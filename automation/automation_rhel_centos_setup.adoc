@@ -1,0 +1,84 @@
+---
+sidebar: sidebar 
+permalink: automation/automation_rhel_centos_setup.html 
+summary: NetApp 解决方案自动化利用 RedHat Ansible 进行配置和管理。 
+keywords: netapp, solutions, automation, ansible, terraform 
+---
+= NetApp 解决方案自动化
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:table-stripes: odd
+:imagesdir: ./media/
+
+
+
+
+=== 操作步骤
+
+. Ansible 控制节点的要求，：
++
+.. 安装了以下软件包的 RHEL/CentOS 计算机：
++
+... Python3.
+... Pip3.
+... Ansible （版本高于 2.10.0 ）
+... Git
+
+
+
+
+
+
+如果您的新 RHEL/CentOS 计算机未安装上述要求，请按照以下步骤将该计算机设置为 Ansible 控制节点：
+
+. 为 RHEL/8/RHEL/7 启用 Ansible 存储库
++
+.. 对于 RHEL/8 （以 root 用户身份运行以下命令）
++
+[source, cli]
+----
+subscription-manager repos --enable ansible-2.9-for-rhel-8-x86_64-rpms
+----
+.. 对于 RHEL/7 （以 root 用户身份运行以下命令）
++
+[source, cli]
+----
+subscription-manager repos --enable rhel-7-server-ansible-2.9-rpms
+----
+
+
+. 创建 .sh 文件
++
+[source, cli]
+----
+vi setup.sh
+----
+. 将以下内容粘贴到文件中
++
+[source, cli]
+----
+#!/bin/bash
+echo "Installing Python ------>"
+sudo yum -y install python3 >/dev/null
+echo "Installing Python Pip ------>"
+sudo yum -y install python3-pip >/dev/null
+echo "Installing Ansible ------>"
+python3 -W ignore -m pip --disable-pip-version-check install ansible >/dev/null
+echo "Installing git ------>"
+sudo yum -y install git >/dev/null
+----
+. 使文件可执行
++
+[source, cli]
+----
+chmod +x setup.sh
+----
+. 以 root 用户身份运行脚本
++
+[source, cli]
+----
+./setup.sh
+----
+

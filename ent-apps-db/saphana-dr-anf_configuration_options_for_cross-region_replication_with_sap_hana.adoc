@@ -1,0 +1,53 @@
+---
+sidebar: sidebar 
+permalink: ent-apps-db/saphana-dr-anf_configuration_options_for_cross-region_replication_with_sap_hana.html 
+keywords: configuration, options, cross, region, replication, sap, hana, azure 
+summary: 下图显示了使用 ANF 跨区域复制的 SAP HANA 系统的卷复制关系。 
+---
+= 使用 SAP HANA 进行跨区域复制的配置选项
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:saphana-dr-anf_anf_cross-region_replication_with_sap_hana_overview.html["先前版本：使用 SAP HANA 进行跨区域复制。"]
+
+下图显示了使用 ANF 跨区域复制的 SAP HANA 系统的卷复制关系。使用 ANF 跨区域复制时，必须复制 HANA 数据和 HANA 共享卷。如果仅复制 HANA 数据卷，则典型 RPO 值的范围为一天。如果需要较低的 RPO 值，则还必须复制 HANA 日志备份以进行正向恢复。
+
+
+NOTE: 本文档中使用的术语 " 日志备份 " 包括日志备份和 HANA 备份目录备份。执行正向恢复操作需要 HANA 备份目录。
+
+
+NOTE: 以下问题描述和实验室设置侧重于 HANA 数据库。其他共享文件（例如 SAP 传输目录）将采用与 HANA 共享卷相同的方式进行保护和复制。
+
+要使用日志备份启用 HANA 保存点恢复或正向恢复，必须在主站点为 HANA 数据卷创建应用程序一致的数据 Snapshot 备份。例如，可以使用 ANF 备份工具 AzAcSnap 执行此操作（另请参见 https://docs.microsoft.com/en-us/azure/azure-netapp-files/azacsnap-introduction["什么是适用于 Azure NetApp Files 的 Azure 应用程序一致性 Snapshot 工具 | Microsoft 文档"^]）。然后，在主站点创建的 Snapshot 备份将复制到灾难恢复站点。
+
+在发生灾难故障转移时，必须中断复制关系，将卷挂载到灾难恢复生产服务器，并且必须将 HANA 数据库恢复到最后一个 HANA 保存点，或者使用复制的日志备份进行正向恢复。章节 link:saphana-dr-anf_disaster_recovery_failover_overview.html["灾难恢复故障转移"]，介绍了所需的步骤。
+
+下图展示了跨区域复制的 HANA 配置选项。
+
+image:saphana-dr-anf_image6.png["错误：缺少图形映像"]
+
+对于当前版本的跨区域复制，只能选择固定计划，用户无法定义实际复制更新时间。可用计划包括每日，每小时和每 10 分钟。使用这些计划选项，根据 RPO 要求，有两种不同的配置是有意义的：不执行日志备份复制的数据卷复制以及按不同计划执行的日志备份复制，每小时或每 10 分钟执行一次。可实现的最低 RPO 约为 20 分钟。下表总结了配置选项以及生成的 RPO 和 RTO 值。
+
+|===
+|  | 数据卷复制 | 数据和日志备份卷复制 | 数据和日志备份卷复制 
+
+
+| CRR 计划数据卷 | 每天 | 每天 | 每天 
+
+
+| CRR 计划日志备份卷 | 不适用 | 每小时 | 10 分钟 
+
+
+| 最大 RPO | 24 小时 + Snapshot 计划（例如 6 小时） + | 1 小时 | 2 x 10 分钟 
+
+
+| 最大 RTO | 主要由 HANA 启动时间定义 | HANA 启动时间 + 恢复时间 + | HANA 启动时间 + 恢复时间 + 
+
+
+| 正向恢复 | 不适用 | 过去 24 小时的日志 + Snapshot 计划（例如 6 小时） + | 过去 24 小时的日志 + Snapshot 计划（例如 6 小时） + 
+|===
+link:saphana-dr-anf_requirements_and_best_practices.html["接下来：要求和最佳实践。"]

@@ -1,0 +1,48 @@
+---
+sidebar: sidebar 
+permalink: ent-apps-db/saphana-dr-anf_lab_setup.html 
+keywords: lab, setup, solution, validation, sap, hana, single, host, system, microsoft, azacsnap, snapshot 
+summary: 已对 SAP HANA 单主机系统执行解决方案验证。适用于 ANF 的 Microsoft AzAcSnap Snapshot 备份工具已用于配置 HANA 应用程序一致的 Snapshot 备份。 
+---
+= 实验室设置
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:saphana-dr-anf_requirements_and_best_practices.html["先前版本：要求和最佳实践。"]
+
+已对 SAP HANA 单主机系统执行解决方案验证。适用于 ANF 的 Microsoft AzAcSnap Snapshot 备份工具已用于配置 HANA 应用程序一致的 Snapshot 备份。每天配置数据卷，每小时日志备份和共享卷复制。灾难恢复测试和故障转移已通过保存点以及正向恢复操作进行验证。
+
+实验室设置中使用了以下软件版本：
+
+* 一个主机 SAP HANA 2.0 SPS5 系统，一个租户
+* 适用于 SAP 15 SP1 的 SUSE SLES
+* AzAcSnap 5.0
+
+
+灾难恢复站点上配置了一个具有手动 QoS 的容量池。
+
+下图显示了实验室设置。
+
+image:saphana-dr-anf_image7.png["错误：缺少图形映像"]
+
+
+
+== 使用 AzAcSnap 的 Snapshot 备份配置
+
+在主站点上， AzAcSnap 配置为为为 HANA 系统 PR1 创建应用程序一致的 Snapshot 备份。这些 Snapshot 备份可从 PR1 HANA 系统的 ANF 数据卷获得，它们也会注册到 SAP HANA 备份目录中，如以下两个图所示。计划每 4 小时执行一次 Snapshot 备份。
+
+通过使用 ANF 跨区域复制复制数据卷，这些 Snapshot 备份将复制到灾难恢复站点，并可用于恢复 HANA 数据库。
+
+下图显示了 HANA 数据卷的 Snapshot 备份。
+
+image:saphana-dr-anf_image8.png["错误：缺少图形映像"]
+
+下图显示了 SAP HANA 备份目录。
+
+image:saphana-dr-anf_image9.png["错误：缺少图形映像"]
+
+link:saphana-dr-anf_configuration_steps_for_anf_cross-region_replication.html["下一步： ANF 跨区域复制的配置步骤。"]

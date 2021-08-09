@@ -1,0 +1,43 @@
+---
+sidebar: sidebar 
+permalink: vdi-vds/citrix_appendix__iscsi_device_configuration.html 
+keywords: appendix, configuration, multipath, iscsi 
+summary: TR-4852 摘要 
+---
+= 附录 iSCSI 设备配置
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+按如下所示编辑 ` /etc/multipath.conf` 处的多路径配置文件：
+
+....
+# This is a basic configuration file with some examples, for device mapper
+# multipath.
+## Use user friendly names, instead of using WWIDs as names.
+defaults {
+user_friendly_names yes
+}
+##
+devices {
+device {
+vendor "SolidFir"
+product "SSD SAN"
+path_grouping_policy multibus path_selector "round-robin 0"
+path_checker tur hardware_handler "0"
+failback immediate rr_weight uniform rr_min_io 10 rr_min_io_rq 10
+features "0"
+no_path_retry 24
+prio const
+}
+}
+## Device black list
+## Enter devices you do NOT want to be controlled by multipathd
+## Example: internal drives
+#blacklist {
+#}
+....

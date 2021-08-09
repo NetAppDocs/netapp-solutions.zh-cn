@@ -1,0 +1,119 @@
+---
+sidebar: sidebar 
+permalink: vdi-vds/citrix_control_layer.html 
+keywords: App Layering, delivery controller, database, director, license, provisioning services, studio, Workspace Environment Management 
+summary: Citrix 控制层由应用程序分层，交付控制器，数据库，控制器，许可， 配置服务， Studio 和 Workspace Environment Management 。 
+---
+= 控制层
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+=== 应用程序分层
+
+分层是一种用于分隔操作系统，应用程序以及用户设置和数据的技术，每个设置和数据都托管在各自的虚拟磁盘或一组虚拟磁盘上。然后，这些组件将与操作系统合并，就好像它们都位于同一个计算机映像上一样。用户无需任何额外培训即可继续工作。通过各个层，可以轻松分配，修补和更新。一个层只是该层所特有的文件系统和注册表条目的容器。
+
+您可以通过 Citrix 应用程序分层管理 Citrix 虚拟应用程序和桌面以及 VMware Horizon 环境的主映像。应用程序分层还允许您按需为用户配置应用程序；这些应用程序会在登录时附加。用户个性化层允许用户安装自定义应用程序并将数据存储在其专用层上。因此，即使使用共享桌面型号，您也可以获得个人桌面体验。
+
+Citrix 应用程序分层可创建合并的层来创建主映像，不会对性能造成任何额外影响。使用弹性层时，用户登录时间会增加。
+
+image:citrix_image33.png["错误：缺少图形映像"]
+
+Citrix 应用程序分层功能使用一个虚拟设备来管理各个层，并通过将映像和应用程序交付到另一个平台来实现。必须从支持 Microsoft Silverlight4.0 的 Web 浏览器访问 Citrix Enterprise Layer Manager （ ELM ）门户。如果无法满足本地管理接口要求，还可以使用基于云的管理门户。
+
+初始配置包括创建两种类型的平台连接器；第一种是用于创建层的平台连接器，另一种是用于映像发布的平台连接器。
+
+image:citrix_image34.png["错误：缺少图形映像"]
+
+层存储库是使用存储弹性层的 ELM 配置的 SMB 文件共享。层工作磁盘是存储由 ELM 创建的所有层的位置。该磁盘将连接到设备，并用作块设备，在该设备上使用本地 Linux 文件系统。层工作磁盘用作将层映像放在一起的暂存区。创建主映像后，该映像将推送到配置平台。
+
+image:citrix_image35.png["错误：缺少图形映像"]
+
+如果多个层上存在通用文件或共享文件，则默认情况下优先级较高的层 ID 优先。每当创建新层时，层 ID 都会递增。如果要控制层优先级，请使用上的支持实用程序  https://support.citrix.com/article/CTX225934["Citrix 层优先级实用程序页面"^]。
+
+此外， Elm 还支持身份验证和基于角色的访问控制，并与 Active Directory 和 LDAP 集成。
+
+
+
+=== 交付控制器
+
+交付控制器负责用户访问，代理和优化连接。此外，它还提供了计算机创建服务（ MCS ），用于有效地配置虚拟机。每个站点至少需要一个交付控制器，通常会添加更多控制器以实现冗余和可扩展性。
+
+虚拟桌面代理（ Virtual Desktop Agent ， VDA ）必须向交付控制器注册，才能供用户使用。在 VDA 部署期间，可以根据 Active Directory OU 通过 GPO 手动提供初始注册选项。也可以使用 MCS 来处理此过程。
+
+如果控制器与数据库服务器的连接断开，则传输控制器会保留本地主机缓存。
+
+
+
+=== 数据库
+
+SQL Server 数据库用于站点配置数据，日志记录和监控。每个站点应至少有一个数据库。要提供高可用性，请使用 AlwaysOn 可用性组，数据库镜像或 SQL 集群等 Microsoft SQL Server 功能。至少应考虑对 SQL VM 使用虚拟机管理程序高可用性功能。
+
+即使控制器具有本地主机缓存，它也不会影响任何现有连接。但是，对于新连接， NetApp 建议使用数据库连接。
+
+
+
+=== 总监
+
+Citrix Director 可为 Citrix 虚拟应用程序和桌面提供监控解决方案。帮助台用户可以搜索特定的用户会话，并获取完整的故障排除信息。在 Citrix 虚拟机管理程序上托管 Citrix 虚拟应用程序和桌面资源时，帮助台用户可以选择从 Director 门户启动控制台会话。
+
+image:citrix_image36.png["错误：缺少图形映像"]
+
+
+
+=== 许可证
+
+Citrix 许可证服务器负责管理所有 Citrix 许可证的存储库，以便应用程序可以轻松地使用许可证。许可证服务器提供了一个用于高级故障排除的管理门户。对于常规操作，也可以使用 Citrix Studio 。
+
+
+
+=== 配置服务
+
+通过配置服务，即使是裸机工作站，也可以使用 PXE 启动来配置桌面映像。此外，还可以使用基于 ISO 或 CD-ROM 的启动选项来支持 PXE 启动不允许更改网络的环境。下图提供了我们在实验室中使用的 DHCP 服务器选项。cp.HCIEUC.Demo 和 PVS.HCIEUC.Demo 是指向两个配置服务器的负载平衡器虚拟 IP 。如果选项 011 和 017 可用，则会忽略选项 066 和 067 。
+
+image:citrix_image37.png["错误：缺少图形映像"]
+
+根据 Citrix 配置创建计算机目录的高级操作如下：
+
+. 在模板 VM 上，安装目标代理，然后再安装 VDA 。
+. 分配一个额外的磁盘以进行缓存，并使用 MBR 对其进行格式化。此步骤为可选步骤。至少验证 PVS 存储是否具有写入缓存路径。
+. 启动目标映像向导并回答其问题。出现提示时，请务必提供一个 Citrix 配置服务器。
+. 此设备将使用 PXE 或 ISO 启动。" 映像 " 向导将继续捕获映像。
+. 选择已创建的 vDisk ，然后右键单击以选择负载平衡并启用它。
+. 对于 vDisk Properties ，将访问模式更改为 Standard ，并将 Cache Type 更改为 Cache in Device RAM with Overflow on Hard Disk 。
+. 右键单击站点以选择 "Create Virtual Desktops Setup Wizard" 并回答问题。
+
+
+
+
+=== 工作室
+
+Citrix Studio 是 Citrix 虚拟应用程序和桌面使用的中央管理控制台。计算机目录，交付组，应用程序，策略以及资源托管，许可证，区域，角色和范围的配置由 Citrix Studio 进行管理。Citrix Studio 还提供了 PowerShell 管理单元来管理 Citrix 虚拟应用程序和桌面。
+
+
+
+=== 工作空间环境管理
+
+工作空间环境管理（ WEM ）提供智能资源管理和配置文件管理技术，可在纯软件的无驱动程序解决方案中为 Citrix 虚拟应用程序和桌面提供最佳性能，桌面登录和应用程序响应时间。
+
+WEM 需要使用 SQL 数据库来存储配置信息。为了为基础架构服务提供高可用性，负载平衡器虚拟服务器连接会使用多个实例。下图显示了 WEM 架构。
+
+image:citrix_image38.png["错误：缺少图形映像"]
+
+下图显示了 WEM 控制台。
+
+image:citrix_image39.png["错误：缺少图形映像"]
+
+WEM 的主要功能如下：
+
+* 能够控制某些任务或应用程序的资源
+* 一个用于管理 Windows 图标，网络驱动器，开始菜单项等的简单界面
+* 能够重复使用旧计算机并将其作为瘦客户端进行管理
+* 基于角色的访问控制
+* 基于各种筛选器的控制策略
+

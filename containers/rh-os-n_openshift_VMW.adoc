@@ -1,0 +1,103 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_openshift_VMW.html 
+keywords: OpenShift, VMware vSphere, ESXi 
+summary: VMware vSphere 是一个虚拟化平台，用于集中管理 ESXi 虚拟机管理程序上运行的大量虚拟化服务器和网络。 
+---
+= VMware vSphere 上的 OpenShift ：采用 NetApp 的 Red Hat OpenShift
+
+
+VMware vSphere 是一个虚拟化平台，用于集中管理 ESXi 虚拟机管理程序上运行的大量虚拟化服务器和网络。
+
+有关 VMware vSphere 的详细信息，请参见 https://www.vmware.com/products/vsphere.html["VMware vSphere 网站"^]。
+
+VMware vSphere 可提供以下功能：
+
+* * VMware vCenter Server* VMware vCenter Server 可通过一个控制台统一管理所有主机和 VM ，并聚合对集群，主机和 VM 的性能监控。
+* 通过 * VMware vSphere vMotion* VMware vCenter ，可以根据用户请求在集群中的节点之间热迁移虚拟机，而不会造成中断。
+* * vSphere 高可用性。 * 如果主机发生故障，为避免中断， VMware vSphere 允许将主机集群化并配置为高可用性。由于主机故障而中断的 VM 不久将在集群中的其他主机上重新启动，从而还原服务。
+* * 分布式资源计划程序（ DRS ） * 可以对 VMware vSphere 集群进行配置，以便对其托管的虚拟机的资源需求进行负载平衡。可以将资源发生资源问题的虚拟机热迁移到集群中的其他节点，以确保有足够的可用资源。
+
+
+image:redhat_openshift_image33.png["错误：缺少图形映像"]
+
+
+
+== 网络设计
+
+NetApp 解决方案上的 Red Hat OpenShift 使用两个数据交换机提供 25 Gbps 的主数据连接。它还使用两个额外的管理交换机，这些交换机以 1 Gbps 的速度提供连接，用于存储节点的带内管理以及 IPMI 功能的带外管理。OCP 使用 VMware vSphere 上的虚拟机逻辑网络进行集群管理。本节介绍解决方案中使用的每个虚拟网段的布局和用途，并概述了部署解决方案的前提条件。
+
+
+
+=== VLAN 要求
+
+VMware vSphere 上的 Red Hat OpenShift 旨在通过使用虚拟局域网（ VLAN ）在逻辑上隔离不同用途的网络流量。此配置可以进行扩展，以满足客户需求，或者为特定网络服务提供进一步隔离。下表列出了在 NetApp 验证解决方案时实施解决方案所需的 VLAN 。
+
+|===
+| VLAN | 目的 | VLAN ID 
+
+
+| 带外管理网络 | 管理物理节点和 IPMI | 16. 
+
+
+| VM 网络 | 虚拟子系统网络访问 | 181 
+
+
+| 存储网络 | ONTAP NFS 的存储网络 | 184 
+
+
+| 存储网络 | 适用于 ONTAP iSCSI 的存储网络 | 185. 
+
+
+| 带内管理网络 | 管理 ESXi 节点， vCenter Server ， ONTAP Select | 3480 
+
+
+| 存储网络 | 适用于 NetApp Element iSCSI 的存储网络 | 3481 
+
+
+| 迁移网络 | 用于虚拟子系统迁移的网络 | 3482 
+|===
+
+
+=== 网络基础架构支持资源
+
+在部署 OpenShift 容器平台之前，应具备以下基础架构：
+
+* 至少一个 DNS 服务器，该服务器可提供完整的主机名解析，可从带内管理网络和 VM 网络访问。
+* 至少可从带内管理网络和 VM 网络访问一个 NTP 服务器。
+* （可选）带内管理网络和 VM 网络的出站 Internet 连接。
+
+
+
+
+== 生产部署的最佳实践
+
+本节列出了企业在将此解决方案部署到生产环境之前应考虑的几个最佳实践。
+
+
+
+=== 将 OpenShift 部署到至少包含三个节点的 ESXi 集群
+
+本文档中介绍的经验证的架构介绍了适用于 HA 操作的最低硬件部署，具体方法是部署两个 ESXi 虚拟机管理程序节点，并通过启用 VMware vSphere HA 和 VMware vMotion 来确保容错配置。 允许已部署的 VM 在两个虚拟机管理程序之间迁移，并在一个主机不可用时重新启动。
+
+由于 Red Hat OpenShift 最初使用三个主节点进行部署，因此在双节点配置中，可以确保至少有两个主节点将占用同一节点，如果特定节点不可用，可能会导致 OpenShift 中断。因此， Red Hat 的最佳实践是，在解决方案中至少部署三个 ESXi 虚拟机管理程序节点，以便 OpenShift 主节点可以均匀分布，并且解决方案可以获得更多的容错能力。
+
+
+
+=== 配置虚拟机和主机关联性
+
+通过启用虚拟机 / 主机关联性，可确保在多个虚拟机管理程序节点之间分布 OpenShift 主节点。
+
+关联性或反关联性是一种为一组 VM 和 / 或主机定义规则的方法，用于确定这些 VM 是在同一主机上运行还是在组中的主机上运行，还是在不同主机上运行。它通过创建由具有一组相同参数和条件的 VM 和 / 或主机组成的关联组来应用于 VM 。根据关联组中的 VM 是在组中的同一主机上运行，还是在不同主机上单独运行，此关联组的参数可以定义正关联性或负关联性。
+
+要配置相关性组，请参见 https://docs.vmware.com/en/VMware-vSphere/6.7/com.vmware.vsphere.resmgmt.doc/GUID-FF28F29C-8B67-4EFF-A2EF-63B3537E6934.html["vSphere 6.7 文档：使用 DRS 关联性规则"^]。
+
+
+
+=== 使用自定义安装文件进行 OpenShift 部署
+
+通过本文档前面讨论的交互式向导， IPI 可以轻松部署 OpenShift 集群。但是，在集群部署过程中，可能需要更改某些默认值。
+
+在这些情况下，无需立即部署集群，即可运行向导并为其分配任务，而是输出一个配置文件，以便稍后可以从该配置文件中部署集群。如果需要更改任何 IPI 默认设置，或者用户希望在其环境中部署多个相同的集群以用于多租户等其他用途，则此功能非常有用。有关为 OpenShift 创建自定义安装配置的详细信息，请参见 https://docs.openshift.com/container-platform/4.7/installing/installing_vsphere/installing-vsphere-installer-provisioned-customizations.html["Red Hat OpenShift 通过自定义在 vSphere 上安装集群"^]。
+
+link:rh-os-n_overview_netapp.html["接下来： NetApp 存储概述。"]

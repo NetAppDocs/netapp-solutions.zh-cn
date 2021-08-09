@@ -1,0 +1,98 @@
+---
+sidebar: sidebar 
+permalink: ai/hcaios_concepts_and_components.html 
+keywords: Concepts, Components, Machine Learning, Kubernetes 
+summary:  
+---
+= 概念和组件
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+本节介绍与 ML 工作流中的数据缓存相关的概念和组件。
+
+
+
+== 机器学习
+
+对于全球许多企业和组织来说， ML 正迅速变得至关重要。因此， IT 和 DevOps 团队现在面临着标准化 ML 工作负载以及配置云，内部和混合计算资源的挑战，这些资源支持 ML 作业和管道所需的动态密集型工作流。
+
+
+
+== 基于容器的机器学习和 Kubernetes
+
+容器是在共享主机操作系统内核上运行的隔离用户空间实例。容器的采用率正在快速增长。容器可提供许多与虚拟机（ VM ）相同的应用程序沙盒优势。但是，由于虚拟机所依赖的虚拟机管理程序和子操作系统层已被消除，因此容器的重量要轻得多。
+
+此外，还可以通过容器直接将应用程序依赖关系，运行时间等内容高效地打包到应用程序中。最常用的容器打包格式是 Docker 容器。已采用 Docker 容器格式进行容器化的应用程序可以在可以运行 Docker 容器的任何计算机上执行。即使计算机上不存在应用程序的依赖关系，也是如此，因为所有依赖关系都打包在容器中。有关详细信息，请访问 https://www.docker.com/["Docker 网站"^]。
+
+Kubernetes 是一款广受欢迎的容器编排程序，可帮助数据科学家启动基于容器的灵活作业和管道。它还支持基础架构团队在一个受管云原生环境中管理和监控 ML 工作负载。有关详细信息，请访问 https://kubernetes.io/["Kubernetes 网站"^]。
+
+
+
+== cnvrg.io
+
+cnvrg.io 是一款 AI 操作系统，可将企业管理，扩展和加速 AI 和数据科学开发的方式从研究转变为生产。代码优先平台由数据科学家为数据科学家构建，可灵活地在内部或云中运行。借助模型管理， MLOps 和持续的 ML 解决方案， cnvrg.io 为数据科学团队带来了一流的技术，因此他们可以减少在开发运营上花费的时间，专注于真正的魔力—算法。自使用 cnvrg.io 以来，各个行业的团队已获得更多生产模式，从而增加了业务价值。
+
+
+
+=== cnvrg.io 元数据计划程序
+
+cnvrg 。IO 具有一个独特的架构，允许 IT 和工程师将不同的计算资源连接到同一控制平面，并使 cnvrg-io 管理所有资源中的 ML 作业。这意味着它可以连接多个内部 Kubernetes 集群， VM 服务器和云帐户，并在所有资源上运行 ML 工作负载，如下图所示。
+
+image:hcaios_image5.png["错误：缺少图形映像"]
+
+
+
+=== cnvrg.io 数据缓存
+
+借助 cnvrg.io ，数据科学家可以利用其数据缓存技术定义热数据集和冷数据集版本。默认情况下，数据集存储在集中式对象存储数据库中。然后，数据科学家可以在选定计算资源上缓存特定数据版本，以节省下载时间，从而提高 ML 开发和工作效率。已缓存且在几天内未使用的数据集将自动从选定 NFS 中清除。只需单击一下鼠标即可执行缓存和清除操作；无需进行编码， IT 或 DevOps 工作。
+
+
+
+=== cnvrg.io 流和 ML 管道
+
+cnvrg.io 流是一种用于构建生产 ML 管道的工具。流中的每个组件都是一个脚本 / 代码，在选定计算上运行，并具有一个基本 Docker 映像。这种设计使数据科学家和工程师能够构建一个可同时在内部和云中运行的管道。cnvrg.io 可确保数据，参数和项目在不同组件之间移动。此外，还会对每个流进行监控和跟踪，以实现 100% 可重现的数据科学。
+
+
+
+=== cnvrg.io 核心
+
+cnvrg.io 核心是数据科学社区的一个免费平台，可帮助数据科学家更加专注于数据科学，而不是专注于开发运营。核心灵活的基础架构使数据科学家能够控制使用任何语言， AI 框架或计算环境，无论是内部环境还是云环境，以便他们能够做到最擅长的事情，构建算法。在任何 Kubernetes 集群上，只需一个命令即可轻松安装 cnvrg-io 核心。
+
+
+
+== NetApp ONTAP AI
+
+ONTAP AI 是一款适用于 ML 和深度学习（ DL ）工作负载的数据中心参考架构，它使用 NetApp AFF 存储系统和采用 Tesla V100 GPU 的 NVIDIA DGX 系统。ONTAP AI 基于基于 100 Gb 以太网的行业标准 NFS 文件协议，可为客户提供高性能 ML/DL 基础架构，该基础架构使用标准数据中心技术来降低实施和管理开销。通过使用标准化网络和协议， ONTAP AI 可以集成到混合云环境中，同时保持操作的一致性和精简性。作为一款经过预先验证的基础架构解决方案， ONTAP AI 可减少部署时间和风险，并显著降低管理开销，从而使客户能够更快地实现价值。
+
+
+
+== NVIDIA DeepOps
+
+DeepOps 是 NVIDIA 的一个开源项目，通过使用 Ansible ，可以根据最佳实践自动部署 GPU 服务器集群。DeepOps 采用模块化设计，可用于执行各种部署任务。在本文档及其所述的验证练习中， DeepOps 用于部署一个由 GPU 服务器辅助节点组成的 Kubernetes 集群。有关详细信息，请访问 https://github.com/NVIDIA/deepops["DeepOps 网站"^]。
+
+
+
+== NetApp Trident
+
+Trident 是一款由 NetApp 开发和维护的开源存储编排程序，可大大简化 Kubernetes 工作负载的永久性存储的创建，管理和使用。Trident 本身是 Kubernetes 的本机应用程序，它直接在 Kubernetes 集群中运行。借助 Trident ， Kubernetes 用户（开发人员，数据科学家， Kubernetes 管理员等）可以采用他们已熟悉的标准 Kubernetes 格式创建，管理永久性存储卷并与其交互。同时，他们还可以利用 NetApp 的高级数据管理功能以及由 NetApp 技术提供支持的数据网络结构。Trident 可将持久存储的复杂性抽象化，并使其易于使用。有关详细信息，请访问 https://netapp-trident.readthedocs.io/en/stable-v18.07/kubernetes/["Trident 网站"^]。
+
+
+
+== NetApp StorageGRID
+
+NetApp StorageGRID 是一款软件定义的对象存储平台，旨在通过提供简单的类似于云的存储来满足这些需求，用户可以使用 S3 协议访问这些存储。StorageGRID 是一种横向扩展系统，旨在支持互联网连接站点之间的多个节点，而不管距离如何。借助 StorageGRID 的智能策略引擎，用户可以选择跨站点的纠删编码对象，以便在远程站点之间实现地理故障恢复能力或对象复制，从而最大程度地减少 WAN 访问延迟。StorageGRID 在此解决方案中提供了一个出色的私有云主对象存储数据湖。
+
+
+
+== NetApp Cloud Volumes ONTAP
+
+NetApp Cloud Volumes ONTAP 数据管理软件可以灵活地为用户数据提供控制，保护和效率，同时还可以灵活地使用 AWS ， Google 云平台和 Microsoft Azure 等公有云提供商。Cloud Volumes ONTAP 是一款基于 NetApp ONTAP 存储软件构建的云原生数据管理软件，可为用户提供出色的通用存储平台来满足其云数据需求。在云端和内部部署中使用相同的存储软件，可以为用户提供 Data Fabric 的价值，而无需培训 IT 员工掌握全新的数据管理方法。
+
+对于对混合云部署模式感兴趣的客户， Cloud Volumes ONTAP 可以在大多数公有云中提供相同的功能和同类领先的性能，以便在任何环境中提供一致，无缝的用户体验。
+
+link:hcaios_hardware_and_software_requirements.html["接下来：硬件和软件要求"]

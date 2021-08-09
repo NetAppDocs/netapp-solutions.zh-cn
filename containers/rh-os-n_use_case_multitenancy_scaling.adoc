@@ -1,0 +1,182 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_use_case_multitenancy_scaling.html 
+keywords: OpenShift, OCP, NetApp Trident, NetApp ONTAP, Red Hat OpenShift, Multitenancy, Multi-tenancy 
+summary: 在使用 NetApp 的 Red Hat OpenShift 上配置多租户 
+---
+= 扩展：添加更多项目
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+在多租户配置中，使用存储资源添加新项目需要进行额外配置，以确保不会违反多租户要求。要在多租户集群中添加更多项目，请完成以下步骤：
+
+. 以存储管理员身份登录到 NetApp ONTAP 集群。
+. 导航到 `Storage -> Storage VM` ，然后单击 `Add` 。创建一个专用于 project-3 的新 SVM 。此外，还可以创建 vsadmin 帐户来管理 SVM 及其资源。
+
+
+image::redhat_openshift_image42.jpg[创建 SVM 以进行扩展]
+
+. 以集群管理员身份登录到 Red Hat OpenShift 集群。
+. 创建新项目。
++
+[source, console]
+----
+oc create ns project-3
+----
+. 确保已在 IdP 上为 project-3 创建用户组并与 OpenShift 集群同步。
++
+[source, console]
+----
+oc get groups
+----
+. 为 project-3 创建开发人员角色。
++
+[source, console]
+----
+cat << EOF | oc create -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: project-3
+  name: developer-project-3
+rules:
+  - verbs:
+      - '*'
+    apiGroups:
+      - apps
+      - batch
+      - autoscaling
+      - extensions
+      - networking.k8s.io
+      - policy
+      - apps.openshift.io
+      - build.openshift.io
+      - image.openshift.io
+      - ingress.operator.openshift.io
+      - route.openshift.io
+      - snapshot.storage.k8s.io
+      - template.openshift.io
+    resources:
+      - '*'
+  - verbs:
+      - '*'
+    apiGroups:
+      - ''
+    resources:
+      - bindings
+      - configmaps
+      - endpoints
+      - events
+      - persistentvolumeclaims
+      - pods
+      - pods/log
+      - pods/attach
+      - podtemplates
+      - replicationcontrollers
+      - services
+      - limitranges
+      - namespaces
+      - componentstatuses
+      - nodes
+  - verbs:
+      - '*'
+    apiGroups:
+      - trident.netapp.io
+    resources:
+      - tridentsnapshots
+EOF
+----
+
+
+
+NOTE: 本节中提供的角色定义只是一个示例。必须根据最终用户要求定义开发人员角色。
+
+. 在 project-3 中为开发人员创建 RoleBinding. 将开发人员项目 3 角色绑定到 project-3 中的相应组（ OCP-project-3 ）。
++
+[source, console]
+----
+cat << EOF | oc create -f -
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: project-3-developer
+  namespace: project-3
+subjects:
+  - kind: Group
+    apiGroup: rbac.authorization.k8s.io
+    name: ocp-project-3
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: developer-project-3
+EOF
+----
+. 以存储管理员身份登录到 Red Hat OpenShift 集群
+. 创建 Trident 后端并将其映射到专用于 project-3 的 SVM 。NetApp 建议使用 SVM 的 vsadmin 帐户将后端连接到 SVM ，而不是使用 ONTAP 集群管理员。
++
+[source, console]
+----
+cat << EOF | tridentctl -n trident create backend -f
+{
+    "version": 1,
+    "storageDriverName": "ontap-nas",
+    "backendName": "nfs_project_3",
+    "managementLIF": "172.21.224.210",
+    "dataLIF": "10.61.181.228",
+    "svm": "project-3-svm",
+    "username": "vsadmin",
+    "password": "NetApp!23"
+}
+EOF
+----
+
+
+
+NOTE: 在此示例中，我们使用的是 ontap-NAS 驱动程序。使用相应的驱动程序根据使用情形创建后端。
+
+
+NOTE: 我们假定 Trident 已安装在 Trident 项目中。
+
+. 为 project-3 创建存储类，并将其配置为使用专用于 project-3 的后端存储池。
++
+[source, console]
+----
+cat << EOF | oc create -f -
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: project-3-sc
+provisioner: csi.trident.netapp.io
+parameters:
+  backendType: ontap-nas
+  storagePools: "nfs_project_3:.*"
+EOF
+----
+. 创建 ResourceQuota 以限制项目 3 中的资源，从而从专用于其他项目的存储库请求存储。
++
+[source, console]
+----
+cat << EOF | oc create -f -
+kind: ResourceQuota
+apiVersion: v1
+metadata:
+  name: project-3-sc-rq
+  namespace: project-3
+spec:
+  hard:
+    project-1-sc.storageclass.storage.k8s.io/persistentvolumeclaims: 0
+    project-2-sc.storageclass.storage.k8s.io/persistentvolumeclaims: 0
+EOF
+----
+. 在其他项目中修补 ResourceQuotas ，以限制这些项目中的资源从专用于项目 3 的存储库访问存储。
++
+[source, console]
+----
+oc patch resourcequotas project-1-sc-rq -n project-1 --patch '{"spec":{"hard":{ "project-3-sc.storageclass.storage.k8s.io/persistentvolumeclaims": 0}}}'
+oc patch resourcequotas project-2-sc-rq -n project-2 --patch '{"spec":{"hard":{ "project-3-sc.storageclass.storage.k8s.io/persistentvolumeclaims": 0}}}'
+----
+

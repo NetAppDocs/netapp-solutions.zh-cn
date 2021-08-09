@@ -1,0 +1,84 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_use_case_multitenancy_storage_admin_tasks.html 
+keywords: OpenShift, OCP, NetApp Trident, NetApp ONTAP, Red Hat OpenShift, Multitenancy, Multi-tenancy 
+summary: 在使用 NetApp 的 Red Hat OpenShift 上配置多租户 
+---
+= 配置： storage-admin 任务
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+存储管理员必须配置以下资源：
+
+. 以管理员身份登录到 NetApp ONTAP 集群。
+. 导航到 `Storage -> Storage VM` ，然后单击 `Add` 。创建两个 SVM ，一个用于 project-1 ，另一个用于 project-2 ，以提供所需的详细信息。此外，还可以创建 vsadmin 帐户来管理 SVM 及其资源。
+
+
+image::redhat_openshift_image41.jpg[在 ONTAP 上创建 SVM]
+
+. 以存储管理员身份登录到 Red Hat OpenShift 集群。
+. 为 project-1 创建后端，并将其映射到专用于该项目的 SVM 。NetApp 建议使用 SVM 的 vsadmin 帐户将后端连接到 SVM ，而不是使用 ONTAP 集群管理员。
++
+[source, console]
+----
+cat << EOF | tridentctl -n trident create backend -f
+{
+    "version": 1,
+    "storageDriverName": "ontap-nas",
+    "backendName": "nfs_project_1",
+    "managementLIF": "172.21.224.210",
+    "dataLIF": "10.61.181.224",
+    "svm": "project-1-svm",
+    "username": "vsadmin",
+    "password": "NetApp123"
+}
+EOF
+----
+
+
+
+NOTE: 在此示例中，我们使用的是 ontap-NAS 驱动程序。根据使用情形创建后端时，请使用相应的驱动程序。
+
+
+NOTE: 假设 Trident 安装在 Trident 项目中。
+
+. 同样，为 project-2 创建 Trident 后端，并将其映射到专用于 project-2 的 SVM 。
+. 接下来，创建存储类。为 project-1 创建存储类，并通过设置 storagePools 参数将其配置为使用后端专用于 project-1 的存储池。
++
+[source, console]
+----
+cat << EOF | oc create -f -
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: project-1-sc
+provisioner: csi.trident.netapp.io
+parameters:
+  backendType: ontap-nas
+  storagePools: "nfs_project_1:.*"
+EOF
+----
+. 同样，为 project-2 创建一个存储类，并将其配置为使用专用于 project-2 的后端存储池。
+. 创建 ResourceQuota 以限制 project-1 中的资源，从而从专用于其他项目的存储库请求存储。
++
+[source, console]
+----
+cat << EOF | oc create -f -
+kind: ResourceQuota
+apiVersion: v1
+metadata:
+  name: project-1-sc-rq
+  namespace: project-1
+spec:
+  hard:
+    project-2-sc.storageclass.storage.k8s.io/persistentvolumeclaims: 0
+EOF
+----
+. 同样，也可以创建 ResourceQuota 来限制项目 2 中的资源，以便从专用于其他项目的存储库请求存储。
+
+
+link:rh-os-n_use_case_multitenancy_validation.html["下一步：验证。"]

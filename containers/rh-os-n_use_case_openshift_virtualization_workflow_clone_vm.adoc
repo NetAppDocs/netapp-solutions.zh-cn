@@ -1,0 +1,71 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_use_case_openshift_virtualization_workflow_clone_vm.html 
+keywords: OpenShift, OCP, NetApp Trident, NetApp ONTAP, Red Hat OpenShift, OpenShift Virtualization, CNV, Container Native Virtualization, Red Hat OpenShift Virtualization 
+summary: 借助 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化 
+---
+= 工作流：使用 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化
+
+
+
+
+== VM 克隆
+
+可以通过 NetApp Trident 的卷 CSI 克隆功能在 OpenShift 中克隆现有 VM 。通过 CSI 卷克隆，可以使用现有 PVC 作为数据源并通过复制其 PV 来创建新的 PVC 。创建新的 PVC 后，它将作为一个单独的实体运行，并且不会与源 PVC 建立任何链接或依赖关系。
+
+image::redhat_openshift_image57.jpg[VM 克隆架构]
+
+要考虑 CSI 卷克隆的某些限制：
+
+. 源 PVC 和目标 PVC 必须位于同一项目中。
+. 在同一存储类中支持克隆。
+. 只有当源卷和目标卷使用相同的卷模式设置时，才能执行克隆；例如，一个块卷只能克隆到另一个块卷。
+
+
+可以通过两种方式克隆 OpenShift 集群中的 VM ：
+
+. 关闭源 VM
+. 使源 VM 保持活动状态
+
+
+
+
+=== 关闭源 VM
+
+通过关闭虚拟机克隆现有虚拟机是一项原生 OpenShift 功能，可在 NetApp Trident 的支持下实施。要克隆虚拟机，请完成以下步骤。
+
+. 导航到 `Workloads > Virtualization > Virtual Machines` ，然后单击要克隆的虚拟机旁边的省略号。
+. 单击克隆虚拟机并提供新虚拟机的详细信息。
++
+image::redhat_openshift_image58.JPG[克隆虚拟机]
+
+. 单击克隆虚拟机；此操作将关闭源 VM 并启动克隆 VM 的创建。
+. 完成此步骤后，您可以访问并验证克隆的虚拟机的内容。
+
+
+
+
+=== 使源 VM 保持活动状态
+
+也可以通过克隆源 VM 的现有 PVC ，然后使用克隆的 PVC 创建新 VM 来克隆现有 VM 。此方法不需要关闭源 VM 。要克隆虚拟机而不关闭它，请完成以下步骤。
+
+. 导航到 Storage -> PersistentVolumeClass` ，然后单击附加到源 VM 的 PVC 旁边的省略号。
+. 单击克隆 PVC 并提供新 PVC 的详细信息。
++
+image::redhat_openshift_image59.JPG[克隆 PVC]
+
+. 然后单击克隆。这样就会为新虚拟机创建一个 PVC 。
+. 导航到 `Workloads > Virtualization > Virtual Machines` ，然后单击 `Create > with YAML` 。
+. 在 `sPec > template > spec> volumes` 部分中，连接克隆的 PVC 而不是容器磁盘。根据您的要求提供新虚拟机的所有其他详细信息。
++
+[source, cli]
+----
+- name: rootdisk
+  persistentVolumeClaim:
+    claimName: rhel8-short-frog-rootdisk-28dvb-clone
+----
+. 单击创建以创建新虚拟机。
+. 成功创建 VM 后，访问并验证新 VM 是否为源 VM 的克隆。
+
+
+link:rh-os-n_use_case_openshift_virtualization_workflow_vm_from_snapshot.html["接下来：工作流：从 Snapshot 创建 VM 。"]

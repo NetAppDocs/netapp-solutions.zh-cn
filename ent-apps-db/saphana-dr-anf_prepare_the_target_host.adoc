@@ -1,0 +1,113 @@
+---
+sidebar: sidebar 
+permalink: ent-apps-db/saphana-dr-anf_prepare_the_target_host.html 
+keywords: prepare, target, host, target, host, server, hana, log, volume, configure, install 
+summary: 本节介绍服务器上所需的准备步骤，这些步骤用于灾难恢复故障转移测试。 
+---
+= 准备目标主机
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:saphana-dr-anf_disaster_recovery_testing_overview.html["先前版本：灾难恢复测试。"]
+
+本节介绍用于灾难恢复故障转移测试的服务器所需的准备步骤。
+
+在正常操作期间，目标主机通常用于其他目的，例如 HANA QA 或测试系统。因此，在执行灾难故障转移测试时，必须运行大多数这些步骤。另一方面，只需复制配置文件，即可准备相关配置文件，例如 ` /etc/fstab` 和 ` usr/sapservices` ，然后将其投入生产。灾难恢复测试操作步骤可确保正确配置准备好的相关配置文件。
+
+目标主机准备工作还包括关闭 HANA QA 或测试系统，以及使用 `systemctl stop sapinit` 停止所有服务。
+
+
+
+== 目标服务器主机名和 IP 地址
+
+目标服务器的主机名必须与源系统的主机名相同。IP 地址可以不同。
+
+
+NOTE: 必须正确隔离目标服务器，使其无法与其他系统通信。如果未设置适当的隔离，则克隆的生产系统可能会与其他生产系统交换数据，从而导致数据在逻辑上损坏。
+
+
+
+== 安装所需的软件
+
+SAP 主机代理软件必须安装在目标服务器上。有关详细信息，请参见 https://help.sap.com/viewer/9f03f1852ce94582af41bb49e0a667a7/103/en-US["SAP 主机代理"^] 在 SAP 帮助门户上。
+
+
+NOTE: 如果主机用作 HANA QA 或测试系统，则已安装 SAP 主机代理软件。
+
+
+
+== 配置用户，端口和 SAP 服务
+
+SAP HANA 数据库所需的用户和组必须在目标服务器上可用。通常使用中央用户管理；因此，不需要在目标服务器上执行任何配置步骤。必须在目标主机上配置 HANA 数据库所需的端口。可以通过将 ` /etc/services` 文件复制到目标服务器来从源系统复制配置。
+
+所需的 SAP 服务条目必须在目标主机上可用。可通过将 ` /usr/sapservices` 文件复制到目标服务器来从源系统复制配置。以下输出显示了在实验室设置中使用的 SAP HANA 数据库所需的条目。
+
+....
+vm-pr1:~ # cat /usr/sap/sapservices
+#!/bin/sh
+LD_LIBRARY_PATH=/usr/sap/PR1/HDB01/exe:$LD_LIBRARY_PATH;export LD_LIBRARY_PATH;/usr/sap/PR1/HDB01/exe/sapstartsrv pf=/usr/sap/PR1/SYS/profile/PR1_HDB01_vm-pr1 -D -u pr1adm
+limit.descriptors=1048576
+....
+
+
+== 准备 HANA 日志卷
+
+由于 HANA 日志卷不是复制的一部分，因此目标主机上必须存在一个空的日志卷。日志卷必须包含与源 HANA 系统相同的子目录。
+
+....
+vm-pr1:~ # ls -al /hana/log/PR1/mnt00001/
+total 16
+drwxrwxrwx 5 root   root   4096 Feb 19 16:20 .
+drwxr-xr-x 3 root   root     22 Feb 18 13:38 ..
+drwxr-xr-- 2 pr1adm sapsys 4096 Feb 22 10:25 hdb00001
+drwxr-xr-- 2 pr1adm sapsys 4096 Feb 22 10:25 hdb00002.00003
+drwxr-xr-- 2 pr1adm sapsys 4096 Feb 22 10:25 hdb00003.00003
+vm-pr1:~ #
+....
+
+
+== 准备日志备份卷
+
+由于源系统为 HANA 日志备份配置了一个单独的卷，因此，目标主机上也必须具有一个日志备份卷。必须在目标主机上配置并挂载用于日志备份的卷。
+
+如果日志备份卷复制是灾难恢复设置的一部分，则会在目标主机上挂载基于快照的新卷，而无需准备其他日志备份卷。
+
+
+
+== 准备文件系统挂载
+
+下表显示了实验室设置中使用的命名约定。灾难恢复站点上新卷的卷名称包含在 ` /etc/fstab` 中。这些卷名称将在下一节的卷创建步骤中使用。
+
+|===
+| HANA PR1 卷 | 灾难恢复站点上的新卷和子目录 | 目标主机上的挂载点 
+
+
+| 数据卷 | pr1-data-mnt00001-sm-dest-clone | /ha/data/PR1/mnt00001 
+
+
+| 共享卷 | PR1-shared-sm-dest-clone/shared PR1-shared-sm-dest-clone/user-sap-pr1 | /has/shared /usr/sap/pr1 
+
+
+| 记录备份卷 | hanabackup-sm-dest-clone | /hanabackup 
+|===
+
+NOTE: 必须在目标主机上创建此表中列出的挂载点。
+
+以下是所需的 ` /etc/fstab` 条目。
+
+....
+vm-pr1:~ # cat /etc/fstab
+# HANA ANF DB Mounts
+10.0.2.4:/PR1-data-mnt00001-sm-dest-clone /hana/data/PR1/mnt00001 nfs   rw,vers=4,minorversion=1,hard,timeo=600,rsize=262144,wsize=262144,intr,noatime,lock,_netdev,sec=sys  0  0
+10.0.2.4:/PR1-log-mnt00001-dr /hana/log/PR1/mnt00001 nfs   rw,vers=4,minorversion=1,hard,timeo=600,rsize=262144,wsize=262144,intr,noatime,lock,_netdev,sec=sys  0  0
+# HANA ANF Shared Mounts
+10.0.2.4:/PR1-shared-sm-dest-clone/hana-shared /hana/shared nfs rw,vers=4,minorversion=1,hard,timeo=600,rsize=262144,wsize=262144,intr,noatime,lock,_netdev,sec=sys  0  0
+10.0.2.4:/PR1-shared-sm-dest-clone/usr-sap-PR1 /usr/sap/PR1 nfs rw,vers=4,minorversion=1,hard,timeo=600,rsize=262144,wsize=262144,intr,noatime,lock,_netdev,sec=sys  0  0
+# HANA file and log backup destination
+10.0.2.4:/hanabackup-sm-dest-clone    /hanabackup nfs   rw,vers=3,hard,timeo=600,rsize=262144,wsize=262144,nconnect=8,bg,noatime,nolock 0 0
+....
+link:saphana-dr-anf_create_new_volumes_based_on_snapshot_backups_at_the_disaster_recovery_site.html["接下来：在灾难恢复站点基于 Snapshot 备份创建新卷。"]

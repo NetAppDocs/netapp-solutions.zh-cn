@@ -1,0 +1,83 @@
+---
+sidebar: sidebar 
+permalink: containers/anthos_task_deploy_netapp_hci.html 
+summary: NDE 可为 NetApp HCI 解决方案提供简单，简化的部署体验。这些步骤将在节点已进行机架安装和布线且已使用控制台在每个节点上配置 IPMI 端口后开始。要使用 NDE 部署 NetApp HCI 解决方案，请完成此页面上列出的步骤。 
+keywords: NDE, vCenter, vSphere, Active IQ 
+---
+= 3. 使用 NetApp 部署引擎部署 NetApp HCI
+
+
+NDE 可为 NetApp HCI 解决方案提供简单，简化的部署体验。有关使用 NDE 1.6 部署 NetApp HCI 系统的详细指南，请参见 link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2856899["此处"^]。
+
+这些步骤将在节点已进行机架安装和布线且已使用控制台在每个节点上配置 IPMI 端口后开始。要使用 NDE 部署 NetApp HCI 解决方案，请完成以下步骤：
+
+. 访问集群中某个存储节点的带外管理控制台，并使用默认凭据 admin/admin 登录。
++
+image::nde_login.PNG[NDE 登录]
+
+. 单击屏幕中央的 "Remote Console Preview" 图像下载 Java Web Start 启动的 JNLP 文件，该文件将启动系统的交互式控制台。
+. 启动虚拟控制台后，用户可以使用管理员 / 管理员用户名和密码组合登录到 HCI 存储节点。
+. 绑定 1G 接口必须具有静态设置的 IP ，网络掩码和网关；其 VLAN 设置为 3480 ；以及为环境定义的 DNS 服务器。
++
+image::nde_bond10g_MTU_config.PNG[绑定 1G 接口配置]
+
++
+
+NOTE: 选择要用于带内管理的子网中的 IP ，而不是要在生产环境中使用的 IP 。NDE 会在初始访问后使用生产 IP 重新配置节点。
+
++
+
+NOTE: 此任务只能在第一个存储节点上执行。之后，如果未配置，则分配给每个存储接口的自动专用 IP 地址（ APIPA ）地址将发现基础架构中的其他节点。
+
+. 绑定 10G 接口必须更改其 MTU 设置以启用巨型帧，并且其绑定模式更改为 LACP 。
++
+image::nde_bond10g_MTU_config.PNG[绑定 10G MTU 配置]
+
++
+
+NOTE: 以这种方式配置 NetApp HCI 解决方案中四个存储节点中的每个节点。然后， NDE 进程便可发现解决方案中的所有节点并对其进行配置。您无需修改两个计算节点上的 Bond10g 接口。
+
+. 完成后，打开 Web 浏览器并访问为管理端口配置的 IP 地址，以使用 NDE 启动 NetApp HCI 配置。
+. 在 Welcome to NetApp HCI 页面上，单击 Get Started 按钮。
+. 选中 Prerequisites 页面上的每个关联框，然后单击 Continue 。
+. 下一页将显示适用于 NetApp HCI 和 VMware vSphere 的最终用户许可证。如果您接受这些条款，请单击每个协议末尾的 I accept ，然后单击 Continue 。
+. 单击 Configure a New vSphere Deployment ，选择 vSphere 6.5U2 ，然后输入 vCenter Server 的完全限定域名（ FQDN ）。然后单击 Continue 。
++
+image::nde_vsphere_config.JPG[vSphere 配置]
+
+. NDE 要求提供要在环境中使用的凭据。此功能用于 VMware vSphere ， NetApp Element 存储集群和 NetApp Mnode ，后者可为集群提供管理功能。完成后，单击 Continue 。
++
+image::nde_credentials.JPG[vSphere 凭据]
+
+. 然后， NDE 将提示输入用于为 NetApp HCI 环境布线的网络拓扑。本文档中经过验证的解决方案已使用双缆线选项部署计算节点，并使用四缆线选项部署存储节点。单击 Continue （继续）。
++
+image::nde_network_topology.JPG[网络拓扑]
+
+. NDE 提供的下一页是存储网络上的 APIPA 所发现的环境清单。已选中当前正在运行 NDE 的存储节点并选中绿色复选标记。选中相应的框以向 NetApp HCI 环境添加其他节点。单击 Continue （继续）。
++
+image::nda_inventory.JPG[NDA 清单]
+
++
+
+NOTE: 如果清单屏幕中缺少任何节点，请等待几分钟，然后单击刷新清单。如果此节点仍无法显示，则可能需要对环境网络进行额外调查。
+
+. 接下来，您必须为 NetApp HCI 部署配置永久网络设置。第一页配置基础架构服务（ DNS 和 NTP ）， vCenter 网络和 Mnode 网络。
++
+image::nda_network_settings.JPG[网络设置]
+
+. 您可以在下一页配置环境中的每个节点。对于计算节点，您可以通过它配置主机名，管理网络， vMotion 网络和存储网络。对于存储节点，请为存储集群命名并配置每个节点所使用的管理和存储网络。单击 Continue （继续）。
++
+image::nda_compute_node_networking.JPG[计算节点网络]
+
+. 在下一页中，展开每个部分以查看为环境定义的所有设置，如有必要，单击编辑进行更正。此页面上还有一个复选框，用于启用或禁用 Mnode 向 NetApp Active IQ 发送实时运行状况和诊断信息。如果所有信息都正确，请单击开始部署。
++
+
+NOTE: 如果要启用 Active IQ ，请验证您的管理网络是否可以访问 Internet 。如果 NDE 无法访问 Active IQ ，则部署可能会失败。
+
+. 此时将显示一个摘要页面，并显示 NetApp HCI 解决方案的每个组件以及整个解决方案的进度条。完成后，您可以选择启动 vSphere 客户端并开始使用您的环境。
++
+image::nda_setup_complete.PNG[您的设置已完成]
+
+
+
+link:anthos_task_configure_the_vcenter_server.html["接下来：配置 vCenter Server"]

@@ -1,0 +1,87 @@
+---
+sidebar: sidebar 
+permalink: containers/anthos_task_enable_access_to_the_cluster.html 
+summary: 在部署集群并将其注册到 Google Cloud 后，必须使用 Google Cloud 控制台登录到以进行管理并接收更多集群详细信息。要使用 GKEE 控制台访问用户集群，请完成此页面上列出的步骤。 
+keywords: google cloud console, GKE, Kubernetes, Service Account 
+---
+= 10. 使用 GKEE 控制台启用对集群的访问
+
+
+在部署集群并将其注册到 Google Cloud 后，必须使用 Google Cloud 控制台登录到以进行管理并接收更多集群详细信息。详细介绍了部署完 Anthos 用户集群后用于访问这些集群的官方操作步骤 https://cloud.google.com/anthos/multicluster-management/console/logging-in["此处"]。
+
+
+NOTE: 要在 Google Cloud 控制台中访问内部集群并使用基于 VMware 的 Anthos 服务，项目和特定用户必须列入白名单。如果在部署集群后无法看到这些集群，您可能需要向 Google 打开支持服务单。
+
+未列入白名单的视图如下所示：
+
+image::google_cloud_console_1.PNG[非白名单视图]
+
+下图显示了集群视图。
+
+image::google_cloud_console_2.PNG[集群视图]
+
+要使用 GKEE 控制台访问用户集群，请完成以下步骤：
+
+. 创建一个 `node-reader.yaml` 文件，用于访问集群。
++
+[listing]
+----
+kind: clusterrole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+ name: node-reader
+rules:
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "list", "watch"]
+----
+. 使用 `kubectl` 命令将此文件应用于要登录到的集群。
++
+[listing]
+----
+ubuntu@Anthos-Admin-Workstation:~$ kubectl apply -f node-reader.yaml --kubeconfig anthos-cluster01-kubeconfig
+clusterrole.rbac.authorization.k8s.io/node-reader created
+----
+. 创建可用于登录的 Kubernetes 服务帐户（ KSA ）。将此帐户命名为使用此帐户登录到集群的用户。
++
+[listing]
+----
+ubuntu@Anthos-Admin-Workstation:~$ kubectl create serviceaccount netapp-user --kubeconfig anthos-cluster01-kubeconfig
+serviceaccount/netapp-user created
+----
+. 创建集群角色绑定资源，将视图和新创建的节点读取器角色绑定到新创建的 KSA 。
++
+[listing]
+----
+ubuntu@Anthos-Admin-Workstation:~$ kubectl create clusterrolebinding netapp-user-view --clusterrole view --serviceaccount default:netapp-user --kubeconfig anthos-cluster01-kubeconfig
+clusterrolebinding.rbac.authorization.k8s.io/netapp-user-view created
+ubuntu@Anthos-Admin-Workstation:~$ kubectl create clusterrolebinding netapp-user-node-reader --clusterrole node-reader -
+-serviceaccount default:netapp-user --kubeconfig anthos-cluster01-kubeconfig
+clusterrolebinding.rbac.authorization.k8s.io/netapp-user-node-reader created
+----
+. 如果需要进一步扩展权限，可以采用类似方式为 KSA 用户授予具有集群管理员权限的角色。
++
+[listing]
+----
+ubuntu@Anthos-Admin-Workstation:~$ kubectl create clusterrolebinding netapp-user-admin --clusterrole cluster-admin --serviceaccount default:netapp-user --kubeconfig anthos-cluster01-kubeconfig
+clusterrolebinding.rbac.authorization.k8s.io/netapp-user-admin created
+----
+. 创建 KSA 帐户并为其分配正确的权限后，您可以创建一个承载令牌，以允许通过 GKE控制 台进行访问。为此，请为机密名称设置一个系统变量，然后通过 `kubectl` 命令传递该变量以生成令牌。
++
+[listing]
+----
+ubuntu@Anthos-Admin-Workstation:~$ SECRET_NAME=$(kubectl get serviceaccount netapp-user --kubeconfig anthos-cluster01-kubeconfig -o jsonpath='{$.secrets[0].name}')
+ubuntu@Anthos-Admin-Workstation:~$ kubectl get secret ${SECRET_NAME} --kubeconfig anthos-cluster01-kubeconfig -o jsonpath='{$.data.token}' | base64 -d
+eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6Im5ldGFwcC11c2VyLXRva2VuLWJxd3piIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6Im5ldGFwcC11c2VyIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiNmIzZTFiZjQtMDE3NS0xMWVhLWEzMGUtNmFiZmRlYjYwNDBmIiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmRlZmF1bHQ6bmV0YXBwLXVzZXIifQ.YrHn4kYlb3gwxVKCLyo7p6J1f7mwwIgZqNw9eTvIkt4PfyR4IJHxQwawnJ4T6RljIFcbVSQwvWI1yGuTJ98lADdcwtFXHoEfMcOa6SIn4OMVw1d5BGloaESn8150VCK3xES2DHAmLexFBqhVBgckZ0E4fZDvn4EhYvtFVpKlRbSyaE-DHD59P1bIgPdioiKREgbOddKdMn6XTVsuip4V4tVKhktcdRNRAuw6cFDY1fPol3BFHr2aNBIe6lFLkUqvQN-9nMd63JGdHL4hfXu6PPDxc9By6LgOW0nyaH4__gexy4uIa61fNLKV2SKe4_gAN41ffOCKe4Tq8sa6zMo-8g
+----
+. 使用此令牌，您可以访问 https://console.cloud.google.com/["Google Cloud Console"] 并通过单击登录按钮并粘贴令牌登录到集群。
+
+
+image::google_cloud_console_3.PNG[登录到 Google Cloud Console]
+
+. 登录完成后，集群名称旁边会显示一个绿色复选标记，并显示有关物理环境的信息。单击集群名称可显示更详细的信息。
+
+
+image::google_cloud_console_4.PNG[Kubernetes 集群详细信息]
+
+link:anthos_task_install_and_configure_trident.html["接下来：安装和配置 NetApp Trident 存储配置程序。"]

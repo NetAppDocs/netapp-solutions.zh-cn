@@ -1,0 +1,62 @@
+---
+sidebar: sidebar 
+permalink: ai/hcaios_hardware_and_software_requirements.html 
+keywords: Hardware, Software, Requirements, NVIDIA, Kubernetes, cnvrg.io, ONTAP 
+summary:  
+---
+= 硬件和软件要求
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+本节介绍 ONTAP AI 解决方案的技术要求。
+
+
+
+== 硬件要求
+
+虽然硬件要求取决于特定的客户工作负载，但 ONTAP AI 可以在任何规模部署，用于数据工程，模型培训和生产推理，从单个 GPU 到机架级配置，用于大规模 ML/DL 操作。有关 ONTAP AI 的详细信息，请参见 https://www.netapp.com/us/products/ontap-ai.aspx["ONTAP AI 网站"^]。
+
+此解决方案已通过使用 DGX-1 系统进行计算，使用 NetApp AFF A800 存储系统和使用 Cisco Nexus 3232C 进行网络连接的验证。在此验证中使用的 AFF A800 可支持多达 10 个 DGX-1 系统，用于大多数 ML/DL 工作负载。下图显示了此验证中用于模型培训的 ONTAP AI 拓扑。
+
+image:hcaios_image6.png["错误：缺少图形映像"]
+
+要将此解决方案扩展到公有云，可以将 Cloud Volumes ONTAP 与云 GPU 计算资源一起部署，并集成到混合云数据网络结构中，使客户能够使用适合任何给定工作负载的任何资源。
+
+
+
+== 软件要求
+
+下表显示了此解决方案验证中使用的特定软件版本。
+
+|===
+| 组件 | version 
+
+
+| Ubuntu | 18.04.4 LTS 
+
+
+| NVIDIA DGX 操作系统 | 4.4.0 
+
+
+| NVIDIA DeepOps | 20.02.1 
+
+
+| Kubernetes | 1.15 
+
+
+| 掌舵 | 3.1.0 
+
+
+| cnvrg.io | 3.0.0 
+
+
+| NetApp ONTAP | 9.6P4 
+|===
+在此解决方案验证中， Kubernetes 会在 DGX-1 系统上部署为单节点集群。对于大规模部署，应部署独立的 Kubernetes 主节点，以提供高可用性的管理服务，并为 ML 和 DL 工作负载预留有价值的 DGX 资源。
+
+link:hcaios_solution_deployment_and_validation_details.html["接下来：解决方案部署和验证详细信息"]

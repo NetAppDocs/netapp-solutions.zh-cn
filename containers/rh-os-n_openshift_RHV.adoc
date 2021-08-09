@@ -1,0 +1,105 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_openshift_RHV.html 
+keywords: Red Hat Virtualization, OpenShift, RHV 
+summary: RHV 是一个企业级虚拟数据中心平台，运行在 Red Hat Enterprise Linux （ RHEL ）上，并使用 KVM 虚拟机管理程序。 
+---
+= OpenShift on Red Hat Virtualization ： Red Hat OpenShift with NetApp
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+RHV 是一个企业级虚拟数据中心平台，运行在 Red Hat Enterprise Linux （ RHEL ）上，并使用 KVM 虚拟机管理程序。
+
+有关 RHV 的详细信息，请参见 https://www.redhat.com/en/technologies/virtualization/enterprise-virtualization["Red Hat 虚拟化网站"^]。
+
+RHV 具有以下功能：
+
+* * 集中管理 VM 和主机。 * 在部署中， RHV 管理器作为物理机或虚拟机（ VM ）运行，并提供一个基于 Web 的图形用户界面，用于从中央界面管理解决方案。
+* * 自托管引擎。 * 为最大限度地降低硬件要求， RHV 允许将 RHV Manager （ RHV-M ）部署为运行子虚拟机的主机上的 VM 。
+* * 高可用性。 * 如果主机发生故障，为了避免中断，可以通过 RHV 配置虚拟机以实现高可用性。高可用性 VM 可通过故障恢复策略在集群级别进行控制。
+* * 高可扩展性。 * 一个 RHV 集群最多可以包含 200 个虚拟机管理程序主机，从而支持大规模虚拟机的要求，以容纳资源耗用的企业级工作负载。
+* * 增强的安全性。 * RHV 继承了 RHV 的功能，安全虚拟化（ sVirt ）和安全增强型 Linux （ SELinux ）技术被 RHV 用于提高主机和 VM 的安全性和增强性能。这些功能的主要优势是对虚拟机及其相关资源进行逻辑隔离。
+
+
+image:redhat_openshift_image3.png["错误：缺少图形映像"]
+
+
+
+== 网络设计
+
+NetApp 解决方案上的 Red Hat OpenShift 使用两个数据交换机提供 25 Gbps 的主数据连接。它还使用两个额外的管理交换机，这些交换机以 1 Gbps 的速度提供连接，用于存储节点的带内管理以及 IPMI 功能的带外管理。OCP 使用 RHV 上的虚拟机逻辑网络进行集群管理。本节介绍解决方案中使用的每个虚拟网段的布局和用途，并概述了部署解决方案的前提条件。
+
+
+
+=== VLAN 要求
+
+RHV 上的 Red Hat OpenShift 旨在通过使用虚拟局域网（ VLAN ）在逻辑上隔离不同用途的网络流量。此配置可以进行扩展，以满足客户需求，或者为特定网络服务提供进一步隔离。下表列出了在 NetApp 验证解决方案时实施解决方案所需的 VLAN 。
+
+|===
+| VLAN | 目的 | VLAN ID 
+
+
+| 带外管理网络 | 管理物理节点和 IPMI | 16. 
+
+
+| VM 网络 | 虚拟子系统网络访问 | 1172. 
+
+
+| 带内管理网络 | 管理 HV-H-H 节点， RHV-Manager 和 ovirtmgmt 网络 | 3343 
+
+
+| 存储网络 | 适用于 NetApp Element iSCSI 的存储网络 | 3344 
+
+
+| 迁移网络 | 用于虚拟子系统迁移的网络 | 3345 
+|===
+
+
+=== 网络基础架构支持资源
+
+在部署 OpenShift 容器平台之前，应具备以下基础架构：
+
+* 至少一个 DNS 服务器，该服务器可提供完整的主机名解析，可从带内管理网络和 VM 网络访问。
+* 至少可从带内管理网络和 VM 网络访问一个 NTP 服务器。
+* （可选）带内管理网络和 VM 网络的出站 Internet 连接。
+
+
+
+
+== 生产部署的最佳实践
+
+本节列出了企业在将此解决方案部署到生产环境之前应考虑的几个最佳实践。
+
+
+
+=== 将 OpenShift 部署到至少包含三个节点的 RHV 集群
+
+本文档中介绍的经验证的架构介绍了适用于 HA 操作的最低硬件部署，具体方法是部署两个 RHV-H 虚拟机管理程序节点，并确保采用容错配置，两个主机均可管理托管引擎，而已部署的虚拟机可在两个虚拟机管理程序之间迁移。
+
+由于 Red Hat OpenShift 最初使用三个主节点进行部署，因此在双节点配置中，可以确保至少有两个主节点将占用同一节点，如果特定节点不可用，可能会导致 OpenShift 中断。因此， Red Hat 的最佳实践是，在解决方案中至少部署三个 RHV-H 虚拟机管理程序节点，以便 OpenShift 主节点可以均匀分布，并且解决方案可以获得更多的容错能力。
+
+
+
+=== 配置虚拟机 / 主机关联性
+
+您可以通过启用虚拟机 / 主机关联性在多个虚拟机管理程序节点之间分布 OpenShift 主节点。
+
+关联性是一种为一组 VM 和 / 或主机定义规则的方法，用于确定这些 VM 是在组中的同一主机上运行还是在不同主机上运行。它通过创建由具有一组相同参数和条件的 VM 和 / 或主机组成的关联组来应用于 VM 。根据关联组中的 VM 是在组中的同一主机上运行，还是在不同主机上单独运行，此关联组的参数可以定义正关联性或负关联性。
+
+为参数定义的条件可以是强制实施，也可以是软强制实施。强制实施可确保关联组中的 VM 始终严格遵循正 / 负关联性，而不考虑外部条件。另一方面，软强制实施可确保在可行的情况下为关联组中的 VM 设置更高的优先级，以便遵循正 / 负关联性。在本文档所述的两个或三个虚拟机管理程序配置中，建议使用软关联性设置，在较大的集群中，可以依赖硬关联性来确保 OpenShift 节点的分布。
+
+要配置相关性组，请参见 https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.4/html/virtual_machine_management_guide/sect-affinity_groups["Red Hat 6.11 。关联性组文档"^]。
+
+
+
+=== 使用自定义安装文件进行 OpenShift 部署
+
+通过本文档前面讨论的交互式向导， IPI 可以轻松部署 OpenShift 集群。但是，在集群部署过程中，可能需要更改某些默认值。
+
+在这些情况下，无需立即部署集群，即可运行向导并为其分配任务，而是输出一个配置文件，以便稍后可以从该配置文件中部署集群。如果需要更改任何 IPI 默认设置，或者用户希望在其环境中部署多个相同的集群以用于多租户等其他用途，则此功能非常有用。有关为 OpenShift 创建自定义安装配置的详细信息，请参见 https://docs.openshift.com/container-platform/4.4/installing/installing_rhv/installing-rhv-customizations.html["Red Hat OpenShift 通过自定义在 RHV 上安装集群"^]。
+
+link:rh-os-n_overview_netapp.html["接下来： NetApp 存储概述。"]

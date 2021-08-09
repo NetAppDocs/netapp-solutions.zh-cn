@@ -1,0 +1,214 @@
+---
+sidebar: sidebar 
+permalink: ent-apps-db/saphana-fas-nfs_adding_additional_data_volume_partitions.html 
+keywords: adding, additional, data, volume, partitions, host, enabling sap, hana, fas 
+summary: 从 SAP HANA 2.0 SPS4 开始，您可以配置其他数据卷分区，从而可以为 SAP HANA 租户数据库的数据卷配置两个或更多卷。 
+---
+= 添加其他数据卷分区
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:saphana-fas-nfs_sap_hana_software_installation.html["先前版本： SAP HANA 软件安装。"]从 SAP HANA 2.0 SPS4 开始，您可以配置其他数据卷分区，从而可以为 SAP HANA 租户数据库的数据卷配置两个或更多卷。您还可以扩展到超出单个卷的大小和性能限制的范围。
+
+
+NOTE: 对于 SAP HANA 单主机和多主机系统，可以为数据卷使用两个或更多个单独的卷。您可以随时添加其他数据卷分区，但这样做可能需要重新启动 SAP HANA 数据库。
+
+
+
+== 启用其他数据卷分区
+
+. 要启用其他数据卷分区，请使用 SAP HANA Studio 或 SYSTEMDB 配置中的 Cockpit 在 `global.ini` 中添加以下条目。
+
+
+....
+[customizable_functionalities]
+persistence_datavolume_partition_multipath = true
+....
+
+NOTE: 手动将参数添加到 `global.ini` 文件需要重新启动数据库。
+
+
+
+== 单主机 SAP HANA 系统的卷配置
+
+具有多个分区的单主机 SAP HANA 系统的卷布局与具有一个数据卷分区的系统的布局类似，但另一个数据卷存储在与日志卷和另一个数据卷不同的聚合上。下表显示了具有两个数据卷分区的 SAP HANA 单主机系统的示例配置。
+
+|===
+| 控制器 A 上的聚合 1 | 控制器 A 上的聚合 2 | 控制器 B 上的聚合 1 | 控制器 b 上的聚合 2 
+
+
+| 数据卷： sid_data_mnt00001 | 共享卷： sid_shared | 数据卷： sid_data2_mnt00001 | 日志卷： sid_log_mnt00001 
+|===
+下表显示了具有两个数据卷分区的单主机系统的挂载点配置示例。
+
+|===
+| Junction path | 目录 | HANA 主机上的挂载点 
+
+
+| sid_data_mnt00001 | – | /ha/data/sid/mnt00001 
+
+
+| sid_data2_mnt00001 | – | /ha/data2/sid/mnt00001 
+
+
+| sid_log_mnt00001 | – | /ha/log/sid/mnt00001 
+
+
+| sid_shared | use-sap 共享 | /usr/sap/SID /has/shared 
+|===
+创建新数据卷并使用 ONTAP 系统管理器或 ONTAP 集群命令行界面将其挂载到命名空间。
+
+
+
+== 多主机 SAP HANA 系统的卷配置
+
+具有多个分区的多主机 SAP HANA 系统的卷布局与具有一个数据卷分区的系统的布局类似，但另一个数据卷存储在与日志卷和另一个数据卷不同的聚合上。下表显示了具有两个数据卷分区的 SAP HANA 多主机系统的示例配置。
+
+|===
+| 目的 | 控制器 A 上的聚合 1 | 控制器 A 上的聚合 2 | 控制器 B 上的聚合 1 | 控制器 B 上的聚合 2 
+
+
+| 节点 1 的数据卷和日志卷 | 数据卷： sid_data_mnt00001 | – | 日志卷： sid_log_mnt00001 | Data2 卷： sid_data2_mnt00001 
+
+
+| 节点 2 的数据卷和日志卷 | 日志卷： sid_log_mnt00002 | Data2 卷： sid_data2_mnt00002 | 数据卷： sid_data_mnt00002 | – 
+
+
+| 节点 3 的数据卷和日志卷 | – | 数据卷： sid_data_mnt00003 | Data2 卷： sid_data2_mnt00003 | 日志卷： sid_log_mnt00003 
+
+
+| 节点 4 的数据卷和日志卷 | Data2 卷： sid_data2_mnt00004 | 日志卷： sid_log_mnt00004 | – | 数据卷： sid_data_mnt00004 
+
+
+| 所有主机的共享卷 | 共享卷： sid_shared | – | – | – 
+|===
+下表显示了具有两个数据卷分区的单主机系统的挂载点配置示例。
+
+|===
+| Junction path | 目录 | SAP HANA 主机上的挂载点 | 注意 
+
+
+| sid_data_mnt00001 | – | /ha/data/sid/mnt00001 | 已挂载到所有主机上 
+
+
+| sid_data2_mnt00001 | – | /ha/data2/sid/mnt00001 | 已挂载到所有主机上 
+
+
+| sid_log_mnt00001 | – | /ha/log/sid/mnt00001 | 已挂载到所有主机上 
+
+
+| sid_data_mnt00002 | – | /ha/data/sid/mnt00002 | 已挂载到所有主机上 
+
+
+| sid_data2_mnt00002 | – | /ha/data2/sid/mnt00002 | 已挂载到所有主机上 
+
+
+| sid_log_mnt00002 | – | /ha/log/sid/mnt00002 | 已挂载到所有主机上 
+
+
+| sid_data_mnt00003 | – | /ha/data/sid/mnt00003 | 已挂载到所有主机上 
+
+
+| sid_data2_mnt00003 | – | /ha/data2/sid/mnt00003 | 已挂载到所有主机上 
+
+
+| sid_log_mnt00003 | – | /ha/log/sid/mnt00003 | 已挂载到所有主机上 
+
+
+| sid_data_mnt00004 | – | /ha/data/sid/mnt00004 | 已挂载到所有主机上 
+
+
+| sid_data2_mnt00004 | – | /ha/data2/sid/mnt00004 | 已挂载到所有主机上 
+
+
+| sid_log_mnt00004 | – | /ha/log/sid/mnt00004 | 已挂载到所有主机上 
+
+
+| sid_shared | 共享 | /ha/shared/SID | 已挂载到所有主机上 
+
+
+| sid_shared | usr-sap-host1 | /usr/sap/SID | 挂载在主机 1 上 
+
+
+| sid_shared | usr-sap-host2. | /usr/sap/SID | 挂载在主机 2 上 
+
+
+| sid_shared | usr-sap-host3. | /usr/sap/SID | 挂载在主机 3 上 
+
+
+| sid_shared | usr-sap-host4. | /usr/sap/SID | 挂载在主机 4 上 
+
+
+| sid_shared | usr-sap-host5 | /usr/sap/SID | 挂载在主机 5 上 
+|===
+创建新数据卷并使用 ONTAP 系统管理器或 ONTAP 集群命令行界面将其挂载到命名空间。
+
+
+
+== 主机配置
+
+除了一节中所述的任务之外 link:saphana-fas-nfs_host_setup.html["" 主机设置 " ，"] 您必须为新的附加数据卷创建其他挂载点和 fstab 条目，并且必须挂载新卷。
+
+. 创建其他挂载点：
++
+** 对于单主机系统，创建挂载点并在数据库主机上设置权限。
++
+....
+sapcc-hana-tst-06:/ # mkdir -p /hana/data2/SID/mnt00001
+sapcc-hana-tst-06:/ # chmod –R 777 /hana/data2/SID
+....
+** 对于多主机系统，创建挂载点并在所有工作主机和备用主机上设置权限。以下示例命令适用于 2+1 多主机 HANA 系统。
++
+*** 第一员工主机：
++
+....
+sapcc-hana-tst-06:~ # mkdir -p /hana/data2/SID/mnt00001
+sapcc-hana-tst-06:~ # mkdir -p /hana/data2/SID/mnt00002
+sapcc-hana-tst-06:~ # chmod -R 777 /hana/data2/SID
+....
+*** 第二工作主机：
++
+....
+sapcc-hana-tst-07:~ # mkdir -p /hana/data2/SID/mnt00001
+sapcc-hana-tst-07:~ # mkdir -p /hana/data2/SID/mnt00002
+sapcc-hana-tst-07:~ # chmod -R 777 /hana/data2/SID
+....
+*** 备用主机：
++
+....
+sapcc-hana-tst-07:~ # mkdir -p /hana/data2/SID/mnt00001
+sapcc-hana-tst-07:~ # mkdir -p /hana/data2/SID/mnt00002
+sapcc-hana-tst-07:~ # chmod -R 777 /hana/data2/SID
+....
+
+
+
+
+. 将其他文件系统添加到所有主机上的 ` /etc/fstab` 配置文件中。以下是使用 NFSv4.1 的单主机系统的示例：
++
+....
+<storage-vif-data02>:/SID_data2_mnt00001 /hana/data2/SID/mnt00001 nfs rw, vers=4minorversion=1,hard,timeo=600,rsize=1048576,wsize=1048576,bg,noatime,lock 0 0
+....
++
+
+NOTE: 使用不同的存储虚拟接口连接到每个数据卷，以确保每个卷使用不同的 TCP 会话。如果 nconnect 挂载选项可用于您的操作系统，您也可以使用它。
+
+. 要挂载文件系统，请运行 `mount – a` 命令。
+
+
+
+
+== 添加其他数据卷分区
+
+对租户数据库执行以下 SQL 语句，以便向租户数据库添加额外的数据卷分区。使用指向其他卷的路径：
+
+....
+ALTER SYSTEM ALTER DATAVOLUME ADD PARTITION PATH '/hana/data2/SID/';
+....
+image:saphana-fas-nfs_image19.jpg["错误：缺少图形映像"]
+
+link:saphana-fas-nfs_where_to_find_additional_information.html["下一步：从何处查找追加信息。"]

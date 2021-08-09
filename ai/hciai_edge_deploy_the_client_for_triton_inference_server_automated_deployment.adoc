@@ -1,0 +1,59 @@
+---
+sidebar: sidebar 
+permalink: ai/hciai_edge_deploy_the_client_for_triton_inference_server_automated_deployment.html 
+keywords:  
+summary:  
+---
+= 为 Triton 推理服务器部署客户端（自动化部署）
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+要为 Triton 推理服务器部署客户端，请完成以下步骤：
+
+. 打开 VI 编辑器，为 Triton 客户端创建部署，然后调用文件 `Triton_client.YAML` 。
++
+....
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: triton-client
+  name: triton-client
+  namespace: triton
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: triton-client
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: triton-client
+        version: v1
+    spec:
+      containers:
+      - image: nvcr.io/nvidia/tritonserver:20.07- v1- py3-clientsdk
+        imagePullPolicy: IfNotPresent
+        name: triton-client
+        resources:
+          limits:
+            cpu: "2"
+            memory: 4Gi
+          requests:
+            cpu: "2"
+            memory: 4Gi
+....
+. 部署客户端。
++
+....
+kubectl apply -f triton_client.yaml
+....
+
+
+link:hciai_edge_collect_inference_metrics_from_triton_inference_server.html["下一步：从 Triton 推理服务器收集推理指标"]

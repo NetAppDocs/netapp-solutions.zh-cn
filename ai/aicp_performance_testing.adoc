@@ -1,0 +1,33 @@
+---
+sidebar: sidebar 
+permalink: ai/aicp_performance_testing.html 
+keywords: Performance, Testing, benchmark, Tensorflow, Docker 
+summary: 在创建此解决方案时，我们执行了简单的性能比较。我们使用 Kubernetes 执行了多个标准 NetApp 基准测试作业，并将基准测试结果与使用简单 Docker run 命令执行的执行情况进行了比较。 
+---
+= 性能测试
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+在创建此解决方案时，我们执行了简单的性能比较。我们使用 Kubernetes 执行了多个标准 NetApp AI 基准测试作业，并将基准测试结果与使用简单 Docker run 命令执行的执行情况进行了比较。我们没有发现任何明显的性能差异。因此，我们得出的结论是，使用 Kubernetes 编排容器化 AI 培训作业不会对性能产生负面影响。有关性能比较结果，请参见下表。
+
+|===
+| 基准测试 | 数据集 | Docker 运行（映像 / 秒） | Kubernetes （图像 / 秒） 
+
+
+| 单节点 TensorFlow | 合成数据 | 6,667.2475 | 6,661.93125 
+
+
+| 单节点 TensorFlow | ImageNet | 6,570.2025 | 6,530.59125 
+
+
+| 同步分布式双节点 TensorFlow | 合成数据 | 13,213.70625 | 13,218.288125 
+
+
+| 同步分布式双节点 TensorFlow | ImageNet | 12,941.69125 | 12,881.33875 
+|===
+link:aicp_conclusion.html["接下来：总结。"]

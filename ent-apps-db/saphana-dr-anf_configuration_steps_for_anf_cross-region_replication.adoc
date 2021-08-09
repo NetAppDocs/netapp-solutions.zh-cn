@@ -1,0 +1,94 @@
+---
+sidebar: sidebar 
+permalink: ent-apps-db/saphana-dr-anf_configuration_steps_for_anf_cross-region_replication.html 
+keywords: configuration, steps, anf, cross, region, replication, preparation, 
+summary: 在配置卷复制之前，必须在灾难恢复站点上执行几个准备步骤。 
+---
+= ANF 跨区域复制的配置步骤
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:saphana-dr-anf_lab_setup.html["上一步：实验室设置。"]
+
+在配置卷复制之前，必须在灾难恢复站点上执行几个准备步骤。
+
+* NetApp 帐户必须可用，并且必须与源帐户配置相同的 Azure 订阅。
+* 必须使用上述 NetApp 帐户配置可用的容量池。
+* 虚拟网络必须可用并已配置。
+* 在虚拟网络中，必须有一个委派子网可用，并将其配置为可用于 ANF 。
+
+
+现在，可以为 HANA 数据， HANA 共享卷和 HANA 日志备份卷创建保护卷。下表显示了我们实验室设置中配置的目标卷。
+
+
+NOTE: 为了实现最佳延迟，在发生灾难故障转移时，必须将卷放置在靠近运行 SAP HANA 的 VM 的位置。因此， DR 卷需要与任何其他 SAP HANA 生产系统相同的固定过程。
+
+|===
+| HANA 卷 | 源 | 目标 | 复制计划 
+
+
+| HANA 数据卷 | PR1-data-mnt00001 | PR1-data-mnt00001-sm-dest | 每天 
+
+
+| HANA 共享卷 | PR1-shared | PR1-shared-sm-dest | 每小时 
+
+
+| HANA 日志 / 目录备份卷 | 哈纳巴克 up | hanabackup-sm-dest | 每小时 
+|===
+对于每个卷，必须执行以下步骤：
+
+. 在灾难恢复站点创建新的保护卷：
++
+.. 提供卷名称，容量池，配额和网络信息。
+.. 提供协议和卷访问信息。
+.. 提供源卷 ID 和复制计划。
+.. 创建目标卷。
+
+
+. 在源卷上授权复制。
++
+** 提供目标卷 ID 。
+
+
+
+
+以下屏幕截图详细显示了配置步骤。
+
+在灾难恢复站点上，通过选择卷并单击添加数据复制来创建新的保护卷。在基础选项卡中，您必须提供卷名称，容量池和网络信息。
+
+
+NOTE: 可以根据容量要求设置卷的配额，因为卷性能不会影响复制过程。如果发生灾难恢复故障转移，则必须调整配额以满足实际的性能要求。
+
+
+NOTE: 如果已为容量池配置手动 QoS ，则除了容量要求之外，您还可以配置吞吐量。与上述相同，您可以在正常操作期间将吞吐量配置为低值，并在发生灾难恢复故障转移时增加吞吐量。
+
+image:saphana-dr-anf_image10.png["错误：缺少图形映像"]
+
+在协议选项卡中，您必须提供网络协议，网络路径和导出策略。
+
+
+NOTE: 此协议必须与源卷使用的协议相同。
+
+image:saphana-dr-anf_image11.png["错误：缺少图形映像"]
+
+在复制选项卡中，您必须配置源卷 ID 和复制计划。对于数据卷复制，我们为实验室设置配置了每日复制计划。
+
+
+NOTE: 可以从源卷的属性屏幕复制源卷 ID 。
+
+image:saphana-dr-anf_image12.png["错误：缺少图形映像"]
+
+最后一步是，您必须提供目标卷的 ID 来在源卷上授权复制。
+
+
+NOTE: 您可以从目标卷的属性屏幕复制目标卷 ID 。
+
+image:saphana-dr-anf_image13.png["错误：缺少图形映像"]
+
+必须对 HANA 共享卷和日志备份卷执行相同的步骤。
+
+link:saphana-dr-anf_monitoring_anf_cross-region_replication.html["下一步：监控 ANF 跨区域复制。"]

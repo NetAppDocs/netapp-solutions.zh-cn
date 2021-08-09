@@ -1,0 +1,69 @@
+---
+sidebar: sidebar 
+permalink: ai/osrunai_achieving_high_cluster_utilization_with_over-uota_gpu_allocation.html 
+keywords:  
+summary:  
+---
+= 通过过度配额 GPU 分配实现高集群利用率
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+在本节和各节中 link:osrunai_basic_resource_allocation_fairness.html["基本资源分配公平"]，和 ，我们设计了高级测试方案，用于演示运行： AI 流程编排功能，以实现复杂的工作负载管理，自动抢占式计划和超配额 GPU 配置。我们这样做是为了在 ONTAP AI 环境中实现高集群资源利用率并优化企业级数据科学团队的工作效率。
+
+对于这三个部分，请设置以下项目和配额：
+
+|===
+| 项目 | 配额 
+
+
+| 团队 A | 4. 
+
+
+| 团队 b | 2. 
+
+
+| 团队 c | 2. 
+
+
+| 团队 | 8. 
+|===
+此外，我们还会对这三个部分使用以下容器：
+
+* Jupyter 笔记本电脑： `jupyter/base-notebook`
+* Run ： AI Quickstart ： `gcr.io/run-ai-demo/Quickstart`
+
+
+我们为此测试场景设定了以下目标：
+
+* 展示资源配置的简便性以及如何从用户中提取资源
+* 展示用户如何轻松配置 GPU 的小部分和 GPU 的整数
+* 展示如果集群中存在可用 GPU ，系统如何通过允许团队或用户超过其资源配额来消除计算瓶颈
+* 展示如何在运行计算密集型作业（例如 NetApp 容器）时使用 NetApp 解决方案消除数据管道瓶颈
+* 显示如何使用系统运行多种类型的容器
++
+** Jupyter 笔记本电脑
+** 运行： AI 容器
+
+
+* 集群已满时显示高利用率
+
+
+有关在测试期间执行的实际命令序列的详细信息，请参见 link:osrunai_testing_details_for_section_4.8.html["第 4.8 节的测试详细信息"]。
+
+提交所有 13 个工作负载后，您可以看到一个容器名称和分配的 GPU 列表，如下图所示。我们有七个培训和六个互动作业，模拟四个数据科学团队，每个团队都有自己的模型运行或开发。对于交互式作业，各个开发人员都在使用 Jupyter 笔记本电脑编写或调试其代码。因此，它适合在不使用过多集群资源的情况下配置 GPU 分段。
+
+image:osrunai_image8.png["错误：缺少图形映像"]
+
+此测试场景的结果如下：
+
+* 集群应已满：使用了 16/16 个 GPU 。
+* 集群利用率高。
+* 由于分配百分比的影响，比 GPU 的实验更多。
+* `team-d` 并未使用所有配额；因此， `team-b` 和 `team-c` 可以在其实验中使用额外的 GPU ，从而加快创新速度。
+
+
+link:osrunai_basic_resource_allocation_fairness.html["下一步：基本资源分配公平"]

@@ -1,0 +1,292 @@
+---
+sidebar: sidebar 
+permalink: infra/rhv-2._configure_data_switches.html 
+keywords: Mellanox, MLAG cluster, fault tolerance, ILP, LLDP 
+summary:  
+---
+= 2. 配置数据交换机：采用 RHV 的 NetApp HCI
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+此部署操作步骤中使用 Mellanox SN2010 交换机为计算和存储节点的数据平面提供 25Gbps 连接。这些步骤将在对交换机进行机架安装，布线并完成初始设置过程后开始。要配置交换机以提供与基础架构的数据连接，请完成以下步骤：
+
+
+
+=== 创建 MLAG 集群以提供容错功能
+
+. 在每个 Mellanox SN210 交换机上运行以下命令以进行常规配置：
++
+.. 进入配置模式：
++
+....
+Switch-01 enable
+Switch-01 configure terminal
+....
+.. 启用对等链路（ IPL ）所需的 LACP 。
++
+....
+Switch-01 (config) # lacp
+....
+.. 启用链路层发现协议（ LLDP ）。
++
+....
+Switch-01 (config) # lldp
+....
+.. 启用 IP 路由。
++
+....
+Switch-01 (config) # ip routing
+....
+.. 启用 MLAG 协议。
++
+....
+Switch-01 (config) # protocol mlag
+....
+.. 启用全局 QoS 。
++
+....
+Switch-01 (config) # dcb priority-flow-control enable force
+....
+
+
+. 要使 MLAG 正常运行，必须通过 IPL 使交换机彼此建立对等关系。此链路应包含两个或更多物理链路，以实现冗余。IPL 的 MTU 设置为巨型帧（ 9216 ），默认情况下，所有 VLAN 均处于启用状态。对域中的每个交换机运行以下命令：
++
+.. 为 IPL 创建端口通道 10 。
++
+....
+Switch-01 (config) # interface port-channel 10
+Switch-01 (config interface port-channel 10) # description IPL
+Switch-01 (config interface port-channel 10) # exit
+....
+.. 将接口 ETH 1/20 和 1/22 添加到端口通道。
++
+....
+Switch-01 (config) # interface ethernet 1/20 channel-group 10 mode active
+Switch-01 (config) # interface ethernet 1/20 description ISL-SWB_01
+Switch-01 (config) # interface ethernet 1/22 channel-group 10 mode active
+Switch-01 (config) # interface ethernet 1/22 description ISL-SWB_02
+....
+.. 创建一个超出专用于 IPL 流量的标准范围的 VLAN 。
++
+....
+Switch-01 (config) # vlan 4000
+Switch-01 (config vlan 4000) # name IPL VLAN
+Switch-01 (config vlan 4000) # exit
+....
+.. 将端口通道定义为 IPL 。
++
+....
+Switch-01 (config) # interface port-channel 10 ipl 1
+Switch-01 (config) # interface port-channel 10 dcb priority-flow-control mode on force
+....
+.. 为每个 IPL 成员设置一个 IP （不可路由；它不会在交换机外部公布）。
++
+....
+Switch-01 (config) # interface vlan 4000
+Switch-01 (config vlan 4000) # ip address 10.0.0.1 255.255.255.0
+Switch-01 (config vlan 4000) # ipl 1 peer-address 10.0.0.2
+Switch-01 (config vlan 4000) # exit
+....
+
+
+. 为这两台交换机创建唯一的 MLAG 域名并分配一个 MLAG 虚拟 IP （ VIP ）。此 IP 用于在两个交换机之间发送保持活动状态的检测信号消息。在域中的每个交换机上运行以下命令：
++
+.. 创建 MLAG 域并设置 IP 地址和子网。
++
+....
+Switch-01 (config) # mlag-vip MLAG-VIP-DOM ip a.b.c.d /24 force
+....
+.. 为系统 MLAG 创建虚拟 MAC 地址。
++
+....
+Switch-01 (config) # mlag system-mac AA:BB:CC:DD:EE:FF
+....
+.. 配置 MLAG 域，使其全局处于活动状态。
++
+....
+Switch-01 (config) # no mlag shutdown
+....
+
+
+
+
+用于 MLAG VIP 的 IP 必须与交换机管理网络（ mgmt0 ）位于同一子网中。此外，使用的 MAC 地址可以是任何单播 MAC 地址，并且必须在 MLAG 域中的两个交换机上将其设置为相同的值。
+
+
+
+=== 配置端口以连接到存储和计算主机
+
+. 创建支持 NetApp HCI 服务所需的每个 VLAN 。在域中的每个交换机上运行以下命令：
++
+.. 创建 VLAN 。
++
+....
+Switch-01 (config) # vlan 1172
+Switch-01 (config vlan 1172) exit
+Switch-01 (config) # vlan 3343
+Switch-01 (config vlan 3343) exit
+Switch-01 (config) # vlan 3344
+Switch-01 (config vlan 3345) exit
+Switch-01 (config) # vlan 3345
+Switch-01 (config vlan 3346) exit
+....
+.. 为每个 VLAN 创建名称，以便于进行核算。
++
+....
+Switch-01 (config) # vlan 1172 name “MGMT_Network”
+Switch-01 (config) # vlan 3343 name “Storage_Network”
+Switch-01 (config) # vlan 3345 name “Migration_Network”
+Switch-01 (config) # vlan 3346 name “VM_Network”
+....
+
+
+. 在标识的端口上创建 MLAG 接口和混合 VLAN ，以便在交换机之间分布连接并为 NetApp HCI 计算节点标记适当的 VLAN 。
++
+.. 选择要使用的端口。
++
+....
+Switch-01 (config) # interface ethernet 1/15
+....
+.. 设置每个端口的 MTU 。
++
+....
+Switch-01 (config interface ethernet 1/15) # mtu 9216 force
+....
+.. 修改每个端口的生成树设置。
++
+....
+Switch-01 (config interface ethernet 1/15) # spanning-tree bpdufilter enable
+Switch-01 (config interface ethernet 1/15) # spanning-tree port type edge
+Switch-01 (config interface ethernet 1/15) # spanning-tree bpduguard enable
+....
+.. 将交换机端口模式设置为混合模式。
++
+....
+Switch-01 (config interface ethernet 1/15) # switchport mode hybrid
+Switch-01 (config interface ethernet 1/15) # exit
+....
+.. 为要修改的每个端口创建说明。
++
+....
+Switch-01 (config) # interface ethernet 1/15 description HCI-CMP-01 PortD
+....
+.. 创建和配置 MLAG 端口通道。
++
+....
+Switch-01 (config) # interface mlag-port-channel 215
+Switch-01 (config interface mlag-port-channel 215) # exit
+Switch-01 (config) # interface mlag-port-channel 215 no shutdown
+Switch-01 (config) # interface mlag-port-channel 215 mtu 9216 force
+Switch-01 (config) # interface ethernet 1/15 lacp port-priority 10
+Switch-01 (config) # interface ethernet 1/15 lacp rate fast
+Switch-01 (config) # interface ethernet 1/15 mlag-channel-group 215 mode active
+....
+.. 为 NetApp HCI 环境标记适当的 VLAN 。
++
+....
+Switch-01 (config) # interface mlag-port-channel 215 switchport hybrid
+Switch-01 (config) # interface mlag-port-channel 215 switchport hybrid allowed-vlan add 1172
+Switch-01 (config) # interface mlag-port-channel 215 switchport hybrid allowed-vlan add 3343
+Switch-01 (config) # interface mlag-port-channel 215 switchport hybrid allowed-vlan add 3345
+Switch-01 (config) # interface mlag-port-channel 215 switchport hybrid allowed-vlan add 3346
+....
+
+
+. 创建标识的 MLAG 接口和混合 VLAN 端口，以便在交换机之间分布连接并为 NetApp HCI 存储节点标记适当的 VLAN 。
++
+.. 选择要使用的端口。
++
+....
+Switch-01 (config) # interface ethernet 1/3
+....
+.. 设置每个端口的 MTU 。
++
+....
+Switch-01 (config interface ethernet 1/3) # mtu 9216 force
+....
+.. 修改每个端口的生成树设置。
++
+....
+Switch-01 (config interface ethernet 1/3) # spanning-tree bpdufilter enable
+Switch-01 (config interface ethernet 1/3) # spanning-tree port type edge
+Switch-01 (config interface ethernet 1/3) # spanning-tree bpduguard enable
+....
+.. 将交换机端口模式设置为混合模式。
++
+....
+Switch-01 (config interface ethernet 1/3) # switchport mode hybrid
+Switch-01 (config interface ethernet 1/3) # exit
+....
+.. 为要修改的每个端口创建说明。
++
+....
+Switch-01 (config) # interface ethernet 1/3 description HCI-STG-01 PortD
+....
+.. 创建和配置 MLAG 端口通道。
++
+....
+Switch-01 (config) # interface mlag-port-channel 203
+Switch-01 (config interface mlag-port-channel 203) # exit
+Switch-01 (config) # interface mlag-port-channel 203 no shutdown
+Switch-01 (config) # interface mlag-port-channel 203 mtu 9216 force
+Switch-01 (config) # interface mlag-port-channel 203 lacp-individual enable force
+Switch-01 (config) # interface ethernet 203 lacp port-priority 10
+Switch-01 (config) # interface ethernet 203 lacp rate fast
+Switch-01 (config) # interface ethernet 1/3 mlag-channel-group 203 mode active
+....
+.. 为存储环境标记适当的 VLAN 。
++
+....
+Switch-01 (config) # interface mlag-port-channel 203 switchport mode hybrid
+Switch-01 (config) # interface mlag-port-channel 203 switchport hybrid allowed-vlan add 1172
+Switch-01 (config) # interface mlag-port-channel 203 switchport hybrid allowed-vlan add 3343
+....
+
+
+
+
+
+NOTE: 本节中的配置以单个端口的配置为例。此外，还必须为解决方案中连接的每个附加端口以及 MLAG 域中第二个交换机的关联端口运行这些端口。NetApp 建议更新每个端口的说明，以反映正在另一交换机上进行布线和配置的设备端口。
+
+
+
+=== 为交换机创建上行链路端口
+
+. 创建一个 MLAG 接口，以便从核心网络为两个 Mellanox SN2010 交换机提供上行链路。
++
+....
+Switch-01 (config) # interface mlag port-channel 201
+Switch-01 (config interface mlag port-channel) # description Uplink CORE-SWITCH port PORT
+Switch-01 (config interface mlag port-channel) # exit
+....
+. 配置 MLAG 成员。
++
+....
+Switch-01 (config) # interface ethernet 1/1 description Uplink to CORE-SWITCH port PORT
+Switch-01 (config) # interface ethernet 1/1 speed 10000 force
+Switch-01 (config) # interface mlag-port-channel 201 mtu 9216 force
+Switch-01 (config) # interface ethernet 1/1 mlag-channel-group 201 mode active
+....
+. 将交换机端口模式设置为混合模式，并允许核心上行链路交换机上的所有 VLAN 。
++
+....
+Switch-01 (config) # interface mlag-port-channel switchport mode hybrid
+Switch-01 (config) # interface mlag-port-channel switchport hybrid allowed-vlan all
+....
+. 验证 MLAG 接口是否已启动。
++
+....
+Switch-01 (config) # interface mlag-port-channel 201 no shutdown
+Switch-01 (config) # exit
+....
+
+
+
+NOTE: 此外，本节中的配置还必须在 MLAG 域中的第二台交换机上运行。NetApp 建议更新每个端口的说明，以反映正在另一交换机上进行布线和配置的设备端口。
+
+link:rhv-3._deploy_element_storage_system.html["下一步： 3.在 HCI 存储节点上部署 Element 存储系统"]

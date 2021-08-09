@@ -1,0 +1,89 @@
+---
+sidebar: sidebar 
+permalink: vdi-vds/hcvdivds_data_management.html 
+keywords: File services, Azure, Command Center, SMB, Global File Cache, SaaS Backup 
+summary: 在部署过程中，您可以选择文件服务方法来托管用户配置文件，共享数据和主驱动器文件夹。可用选项包括文件服务器， Azure 文件或 Azure NetApp Files 。但是，在部署后，您可以使用命令中心工具修改此选项，使其指向任何 SMB 共享。使用 NetApp ONTAP 托管具有多种优势。 
+---
+= 数据管理
+
+
+在部署过程中，您可以选择文件服务方法来托管用户配置文件，共享数据和主驱动器文件夹。可用选项包括文件服务器， Azure 文件或 Azure NetApp Files 。但是，在部署后，您可以使用命令中心工具修改此选项，使其指向任何 SMB 共享。 link:hcvdivds_why_ontap.html["使用 NetApp ONTAP 托管具有多种优势"]。要了解如何更改 SMB 共享，请参见 https://docs.netapp.com/us-en/virtual-desktop-service/Architectural.change_data_layer.html["更改数据层"^]。
+
+
+
+== 全局文件缓存
+
+如果用户分布在全局命名空间的多个站点上，则全局文件缓存有助于减少频繁访问的数据的延迟。可以使用配置收集和脚本化事件自动部署全局文件缓存。全局文件缓存可在本地处理读写缓存，并在不同位置保持文件锁定。全局文件缓存可用于任何 SMB 文件服务器，包括 Azure NetApp Files 。
+
+image:hcvdivds_image13.png["错误：缺少图形映像"]
+
+全局文件缓存需要满足以下要求：
+
+* 管理服务器（许可证管理服务器）
+* 核心
+* 具有足够磁盘容量以缓存数据的边缘
+
+
+要下载软件并计算 Edge 的磁盘缓存容量，请参见 https://docs.netapp.com/us-en/occm/download_gfc_resources.html#download-required-resources["GFC 文档"^]。
+
+为了进行验证，我们在 Azure 的同一个虚拟机上部署了核心资源和管理资源，并在 NetApp HCI 上部署了边缘资源。请注意，核心是需要进行大量数据访问的位置，边缘是核心的一部分。安装软件后，您必须激活已激活的许可证，然后才能使用。为此，请完成以下步骤：
+
+. 在 License Configuration 部分下，使用链接 Click here 完成许可证激活。然后注册核心。
++
+image:hcvdivds_image27.png["错误：缺少图形映像"]
+
+. 提供用于全局文件缓存的服务帐户。有关此帐户所需的权限，请参见 https://docs.netapp.com/us-en/occm/download_gfc_resources.html#download-required-resources["GFC 文档"^]。
++
+image:hcvdivds_image28.png["错误：缺少图形映像"]
+
+. 添加新的后端文件服务器并提供文件服务器名称或 IP 。
++
+image:hcvdivds_image29.png["错误：缺少图形映像"]
+
+. 在边缘上，缓存驱动器必须具有驱动器盘符 D如果不是，请使用 diskpart.exe 选择卷并更改驱动器号。以边缘身份向许可证服务器注册。
++
+image:hcvdivds_image30.png["错误：缺少图形映像"]
+
+
+
+如果启用了核心自动配置，则会自动从许可证管理服务器检索核心信息。
+
+image:hcvdivds_image31.png["错误：缺少图形映像"]
+
+在任何客户端计算机上，用于访问文件服务器上共享的管理员都可以使用 UNC 路径 ` \\< 边缘服务器名称 >\FASTDATA\< 核心服务器名称 >\< 后端文件服务器名称 >\< 共享名称 >` 使用 GFC 边缘访问该共享。管理员可以将此路径包含在用户登录脚本或 GPO 中，以便在边缘位置映射用户驱动器。
+
+为了为全球用户提供透明的访问权限，管理员可以设置 Microsoft 分布式文件系统（ DFS ），使其链接指向文件服务器共享和边缘位置。
+
+image:hcvdivds_image32.png["错误：缺少图形映像"]
+
+当用户根据与站点关联的子网使用 Active Directory 凭据登录时， DFS 客户端将使用相应的链接来访问数据。
+
+image:hcvdivds_image33.png["错误：缺少图形映像"]
+
+文件图标会根据文件是否已缓存而变化；未缓存的文件在图标的左下角显示灰色 X 。边缘位置的用户访问某个文件后，该文件将被缓存，并且图标将发生变化。
+
+image:hcvdivds_image34.png["错误：缺少图形映像"]
+
+如果某个文件已打开，而另一个用户正在尝试从边缘位置打开同一文件，则系统会提示用户选择以下内容：
+
+image:hcvdivds_image35.png["错误：缺少图形映像"]
+
+如果用户选择在原始副本可用时接收通知的选项，则系统会按如下所示通知用户：
+
+image:hcvdivds_image36.png["错误：缺少图形映像"]
+
+有关详细信息，请参见此 https://www.youtube.com/watch?v=91LKb1qsLIM["有关 Talon 和 Azure NetApp Files 部署的视频"^]。
+
+
+
+== SaaS 备份
+
+NetApp VDS 可为 Salesforce 和 Microsoft Office 365 （包括 Exchange ， SharePoint 和 Microsoft OneDrive ）提供数据保护。下图显示了 NetApp VDS 如何为这些数据服务提供 SaaS Backup 。
+
+image:hcvdivds_image14.png["错误：缺少图形映像"]
+
+有关 Microsoft Office 365 数据保护的演示，请参见 https://www.youtube.com/watch?v=MRPBSu8RaC0&ab_channel=NetApp["此视频"^]。
+
+有关 Salesforce 数据保护的演示，请参见 https://www.youtube.com/watch?v=1j1l3Qwo9nw&ab_channel=NetApp["此视频"^]。
+
+link:hcvdivds_operation_management.html["下一步：操作管理"]

@@ -1,0 +1,26 @@
+---
+sidebar: sidebar 
+permalink: hybrid-cloud/vsphere_admin_vvols_and_spbm.html 
+keywords: vSphere, vVols, virtual volumes, SPBM, storage police based management, ONTAP 
+summary: 本页介绍在 VMware vSphere 环境中实施 NetApp ONTAP Storage 解决方案的最佳实践。 
+---
+= 虚拟卷（ VVOL ）和基于存储策略的管理（ SPBM ）
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== 关于 VVOL 和 SPBM
+
+NetApp 是 VMware 在开发 vSphere 虚拟卷（ VVOL ）方面的早期设计合作伙伴，为 VVOL 和 VMware vSphere 存储感知 API （ VASA ）提供架构输入和早期支持。此方法不仅可以为 VMFS 提供虚拟机粒度存储管理，还支持通过基于存储策略的管理（ Storage Policy-Based Management ， SPBM ）实现存储配置自动化。
+
+SPBM 提供了一个框架，可用作虚拟化环境可用存储服务与通过策略配置的存储元素之间的抽象层。通过这种方法，存储架构师可以设计具有不同功能的存储池， VM 管理员可以轻松地使用这些功能。然后，管理员可以将虚拟机工作负载要求与配置的存储池进行匹配，从而可以在每个 VM 或虚拟磁盘级别精细控制各种设置。
+
+ONTAP 在 VVOL 规模方面处于存储行业的领先地位，在一个集群中支持数十万个 VVOL ，而企业级阵列和小型闪存阵列供应商支持的每个阵列仅支持数千个 VVOL 。NetApp 还在推动 VM 粒度管理的发展，即将推出支持 VVOL 3.0 的功能。
+
+
+NOTE: 有关 VMware vSphere 虚拟卷， SPBM 和 ONTAP 的详细信息，请参见 https://www.netapp.com/pdf.html?item=/media/13555-tr4400.pdf["TR-4400 ：采用 ONTAP 的 VMware vSphere 虚拟卷"^]。

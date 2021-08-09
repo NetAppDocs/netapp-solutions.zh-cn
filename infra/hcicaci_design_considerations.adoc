@@ -1,0 +1,39 @@
+---
+sidebar: sidebar 
+permalink: infra/hcicaci_design_considerations.html 
+keywords:  
+summary:  
+---
+= 设计注意事项
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== 网络设计
+
+Cisco ACI 网络结构的最低配置包括两个分支交换机和两个主干交换机，其中一个集群至少有三个 APIC 来管理和控制整个网络结构。所有工作负载都连接到叶交换机。主干交换机是网络的主干，负责互连所有分支交换机。任何两个叶交换机都不能互连。每个叶交换机都连接到全网状拓扑中的每个主干交换机。
+
+借助这种双层主干叶架构，无论服务器连接到哪个叶交换机，其流量都始终会通过相同数量的设备传输到连接到网络结构的另一台服务器（除非另一台服务器位于同一叶片上）。这种方法可将延迟保持在可预测的水平。
+
+
+
+== 计算设计
+
+使用 NetApp HCI 的高可用性基础架构所需的计算节点最少为 2 个。NetApp HCI 提供了两种布线选项：双缆线和六缆线。NetApp HCI H410C 计算节点具有两个 1GbE 端口（端口 A 和 B ）和四个 10/25GbE 端口（端口 C ， D ， E 和 F ）板载端口。对于双缆线选项，端口 D 和 E 用于连接到上行链路交换机，对于六缆线选项，则使用从 A 到 F 的所有端口。每个节点还具有一个额外的带外管理端口，该端口支持智能平台管理接口（ Intelligent Platform Management Interface ， IPMI ）功能。此解决方案可为计算节点使用双缆线选项。
+
+对于 VMware 部署， NetApp HCI 附带了一个名为 NetApp 部署引擎（ NetApp Deployment Engine ， NDE ）的自动化部署工具。对于非 VMware 部署，需要在计算节点上手动安装虚拟机管理程序或操作系统。
+
+
+
+== 存储设计
+
+NetApp HCI 对存储节点使用四缆线选项。NetApp HCI H410S 存储节点具有两个 1GbE 端口（端口 A 和 B ）和两个 10/25GbE 端口（端口 C 和 D ）板载。两个 1GbE 端口捆绑为用于管理流量的绑定 1G （主动 / 被动模式），两个 10/25GbE 端口捆绑为用于存储数据流量的绑定 10G （ LACP 主动模式）。
+
+对于非 VMware 部署， NetApp HCI 存储集群的最低配置为四个节点。对于采用 VMware 部署的 1.8 之前的 NetApp HCI 版本，最低配置为四个存储节点。但是，对于采用 VMware 部署的 HCI 1.8 版， NetApp HCI 存储集群的最低配置为两个节点。有关 NetApp HCI 双节点存储集群的详细信息，请参见相关文档 https://www.netapp.com/us/media/tr-4823.pdf["此处"^]。
+
+link:hcicaci_vmware_vsphere.html["接下来： VMware vSphere ：采用 Cisco ACI 的 NetApp HCI"]

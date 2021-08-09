@@ -1,0 +1,25 @@
+---
+sidebar: sidebar 
+permalink: ai/osrunai_fractional_gpu_allocation_for_less_demanding_or_interactive_workloads.html 
+keywords:  
+summary:  
+---
+= 为要求较低的工作负载或交互式工作负载分配的 GPU 百分比
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+当研究人员和开发人员在开发，超参数调整或调试阶段使用其模型时，此类工作负载通常所需的计算资源更少。因此，配置百分比 GPU 和内存的效率更高，以便可以将同一 GPU 同时分配给其他工作负载。Run ： AI 的业务流程解决方案为 Kubernetes 上的容器化工作负载提供了一个百分比 GPU 共享系统。该系统支持运行 CUDA 程序的工作负载，尤其适用于推理和模型构建等轻型 AI 任务。部分 GPU 系统可以透明地为数据科学和 AI 工程团队提供在一个 GPU 上同时运行多个工作负载的能力。这样，企业就可以在同一硬件上运行更多的工作负载，例如计算机视觉，语音识别和自然语言处理，从而降低成本。
+
+Run ： AI 的百分比 GPU 系统可利用自身的内存和计算空间有效地创建虚拟化逻辑 GPU ，容器可以使用和访问这些 GPU ，就像它们是独立的处理器一样。这样，多个工作负载便可在同一 GPU 上的容器中并排运行，而不会相互干扰。解决方案是透明，简单且可移植的，不需要对容器本身进行更改。
+
+一个典型的使用情形可能会看到在同一个 GPU 上运行两到八个作业，这意味着您可以使用同一个硬件执行八倍的工作。
+
+对于下图中的作业 `frac05` 属于项目 `team-d` ，我们可以看到分配的 GPU 数量为 0.5 。这一点可通过 `nvidia-smi` 命令进一步验证，该命令显示容器可用的 GPU 内存为 16 ， 255 MB ： DGX-1 节点中每个 V100 GPU 32 GB 的一半。
+
+image:osrunai_image7.png["错误：缺少图形映像"]
+
+link:osrunai_achieving_high_cluster_utilization_with_over-uota_gpu_allocation.html["接下来：通过过度配额 GPU 分配实现高集群利用率"]

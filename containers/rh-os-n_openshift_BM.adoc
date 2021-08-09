@@ -1,0 +1,85 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_openshift_BM.html 
+keywords: OpenShift, bare metal, IPI 
+summary:  
+---
+= OpenShift on Bare Metal ： Red Hat OpenShift with NetApp
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+基于裸机的 OpenShift 可在商用服务器上自动部署 OpenShift 容器平台。
+
+与 OpenShift 的虚拟部署类似， OpenShift 非常受欢迎，因为它可以轻松部署，快速配置和扩展 OpenShift 集群，同时还需要为尚未准备好进行容器化的应用程序支持虚拟化工作负载。通过在裸机上部署，客户确实需要在管理主机虚拟机管理程序环境以及 OpenShift 环境方面额外增加开销。通过直接在裸机服务器上部署，客户还可以减少主机和 OpenShift 环境之间共享资源的物理开销限制。
+
+
+
+== 裸机上的 OpenShift 可提供以下功能：
+
+* * IPI 或辅助安装程序部署 * 借助由安装程序配置基础架构（ IPI ）在裸机服务器上部署的 OpenShift 集群，客户可以直接在商用服务器上部署高度通用且易于扩展的 OpenShift 环境，而无需管理虚拟机管理程序层。
+* * 紧凑型集群设计 * 为了最大程度地降低硬件要求，在裸机上使用 OpenShift 可以使用户部署仅包含 3 个节点的集群，它还可以使 OpenShift 控制面板节点充当辅助节点和主机容器。
+* * OpenShift 虚拟化 * OpenShift 可以使用 OpenShift 虚拟化在容器中运行虚拟机。此容器本机虚拟化可在容器内运行 KVM 虚拟机管理程序，并为 VM 存储附加永久性卷。
+* * 人工智能 / 机器学习优化型基础架构 * 通过将基于 GPU 的员工节点整合到 OpenShift 环境中并利用 OpenShift 高级计划功能，为机器学习应用程序部署 Kubeflow 等应用程序。
+
+
+
+
+== 网络设计
+
+NetApp 解决方案上的 Red Hat OpenShift 使用两个数据交换机提供 25 Gbps 的主数据连接。它还使用两个额外的管理交换机，这些交换机以 1 Gbps 的速度提供连接，用于存储节点的带内管理以及 IPMI 功能的带外管理。
+
+OpenShift 裸机 IPI 部署要求客户创建一个配置程序节点，即 Red Hat Enterprise Linux 8 计算机，该计算机需要将网络接口连接到不同的网络。
+
+* * 配置网络： * 此网络用于启动裸机节点并安装部署 OpenShift 集群所需的映像和软件包。
+* * Baremetal Network ： * 部署集群后，此网络将用于进行面向公有的通信。
+
+
+在设置配置程序节点时，客户将创建网桥接口，以便在节点本身以及为用于部署的 Bootstrap 虚拟机正确路由流量。
+
+部署集群后， API 和传入 VIP 地址将从启动节点迁移到新部署的集群。
+
+下图显示了 IPI 部署期间以及部署完成后的环境。
+
+image:redhat_openshift_image36.png["错误：缺少图形映像"]
+
+image:redhat_openshift_image37.png["错误：缺少图形映像"]
+
+
+
+=== VLAN 要求
+
+采用 NetApp 解决方案的 Red Hat OpenShift 可通过使用虚拟局域网（ VLAN ）在逻辑上隔离不同用途的网络流量。
+
+|===
+
+
+| VLAN | 目的 | VLAN ID 
+
+
+| 带外管理网络 | 管理裸机节点和 IPMI | 16. 
+
+
+| 裸机网络 | 集群可用后用于 OpenShift 服务的网络 | 181 
+
+
+| 配置网络 | 通过 IPI 以 PXE 启动和安装裸机节点的网络 | 3485 
+|===
+
+NOTE: 虽然这些网络中的每个网络几乎都由 VLAN 分隔，但每个物理端口都需要在分配了主 VLAN 的 " 访问模式 " 下进行设置，因为在 PXE 启动序列期间无法传递 VLAN 标记。
+
+
+
+=== 网络基础架构支持资源
+
+在部署 OpenShift 容器平台之前，应具备以下基础架构：
+
+* 至少一个 DNS 服务器，该服务器可提供完整的主机名解析，可从带内管理网络和 VM 网络访问。
+* 至少可从带内管理网络和 VM 网络访问一个 NTP 服务器。
+* （可选）带内管理网络和 VM 网络的出站 Internet 连接。
+
+
+link:rh-os-n_overview_netapp.html["接下来： NetApp 存储概述。"]

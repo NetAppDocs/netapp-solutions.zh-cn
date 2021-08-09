@@ -1,0 +1,44 @@
+---
+sidebar: sidebar 
+permalink: ai/osrunai_run_ai_installation.html 
+keywords:  
+summary:  
+---
+= 运行： AI 安装
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+要安装 Run ： AI ，请完成以下步骤：
+
+. 使用 DeepOps 安装 Kubernetes 集群并配置 NetApp 默认存储类。
+. 准备 GPU 节点：
++
+.. 验证是否已在 GPU 节点上安装 NVIDIA 驱动程序。
+.. 验证是否已安装 `nvidia-Docker` 并将其配置为默认 Docker 运行时。
+
+
+. 安装运行： AI ：
++
+.. 登录到 https://app.run.ai["运行： AI 管理员 UI"^] 以创建集群。
+.. 下载创建的 `runai-operator-<clustername>.yaml` 文件。
+.. 将操作员配置应用于 Kubernetes 集群。
++
+....
+kubectl apply -f runai-operator-<clustername>.yaml
+....
+
+
+. 验证安装。
++
+.. 转至 https://app.run.ai/["https://app.run.ai/"^]。
+.. 转到 " 概述 " 信息板。
+.. 验证右上角的 GPU 数量是否反映了预期的 GPU 数量，并且 GPU 节点均位于服务器列表中。有关 Run ： AI 部署的详细信息，请参见 https://docs.run.ai/Administrator/Cluster-Setup/Installing-Run-AI-on-an-on-premise-Kubernetes-Cluster/["在内部 Kubernetes 集群上安装 Run ： AI"^] 和。
+
+
+
+
+link:osrunai_run_ai_dashboards_and_views.html["接下来：运行 AI 信息板和视图"]

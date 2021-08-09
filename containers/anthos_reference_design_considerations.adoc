@@ -1,0 +1,109 @@
+---
+sidebar: sidebar 
+permalink: containers/anthos_reference_design_considerations.html 
+summary: 本节介绍成功部署 NetApp HCI Anthos 解决方案所需的设计注意事项。 
+keywords: Port Identification, Network Design, VLAN requirements, Best Practices, DRS, SnapMirror 
+---
+= 设计注意事项
+
+
+本节介绍成功部署 NetApp HCI Anthos 解决方案所需的设计注意事项。
+
+
+
+== 端口标识
+
+NetApp HCI 由专用于计算或存储的 NetApp H 系列节点组成。这两种节点配置都具有两个 1GbE 端口（端口 A 和 B ）和两个 10/25 GbE 端口（端口 C 和 D ）板载。计算节点在第一个夹层插槽中额外提供了 10/25GbE 端口（端口 E 和 F ）。每个节点还具有一个额外的带外管理端口，该端口支持智能平台管理接口（ Intelligent Platform Management Interface ， IPMI ）功能。下图显示了 H410C 节点背面的每个端口。
+
+image::netapp_hci_network_ports_compute_node.png[NetApp HCI 网络端口（计算节点）。]
+
+
+
+== 网络设计
+
+采用 Anthos 解决方案的 NetApp HCI 使用两个数据交换机提供 25 Gbps 的主数据连接。它还使用两个额外的管理交换机，这些交换机以 1 Gbps 的速度提供连接，用于存储节点的带内管理以及 IPMI 功能的带外管理。
+
+
+
+=== 为存储节点布线
+
+每个存储节点上的管理端口 A 和 B 必须处于活动状态，才能运行 NDE ，配置 NetApp HCI 集群，并在部署解决方案后为 Element 提供管理可访问性。应将两个 25 Gbps 端口（ C 和 D ）连接到每个数据交换机，以提供物理容错能力。交换机端口应配置为多机箱链路聚合（ MLAG ），节点上的数据端口应配置为 LACP 并启用巨型帧支持。在将节点安装到数据中心后，可以使用每个节点上的 IPMI 端口来远程管理该节点。使用 IPMI 时，可以使用基于 Web 浏览器的控制台访问节点，以便运行初始安装，运行诊断以及根据需要重新启动或关闭节点。
+
+
+
+=== 为计算节点布线
+
+计算节点上的 25 Gbps 端口通过缆线连接在一起，其中一个板载端口（ C ）连接到一个数据交换机，另一个端口从 PCI 插槽（ E ）连接到另一个交换机，以提供物理容错能力。应将这些端口配置为支持巨型帧。在环境中部署 VMware vSphere 后，节点的连接由 VDS 管理。在将节点安装到数据中心后， IPMI 端口还可用于远程管理该节点。通过 IPMI ，可以通过基于 Web 浏览器的控制台访问节点以运行诊断，并在必要时重新启动或关闭节点。下图提供了网络布线参考。
+
+image::network_cabling_reference_diagram.png[网络布线参考图。]
+
+
+
+== VLAN 要求
+
+解决方案可通过使用虚拟局域网（ VLAN ）在逻辑上隔离不同用途的网络流量。NetApp HCI 至少需要三个网段。但是，可以扩展此配置以满足客户需求，或者为特定网络服务提供进一步隔离。下表列出了实施解决方案所需的 VLAN ，以及稍后在经验证的架构部署中使用的特定 VLAN ID 。
+
+[cols="25,50,25"]
+|===
+| VLAN | 目的 | 已使用 VLAN 
+
+
+| 带外管理 | HCI 节点管理 | 16. 
+
+
+| 带内管理 | 管理 HCI 节点和基础架构虚拟子系统 | 3480 
+
+
+| 存储网络 | NetApp Element 的存储网络 | 3481 
+
+
+| VMotion 网络 | VMware vMotion 的网络 | 3482 
+
+
+| VM 网络 | 虚拟子系统的网络 | 1172. 
+|===
+
+
+== 网络基础架构支持资源
+
+在 NetApp HCI 解决方案上部署 Anthos 之前，应具备以下基础架构：
+
+* 一种 DHCP 服务器，可为带内管理网络和 VM 网络提供地址。DHCP 池必须足够大，以便在初始部署中至少支持 10 个 VM ，并应根据需要进行扩展。
+* 至少一个 DNS 服务器，提供可从带内管理网络和 VM 网络访问的完整主机名解析。
+* 至少可从带内管理网络和 VM 网络访问一个 NTP 服务器。
+* 带内管理网络和 VM 网络的出站 Internet 连接。
+
+
+
+
+== 最佳实践
+
+本文档中的详细信息介绍了如何在 VMware 上部署符合最低部署要求的 Anthos 。在生产环境中部署解决方案之前，您应使用此最佳实践部分中提供的信息。
+
+
+
+=== 安装另一个 seesaw 负载平衡器
+
+在生产环境中，最好避免环境中出现单点故障。在此验证中，为管理员和部署的每个用户集群分配了一个 seesaw 捆绑负载平衡器。虽然这对于简单的验证来说很好，但如果与集群的控制平面 VIP 通信中断，则可能会使集群无法访问或无法从管理工作站或 Google Cloud 控制台进行管理。通过部署 HA seesaw 负载平衡器，可以确保不会发生中断。本文档未详细介绍启用此功能的设置过程和其他要求，但可以找到完整说明 link:https://cloud.google.com/anthos/gke/docs/on-prem/1.6/how-to/bundled-load-balance["此处"^]。
+
+
+
+=== 安装另一个 F5 BIG-IP Virtual Edition 设备
+
+在生产环境中，最好避免环境中出现单点故障。在此验证中，我们使用了一个 F5 BIG-IP Virtual Edition 负载平衡器设备来验证与控制平面的连接以及 VMware 集群上 Anthos 的传入 VIP 地址。尽管这对于简单的验证来说是很好的，但与集群的控制平面 VIP 通信中断可能会使集群无法访问或无法从管理工作站或 Google Cloud 控制台进行管理。F5 BIG-IP 虚拟版支持基于应用程序的 HA ，以确保不会发生中断。尽管简要介绍了此问题描述，但本文档并未详细介绍此功能的设置过程。但是， NetApp 建议在将适用于 Anthos 解决方案的 NetApp HCI 部署到生产环境之前进一步调查此功能。
+
+
+
+=== 启用 VMware vSphere DRS 并配置反关联性规则
+
+VMware vSphere 提供了一项功能，可确保集群中的任何一个节点都不会对虚拟子系统可用的物理资源运行不足。可以在至少包含三个 ESXi 节点的 vSphere 集群上配置分布式资源计划程序（ DRS ）。本部署指南中介绍的 NetApp HCI 最低配置包含两个计算节点，无法使用此功能。由于这一限制，我们还被迫为部署的 VMware 集群上的 Anthos 禁用反关联性规则。
+
+反关联性规则可确保特定用户集群的所有主集群或所有员工都在不同节点上运行，这样单节点故障就不会禁用整个用户集群或其托管的 Pod 。NetApp HCI 系统可轻松快速地进行扩展，此验证中所述的最低部署具有两个开放式机箱插槽，用于立即扩展 HCI 410C 节点。因此， NetApp 建议在将解决方案部署到生产环境中之前，先将更多计算节点添加到空机箱插槽中，并使用反关联性规则启用 DRS 。
+
+
+
+=== 使用 SnapMirror 远程复制数据以实现灾难恢复
+
+NetApp Element 存储系统可以使用 NetApp SnapMirror 技术将存储卷复制到运行 NetApp ONTAP 系统的系统，包括 AFF ， FAS 和 Cloud Volumes ONTAP 。您可以设置定期计划的 SnapMirror 操作，以便在发生灾难时备份 VMware 数据存储库并从远程站点进行还原。此外，还可以使用 SnapMirror 备份或迁移 Trident 配置的永久性卷，并将其重新连接到部署在其他环境和云中的 Kubernetes 集群。
+
+link:anthos_reference_hardware_software_requirements.html["接下来：硬件和软件要求"]

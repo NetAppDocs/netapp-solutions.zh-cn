@@ -1,0 +1,98 @@
+---
+sidebar: sidebar 
+permalink: ai/hciai_edge_setp_the_deployment_jump__and_the_kubernetes_master_node_vms_manual_deployment.html 
+keywords:  
+summary:  
+---
+= 设置部署跳转 VM 和 Kubernetes 主节点 VM （手动部署）
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+运行 Linux 分发版的部署跳转虚拟机用于以下目的：
+
+* 使用 Ansible 部署 ONTAP Select 攻略手册
+* 使用 NVIDIA DeepOps 和 GPU 操作员部署 Kubernetes 基础架构
+* 安装和配置 NetApp Trident
+
+
+另外还设置了三个运行 Linux 的 VM ；这些 VM 将在此解决方案中配置为 Kubernetes 主节点。
+
+此解决方案部署使用了 Ubuntu 18.04.4 LTS 。
+
+. 使用 VMware 工具部署 Ubuntu 18.04.4 LTS VM
++
+您可以参考第节中所述的高级步骤 link:hciaiedge_netapp_h615cmanual_deployment.html#install-ubuntu-18.04.4-lts["安装 Ubuntu 18.04.4 LTS"]。
+
+. 为 VM 配置带内管理网络。请参见以下网络计划模板示例：
++
+....
+# This file describes the network interfaces available on your system
+# For more information, see netplan(5).
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    ens160:
+      dhcp4: false
+      addresses: [ipv4_address/subnet]
+      routes:
+      - to: 0.0.0.0/0
+        via: 172.21.232.111
+        metric: 100
+        table: 3488
+      routing-policy:
+      - from: 0.0.0.0/0
+        priority: 32768
+        table: 3488
+      nameservers:
+        addresses: [nameserver_ip]
+        search: [ search_domain ]
+      mtu: 1500
+....
++
+此模板不是设置网络的唯一方式。您可以使用自己喜欢的任何其他方法。
+
+. 应用网络计划。
++
+....
+sudo netplan –-debug apply
+....
+. 如果 Network Manager 正在运行，请停止并禁用它。
++
+....
+systemctl stop NetworkManager
+systemctl disable NetworkManager
+....
+. 打开一个 VI 编辑器以 ` /etc/iproute2/RT_Tables` 并添加表条目。
++
+....
+#
+# reserved values
+#
+255     local
+254     main
+253     default
+0       unspec
+#
+# local
+#
+#1      inr.ruhep
+101     3488
+....
+. 在 DNS 中为 VM 添加主机记录。
+. 验证出站 Internet 访问。
+. 更新系统。
++
+....
+sudo apt-get update && sudo apt-get upgrade
+....
+. 重新启动系统。
+. 重复步骤 1 到 9 以设置其他三个 VM 。
+
+
+link:hciai_edge_deploy_a_kubernetes_cluster_with_nvidia_deepops_automated_deployment.html["下一步：使用 NVIDIA DeepOps 部署 Kubernetes 集群（自动化部署）"]

@@ -1,0 +1,59 @@
+---
+sidebar: sidebar 
+permalink: ai/mlrun_deploy_grafana_dashboard.html 
+keywords: NetApp, AI, ML, Cleanup, Grafana 
+summary:  
+---
+= 部署 Grafana 信息板
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+部署完所有内容后，我们会对新数据运行推断。这些型号可预测网络设备故障。预测结果存储在 Iguazio 时间序列表中。您可以在与 Iguazio 的安全和数据访问策略集成的平台中使用 Grafana 来查看结果。
+
+您可以通过将提供的 JSON 文件导入到集群中的 Grafana 接口来部署信息板。
+
+. 要验证 Grafana 服务是否正在运行，请查看服务下的。
++
+image:mlrun_image22.png["错误：缺少图形映像"]
+
+. 如果不存在此实例，请从服务部分部署此实例：
++
+.. 单击新建服务。
+.. 从列表中选择 Grafana 。
+.. 接受默认值。
+.. 单击下一步。
+.. 输入您的用户 ID 。
+.. 单击 Save Service 。
+.. 单击顶部的 Apply Changes 。
+
+
+. 要部署信息板，请通过 Jupyter 界面下载文件 `NetopsPredictions-Dashboard.json` 。
++
+image:mlrun_image23.png["错误：缺少图形映像"]
+
+. 从服务部分打开 Grafana 并导入信息板。
++
+image:mlrun_image24.png["错误：缺少图形映像"]
+
+. 单击 Upload ` * 。 json` File ，然后选择先前下载的文件（`NetopsPredictions-Dashboard.json` ）。上传完成后，将显示信息板。
+
+
+image:mlrun_image25.png["错误：缺少图形映像"]
+
+
+
+== 部署清理功能
+
+当您生成大量数据时，保持数据干净有序非常重要。为此，请使用 `cleanup.ipynb` 笔记本部署清理功能。
+
+
+
+== 优势
+
+NetApp 和 Iguazio 通过构建 Kubeflow ， Apache Spark 和 TensorFlow 等基本框架以及 Docker 和 Kubernetes 等业务流程工具，加快并简化 AI 和 ML 应用程序的部署。通过统一端到端数据管道， NetApp 和 Iguazio 可以减少许多高级计算工作负载固有的延迟和复杂性，从而有效地缩小开发和运营之间的差距。在培训阶段，数据科学家可以对大型数据集运行查询，并与授权用户安全地共享数据和算法模型。容器化模型准备好投入生产后，您可以轻松地将其从开发环境迁移到操作环境。
+
+link:mlrun_conclusion.html["接下来：总结。"]

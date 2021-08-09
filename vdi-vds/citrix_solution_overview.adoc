@@ -1,0 +1,32 @@
+---
+sidebar: sidebar 
+permalink: vdi-vds/citrix_solution_overview.html 
+keywords: virtual apps, desktops, citrix hypervisor, citrix provisioning, aff a300 
+summary: 提供虚拟应用程序和桌面服务的服务提供商更愿意将其托管在 Citrix 虚拟机管理程序上，以降低成本并实现更好的集成。在 NetApp HCI 上自动安装 VMware vSphere 的 NetApp 部署引擎（ NDE ）目前不支持部署 Citrix 虚拟机管理程序。可以使用 PXE 启动或安装介质或 Citrix 支持的其他部署方法将 Citrix 虚拟机管理程序安装在 NetApp HCI 上。 
+---
+= 解决方案概述
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+提供虚拟应用程序和桌面服务的服务提供商更愿意将其托管在 Citrix 虚拟机管理程序上，以降低成本并实现更好的集成。在 NetApp HCI 上自动安装 VMware vSphere 的 NetApp 部署引擎（ NDE ）目前不支持部署 Citrix 虚拟机管理程序。可以使用 PXE 启动或安装介质或 Citrix 支持的其他部署方法将 Citrix 虚拟机管理程序安装在 NetApp HCI 上。
+
+Citrix 虚拟应用程序和桌面可以使用 Citrix 配置（基于网络）或 Machine Creation Services （基于虚拟机管理程序存储）自动配置桌面和会话主机。支持基于 Microsoft Windows 的操作系统和常见的 Linux 模式。如果其他虚拟机管理程序上的现有物理工作站，桌面 PC 和 VM 未启用自动配置，则也可以通过安装代理来进行远程访问。
+
+Citrix Workspace 应用程序是一款用于访问虚拟应用程序和桌面的客户端软件，在平板电脑和手机等各种设备上均受支持。可以使用部署位置内部或外部基于浏览器的 HTML5 界面访问虚拟应用程序和桌面。
+
+根据您的业务需求，解决方案可以扩展到多个站点。但是，请记住， NetApp HCI 存储效率是按集群运行的。
+
+下图显示了解决方案的高级架构。访问，控制和资源层作为虚拟机部署在 Citrix 虚拟机管理程序之上。Citrix 虚拟机管理程序在 NetApp HCI 计算节点上运行。虚拟磁盘映像存储在 NetApp HCI 存储节点上的 iSCSI 存储库中。
+
+此解决方案中用于 SMB 文件共享的 NetApp AFF A300 用于存储使用 FSLogix 容器， Citrix 配置文件管理（用于多会话回写支持），弹性应用程序分层映像等的用户配置文件。我们还使用 SMB 文件共享在 Citrix 虚拟机管理程序上挂载 ISO 映像。
+
+image:citrix_image1.png["错误：缺少图形映像"]
+
+Mellanox SN2010 交换机用于 10/25/100GB 以太网连接。存储节点使用 SFP28 收发器进行 25 Gb 连接，计算节点使用 SFP/SFP+ 收发器进行 10 Gb 连接，交换机间链路是使用 QSFP28 收发器进行 100 Gb 连接。
+
+存储端口配置有多机箱链路聚合（ MLAG ），可提供 50 GB 的总吞吐量，并配置为中继端口。计算节点端口配置为混合端口，用于为 iSCSI ， XenMotion 和工作负载 VLAN 创建 VLAN 。

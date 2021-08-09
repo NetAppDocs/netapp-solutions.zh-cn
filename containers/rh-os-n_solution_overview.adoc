@@ -1,0 +1,107 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_solution_overview.html 
+keywords: NVA-1160, Red Hat, OpenShift, Netapp, Trident 
+summary: 本参考文档对通过安装程序配置的基础架构（ IPI ）在 NetApp 验证的多种不同数据中心环境中部署的 Red Hat OpenShift 解决方案进行了部署验证。同时，还详细介绍了如何利用 NetApp Trident 存储编排程序来管理永久性存储，从而与 NetApp 存储系统实现存储集成。最后，我们还探讨并记录了许多解决方案验证和实际使用情形。 
+---
+= NVA-1160 ：采用 NetApp 技术的 Red Hat OpenShift
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+NetApp 公司 Alan Cowles 和 Nikhil M Kulkarni
+
+本参考文档对通过安装程序配置的基础架构（ IPI ）在 NetApp 验证的多种不同数据中心环境中部署的 Red Hat OpenShift 解决方案进行了部署验证。同时，还详细介绍了如何利用 NetApp Trident 存储编排程序来管理永久性存储，从而与 NetApp 存储系统实现存储集成。最后，我们还探讨并记录了许多解决方案验证和实际使用情形。
+
+
+
+== 用例
+
+采用 NetApp 解决方案的 Red Hat OpenShift 旨在为客户提供卓越的价值，其使用情形如下：
+
+* 使用 IPI （安装程序配置的基础架构）在裸机上， Red Hat OpenStack Platform ， Red Hat 虚拟化和 VMware vSphere 上轻松部署和管理 Red Hat OpenShift 。
+* 将企业级容器和虚拟化工作负载的强大功能与 Red Hat OpenShift 相结合， Red Hat OpenShift 可虚拟部署在 OSP ， RHV 或 vSphere 上，也可通过 OpenShift 虚拟化部署在裸机上。
+* 与 NetApp 存储和适用于 Kubernetes 的开源存储编排程序 NetApp Trident 结合使用时，重点介绍 Red Hat OpenShift 功能的实际配置和使用情形。
+
+
+
+
+== 业务价值
+
+企业越来越多地采用 DevOps 实践来创建新产品，缩短发布周期并快速添加新功能。由于容器和微服务本身的灵活性，它们在支持 DevOps 实践方面发挥着至关重要的作用。但是，在企业环境中以生产规模实施 DevOps 会带来自身的挑战，并对底层基础架构提出一些要求，例如：
+
+* 堆栈中所有层的高可用性
+* 易于部署过程
+* 无中断运行和升级
+* API 驱动的可编程基础架构，可跟上微服务灵活性的步伐
+* 具有性能保证的多租户
+* 能够同时运行虚拟化和容器化工作负载
+* 能够根据工作负载需求独立扩展基础架构
+
+
+Red Hat OpenShift with NetApp 认可这些挑战，并提供了一个解决方案，通过在客户选择的数据中心环境中实施完全自动化的 RedHat OpenShift IPI 部署，帮助解决每个问题。
+
+
+
+== 技术概述
+
+采用 NetApp 解决方案的 Red Hat OpenShift 由以下三个组件组成：
+
+
+
+=== Red Hat OpenShift 容器平台
+
+Red Hat OpenShift 容器平台是一个完全受支持的企业级 Kubernetes 平台。 Red Hat 对开源 Kubernetes 进行了多项增强，以提供一个应用程序平台，其中包含所有组件，可完全集成以构建，部署和管理容器化应用程序。
+
+有关详细信息，请访问 OpenShift 网站 https://www.openshift.com["此处"]。
+
+
+
+=== NetApp 存储系统
+
+NetApp 拥有多个存储系统，非常适合企业数据中心和混合云部署。NetApp 产品组合包括 NetApp ONTAP ， NetApp Element 和 NetApp E 系列存储系统，所有这些系统均可用于为容器化应用程序提供永久性存储。
+
+有关详细信息，请访问 NetApp 网站 https://www.netapp.com["此处"]。
+
+
+
+=== NetApp Trident
+
+NetApp Trident 是一款开源且完全受支持的存储编排程序，适用于容器和 Kubernetes 分发版，包括 Red Hat OpenShift 。
+
+有关详细信息，请访问 Trident 网站 https://netapp-trident.readthedocs.io/en/stable-v21.04/index.html["此处"]。
+
+
+
+== 经过验证的版本的最新支持列表
+
+|===
+
+
+| 技术 | 目的 | 软件版本 
+
+
+| NetApp ONTAP | 存储 | 9.8 
+
+
+| NetApp Element | 存储 | 12.3 
+
+
+| NetApp Trident | 存储编排 | 21.04 
+
+
+| Red Hat OpenShift | 容器编排 | 4.6 EUS ， 4.7 
+
+
+| Red Hat OpenStack 平台 | 私有云基础架构 | 16.1 
+
+
+| Red Hat 虚拟化 | 数据中心虚拟化 | 4.4 
+
+
+| VMware vSphere | 数据中心虚拟化 | 6.7U3. 
+|===
+link:rh-os-n_overview_openshift.html["接下来： Red Hat OpenShift 概述。"]

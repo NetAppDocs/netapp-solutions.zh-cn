@@ -1,0 +1,209 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_use_case_multitenancy_validation.html 
+keywords: OpenShift, OCP, NetApp Trident, NetApp ONTAP, Red Hat OpenShift, Multitenancy, Multi-tenancy 
+summary: 在使用 NetApp 的 Red Hat OpenShift 上配置多租户 
+---
+= 验证
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+要验证在上述步骤中配置的多租户架构，请完成以下步骤：
+
+
+
+== 验证在分配的项目中创建 PVC/Pod 的访问权限
+
+. 以项目 1 中的 OCP-project-1-user 和开发人员身份登录。
+. 检查访问权限以创建新项目。
++
+[source, console]
+----
+oc create ns sub-project-1
+----
+. 使用分配给 project-1 的 storageclass 在 project-1 中创建 PVC 。
++
+[source, console]
+----
+cat << EOF | oc create -f -
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: test-pvc-project-1
+  namespace: project-1
+  annotations:
+    trident.netapp.io/reclaimPolicy: Retain
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: project-1-sc
+EOF
+----
+. 检查与 PVC 关联的 PV 。
++
+[source, console]
+----
+oc get pv
+----
+. 验证 PV 及其卷是否已在 NetApp ONTAP 上专用于 project-1 的 SVM 中创建。
++
+[source, console]
+----
+volume show -vserver project-1-svm
+----
+. 在 project-1 中创建 POD ，然后挂载上一步创建的 PVC 。
++
+[source, console]
+----
+cat << EOF | oc create -f -
+kind: Pod
+apiVersion: v1
+metadata:
+  name: test-pvc-pod
+  namespace: project-1
+spec:
+  volumes:
+    - name: test-pvc-project-1
+      persistentVolumeClaim:
+       claimName: test-pvc-project-1
+  containers:
+    - name: test-container
+      image: nginx
+      ports:
+        - containerPort: 80
+          name: "http-server"
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: test-pvc-project-1
+EOF
+----
+. 检查 POD 是否正在运行以及是否已挂载卷。
++
+[source, console]
+----
+oc describe pods test-pvc-pod -n project-1
+----
+
+
+
+
+== 验证在另一个项目中创建 PVC/Pod 的访问权限，或者使用专用于另一个项目的资源
+
+. 以项目 1 中的 OCP-project-1-user 和开发人员身份登录。
+. 使用分配给 project-2 的 storageclass 在 project-1 中创建 PVC 。
++
+[source, console]
+----
+cat << EOF | oc create -f -
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: test-pvc-project-1-sc-2
+  namespace: project-1
+  annotations:
+    trident.netapp.io/reclaimPolicy: Retain
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: project-2-sc
+EOF
+----
+. 在 project-2 中创建 PVC 。
++
+[source, console]
+----
+cat << EOF | oc create -f -
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: test-pvc-project-2-sc-1
+  namespace: project-2
+  annotations:
+    trident.netapp.io/reclaimPolicy: Retain
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: project-1-sc
+EOF
+----
+. 请确保未创建 PVC `test-vpa-project-1-sc-2` 和 `test-vpa-project-2-sc-1` 。
++
+[source, console]
+----
+oc get pvc -n project-1
+oc get pvc -n project-2
+----
+. 在 project-2 中创建 POD 。
++
+[source, console]
+----
+cat << EOF | oc create -f -
+kind: Pod
+apiVersion: v1
+metadata:
+  name: test-pvc-pod
+  namespace: project-1
+spec:
+  containers:
+    - name: test-container
+      image: nginx
+      ports:
+        - containerPort: 80
+          name: "http-server"
+EOF
+----
+
+
+
+
+== 验证对查看 / 编辑项目， ResourceQuotas 和 StorageClasses 的访问权限
+
+. 以项目 1 中的 OCP-project-1-user 和开发人员身份登录。
+. 检查访问权限以创建新项目。
++
+[source, console]
+----
+oc create ns sub-project-1
+----
+. 验证对查看项目的访问权限。
++
+[source, console]
+----
+oc get ns
+----
+. 检查用户是否可以在 project-1 中查看或编辑 ResourceQuotas 。
++
+[source, console]
+----
+oc get resourcequotas -n project-1
+oc edit resourcequotas project-1-sc-rq -n project-1
+----
+. 验证用户是否有权查看存储器。
++
+[source, console]
+----
+oc get sc
+----
+. 检查访问权限以描述存储器。
+. 验证用户的访问权限以编辑存储器库。
++
+[source, console]
+----
+oc edit sc project-1-sc
+----
+
+
+link:rh-os-n_use_case_multitenancy_scaling.html["下一步：扩展。"]

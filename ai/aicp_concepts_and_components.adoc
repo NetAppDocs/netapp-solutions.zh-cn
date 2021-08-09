@@ -1,0 +1,193 @@
+---
+sidebar: sidebar 
+permalink: ai/aicp_concepts_and_components.html 
+keywords: Trident, DeepOps, ONTAP, FlexClone, containers, AI, Kubernetes, Kubeflow, Jupyter, Airflow 
+summary: 此页面提供了了解 NetApp 如何推进 AI 项目的背景信息，包括有关容器， Kubernetes ， NetApp Trident 等的信息。 
+---
+= 概念和组件
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== 人工智能
+
+AI 是一门计算机科学学科，其中计算机经过训练，可以模拟人类思维的认知功能。AI 开发人员培训计算机，以便以类似于甚至优于人类的方式学习和解决问题。深度学习和机器学习是 AI 的子领域。企业越来越多地采用 AI ， ML 和 DL 来满足其关键业务需求。以下是一些示例：
+
+* 分析大量数据以挖掘以前未知的业务洞察力
+* 使用自然语言处理直接与客户互动
+* 自动化执行各种业务流程和功能
+
+
+现代 AI 训练和推理工作负载需要大规模并行计算功能。因此， GPU 越来越多地用于执行 AI 操作，因为 GPU 的并行处理功能远远优于通用 CPU 。
+
+
+
+== 容器
+
+容器是在共享主机操作系统内核上运行的隔离用户空间实例。容器的采用率正在快速增长。容器可提供许多与虚拟机（ VM ）相同的应用程序沙盒优势。但是，由于虚拟机所依赖的虚拟机管理程序和子操作系统层已被消除，因此容器的重量要轻得多。下图展示了虚拟机与容器的可视化情况。
+
+此外，还可以通过容器直接将应用程序依赖关系，运行时间等内容高效地打包到应用程序中。最常用的容器打包格式是 Docker 容器。已采用 Docker 容器格式进行容器化的应用程序可以在可以运行 Docker 容器的任何计算机上执行。即使计算机上不存在应用程序的依赖关系，也是如此，因为所有依赖关系都打包在容器中。有关详细信息，请访问 https://www.docker.com["Docker 网站"^]。
+
+image:aicp_image2.png["错误：缺少图形映像"]
+
+
+
+== Kubernetes
+
+Kubernetes 是一款开源分布式容器编排平台，最初由 Google 设计，现在由 Cloud 原生计算基金会（ CNCF ）维护。Kubernetes 可以为容器化应用程序实现部署，管理和扩展功能的自动化。近年来， Kubernetes 已成为主导容器业务流程平台。虽然支持其他容器打包格式和运行时间，但 Kubernetes 最常用作 Docker 容器的业务流程系统。有关详细信息，请访问 https://kubernetes.io["Kubernetes 网站"^]。
+
+
+
+== NetApp Trident
+
+Trident 是一款由 NetApp 开发和维护的开源存储编排程序，可大大简化 Kubernetes 工作负载的永久性存储的创建，管理和使用。Trident 本身是 Kubernetes 本机应用程序，直接在 Kubernetes 集群中运行。借助 Trident ， Kubernetes 用户（开发人员，数据科学家， Kubernetes 管理员等）可以采用他们已熟悉的标准 Kubernetes 格式创建，管理永久性存储卷并与其交互。同时，他们还可以利用 NetApp 的高级数据管理功能以及由 NetApp 技术提供支持的数据网络结构。Trident 可将持久存储的复杂性抽象化，并使其易于使用。有关详细信息，请访问 https://netapp.io/persistent-storage-provisioner-for-kubernetes/["Trident 网站"^]。
+
+
+
+== NVIDIA DeepOps
+
+DeepOps 是 NVIDIA 的一个开源项目，通过使用 Ansible ，可以根据最佳实践自动部署 GPU 服务器集群。DeepOps 采用模块化设计，可用于执行各种部署任务。在本文档及其所述的验证练习中， DeepOps 用于部署一个由 GPU 服务器辅助节点组成的 Kubernetes 集群。有关详细信息，请访问 https://github.com/NVIDIA/deepops["DeepOps 网站"^]。
+
+
+
+== Kubeflow
+
+Kubeflow 是一款适用于 Kubernetes 的开源 AI 和 ML 工具包，最初由 Google 开发。通过 Kubeflow 项目，可以在 Kubernetes 上轻松，便携且可扩展地部署 AI 和 ML 工作流。Kubeflow 将 Kubernetes 的错综复杂之处抽象出来，让数据科学家能够专注于他们最了解的―数据科学。有关可视化效果，请参见下图。随着企业 IT 部门越来越多地在 Kubernetes 上实现标准化， Kubeflow 的吸引力也越来越大。有关详细信息，请访问 http://www.kubeflow.org/["Kubeflow 网站"^]。
+
+image:aicp_image3.png["错误：缺少图形映像"]
+
+
+
+=== KubeFlow 管道
+
+Kubeflow 管道是 Kubeflow 的一个关键组件。Kubeflow 管道是一个平台和标准，用于定义和部署可移植且可扩展的 AI 和 ML 工作流。有关详细信息，请参见 https://www.kubeflow.org/docs/components/pipelines/pipelines/["Kubeflow 官方文档"^]。
+
+
+
+=== Jupyter 笔记本电脑服务器
+
+Jupyter 笔记本电脑服务器是一款开源 Web 应用程序，数据科学家可以利用它创建类似于维基的文档，这些文档称为 Jupyter 笔记本电脑，其中包含实时代码以及描述性测试。Jupyter 笔记本电脑在 AI 和 ML 社区中广泛使用，可用于记录，存储和共享 AI 和 ML 项目。Kubeflow 可简化 Kubernetes 上 Jupyter 笔记本电脑服务器的配置和部署。有关 Jupyter 笔记本电脑的详细信息，请访问 http://www.jupyter.org/["Jupyter 网站"^]。有关 Kubeflow 环境中 Jupyter 笔记本电脑的详细信息，请参见。
+
+
+
+== Apache 气流
+
+Apache Airflow 是一个开源工作流管理平台，支持对复杂的企业工作流进行编程创作，计划和监控。它通常用于自动执行 ETL 和数据管道工作流，但不限于这些类型的工作流。气流项目由 Airbnb 发起，但此后在业内备受欢迎，现在由 Apache 软件基金会赞助。气流采用 Python 编写，气流工作流通过 Python 脚本创建，气流是按照 " 配置即代码 " 原则设计的。 现在，许多企业级气流用户都在 Kubernetes 上运行 Airflow 。
+
+
+
+=== 定向循环图（ DAG ）
+
+在气流模式下，工作流称为定向环比图（ DAG ）。DAG 由按顺序，并行或两者的组合执行的任务组成，具体取决于 DAG 定义。气流计划程序会根据 DAG 定义中指定的任务级别依赖关系对一组工作负载执行各个任务。DAG 是通过 Python 脚本定义和创建的。
+
+
+
+== NetApp ONTAP 9.
+
+NetApp ONTAP 9 是 NetApp 推出的最新一代存储管理软件，可帮助像您这样的企业打造现代化的基础架构并过渡到云就绪数据中心。借助行业领先的数据管理功能，无论数据位于何处， ONTAP 都可以通过一组工具来管理和保护数据。您还可以将数据自由移动到任何需要的位置：边缘，核心或云。ONTAP 9 包含许多功能，可简化数据管理，加快和保护关键数据，并在混合云架构中打造适应未来需求的基础架构。
+
+
+
+=== 简化数据管理
+
+数据管理对于企业 IT 运营至关重要，这样您就可以为应用程序和数据集使用适当的资源。ONTAP 包括以下功能，可简化运营并降低总运营成本：
+
+* * 实时数据缩减和扩展的重复数据删除。 * 数据缩减可减少存储块中浪费的空间，重复数据删除可显著提高有效容量。
+* * 最低，最高和自适应服务质量（ QoS ）。 * 细粒度 QoS 控制有助于在高度共享的环境中保持关键应用程序的性能水平。
+* * ONTAP FabricPool 。 * 此功能可将冷数据自动分层到公有和私有云存储选项，包括 Amazon Web Services （ AWS ）， Azure 和 NetApp StorageGRID 基于对象的存储。
+
+
+
+
+=== 加速和保护数据
+
+ONTAP 可提供卓越的性能和数据保护，并通过以下功能扩展这些功能：
+
+* * 高性能和低延迟。 * ONTAP 以尽可能低的延迟提供最高的吞吐量。
+* * NetApp ONTAP FlexGroup 技术 * 。 FlexGroup 卷是一种高性能数据容器，可线性扩展到高达 20 PB 和 4000 亿个文件，从而提供一个可简化数据管理的命名空间。
+* * 数据保护。 * ONTAP 提供内置数据保护功能，并在所有平台之间进行通用管理。
+* * NetApp 卷加密。 * ONTAP 提供原生卷级加密，并支持板载和外部密钥管理。
+
+
+
+
+=== Future-Proof 基础架构
+
+ONTAP 9 可帮助您满足不断变化的苛刻业务需求：
+
+* * 无缝扩展和无中断运行。 * ONTAP 支持向现有控制器和横向扩展集群无中断添加容量。您可以升级到 NVMe 和 32 Gb FC 等最新技术，而无需进行昂贵的数据迁移或中断。
+* * 云连接。 * ONTAP 是云连接最广泛的存储管理软件之一，可在所有公有云中选择软件定义的存储（ ONTAP Select ）和云原生实例（ NetApp Cloud Volumes Service ）。
+* * 与新兴应用程序集成。 * 通过使用支持现有企业级应用程序的相同基础架构， ONTAP 可为 OpenStack ， Hadoop 和 MongoDB 等下一代平台和应用程序提供企业级数据服务。
+
+
+
+
+== NetApp Snapshot 副本
+
+NetApp Snapshot 副本是卷的只读时间点映像。该映像占用的存储空间极少，并且性能开销极低，因为它仅记录自创建上次 Snapshot 副本以来创建的文件所做的更改，如下图所示。
+
+Snapshot 副本的效率归功于核心 ONTAP 存储虚拟化技术—任意位置写入文件布局（ Write Anywhere File Layout ， WAFL ）。与数据库一样， WAFL 使用元数据指向磁盘上的实际数据块。但是，与数据库不同， WAFL 不会覆盖现有块。它会将更新后的数据写入新块并更改元数据。这是因为 ONTAP 在创建 Snapshot 副本时引用元数据，而不是复制数据块，因此 Snapshot 副本的效率非常高。这样做可以避免其他系统在查找要复制的块时花费寻道时间，并避免创建副本本身的成本。
+
+您可以使用 Snapshot 副本恢复单个文件或 LUN ，或者还原卷的整个内容。ONTAP 会将 Snapshot 副本中的指针信息与磁盘上的数据进行比较，以重建缺少或损坏的对象，而不会造成停机或高昂的性能成本。
+
+image:aicp_image4.png["错误：缺少图形映像"]
+
+
+
+== NetApp FlexClone 技术
+
+NetApp FlexClone 技术会引用 Snapshot 元数据来创建卷的可写时间点副本。副本与其父级共享数据块，在将更改写入副本之前，除了元数据所需的存储外，不会占用任何其他存储，如下图所示。传统副本可能需要几分钟甚至几小时才能创建，而 FlexClone 软件可以让您几乎即时复制最大的数据集。因此，如果您需要相同数据集的多个副本（例如，开发工作空间）或数据集的临时副本（针对生产数据集测试应用程序），则这种情况是理想之选。
+
+image:aicp_image5.png["错误：缺少图形映像"]
+
+
+
+== NetApp SnapMirror 数据复制技术
+
+NetApp SnapMirror 软件是一款经济高效且易于使用的统一复制解决方案，可跨数据网络结构实现。它可以通过 LAN 或 WAN 高速复制数据。它可以为各种类型的应用程序提供高数据可用性和快速数据复制，包括虚拟和传统环境中的业务关键型应用程序。在将数据复制到一个或多个 NetApp 存储系统并持续更新二级数据时，您的数据将保持最新，并可随时使用。不需要外部复制服务器。有关利用 SnapMirror 技术的架构示例，请参见下图。
+
+SnapMirror 软件通过仅通过网络发送更改的块来利用 NetApp ONTAP 的存储效率。SnapMirror 软件还可使用内置网络压缩来加快数据传输速度，并将网络带宽利用率降低多达 70% 。借助 SnapMirror 技术，您可以利用一个精简复制数据流创建一个存储库，同时维护活动镜像和先前的时间点副本，从而将网络流量减少多达 50% 。
+
+image:aicp_image6.png["错误：缺少图形映像"]
+
+
+
+== NetApp Cloud Sync
+
+Cloud Sync 是一项 NetApp 服务，用于快速安全地同步数据。无论您需要在内部 NFS 还是 SMB 文件共享， NetApp StorageGRID ， NetApp ONTAP S3 ， NetApp Cloud Volumes Service ， Azure NetApp Files ， AWS S3 ， AWS EFS ， Azure Blob ， Google 云存储或 IBM 云对象存储， Cloud Sync 可将文件快速安全地移动到您需要的位置。
+
+数据传输完成后，即可在源和目标上完全使用。Cloud Sync 可以在触发更新时按需同步数据，也可以根据预定义的计划持续同步数据。无论如何， Cloud Sync 只会移动增量，因此将数据复制所花费的时间和金钱降至最低。
+
+Cloud Sync 是一款软件即服务（ SaaS ）工具，设置和使用极其简单。由 Cloud Sync 触发的数据传输由数据代理执行。Cloud Sync 数据代理可以部署在 AWS ， Azure ， Google 云平台或内部环境中。
+
+
+
+== NetApp XCP
+
+NetApp XCP 是一款基于客户端的软件，可用于任意到 NetApp 以及 NetApp 到 NetApp 的数据迁移和文件系统洞察。XCP 旨在通过利用所有可用系统资源来处理大容量数据集和高性能迁移来实现扩展和最大性能。XCP 可通过生成报告的选项帮助您全面了解文件系统。
+
+NetApp XCP 可通过一个软件包提供，该软件包支持 NFS 和 SMB 协议。XCP 包括一个适用于 NFS 数据集的 Linux 二进制文件和一个适用于 SMB 数据集的 Windows 可执行文件。
+
+NetApp XCP 文件分析是一款基于主机的软件，可检测文件共享，对文件系统运行扫描并提供用于文件分析的信息板。XCP 文件分析与 NetApp 和非 NetApp 系统兼容，并可在 Linux 或 Windows 主机上运行，以便为 NFS 和 SMB 导出的文件系统提供分析。
+
+
+
+== NetApp ONTAP FlexGroup 卷
+
+培训数据集可以是一组可能包含数十亿个文件的集合。文件可以包括文本，音频，视频以及其他形式的非结构化数据，这些数据必须进行存储和处理才能并行读取。存储系统必须存储大量小文件，并且必须并行读取这些文件，以便执行顺序和随机 I/O
+
+FlexGroup 卷是一个包含多个成分卷的命名空间，如下图所示。从存储管理员的角度来看， FlexGroup 卷是一个受管卷，其作用类似于 NetApp FlexVol 卷。FlexGroup 卷中的文件将分配给各个成员卷，并且不会在卷或节点之间进行条带化。它们支持以下功能：
+
+* FlexGroup 卷可为高元数据工作负载提供多 PB 的容量和可预测的低延迟。
+* 它们在同一命名空间中最多支持 4000 亿个文件。
+* 它们支持在 CPU ，节点，聚合和成分卷之间的 NAS 工作负载中执行并行操作 FlexVol 。
+
+
+image:aicp_image7.png["错误：缺少图形映像"]
+
+link:aicp_hardware_and_software_requirements.html["接下来：硬件和软件要求"]

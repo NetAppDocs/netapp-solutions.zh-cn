@@ -1,0 +1,33 @@
+---
+sidebar: sidebar 
+permalink: containers/bmanthos_deployment_summary.html 
+keywords: Summary, World Wide Technology, ATC, WWT, Advanced Technology Center, bmctl tool, Cisco UCS B200M3, Cisco Nexus 5548, Red Hat Enterprise Linux 8.2, CentOS 8.2, Ubuntu 20.04 LTS, or Ubuntu 18.04 LTS 
+summary: 在对此解决方案进行初始验证时， NetApp 与全球技术（ World Wide Technology ， WWT ）合作，在 WWT 的高级技术中心（ Advanced Technology Center ， ATT ）建立了一个环境。Anthos 使用 Google Cloud 提供的 bmctl 工具部署在裸机基础架构上。下一节详细介绍了用于验证的部署。 
+---
+= 部署摘要
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+在对此解决方案进行初始验证时， NetApp 与全球技术（ World Wide Technology ， WWT ）合作，在 WWT 的高级技术中心（ Advanced Technology Center ， ATT ）建立了一个环境。Anthos 使用 Google Cloud 提供的 bmctl 工具部署在裸机基础架构上。下一节详细介绍了用于验证的部署。
+
+采用 NetApp 解决方案的裸机上的 Anthos 是一个高可用性混合集群，其中包含三个 Anthos 控制平台节点和四个 Anthos 工作节点。
+
+使用的控制面板节点是托管在机箱中的 Cisco UCS B200M3 刀片式服务器，每个节点上配置有一个虚拟网络接口卡（ vNIC ），从而可以在 Cisco UCS 平台级别进行 A/B 故障转移以实现容错。上游连接到一对 Cisco UCS 6248 互联阵列的 Cisco UCS 机箱，可提供不同的路径来分隔阵列 A 和阵列 B 上的流量这些互联阵列会上游连接到一对 Cisco Nexus 5548 数据中心交换机，这些交换机会绑定回 WWT 的核心网络。
+
+工作节点为 HP ProLiant DL360 节点，每个节点均运行一个支持的 Linux 分发版，用于裸机上的 Anthos ： Red Hat Enterprise Linux 8.2 ， CentOS 8.2 ， Ubuntu 20.04 LTS 或 Ubuntu 18.04 LTS 。Red Hat Enterprise Linux 8 和 CentOS 8 节点配置了在 LACP 模式下运行的 NIC 组，并通过缆线连接到两个 Nexus 9k C93180YC-FX 交换机以实现容错。Ubuntu 服务器已配置为在 LACP 模式下进行网络绑定，并已连接到同一对 Nexus 9k 交换机以实现容错。
+
+运行 ONTAP 9.7 软件的 NetApp AFF A300 存储系统已安装并以物理方式连接到与 Anthos 工作节点相同的一对 Nexus 9k 交换机。这些网络上行链路聚合到一个接口组（ a0a ）中，并标记了相应的数据网络 VLAN ，以使工作节点能够与存储系统进行交互。创建了一个 Storage Virtual Machine （ SVM ），其中包含支持 NFS 协议并专用于 Trident 存储操作的数据 LIF ，以便为裸机集群上的 Anthos 中部署的容器提供永久性存储。这些永久性卷由 NetApp Trident 20.10 提供，该软件是完全受支持的适用于 Kubernetes 的 NetApp 开源存储编排程序的最新版本。
+
+下图展示了解决方案到机架数据中心交换机顶部的物理布线图。
+
+image:bmanthos_image4.png["错误：缺少图形映像"]
+
+下图显示了在 NetApp 合作伙伴 WWT 实验室的硬件上部署和验证的解决方案逻辑视图。
+
+image:bmanthos_image5.png["错误：缺少图形映像"]
+
+link:bmanthos_solution_validation.html["接下来：解决方案验证。"]

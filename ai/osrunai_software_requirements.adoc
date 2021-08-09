@@ -1,0 +1,50 @@
+---
+sidebar: sidebar 
+permalink: ai/osrunai_software_requirements.html 
+keywords:  
+summary:  
+---
+= 软件要求
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+此解决方案已通过安装了 Run ： AI 操作员的基本 Kubernetes 部署进行验证。Kubernetes 是使用部署的 https://github.com/NVIDIA/deepops["NVIDIA DeepOps"^] 部署引擎，用于为生产就绪环境部署所有必需的组件。DeepOps 会自动部署 为了与 K8s 环境实现持久存储集成，我们创建了默认存储类，以便容器可以利用 AFF A800 存储系统中的存储。有关在 ONTAP AI 上使用 Kubernetes 进行 Trident 的详细信息，请参见。
+
+....
+The following table lists the software components that are required to implement the solution as tested.
+....
+|===
+| 软件 | 版本或其他信息 
+
+
+| NetApp ONTAP 数据管理软件 | 9.6 第 4 页 
+
+
+| Cisco NX-OS 交换机固件 | 7.0 （ 3 ） I6 （ 1 ） 
+
+
+| NVIDIA DGX 操作系统 | 4.0.4 — Ubuntu 18.04 LTS 
+
+
+| Kubernetes 版本 | 1.17 
+
+
+| Trident 版本 | 20.04.0 
+
+
+| 运行： AI 命令行界面 | v2.1.13 
+
+
+| 运行： AI Orchestration Kubernetes Operator 版本 | 1.0.39 
+
+
+| Docker 容器平台 | 18.06.1-ce [e68fc7a] 
+|===
+有关 Run ： AI 的其他软件要求，请参见 https://docs.run.ai/Administrator/Cluster-Setup/Run-AI-GPU-Cluster-Prerequisites/["运行： AI GPU 集群前提条件"^]。
+
+link:osrunai_optimal_cluster_and_gpu_utilization_with_run_ai_overview.html["接下来：使用 Run AI 优化集群和 GPU 利用率"]。

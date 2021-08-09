@@ -1,0 +1,26 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_use_case_advanced_cluster_management_overview.html 
+keywords: OpenShift, OCP, NetApp Trident, NetApp ONTAP, ONTAP, Trident, Red Hat OpenShift, Advanced Cluster Management, Advanced Cluster Management for Kubernetes 
+summary: 借助 NetApp 在 Red Hat OpenShift 上为 Kubernetes 提供高级集群管理 
+---
+= 适用于 Kubernetes 的高级集群管理：采用 NetApp 的 Red Hat OpenShift
+
+
+随着容器化应用程序从开发过渡到生产，许多组织需要使用多个 Red Hat OpenShift 集群来支持该应用程序的测试和部署。同时，企业通常会在 OpenShift 集群上托管多个应用程序或工作负载。因此，每个组织最终都会管理一组集群，因此 OpenShift 管理员必须面对在跨多个内部数据中心和公有云的一系列环境中管理和维护多个集群这一额外挑战。为了应对这些挑战， Red Hat 推出了适用于 Kubernetes 的高级集群管理。
+
+Red Hat Advanced Cluster Management for Kubernetes 允许用户：
+
+. 跨数据中心和公有云创建，导入和管理多个集群。
+. 从一个控制台在多个集群上部署和管理应用程序或工作负载。
+. 监控和分析不同集群资源的运行状况和状态。
+. 监控并强制实施多个集群的安全合规性。
+
+
+Red Hat Advanced Cluster Management for Kubernetes 作为 Red Hat OpenShift 集群的附加组件进行安装，并使用此集群作为其所有操作的中央控制器。此集群称为集线器集群，它会为用户提供一个管理平面以连接到高级集群管理。通过高级集群管理控制台导入或创建的所有其他 OpenShift 集群均由集线器集群管理，称为受管集群。它会在受管集群上安装一个名为 Kluterlet 的代理，将其连接到中心集群，并处理与集群生命周期管理，应用程序生命周期管理，可观察性和安全合规性相关的不同活动请求。
+
+image::redhat_openshift_image65.jpg[ACM 架构]
+
+有关详细信息，请参见文档 https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.2/["此处"]。
+
+link:rh-os-n_use_case_advanced_cluster_management_deployment_prerequisites.html["接下来：部署前提条件。"]

@@ -1,0 +1,92 @@
+---
+sidebar: sidebar 
+permalink: ent-apps-db/saphana-fas-nfs_introduction.html 
+keywords: sap, hana, fas, systems, nfs, configuration, guide 
+summary: NetApp FAS 产品系列已通过认证，可在定制数据中心集成（ TDI ）项目中与 SAP HANA 结合使用。经过认证的企业级存储系统采用 NetApp ONTAP 软件的特征。 
+---
+= TR-4290 ：《采用 NFS 配置的 NetApp FAS 系统上的 SAP HANA 》指南
+
+
+NetApp 公司 Nil Bauser 和 Marco schön
+
+NetApp FAS 产品系列已通过认证，可在定制数据中心集成（ TDI ）项目中与 SAP HANA 结合使用。经过认证的企业级存储系统采用 NetApp ONTAP 软件的特征。
+
+此认证目前仅适用于以下型号：
+
+* FAS2720 ， FAS2750 ， FAS8300 ， FAS8700 和 FAS9000A 有关适用于 SAP HANA 的 NetApp 认证存储解决方案的完整列表，请参见 https://www.sap.com/dmc/exp/2014-09-02-hana-hardware/enEN/enterprise-storage.html["经过认证并受支持的 SAP HANA 硬件目录"^]。
+
+
+本文档介绍了 NFS 版本 3 （ NFSv3 ）协议或 NFS 版本 4 （ NFSv4.0 和 NFSv4.1 ）协议的 ONTAP 配置要求。在本文档的其余部分中， NFSv4 既指 NFSv4.0 ，也指 NFSv4.1 。
+
+
+NOTE: 要为 SAP HANA 实现所需的 SAP HANA KPI 和最佳性能，必须采用本文所述的配置。更改任何设置或使用本文未列出的功能可能会导致发生原因性能下降或出现意外行为，只有在 NetApp 支持人员建议的情况下，才应执行此操作。
+
+有关使用 FCP 的 NetApp FAS 系统以及使用 NFS 或 FC 的 AFF 系统的配置指南，请访问以下链接：
+
+* https://docs.netapp.com/us-en/netapp-solutions_main/ent-apps-db/saphana_fas_fc_introduction.html["基于采用光纤通道协议的 NetApp FAS 系统的 SAP HANA"^]
+* https://docs.netapp.com/us-en/netapp-solutions_main/ent-apps-db/saphana_aff_nfs_introduction.html["基于采用 NFS 的 NetApp AFF 系统的 SAP HANA"^]
+* https://docs.netapp.com/us-en/netapp-solutions_main/ent-apps-db/saphana_aff_fc_introduction.html["基于采用光纤通道协议的 NetApp AFF 系统的 SAP HANA"^]
+
+
+下表显示了 NFS 版本， NFS 锁定和所需隔离实施的受支持组合，具体取决于 SAP HANA 数据库配置。
+
+对于不具有主机自动故障转移功能的 SAP HANA 单主机系统或多个主机，支持 NFSv3 和 NFSv4 。
+
+对于采用主机自动故障转移的 SAP HANA 多主机系统， NetApp 仅支持 NFSv4 ，而使用 NFSv4 锁定作为服务器专用 STONITH （ SAP HANA HA/DR 提供程序）实施的替代方案。
+
+|===
+| SAP HANA | NFS 版本 | NFS 锁定 | SAP HANA HA/DR 提供程序 
+
+
+.2+| SAP HANA 单个主机，多个主机，而不具有主机自动故障转移功能 | NFSv3 | 关闭 | 不适用 
+
+
+| NFSv4 | 开启 | 不适用 
+
+
+.2+| SAP HANA 多个主机，具有主机自动故障转移功能 | NFSv3 | 关闭 | 必须实施特定于服务器的 STONITH 
+
+
+| NFSv4 | 开启 | 不需要 
+|===
+
+NOTE: 本指南不包括特定于服务器的 STONITH 实施。请联系您的服务器供应商进行此类实施。
+
+本文档介绍了在物理服务器和使用 VMware vSphere 的虚拟服务器上运行的 SAP HANA 的配置建议。
+
+
+NOTE: 有关操作系统配置准则和特定于 HANA 的 Linux 内核依赖关系，请始终参考相关 SAP 注释。有关详细信息，请参见 https://launchpad.support.sap.com/["SAP 注释 2235581 ： SAP HANA 支持的操作系统"^]。
+
+
+
+== SAP HANA 量身定制的数据中心集成
+
+NetApp FAS 存储控制器已通过 SAP HANA TDI 计划的认证，并同时使用 NFS （ NAS ）和 FC （ SAN ）协议。它们可以部署在任何当前 SAP HANA 方案中，例如采用单主机或多主机配置的基于 HANA 的 SAP Business Suite ， S/4HANA ， BB/4HANA 或基于 HANA 的 SAP Business Warehouse 。任何经认证可与 SAP HANA 结合使用的服务器均可与 NetApp 认证的存储解决方案结合使用。有关架构概述，请参见下图。
+
+image:saphana-fas-nfs_image1.png["错误：缺少图形映像"]
+
+有关生产 SAP HANA 系统的前提条件和建议的详细信息，请参见以下 SAP 资源：
+
+* http://go.sap.com/documents/2016/05/e8705aae-717c-0010-82c7-eda71af511fa.html["SAP HANA 定制数据中心集成常见问题解答"^]
+* http://go.sap.com/documents/2015/03/74cdb554-5a7c-0010-82c7-eda71af511fa.html["SAP HANA 存储要求"^]
+
+
+
+
+== 使用 VMware vSphere 的 SAP HANA
+
+可以通过多种方法将存储连接到虚拟机（ VM ）。首选方法是，将具有 NFS 的存储卷直接从子操作系统中连接起来。使用此选项时，物理主机和 VM 之间的主机和存储配置不会有所不同。
+
+此外，还支持 NFS 数据存储库或采用 NFS 的 VVol 数据存储库。对于这两个选项，数据存储库中只能存储一个 SAP HANA 数据或日志卷，以用于生产用例。此外，无法实施由 SnapCenter 协调的基于 Snapshot 副本的备份和恢复，以及基于此操作的解决方案，例如 SAP 系统克隆。
+
+本文档介绍了从子操作系统直接挂载 NFS 的建议设置。
+
+有关将 vSphere 与 SAP HANA 结合使用的详细信息，请参见以下链接：
+
+* https://wiki.scn.sap.com/wiki/display/VIRTUALIZATION/SAP+HANA+on+VMware+vSphere["基于 VMware vSphere 的 SAP HANA —虚拟化—社区 Wiki"^]
+* http://www.vmware.com/files/pdf/SAP_HANA_on_vmware_vSphere_best_practices_guide.pdf["在 VMware vSphere 上纵向扩展 SAP HANA 的最佳实践和建议"^]
+* http://www.vmware.com/files/pdf/sap-hana-scale-out-deployments-on-vsphere.pdf["在 VMware vSphere 上横向扩展 SAP HANA 的最佳实践和建议"^]
+* https://launchpad.support.sap.com/["2161991 — VMware vSphere 配置准则— SAP One Support Launchpad （需要登录）"^]
+
+
+link:saphana-fas-nfs_architecture.html["接下来：架构。"]

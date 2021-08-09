@@ -1,0 +1,125 @@
+---
+sidebar: sidebar 
+permalink: ent-apps-db/saphana-dr-anf_hana_database_recovery_01.html 
+keywords: recovery, forward, log, backups, system, tenant, database, log, backups, check, consistency, hana, azure 
+summary: 以下是 HANA 数据库恢复的步骤。 
+---
+= HANA 数据库恢复
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:saphana-dr-anf_mount_the_volumes_at_the_target_host.html["上一步：在目标主机上挂载卷。"]
+
+启动所需的 SAP 服务。
+
+....
+vm-pr1:~ # systemctl start sapinit
+....
+以下输出显示了所需的进程。
+
+....
+vm-pr1:/ # ps -ef | grep sap
+root     23101     1  0 11:29 ?        00:00:00 /usr/sap/hostctrl/exe/saphostexec pf=/usr/sap/hostctrl/exe/host_profile
+pr1adm   23191     1  3 11:29 ?        00:00:00 /usr/sap/PR1/HDB01/exe/sapstartsrv pf=/usr/sap/PR1/SYS/profile/PR1_HDB01_vm-pr1 -D -u pr1adm
+sapadm   23202     1  5 11:29 ?        00:00:00 /usr/sap/hostctrl/exe/sapstartsrv pf=/usr/sap/hostctrl/exe/host_profile -D
+root     23292     1  0 11:29 ?        00:00:00 /usr/sap/hostctrl/exe/saposcol -l -w60 pf=/usr/sap/hostctrl/exe/host_profile
+root     23359  2597  0 11:29 pts/1    00:00:00 grep --color=auto sap
+....
+以下各小节介绍了使用复制的日志备份进行正向恢复的恢复过程。可以使用系统数据库的 HANA 恢复脚本和租户数据库的 hdbsql. 命令执行恢复。
+
+第章介绍了用于恢复到最新数据保存点的命令 link:saphana-dr-anf_hana_database_recovery.html#recovery-to-latest-hana-data-volume-backup-savepoint["恢复到最新的 HANA 数据卷备份 Savepoint"]。
+
+
+
+== 使用日志备份进行正向恢复
+
+使用所有可用日志备份执行恢复时，使用以下命令作为用户 pr1adm 执行：
+
+* 系统数据库
+
+
+....
+recoverSys.py --command "RECOVER DATABASE UNTIL TIMESTAMP '2021-02-20 00:00:00' CLEAR LOG USING SNAPSHOT"
+....
+* 租户数据库
+
+
+....
+Within hdbsql: RECOVER DATABASE FOR PR1 UNTIL TIMESTAMP '2021-02-20 00:00:00' CLEAR LOG USING SNAPSHOT
+....
+
+NOTE: 要使用所有可用日志进行恢复，您可以在恢复语句中随时使用作为时间戳。
+
+您还可以使用 HANA Studio 或 Cockpit 执行系统和租户数据库的恢复。
+
+以下命令输出显示了恢复执行情况。
+
+
+
+=== 系统数据库恢复
+
+....
+pr1adm@vm-pr1:/usr/sap/PR1/HDB01> HDBSettings.sh recoverSys.py --command "RECOVER DATABASE UNTIL TIMESTAMP '2021-02-24 00:00:00' CLEAR LOG USING SNAPSHOT"
+[139792805873472, 0.008] >> starting recoverSys (at Tue Feb 23 12:05:16 2021)
+[139792805873472, 0.008] args: ()
+[139792805873472, 0.008] keys: {'command': "RECOVER DATABASE UNTIL TIMESTAMP '2021-02-24 00:00:00' CLEAR LOG USING SNAPSHOT"}
+using logfile /usr/sap/PR1/HDB01/vm-pr1/trace/backup.log
+recoverSys started: ============2021-02-23 12:05:16 ============
+testing master: vm-pr1
+vm-pr1 is master
+shutdown database, timeout is 120
+stop system
+stop system on: vm-pr1
+stopping system: 2021-02-23 12:05:17
+stopped system: 2021-02-23 12:05:18
+creating file recoverInstance.sql
+restart database
+restart master nameserver: 2021-02-23 12:05:23
+start system: vm-pr1
+sapcontrol parameter: ['-function', 'Start']
+sapcontrol returned successfully:
+2021-02-23T12:07:53+00:00  P0012969      177cec93d51 INFO    RECOVERY RECOVER DATA finished successfully, reached timestamp 2021-02-23T09:03:11+00:00, reached log position 43123520
+recoverSys finished successfully: 2021-02-23 12:07:54
+[139792805873472, 157.466] 0
+[139792805873472, 157.466] << ending recoverSys, rc = 0 (RC_TEST_OK), after 157.458 secs
+pr1adm@vm-pr1:/usr/sap/PR1/HDB01>
+....
+
+
+=== 租户数据库恢复
+
+如果尚未在源系统上为 pr1adm 用户创建用户存储密钥，则必须在目标系统上创建密钥。在密钥中配置的数据库用户必须具有执行租户恢复操作的权限。
+
+....
+pr1adm@vm-pr1:/usr/sap/PR1/HDB01> hdbuserstore set PR1KEY vm-pr1:30113 <backup-user> <password>
+....
+....
+pr1adm@vm-pr1:/usr/sap/PR1/HDB01> hdbsql -U PR1KEY
+Welcome to the SAP HANA Database interactive terminal.
+Type:  \h for help with commands
+       \q to quit
+hdbsql SYSTEMDB=> RECOVER DATABASE FOR PR1 UNTIL TIMESTAMP '2021-02-24 00:00:00' CLEAR LOG USING SNAPSHOT
+0 rows affected (overall time 98.740038 sec; server time 98.737788 sec)
+hdbsql SYSTEMDB=>
+....
+
+
+== 检查最新日志备份的一致性
+
+由于日志备份卷复制是独立于 SAP HANA 数据库执行的日志备份过程执行的，因此灾难恢复站点上可能存在不一致的开放日志备份文件。只有最新的日志备份文件可能不一致，在使用 `hdbbackupcheck` 工具在灾难恢复站点执行正向恢复之前，应先检查这些文件。
+
+....
+pr1adm@hana-10: > hdbbackupcheck /hanabackup/PR1/log/SYSTEMDB/log_backup_0_0_0_0.1589289811148
+Loaded library 'libhdbcsaccessor'
+Loaded library 'libhdblivecache'
+Backup '/mnt/log-backup/SYSTEMDB/log_backup_0_0_0_0.1589289811148' successfully checked.
+....
+必须对系统和租户数据库的最新日志备份文件执行检查。
+
+如果 `hdbbackupcheck` 工具报告最新日志备份出错，则必须删除或删除最新的日志备份集。
+
+link:saphana-dr-anf_update_history.html["下一步：更新历史记录。"]

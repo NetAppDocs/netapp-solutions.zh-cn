@@ -1,0 +1,58 @@
+---
+sidebar: sidebar 
+permalink: ent-apps-db/saphana-fas-nfs_sap_hana_installation_preparations_for_nfsv4.html 
+keywords: sap, hana, installation, preparations, nfsv4, user, authentication, storage, controller, hosts 
+summary: NFS 版本 4 及更高版本需要用户身份验证。可以使用轻型目录访问协议（ Lightweight Directory Access Protocol ， LDAP ）服务器等中央用户管理工具或使用本地用户帐户来完成此身份验证。 
+---
+= NFSv4 的 SAP HANA 安装准备
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:saphana-fas-nfs_host_setup.html["上一步：主机设置。"]
+
+NFS 版本 4 及更高版本需要用户身份验证。可以使用轻型目录访问协议（ Lightweight Directory Access Protocol ， LDAP ）服务器等中央用户管理工具或使用本地用户帐户来完成此身份验证。以下各节介绍如何配置本地用户帐户。
+
+在开始安装 SAP HANA 软件之前，必须在 SAP HANA 主机和存储控制器上手动创建管理用户 ` <sidadm>` 和 `sapsys` 组。
+
+
+
+== SAP HANA 主机
+
+如果不存在，则必须在 SAP HANA 主机上创建 `sapsys` 组。必须选择一个不与存储控制器上的现有组 ID 冲突的唯一组 ID 。
+
+已在 SAP HANA 主机上创建用户 ` <sidadm>` 。必须选择一个与存储控制器上的现有用户 ID 不冲突的唯一 ID 。
+
+对于多主机 SAP HANA 系统，所有 SAP HANA 主机上的用户和组 ID 必须相同。通过将 ` /etc/group` 和 ` /etc/passwd` 中的受影响行从源系统复制到所有其他 SAP HANA 主机，可以在其他 SAP HANA 主机上创建组和用户。
+
+
+NOTE: 在所有 Linux 服务器（` /etc/idmapd.conf` ）和 SVM 上， NFSv4 域必须设置为相同的值。在文件 ` /etc/idmapd.conf` 中为 Linux 主机设置域参数 "Domain = <domain-name> " 。
+
+启用并启动 NFS idmapd 服务。
+
+....
+systemctl enable nfs-idmapd.service
+systemctl start nfs-idmapd.service
+....
+
+NOTE: 最新的 Linux 内核不需要执行此步骤。可以安全地忽略警告消息。
+
+
+
+== 存储控制器
+
+SAP HANA 主机和存储控制器上的用户 ID 和组 ID 必须相同。可通过在存储集群上输入以下命令来创建组和用户：
+
+....
+vserver services unix-group create -vserver <vserver> -name <group name> -id <group id>
+vserver services unix-user create -vserver <vserver> -user <user name> -id <user-id> -primary-gid <group id>
+....
+此外，将 SVM 的 UNIX 用户 root 的组 ID 设置为 0 。
+
+....
+vserver services unix-user modify -vserver <vserver> -user root -primary-gid 0
+....
+link:saphana-fas-nfs_i_o_stack_configuration_for_sap_hana.html["接下来： SAP HANA 的 I/O 堆栈配置。"]

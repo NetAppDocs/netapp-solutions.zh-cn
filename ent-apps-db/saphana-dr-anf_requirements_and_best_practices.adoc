@@ -1,0 +1,25 @@
+---
+sidebar: sidebar 
+permalink: ent-apps-db/saphana-dr-anf_requirements_and_best_practices.html 
+keywords: requirements, best, practices, microsoft, azure, virtual, machine, vm 
+summary: Microsoft Azure 不保证特定虚拟机（ VM ）类型在创建时或启动已取消分配的 VM 时可用。 
+---
+= 要求和最佳实践
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:saphana-dr-anf_configuration_options_for_cross-region_replication_with_sap_hana.html["先前版本：使用 SAP HANA 进行跨区域复制的配置选项。"]
+
+Microsoft Azure 不保证特定虚拟机（ VM ）类型在创建时或启动已取消分配的 VM 时可用。具体而言，如果某个区域发生故障，许多客户端可能需要在灾难恢复区域添加更多 VM 。因此，建议主动使用具有灾难故障转移所需大小的虚拟机作为灾难恢复区域的测试或 QA 系统，以便分配所需的虚拟机类型。
+
+为了优化成本，在正常运行期间使用性能层较低的 ANF 容量池是有意义的。数据复制不需要高性能，因此可以使用具有标准性能层的容量池。对于灾难恢复测试，或者如果需要进行灾难故障转移，则必须将卷移至具有高性能层的容量池。
+
+如果不能选择第二个容量池，则应根据容量要求而不是正常操作期间的性能要求来配置复制目标卷。然后，可以调整配额或吞吐量（对于手动 QoS ），以便在发生灾难故障转移时进行灾难恢复测试。
+
+有关详细信息，请参见 https://docs.microsoft.com/en-us/azure/azure-netapp-files/cross-region-replication-requirements-considerations["使用 Azure NetApp Files 卷跨区域复制的要求和注意事项 | Microsoft 文档"^]。
+
+link:saphana-dr-anf_lab_setup.html["下一步：实验室设置。"]

@@ -1,0 +1,42 @@
+---
+sidebar: sidebar 
+permalink: ent-apps-db/saphana-dr-anf_disaster_recovery_testing_overview.html 
+keywords: disaster, recovery, strategy, workflow, testing, internal, documentation 
+summary: 要实施有效的灾难恢复策略，您必须测试所需的工作流。测试可证明该策略是否有效以及内部文档是否充足，同时还允许管理员对所需的程序进行培训。 
+---
+= 灾难恢复测试
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:saphana-dr-anf_monitoring_anf_cross-region_replication.html["先前版本：监控 ANF 跨区域复制。"]
+
+要实施有效的灾难恢复策略，您必须测试所需的工作流。测试可证明该策略是否有效以及内部文档是否充足，同时还允许管理员对所需的程序进行培训。
+
+ANF 跨区域复制支持灾难恢复测试，而不会使 RTO 和 RPO 面临风险。可以在不中断数据复制的情况下执行灾难恢复测试。
+
+灾难恢复测试工作流利用 ANF 功能集，根据灾难恢复目标上的现有 Snapshot 备份创建新卷。请参见 https://docs.microsoft.com/en-us/azure/azure-netapp-files/snapshots-introduction["Azure NetApp Files 快照的工作原理 | Microsoft 文档"^]。
+
+根据日志备份复制是否属于灾难恢复设置的一部分，灾难恢复的步骤略有不同。本节介绍了针对纯数据备份复制以及结合日志备份卷复制的数据卷复制进行的灾难恢复测试。
+
+要执行灾难恢复测试，请完成以下步骤：
+
+. 准备目标主机。
+. 在灾难恢复站点基于 Snapshot 备份创建新卷。
+. 在目标主机上挂载新卷。
+. 恢复 HANA 数据库。
++
+** 仅限数据卷恢复。
+** 使用复制的日志备份进行正向恢复。
+
+
+
+
+以下各小节详细介绍了这些步骤。
+
+image:saphana-dr-anf_image18.png["错误：缺少图形映像"]
+
+link:saphana-dr-anf_prepare_the_target_host.html["下一步：准备目标主机。"]

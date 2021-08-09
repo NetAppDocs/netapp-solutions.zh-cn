@@ -1,0 +1,43 @@
+---
+sidebar: sidebar 
+permalink: infra/hcicaci_ontap_select_with_vmware_vsphere.html 
+keywords: ONTAP Select, SDS, software-defined storage, IoT, tactical, 
+summary: TR-4857 
+---
+= 采用 VMware vSphere 的 ONTAP Select ： NetApp HCI 和 Cisco ACI
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+NetApp ONTAP Select 是适用于软件定义存储（ SDS ）的 NetApp 解决方案，可为软件定义的数据中心提供企业级存储管理功能。ONTAP Select 将 ONTAP 功能扩展到极致边缘使用情形，包括 IoT 和战术服务器，它是一种软件定义的存储设备，充当完整的存储系统。它可以在虚拟环境之上作为一个简单的 VM 运行，以提供灵活且可扩展的存储解决方案。
+
+在另一个软件应用程序上以软件形式运行 ONTAP ，可以让您充分利用虚拟机管理程序完成的大部分资格认定工作。此功能对于帮助我们快速扩展受支持平台列表至关重要。此外，将 ONTAP 定位为虚拟机（ Virtual Machine ， VM ）还可以让客户插入到现有的管理和业务流程框架中，从而实现快速配置以及从部署到 Sunsetting 的端到端自动化。下图概述了一个四节点 ONTAP Select 实例。
+
+image:hcicaci_image24.png["错误：缺少图形映像"]
+
+在环境中部署 ONTAP Select 以使用 NetApp HCI 提供的存储扩展了 NetApp Element 的功能。
+
+
+
+== 工作流
+
+以下工作流用于设置环境。在此解决方案中，我们部署了一个双节点 ONTAP Select 集群。其中每个步骤可能涉及多个单独的任务。
+
+. 为 OTS 集群的内部通信创建 L2 BD 和 EPG ，并在原生交换模式（对于 Cisco Ave 虚拟交换机）下使用预配置解析即时性将 VMM 域连接到 EPG 。
++
+image:hcicaci_image25.png["错误：缺少图形映像"]
+
+. 验证您是否具有 VMware vSphere 许可证。
+. 创建托管 OTS 的数据存储库。
+. 根据部署和配置 ONTAP Select https://docs.netapp.com/us-en/ontap-select/["ONTAP Select 文档"^]。
++
+image:hcicaci_image26.png["错误：缺少图形映像"]
+
+. 使用 ONTAP Select 创建其他数据存储库以利用其他功能。
+
+
+link:hcicaci_storagegrid_with_vmware_vsphere.html["接下来：采用 VMware vSphere 的 StorageGRID ： NetApp HCI 和 Cisco ACI"]

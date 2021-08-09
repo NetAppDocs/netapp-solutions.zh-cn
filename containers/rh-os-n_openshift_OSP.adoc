@@ -1,0 +1,155 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_openshift_OSP.html 
+keywords: OpenShift, OpenStack, private cloud 
+summary:  
+---
+= 基于 Red Hat OpenStack Platform 的 OpenShift ：采用 NetApp 的 Red Hat OpenShift
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+Red Hat OpenStack Platform 为创建，部署和扩展安全可靠的私有 OpenStack 云提供了一个集成基础。
+
+OSP 是一种基础架构即服务（ Infrastructure-as-a-Service ， IaaS ）云，由一组控制服务实施，用于管理计算，存储和网络资源。环境可通过基于 Web 的界面进行管理，管理员和用户可以控制，配置和自动化 OpenStack 资源。此外，还通过广泛的命令行界面和 API 为 OpenStack 基础架构提供便利，为管理员和最终用户提供全面的自动化功能。
+
+OpenStack 项目是一个快速开发的社区项目，每六个月提供更新版本。最初， Red Hat OpenStack Platform 通过发布新版本以及每个上游版本并为每个第三个版本提供长期支持，跟上了此版本周期的步伐。最近，在 OSP 16.0 版（基于 OpenStack Train ）中， Red Hat 选择不跟上版本号的步伐，而是将新功能回退到子版本中。最新版本是 Red Hat OpenStack Platform 16.1 ，其中包括上游 Ussuri 和维多利亚版本的后台高级功能。
+
+有关 OSP 的详细信息，请参见 https://www.redhat.com/en/technologies/linux-platforms/openstack-platform["Red Hat OpenStack Platform 网站"^]。
+
+
+
+== OpenStack 服务
+
+OpenStack 平台服务以容器的形式部署，可将服务彼此隔离，并可轻松进行升级。OpenStack 平台使用一组使用 Kolla 构建和管理的容器。可通过从 Red Hat 自定义门户中提取容器映像来部署服务。这些服务容器可使用 Podman 命令进行管理，并可使用 Red Hat OpenStack Director 进行部署，配置和维护。
+
+image:redhat_openshift_image34.png["错误：缺少图形映像"]
+
+|===
+
+
+| 服务 | 项目名称 | Description 
+
+
+| 信息板 | Horizon | 基于 Web 浏览器的信息板，用于管理 OpenStack 服务。 
+
+
+| 身份 | Keystone | 用于身份验证和授权 OpenStack 服务以及管理用户，项目和角色的集中式服务。 
+
+
+| OpenStack 网络 | 中子 | 在 OpenStack 服务的接口之间提供连接。 
+
+
+| 块存储 | Cinder | 管理虚拟机（ VM ）的永久性块存储卷。 
+
+
+| 计算 | Nova | 管理和配置计算节点上运行的 VM 。 
+
+
+| 图像 | 概览 | 用于存储 VM 映像和卷快照等资源的注册表服务。 
+
+
+| 对象存储 | Swift | 允许用户存储和检索文件和任意数据。 
+
+
+| 遥测 | Ceilmeter | 提供对云资源使用情况的衡量指标。 
+
+
+| 流程编排 | 热 | 基于模板的流程编排引擎，支持自动创建资源堆栈。 
+|===
+
+
+== 网络设计
+
+采用 NetApp 解决方案的 Red Hat OpenShift 使用两个数据交换机以 25 Gbps 的速度提供主数据连接。它还使用两个额外的管理交换机，这些交换机以 1 Gbps 的速度提供连接，用于存储节点的带内管理以及 IPMI 功能的带外管理。
+
+Red Hat OpenStack Director 需要 IPMI 功能才能使用具有讽刺意味的 BareMetal 配置服务部署 Red Hat OpenStack Platform 。
+
+
+
+=== VLAN 要求
+
+采用 NetApp 的 Red Hat OpenShift 旨在通过使用虚拟局域网（ VLAN ）在逻辑上隔离不同用途的网络流量。此配置可以进行扩展，以满足客户需求，或者为特定网络服务提供进一步隔离。下表列出了在 NetApp 验证解决方案时实施解决方案所需的 VLAN 。
+
+|===
+| VLAN | 目的 | VLAN ID 
+
+
+| 带外管理网络 | 用于管理物理节点和 IPMI 服务的网络具有讽刺意味。 | 16. 
+
+
+| 存储基础架构 | 用于控制器节点直接映射卷以支持 Swift 等基础架构服务的网络。 | 201 
+
+
+| 存储 Cinder | 用于将块卷直接映射和附加到环境中部署的虚拟实例的网络。 | 202 
+
+
+| 内部 API | 用于通过 API 通信， RPC 消息和数据库通信在 OpenStack 服务之间进行通信的网络。 | 301. 
+
+
+| 租户 | 中子通过 VXLAN 的通道为每个租户提供自己的网络。网络流量在每个租户网络中隔离。每个租户网络都有一个关联的 IP 子网，而网络命名空间意味着多个租户网络可以使用相同的地址范围而不会导致冲突 | 302. 
+
+
+| 存储管理 | OpenStack 对象存储（ Swift ）使用此网络在参与的副本节点之间同步数据对象。代理服务充当用户请求与底层存储层之间的中间接口。代理接收传入请求并找到所需的副本以检索请求的数据。 | 303. 
+
+
+| PXE | OpenStack Director 在具有讽刺意味的裸机配置服务中提供 PXE 启动，用于编排 OSP Overcloud 的安装。 | 3484 
+
+
+| 外部 | 公共网络，用于托管用于图形管理的 OpenStack 信息板（ Horizon ），并允许公有 API 调用来管理 OpenStack 服务。 | 3485 
+
+
+| 带内管理网络 | 提供对系统管理功能的访问，例如 SSH 访问， DNS 流量和网络时间协议（ NTP ）流量。此网络还充当非控制器节点的网关。 | 3486 
+|===
+
+
+=== 网络基础架构支持资源
+
+在部署 OpenShift 容器平台之前，应具备以下基础架构：
+
+* 至少一个 DNS 服务器，可提供完整的主机名解析。
+* 至少三个 NTP 服务器，这些服务器可以使解决方案中的服务器保持时间同步。
+* （可选） OpenShift 环境的出站 Internet 连接。
+
+
+
+
+== 生产部署的最佳实践
+
+本节列出了企业在将此解决方案部署到生产环境之前应考虑的几个最佳实践。
+
+
+
+=== 将 OpenShift 部署到至少包含三个计算节点的 OSP 私有云
+
+本文档中介绍的经验证的架构通过部署三个 OSP 控制器节点和两个 OSP 计算节点提供了最适合 HA 操作的最低硬件部署。 并确保采用容错配置，使两个计算节点均可启动虚拟实例，而已部署的 VM 可在两个虚拟机管理程序之间迁移。
+
+由于 Red Hat OpenShift 最初使用三个主节点进行部署，因此在双节点配置中，可以确保至少有两个主节点将占用同一节点，如果特定节点不可用，可能会导致 OpenShift 中断。因此， Red Hat 的最佳实践是，在解决方案中至少部署三个 OSP 计算节点，以便 OpenShift 主节点可以均匀分布，并且解决方案可以获得更多的容错能力。
+
+
+
+=== 配置虚拟机 / 主机关联性
+
+通过启用虚拟机 / 主机关联性，可确保在多个虚拟机管理程序节点之间分布 OpenShift 主节点。
+
+关联性是一种为一组 VM 和 / 或主机定义规则的方法，用于确定这些 VM 是在组中的同一主机上运行还是在不同主机上运行。它通过创建由具有一组相同参数和条件的 VM 和 / 或主机组成的关联组来应用于 VM 。根据关联组中的 VM 是在组中的同一主机上运行，还是在不同主机上单独运行，此关联组的参数可以定义正关联性或负关联性。在 Red Hat OpenStack 平台中，可以通过创建服务器组和配置筛选器来创建和实施主机关联性和反关联性规则，以便 Nova 在服务器组中部署的实例部署在不同的计算节点上。
+
+默认情况下，服务器组最多可管理 10 个虚拟实例的放置。可以通过更新 Nova 的默认配额来修改此设置。
+
+
+NOTE: OSP 服务器组具有特定的硬关联性 / 反关联性限制，如果没有足够的资源可在不同的节点上部署，或者没有足够的资源可用于共享节点，则 VM 将无法启动。
+
+要配置相关性组，请参见 https://access.redhat.com/solutions/1977943["如何为 OpenStack 实例配置关联性和反关联性？"^]。
+
+
+
+=== 使用自定义安装文件进行 OpenShift 部署
+
+通过本文档前面讨论的交互式向导， IPI 可以轻松部署 OpenShift 集群。但是，在集群部署过程中，可能需要更改某些默认值。
+
+在这些情况下，无需立即部署集群，即可运行向导并为其分配任务，而是输出一个配置文件，以便稍后可以从该配置文件中部署集群。如果需要更改任何 IPI 默认设置，或者用户希望在其环境中部署多个相同的集群以用于多租户等其他用途，则此功能非常有用。有关为 OpenShift 创建自定义安装配置的详细信息，请参见 https://docs.openshift.com/container-platform/4.7/installing/installing_openstack/installing-openstack-installer-custom.html["Red Hat OpenShift 通过自定义在 OpenStack 上安装集群"^]。
+
+link:rh-os-n_overview_netapp.html["接下来： NetApp 存储概述。"]

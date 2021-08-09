@@ -1,0 +1,28 @@
+---
+sidebar: sidebar 
+permalink: infra/rhv-enabling_fencing_for_rhv-h_hosts.html 
+keywords: fencing, high availability, VM, power management 
+summary:  
+---
+= 为 RHP-H 主机启用隔离：采用 RHV 的 NetApp HCI
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+隔离是一个过程，通过该过程， RHV Manager 可以通过自动关闭无响应虚拟机管理程序主机来为环境中的虚拟机提供高可用性。为此，它会向隔离代理发送命令，如果使用的是 NetApp HCI ，则可以通过计算节点上的 IPMI 带外管理界面来执行此操作，并重新启动主机。此操作可解除无响应虚拟机管理程序节点在 VM 磁盘上的锁定，并允许在集群中的另一个节点上重新启动这些虚拟子系统，而不会造成数据损坏。主机完成启动过程后，它会自动尝试重新加入关闭之前所在的集群。如果成功，则再次允许托管 VM 。
+
+要启用隔离，每个主机都必须启用电源管理；这可以通过突出显示主机并单击右上角的编辑按钮来实现，也可以通过右键单击主机并选择编辑来实现。
+
+image:redhat_virtualization_image73.png["错误：缺少图形映像"]
+
+启用电源管理后，下一步需要配置隔离代理。单击 Add Fence Agent 旁边的加号（ + ），此时将弹出一个新窗口，必须填写 NetApp HCI 计算节点上 IPMI 连接的信息。连接类型为 IPMLAN ，代理需要 IP 地址，用户名和密码才能登录控制台。提供此信息后，您可以单击 test 以验证配置。如果配置正确，则应报告节点的当前电源状态。
+
+image:redhat_virtualization_image74.png["错误：缺少图形映像"]
+
+启用隔离后，可以将 RHV 环境配置为在其中一个虚拟机管理程序节点无响应时支持高可用性部署。
+
+link:rhv-optimizing_memory_for_red_hat_virtualization.html["接下来：最佳实践—为 Red Hat 虚拟化优化内存"]

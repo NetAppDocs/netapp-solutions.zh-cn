@@ -1,0 +1,55 @@
+---
+sidebar: sidebar 
+permalink: hybrid-cloud/vsrm-ontap9_deployment_best_practices.html 
+keywords: vmware, site, recovery manager, vsrm, svm, layout, segmentation, smt, best, practices, deploy, ontap, tools, vvols 
+summary: 借助 ONTAP ， Storage Virtual Machine （ SVM ）的概念可在安全多租户环境中提供严格的分段。 
+---
+= 部署最佳实践
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== SMT 的 SVM 布局和分段
+
+借助 ONTAP ， Storage Virtual Machine （ SVM ）的概念可在安全多租户环境中提供严格的分段。一个 SVM 上的 SVM 用户无法从另一个 SVM 访问或管理资源。这样，您就可以利用 ONTAP 技术，为在同一集群上管理自己 SRM 工作流的不同业务单位创建单独的 SVM ，从而提高整体存储效率。
+
+请考虑使用 SVM 范围的帐户和 SVM 管理 LIF 管理 ONTAP ，这样不仅可以改进安全控制，还可以提高性能。使用 SVM 范围的连接时，性能本身就会更高，因为处理整个集群中的所有资源（包括物理资源）并不需要 SRA 。相反，它只需要了解抽象到特定 SVM 的逻辑资产。
+
+仅使用 NAS 协议（无 SAN 访问）时，您甚至可以通过设置以下参数来利用新的 NAS 优化模式（请注意，此名称是如此，因为 SRA 和 VASA 在设备中使用相同的后端服务）：
+
+. 登录到控制面板，网址为 ` \https://<IP address> ： 9083` ，然后单击基于 Web 的命令行界面。
+. 运行命令 `vp updateconfig -key=enable.qtree.discovery -value=true` 。
+. 运行命令 `vp updateconfig -key=enable.optimed.sra-value=true` 。
+. 运行命令 `vp reloadconfig` 。
+
+
+
+
+== 部署适用于 VVOL 的 ONTAP 工具和注意事项
+
+如果要将 SRM 与 VVol 结合使用，则必须使用集群范围的凭据和集群管理 LIF 来管理存储。这是因为 VASA Provider 必须了解底层物理架构，才能满足 VM 存储策略的策略要求。例如，如果您的策略需要全闪存存储，则 VASA Provider 必须能够查看哪些系统全闪存。
+
+另一个部署最佳实践是，切勿将 ONTAP 工具设备存储在其管理的 VVOL 数据存储库上。这可能导致无法启动 VASA Provider ，因为您无法为设备创建交换 VVol ，因为设备已脱机。
+
+
+
+== 管理 ONTAP 9 系统的最佳实践
+
+如前所述，您可以使用集群或 SVM 范围的凭据和管理 LIF 来管理 ONTAP 集群。为了获得最佳性能，您可能需要考虑在不使用 VVOL 的情况下使用 SVM 范围的凭据。但是，在执行此操作时，您应了解一些要求，并且确实会丢失某些功能。
+
+* 默认 vsadmin SVM 帐户没有执行 ONTAP 工具任务所需的访问级别。因此，您需要创建新的 SVM 帐户。
+* 如果您使用的是 ONTAP 9.8 或更高版本， NetApp 建议使用 ONTAP 系统管理器的用户菜单以及 ONTAP 工具设备上提供的 JSON 文件创建一个权限最低的 RBAC 用户帐户，网址为 ` \https://<IP address> ： 9083/VSC/config/` 。使用您的管理员密码下载 JSON 文件。这可以用于 SVM 或集群范围的帐户。
++
+如果您使用的是 ONTAP 9.6 或更早版本，则应使用中提供的 RBAC User Creator （ RUC ）工具 https://mysupport.netapp.com/site/tools/tool-eula/rbac["NetApp 支持站点工具箱"^]。
+
+* 由于 vCenter UI 插件， VASA Provider 和 SRA 服务器都是完全集成的服务，因此您必须按照在 vCenter UI for ONTAP Tools 中添加存储的方式在 SRM 中向 SRA 适配器添加存储。否则， SRA 服务器可能无法识别通过 SRA 适配器从 SRM 发送的请求。
+* 使用 SVM 范围的凭据时，不会执行 NFS 路径检查。这是因为物理位置从 SVM 中进行了逻辑抽象。不过，这并不是一个值得关注的发生原因，因为现代 ONTAP 系统在使用间接路径时不再出现任何明显的性能下降。
+* 可能不会报告因存储效率而节省的聚合空间。
+* 如果支持，则无法更新负载共享镜像。
+* 可能不会在使用 SVM 范围的凭据管理的 ONTAP 系统上执行 EMS 日志记录。
+

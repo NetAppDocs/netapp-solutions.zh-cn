@@ -1,0 +1,177 @@
+---
+sidebar: sidebar 
+permalink: ai/hciai_edge_deploy_and_configure_ontap_select_in_the_vmware_virtual_infrastructure_automated_deployment.html 
+keywords:  
+summary:  
+---
+= 在 VMware 虚拟基础架构中部署和配置 ONTAP Select （自动化部署）
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+要在 VMware 虚拟基础架构中部署和配置 ONTAP Select 实例，请完成以下步骤：
+
+. 从 Deployment Jump VM 中，登录到 https://mysupport.netapp.com/site/products/all/details/ontap-select/downloads-tab/download/62293/9.7["NetApp 支持站点"^] 并下载适用于 ESXi 的 ONTAP Select OVA 。
+. 创建目录 OTS 并获取用于部署 ONTAP Select 的 Ansible 角色。
++
+....
+mkdir OTS
+cd OTS
+git clone https://github.com/NetApp/ansible.git
+cd ansible
+....
+. 安装前提条件库。
++
+....
+pip install requests
+pip install pyvmomi
+Open a VI Editor and create a playbook ‘`ots_setup.yaml`’ with the below content to deploy the ONTAP Select OVA and initialize the ONTAP cluster.
+---
+- name: Create ONTAP Select Deploy VM from OVA (ESXi)
+  hosts: localhost
+  gather_facts: false
+  connection: 'local'
+  vars_files:
+    - ots_deploy_vars.yaml
+  roles:
+    - na_ots_deploy
+- name: Wait for 1 minute before starting cluster setup
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  - pause:
+      minutes: 1
+- name: Create ONTAP Select cluster (ESXi)
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+  - ots_cluster_vars.yaml
+  roles:
+    - na_ots_cluster
+....
+. 打开 VI 编辑器，创建一个变量文件 `ots_deploy_vars.yaml` ，然后填写以下参数：
++
+....
+target_vcenter_or_esxi_host: "10.xxx.xx.xx"# vCenter IP
+host_login: "yourlogin@yourlab.local"  # vCenter Username
+ovf_path: "/run/deploy/ovapath/ONTAPdeploy.ova"# Path to OVA on Deployment Jump VM
+datacenter_name: "your-Lab"# Datacenter name in vCenter
+esx_cluster_name: "your Cluster"# Cluster name in vCenter
+datastore_name: "your-select-dt"# Datastore name in vCenter
+mgt_network: "your-mgmt-network"# Management Network to be used by OVA
+deploy_name: "test-deploy-vm"# Name of the ONTAP Select VM
+deploy_ipAddress: "10.xxx.xx.xx"# Management IP Address of ONTAP Select VM
+deploy_gateway: "10.xxx.xx.1"# Default Gateway
+deploy_proxy_url: ""# Proxy URL (Optional and if used)
+deploy_netMask: "255.255.255.0"# Netmask
+deploy_product_company: "NetApp"# Name of Organization
+deploy_primaryDNS: "10.xxx.xx.xx"# Primary DNS IP
+deploy_secondaryDNS: ""# Secondary DNS (Optional)
+deploy_searchDomains: "your.search.domain.com"# Search Domain Name
+....
++
+更新变量以匹配您的环境。
+
+. 打开 VI 编辑器，创建一个变量文件 `ots_cluster_vars.yaml` ，并使用以下参数填写该变量：
++
+....
+node_count: 1#Number of nodes in the ONTAP Cluster
+monitor_job: truemonitor_deploy_job: true
+deploy_api_url: #Use the IP of the ONTAP Select VM
+deploy_login: "admin"
+vcenter_login: "administrator@vsphere.local"
+vcenter_name: "172.21.232.100"
+esxi_hosts:
+  - host_name: 172.21.232.102
+  - host_name: 172.21.232.103
+cluster_name: "hci-ai-ots"# Name of ONTAP Cluster
+cluster_ip: "172.21.232.118"# Cluster Management IP
+cluster_netmask: "255.255.255.0"
+cluster_gateway: "172.21.232.1"
+cluster_ontap_image: "9.7"
+cluster_ntp:
+  - "10.61.186.231"
+cluster_dns_ips:
+  - "10.61.186.231"
+cluster_dns_domains:
+  - "sddc.netapp.com"
+mgt_network: "NetApp HCI VDS 01-Management_Network"# Name of VM Port Group for Mgmt Network
+data_network: "NetApp HCI VDS 01-NFS_Network"# Name of VM Port Group for NFS Network
+internal_network: ""# Not needed for Single Node Cluster
+instance_type: "small"
+cluster_nodes:
+  - node_name: "{{ cluster_name }}-01"
+    ipAddress: 172.21.232.119# Node Management IP
+    storage_pool: NetApp-HCI-Datastore-02 # Name of Datastore in vCenter to use
+    capacityTB: 1# Usable capacity will be ~700GB
+    host_name: 172.21.232.102# IP Address of an ESXi host to deploy node
+....
++
+更新变量以匹配您的环境。
+
+. 启动 ONTAP Select 设置。
++
+....
+ansible-playbook ots_setup.yaml --extra-vars deploy_pwd=$'"P@ssw0rd"' --extra-vars vcenter_password=$'"P@ssw0rd"' --extra-vars ontap_pwd=$'"P@ssw0rd"' --extra-vars host_esx_password=$'"P@ssw0rd"' --extra-vars host_password=$'"P@ssw0rd"' --extra-vars deploy_password=$'"P@ssw0rd"'
+....
+. 使用 `deDeploy pwd ` （ ONTAP Select VM 实例）， `vcvc_password` （ vCenter ）， `ontap_pwd` （ ONTAP 登录密码）， `host_esx_password` （ VMware ESXi ）， `host_password` （ vCenter ）和 `deDeploy _password` （ ONTAP Select VM 实例）更新命令。
+
+
+
+
+== 配置 ONTAP Select 集群—手动部署
+
+要配置 ONTAP Select 集群，请完成以下步骤：
+
+. 打开浏览器并使用其集群管理 IP 登录到 ONTAP 集群的 System Manager 。
+. 在信息板页面上，单击容量下的准备存储。
++
+image:hciaiedge_image13.png["错误：缺少图形映像"]
+
+. 选择单选按钮继续而不使用板载密钥管理器，然后单击准备存储。
+. 在网络页面上，单击广播域窗口中的 ` +` 符号。
++
+image:hciaiedge_image14.png["错误：缺少图形映像"]
+
+. 输入 Name as `NFS` ，将 MTU 设置为 `9000` ，然后选择端口 `e0b` 。单击保存。
++
+image:hciaiedge_image15.png["错误：缺少图形映像"]
+
+. 在信息板页面上，单击网络下的 `配置协议` 。
++
+image:hciaiedge_image16.png["错误：缺少图形映像"]
+
+. 输入 SVM 的名称，选择启用 NFS ，为 NFS LIF 提供 IP 和子网掩码，将广播域设置为 NFS ，然后单击保存。
++
+image:hciaiedge_image17.png["错误：缺少图形映像"]
+
+. 单击左窗格中的 storage ，然后从下拉列表中选择 Storage VM
++
+.. 编辑 SVM 。
++
+image:hciaiedge_image18.png["错误：缺少图形映像"]
+
+.. 选中 " 资源分配 " 下的复选框，确保已列出本地层，然后单击 " 保存 " 。
++
+image:hciaiedge_image19.png["错误：缺少图形映像"]
+
+
+
+. 单击 SVM 名称，然后在右侧面板上向下滚动到策略。
+. 单击导出策略磁贴中的箭头，然后单击默认策略。
+. 如果已定义某个规则，您可以对其进行编辑；如果不存在任何规则，请创建一个新规则。
++
+.. 选择 NFS 网络客户端作为客户端规范。
+.. 选中只读和读 / 写复选框。
+.. 选中复选框以允许超级用户访问。
+
+
+
+
+image:hciaiedge_image20.png["错误：缺少图形映像"]
+
+link:hciai_edge_deploy_netapp_trident_automated_deployment.html["下一步：部署 NetApp Trident （自动化部署）"]

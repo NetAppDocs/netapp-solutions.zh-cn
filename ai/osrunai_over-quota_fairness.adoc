@@ -1,0 +1,59 @@
+---
+sidebar: sidebar 
+permalink: ai/osrunai_over-quota_fairness.html 
+keywords:  
+summary:  
+---
+= 配额过度公平
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+在本节中，我们将扩展多个团队提交工作负载并超过其配额的情形。通过这种方式，我们将展示 Run ： AI 的公平性算法如何根据预设配额比率分配集群资源。
+
+此测试场景的目标：
+
+* 显示多个团队请求超过其配额的 GPU 时的排队机制。
+* 显示系统如何根据配额之间的比率在超过配额的多个组之间分配公平的集群份额，以便具有较大配额的组获得较大的备用容量份额。
+
+
+结束时 link:osrunai_basic_resource_allocation_fairness.html["基本资源分配公平"]，有两个工作负载排队：一个用于 `team-b` ，一个用于 `team-c` 。在本节中，我们将对其他工作负载进行排队。
+
+有关提交作业，使用的容器映像以及执行的命令序列等详细信息，请参见 link:osrunai_testing_details_for_section_4.10.html["第 4.10 节的测试详细信息"]。
+
+根据部分提交所有作业时 link:osrunai_testing_details_for_section_4.10.html["第 4.10 节的测试详细信息"]系统信息板显示 `team-A` ， `team-b` 和 `team-c` 所有 GPU 都超过其预设配额。与预设的软配额（ 4 个）相比， `team-A` 占用的 GPU 更多，而 `team-b` 和 `team-c` 每个占用的 GPU 都比其软配额（ 2 个）多两个。分配的过度配额 GPU 的比率等于其预设配额的比率。这是因为系统使用预设配额作为优先级的参考，并在多个团队请求更多 GPU ，超过其配额时相应地进行配置。当企业数据科学团队积极参与 AI 模型的开发和生产时，这种自动负载平衡可以实现公平和优先级划分。
+
+image:osrunai_image10.png["错误：缺少图形映像"]
+
+此测试场景的结果如下：
+
+* 系统开始将其他团队的工作负载取消队列。
+* 除队顺序根据公平算法来确定，这样 `team-b` 和 `team-c` 会获得相同数量的超配额 GPU （因为它们具有类似的配额）， 而 `team-A` 获得的 GPU 数量是原来的两倍，因为他们的配额是 `team-b` 和 `team-c` 的两倍。
+* 所有分配都将自动完成。
+
+
+因此，系统应在以下状态下保持稳定：
+
+|===
+| 项目 | 已分配 GPU | comment 
+
+
+| 团队 A | 8/4. | 超过配额的四个 GPU 。空队列。 
+
+
+| 团队 b | 4/2 | 超过配额的两个 GPU 。一个工作负载已排队。 
+
+
+| 团队 c | 4/2 | 超过配额的两个 GPU 。一个工作负载已排队。 
+
+
+| 团队 | 0/8 | 根本不使用 GPU ，没有已排队的工作负载。 
+|===
+下图显示了各个部分的 Run ： AI Analytics 信息板中每个项目在一段时间内的 GPU 分配情况 link:osrunai_achieving_high_cluster_utilization_with_over-uota_gpu_allocation.html["通过过度配额 GPU 分配实现高集群利用率"]， ，和 。图中的每一行表示在任何时间为给定数据科学团队配置的 GPU 数量。我们可以看到，系统会根据提交的工作负载动态分配 GPU 。这样，当集群中存在可用 GPU 时，团队可以超过配额，然后根据公平原则抢占作业，最后达到所有四个团队的稳定状态。
+
+image:osrunai_image11.png["错误：缺少图形映像"]
+
+link:osrunai_saving_data_to_a_trident-provisioned_persistentvolume.html["下一步：将数据保存到 Trident 配置的 PersistentVolume"]

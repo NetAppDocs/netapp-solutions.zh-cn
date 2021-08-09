@@ -1,0 +1,42 @@
+---
+sidebar: sidebar 
+permalink: ai/osrunai_saving_data_to_a_trident-provisioned_persistentvolume.html 
+keywords:  
+summary:  
+---
+= 将数据保存到 Trident 配置的 PersistentVolume
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+NetApp Trident 是一个完全受支持的开源项目，旨在帮助您满足容器化应用程序的复杂持久性需求。您可以将数据读写到 Trident 配置的 Kubernetes PersistentVolume （ PV ）中，并通过 NetApp ONTAP 数据管理软件提供数据分层，加密， NetApp Snapshot 技术，合规性和高性能优势。
+
+
+
+== 重复使用现有命名空间中的 PVC
+
+对于规模较大的 AI 项目，不同容器向同一个 Kubernetes PV 读取和写入数据可能会更高效。要重复使用 Kubernetes 永久性卷声明（ PVC ），用户必须已创建 PVC 。请参见 https://netapp-trident.readthedocs.io/["NetApp Trident 文档"^] 有关创建 PVC 的详细信息。以下是重复使用现有 PVC 的示例：
+
+....
+$ runai submit pvc-test -p team-a --pvc test:/tmp/pvc1mount -i gcr.io/run-ai-demo/quickstart -g 1
+....
+运行以下命令查看项目 `team-A` 的作业 `pvc 测试` 的状态：
+
+....
+$ runai get pvc-test -p team-a
+....
+您应看到 PV /tmp/pvc1mount 挂载到 `team-A` job `vc-test` 。这样，多个容器就可以从同一个卷读取数据，这在开发或生产环境中存在多个竞争模式时非常有用。数据科学家可以构建一系列模型，然后通过多数投票或其他技术将预测结果结合起来。
+
+使用以下命令访问容器 Shell ：
+
+....
+$ runai bash pvc-test -p team-a
+....
+然后，您可以检查已挂载的卷并访问容器中的数据。
+
+这种重复使用 PVC 的功能可与 NetApp FlexVol 卷和 NetApp ONTAP FlexGroup 卷配合使用，从而使数据工程师可以使用更灵活，更强大的数据管理选项来利用由 NetApp 提供支持的数据网络结构。
+
+link:osrunai_conclusion.html["接下来：总结。"]

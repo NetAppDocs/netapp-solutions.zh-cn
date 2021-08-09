@@ -1,0 +1,63 @@
+---
+sidebar: sidebar 
+permalink: ai/cainvidia_solution_technology.html 
+keywords: Solution, AIaaS, Jarvis NLP, Dialog Manager, Fulfillment Engine, 
+summary:  
+---
+= 解决方案技术
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+下图显示了建议的对话 AI 系统架构。您可以使用语音信号或文本输入与系统进行交互。如果检测到语音输入，则 JARVIS AI as-service （ AIaaS ）将执行 As1 ，以便为对话框管理器生成文本。对话框管理器会记住对话状态，将文本路由到相应的服务，并将命令传递到实施引擎。JARVIS NLP 服务会输入文本，识别意向和实体，并将这些意向和实体插槽输出回对话框管理器，然后由该对话框管理器向执行引擎发送操作。履行引擎由问题解答用户查询的第三方 API 或 SQL 数据库组成。从实施引擎收到结果后，对话管理器会将文本路由到 JarVis TTSAIaaS ，以便为最终用户生成音频响应。我们可以归档对话历史记录，为 Nemo 培训添加意向和插槽，以便随着更多用户与系统交互， NLP 服务得到改进。
+
+image:cainvidia_image3.png["错误：缺少图形映像"]
+
+
+
+== 硬件要求
+
+此解决方案已通过一个 DGX 工作站和一个 AFF A220 存储系统的验证。JARVIS 需要使用 T4 或 V100 GPU 来执行深度神经网络计算。
+
+下表列出了在测试中实施解决方案所需的硬件组件。
+
+|===
+| 硬件 | 数量 
+
+
+| T4 或 V100 GPU | 1. 
+
+
+| NVIDIA DGX Station | 1. 
+|===
+
+
+== 软件要求
+
+下表列出了在测试中实施解决方案所需的软件组件。
+
+|===
+| 软件 | 版本或其他信息 
+
+
+| NetApp ONTAP 数据管理软件 | 9.6 
+
+
+| Cisco NX-OS 交换机固件 | 7.0 （ 3 ） I6 （ 1 ） 
+
+
+| NVIDIA DGX 操作系统 | 4.0.4 — Ubuntu 18.04 LTS 
+
+
+| NVIDIA JarVis Framework | EA v0.2 
+
+
+| NVIDIA Nemo | nvcr.io/nvidia/nemo ： v0.10 
+
+
+| Docker 容器平台 | 18.06.1-ce [e68fc7a] 
+|===
+link:cainvidia_build_a_virtual_assistant_using_jarvis,_cloud_sync,_and_nemo_overview.html["接下来：使用 Jarvis ， Cloud Sync 和 Nemo 概述构建虚拟助手"]

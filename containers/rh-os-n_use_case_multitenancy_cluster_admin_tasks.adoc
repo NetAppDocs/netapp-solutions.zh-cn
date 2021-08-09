@@ -1,0 +1,185 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_use_case_multitenancy_cluster_admin_tasks.html 
+keywords: OpenShift, OCP, NetApp Trident, NetApp ONTAP, Red Hat OpenShift, Multitenancy, Multi-tenancy 
+summary: 在使用 NetApp 的 Red Hat OpenShift 上配置多租户 
+---
+= 配置： cluster-admin 任务
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+Red Hat OpenShift cluster-admin 执行以下任务：
+
+. 以 cluster-admin 身份登录到 Red Hat OpenShift 集群。
+. 创建两个与不同项目对应的项目。
++
+[source, console]
+----
+oc create namespace project-1
+oc create namespace project-2
+----
+. 为 project-1 创建开发人员角色。
++
+[source, console]
+----
+cat << EOF | oc create -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: project-1
+  name: developer-project-1
+rules:
+  - verbs:
+      - '*'
+    apiGroups:
+      - apps
+      - batch
+      - autoscaling
+      - extensions
+      - networking.k8s.io
+      - policy
+      - apps.openshift.io
+      - build.openshift.io
+      - image.openshift.io
+      - ingress.operator.openshift.io
+      - route.openshift.io
+      - snapshot.storage.k8s.io
+      - template.openshift.io
+    resources:
+      - '*'
+  - verbs:
+      - '*'
+    apiGroups:
+      - ''
+    resources:
+      - bindings
+      - configmaps
+      - endpoints
+      - events
+      - persistentvolumeclaims
+      - pods
+      - pods/log
+      - pods/attach
+      - podtemplates
+      - replicationcontrollers
+      - services
+      - limitranges
+      - namespaces
+      - componentstatuses
+      - nodes
+  - verbs:
+      - '*'
+    apiGroups:
+      - trident.netapp.io
+    resources:
+      - tridentsnapshots
+EOF
+----
+
+
+
+NOTE: 本节中提供的角色定义只是一个示例。必须根据最终用户要求定义开发人员角色。
+
+. 同样，为 project-2 创建开发人员角色。
+. 所有 OpenShift 和 NetApp 存储资源通常由存储管理员管理。存储管理员的访问由安装 Trident 时创建的 Trident 操作员角色控制。此外，存储管理员还需要访问 ResourceQuotas 来控制存储的使用方式。
+. 在集群中的所有项目中创建一个用于管理 ResourceQuotas 的角色，以将其连接到存储管理员：
++
+[source, console]
+----
+cat << EOF | oc create -f -
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: resource-quotas-role
+rules:
+  - verbs:
+      - '*'
+    apiGroups:
+      - ''
+    resources:
+      - resourcequotas
+  - verbs:
+      - '*'
+    apiGroups:
+      - quota.openshift.io
+    resources:
+      - '*'
+EOF
+----
+. 确保集群与组织的身份提供程序集成，并且用户组与集群组同步。以下示例显示身份提供程序已与集群集成并与用户组同步。
+
+
+....
+$ oc get groups
+NAME                        USERS
+ocp-netapp-storage-admins   ocp-netapp-storage-admin
+ocp-project-1               ocp-project-1-user
+ocp-project-2               ocp-project-2-user
+....
+. 为存储管理员配置 ClusterRoleBindings 。
++
+[source, console]
+----
+cat << EOF | oc create -f -
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: netapp-storage-admin-trident-operator
+subjects:
+  - kind: Group
+    apiGroup: rbac.authorization.k8s.io
+    name: ocp-netapp-storage-admins
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: trident-operator
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: netapp-storage-admin-resource-quotas-cr
+subjects:
+  - kind: Group
+    apiGroup: rbac.authorization.k8s.io
+    name: ocp-netapp-storage-admins
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: resource-quotas-role
+EOF
+----
+
+
+
+NOTE: 对于存储管理员，必须绑定两个角色： trident 操作员角色和资源配额角色。
+
+. 为开发人员创建 RoleBindings ，将开发人员项目 1 角色绑定到项目 1 中的相应组（ OCP-project-1 ）。
++
+[source, console]
+----
+cat << EOF | oc create -f -
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: project-1-developer
+  namespace: project-1
+subjects:
+  - kind: Group
+    apiGroup: rbac.authorization.k8s.io
+    name: ocp-project-1
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: developer-project-1
+EOF
+----
+
+
+. 同样，为开发人员创建 RoleBindings ，将开发人员角色绑定到 project-2 中的相应用户组。
+
+
+link:rh-os-n_use_case_multitenancy_storage_admin_tasks.html["下一步：存储管理员任务。"]

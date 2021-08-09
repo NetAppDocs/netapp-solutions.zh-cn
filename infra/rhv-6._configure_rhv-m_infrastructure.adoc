@@ -1,0 +1,49 @@
+---
+sidebar: sidebar 
+permalink: infra/rhv-6._configure_rhv-m_infrastructure.html 
+keywords: ovirtmgmt network, RHV-M infrastructure, configuration 
+summary:  
+---
+= 6. 配置 RHV-M 基础架构：采用 RHV 的 NetApp HCI
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+要配置 RHV-M 基础架构，请完成以下步骤：
+
+. 默认情况下， ovirtmgmt 网络用于所有用途，包括迁移 VM 和虚拟子系统数据。
+. 最佳做法是为此指定不同的网络。要配置迁移网络，请导航到 " 网络 ">" 网络 " ，然后单击 " 新建 " 。输入所选名称，启用 VLAN 标记，然后输入迁移网络的 VLAN ID 。
+. 确保未选中 VM Network 复选框。转到 "Cluster" 子选项卡，并确保选中 "Attach and require" 。然后单击确定创建网络。
++
+image:redhat_virtualization_image56.jpg["错误：缺少图形映像"]
+
+. 要将迁移逻辑网络分配给这两个主机，请导航到 Compute > Hosts ，单击主机，然后导航到 Network Interfaces 子选项卡。
+. 然后，单击设置主机网络并将迁移逻辑网络拖放到 bond0 右侧的已分配逻辑网络列中。
++
+image:redhat_virtualization_image57.jpeg["错误：缺少图形映像"]
+
+. 单击迁移网络接口上 bond0 下的笔形符号。配置 IP 地址详细信息，然后单击确定。然后在设置主机网络窗格中再次单击确定。
++
+image:redhat_virtualization_image58.png["错误：缺少图形映像"]
+
+. 对另一台主机重复步骤 4 到 6 。
+. 必须为新创建的网络分配迁移网络的角色。导航到 Compute > Clusters ，然后单击 RHV 主机所属的集群，再单击 Logical Networks 子选项卡，然后单击 Manage Networks 。对于迁移网络，请启用迁移网络列下的复选框。单击确定。
++
+image:redhat_virtualization_image59.png["错误：缺少图形映像"]
+
+. 接下来，作为最佳实践，请创建一个单独的 VM 网络，而不是对 VM 使用 ovirtmgmt 网络。
+. 导航到 " 网络 ">" 网络 " ，然后单击 " 新建 " 。输入您选择的名称，启用 VLAN 标记，然后输入 VM 子系统网络的 VLAN ID 。确保已选中 VM Network 复选框。转至集群的子选项卡，并确保选中了 Attach 和 Require 。然后单击确定以创建 VM 子系统网络。
++
+image:redhat_virtualization_image60.png["错误：缺少图形映像"]
+
+. 将 VM 子系统逻辑网络分配给这两个主机。导航到 Compute > Hosts ，单击主机名并导航到 Network Interfaces 子选项卡。然后，单击设置主机网络并将 VM 子系统逻辑网络拖放到 bond0 右侧的已分配逻辑网络列中。无需为此逻辑网络分配 IP ，因为它可为 VM 提供直通网络。
++
+VM 子系统网络应能够访问 Internet ，以便允许子系统向 Red Hat 订阅管理器注册。
+
+
+
+link:rhv-7._deploy_netapp_mnode.html["下一步： 7.部署 NetApp mNode"]

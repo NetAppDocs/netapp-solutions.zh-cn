@@ -1,0 +1,32 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_use_case_openshift_virtualization_deployment_prerequisites.html 
+keywords: OpenShift, OCP, NetApp Trident, NetApp ONTAP, Red Hat OpenShift, OpenShift Virtualization, CNV, Container Native Virtualization, Red Hat OpenShift Virtualization 
+summary: 借助 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化 
+---
+= 使用 NetApp ONTAP 部署 Red Hat OpenShift 虚拟化
+
+
+
+
+== 前提条件
+
+* Red Hat OpenShift 集群（ 4.6 版之后的版本），安装在具有 RHCOS 工作节点的裸机基础架构上
+* OpenShift 集群必须通过安装程序配置的基础架构（ IPI ）进行安装
+* 部署计算机运行状况检查以保持虚拟机的 HA
+* NetApp ONTAP 集群
+* NetApp Trident 安装在 OpenShift 集群上
+* 在 ONTAP 集群上配置了 SVM 的 Trident 后端
+* 一种在 OpenShift 集群上配置的存储类，其中 NetApp Trident 用作配置程序
+* 对 Red Hat OpenShift 集群的集群管理员访问
+* 对 NetApp ONTAP 集群的管理员访问权限
+* 安装了 tridentctl 和 oc 工具并将其添加到 $path 中的管理工作站
+
+
+由于 OpenShift 虚拟化由 OpenShift 集群上安装的操作员管理，因此会增加内存， CPU 和存储的开销，在规划集群的硬件要求时必须考虑这些开销。请参见文档 https://docs.openshift.com/container-platform/4.7/virt/install/preparing-cluster-for-virt.html#virt-cluster-resource-requirements_preparing-cluster-for-virt["此处"] 有关详细信息：
+
+或者，您也可以通过配置节点放置规则来指定一组 OpenShift 集群节点，以托管 OpenShift 虚拟化操作员，控制器和 VM 。要为 OpenShift 虚拟化配置节点放置规则，请按照文档进行操作 https://docs.openshift.com/container-platform/4.7/virt/install/virt-specifying-nodes-for-virtualization-components.html["此处"]。
+
+对于支持 OpenShift 虚拟化的存储， NetApp 建议使用一个专用 StorageClass ，以便从特定 Trident 后端请求存储，而该后端又由专用 SVM 提供支持。这样就可以在 OpenShift 集群上为基于 VM 的工作负载提供的数据方面保持多租户级别。
+
+link:rh-os-n_use_case_openshift_virtualization_deployment.html["下一步：通过操作员部署。"]

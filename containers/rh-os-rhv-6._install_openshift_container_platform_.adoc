@@ -1,0 +1,82 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-rhv-6._install_openshift_container_platform.html 
+keywords: Container platform, installation 
+summary:  
+---
+= 6. 在 RHV 上安装 OpenShift 容器平台：适用于 Red Hat OpenShift 的 NetApp HCI
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+要安装 OpenShift 容器平台，请完成以下步骤：
+
+. 为 OpenShift 安装创建一个目录，并将下载的文件传输到该目录。从 tar 归档中提取 OpenShift 安装程序文件。
++
+....
+[user@rhel7 ~]$ mkdir openshift-deploy
+[user@rhel7 ~]$ cd openshift-deploy
+[user@rhel7 openshift-deploy]$ tar xvf openshift-install-linux.tar.gz
+README.md
+openshift-install
+[user@rhel7 openshift-deploy]$ ls -la
+total 453260
+drwxr-xr-x.  2 user user       146 May 26 16:01 .
+dr-xr-x---. 16 user user      4096 May 26 15:58 ..
+-rw-r--r--.  1 user user  25249648 May 26 15:59 openshift-client-linux.tar.gz
+-rwxr-xr-x.  1 user user 354664448 Apr 27 01:37 openshift-install
+-rw-r--r--.  1 user user  84207215 May 26 16:00 openshift-install-linux.tar.gz
+-rw-r--r--.  1 user user      2736 May 26 15:59 pull-secret.txt
+-rw-r--r--.  1 user user       706 Apr 27 01:37 README.md
+....
++
+
+NOTE: 安装程序会在用于安装集群的目录中创建多个文件。即使集群已启动，安装程序和安装程序创建的文件也必须保留。
+
++
+
+NOTE: 您先前下载的二进制文件（例如 `OpenShift-install` 或 `oc` ）可以复制到用户路径中的目录（例如 ` /usr/local/bin` ），以便于运行。
+
+. 运行 `OpenShift-install create cluster` 命令创建集群，并响应安装程序提示。传递 SSH 公有密钥，从平台中选择 ovirt ，提供 RHV 基础架构详细信息，并在安装程序提示符处提供三个预留的 IP 地址和下载的拉取密钥。提供所有输入后，安装程序将创建一个具有临时 Kubernetes 控制面板的启动计算机并对其进行配置，然后使用生产 Kubernetes 控制面板创建和配置主 VM 。主节点上的控制面板用于创建和配置工作 VM 。
++
+整个集群启动并运行大约需要 30 – 45 分钟。
+
++
+....
+[user@rhel7 openshift-deploy]$ ./openshift-install create cluster --dir=/home/user/openshift-deploy --log-level=info                    ? SSH Public Key /home/user/.ssh/id_rsa.pub
+? Platform ovirt
+? oVirt cluster Default
+? oVirt storage domain data_domain
+? oVirt network ovirtmgmt
+? Internal API virtual IP 10.63. 172.151
+? Internal DNS virtual IP 10.63. 172.153
+? Ingress virtual IP 10.63. 172.152
+? Base Domain cie.netapp.com
+? Cluster Name rhv-ocp-cluster
+? Pull Secret [? for help] ********************************************************************************************************************************************************************************************************************************************************************************************************
+INFO Obtaining RHCOS image file from 'https://releases-art-rhcos.svc.ci.openshift.org/art/storage/releases/rhcos-4.4/44.81.202004250133-0/x86_64/rhcos-44.81.202004250133-0-openstack.x86_64.qcow2.gz?sha256=f8a44e0ea8cc45882dc22eb632a63afb90b414839b8aa92f3836ede001dfe9cf'
+INFO The file was found in cache: /home/user/.cache/openshift-installer/image_cache/e263efbc53c0caf612bcfaad10e3dff0. Reusing...
+INFO Creating infrastructure resources...
+INFO Waiting up to 20m0s for the Kubernetes API at https://api.rhv-ocp-cluster.cie.netapp.com:6443...
+INFO API v1.17.1 up
+INFO Waiting up to 40m0s for bootstrapping to complete...
+INFO Destroying the bootstrap resources...
+INFO Waiting up to 30m0s for the cluster at https://api.rhv-ocp-cluster.cie.netapp.com:6443 to initialize...
+INFO Waiting up to 10m0s for the openshift-console route to be created...
+INFO Install complete!
+INFO To access the cluster as the system:admin user when using 'oc', run 'export KUBECONFIG=/home/user/openshift-deploy/auth/kubeconfig'
+INFO Access the OpenShift web-console here: https://console-openshift-console.apps.rhv-ocp-cluster.cie.netapp.com
+INFO Login to the console with user: kubeadmin, password: NtsqU-p3qUb-8Hscu-JfAq7
+
+....
+. 集群部署完成后，将显示访问 OpenShift 集群的说明，包括指向其 Web 控制台的链接以及 kubeadmin 用户的凭据。请务必记下这些详细信息。
+. 登录到 RHV Manager 并观察与 OCP 集群相关的 VM 是否已启动且正在运行。
+
+
+image:redhat_openshift_image12.png["错误：缺少图形映像"]
+
+link:rh-os-rhv-7._access_console_web_console.html["下一步： 7.访问控制台 /Web 控制台"]

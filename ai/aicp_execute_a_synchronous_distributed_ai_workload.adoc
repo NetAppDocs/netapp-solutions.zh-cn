@@ -1,0 +1,231 @@
+---
+sidebar: sidebar 
+permalink: ai/aicp_execute_a_synchronous_distributed_ai_workload.html 
+keywords: NetApp Distributed AI Workload 
+summary: 要在 Kubernetes 集群中执行同步多节点 AI 和 ML 作业，请在部署跳转主机上执行此页面上列出的任务。通过此过程，您可以利用存储在 NetApp 卷上的数据，并使用单个工作节点所能提供的 GPU 。 
+---
+= 执行同步分布式 AI 工作负载
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+要在 Kubernetes 集群中执行同步多节点 AI 和 ML 作业，请在部署跳转主机上执行以下任务。通过此过程，您可以利用存储在 NetApp 卷上的数据，并使用单个工作节点所能提供的 GPU 。有关同步分布式 AI 作业的描述，请参见下图。
+
+
+NOTE: 与异步分布式作业相比，同步分布式作业有助于提高性能和训练准确性。本文档不会讨论同步作业与异步作业的利弊。
+
+image:aicp_image56.png["错误：缺少图形映像"]
+
+. 以下示例命令显示了创建一名员工参与同步分布式执行本节中示例中在单个节点上执行的同一 TensorFlow 基准测试作业的过程 link:aicp_execute_a_single-node_ai_workload.html["执行单节点 AI 工作负载"]。在此特定示例中，仅部署一个员工，因为此作业会在两个员工节点上执行。
++
+此示例员工部署请求八个 GPU ，因此可以在一个 GPU 工作节点上运行，该节点具有八个或更多 GPU 。如果您的 GPU 工作节点具有八个以上的 GPU ，则为了最大限度地提高性能，您可能需要增加此数量，使其等于您的工作节点所具有的 GPU 数量。有关 Kubernetes 部署的详细信息，请参见 https://kubernetes.io/docs/concepts/workloads/controllers/deployment/["Kubernetes 官方文档"^]。
+
++
+在此示例中创建了 Kubernetes 部署，因为此特定容器化员工永远不会自行完成。因此，使用 Kubernetes 作业构造来部署它毫无意义。如果员工的设计或编写是为了自己完成，则可以使用此作业构建来部署员工。
+
++
+在此示例部署规范中指定的 Pod 的值为 `hostNetwork` 值 `true` 。此值表示 Pod 使用主机工作节点的网络堆栈，而不是 Kubernetes 通常为每个 Pod 创建的虚拟网络堆栈。在这种情况下使用此标注是因为特定工作负载依靠 Open MPI ， NCCL 和 Horovod 以同步分布式方式执行工作负载。因此，它需要访问主机网络堆栈。有关 Open MPI ， NCCL 和 Horovod 的讨论不在本文档的讨论范围之内。是否需要此 `hostNetwork ： true` 标注取决于要执行的特定工作负载的要求。有关 `hostNetwork` 字段的详细信息，请参见 https://kubernetes.io/docs/concepts/policy/pod-security-policy/["Kubernetes 官方文档"^]。
+
++
+....
+$ cat << EOF > ./netapp-tensorflow-multi-imagenet-worker.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netapp-tensorflow-multi-imagenet-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: netapp-tensorflow-multi-imagenet-worker
+  template:
+    metadata:
+      labels:
+        app: netapp-tensorflow-multi-imagenet-worker
+    spec:
+      hostNetwork: true
+      volumes:
+      - name: dshm
+        emptyDir:
+          medium: Memory
+      - name: testdata-iface1
+        persistentVolumeClaim:
+          claimName: pb-fg-all-iface1
+      - name: testdata-iface2
+        persistentVolumeClaim:
+          claimName: pb-fg-all-iface2
+      - name: results
+        persistentVolumeClaim:
+          claimName: tensorflow-results
+      containers:
+      - name: netapp-tensorflow-py2
+        image: netapp/tensorflow-py2:19.03.0
+        command: ["bash", "/netapp/scripts/start-slave-multi.sh", "22122"]
+        resources:
+          limits:
+            nvidia.com/gpu: 8
+        volumeMounts:
+        - mountPath: /dev/shm
+          name: dshm
+        - mountPath: /mnt/mount_0
+          name: testdata-iface1
+        - mountPath: /mnt/mount_1
+          name: testdata-iface2
+        - mountPath: /tmp
+          name: results
+        securityContext:
+          privileged: true
+EOF
+$ kubectl create -f ./netapp-tensorflow-multi-imagenet-worker.yaml
+deployment.apps/netapp-tensorflow-multi-imagenet-worker created
+$ kubectl get deployments
+NAME                                      DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+netapp-tensorflow-multi-imagenet-worker   1         1         1            1           4s
+....
+. 确认您在第 1 步中创建的员工部署已成功启动。以下示例命令确认已为部署创建了一个辅助 POD ，如部署定义所示，并且此 POD 当前正在其中一个 GPU 辅助节点上运行。
++
+....
+$ kubectl get pods -o wide
+NAME                                                       READY   STATUS    RESTARTS   AGE
+IP              NODE            NOMINATED NODE
+netapp-tensorflow-multi-imagenet-worker-654fc7f486-v6725   1/1     Running   0          60s   10.61.218.154   10.61.218.154   <none>
+$ kubectl logs netapp-tensorflow-multi-imagenet-worker-654fc7f486-v6725
+22122
+....
+. 为启动，参与并跟踪同步多节点作业执行的主节点创建 Kubernetes 作业。以下示例命令创建一个主节点，用于启动，参与和跟踪在一节中的示例中对单个节点执行的相同 TensorFlow 基准测试作业的同步分布式执行 link:aicp_execute_a_single-node_ai_workload.html["执行单节点 AI 工作负载"]。
++
+此示例主作业请求八个 GPU ，因此可以在具有八个或更多 GPU 的单个 GPU 工作节点上运行。如果您的 GPU 工作节点具有八个以上的 GPU ，则为了最大限度地提高性能，您可能需要增加此数量，使其等于您的工作节点所具有的 GPU 数量。
+
++
+在本示例作业定义中指定的主 Pod 的值为 `hostNetwork` 值为 `true` ，就像在步骤 1 中为工作 Pod 提供了 `hostNetwork` 值 `true` 一样。有关为何需要此值的详细信息，请参见第 1 步。
+
++
+....
+$ cat << EOF > ./netapp-tensorflow-multi-imagenet-master.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: netapp-tensorflow-multi-imagenet-master
+spec:
+  backoffLimit: 5
+  template:
+    spec:
+      hostNetwork: true
+      volumes:
+      - name: dshm
+        emptyDir:
+          medium: Memory
+      - name: testdata-iface1
+        persistentVolumeClaim:
+          claimName: pb-fg-all-iface1
+      - name: testdata-iface2
+        persistentVolumeClaim:
+          claimName: pb-fg-all-iface2
+      - name: results
+        persistentVolumeClaim:
+          claimName: tensorflow-results
+      containers:
+      - name: netapp-tensorflow-py2
+        image: netapp/tensorflow-py2:19.03.0
+        command: ["python", "/netapp/scripts/run.py", "--dataset_dir=/mnt/mount_0/dataset/imagenet", "--port=22122", "--num_devices=16", "--dgx_version=dgx1", "--nodes=10.61.218.152,10.61.218.154"]
+        resources:
+          limits:
+            nvidia.com/gpu: 8
+        volumeMounts:
+        - mountPath: /dev/shm
+          name: dshm
+        - mountPath: /mnt/mount_0
+          name: testdata-iface1
+        - mountPath: /mnt/mount_1
+          name: testdata-iface2
+        - mountPath: /tmp
+          name: results
+        securityContext:
+          privileged: true
+      restartPolicy: Never
+EOF
+$ kubectl create -f ./netapp-tensorflow-multi-imagenet-master.yaml
+job.batch/netapp-tensorflow-multi-imagenet-master created
+$ kubectl get jobs
+NAME                                      COMPLETIONS   DURATION   AGE
+netapp-tensorflow-multi-imagenet-master   0/1           25s        25s
+....
+. 确认您在步骤 3 中创建的主作业正在正确运行。以下示例命令确认已为作业创建了一个主 Pod ，如作业定义所示，并且此 Pod 当前正在其中一个 GPU 工作节点上运行。您还应看到，您最初在步骤 1 中看到的辅助 POD 仍在运行，并且主节点和辅助节点正在不同的节点上运行。
++
+....
+$ kubectl get pods -o wide
+NAME                                                       READY   STATUS    RESTARTS   AGE
+IP              NODE            NOMINATED NODE
+netapp-tensorflow-multi-imagenet-master-ppwwj              1/1     Running   0          45s   10.61.218.152   10.61.218.152   <none>
+netapp-tensorflow-multi-imagenet-worker-654fc7f486-v6725   1/1     Running   0          26m   10.61.218.154   10.61.218.154   <none>
+....
+. 确认您在步骤 3 中创建的主作业已成功完成。以下示例命令确认作业已成功完成。
++
+....
+$ kubectl get jobs
+NAME                                      COMPLETIONS   DURATION   AGE
+netapp-tensorflow-multi-imagenet-master   1/1           5m50s      9m18s
+$ kubectl get pods
+NAME                                                       READY   STATUS      RESTARTS   AGE
+netapp-tensorflow-multi-imagenet-master-ppwwj              0/1     Completed   0          9m38s
+netapp-tensorflow-multi-imagenet-worker-654fc7f486-v6725   1/1     Running     0          35m
+$ kubectl logs netapp-tensorflow-multi-imagenet-master-ppwwj
+[10.61.218.152:00008] WARNING: local probe returned unhandled shell:unknown assuming bash
+rm: cannot remove '/lib': Is a directory
+[10.61.218.154:00033] PMIX ERROR: NO-PERMISSIONS in file gds_dstore.c at line 702
+[10.61.218.154:00033] PMIX ERROR: NO-PERMISSIONS in file gds_dstore.c at line 711
+[10.61.218.152:00008] PMIX ERROR: NO-PERMISSIONS in file gds_dstore.c at line 702
+[10.61.218.152:00008] PMIX ERROR: NO-PERMISSIONS in file gds_dstore.c at line 711
+Total images/sec = 12881.33875
+================ Clean Cache !!! ==================
+mpirun -allow-run-as-root -np 2 -H 10.61.218.152:1,10.61.218.154:1 -mca pml ob1 -mca btl ^openib -mca btl_tcp_if_include enp1s0f0 -mca plm_rsh_agent ssh -mca plm_rsh_args "-p 22122" bash -c 'sync; echo 1 > /proc/sys/vm/drop_caches'
+=========================================
+mpirun -allow-run-as-root -np 16 -H 10.61.218.152:8,10.61.218.154:8 -bind-to none -map-by slot -x NCCL_DEBUG=INFO -x LD_LIBRARY_PATH -x PATH -mca pml ob1 -mca btl ^openib -mca btl_tcp_if_include enp1s0f0 -x NCCL_IB_HCA=mlx5 -x NCCL_NET_GDR_READ=1 -x NCCL_IB_SL=3 -x NCCL_IB_GID_INDEX=3 -x NCCL_SOCKET_IFNAME=enp5s0.3091,enp12s0.3092,enp132s0.3093,enp139s0.3094 -x NCCL_IB_CUDA_SUPPORT=1 -mca orte_base_help_aggregate 0 -mca plm_rsh_agent ssh -mca plm_rsh_args "-p 22122" python /netapp/tensorflow/benchmarks_190205/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model=resnet50 --batch_size=256 --device=gpu --force_gpu_compatible=True --num_intra_threads=1 --num_inter_threads=48 --variable_update=horovod --batch_group_size=20 --num_batches=500 --nodistortions --num_gpus=1 --data_format=NCHW --use_fp16=True --use_tf_layers=False --data_name=imagenet --use_datasets=True --data_dir=/mnt/mount_0/dataset/imagenet --datasets_parallel_interleave_cycle_length=10 --datasets_sloppy_parallel_interleave=False --num_mounts=2 --mount_prefix=/mnt/mount_%d --datasets_prefetch_buffer_size=2000 -- datasets_use_prefetch=True --datasets_num_private_threads=4 --horovod_device=gpu > /tmp/20190814_161609_tensorflow_horovod_rdma_resnet50_gpu_16_256_b500_imagenet_nodistort_fp16_r10_m2_nockpt.txt 2>&1
+....
+. 如果您不再需要此员工部署，请将其删除。以下示例命令显示了删除在步骤 1 中创建的工作部署对象的过程。
++
+删除 worker 部署对象时， Kubernetes 会自动删除任何关联的 worker Pod 。
+
++
+....
+$ kubectl get deployments
+NAME                                      DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+netapp-tensorflow-multi-imagenet-worker   1         1         1            1           43m
+$ kubectl get pods
+NAME                                                       READY   STATUS      RESTARTS   AGE
+netapp-tensorflow-multi-imagenet-master-ppwwj              0/1     Completed   0          17m
+netapp-tensorflow-multi-imagenet-worker-654fc7f486-v6725   1/1     Running     0          43m
+$ kubectl delete deployment netapp-tensorflow-multi-imagenet-worker
+deployment.extensions "netapp-tensorflow-multi-imagenet-worker" deleted
+$ kubectl get deployments
+No resources found.
+$ kubectl get pods
+NAME                                            READY   STATUS      RESTARTS   AGE
+netapp-tensorflow-multi-imagenet-master-ppwwj   0/1     Completed   0          18m
+....
+. * 可选： * 清理主作业项目。以下示例命令显示了删除在步骤 3 中创建的主作业对象的过程。
++
+删除主作业对象时， Kubernetes 会自动删除任何关联的主 Pod 。
+
++
+....
+$ kubectl get jobs
+NAME                                      COMPLETIONS   DURATION   AGE
+netapp-tensorflow-multi-imagenet-master   1/1           5m50s      19m
+$ kubectl get pods
+NAME                                            READY   STATUS      RESTARTS   AGE
+netapp-tensorflow-multi-imagenet-master-ppwwj   0/1     Completed   0          19m
+$ kubectl delete job netapp-tensorflow-multi-imagenet-master
+job.batch "netapp-tensorflow-multi-imagenet-master" deleted
+$ kubectl get jobs
+No resources found.
+$ kubectl get pods
+No resources found.
+....
+
+
+link:aicp_performance_testing.html["接下来：性能测试"]

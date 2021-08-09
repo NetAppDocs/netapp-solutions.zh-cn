@@ -1,0 +1,104 @@
+---
+sidebar: sidebar 
+permalink: automation/setup_awx.html 
+summary: 借助 NetApp 解决方案自动化，客户可以自动部署，配置和执行许多常见的基础架构和应用程序任务。 
+keywords: netapp, awx, tower, ansible tower, solutions, automation, ansible 
+---
+= NetApp 解决方案自动化
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:table-stripes: odd
+:imagesdir: ./../media/
+
+
+
+
+== 操作步骤
+
+本节介绍在 AWX/Ansible 塔中配置参数所需的步骤，这些参数可为使用 NetApp 自动化解决方案的环境做好准备。
+
+. 配置清单。
++
+.. 导航到资源→清单→添加，然后单击添加清单。
+.. 提供名称和组织详细信息，然后单击保存。
+.. 在清单页面中，单击刚刚创建的清单资源。
+.. 如果存在任何清单变量，请将其粘贴到变量字段中。
+.. 转到组子菜单，然后单击添加。
+.. 提供组的名称，复制组变量（如果需要），然后单击保存。
+.. 单击创建的组，转到主机子菜单，然后单击添加新主机。
+.. 提供主机的主机名和 IP 地址，粘贴到主机变量中（如有必要），然后单击保存。
+
+
+. 创建凭据类型。对于涉及 ONTAP ， Element ， VMware 或任何其他基于 HTTPS 的传输连接的解决方案，您必须将凭据类型配置为与用户名和密码条目匹配。
++
+.. 导航到 Administration → Credential types ，然后单击 Add 。
+.. 提供名称和问题描述。
+.. 将以下内容粘贴到输入配置中：
+
+
+
+
+[listing]
+----
+fields:
+- id: username
+type: string
+label: Username
+- id: password
+type: string
+label: Password
+secret: true
+- id: vsadmin_password
+type: string
+label: vsadmin_password
+secret: true
+----
+. 将以下内容粘贴到注射器配置中：
+
+
+[listing]
+----
+extra_vars:
+password: '{{ password }}'
+username: '{{ username }}'
+vsadmin_password: '{{ vsadmin_password }}'
+----
+. 配置凭据。
++
+.. 导航到资源→凭据，然后单击添加。
+.. 输入名称和组织详细信息。
+.. 选择正确的凭据类型；如果要使用标准 SSH 登录，请选择类型 Machine 或选择您创建的自定义凭据类型。
+.. 输入其他相应的详细信息，然后单击保存。
+
+
+. 配置项目。
++
+.. 导航到资源→项目，然后单击添加。
+.. 输入名称和组织详细信息。
+.. 为源控制凭据类型选择 Git 。
+.. 粘贴与特定解决方案对应的源控制 URL （或 git 克隆 URL ）。
+.. 或者，如果 Git URL 受访问控制，请在源控制凭据中创建并附加相应的凭据。
+.. 单击保存。
+
+
+. 配置作业模板。
++
+.. 导航到资源→模板→添加，然后单击添加作业模板。
+.. 输入名称和问题描述。
+.. 选择作业类型； Run 会根据攻略手册配置系统， Check 会在不实际配置系统的情况下执行攻略手册的试运行。
+.. 为攻略手册选择相应的清单，项目和凭据。
+.. 选择要在作业模板中运行的攻略手册。
+.. 通常，变量会在运行时粘贴。因此，要在运行时提示填充变量，请确保选中与 Variable 字段对应的 Launch 上的复选框提示。
+.. 根据需要提供任何其他详细信息，然后单击保存。
+
+
+. 启动作业模板。
++
+.. 导航到资源→模板。
+.. 单击所需模板，然后单击启动。
+.. 如果在启动时出现提示，请填写任何变量，然后再次单击启动。
+
+
+

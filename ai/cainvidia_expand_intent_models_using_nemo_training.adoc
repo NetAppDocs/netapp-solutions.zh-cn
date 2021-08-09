@@ -1,0 +1,179 @@
+---
+sidebar: sidebar 
+permalink: ai/cainvidia_expand_intent_models_using_nemo_training.html 
+keywords: Intent Models, NeMo, toolkit, ASR, NLP, TTS, NARA, Data Preparation 
+summary:  
+---
+= 使用 Nemo 培训扩展意向模型
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+NVIDIA Nemo 是由 NVIDIA 构建的一个工具包，用于创建对话式 AI 应用程序。该工具包包含一系列针对 ASL ， NLP 和 TTS- 的预培训模块，使研究人员和数据科学家能够轻松构建复杂的神经网络架构，并更加专注于设计自己的应用程序。
+
+如上例所示， Nara 只能处理有限类型的问题。这是因为经过预先培训的 NLP 模型只会对这些类型的问题进行训练。如果我们希望 Nara 能够处理更广泛的问题，我们需要使用自己的数据集对其进行重新训练。因此，我们将在此演示如何使用 Nemo 扩展 NLP 模型以满足要求。我们首先将从 Nara 收集的日志转换为 Nemo 的格式，然后训练数据集以增强 NLP 模型。
+
+
+
+== 型号
+
+我们的目标是使 Nara 能够根据用户首选项对项目进行排序。例如，我们可能会要求 Nara 推荐排名最高的寿司店，也可能希望 Nara 寻找价格最低的 jeans 。为此，我们使用 Nemo 中提供的意向检测和插槽填充模型作为我们的培训模型。通过此模型， Nara 可以了解搜索首选项的意图。
+
+
+
+== 数据准备
+
+为了训练模型，我们会收集此类问题的数据集，并将其转换为 Nemo 格式。我们在此处列出了用于训练模型的文件。
+
+
+
+=== dict.intents.csv
+
+此文件列出了我们希望 Nemo 了解的所有意向。此处，我们有两个主要意向，一个意图仅用于对不符合任何主要意向的问题进行分类。
+
+....
+price_check
+find_the_store
+unknown
+....
+
+
+=== dict.slots.csv
+
+此文件列出了我们可以在培训问题上标记的所有插槽。
+
+....
+B-store.type
+B-store.name
+B-store.status
+B-store.hour.start
+B-store.hour.end
+B-store.hour.day
+B-item.type
+B-item.name
+B-item.color
+B-item.size
+B-item.quantity
+B-location
+B-cost.high
+B-cost.average
+B-cost.low
+B-time.period_of_time
+B-rating.high
+B-rating.average
+B-rating.low
+B-interrogative.location
+B-interrogative.manner
+B-interrogative.time
+B-interrogative.personal
+B-interrogative
+B-verb
+B-article
+I-store.type
+I-store.name
+I-store.status
+I-store.hour.start
+I-store.hour.end
+I-store.hour.day
+I-item.type
+I-item.name
+I-item.color
+I-item.size
+I-item.quantity
+I-location
+I-cost.high
+I-cost.average
+I-cost.low
+I-time.period_of_time
+I-rating.high
+I-rating.average
+I-rating.low
+I-interrogative.location
+I-interrogative.manner
+I-interrogative.time
+I-interrogative.personal
+I-interrogative
+I-verb
+I-article
+O
+....
+
+
+=== Traine.tsv
+
+这是主要的培训数据集。每行都以文件 dict.intent.csv 中列出的意图类别后面的问题开头。此标签将从零开始枚举。
+
+
+
+=== Train_slots.tsv
+
+....
+20 46 24 25 6 32 6
+52 52 24 6
+23 52 14 40 52 25 6 32 6
+…
+....
+
+
+== 训练模型
+
+....
+docker pull nvcr.io/nvidia/nemo:v0.10
+....
+然后，我们将使用以下命令启动此容器。在此命令中，我们会将容器限制为使用单个 GPU （ GPU ID = 1 ），因为这是一项轻型训练练习。此外，我们还会将本地工作空间 /workstore/nemo/ 映射到容器 /nemo 中的文件夹。
+
+....
+NV_GPU='1' docker run --runtime=nvidia -it --shm-size=16g \
+                        --network=host --ulimit memlock=-1 --ulimit stack=67108864 \
+                        -v /workspace/nemo:/nemo\
+                        --rm nvcr.io/nvidia/nemo:v0.10
+....
+在容器中，如果要从最初的预先培训的 Bert 模型开始，我们可以使用以下命令启动培训操作步骤。data_dir 是用于设置训练数据路径的参数。work_dir 用于配置检查点文件的存储位置。
+
+....
+cd examples/nlp/intent_detection_slot_tagging/
+python joint_intent_slot_with_bert.py \
+    --data_dir /nemo/training_data\
+    --work_dir /nemo/log
+....
+如果我们有新的培训数据集并希望改进先前的模型，则可以使用以下命令从停止的位置继续操作。checkpoint_dir 获取上一个检查点文件夹的路径。
+
+....
+cd examples/nlp/intent_detection_slot_tagging/
+python joint_intent_slot_infer.py \
+    --data_dir /nemo/training_data \
+    --checkpoint_dir /nemo/log/2020-05-04_18-34-20/checkpoints/ \
+    --eval_file_prefix test
+....
+
+
+== 推理模型
+
+我们需要在经过一定次数的时间之后验证经过训练的模型的性能。使用以下命令，我们可以逐个测试查询。例如，在此命令中，我们希望检查我们的模型是否能够正确识别查询的目的 `在哪里可以获得最好的意大利面` 。
+
+....
+cd examples/nlp/intent_detection_slot_tagging/
+python joint_intent_slot_infer_b1.py \
+--checkpoint_dir /nemo/log/2020-05-29_23-50-58/checkpoints/ \
+--query "where can i get the best pasta" \
+--data_dir /nemo/training_data/ \
+--num_epochs=50
+....
+然后，以下是推理的输出。在输出中，我们可以看到经过培训的模型可以正确预测 DETAINT_the_store 的意向，并返回我们感兴趣的关键字。通过这些关键字，我们可以使 Nara 搜索用户所需内容并进行更精确的搜索。
+
+....
+[NeMo I 2020-05-30 00:06:54 actions:728] Evaluating batch 0 out of 1
+[NeMo I 2020-05-30 00:06:55 inference_utils:34] Query: where can i get the best pasta
+[NeMo I 2020-05-30 00:06:55 inference_utils:36] Predicted intent:       1       find_the_store
+[NeMo I 2020-05-30 00:06:55 inference_utils:50] where   B-interrogative.location
+[NeMo I 2020-05-30 00:06:55 inference_utils:50] can     O
+[NeMo I 2020-05-30 00:06:55 inference_utils:50] i       O
+[NeMo I 2020-05-30 00:06:55 inference_utils:50] get     B-verb
+[NeMo I 2020-05-30 00:06:55 inference_utils:50] the     B-article
+[NeMo I 2020-05-30 00:06:55 inference_utils:50] best    B-rating.high
+[NeMo I 2020-05-30 00:06:55 inference_utils:50] pasta   B-item.type
+....
+link:cainvidia_conclusion.html["接下来：总结。"]

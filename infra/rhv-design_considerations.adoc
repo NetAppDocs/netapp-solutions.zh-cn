@@ -1,0 +1,87 @@
+---
+sidebar: sidebar 
+permalink: infra/rhv-design_considerations.html 
+keywords: Networking, Port, network design, cabling, storage nodes, VLAN, In-band, out-of-band 
+summary:  
+---
+= 设计注意事项：采用 RHV 的 NetApp HCI
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+制定部署策略时，请查看以下设计注意事项。
+
+
+
+=== 网络要求
+
+本节介绍在 NetApp HCI 上以经验证的解决方案形式部署 Red Hat 虚拟化的网络要求。它提供了 NetApp HCI 计算节点和解决方案中部署的交换机上的网络端口的物理示意图。本节还介绍了解决方案中使用的每个虚拟网段的布局和用途。
+
+
+
+==== 端口标识
+
+NetApp HCI 由专用于计算或存储的 NetApp H 系列节点组成。这两种节点配置都具有两个 1GbE 端口（端口 A 和 B ）和两个 10/25GbE 端口（端口 C 和 D ）板载。计算节点在第一个夹层插槽中额外提供了 10/25GbE 端口（端口 E 和 F ）。每个节点还具有一个额外的带外管理端口，该端口支持智能平台管理接口（ Intelligent Platform Management Interface ， IPMI ）功能。下图显示了 H410C 节点背面的每个端口。
+
+image:redhat_virtualization_image3.png["错误：缺少图形映像"]
+
+
+
+=== 网络设计
+
+采用 Red Hat 虚拟化解决方案的 NetApp HCI 使用两个数据交换机提供 25 Gbps 的主数据连接。它还使用两个额外的管理交换机，这些交换机以 1 Gbps 的速度提供连接，用于存储节点的带内管理以及 IPMI 功能的带外管理。
+
+
+
+==== 为存储节点布线
+
+要配置 NetApp HCI 集群，每个存储节点上的管理端口 A 和 B 必须处于活动状态，并在部署解决方案后为 Element 提供管理可访问性。应将两个 25 Gbps 端口（ C 和 D ）连接到每个数据交换机，以提供物理容错能力。交换机端口应配置为多机箱链路聚合（ MLAG ），节点上的数据端口应配置为 LACP 并启用巨型帧支持。在将节点安装到数据中心后，可以使用每个节点上的 IPMI 端口来远程管理该节点。使用 IPMI 时，可以使用基于 Web 浏览器的控制台访问节点，以便运行初始安装，运行诊断以及根据需要重新启动或关闭节点。
+
+
+
+==== 为计算节点布线
+
+应将两个 25 Gbps 端口（ C 和 E ）连接到每个数据交换机，以提供物理容错能力。交换机端口应配置为多机箱链路聚合（ MLAG ），节点上的数据端口应配置为 LACP 并启用巨型帧支持。在将节点安装到数据中心后， IPMI 端口还可用于远程管理该节点。使用 IPMI 时，可以使用基于 Web 浏览器的控制台访问节点，以便运行初始安装，运行诊断以及根据需要重新启动或关闭节点。
+
+image:redhat_virtualization_image4.PNG["错误：缺少图形映像"]
+
+
+
+=== VLAN 要求
+
+解决方案可通过使用虚拟局域网（ VLAN ）在逻辑上隔离不同用途的网络流量。NetApp HCI 至少需要三个网段。但是，可以扩展此配置以满足客户需求，或者为特定网络服务提供进一步隔离。下表列出了实施解决方案所需的 VLAN ，以及稍后在经验证的架构部署中使用的特定 VLAN ID 。
+
+|===
+| VLAN | 目的 | 已使用 VLAN 
+
+
+| 带外管理网络 | HCI 节点 /IPMI 的管理 | 16. 
+
+
+| 带内管理网络 | HCI 节点管理 /ovirtmgmt | 1172. 
+
+
+| 存储网络 | NetApp Element 的存储网络。 | 3343 
+
+
+| 迁移网络 | 用于虚拟子系统迁移的网络。 | 3345 
+
+
+| VM 网络 | 虚拟子系统的网络。 | 3346 
+|===
+
+
+=== 网络基础架构支持资源
+
+在 NetApp HCI 解决方案上部署 Red Hat 虚拟化之前，应具备以下基础架构：
+
+* 至少一个 DNS 服务器，提供可从带内管理网络和 VM 网络访问的完整主机名解析。
+* 至少可从带内管理网络和 VM 网络访问一个 NTP 服务器。
+* 对于带内管理网络和 VM 网络，建议使用出站 Internet 连接，但这并不是必需的。
+
+
+link:rhv-deployment_summary.html["下一步：部署过程"]

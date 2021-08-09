@@ -1,0 +1,180 @@
+---
+sidebar: sidebar 
+permalink: vdi-vds/citrix_citrix_hypervisor.html 
+keywords: Compute, storage, network, gpu, security, data protection, xencenter 
+summary: Citrix 虚拟机管理程序（以前称为 XenServer ）是适用于桌面虚拟化基础架构的行业领先且经济高效的开源平台。XenCenter 是适用于 Citrix 虚拟机管理程序服务器的轻型图形管理界面。 
+---
+= Citrix 虚拟机管理程序
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+Citrix 虚拟机管理程序（以前称为 XenServer ）是适用于桌面虚拟化基础架构的行业领先且经济高效的开源平台。XenCenter 是适用于 Citrix 虚拟机管理程序服务器的轻型图形管理界面。下图概述了 Citrix 虚拟机管理程序架构。
+
+image:citrix_image14.png["错误：缺少图形映像"]
+
+Citrix 虚拟机管理程序是一种 1 类虚拟机管理程序。控制域（也称为域 0 或域 0 ）是一个安全的有权限 Linux VM ，它运行称为 XAPI 的 Citrix 虚拟机管理程序管理工具堆栈。此 Linux VM 基于 CentOS 7.5 版本。除了提供 Citrix 虚拟机管理程序管理功能之外， DOMA0 还会运行网络连接，存储等的物理设备驱动程序。控制域可以与虚拟机管理程序进行通信，指示其启动或停止子虚拟机。
+
+虚拟桌面在子域（有时称为用户域或域 U ）中运行，并从控制域请求资源。硬件辅助虚拟化使用 Intel VT 等 CPU 虚拟化扩展。操作系统内核无需注意它正在虚拟机上运行。快速模拟器（ QEMU ）用于虚拟化 BIOS ， IDE ，图形适配器， USB ，网络适配器， 等等。借助半虚拟化（ PV ），操作系统内核和设备驱动程序经过优化，可提高虚拟机的性能。下图显示了 Citrix 虚拟机管理程序的多租户功能。
+
+image:citrix_image15.png["错误：缺少图形映像"]
+
+NetApp HCI 的资源构成了硬件层，其中包括计算，存储，网络， GPU ， 等等。
+
+
+
+=== 计算
+
+上一节介绍了 NetApp HCI 的 CPU 和内存详细信息。但是，本节重点介绍如何在 Citrix 虚拟机管理程序环境中利用计算节点。
+
+安装了 Citrix 虚拟机管理程序的每个 NetApp HCI 计算节点均称为服务器。服务器池作为资源池（ Resource Pool ， RP ）进行管理。创建的资源池具有类似型号的计算节点，以便在工作负载从一个节点移动到另一个节点时提供类似的性能。资源池始终包含一个指定为主节点，此节点会公开管理接口（对于 XenCenter 和 CLI ），并可根据需要路由到其他成员服务器。启用高可用性后，如果主节点发生故障，则会重新选择主节点。
+
+一个资源池最多可以包含 64 个服务器（软限制）。但是，如果使用 GFS2 共享存储资源启用了集群，则服务器数量将限制为 16 。
+
+资源池会选取一个服务器来托管工作负载，并可使用实时迁移功能迁移到其他服务器。要在资源池中实现负载平衡，必须在 Citrix 虚拟机管理程序上安装可选的 WLB 管理包。
+
+image:citrix_image16.png["错误：缺少图形映像"]
+
+每个租户资源都可以托管在专用资源池上，也可以通过同一资源池上的标记进行区分。可以定义自定义值以用于操作和报告目的。
+
+
+
+=== 存储
+
+NetApp HCI 计算节点具有本地存储，不建议将其用于存储任何永久性数据。此类数据应存储在使用 NetApp HCI 存储创建的 iSCSI 卷上，也可以存储在 NetApp AFF 上的 NFS 数据存储库上。
+
+要使用 NetApp HCI 存储，必须在 Citrix 虚拟机管理程序服务器上启用 iSCSI 。使用 IQN ，注册启动程序并在 Element 管理门户上创建访问组。创建卷（请记住为基于 iSCSI SR 的 LVM 启用 512e 块大小支持）并分配帐户 ID 和访问组。
+
+
+NOTE: 可以在命令行界面上使用以下命令自定义 iSCSI 启动程序：
+
+....
+    xe host-param-set uuid=valid_host_id other-config:iscsi_iqn=new_initiator_iqn
+....
+如果配置了多个 iSCSI NIC ，则支持 iSCSI 的多路径功能。iSCSI 配置可使用 XenCenter 或 iscsiadm 和 multipath 等命令行界面命令来执行。也可以使用各种 Citrix 虚拟机管理程序 CLI 工具来执行此配置。有关单目标存储阵列的 iSCSI 多路径，请参见  https://support.citrix.com/article/CTX138429["CTX138429"^]。
+
+存储库（ Storage Repository ， SR ）是存储虚拟机（ VM ）虚拟磁盘映像（ Virtual Disk Image ， VDI ）的存储目标。VDI 是一种存储抽象，表示虚拟硬盘驱动器（ HDD ）。下图显示了各种 Citrix 虚拟机管理程序存储对象。
+
+image:citrix_image17.png["错误：缺少图形映像"]
+
+SR 与主机之间的关系由物理块设备（ PBD ）处理，该设备存储与给定存储目标进行连接和交互所需的配置信息。同样，虚拟块设备（ Virtual Block Device ， VBD ）也会维护 VDI 与 VM 之间的映射。除此之外，还可以使用 VBD 来微调给定 VDI 的服务质量（ QoS ）和统计信息。以下屏幕截图显示了 Citrix 虚拟机管理程序存储库类型。
+
+image:citrix_image18.png["错误：缺少图形映像"]
+
+使用 NetApp HCI ，可以创建以下 SR 类型。下表对功能进行了比较。
+
+|===
+| 功能 | 基于 iSCSI 的 LVM | gfs2. 
+
+
+| 最大虚拟磁盘映像大小 | 2 TiB | 16 TiB 
+
+
+| 磁盘配置方法 | 厚配置 | 精简配置 
+
+
+| 读缓存支持 | 否 | 是的。 
+
+
+| 集群模式池支持 | 否 | 是的。 
+
+
+| 已知限制  a| 
+* 不支持读取缓存
+
+ a| 
+* 如果 VM 的 VDI 位于 GFS2 SR 上，则不支持使用存储实时迁移进行 VM 迁移。您也不能将 VDI 从其他类型的 SR 迁移到 GFS2 SR 。
+* GFS2 SR 不支持调整 / 取消映射。
+* 对于这些 SR 上的 GFS2 SR 和磁盘，性能指标不可用。
+* GFS2 SR 上存储的 VDI 不支持更改块跟踪。
+* 不能将大于 2 TiB 的 VDI 导出为 VHD 或 OVA/OVF 。但是，您可以导出 VDI 大于 2 TiB 的 VM ，其格式为 XVA 。
+* 集群模式池仅支持每个池最多 16 个主机。
+
+
+|===
+由于 NetApp HCI 提供了当前的功能，因此 Citrix 虚拟机管理程序的 Intellicache 功能对 NetApp HCI 客户没有价值。Intellicache 可通过缓存本地存储库中的数据来提高基于文件的存储系统的性能。
+
+通过读取缓存，您可以通过缓存服务器内存中的数据来提高某些存储库的性能。gfs2 是第一个支持读取缓存的 iSCSI 卷。
+
+
+
+=== 网络
+
+Citrix 虚拟机管理程序网络基于支持 OpenFlow 的 Open vSwitch 。它支持精细安全策略，以控制从 VM 发送和接收的流量。此外，还可以详细了解虚拟网络环境中发送的所有流量的行为和性能。下图概述了 Citrix 虚拟机管理程序网络连接。
+
+image:citrix_image19.png["错误：缺少图形映像"]
+
+物理接口（ PIF ）与服务器上的 NIC 相关联。对于 Network HCI ，最多可使用六个 NIC 。对于只有两个 NIC 的型号，可以使用 SR-IOV 添加更多的 PIF 。PIF 充当虚拟交换机网络的上行链路端口。虚拟接口（ VIF ）连接到虚拟机上的 NIC 。
+
+提供了多种网络选项：
+
+* 一种使用 VLAN 的外部网络
+* 没有外部连接的单个服务器专用网络
+* 绑定网络（主动 / 主动 - 聚合吞吐量）
+* 绑定网络（主动 / 被动 - 容错）
+* 绑定网络（ LACP —基于源和目标 IP 及端口的负载平衡）
+* 绑定网络（ LACP —基于源和目标 MAC 地址的负载平衡）
+* 网络不离开资源池的跨服务器专用网络
+* SR-IOV
+
+
+在主服务器上创建的网络配置将复制到其他成员服务器。因此，在将新服务器添加到资源池中时，其网络配置将从主服务器复制。
+
+
+NOTE: 每个 NIC 只能为每个 VLAN 分配一个 IP 地址。对于 iSCSI 多路径，要在同一子网上分配 IP ，您必须具有多个 PIF 。对于 H615C ，您可以考虑对 iSCSI 使用 SR-IOV 。
+
+image:citrix_image20.png["错误：缺少图形映像"]
+
+由于 Citrix 虚拟机管理程序上的网络基于 Open vSwitch ，因此您可以使用 OVS-vsctl 和 OVS-appctl 命令对其进行管理。它还支持将 NVGE/VXLAN 作为大型横向扩展环境的叠加解决方案。
+
+与 Citrix 配置（ PVS ）结合使用时， PVS 加速器可通过缓存域 0 内存或将内存与本地存储库结合使用来提高性能。
+
+image:citrix_image21.png["错误：缺少图形映像"]
+
+
+
+=== GPU
+
+Citrix 虚拟机管理程序率先部署了 NVIDIA vGPU ，这是一个适用于 GPU 的虚拟化平台，支持在多个虚拟机之间共享 GPU 。NetApp HCI H610C （使用 NVIDIA Tesla M10 卡）和 H615C （使用 NVIDIA Tesla T4 卡）可以为虚拟桌面提供 GPU 资源，从而提供硬件加速以增强用户体验。
+
+NetApp HCI GPU 可以在 Citrix 虚拟机管理程序环境中使用直通模式，即整个 GPU 提供给单个虚拟机，也可以使用 NVIDIA vGPU 。不支持使用 GPU 直通实时迁移虚拟机，因此 NVIDIA vGPU 是首选。
+
+适用于 Citrix 虚拟机管理程序的 NVIDIA Virtual GPU Manager 可以使用 XenCenter 与其他管理包一起部署，也可以通过与服务器的 SSH 会话进行安装。虚拟 GPU 会获得自己的专用帧缓冲区，同时共享流式处理器，编码器，解码器等。也可以使用计划程序对其进行控制。
+
+H610C 具有两个 Tesla M10 图形卡，每个卡具有 4 个 GPU 。每个 GPU 都有 8 GB 帧缓冲区内存，每个服务器总共有 8 个 GPU 和 64 GB 内存。H615C 具有三个 Tesla T4 卡，每个卡都有自己的 GPU 和 16 GB 帧缓冲区内存，每个服务器总共有 3 个 GPU 和 48 GB 图形内存。下图概述了 NVIDIA vGPU 架构。
+
+image:citrix_image22.png["错误：缺少图形映像"]
+
+NVIDIA vGPU 支持每个 GPU 的同构配置文件。虚拟机在 GPU 上的放置由一个策略控制，该策略可根据需求设置最大密度或最高性能。
+
+image:citrix_image23.png["错误：缺少图形映像"]
+
+创建 VM 时，您可以设置虚拟 GPU 配置文件。您选择的 vGPU 配置文件取决于所需的帧缓冲区内存级别，显示数量和解决要求。您还可以设置虚拟机的用途，无论是虚拟应用程序（ A ），虚拟桌面（ B ），专业的 Quadro 虚拟工作站（ Q ），还是人工智能推理应用程序的计算工作负载 ++ （ C ） ++ 。
+
+image:citrix_image24.png["错误：缺少图形映像"]
+
+独立于 XenCenter ， Citrix 虚拟机管理程序 NVIDIA-SMI 上的 CLI 实用程序可用于故障排除和监控性能。
+
+要访问虚拟 GPU ，需要虚拟机上的 NVIDIA 驱动程序。通常，虚拟机管理程序驱动程序版本和 VM 子驱动程序应具有相同的 vGPU 版本。但是，从 vGPU 版本 10 开始，虚拟机管理程序可以是最新版本，而虚拟机驱动程序可以是 n-1 版本。
+
+
+
+=== 安全性
+
+Citrix 虚拟机管理程序支持身份验证，授权和审核控制。身份验证由本地帐户和 Active Directory 控制。可以将用户和组分配给控制资源权限的角色。事件和日志记录除了可以远程存储在本地服务器上之外，还可以远程存储。
+
+Citrix 虚拟机管理程序支持使用 SSL 证书对流量进行加密。
+
+由于大多数配置都存储在本地 XML 数据库中，因此某些内容（例如 SMB 密码）以明文形式显示，因此您必须保护对虚拟机管理程序的访问。
+
+
+
+=== 数据保护
+
+虚拟机可以导出为 OVA 文件，并可用于将其导入到其他虚拟机管理程序中。虚拟机也可以以原生 XVA 格式导出，并导入到任何其他 Citrix 虚拟机管理程序。对于灾难恢复，还可以使用第二个选项以及 SnapMirror 或原生 Element OS 同步或异步复制所处理的基于存储的复制。借助 NetApp ， HCI 存储还可以与 ONTAP 存储配对以进行复制。
+
+可通过基于存储的快照和克隆功能提供崩溃状态一致的映像备份。基于虚拟机管理程序的快照可用于提供时间点快照，也可用作配置新虚拟机的模板。

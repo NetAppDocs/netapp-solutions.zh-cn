@@ -1,0 +1,36 @@
+---
+sidebar: sidebar 
+permalink: ai/hciai_edge_validation_results.html 
+keywords:  
+summary:  
+---
+= 验证结果
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+要运行示例推理请求，请完成以下步骤：
+
+. 获取客户端容器 /Pod 的 Shell 。
++
+....
+kubectl exec --stdin --tty <<client_pod_name>> -- /bin/bash
+....
+. 运行示例推理请求。
++
+....
+image_client -m resnet50_netdef -s INCEPTION -u <<LoadBalancer_IP_recorded earlier>>:8000 -c 3 images/mug.jpg
+....
++
+image:hciaiedge_image24.png["错误：缺少图形映像"]
+
++
+此推理请求调用用于图像识别的 `resnet50_netdef` 模型。其他客户端也可以通过类似的方法并调用相应的模型来同时发送推理请求。
+
+
+
+link:hciai_edge_additional_information.html["下一步：从何处查找追加信息"]

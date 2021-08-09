@@ -1,0 +1,104 @@
+---
+sidebar: sidebar 
+permalink: ai/osrunai_testing_details_for_section_4.8.html 
+keywords:  
+summary:  
+---
+= 第 4.8 节的测试详细信息
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+此部分包含此部分的测试详细信息 link:osrunai_achieving_high_cluster_utilization_with_over-uota_gpu_allocation.html["通过过度配额 GPU 分配实现高集群利用率"]。
+
+按以下顺序提交作业：
+
+|===
+| 项目 | 图像 | GPU 数量 | 总计 | comment 
+
+
+| 团队 A | Jupyter | 1. | 1 ， 4 | – 
+
+
+| 团队 A | NetApp | 1. | 2 ， 4 | – 
+
+
+| 团队 A | 运行： AI | 2. | 4.4 | 正在使用其所有配额 
+
+
+| 团队 b | 运行： AI | 0.6 | 0.6/2 | GPU 百分比 
+
+
+| 团队 b | 运行： AI | 0.4 | 1.2 | GPU 百分比 
+
+
+| 团队 b | NetApp | 1. | 2/2 | – 
+
+
+| 团队 b | NetApp | 2. | 4/2 | 两个超过配额 
+
+
+| 团队 c | 运行： AI | 0.5 | 0.5/2 | GPU 百分比 
+
+
+| 团队 c | 运行： AI | 0 ， 3. | 0.8/2 | GPU 百分比 
+
+
+| 团队 c | 运行： AI | 0.2 | 1.2 | GPU 百分比 
+
+
+| 团队 c | NetApp | 2. | 3/2 | 一个超过配额 
+
+
+| 团队 c | NetApp | 1. | 4/2 | 两个超过配额 
+
+
+| 团队 | NetApp | 4. | 4 ， 8. | 正在使用配额的一半 
+|===
+命令结构：
+
+....
+$ runai submit <job-name> -p <project-name> -g <#GPUs> -i <image-name>
+....
+测试中使用的实际命令顺序：
+
+....
+$ runai submit a-1-1-jupyter -i jupyter/base-notebook -g 1 \
+  --interactive --service-type=ingress --port 8888 \
+  --args="--NotebookApp.base_url=team-a-test-ingress" --command=start-notebook.sh -p team-a
+$ runai submit a-1-g -i gcr.io/run-ai-demo/quickstart -g 1 -p team-a
+$ runai submit a-2-gg -i gcr.io/run-ai-demo/quickstart -g 2 -p team-a
+$ runai submit b-1-g06 -i gcr.io/run-ai-demo/quickstart -g 0.6 --interactive -p team-b
+$ runai submit b-2-g04 -i gcr.io/run-ai-demo/quickstart -g 0.4 --interactive -p team-b
+$ runai submit b-3-g -i gcr.io/run-ai-demo/quickstart -g 1 -p team-b
+$ runai submit b-4-gg -i gcr.io/run-ai-demo/quickstart -g 2 -p team-b
+$ runai submit c-1-g05 -i gcr.io/run-ai-demo/quickstart -g 0.5 --interactive -p team-c
+$ runai submit c-2-g03 -i gcr.io/run-ai-demo/quickstart -g 0.3 --interactive -p team-c
+$ runai submit c-3-g02 -i gcr.io/run-ai-demo/quickstart -g 0.2 --interactive -p team-c
+$ runai submit c-4-gg -i gcr.io/run-ai-demo/quickstart -g 2 -p team-c
+$ runai submit c-5-g -i gcr.io/run-ai-demo/quickstart -g 1 -p team-c
+$ runai submit d-1-gggg -i gcr.io/run-ai-demo/quickstart -g 4 -p team-d
+....
+此时，您应处于以下状态：
+
+|===
+| 项目 | 已分配 GPU | 已排队的工作负载 
+
+
+| 团队 A | 4/4 （软配额 / 实际分配） | 无 
+
+
+| 团队 b | 4/2 | 无 
+
+
+| 团队 c | 4/2 | 无 
+
+
+| 团队 | 4 ， 8. | 无 
+|===
+请参见一节 link:osrunai_achieving_high_cluster_utilization_with_over-uota_gpu_allocation.html["通过过度分配 GPU 实现高集群利用率"] 用于讨论继续测试场景。
+
+link:osrunai_testing_details_for_section_4.9.html["接下来：第 4.9 节的测试详细信息"]

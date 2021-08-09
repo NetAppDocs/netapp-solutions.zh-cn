@@ -1,0 +1,381 @@
+---
+sidebar: sidebar 
+permalink: ent-apps-db/saphana_aff_fc_host_setup.html 
+keywords: multipating, fcp, hba, configure 
+summary: 在设置主机之前，必须从 NetApp 支持站点下载 NetApp SAN 主机实用程序，并将其安装在 HANA 服务器上。主机实用程序文档提供了有关根据所使用的 FCP HBA 而必须安装的其他软件的信息。 
+---
+= 主机设置
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:saphana_aff_fc_sap_hana_storage_connector_api.html["先前版本： SAP HANA 存储连接器 API 。"]
+
+在设置主机之前，必须从下载 NetApp SAN 主机实用程序 http://mysupport.netapp.com/["NetApp 支持"^] 站点和安装在 HANA 服务器上。主机实用程序文档提供了有关根据所使用的 FCP HBA 而必须安装的其他软件的信息。
+
+文档还包含有关特定于所用 Linux 版本的多路径配置的信息。本文档介绍了 SLES 12 SP1 或更高版本以及 RHEL 7 所需的配置步骤。2 或更高版本，如中所述 https://library.netapp.com/ecm/ecm_download_file/ECMLP2547958["《 Linux Host Utilities 7.1 安装和设置指南》"^]。
+
+
+
+=== 配置多路径
+
+
+NOTE: 必须在 SAP HANA 多主机配置中的所有辅助主机和备用主机上执行步骤 1 到 6 。
+
+要配置多路径，请完成以下步骤：
+
+. 在每个服务器上运行 Linux `rescan-scsi-bus.sh -a` 命令以发现新的 LUN 。
+. 运行 `sanlun lun show` 命令并验证所有必需的 LUN 是否可见。以下示例显示了对于具有两个数据 LUN 和两个日志 LUN 的 2+1 多主机 HANA 系统的 `sanlun lun show` 命令输出。输出将显示 LUN 以及相应的设备文件，例如 LUN `SS3_data_mnt00001` 和设备文件 ` /dev/sdag` 每个 LUN 都有八条从主机到存储控制器的 FC 路径。
++
+....
+stlrx300s8-6:~ # sanlun lun show
+controller(7mode/E-Series)/                                            device        host                  lun
+vserver(cDOT/FlashRay)        lun-pathname                             filename        adapter    protocol   size    product
+-------------------------------------------------------------------------------------------------------------------------
+hana                          /vol/SS3_log_mnt00002/SS3_log_mnt00002   /dev/sdah       host11     FCP        512.0g  cDOT
+hana                          /vol/SS3_data_mnt00001/SS3_data_mnt00001 /dev/sdag       host11     FCP        1.2t    cDOT
+hana                          /vol/SS3_data_mnt00002/SS3_data_mnt00002 /dev/sdaf       host11     FCP        1.2t    cDOT
+hana                          /vol/SS3_log_mnt00002/SS3_log_mnt00002   /dev/sdae       host11     FCP        512.0g  cDOT
+hana                          /vol/SS3_data_mnt00001/SS3_data_mnt00001 /dev/sdad       host11     FCP        1.2t    cDOT
+hana                          /vol/SS3_data_mnt00002/SS3_data_mnt00002 /dev/sdac       host11     FCP        1.2t    cDOT
+hana                          /vol/SS3_log_mnt00002/SS3_log_mnt00002   /dev/sdab       host11     FCP        512.0g  cDOT
+hana                          /vol/SS3_data_mnt00001/SS3_data_mnt00001 /dev/sdaa       host11     FCP        1.2t    cDOT
+hana                          /vol/SS3_data_mnt00002/SS3_data_mnt00002 /dev/sdz        host11     FCP        1.2t    cDOT
+hana                          /vol/SS3_log_mnt00002/SS3_log_mnt00002   /dev/sdy        host11     FCP        512.0g  cDOT
+hana                          /vol/SS3_data_mnt00001/SS3_data_mnt00001 /dev/sdx        host11     FCP        1.2t    cDOT
+hana                          /vol/SS3_data_mnt00002/SS3_data_mnt00002 /dev/sdw        host11     FCP        1.2t    cDOT
+hana                          /vol/SS3_log_mnt00001/SS3_log_mnt00001   /dev/sdv        host11     FCP        512.0g  cDOT
+hana                          /vol/SS3_log_mnt00001/SS3_log_mnt00001   /dev/sdu        host11     FCP        512.0g  cDOT
+hana                          /vol/SS3_log_mnt00001/SS3_log_mnt00001   /dev/sdt        host11     FCP        512.0g  cDOT
+hana                          /vol/SS3_log_mnt00001/SS3_log_mnt00001   /dev/sds        host11     FCP        512.0g  cDOT
+hana                          /vol/SS3_log_mnt00002/SS3_log_mnt00002   /dev/sdr        host10     FCP        512.0g  cDOT
+hana                          /vol/SS3_data_mnt00001/SS3_data_mnt00001 /dev/sdq        host10     FCP        1.2t    cDOT
+hana                          /vol/SS3_data_mnt00002/SS3_data_mnt00002 /dev/sdp        host10     FCP        1.2t    cDOT
+hana                          /vol/SS3_log_mnt00002/SS3_log_mnt00002   /dev/sdo        host10     FCP        512.0g  cDOT
+hana                          /vol/SS3_data_mnt00001/SS3_data_mnt00001 /dev/sdn        host10     FCP        1.2t    cDOT
+hana                          /vol/SS3_data_mnt00002/SS3_data_mnt00002 /dev/sdm        host10     FCP        1.2t    cDOT
+hana                          /vol/SS3_log_mnt00002/SS3_log_mnt00002   /dev/sdl        host10     FCP        512.0g  cDOT
+hana                          /vol/SS3_data_mnt00001/SS3_data_mnt00001 /dev/sdk        host10     FCP        1.2t    cDOT
+hana                          /vol/SS3_data_mnt00002/SS3_data_mnt00002 /dev/sdj        host10     FCP        1.2t    cDOT
+hana                          /vol/SS3_log_mnt00002/SS3_log_mnt00002   /dev/sdi        host10     FCP        512.0g  cDOT
+hana                          /vol/SS3_data_mnt00001/SS3_data_mnt00001 /dev/sdh        host10     FCP        1.2t    cDOT
+hana                          /vol/SS3_data_mnt00002/SS3_data_mnt00002 /dev/sdg        host10     FCP        1.2t    cDOT
+hana                          /vol/SS3_log_mnt00001/SS3_log_mnt00001   /dev/sdf        host10     FCP        512.0g  cDOT
+hana                          /vol/SS3_log_mnt00001/SS3_log_mnt00001   /dev/sde        host10     FCP        512.0g  cDOT
+hana                          /vol/SS3_log_mnt00001/SS3_log_mnt00001   /dev/sdd        host10     FCP        512.0g  cDOT
+hana                          /vol/SS3_log_mnt00001/SS3_log_mnt00001   /dev/sdc        host10     FCP        512.0g  cDOT
+....
+. 运行 `multipath -r` 命令以获取设备文件名的全球通用标识符（ WWID ）。
++
+
+NOTE: 在此示例中，有四个 LUN 。
+
++
+....
+stlrx300s8-6:~ # multipath -r
+create: 3600a098038304436375d4d442d753878 undef NETAPP,LUN C-Mode
+size=512G features='3 pg_init_retries 50 queue_if_no_path' hwhandler='0' wp=undef
+|-+- policy='service-time 0' prio=50 status=undef
+| |- 10:0:1:0 sdd  8:48   undef ready running
+| |- 10:0:3:0 sdf  8:80   undef ready running
+| |- 11:0:0:0 sds  65:32  undef ready running
+| `- 11:0:2:0 sdu  65:64  undef ready running
+`-+- policy='service-time 0' prio=10 status=undef
+  |- 10:0:0:0 sdc  8:32   undef ready running
+  |- 10:0:2:0 sde  8:64   undef ready running
+  |- 11:0:1:0 sdt  65:48  undef ready running
+  `- 11:0:3:0 sdv  65:80  undef ready running
+create: 3600a098038304436375d4d442d753879 undef NETAPP,LUN C-Mode
+size=1.2T features='3 pg_init_retries 50 queue_if_no_path' hwhandler='0' wp=undef
+|-+- policy='service-time 0' prio=50 status=undef
+| |- 10:0:1:1 sdj  8:144  undef ready running
+| |- 10:0:3:1 sdp  8:240  undef ready running
+| |- 11:0:0:1 sdw  65:96  undef ready running
+| `- 11:0:2:1 sdac 65:192 undef ready running
+`-+- policy='service-time 0' prio=10 status=undef
+  |- 10:0:0:1 sdg  8:96   undef ready running
+  |- 10:0:2:1 sdm  8:192  undef ready running
+  |- 11:0:1:1 sdz  65:144 undef ready running
+  `- 11:0:3:1 sdaf 65:240 undef ready running
+create: 3600a098038304436392b4d442d6f534f undef NETAPP,LUN C-Mode
+size=1.2T features='3 pg_init_retries 50 queue_if_no_path' hwhandler='0' wp=undef
+|-+- policy='service-time 0' prio=50 status=undef
+| |- 10:0:0:2 sdh  8:112  undef ready running
+| |- 10:0:2:2 sdn  8:208  undef ready running
+| |- 11:0:1:2 sdaa 65:160 undef ready running
+| `- 11:0:3:2 sdag 66:0   undef ready running
+`-+- policy='service-time 0' prio=10 status=undef
+  |- 10:0:1:2 sdk  8:160  undef ready running
+  |- 10:0:3:2 sdq  65:0   undef ready running
+  |- 11:0:0:2 sdx  65:112 undef ready running
+  `- 11:0:2:2 sdad 65:208 undef ready running
+create: 3600a098038304436392b4d442d6f5350 undef NETAPP,LUN C-Mode
+size=512G features='3 pg_init_retries 50 queue_if_no_path' hwhandler='0' wp=undef
+|-+- policy='service-time 0' prio=50 status=undef
+| |- 10:0:0:3 sdi  8:128  undef ready running
+| |- 10:0:2:3 sdo  8:224  undef ready running
+| |- 11:0:1:3 sdab 65:176 undef ready running
+| `- 11:0:3:3 sdah 66:16  undef ready running
+`-+- policy='service-time 0' prio=10 status=undef
+  |- 10:0:1:3 sdl  8:176  undef ready running
+  |- 10:0:3:3 sdr  65:16  undef ready running
+  |- 11:0:0:3 sdy  65:128 undef ready running
+  `- 11:0:2:3 sdae 65:224 undef ready running
+....
+. 编辑 ` /etc/multipath.conf` 文件并添加 WWID 和别名。
++
+
+NOTE: 示例输出显示了 ` /etc/multipath.conf` 文件的内容，其中包括 2+1 多主机系统中四个 LUN 的别名。如果没有可用的 multipath.conf 文件，则可以运行以下命令创建一个： `multipath -T > /etc/multipath.conf` 。
+
++
+....
+stlrx300s8-6:/ # cat /etc/multipath.conf
+multipaths {
+        multipath {
+                wwid    3600a098038304436392b4d442d6f534f
+                alias   hana- SS3_data_mnt00001
+        }
+        multipath {
+                wwid    3600a098038304436375d4d442d753879
+                alias   hana- SS3_data_mnt00002
+        }
+        multipath {
+                wwid    3600a098038304436375d4d442d753878
+                alias   hana- SS3_log_mnt00001
+        }
+        multipath {
+                wwid    3600a098038304436392b4d442d6f5350
+                alias   hana- SS3_log_mnt00002
+        }
+
+}
+....
+. 运行 `multipath -r` 命令重新加载设备映射。
+. 运行 `multipath -ll` 命令列出所有 LUN ，别名以及活动和备用路径，以验证配置。
++
+
+NOTE: 以下示例输出显示了具有两个数据和两个日志 LUN 的 2+1 多主机 HANA 系统的输出。
+
++
+....
+stlrx300s8-6:~ # multipath -ll
+hana-SS3_data_mnt00002 (3600a098038304436375d4d442d753879) dm-1 NETAPP,LUN C-Mode
+size=1.2T features='4 queue_if_no_path pg_init_retries 50 retain_attached_hw_handler' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=enabled
+| |- 10:0:1:1 sdj  8:144  active ready running
+| |- 10:0:3:1 sdp  8:240  active ready running
+| |- 11:0:0:1 sdw  65:96  active ready running
+| `- 11:0:2:1 sdac 65:192 active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |- 10:0:0:1 sdg  8:96   active ready running
+  |- 10:0:2:1 sdm  8:192  active ready running
+  |- 11:0:1:1 sdz  65:144 active ready running
+  `- 11:0:3:1 sdaf 65:240 active ready running
+hana-SS3_data_mnt00001 (3600a098038304436392b4d442d6f534f) dm-2 NETAPP,LUN C-Mode
+size=1.2T features='4 queue_if_no_path pg_init_retries 50 retain_attached_hw_handler' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=enabled
+| |- 10:0:0:2 sdh  8:112  active ready running
+| |- 10:0:2:2 sdn  8:208  active ready running
+| |- 11:0:1:2 sdaa 65:160 active ready running
+| `- 11:0:3:2 sdag 66:0   active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |- 10:0:1:2 sdk  8:160  active ready running
+  |- 10:0:3:2 sdq  65:0   active ready running
+  |- 11:0:0:2 sdx  65:112 active ready running
+  `- 11:0:2:2 sdad 65:208 active ready running
+hana-SS3_log_mnt00002 (3600a098038304436392b4d442d6f5350) dm-3 NETAPP,LUN C-Mode
+size=512G features='4 queue_if_no_path pg_init_retries 50 retain_attached_hw_handler' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=enabled
+| |- 10:0:0:3 sdi  8:128  active ready running
+| |- 10:0:2:3 sdo  8:224  active ready running
+| |- 11:0:1:3 sdab 65:176 active ready running
+| `- 11:0:3:3 sdah 66:16  active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |- 10:0:1:3 sdl  8:176  active ready running
+  |- 10:0:3:3 sdr  65:16  active ready running
+  |- 11:0:0:3 sdy  65:128 active ready running
+  `- 11:0:2:3 sdae 65:224 active ready running
+hana-SS3_log_mnt00001 (3600a098038304436375d4d442d753878) dm-0 NETAPP,LUN C-Mode
+size=512G features='4 queue_if_no_path pg_init_retries 50 retain_attached_hw_handler' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=enabled
+| |- 10:0:1:0 sdd  8:48   active ready running
+| |- 10:0:3:0 sdf  8:80   active ready running
+| |- 11:0:0:0 sds  65:32  active ready running
+| `- 11:0:2:0 sdu  65:64  active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |- 10:0:0:0 sdc  8:32   active ready running
+  |- 10:0:2:0 sde  8:64   active ready running
+  |- 11:0:1:0 sdt  65:48  active ready running
+  `- 11:0:3:0 sdv  65:80  active ready running
+....
+
+
+
+
+=== 创建 LVM 卷组和逻辑卷
+
+只有在使用 LVM 时，才需要执行此步骤。以下示例适用于使用 SID FC5 的 2+1 主机设置。
+
+
+NOTE: 对于基于 LVM 的设置，也必须完成上一节所述的多路径配置。在此示例中，必须为多路径配置八个 LUN 。
+
+. 将所有 LUN 初始化为物理卷。
++
+....
+pvcreate /dev/mapper/hana-FC5_data_mnt00001
+pvcreate /dev/mapper/hana-FC5_data2_mnt00001pvcreate /dev/mapper/hana-FC5_data_mnt00002
+pvcreate /dev/mapper/hana-FC5_data2_mnt00002
+pvcreate /dev/mapper/hana-FC5_log_mnt00001
+pvcreate /dev/mapper/hana-FC5_log2_mnt00001pvcreate /dev/mapper/hana-FC5_log_mnt00002
+pvcreate /dev/mapper/hana-FC5_log2_mnt00002
+....
+. 为每个数据和日志分区创建卷组。
++
+....
+vgcreate FC5_data_mnt00001 /dev/mapper/hana-FC5_data_mnt00001 /dev/mapper/hana-FC5_data2_mnt00001
+vgcreate FC5_data_mnt00002 /dev/mapper/hana-FC5_data_mnt00002 /dev/mapper/hana-FC5_data2_mnt00002
+vgcreate FC5_log_mnt00001 /dev/mapper/hana-FC5_log_mnt00001 /dev/mapper/hana-FC5_log2_mnt00001
+vgcreate FC5_log_mnt00002 /dev/mapper/hana-FC5_log_mnt00002 /dev/mapper/hana-FC5_log2_mnt00002
+....
+. 为每个数据和日志分区创建一个逻辑卷。使用的条带大小等于每个卷组使用的 LUN 数量（在此示例中为 2 个），数据条带大小为 256k ，日志条带大小为 64k 。SAP 仅支持每个卷组一个逻辑卷。
++
+....
+lvcreate --extents 100%FREE -i 2 -I 256k --name vol FC5_data_mnt00001
+lvcreate --extents 100%FREE -i 2 -I 256k --name vol FC5_data_mnt00002
+lvcreate --extents 100%FREE -i 2 -I 64k --name vol FC5_log_mnt00002
+lvcreate --extents 100%FREE -i 2 -I 64k --name vol FC5_log_mnt00001
+....
+. 扫描所有其他主机上的物理卷，卷组和卷组。
+
+
+....
+modprobe dm_mod
+pvscan
+vgscan
+lvscan
+....
+
+NOTE: 如果这些命令未找到卷，则需要重新启动。
+
+要挂载逻辑卷，必须激活逻辑卷。要激活卷，请运行以下命令：
+
+....
+vgchange -a y
+....
+
+
+=== 创建文件系统
+
+要在属于 HANA 系统的每个 LUN 上创建 XFS 文件系统，请执行以下操作之一：
+
+* 对于单主机系统，请在数据，日志和 ` /ha/shared` LUN 上创建 XFS 文件系统。
+
+
+....
+stlrx300s8-6:/ # mkfs.xfs /dev/mapper/hana-SS3_data_mnt00001
+stlrx300s8-6:/ # mkfs.xfs /dev/mapper/hana-SS3_log_mnt00001
+stlrx300s8-6:/ # mkfs.xfs /dev/mapper/hana-SS3_shared
+....
+* 对于多主机系统，请在所有数据和日志 LUN 上创建 XFS 文件系统。
+
+
+....
+stlrx300s8-6:~ # mkfs.xfs /dev/mapper/hana-SS3_log_mnt00001
+stlrx300s8-6:~ # mkfs.xfs /dev/mapper/hana-SS3_log_mnt00002
+stlrx300s8-6:~ # mkfs.xfs /dev/mapper/hana-SS3_data_mnt00001
+stlrx300s8-6:~ # mkfs.xfs /dev/mapper/hana-SS3_data_mnt00002
+....
+* 如果使用 LVM ，请在所有数据卷和日志逻辑卷上创建 XFS 文件系统。
+
+
+....
+mkfs.xfs FC5_data_mnt00001-vol
+mkfs.xfs FC5_data_mnt00002-vol
+mkfs.xfs FC5_log_mnt00001-vol
+mkfs.xfs FC5_log_mnt00002-vol
+....
+
+NOTE: 多主机示例命令显示 2+1 多主机 HANA 系统。
+
+
+
+=== 创建挂载点
+
+要创建所需的挂载点目录，请执行以下操作之一：
+
+* 对于单主机系统，设置权限并在数据库主机上创建挂载点。
+
+
+....
+stlrx300s8- 6:/ # mkdir -p /hana/data/SS3/mnt00001
+stlrx300s8- 6:/ # mkdir -p /hana/log/SS3/mnt00001
+stlrx300s8- 6:/ # mkdir -p /hana/shared
+stlrx300s8- 6:/ # chmod –R 777 /hana/log/SS3
+stlrx300s8- 6:/ # chmod –R 777 /hana/data/SS3
+stlrx300s8-6:/ # chmod 777 /hana/shared
+....
+* 对于多主机系统，请在所有辅助主机和备用主机上设置权限并创建挂载点。
+
+
+
+NOTE: 示例命令显示 2+1 多主机 HANA 系统。
+
+....
+stlrx300s8- 6:/ # mkdir -p /hana/data/SS3/mnt00001
+stlrx300s8- 6:/ # mkdir -p /hana/log/SS3/mnt00001
+stlrx300s8- 6:/ # mkdir -p /hana/data/SS3/mnt00002
+stlrx300s8- 6:/ # mkdir -p /hana/log/SS3/mnt00002
+stlrx300s8- 6:/ # mkdir -p /hana/shared
+stlrx300s8- 6:/ # chmod –R 777 /hana/log/SS3
+stlrx300s8- 6:/ # chmod –R 777 /hana/data/SS3
+stlrx300s8-6:/ # chmod 777 /hana/shared
+....
+
+NOTE: 对于使用 Linux LVM 的系统配置，必须执行相同的步骤。
+
+
+
+=== 挂载文件系统
+
+要在系统启动期间使用 ` /etc/fstab` 配置文件挂载文件系统，请完成以下步骤：
+
+* 对于单主机系统，请将所需的文件系统添加到 ` /etc/fstab` 配置文件中。
++
+
+NOTE: 必须使用 `relatime` 和 `inode64` 挂载选项挂载数据和日志 LUN 的 XFS 文件系统。
+
++
+....
+stlrx300s8-6:/ # cat /etc/fstab
+/dev/mapper/hana-SS3_shared /hana/shared xfs defaults 0 0
+/dev/mapper/hana-SS3_log_mnt00001 /hana/log/SS3/mnt00001 xfs relatime,inode64 0 0
+/dev/mapper/hana-SS3_data_mnt00001 /hana/data/SS3/mnt00001 xfs relatime,inode64 0 0
+....
++
+如果使用 LVM ，请对数据和日志使用逻辑卷名称。
+
++
+....
+# cat /etc/fstab
+/dev/mapper/hana-FC5_shared /hana/shared xfs defaults 0 0
+/dev/mapper/FC5_log_mnt00001-vol /hana/log/FC5/mnt00001 xfs relatime,inode64 0 0
+/dev/mapper/FC5_data_mnt00001-vol /hana/data/FC5/mnt00001 xfs relatime,inode64 0 0
+....
+* 对于多主机系统，请将 ` /ha/shared` 文件系统添加到每个主机的 ` /etc/fstab` 配置文件中。
++
+
+NOTE: 所有数据和日志文件系统均通过 SAP HANA 存储连接器挂载。
+
++
+....
+stlrx300s8-6:/ # cat /etc/fstab
+<storage-ip>:/hana_shared /hana/shared nfs rw,vers=3,hard,timeo=600, intr,noatime,nolock 0 0
+....
+
+
+要挂载文件系统，请在每个主机上运行 `mount – a` 命令。
+
+link:saphana_aff_fc_i_o_stack_configuration_for_sap_hana.html["接下来： SAP HANA 的 I/O 堆栈配置。"]

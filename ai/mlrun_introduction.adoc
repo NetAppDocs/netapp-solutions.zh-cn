@@ -1,0 +1,62 @@
+---
+sidebar: sidebar 
+permalink: ai/mlrun_introduction.html 
+keywords: NetApp, MLRun, Introduction, Audience, Solution 
+summary:  
+---
+= TR-4834 ：《 NetApp 和 Iguazio for MLRun 管道》
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+Rick Huang ， David Arnette ， NetApp Marcelo LitovskY ， Iguazio
+
+本文档介绍了使用 NetApp ONTAP AI ， NetApp AI 控制平台， NetApp Cloud Volumes 软件和 Iguazio 数据科学平台的 MLRun 管道的详细信息。我们使用的是 Nercio 无服务器功能， Kubernetes 永久性卷， NetApp Cloud Volumes ， NetApp Snapshot 副本， Grafana 信息板， 以及 Iguazio 平台上的其他服务，用于构建端到端数据管道，以模拟网络故障检测。我们集成了 Iguazio 和 NetApp 技术，可在内部和云端实现快速的模型部署，数据复制和生产监控功能。
+
+数据科学家的工作重点应放在机器学习（ ML ）和人工智能（ AI ）模型的培训和调整上。但是，根据 Google 的研究，数据科学家花费了 ~80% 的时间来研究如何使其模型能够与企业应用程序结合使用并大规模运行，如以下描述 AI/ML 工作流中模型开发的图像所示。
+
+image:mlrun_image1.png["错误：缺少图形映像"]
+
+要管理端到端 AI/ML 项目，需要更广泛地了解企业组件。虽然 DevOps 已接管这些类型的组件的定义，集成和部署，但机器学习操作的目标是类似的流程，其中包括 AI/ML 项目。要了解端到端 AI/ML 管道在企业中涉及的内容，请参见以下所需组件列表：
+
+* 存储
+* 网络
+* 数据库
+* 文件系统
+* 容器
+* 持续集成和持续部署（ CI/CD ）管道
+* 开发集成开发环境（ IDE ）
+* 安全性
+* 数据访问策略
+* 硬件
+* 云
+* 虚拟化
+* 数据科学工具集和库
+
+
+在本白皮书中，我们展示了 NetApp 与 Iguazio 之间的合作关系如何显著简化端到端 AI/ML 管道的开发。这种简化可以加快所有 AI/ML 应用程序的上市速度。
+
+
+
+== 目标受众
+
+数据科学领域涉及信息技术和业务领域的多个学科。
+
+* 数据科学家需要灵活地使用自己选择的工具和库。
+* 数据工程师需要了解数据的流动方式及其所在位置。
+* DevOps 工程师需要使用工具将新的 AI/ML 应用程序集成到其 CI/CD 管道中。
+* 业务用户希望能够访问 AI/ML 应用程序。我们介绍了 NetApp 和 Iguazio 如何帮助这些角色为我们的平台带来业务价值。
+
+
+
+
+== 解决方案概述
+
+此解决方案遵循 AI/ML 应用程序的生命周期。我们从数据科学家的工作开始，定义准备数据以及训练和部署模型所需的不同步骤。接下来，我们将完成创建完整管道所需的工作，该管道能够跟踪项目，试验执行并部署到 Kubeflow 。为了完成整个周期，我们将管道与 NetApp Cloud Volumes 集成，以启用数据版本控制，如下图所示。
+
+image:mlrun_image2.png["错误：缺少图形映像"]
+
+link:mlrun_technology_overview.html["接下来：技术概述"]

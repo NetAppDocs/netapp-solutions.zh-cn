@@ -1,0 +1,32 @@
+---
+sidebar: sidebar 
+permalink: ai/osrunai_creating_projects_for_data_science_teams_and_allocating_gpus.html 
+keywords:  
+summary:  
+---
+= 为数据科学团队创建项目并分配 GPU
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+研究人员可以通过 Run ： AI CLI ， Kubeflow 或类似流程提交工作负载。为了简化资源分配并创建优先级， Run ： AI 引入了项目概念。项目是指将项目名称与 GPU 分配和首选项关联的配额实体。这是一种管理多个数据科学团队的简单便捷的方式。
+
+提交工作负载的研究人员必须将项目与工作负载请求相关联。运行： AI 计划程序会将请求与当前分配和项目进行比较，并确定是否可以为工作负载分配资源或是否应保持待定状态。
+
+作为系统管理员，您可以在 Run ： AI projects 选项卡中设置以下参数：
+
+* * 模拟项目。 * 为每个用户设置一个项目，为每个用户团队设置一个项目，并为每个实际组织项目设置一个项目。
+* * 项目配额。 * 每个项目都与一个 GPU 配额相关联，可以同时为此项目分配 GPU 配额。这是一个有保障的配额，因为使用此项目的研究人员无论在集群中处于何种状态，都可以获得这一数量的 GPU 。通常，项目分配总和应等于集群中的 GPU 数量。除此之外，此项目的用户还可以收到超配额。只要未使用 GPU ，使用此项目的研究人员就可以获得更多 GPU 。我们在中演示了超额配额测试场景和公平考虑事项 https://osrunai_achieving_high_cluster_utilization_with_over-uota_gpu_allocation.adoc["通过过度配额 GPU 分配实现高集群利用率"]，，和。
+* 创建新项目，更新现有项目并删除现有项目。
+* * 限制作业在特定节点组上运行 * 。您可以分配仅在特定节点上运行的特定项目。如果项目团队需要专用硬件，例如具有足够内存的硬件，则此功能非常有用。或者，项目团队也可能是特定硬件的所有者，这些硬件是通过专门预算获得的，或者您可能需要直接构建或交互式工作负载来处理较弱的硬件，并将较长的培训或无人看管的工作负载定向到较快的节点。有关对节点进行分组并为特定项目设置相关性的命令，请参见  https://docs.run.ai/Administrator/Admin-User-Interface-Setup/Working-with-Projects/["运行： AI 文档"^]。
+* * 限制交互作业的持续时间 * 。研究人员经常忘记关闭交互式作业。这可能会导致资源浪费。一些组织倾向于限制交互式作业的持续时间并自动关闭这些作业。
+
+
+下图显示了已创建四个团队的 " 项目 " 视图。每个团队分配不同数量的 GPU 来处理不同的工作负载， GPU 总数等于由两个 DGX-1 组成的集群中可用 GPU 总数。
+
+image:osrunai_image4.png["错误：缺少图形映像"]
+
+link:osrunai_submitting_jobs_in_run_ai_cli.html["下一步：在 Run AI CLI 中提交作业"]

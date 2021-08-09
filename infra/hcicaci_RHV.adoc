@@ -1,0 +1,108 @@
+---
+sidebar: sidebar 
+permalink: infra/hcicaci_RHV.html 
+keywords: Red Hat Virtualization, RHV, virtualization, workflow, ESXi, 
+summary: TR-4857 
+---
+= Red Hat 虚拟化：采用 Cisco ACI 的 NetApp HCI
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+Red Hat 虚拟化（ RHV ）是一个企业级虚拟数据中心平台，它使用 KVM 虚拟机管理程序在 Red Hat Enterprise Linux 上运行。RHV 的主要组件包括 Red Hat 虚拟化主机（ RHP-H ）和 Red Hat 虚拟化管理器（ RHH- M ）。RHV-M 可为虚拟化的 RHV 环境中的物理和逻辑资源提供集中式企业级管理。RHV-H- H 是一款基于 Red Hat Enterprise Linux 的轻量级操作系统，经过优化，可以轻松地将物理服务器设置为 RHV 虚拟机管理程序。有关 RHV 的详细信息，请参见相关文档 https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.3/["此处"^]。下图概述了 RHV 。
+
+image:hcicaci_image16.png["错误：缺少图形映像"]
+
+从 Cisco APIC 3.1 版开始， Cisco ACI 支持将 VMM 与 Red Hat 虚拟化环境集成。Cisco APIC 中的 RHV VMM 域连接到 RHV-M ，并与数据中心对象直接关联。此数据中心下的所有 RHV-H 集群都被视为 VMM 域的一部分。当 EPG 连接到 ACI 中的 RHV VMM 域时， Cisco ACI 会自动在 HV- M 中创建逻辑网络。属于 Red Hat VMM 域的 RHV 主机可以使用 Linux 网桥或 Open vSwitch 作为其虚拟交换机。这种集成可简化和自动执行 RHP-M 上的网络配置，为系统和网络管理员节省大量手动工作。
+
+
+
+== 工作流
+
+以下工作流用于设置虚拟环境。其中每个步骤可能涉及多个单独的任务。
+
+. 在 UCS C 系列服务器上以 ACI 模式安装和配置 Nexus 9000 交换机以及 APIC 软件。请参见安装和升级 https://www.cisco.com/c/en/us/support/cloud-systems-management/application-policy-infrastructure-controller-apic/tsd-products-support-series-home.html["文档。"^] 了解详细步骤。
+. 请参阅配置和设置 ACI 网络结构 https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/3-x/getting_started/b_APIC_Getting_Started_Guide_Rel_3_x.html["文档。"^]。
+. 配置 NetApp HCI 节点所需的租户，应用程序配置文件，网桥域和 EPG 。NetApp 建议使用一个 BD 对一个 EPG 框架，但 iSCSI 除外。请参见文档 https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/2-x/L2_config/b_Cisco_APIC_Layer_2_Configuration_Guide.html["此处"^] 有关详细信息：所需的最小 EPG 集包括带内管理， iSCSI ， VM 移动， VM 数据网络和原生。
+. 根据要求创建 VLAN 池，物理域和 AEP 。为 VPC 和各个端口创建交换机和接口配置文件和策略。然后连接物理域并配置指向 EPG 的静态路径。请参见 https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/2-x/L2_config/b_Cisco_APIC_Layer_2_Configuration_Guide.html["配置指南"^] 有关详细信息：下表列出了在 RHV 上将 ACI 与 Linux 网桥集成的最佳实践。
++
+image:hcicaci_image17.png["错误：缺少图形映像"]
+
++
+
+NOTE: 对于连接到 NetApp HCI 存储和计算节点的接口，请使用 vPC 策略组。
+
+. 创建和分配合同，以便在工作负载之间进行严格控制的访问。有关配置合同的详细信息，请参见指南 https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/1-x/Operating_ACI/guide/b_Cisco_Operating_ACI/b_Cisco_Operating_ACI_chapter_01000.html["此处"^]。
+. 安装和配置 NetApp HCI Element 集群。请勿使用 NDE 进行此安装，而是在 HCI 存储节点上安装独立的 Element 集群。然后，配置所需的卷以安装 RHV 。在 NetApp HCI 上安装 RHV 。请参见 https://docs.netapp.com/us-en/hci-solutions/redhat_virtualization_solution_overview__netapp_hci_with_rhv.html["NetApp HCI NVA 上的 RHV"^] 有关详细信息：
+. RHV 安装会创建一个名为 ovirtmgmt 的默认管理网络。虽然 Cisco ACI 与 RHV 的 VMM 集成是可选的，但最好利用 VMM 集成。请勿手动创建其他逻辑网络。要使用 Cisco ACI VMM 集成，请创建一个 Red Hat VMM 域，并使用预配置解析即时性将 VMM 域附加到所有所需的 EPG 。此过程会自动创建相应的逻辑网络和 vNIC 配置文件。vNIC 配置文件可直接用于连接到主机和 VM 进行通信。由 Cisco ACI 管理的网络的格式为 ` <tenant-name>><application-profile-name>><epg-name>` 标记有格式 `ACI_<rhv-VMM- 域名 >` 。请参见 https://www.cisco.com/c/en/us/solutions/collateral/data-center-virtualization/application-centric-infrastructure/white-paper-c11-740535.html["Cisco 白皮书"^] 用于为 RHV 创建和配置 VMM 域。此外，有关将 NetApp HCI 上的 RHV 与 Cisco ACI 集成的最佳实践，请参见下表。
++
+
+NOTE: 除 ovirtmgmt 之外，所有其他逻辑网络均可由 Cisco ACI 管理。
+
++
+image:hcicaci_image18.jpeg["错误：缺少图形映像"]
+
++
+image:hcicaci_image19.jpg["错误：缺少图形映像"]
+
++
+此解决方案中的 HVH 主机的网络功能由 Linux 网桥提供。
+
+
+
+
+
+== Linux 网桥
+
+Linux Bridge 是所有 Linux 分发版上的默认虚拟交换机，通常用于基于 KVM/QEMU 的虚拟机管理程序。它用于根据 MAC 地址在网络之间转发流量，因此被视为第 2 层虚拟交换机。有关详细信息，请参见文档 https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-configure_network_bridging["此处"^]。下图显示了在 RHV-H-H 上使用 Linux Bridge 的内部网络连接（已测试）。
+
+image:hcicaci_image20.png["错误：缺少图形映像"]
+
+下表概括了在 RHV 主机上配置和集成 Cisco ACI 与 Linux Bridge 的必要参数和最佳实践。
+
+|===
+| 资源 | 配置注意事项 | 最佳实践 
+
+
+| 端点组  a| 
+* 原生 VLAN 使用单独的 EPG
+* 在原生 VLAN EPG 中，将接口与 HCI 存储和计算节点的静态绑定设置为 802.1p 模式
+* 安装 RHV 之前，需要在带内管理 EPG 和 iSCSI EPG 上静态绑定 vPC
+
+ a| 
+* 在启用动态分配的情况下，为 VMM 域单独配置 VLAN 池
+* EPG 之间的合同需要明确定义。仅允许所需端口进行通信。
+* 在元素集群形成期间，使用唯一的原生 VLAN 进行发现
+* 对于与要连接到 VMkernel 端口的端口组对应的 EPG ， VMM 域应与 ‘预配置 ' 一起附加，以便立即解决问题
+
+
+
+
+| 接口策略  a| 
+* 每个 RHV-H 主机一个 vPC 策略组
+* 每个 NetApp HCI 存储节点一个 vPC 策略组
+* 已启用 LLDP ， CDP 已禁用
+
+ a| 
+* 建议对 RHV-HH 主机使用 vPC
+* 对端口通道策略使用 ‘LACP Active '
+* 对于端口通道策略，请仅使用 ‘正常融合 ' 和 ‘S对称散列 ' 控制位对于端口通道策略，请使用 ‘第 4 层 src-port ' 负载平衡散列方法建议对指向 NetApp HCI 存储节点的接口使用具有 LACP 活动端口通道策略的 vPC
+
+
+
+
+| VMM 集成  a| 
+* 请勿将主机管理逻辑接口从 ovirtmgmt 迁移到任何其他逻辑网络
+
+ a| 
+* 要迁移到由 ACI VMM 集成管理的 iSCSI 逻辑网络的 iSCSI 主机逻辑接口
+
+
+|===
+
+NOTE: 除了 ovirtmgmt 逻辑网络之外，可以在 Cisco APIC 上创建所有其他基础架构逻辑网络并将其映射到 VMM 域。‘虚拟管理逻辑网络使用与物理域连接的带内管理 EPG 上的静态路径绑定。
+
+link:hcicaci_kvm_on_rhel.html["接下来： RHEL 上的 KVM ：采用 Cisco ACI 的 NetApp HCI"]

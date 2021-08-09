@@ -1,0 +1,124 @@
+---
+sidebar: sidebar 
+permalink: vdi-vds/citrix_physical_infrastructure.html 
+keywords: NetApp HCI, compute nodes, storage nodes, mnode, mangement node, hybrid cloud control, hcc, aff, mellanox 
+summary: 此解决方案的物理基础架构由 NetApp HCI 存储节点和计算节点，混合云控制， NetApp AFF 和 Mellanox 交换机组成。 
+---
+= 物理基础架构
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+=== NetApp HCI
+
+NetApp HCI 可用作计算节点或存储节点。根据存储节点型号，至少需要两到四个节点才能构成集群。对于计算节点，要提供高可用性，至少需要两个节点。根据需要，可以一次添加一个节点以增加计算或存储容量。
+
+在计算节点上部署的管理节点（ mNode ）在受支持的虚拟机管理程序上作为虚拟机运行。mNode 用于将数据发送到 ActiveIQ （一个基于 SaaS 的管理门户），托管混合云控制门户，并用作 NetApp HCI 远程支持的反向代理等。
+
+通过 NetApp HCI ，您可以进行非分配滚动升级。即使一个节点关闭，也会从其他节点提供数据服务。下图展示了 NetApp HCI 存储多租户功能。
+
+image:citrix_image2.png["错误：缺少图形映像"]
+
+NetApp HCI 存储通过与计算节点的 iSCSI 连接提供闪存存储。可以使用 CHAP 凭据或卷访问组保护 iSCSI 连接。卷访问组仅允许授权启动程序访问卷。帐户包含一组卷， CHAP 凭据和卷访问组。要在租户之间提供网络级隔离，可以使用不同的 VLAN ，卷访问组还支持虚拟路由和转发（ VRF ），以确保租户可以具有相同或重叠的 IP 子网。
+
+RESTful Web 界面可用于执行自定义自动化任务。NetApp HCI 具有可用于自动化任务的 PowerShell 和 Ansible 模块。有关详细信息，请参见 https://netapp.io/["netapp.io"^]。
+
+
+
+==== 存储节点
+
+NetApp HCI 支持两种存储节点型号： H410S 和 H610S 。H410 系列采用 2U 机箱，其中包含四个半宽节点。每个节点都有六个大小为 480 GB ， 960 GB 或 1.92 TB 的 SSD ，并可选择驱动器加密。H410S 至少可以从两个节点开始。每个节点可提供 50 ， 000 到 100 ， 000 次 IOPS ，块大小为 4 k 。下图显示了 H410S 存储节点的正面和背面视图。
+
+image:citrix_image3.png["错误：缺少图形映像"]
+
+image:citrix_image4.png["错误：缺少图形映像"]
+
+H610S 是一个 1U 存储节点，具有 12 个大小为 960 GB ， 1.92 TB 或 3.84 TB 的 NVMe 驱动器，并可选择驱动器加密。要构成集群，至少需要四个 H610S 节点。它可以为每个节点提供大约 100 ， 000 次 IOPS ，块大小为 4 k 。下图显示了 H610S 存储节点的正面视图和背面视图。
+
+image:citrix_image5.png["错误：缺少图形映像"]
+
+image:citrix_image6.png["错误：缺少图形映像"]
+
+在单个集群中，可以混合使用多种存储节点型号。单个节点的容量不能超过集群总大小的 1/3 。存储节点附带两个用于 iSCSI 的网络端口（ 10/25GbE – SFP28 ）和两个用于管理的端口（ 1/10GbE – RJ45 ）。此外，还提供一个带外 1GbE RJ45 管理端口。
+
+
+
+==== 计算节点
+
+NetApp HCI 计算节点有三种型号： H410C ， H610C 和 H615C 。计算节点均与 Redfish API 兼容，并提供了一个 BIOS 选项来启用可信平台模块（ TPM ）和 Intel 可信执行技术（ TXT ）。
+
+H410C 是一个半宽节点，可以放置在 2U 机箱中。机箱可以混合使用计算节点和存储节点。H410C 随附第一代 Intel Xeon 银牌 / 金牌可扩展处理器，在双插槽配置中具有 4 到 20 个核心。内存大小介于 384 GB 到 1 TB 之间。有四个 10/25GbE （ SFP28 ）端口和两个 1GbE RJ45 端口，其中一个 1GbE RJ45 端口可用于带外管理。下图显示了 H410C 计算节点的正面视图和背面视图。
+
+image:citrix_image7.png["错误：缺少图形映像"]
+
+image:citrix_image8.png["错误：缺少图形映像"]
+
+H610C 为 2RU ，具有一个双插槽第一代 Intel Xeon Gold 6130 可扩展处理器，具有 16 个 2.1 GHz 核心， 512 GB RAM 和两个 NVIDIA Tesla M10 GPU 卡。此服务器附带两个 10/25GbE SFP28 端口和两个 1GbE RJ45 端口，其中一个 1GbE RJ45 端口可用于带外管理。下图显示了 H610C 计算节点的正面视图和背面视图。
+
+image:citrix_image9.png["错误：缺少图形映像"]
+
+image:citrix_image10.png["错误：缺少图形映像"]
+
+H610C 具有两个 Tesla M10 卡，可提供总共 64 GB 的帧缓冲区内存和总共 8 个 GPU 。它最多可支持 64 个启用了 GPU 的个人虚拟桌面。要为每台服务器托管更多会话，可以使用共享桌面交付模式。
+
+H615C 是一款具有双插槽的 1RU 服务器，适用于第二代 Intel Xeon 银牌 / 金牌可扩展处理器，每个插槽具有 4 到 24 个核心。RAM 范围为 384 GB 到 1.5 TB 。一个型号包含三个 NVIDIA Tesla T4 卡。该服务器包括两个 10/25GbE （ SFP28 ）和一个 1GbE （ RJ45 ），用于带外管理。下图显示了 H615C 计算节点的正面和背面视图。
+
+image:citrix_image11.png["错误：缺少图形映像"]
+
+image:citrix_image12.png["错误：缺少图形映像"]
+
+H615C 包括三个 Tesla T4 卡，可提供总共 48 GB 的帧缓冲区和三个 GPU 。T4 卡是一种通用 GPU 卡，可用于 AI 推理工作负载以及专业图形。它包括可帮助模拟光回映的光线跟踪核心。
+
+
+
+==== 混合云控制
+
+混合云控制门户通常用于通过添加存储或 / 和计算节点横向扩展 NetApp HCI 。此门户提供 NetApp HCI 计算和存储节点清单以及指向 ActiveIQ 管理门户的链接。请参见以下 Hybrid Cloud Control 屏幕截图。
+
+image:citrix_image13.png["错误：缺少图形映像"]
+
+
+
+=== NetApp AFF
+
+NetApp AFF 提供了一个全闪存横向扩展文件存储系统，作为此解决方案的一部分使用。ONTAP 是在 NetApp AFF 上运行的存储软件。将 ONTAP 用于 SMB 文件存储的一些主要优势如下：
+
+* Storage Virtual Machine （ SVM ）以实现安全多租户
+* NetApp FlexGroup 技术，用于可扩展的高性能文件系统
+* 用于容量分层的 NetApp FabricPool 技术。借助 FabricPool ，您可以将热数据保留在本地，并将冷数据传输到云存储。
+* 通过自适应 QoS 提供有保障的 SLA 。您可以根据已分配或已用空间调整 QoS 设置。
+* 自动化功能（ RESTful API ， PowerShell 和 Ansible 模块）
+* 数据保护和业务连续性功能，包括 NetApp Snapshot ， NetApp SnapMirror 和 NetApp MetroCluster 技术
+
+
+
+
+=== Mellanox 交换机
+
+此解决方案中使用了 Mellanox SN2010 交换机。但是，您也可以使用其他兼容交换机。NetApp HCI 经常使用以下 Mellanox 交换机。
+
+|===
+| 型号 | 机架单元 | SFP28 （ 10/25GbE ）端口 | QSFP （ 40/100GbE ）端口 | 聚合吞吐量（ Tbps ） 
+
+
+| SN2010 | 半宽 | 18 | 4. | 1.7 
+
+
+| SN2100 | 半宽 | – | 16. | 3.2 
+
+
+| SN2700 | 全宽 | – | 32 | 6.4 
+|===
+
+NOTE: QSFP 端口支持 4 根 25GbE 分支缆线。
+
+Mellanox 交换机是开放式以太网交换机，可用于选择网络操作系统。选项包括 Mellanox Onyx 操作系统或各种 Linux 操作系统，例如 Cumulus-Linux ， Linux 交换机等。Mellanox 交换机还支持交换机软件开发套件，交换机抽象接口（ Sai ；开放式计算项目的一部分）和云中开放式网络软件（ Software for Open Networking in the Cloud ，声波）。
+
+Mellanox 交换机提供低延迟，并支持传统数据中心协议和 VXLAN 等通道协议。VXLAN 硬件 VTEP 可用作 L2 网关。这些交换机支持各种认证的安全标准，例如 UC API ， FIPS 140-2 （系统安全模式）， NIST 800-181A （ SSH 服务器严格模式）和 CoPP （ IP 筛选器）。
+
+Mellanox 交换机支持 Ansible ，盐堆栈， Puppet 等自动化工具。Web 管理界面提供了执行多行命令行界面命令的选项。

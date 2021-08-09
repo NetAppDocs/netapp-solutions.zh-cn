@@ -1,0 +1,323 @@
+---
+sidebar: sidebar 
+permalink: ai/hciai_edge_deploy_nvidia_triton_inference_server_automated_deployment.html 
+keywords:  
+summary:  
+---
+= 部署 NVIDIA Triton 推理服务器（自动化部署）
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+要为 Triton 推理服务器设置自动部署，请完成以下步骤：
+
+. 打开 VI 编辑器并创建 PVC YAML 文件 `vi PVA-Triton-model- repo.yaml` 。
++
+....
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: triton-pvc  namespace: triton
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: ontap-flexvol
+....
+. 创建 PVC 。
++
+....
+kubectl create -f pvc-triton-model-repo.yaml
+....
+. 打开 VI 编辑器，为 Triton 推理服务器创建部署，然后调用文件 `Triton_deployment.YAML` 。
++
+....
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: triton-3gpu
+  name: triton-3gpu
+  namespace: triton
+spec:
+  ports:
+  - name: grpc-trtis-serving
+    port: 8001
+    targetPort: 8001
+  - name: http-trtis-serving
+    port: 8000
+    targetPort: 8000
+  - name: prometheus-metrics
+    port: 8002
+    targetPort: 8002
+  selector:
+    app: triton-3gpu
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: triton-1gpu
+  name: triton-1gpu
+  namespace: triton
+spec:
+  ports:
+  - name: grpc-trtis-serving
+    port: 8001
+    targetPort: 8001
+  - name: http-trtis-serving
+    port: 8000
+    targetPort: 8000
+  - name: prometheus-metrics
+    port: 8002
+    targetPort: 8002
+  selector:
+    app: triton-1gpu
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: triton-3gpu
+  name: triton-3gpu
+  namespace: triton
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: triton-3gpu      version: v1
+  template:
+    metadata:
+      labels:
+        app: triton-3gpu
+        version: v1
+    spec:
+      containers:
+      - image: nvcr.io/nvidia/tritonserver:20.07-v1-py3
+        command: ["/bin/sh", "-c"]
+        args: ["trtserver --model-store=/mnt/model-repo"]
+        imagePullPolicy: IfNotPresent
+        name: triton-3gpu
+        ports:
+        - containerPort: 8000
+        - containerPort: 8001
+        - containerPort: 8002
+        resources:
+          limits:
+            cpu: "2"
+            memory: 4Gi
+            nvidia.com/gpu: 3
+          requests:
+            cpu: "2"
+            memory: 4Gi
+            nvidia.com/gpu: 3
+        volumeMounts:
+        - name: triton-model-repo
+          mountPath: /mnt/model-repo      nodeSelector:
+        gpu-count: “3”
+      volumes:
+      - name: triton-model-repo
+        persistentVolumeClaim:
+          claimName: triton-pvc---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: triton-1gpu
+  name: triton-1gpu
+  namespace: triton
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: triton-1gpu
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: triton-1gpu
+        version: v1
+    spec:
+      containers:
+      - image: nvcr.io/nvidia/tritonserver:20.07-v1-py3
+        command: ["/bin/sh", "-c", “sleep 1000”]
+        args: ["trtserver --model-store=/mnt/model-repo"]
+        imagePullPolicy: IfNotPresent
+        name: triton-1gpu
+        ports:
+        - containerPort: 8000
+        - containerPort: 8001
+        - containerPort: 8002
+        resources:
+          limits:
+            cpu: "2"
+            memory: 4Gi
+            nvidia.com/gpu: 1
+          requests:
+            cpu: "2"
+            memory: 4Gi
+            nvidia.com/gpu: 1
+        volumeMounts:
+        - name: triton-model-repo
+          mountPath: /mnt/model-repo      nodeSelector:
+        gpu-count: “1”
+      volumes:
+      - name: triton-model-repo
+        persistentVolumeClaim:
+          claimName: triton-pvc
+....
++
+此处创建了两个部署示例。第一个部署会启动一个 POD ，该 POD 使用三个 GPU 并将副本设置为 1 。另一个部署使用一个 GPU 生成三个 Pod ，而副本设置为 3 。根据您的要求，您可以更改 GPU 分配和副本计数。
+
++
+这两种部署都使用先前创建的 PVC ，并且此永久性存储将提供给 Triton 推理服务器作为模型存储库。
+
++
+对于每个部署，都会创建一个类型为 loadbalancer 的服务。可以使用应用程序网络中的负载平衡器 IP 访问 Triton 推理服务器。
+
++
+节点选择器用于确保两种部署都能获得所需数量的 GPU ，而不会出现任何问题。
+
+. 为 K8 工作节点贴上标签。
++
+....
+kubectl label nodes hci-ai-k8-worker-01 gpu-count=3
+kubectl label nodes hci-ai-k8-worker-02 gpu-count=1
+....
+. 创建部署。
++
+....
+kubectl apply -f triton_deployment.yaml
+....
+. 记下负载平衡器服务外部 LPS 。
++
+....
+kubectl get services -n triton
+....
++
+预期示例输出如下：
+
++
+image:hciaiedge_image21.png["错误：缺少图形映像"]
+
+. 连接到通过部署创建的任何一个 Pod 。
++
+....
+kubectl exec -n triton --stdin --tty triton-1gpu-86c4c8dd64-545lx -- /bin/bash
+....
+. 使用示例模型存储库设置模型存储库。
++
+....
+git clone
+cd triton-inference-server
+git checkout r20.07
+....
+. 提取任何缺失的模型定义文件。
++
+....
+cd docs/examples
+./fetch_models.sh
+....
+. 将所有型号复制到型号存储库位置或仅复制您要使用的特定型号。
++
+....
+cp -r model_repository/resnet50_netdef/ /mnt/model-repo/
+....
++
+在此解决方案中，仅会将 resnet50_netdef 模型复制到模型存储库中作为示例。
+
+. 检查 Triton 推理服务器的状态。
++
+....
+curl -v <<LoadBalancer_IP_recorded earlier>>:8000/api/status
+....
++
+预期示例输出如下：
+
++
+....
+curl -v 172.21.231.132:8000/api/status
+*   Trying 172.21.231.132...
+* TCP_NODELAY set
+* Connected to 172.21.231.132 (172.21.231.132) port 8000 (#0)
+> GET /api/status HTTP/1.1
+> Host: 172.21.231.132:8000
+> User-Agent: curl/7.58.0
+> Accept: */*
+>
+< HTTP/1.1 200 OK
+< NV-Status: code: SUCCESS server_id: "inference:0" request_id: 9
+< Content-Length: 1124
+< Content-Type: text/plain
+<
+id: "inference:0"
+version: "1.15.0"
+uptime_ns: 377890294368
+model_status {
+  key: "resnet50_netdef"
+  value {
+    config {
+      name: "resnet50_netdef"
+      platform: "caffe2_netdef"
+      version_policy {
+        latest {
+          num_versions: 1
+        }
+      }
+      max_batch_size: 128
+      input {
+        name: "gpu_0/data"
+        data_type: TYPE_FP32
+        format: FORMAT_NCHW
+        dims: 3
+        dims: 224
+        dims: 224
+      }
+      output {
+        name: "gpu_0/softmax"
+        data_type: TYPE_FP32
+        dims: 1000
+        label_filename: "resnet50_labels.txt"
+      }
+      instance_group {
+        name: "resnet50_netdef"
+        count: 1
+        gpus: 0
+        gpus: 1
+        gpus: 2
+        kind: KIND_GPU
+      }
+      default_model_filename: "model.netdef"
+      optimization {
+        input_pinned_memory {
+          enable: true
+        }
+        output_pinned_memory {
+          enable: true
+        }
+      }
+    }
+    version_status {
+      key: 1
+      value {
+        ready_state: MODEL_READY
+        ready_state_reason {
+        }
+      }
+    }
+  }
+}
+ready_state: SERVER_READY
+* Connection #0 to host 172.21.231.132 left intact
+....
+
+
+link:hciai_edge_deploy_the_client_for_triton_inference_server_automated_deployment.html["下一步：部署用于 Triton 推理服务器的客户端（自动部署）"]

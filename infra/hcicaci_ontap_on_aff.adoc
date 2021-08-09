@@ -1,0 +1,43 @@
+---
+sidebar: sidebar 
+permalink: infra/hcicaci_ontap_on_aff.html 
+keywords: NetApp AFF, All-Flash FAS, ONTAP, protocols, FC, FCoE, NVMe/FC 
+summary: TR-4875 
+---
+= ONTAP 上的 AFF ： NetApp HCI 和 Cisco ACI
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+NetApp AFF 是一款功能强大的存储平台，可提供低延迟性能，集成数据保护，多协议支持和无中断运行。NetApp AFF 由 NetApp ONTAP 数据管理软件提供支持，可确保从维护到升级再到存储系统的完全更换，无中断运行。
+
+NetApp ONTAP 是一款功能强大的存储操作系统，具有实时压缩，无中断硬件升级和跨存储导入等功能。NetApp ONTAP 集群提供了一个统一存储系统，可同时对网络文件系统（ NFS ），通用 Internet 文件系统（ CIFS ）， iSCSI ，光纤通道（ FC ），以太网光纤通道（ FCoE ）和 NVMe/FC 协议进行数据访问和管理。ONTAP 可提供强大的数据保护功能，例如 NetApp MetroCluster ， SnapLock ， Snapshot 副本， SnapVault ， SnapMirror ， SyncMirror 技术等。有关详细信息，请参见 https://docs.netapp.com/ontap-9/index.jsp["ONTAP 文档"^]。
+
+要将存储功能扩展到文件服务并增加更多数据保护功能，可以将 ONTAP 与 NetApp HCI 结合使用。如果您的环境中已存在 NetApp ONTAP ，则可以轻松地将其与 NetApp HCI 和 Cisco ACI 集成。
+
+
+
+== 工作流
+
+以下是用于设置环境的高级工作流。其中每个步骤可能涉及多个单独的任务。
+
+. 在 ACI 上为 NFS 和 / 或具有相应子网的其他协议创建一个单独的网桥域和 EPG 。您可以使用相同的 HCI 相关 iSCSI EPG 。
+. 请确保您拥有适当的合同，以便仅允许所需端口进行 EPG 间通信。
+. 为指向 AFF 控制器的接口配置接口策略组和选择器。为端口通道策略创建具有 LACP 活动模式的 vPC 策略组。
++
+image:hcicaci_image22.png["错误：缺少图形映像"]
+
+. 将物理域和 VMM 域附加到创建的 EPG 。将 vPC 策略作为静态路径连接，对于 Cisco Ave 虚拟交换机，在连接 VMM 域时使用原生交换模式。
++
+image:hcicaci_image23.png["错误：缺少图形映像"]
+
+. 在 AFF 控制器上安装和配置 ONTAP 集群。然后，创建并配置 NFS 和 / 或 iSCSI 卷 /LUN 。请参见 https://www.netapp.com/us/documentation/all-flash-fas.aspx["AFF 和 ONTAP 文档"^] 有关详细信息 ...
+. 创建连接 NFS （或其他协议）端口组或逻辑网络的 VMkernel 适配器（对于 VMware ESXi ）或逻辑接口（对于 RHV-H/RHEL-KVM 主机）。
+. 使用 AFF 存储在虚拟机管理程序（ VMware ， RHV 或 KVM ）上创建其他数据存储库，存储域或存储池。
+
+
+link:hcicaci_ontap_select_with_vmware_vsphere.html["接下来：采用 VMware vSphere 的 ONTAP Select ： NetApp HCI 和 Cisco ACI"]

@@ -1,0 +1,52 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-rhv-7._access_console_web_console.html 
+keywords: OCP Cluster, console, web 
+summary:  
+---
+= 7. 访问控制台 /Web 控制台： RHV 上适用于 Red Hat OpenShift 的 NetApp HCI
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+要访问控制台或 Web 控制台，请完成以下步骤：
+
+. 要通过 CLI 访问 OCP 集群，请提取 `oc` 命令行工具 tar 文件，并将其内容放置在用户路径中的目录中。
++
+....
+[user@rhel7 openshift-deploy]$ tar xvf openshift-client-linux.tar.gz
+README.md
+oc
+kubectl
+[user@rhel7 openshift-deploy]$ echo $PATH
+/usr/local/bin: /usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin
+
+[user@rhel7 openshift-deploy]$ cp oc /usr/local/bin
+....
+. 要通过 CLI 与集群交互，您可以使用由 IPI 进程提供的 `kubeconfig` 文件，该文件位于启动安装程序的文件夹内的 ` /auth` 目录中。要轻松与集群交互，请导出在目录中创建的文件。成功部署集群后，将显示文件位置和以下命令。
++
+....
+[user@rhel7 openshift-deploy]$ export KUBECONFIG=/home/user/openshift-deploy/auth/kubeconfig
+....
+. 验证您是否有权访问集群以及节点是否处于就绪状态。
++
+....
+[user@rhel7 openshift-deploy]$ oc get nodes
+NAME                                   STATUS   ROLES    AGE   VERSION
+rhv-ocp-cluster-hdr7k-master-0         Ready    master   93m   v1.17.1
+rhv-ocp-cluster-hdr7k-master-1         Ready    master   93m   v1.17.1
+rhv-ocp-cluster-hdr7k-master-2         Ready    master   93m   v1.17.1
+rhv-ocp-cluster-hdr7k-worker-0-ghskz   Ready    worker   83m   v1.17.1
+rhv-ocp-cluster-hdr7k-worker-0-xdl99   Ready    worker   86m   v1.17.1
+rhv-ocp-cluster-hdr7k-worker-0-zkxmt   Ready    worker   85m   v1.17.1
+....
+. 使用成功部署集群后提供的凭据登录到 Web 控制台 URL ，然后验证对集群的 GUI 访问。
+
+
+image:redhat_openshift_image13.png["错误：缺少图形映像"]
+
+link:rh-os-rhv-8._configure_worker_nodes_to_run_storage_services.html["下一步： 8.配置工作节点以运行存储服务"]

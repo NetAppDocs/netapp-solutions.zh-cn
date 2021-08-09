@@ -1,0 +1,93 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-rhv_validation_results.html 
+keywords: best practices, CI/CD, Continuous integration, continuous deployment, Jenkins, PVC 
+summary:  
+---
+= 验证结果：基于 RHV 的适用于 Red Hat OpenShift 的 NetApp HCI
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+本节介绍了与 Jenkins 部署持续集成 / 持续交付或部署（ CI/CD ）管道以验证解决方案运行的步骤。
+
+
+
+=== 创建 Jenkins 部署所需的资源
+
+要创建部署 Jenkins 应用程序所需的资源，请完成以下步骤：
+
+. 创建一个名为 Jenkins 的新项目。
++
+image:redhat_openshift_image15.jpeg["错误：缺少图形映像"]
+
+. 在此示例中，我们使用永久性存储部署了 Jenkins 。要支持 Jenkins 构建，请创建 PVC 。导航到 "Storage">"Persistent Volume Claim " ，然后单击 "Create Persistent Volume Claim " 。选择已创建的存储类，确保永久性卷声明名称是 Jenkins ，选择适当的大小和访问模式，然后单击创建。
+
+
+image:redhat_openshift_image16.png["错误：缺少图形映像"]
+
+
+
+=== 使用永久性存储部署 Jenkins
+
+要使用永久性存储部署 Jenkins ，请完成以下步骤：
+
+. 在左上角，将角色从管理员更改为开发人员。单击 +Add ，然后从目录中选择。在 Filter by Keyword 栏中，搜索 Jenkins 。选择 Jenkins Service ， With Persistent Storage 。
++
+image:redhat_openshift_image17.png["错误：缺少图形映像"]
+
+. 单击实例化模板。
++
+image:redhat_openshift_image18.png["错误：缺少图形映像"]
+
+. 默认情况下，系统会填充 Jenkins 应用程序的详细信息。根据需要修改参数，然后单击创建。此过程将创建支持 OpenShift 上的 Jenkins 所需的所有资源。
++
+image:redhat_openshift_image19.jpeg["错误：缺少图形映像"]
+
+. Jenkins POD 大约需要 10 – 12 分钟才能进入就绪状态。
++
+image:redhat_openshift_image20.png["错误：缺少图形映像"]
+
+. 实例化 Pod 后，导航到 "Networking" （网络） >"routes" （路由）。要打开 Jenkins 网页，请单击为 Jenkins 路由提供的 URL 。
++
+image:redhat_openshift_image21.png["错误：缺少图形映像"]
+
+. 由于在创建 Jenkins 应用程序时使用了 OpenShift OAuth ，因此请单击使用 OpenShift 登录。
++
+image:redhat_openshift_image22.jpeg["错误：缺少图形映像"]
+
+. 授权 Jenkins 服务帐户访问 OpenShift 用户。
++
+image:redhat_openshift_image23.jpeg["错误：缺少图形映像"]
+
+. 此时将显示 Jenkins 欢迎页面。由于我们使用的是 Maven 内部版本，因此请先完成 Maven 安装。导航到 Manage Jenkins > Global Tool Configuration ，然后在 Maven 子标题中单击 Add Maven 。输入您选择的名称，并确保已选中自动安装选项。单击保存。
++
+image:redhat_openshift_image24.png["错误：缺少图形映像"]
+
+. 现在，您可以创建一个管道来演示 CI/CD 工作流。在主页上，单击左侧菜单中的创建新作业或新建项目。
++
+image:redhat_openshift_image25.jpeg["错误：缺少图形映像"]
+
+. 在创建项目页面上，输入所选名称，选择管道，然后单击确定。
++
+image:redhat_openshift_image26.png["错误：缺少图形映像"]
+
+. 选择管道选项卡。从试用样本管道下拉菜单中，选择 Github + Maven 。代码将自动填充。单击保存。
++
+image:redhat_openshift_image27.png["错误：缺少图形映像"]
+
+. 单击 Build now ，在准备，构建和测试阶段触发开发。完成整个构建过程并显示构建结果可能需要几分钟的时间。
++
+image:redhat_openshift_image28.png["错误：缺少图形映像"]
+
+. 只要代码发生任何更改，就可以重新构建管道来修补新版本的软件，从而实现持续集成和持续交付。单击 Recent Changes 以跟踪与先前版本相比的更改。
++
+image:redhat_openshift_image29.png["错误：缺少图形映像"]
+
+
+
+link:rh-os-rhv_best_practices_for_production_deployments.html["接下来：生产部署的最佳实践"]

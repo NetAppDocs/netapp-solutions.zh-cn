@@ -1,0 +1,185 @@
+---
+sidebar: sidebar 
+permalink: ai/hciai_edge_netapp_h615cmanual_deployment.html 
+keywords:  
+summary:  
+---
+= 配置 NetApp H615c （手动部署）
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+在此解决方案中， NetApp H615c 计算节点配置为 Kubernetes 工作节点。推理工作负载托管在这些节点上。
+
+部署计算节点涉及以下任务：
+
+* 安装 Ubuntu 18.04.4 LTS 。
+* 为数据和管理访问配置网络。
+* 准备用于 Kubernetes 部署的 Ubuntu 实例。
+
+
+
+
+== 安装 Ubuntu 18.04.4 LTS
+
+要在 H615c 计算节点上安装操作系统，需要执行以下高级步骤：
+
+. 从下载 Ubuntu 18.04.4 LTS http://cdimage.ubuntu.com/ubuntu/releases/18.04/release/["Ubuntu 版本"^]。
+. 使用浏览器连接到 H615c 节点的 IPMI 并启动远程控制。
+. 使用虚拟介质向导映射 Ubuntu ISO 并开始安装。
+. 出现提示时，从两个物理接口中选择一个作为 `主网络接口` 。
++
+DHCP 源中的 IP 在可用时分配，您也可以稍后切换到手动 IP 配置。安装操作系统后，网络配置将修改为基于绑定的设置。
+
+. 请提供一个主机名，后跟一个域名。
+. 创建用户并提供密码。
+. 根据您的要求对磁盘进行分区。
+. 在 Software Selection 下，选择 `OpenSSH server` 并单击 Continue 。
+. 重新启动节点。
+
+
+
+
+== 为数据和管理访问配置网络
+
+Kubernetes 工作节点的两个物理网络接口设置为用于管理和应用程序的绑定和 VLAN 接口，并在此接口上创建 NFS 数据流量。
+
+
+NOTE: 推理应用程序和关联容器使用应用程序网络进行连接。
+
+. 以具有 root 权限的用户身份连接到 Ubuntu 实例的控制台，然后启动终端会话。
+. 导航到 ` /etc/netplan` 并打开 `01-netcfg.yaml` 文件。
+. 根据环境中管理，应用程序和 NFS 流量的网络详细信息更新网络计划文件。
++
+此解决方案中使用了以下网络计划文件模板：
+
++
+....
+# This file describes the network interfaces available on your system
+# For more information, see netplan(5).
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp59s0f0: #Physical Interface 1
+      match:
+        macaddress: <<mac_address Physical Interface 1>>
+      set-name: enp59s0f0
+      mtu: 9000
+    enp59s0f1: # Physical Interface 2
+      match:
+        macaddress: <<mac_address Physical Interface 2>>
+      set-name: enp59s0f1
+      mtu: 9000
+  bonds:
+      bond0:
+        mtu: 9000
+        dhcp4: false
+        dhcp6: false
+        interfaces: [ enp59s0f0, enp59s0f1 ]
+        parameters:
+          mode: 802.3ad
+          mii-monitor-interval: 100
+  vlans:
+    vlan.3488: #Management VLAN
+      id: 3488
+      link: bond0
+      dhcp4: false
+      addresses: [ipv4_address/subnet]
+      routes:
+      - to: 0.0.0.0/0
+        via: 172.21.232.111
+        metric: 100
+        table: 3488
+      - to: x.x.x.x/x # Additional routes if any
+        via: y.y.y.y
+        metric: <<metric>>
+        table: <<table #>>
+      routing-policy:
+      - from: 0.0.0.0/0
+        priority: 32768#Higher Priority than table 3487
+        table: 3488
+      nameservers:
+        addresses: [nameserver_ip]
+        search: [ search_domain ]
+      mtu: 1500
+    vlan.3487:
+      id: 3487
+      link: bond0
+      dhcp4: false
+      addresses: [ipv4_address/subnet]
+      routes:
+      - to: 0.0.0.0/0
+        via: 172.21.231.111
+        metric: 101
+        table: 3487
+      - to: x.x.x.x/x
+        via: y.y.y.y
+        metric: <<metric>>
+        table: <<table #>>
+      routing-policy:
+      - from: 0.0.0.0/0
+        priority: 32769#Lower Priority
+        table: 3487
+      nameservers:
+        addresses: [nameserver_ip]
+        search: [ search_domain ]
+      mtu: 1500    vlan.3491:
+      id: 3491
+      link: bond0
+      dhcp4: false
+      addresses: [ipv4_address/subnet]
+      mtu: 9000
+....
+. 确认路由策略的优先级低于主表和默认表的优先级。
+. 应用网络计划。
++
+....
+sudo netplan -–debug apply
+....
+. 确保没有错误。
+. 如果 Network Manager 正在运行，请停止并禁用它。
++
+....
+systemctl stop NetworkManager
+systemctl disable NetworkManager
+....
+. 在 DNS 中为服务器添加主机记录。
+. 打开一个 VI 编辑器以 ` /etc/iproute2/RT_Tables` 并添加这两个条目。
++
+....
+#
+# reserved values
+#
+255     local
+254     main
+253     default
+0       unspec
+#
+# local
+#
+#1      inr.ruhep
+101     3488
+102     3487
+....
+. 将表编号与您在网络计划中使用的内容进行匹配。
+. 打开一个 VI 编辑器并设置 ` /etc/sysctl.conf` ，然后设置以下参数的值。
++
+....
+net.ipv4.conf.default.rp_filter=0
+net.ipv4.conf.all.rp_filter=0net.ipv4.ip_forward=1
+....
+. 更新系统。
++
+....
+sudo apt-get update && sudo apt-get upgrade
+....
+. 重新启动系统
+. 对另一个 Ubuntu 实例重复步骤 1 到 13 。
+
+
+link:hciai_edge_setp_the_deployment_jump__and_the_kubernetes_master_node_vms_manual_deployment.html["下一步：设置部署跳转和 Kubernetes 主节点 VM （手动部署）"]

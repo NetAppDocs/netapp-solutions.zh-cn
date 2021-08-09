@@ -1,0 +1,76 @@
+---
+sidebar: sidebar 
+permalink: ai/osrunai_solution_technology_overview.html 
+keywords:  
+summary:  
+---
+= 解决方案技术
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+此解决方案是在一个 NetApp AFF A800 系统，两个 DGX-1 服务器和两个 Cisco Nexus 3232C 100GbE 交换机上实施的。每个 DGX-1 服务器都通过四个 100GbE 连接连接连接到 Nexus 交换机，这些连接可通过使用基于融合以太网（ RoCE ）的远程直接内存访问（ RDMA ）进行 GPU 间通信。NFS 存储访问的传统 IP 通信也发生在这些链路上。每个存储控制器均使用四个 100GbE 链路连接到网络交换机。下图显示了本技术报告中用于所有测试场景的 ONTAP AI 解决方案架构。
+
+image:osrunai_image2.png["错误：缺少图形映像"]
+
+
+
+== 此解决方案中使用的硬件
+
+此解决方案已使用 ONTAP AI 参考架构两个 DGX-1 节点和一个 AFF A800 存储系统进行了验证。请参见 https://www.netapp.com/us/media/nva-1121-design.pdf["NVA-1121"^] 有关此验证中使用的基础架构的更多详细信息。
+
+下表列出了在测试中实施解决方案所需的硬件组件。
+
+|===
+| 硬件 | 数量 
+
+
+| DGX-1 系统 | 2. 
+
+
+| AFF A800 | 1. 
+
+
+| Nexus 3232C 交换机 | 2. 
+|===
+
+
+== 软件要求
+
+此解决方案已通过安装了 Run ： AI 操作员的基本 Kubernetes 部署进行验证。Kubernetes 是使用部署的 https://github.com/NVIDIA/deepops["NVIDIA DeepOps"^] 部署引擎，用于为生产就绪环境部署所有必需的组件。DeepOps 会自动部署 为了与 K8s 环境实现持久存储集成，我们创建了默认存储类，以便容器可以利用 AFF A800 存储系统中的存储。有关在 ONTAP AI 上使用 Kubernetes 进行 Trident 的详细信息，请参见。
+
+下表列出了在测试中实施解决方案所需的软件组件。
+
+|===
+| 软件 | 版本或其他信息 
+
+
+| NetApp ONTAP 数据管理软件 | 9.6 第 4 页 
+
+
+| Cisco NX-OS 交换机固件 | 7.0 （ 3 ） I6 （ 1 ） 
+
+
+| NVIDIA DGX 操作系统 | 4.0.4 — Ubuntu 18.04 LTS 
+
+
+| Kubernetes 版本 | 1.17 
+
+
+| Trident 版本 | 20.04.0 
+
+
+| 运行： AI 命令行界面 | v2.1.13 
+
+
+| 运行： AI Orchestration Kubernetes Operator 版本 | 1.0.39 
+
+
+| Docker 容器平台 | 18.06.1-ce [e68fc7a] 
+|===
+有关 Run ： AI 的其他软件要求，请参见 https://docs.run.ai/Administrator/Cluster-Setup/Run-AI-GPU-Cluster-Prerequisites/["运行： AI GPU 集群前提条件"^]。
+
+link:osrunai_optimal_cluster_and_gpu_utilization_with_run_ai_overview.html["接下来：使用 Run AI 优化集群和 GPU 利用率"]

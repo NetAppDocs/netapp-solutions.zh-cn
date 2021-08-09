@@ -1,0 +1,39 @@
+---
+sidebar: sidebar 
+permalink: ai/hciai_edge_inferencing.html 
+keywords: NVA-1144, NVA1144, 1144, inferencing, AI, artificial intelligence, ML, machine learning, Triton, NVIDIA, Kubernetes, DeepOps, 
+summary:  
+---
+= NVA-1144 ：采用 H615c 和 NVIDIA T4 在边缘数据中心进行 NetApp HCI AI 推理
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+NetApp 公司 Arvind Ramakrishnan
+
+本文档介绍如何设计 NetApp HCI 来在边缘数据中心位置托管人工智能（ AI ）推理工作负载。此设计基于采用 NVIDIA T4 GPU 的 NetApp HCI 计算节点， NVIDIA Triton 推理服务器以及使用 NVIDIA DeepOps 构建的 Kubernetes 基础架构。此外，该设计还会在核心数据中心与边缘数据中心之间建立数据管道，并说明如何实施才能完成数据生命周期路径。
+
+人工智能和机器学习（ ML ）推动的现代应用程序已经突破了互联网的限制。最终用户和设备需要随时随地访问应用程序，数据和服务，而延迟极短。为了满足这些需求，数据中心正在向用户更接近，以提高性能，减少前后数据传输，并提供经济高效的方式来满足用户需求。
+
+在 AI 环境下，核心数据中心是一个提供机器学习和分析等集中式服务的平台，而边缘数据中心则是实时生产数据需要推理的地方。这些边缘数据中心通常连接到核心数据中心。它们可提供最终用户服务，并为需要额外处理且时间过于敏感而无法传输回中央核心的物联网设备生成的数据提供暂存层。本文档介绍了使用 NetApp HCI 作为基础平台的 AI 推理参考架构。
+
+
+
+== 客户价值
+
+NetApp HCI 在超融合市场中为这种推理解决方案提供了差异化优势，包括以下优势：
+
+* 通过一个分解式架构，可以独立扩展计算和存储，并降低独立 NetApp HCI 存储节点上的虚拟化许可成本和性能税。
+* NetApp Element 存储可为每个存储卷提供服务质量（ QoS ），从而为 NetApp HCI 上的工作负载提供有保障的存储性能。因此，相邻工作负载不会对推理性能产生负面影响。
+* 借助 NetApp 提供支持的 Data Fabric ，可以将数据从核心复制到边缘再复制到云数据中心，从而使数据更接近应用程序所需的位置。
+* 借助由 NetApp 和 NetApp FlexCache 软件提供支持的 Data Fabric ，可以从 NetApp HCI 访问经过 NetApp ONTAP AI 培训的 AI 深度学习模型，而无需导出该模型。
+* NetApp HCI 可以将推理服务器托管在同一基础架构上，并与多个工作负载（虚拟机（ VM ）或基于容器）同时托管，而不会降低性能。
+* NetApp HCI 已通过 NVIDIA GPU 云（ NGC ）认证，可用于 NVIDIA AI 容器化应用程序。
+* NGC 就绪表示此堆栈已通过 NVIDIA 验证，专为 AI 构建，可通过 NGC 支持服务获得企业支持。
+* 凭借丰富的 AI 产品组合， NetApp 可以支持从边缘到核心再到云的各种 AI 使用情形，包括用于训练和推理的 ONTAP AI ，用于云中训练的 Cloud Volumes Service 和 Azure NetApp Files 以及使用 NetApp HCI 在边缘进行推理的过程。
+
+
+link:hciai_edge_use_cases.html["下一步：用例"]

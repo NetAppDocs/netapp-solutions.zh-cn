@@ -1,0 +1,95 @@
+= 验证 Oracle 安装
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+=== 验证 Oracle 安装
+
+
+[source, cli]
+----
+ps -ef | grep ora
+----
+
+NOTE: 如果安装按预期完成且 Oracle 数据库已启动，则此列表将列出 Oracle 进程
+
+
+[source, cli]
+----
+sqlplus / as sysdba
+----
+[Oracle@localhost ~ ]$ sqlplus / 作为 sysdba
+
+SQL* Plus ：版本 19.0.0.0.0 —在 5 月 6 日星期四 12 ： 52 ： 51 2021 年版本 19.8.0.0.0 上生产
+
+版权所有（ c ） 1982-2019 ， Oracle 。保留所有权利。
+
+已连接到： Oracle Database 19c Enterprise Edition 版本 19.0.0.0.0 - 生产版本 19.8.0.0.0
+
+SQL/
+
+[source, cli]
+----
+select name, log_mode from v$database;
+----
+sql > 从 v$database 中选择名称 log_mode ；名称 log_mode --- ------- CDB2 归档日志
+
+[source, cli]
+----
+show pdbs;
+----
+sql > 显示 PDF
+
+....
+    CON_ID CON_NAME                       OPEN MODE  RESTRICTED
+---------- ------------------------------ ---------- ----------
+         2 PDB$SEED                       READ ONLY  NO
+         3 CDB2_PDB1                      READ WRITE NO
+         4 CDB2_PDB2                      READ WRITE NO
+         5 CDB2_PDB3                      READ WRITE NO
+....
+[source, cli]
+----
+col svrname form a30
+col dirname form a30
+select svrname, dirname, nfsversion from v$dnfs_servers;
+----
+sql > col svrname form A30 sql > col dirname form A30 sql > 从 v$dnfs_servers 中选择 svrname ， dirname ， nfsversion ；
+
+SVRname 名称 NFSVERSION ----------- ----------------- --------- 172.21.126.200 /rhelora03_u02 NFSv3.0 172.21.126.200 /rhelora03_u03 NFSv3.0 172.21.126.200 /rhelora03_u01 NFSv3.0
+
+[listing]
+----
+This confirms that dNFS is working properly.
+----
+
+[source, cli]
+----
+sqlplus system@//localhost:1523/cdb2_pdb1.cie.netapp.com
+----
+[Oracle@localhost ~ ]$ sqlplus 系统@ //localhost ： 1523/ cdb2_pdb1.cie.netapp.com
+
+SQL* Plus ：版本 19.0.0.0.0 — 5 月 6 日星期四 13 ： 19 ： 57 2021 年版本 19.8.0.0.0
+
+版权所有（ c ） 1982-2019 ， Oracle 。保留所有权利。
+
+输入密码：上次成功登录时间： Wed ， 2021 年 5 月 5 日 17 ： 11 ： 11 -04 ： 00
+
+已连接到： Oracle Database 19c Enterprise Edition 版本 19.0.0.0.0 - 生产版本 19.8.0.0.0
+
+sql > show user user is "system" sql > show con_name con_name CDB2_PDB1
+
+[listing]
+----
+This confirms that Oracle listener is working properly.
+----
+
+
+=== 如何获取帮助？
+
+如果您需要有关该工具包的帮助，请加入 link:https://netapppub.slack.com/archives/C021R4WC0LC["NetApp 解决方案自动化社区支持 Slack 通道"] 并寻找解决方案自动化渠道来发布您的问题或询问。

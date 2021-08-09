@@ -1,0 +1,50 @@
+---
+sidebar: sidebar 
+permalink: ent-apps-db/saphana-dr-anf_monitoring_anf_cross-region_replication.html 
+keywords: replicated, snapshot, backups, status, monitoring, anf, cross, region 
+summary: 以下三个屏幕截图显示了数据，日志备份和共享卷的复制状态。 
+---
+= 监控 ANF 跨区域复制
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:saphana-dr-anf_configuration_steps_for_anf_cross-region_replication.html["上一步： ANF 跨区域复制的配置步骤。"]
+
+
+
+== 复制状态
+
+以下三个屏幕截图显示了数据，日志备份和共享卷的复制状态。
+
+卷复制滞后时间是了解 RPO 预期的有用值。例如，日志备份卷复制显示最长滞后时间为 58 分钟，这意味着最大 RPO 具有相同的值。
+
+传输持续时间和传输大小可提供有关带宽要求以及更改复制卷的速率的宝贵信息。
+
+以下屏幕截图显示了 HANA 数据卷的复制状态。
+
+image:saphana-dr-anf_image14.png["错误：缺少图形映像"]
+
+以下屏幕截图显示了 HANA 日志备份卷的复制状态。
+
+image:saphana-dr-anf_image15.png["错误：缺少图形映像"]
+
+以下屏幕截图显示了 HANA 共享卷的复制状态。
+
+image:saphana-dr-anf_image16.png["错误：缺少图形映像"]
+
+
+
+== 复制的 Snapshot 备份
+
+每次从源卷到目标卷的复制更新都会将上次更新到当前更新之间发生的所有块更改复制到目标卷。这还包括在源卷上创建的快照。以下屏幕截图显示了目标卷上可用的快照。如前文所述， AzAcSnap 工具创建的每个快照都是 HANA 数据库中应用程序一致的映像，可用于执行保存点或正向恢复。
+
+
+NOTE: 在源卷和目标卷中，还会创建 SnapMirror Snapshot 副本，用于重新同步和复制更新操作。从 HANA 数据库角度来看，这些 Snapshot 副本的应用程序不一致；只有通过 AzaCSnap 创建的应用程序一致的快照才能用于 HANA 恢复操作。
+
+image:saphana-dr-anf_image17.png["错误：缺少图形映像"]
+
+link:saphana-dr-anf_disaster_recovery_testing_overview.html["接下来：灾难恢复测试。"]

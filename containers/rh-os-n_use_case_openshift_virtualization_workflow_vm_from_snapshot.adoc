@@ -1,0 +1,60 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_use_case_openshift_virtualization_workflow_vm_from_snapshot.html 
+keywords: OpenShift, OCP, NetApp Trident, NetApp ONTAP, Red Hat OpenShift, OpenShift Virtualization, CNV, Container Native Virtualization, Red Hat OpenShift Virtualization 
+summary: 借助 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化 
+---
+= 工作流：使用 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化
+
+
+
+
+== 从 Snapshot 创建 VM
+
+借助 NetApp Trident 和 Red Hat OpenShift ，用户可以在所配置的存储类上创建永久性卷的快照。通过此功能，用户可以创建卷的时间点副本，并使用该副本创建新卷或将同一卷还原到先前的状态。这样可以启用或支持从回滚到克隆再到数据还原等各种使用情形。
+
+对于 OpenShift 中的 Snapshot 操作，必须定义资源 VolumeSnapshotClass ， VolumeSnapshot 和 VolumeSnapshotContent 。
+
+* VolumeSnapshotContent 是从集群中的卷生成的实际快照。它是一种集群范围的资源，类似于用于存储的 PersistentVolume 。
+* VolumeSnapshot 是指创建卷快照的请求。它类似于 PersistentVolumeClaim 。
+* 管理员可以使用 VolumeSnapshotClass 为 VolumeSnapshot 指定不同的属性。通过此选项，您可以为从同一卷创建的不同快照设置不同的属性。
+
+
+image::redhat_openshift_image60.jpg[Snapshot 架构中的 VM]
+
+要创建虚拟机的 Snapshot ，请完成以下步骤：
+
+. 创建 VolumeSnapshotClass ，然后使用该类创建 VolumeSnapshot 。导航到 `Storage > VolumeSnapshotClasses` ，然后单击 Create VolumeSnapshotClass 。
+. 输入 Snapshot 类的名称，输入驱动程序的 csi.trident.netapp.io ，然后单击创建。
++
+image::redhat_openshift_image61.JPG[创建 Snapshot 类]
+
+. 确定连接到源 VM 的 PVC ，然后创建该 PVC 的 Snapshot 。导航到 `Storage > VolumeSnapshots` ，然后单击 Create VolumeSnapshots 。
+. 选择要为其创建 Snapshot 的 PVC ，输入 Snapshot 的名称或接受默认值，然后选择相应的 VolumeSnapshotClass 。然后单击创建。
++
+image::redhat_openshift_image62.JPG[创建快照]
+
+. 此时将创建 PVC 的快照。
+
+
+
+
+== 从快照创建新虚拟机
+
+. 首先，将 Snapshot 还原到新的 PVC 中。导航到 `S存储 > 卷快照` ，单击要还原的快照旁边的省略号，然后单击 ‘Restore as new PVC ｝ 。
+. 输入新 PVC 的详细信息，然后单击还原。这样就会创建一个新的 PVC 。
++
+image::redhat_openshift_image63.JPG[将 Snapshot 还原到新的 PVC]
+
+. 接下来，使用此 PVC 创建一个新虚拟机。导航到 `Workloads > Virtualization > Virtual Machines` ，然后单击 `Create -> with YAML` 。
+. 在 `sPec > template > spec> volumes` 部分中，指定从 Snapshot 创建的新 PVC ，而不是容器磁盘。根据您的要求提供新虚拟机的所有其他详细信息。
++
+[source, cli]
+----
+- name: rootdisk
+  persistentVolumeClaim:
+    claimName: rhel8-short-frog-rootdisk-28dvb-snapshot-restore
+----
+. 单击创建以创建新虚拟机。
+. 成功创建虚拟机后，访问并验证新虚拟机的状态是否与创建快照时使用 PVC 创建快照的虚拟机的状态相同。
+

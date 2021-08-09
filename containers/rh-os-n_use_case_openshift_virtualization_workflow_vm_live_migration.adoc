@@ -1,0 +1,41 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_use_case_openshift_virtualization_workflow_vm_live_migration.html 
+keywords: OpenShift, OCP, NetApp Trident, NetApp ONTAP, Red Hat OpenShift, OpenShift Virtualization, CNV, Container Native Virtualization, Red Hat OpenShift Virtualization 
+summary: 借助 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化 
+---
+= 工作流：使用 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化
+
+
+
+
+== VM 实时迁移
+
+实时迁移是指在不停机的情况下将 VM 实例从 OpenShift 集群中的一个节点迁移到另一个节点的过程。要在 OpenShift 集群中执行实时迁移， VM 必须绑定到具有共享 ReadWriteMany 访问模式的 PVC 。在 NetApp ONTAP 集群上配置了 SVM 并启用了 NFS 协议的 NetApp Trident 后端支持对 PVC 的共享 ReadWriteMany 访问。因此，对于从启用了 NFS 的 SVM 中由 Trident 配置的 StorageClasses 请求具有 PVC 的 VM ，可以在不停机的情况下进行迁移。
+
+image::redhat_openshift_image55.jpg[VM 实时迁移架构]
+
+要创建绑定到具有共享 ReadWriteMany 访问权限的 PVC 的 VM ，请执行以下操作：
+
+. 导航到 `Workloads > Virtualization > Virtual Machines` ，然后单击 `Create > with Wizard` 。
+. 选择所需的操作系统，然后单击下一步。假设选定操作系统已配置了启动源。
+. 在 Review and Create 窗格中，选择要在其中创建 VM 的项目并提供 VM 详细信息。确保选择了要克隆的启动源，并使用为选定操作系统分配的相应 PVC 从 CD-ROM 启动。
+. 单击自定义虚拟机，然后单击存储。
+. 单击 rootdisk 旁边的省略号，确保已选择使用 Trident 配置的 storageclass 。展开高级，然后为访问模式选择共享访问（ rwx ）。然后单击保存。
++
+image::redhat_openshift_image56.JPG[使磁盘 rwx 可访问]
+
+. 单击 Review 并确认，然后单击 Create Virtual Machine 。
+
+
+要手动将虚拟机迁移到 OpenShift 集群中的另一个节点，请完成以下步骤。
+
+. 导航到 `工作负载 > 虚拟化 > 虚拟机` 。
+. 对于要迁移的虚拟机，单击省略号，然后单击迁移虚拟机。
+. 当消息弹出时，单击迁移进行确认。
+
+
+
+NOTE: 如果 evictionStrategy 设置为 LiveMigrate ，则在将原始节点置于维护模式时， OpenShift 集群中的 VM 实例会自动迁移到另一节点。
+
+link:rh-os-n_use_case_openshift_virtualization_workflow_clone_vm.html["接下来：工作流： VM 克隆。"]

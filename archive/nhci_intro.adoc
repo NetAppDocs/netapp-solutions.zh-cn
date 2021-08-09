@@ -1,0 +1,135 @@
+---
+sidebar: sidebar 
+permalink: nhci_intro.html 
+summary: NetApp HCI 基础架构平台概述 
+keywords: hci, infrastructure, overview 
+---
+= NetApp HCI 基础架构平台概述
+
+
+[role="lead"]
+NetApp HCI 可提供卓越的灵活性以及企业级功能。下面我们来了解一下该平台的功能和优势。
+
+
+
+== 概述
+
+NetApp HCI 是一种企业级基础架构，由多个存储节点和计算节点组成。NetApp HCI 在高度灵活高效的架构上提供可预测的性能，使其易于管理。借助 NetApp Element 软件，您可以释放 Data Fabric 的强大功能，使 NetApp HCI 能够参与混合云服务。
+
+部署 VM 所需的安装和配置通过 NDE 自动完成。计算集群通过 VMware vCenter 进行管理，存储集群通过使用 NDE 部署的 vCenter 插件进行管理。作为 NDE 一部分部署的名为 mNode 的管理 VM 负责处理版本升级，将事件推送到 vCenter ， vCenter 插件管理，用于支持的 VPN 通道以及 NetApp Active IQ ® 收集器。此外，您还可以将 NetApp 云服务扩展到内部环境，从而实现混合云基础架构。计算和存储节点有多个选项，
+
+NetApp HCI 适用于多种工作负载，包括：
+
+* 开发运营
+* 容器工作负载
+* 边缘计算
+* 数据库工作负载
+* 人工智能
+* 机器学习
+* 虚拟桌面基础架构 (VDI)
+
+
+
+
+== NetApp HCI 用例
+
+* * 内部私有云。 * NetApp HCI 可选择从小规模入手并扩展基础架构，让您的数据中心适应未来需求，实现更高的增长和灵活性。
+* * 混合云。 * NetApp HCI 可用作混合多云或私有云部署的基础架构。
+* * 最终用户计算。 * 您可以利用 NetApp HCI 和 VMware Horizon 提供最佳用户体验。
+* * 工作负载整合。 * NetApp HCI QoS 设置可确保应用程序性能。
+
+
+
+
+== NetApp HCI 主要功能
+
+NetApp HCI 可提供企业级可靠性和可用性。NetApp HCI 的一些重要功能包括：
+
+* 性能保障
++
+** 独立于容量分配存储性能
+** 在不影响其他卷的情况下实时管理性能
+** 使用精细的 QoS 设置保证每个卷的性能
+
+
+* 全球效率
++
+** 实时和后压缩
+** 通过无中断重复数据删除自动分发数据（无热点）
+** 全局精简配置
+
+
+* 数据保证
++
+** NetApp HCI Helix 无 RAID 数据保护
+** 实时复制（同步和异步）
+** 集成备份和恢复（云）
+** 无论系统状况或应用程序活动如何，数据和性能均可用
+** 使用 256 位加密保护数据
+
+
+
+
+.NetApp HCI 基础架构组件
+image::nhci_infrastructure.jpg[nhci 基础架构]
+
+
+
+== NetApp HCI 设计原则：可预测性，灵活性，精简性
+
+通过 NetApp HCI ，您可以灵活，直接地控制企业级工作负载。它旨在提供可预测的性能，线性可扩展性以及简单的部署和管理体验。
+
+* 可预测
++
+** 利用行业领先的性能 QoS 防止资源争用并满足性能 SLA 要求。
+** 将基于存储策略的管理（ Storage Policy Based Management ， SPBM ）相结合，实现 QoS 的自动化和管理。
+
+
+* 灵活
++
+** 利用零共享架构自信地独立扩展计算和存储节点。
+** 防止效率低下的过度配置并降低 TCO 。
+** 混合使用小型，中型和大型计算和存储配置。
+
+
+* 简单
++
+** 借助 NDE ，可消除手动部署和用户错误风险。
+** 使用适用于 vCenter 的 Element 插件管理 NetApp HCI
+
+
+
+
+
+
+== 计算和存储节点
+
+NetApp HCI 提供多种外形规格，可满足各种计算和存储需求。最低起始配置包括两个机箱，其中包含两个计算节点和四个存储节点。对于 GPU 驱动的工作负载，例如 VMware Horizon 或机器学习，需要更多节点。此架构还提供用于数据库工作负载的计算节点。
+
+
+
+==== 计算节点
+
+NetApp H300E ， H500E 和 H700E 节点均采用 Intel Xeon E5 v4 （ Broadwell ）处理器。NetApp HCI H410C 和 H610C 节点基于 Intel 可扩展（ Skylake ）处理器。NetApp HCI H610C 节点包含两个 NVIDIA Tesla M10 卡。每个集群最多可扩展到 64 个 NetApp HCI 计算节点。
+
+NetApp 强烈建议阅读 https://www.netapp.com/us/media/ds-3881.pdf["NetApp HCI 产品规格"] 有关 NetApp HCI 计算和存储产品的详细信息。有关 NetApp HCI 工作原理的详细信息，请参见 白皮书。
+
+
+
+==== 存储节点
+
+存储节点可在半宽或全宽机架单元上使用。半宽机架单元正在填充两个机架单元机箱，其中可以包含存储节点或计算节点。至少需要四个存储节点，最多可扩展到 40 个节点。一个存储集群可以在多个计算集群之间共享，从而为集成数据服务提供异步，同步和 Snapshot 复制方法。存储节点包含一个缓存控制器，用于提高写入性能。单个节点可在块大小为 4 k 的情况下提供 50 ， 000 或 100 ， 000 IOPS 。
+
+NetApp HCI 存储节点运行 Element 软件，该软件可提供支持最小，最大和突发限制的 QoS 功能。存储集群允许混合使用多个存储节点；唯一的注意事项是，一个存储节点大小不能超过总容量的 1/3 。
+
+
+
+== Element 软件
+
+Element 软件专为需要针对不同工作负载快速进行模块化增长或缩减的数据中心而设计。Element 软件可以灵活地处理永久和瞬时工作负载，并满足各种不同的吞吐量和容量要求，因此是服务提供商的首选存储基础架构。
+
+Element 可为每个存储节点提供模块化的可扩展性能，从而为环境提供有保障的容量和吞吐量。添加到 NetApp HCI 环境中的每个 Element 存储节点均可提供一组 IOPS 和容量，从而实现可预测的计划内增长。
+
+由于每个节点都会为存储环境提供一组吞吐量（ IOPS ），因此可以保证每个工作负载的 QoS 。Element 可帮助您确保最低 SLA ，因为集群的总吞吐量是一个已知的可量化容量。有关详细信息，请参见 link:https://www.netapp.com/us/products/data-management-software/element-os.aspx["Element 软件产品页面"]。
+
+Element 软件 100% 可编程，可提供无与伦比的灵活性和应用程序性能保障。由于可以在集群中混用节点，因此您可以构建私有云架构，以满足任何规模的业务需求。

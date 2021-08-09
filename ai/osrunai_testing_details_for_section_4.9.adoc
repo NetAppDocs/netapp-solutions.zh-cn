@@ -1,0 +1,52 @@
+---
+sidebar: sidebar 
+permalink: ai/osrunai_testing_details_for_section_4.9.html 
+keywords:  
+summary:  
+---
+= 第 4.9 节的测试详细信息
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+此部分包含此部分的测试详细信息 link:osrunai_basic_resource_allocation_fairness.html["基本资源分配公平"]。
+
+按以下顺序提交作业：
+
+|===
+| 项目 | GPU 数量 | 总计 | comment 
+
+
+| 团队 | 2. | 6/8 | team-b/c 工作负载暂停并移至 `pending` 。 
+
+
+| 团队 | 2. | 8/8. | 其他团队（ b/c ）工作负载暂停并移至 `pending` 。 
+|===
+请参见以下已执行的命令序列：
+
+....
+$ runai submit d-2-gg -i gcr.io/run-ai-demo/quickstart -g 2 -p team-d$ runai submit d-3-gg -i gcr.io/run-ai-demo/quickstart -g 2 -p team-d
+....
+此时，您应处于以下状态：
+
+|===
+| 项目 | 已分配 GPU | 已排队的工作负载 
+
+
+| 团队 A | 4.4 | 无 
+
+
+| 团队 b | 2/2 | 无 
+
+
+| 团队 c | 2/2 | 无 
+
+
+| 团队 | 8/8. | 无 
+|===
+请参见一节 link:osrunai_basic_resource_allocation_fairness.html["基本资源分配公平"] 有关继续测试场景的讨论。
+
+link:osrunai_testing_details_for_section_4.10.html["接下来：第 4.10 节的测试详细信息"]

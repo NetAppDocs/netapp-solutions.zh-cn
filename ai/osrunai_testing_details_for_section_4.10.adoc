@@ -1,0 +1,63 @@
+---
+sidebar: sidebar 
+permalink: ai/osrunai_testing_details_for_section_4.10.html 
+keywords:  
+summary:  
+---
+= 第 4.10 节的测试详细信息
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+此部分包含此部分的测试详细信息 link:osrunai_over-quota_fairness.html["配额过度公平"]。
+
+按以下顺序提交 `team-A` ， `team-b` 和 `team-c` 的作业：
+
+|===
+| 项目 | GPU 数量 | 总计 | comment 
+
+
+| 团队 A | 2. | 4.4 | 1 个工作负载已排队 
+
+
+| 团队 A | 2. | 4.4 | 已排队 2 个工作负载 
+
+
+| 团队 b | 2. | 2/2 | 已排队 2 个工作负载 
+
+
+| 团队 c | 2. | 2/2 | 已排队 2 个工作负载 
+|===
+请参见以下已执行的命令序列：
+
+....
+$ runai submit a-3-gg -i gcr.io/run-ai-demo/quickstart -g 2 -p team-a$ runai submit a-4-gg -i gcr.io/run-ai-demo/quickstart -g 2 -p team-a$ runai submit b-5-gg -i gcr.io/run-ai-demo/quickstart -g 2 -p team-b$ runai submit c-6-gg -i gcr.io/run-ai-demo/quickstart -g 2 -p team-c
+....
+此时，您应处于以下状态：
+
+|===
+| 项目 | 已分配 GPU | 已排队的工作负载 
+
+
+| 团队 A | 4.4 | 两个工作负载要求每个 GPU 两个 
+
+
+| 团队 b | 2/2 | 两个工作负载，每个工作负载需要两个 GPU 
+
+
+| 团队 c | 2/2 | 两个工作负载，每个工作负载需要两个 GPU 
+
+
+| 团队 | 8/8. | 无 
+|===
+接下来，删除 `team-d` 的所有工作负载：
+
+....
+$ runai delete -p team-d d-1-gggg d-2-gg d-3-gg
+....
+请参见一节 link:osrunai_over-quota_fairness.html["配额过度公平"]，用于讨论后续测试场景。
+
+link:osrunai_where_to_find_additional_information.html["下一步：从何处查找追加信息"]

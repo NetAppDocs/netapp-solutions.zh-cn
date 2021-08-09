@@ -1,0 +1,146 @@
+---
+sidebar: sidebar 
+permalink: ai/hcaios_cnvrg.io_deployment.html 
+keywords: cnrvg.io, Deployment, Kubernetes 
+summary:  
+---
+= cnvrg.io 部署
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== 使用 Helm 部署 cnvrg 核心
+
+使用任何集群，内部， MinikubE 或任何云集群（如 AKS ， EKS 和 GKE） ， Helm 是快速部署 cnvrg 的最简单方法。本节介绍如何在安装了 Kubernetes 的内部（ DGX-1 ）实例上安装 cnvrg 。
+
+
+
+=== 前提条件
+
+在完成安装之前，您必须在本地计算机上安装并准备以下依赖项：
+
+* Kubectl
+* Helm 3.x
+* Kubernetes 集群 1.15 及更高版本
+
+
+
+
+=== 使用 Helm 部署
+
+. 要下载最新的 cnvrg Helm 图表，请运行以下命令：
++
+....
+helm repo add cnvrg https://helm.cnvrg.io
+helm repo update
+....
+. 在部署 cnvrg 之前，您需要集群的外部 IP 地址以及要部署 cnvrg 的节点的名称。要在内部 Kubernetes 集群上部署 cnvrg ，请运行以下命令：
++
+....
+helm install cnvrg cnvrg/cnvrg --timeout 1500s  --wait \ --set global.external_ip=<ip_of_cluster> \ --set global.node=<name_of_node>
+....
+. 运行 `helm install` 命令。所有服务和系统都会自动安装在集群上。此过程可能需要长达 15 分钟。
+. `helm install` 命令可能需要长达 10 分钟的时间。部署完成后，转到新部署的 cnvrg 的 URL 或将新集群添加为组织内部的资源。使用 `helm` 命令可向您告知正确的 URL 。
++
+....
+Thank you for installing cnvrg.io!
+Your installation of cnvrg.io is now available, and can be reached via:
+Talk to our team via email at
+....
+. 当所有容器的状态为 running 或 complete 时，已成功部署 cnvrg 。它应类似于以下示例输出：
+
+
+....
+NAME                            READY   STATUS      RESTARTS   AGE
+cnvrg-app-69fbb9df98-6xrgf              1/1     Running     0          2m cnvrg-sidekiq-b9d54d889-5x4fc           1/1     Running     0          2m controller-65895b47d4-s96v6             1/1     Running     0          2m init-app-vs-config-wv9c4                0/1     Completed   0          9m init-gateway-vs-config-2zbpp            0/1     Completed   0          9m init-minio-vs-config-cd2rg              0/1     Completed   0          9m minio-0                                 1/1     Running     0          2m postgres-0                              1/1     Running     0          2m redis-695c49c986-kcbt9                  1/1     Running     0          2m seeder-wh655                            0/1     Completed   0          2m speaker-5sghr                           1/1     Running     0          2m
+....
+
+
+== 使用 ResNet50 和 Chest X 射线数据集的计算机视觉模型培训
+
+cnvrg.io AI 操作系统部署在 Kubernetes 设置中，并部署在由 NVIDIA DGX 系统提供支持的 NetApp ONTAP AI 架构上。为了进行验证，我们使用了 NIH Chest X ray 数据集，该数据集包含经去除身份识别的胸 x 射线图像。这些映像采用 PNG 格式。这些数据由 NIH 临床中心提供，可通过获取 https://nihcc.app.box.com/v/ChestXray-NIHCC["NIH 下载站点"^]。我们使用了一个 250 GB 的数据样本，其中包含 627 ， 615 个图像，分布在 15 个类别中。
+
+数据集已上传到 cnvrg 平台，并在 NetApp AFF A800 存储系统的 NFS 导出中进行缓存。
+
+
+
+== 设置计算资源
+
+借助 cnvrg 架构和元数据计划功能，工程师和 IT 专业人员可以将不同的计算资源连接到一个平台。在我们的设置中，我们使用了为运行深度学习工作负载而部署的相同集群 cnvrg 。如果需要连接其他集群，请使用 GUI ，如以下屏幕截图所示。
+
+image:hcaios_image7.png["错误：缺少图形映像"]
+
+
+
+== 加载数据
+
+要将数据上传到 cnvrg 平台，您可以使用 GUI 或 cnvrg CLI 。对于大型数据集， NetApp 建议使用 CLI ，因为它是一款强大，可扩展且可靠的工具，可以处理大量文件。
+
+要上传数据，请完成以下步骤：
+
+. 下载 https://app.cnvrg.io/docs/cli/install.html["cnvrg 命令行界面"^]。
+. 导航到 x-ray 目录。
+. 使用 `cnvrg data init` 命令初始化平台中的数据集。
+. 使用 `cnvrg data sync` 命令将目录的所有内容上传到中央数据湖。将数据上传到中央对象存储（ StorageGRID ， S3 或其他）后，您可以使用 GUI 进行浏览。下图显示了一个已加载的胸 X 射线纤维化影像 PNG 文件。此外， cnvrg 会对数据进行版本控制，以便您构建的任何模型都可以复制到数据版本。
+
+
+image:hcaios_image8.png["错误：缺少图形映像"]
+
+
+
+== Cach 数据
+
+为了加快训练速度并避免为每个模型训练和实验下载 60 万多个文件，在数据最初上传到中央数据湖对象存储之后，我们使用了数据缓存功能。
+
+image:hcaios_image9.png["错误：缺少图形映像"]
+
+用户单击缓存后， cnvrg 将从远程对象存储下载其特定提交中的数据，并将其缓存到 ONTAP NFS 卷上。完成后，可以使用这些数据进行即时培训。此外，如果数据在几天内未使用（例如用于模型训练或探索），则 cnvrg 会自动清除缓存。
+
+
+
+== 使用缓存数据构建 ML 管道
+
+借助 cnvrg 流，您可以轻松构建生产 ML 管道。流非常灵活，可用于任何类型的 ML 用例，并可通过 GUI 或代码创建。一个流中的每个组件都可以使用不同的 Docker 映像在不同的计算资源上运行，从而可以构建混合云和优化的 ML 管道。
+
+image:hcaios_image10.png["错误：缺少图形映像"]
+
+
+
+=== 构建箱内 X 射线流：设置数据
+
+我们已将数据集添加到新创建的流中。添加数据集时，您可以选择特定版本（提交）并指示是否需要缓存版本。在此示例中，我们选择了缓存的提交。
+
+image:hcaios_image11.png["错误：缺少图形映像"]
+
+
+
+=== 构建箱内 X 射线流：设置训练模型： ResNet50
+
+在管道中，您可以添加所需的任何类型的自定义代码。在 cnvrg 中，还提供了 AI 库，这是一个可重复使用的 ML 组件集合。在 AI 库中，有算法，脚本，数据源以及其他解决方案可用于任何 ML 或深度学习流。在此示例中，我们选择了预构建的 ResNet50 模块。我们使用的是默认参数，例如 batch_size ： 128 ， epodchs ： 10 等。可以在 AI 库文档中查看这些参数。以下屏幕截图显示了将 X 线数据集连接到 ResNet50 的新流。
+
+image:hcaios_image12.png["错误：缺少图形映像"]
+
+
+
+== 为 ResNet50 定义计算资源
+
+cnvrg 流中的每个算法或组件都可以使用不同的 Docker 映像在不同的计算实例上运行。在我们的设置中，我们希望使用 NetApp ONTAP AI 架构在 NVIDIA DGX 系统上运行训练算法。在下图中，我们选择了 `GPU Real` ，这是我们内部集群的计算模板和规范。我们还创建了一个模板队列并选择了多个模板。这样，如果无法分配 `GPU-Real` 资源（例如，如果其他数据科学家正在使用该资源），则可以通过添加云提供商模板来启用自动云突发功能。以下屏幕截图显示了如何使用 GPU Real 作为 ResNet50 的计算节点。
+
+image:hcaios_image13.png["错误：缺少图形映像"]
+
+
+
+=== 跟踪和监控结果
+
+执行流量后， cnvrg 将触发跟踪和监控引擎。每次运行流程都会自动记录并实时更新。超参数，指标，资源使用情况（ GPU 利用率等），代码版本，项目，日志， 实验部分会自动提供，如以下两个屏幕截图所示。
+
+image:hcaios_image14.png["错误：缺少图形映像"]
+
+image:hcaios_image15.png["错误：缺少图形映像"]
+
+link:hcaios_conclusion.html["接下来：总结。"]

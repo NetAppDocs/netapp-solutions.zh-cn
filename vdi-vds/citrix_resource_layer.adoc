@@ -1,0 +1,73 @@
+---
+sidebar: sidebar 
+permalink: vdi-vds/citrix_resource_layer.html 
+keywords: compute, storage, FSLogix, network, gpu 
+summary: 此解决方案的资源层包含计算资源，存储资源， FSLogix ，网络和 GPU 资源。 
+---
+= 资源层
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+
+
+=== 计算
+
+要托管虚拟应用程序和桌面资源，应在 Citrix Studio 或 PowerShell 中配置与虚拟机管理程序和资源详细信息的连接。对于 Citrix 虚拟机管理程序，需要提供资源池主节点 DNS 或 IP 地址。要实现安全连接，请使用 HTTPS 并在服务器上安装 SSL 证书。通过选择存储资源和网络来定义资源。
+
+image:citrix_image25.png["错误：缺少图形映像"]
+
+如果需要额外的计算容量，可以将虚拟机管理程序服务器添加到现有资源池中。每当添加新资源池时，如果需要使其可用于托管虚拟应用程序和桌面，则必须定义新连接。
+
+站点是 SQL 数据库所在的站点，称为主区域。此外，还添加了其他分区来满足不同地理位置的用户的需求，以便通过托管本地资源来缩短响应时间。卫星区域是一个远程区域，它只包含用于托管虚拟应用程序或具有可选交付控制器的桌面的虚拟机管理程序组件。
+
+使用 Citrix 虚拟桌面设置向导时， Citrix 配置还会使用连接和资源信息。
+
+image:citrix_image26.png["错误：缺少图形映像"]
+
+
+
+=== 存储
+
+虚拟应用程序和桌面的存储库可使用一节中所述的连接和资源进行控制 link:citrix_citrix_hypervisor.html#compute["计算"]。定义资源时，您可以选择共享存储并为 Citrix 虚拟机管理程序启用 Intellicache 。
+
+image:citrix_image27.png["错误：缺少图形映像"]
+
+此外，还可以选择操作系统，个人 vDisk 和临时数据的资源。选择多个资源后， Citrix 虚拟应用程序和桌面会自动分摊负载。在多租户环境中，可以为每个租户资源选择专用资源。
+
+image:citrix_image28.png["错误：缺少图形映像"]
+
+Citrix 配置需要 SMB 文件共享来托管设备的 vDisk 。我们建议将此 SMB 共享托管在 FlexGroup 卷上，以提高可用性，性能和容量扩展。
+
+image:citrix_image29.png["错误：缺少图形映像"]
+
+
+
+=== FSLogix
+
+FSLogix 允许用户即使在池化桌面部署方案等非持久性环境中也能获得持久体验。它可以优化虚拟桌面和 SMB 文件存储之间的文件 I/O ，并缩短登录时间。原生（本地）配置文件体验可最大限度地减少主映像设置用户配置文件所需的任务。
+
+image:citrix_image30.png["错误：缺少图形映像"]
+
+FSLogix 会将用户设置和个人数据保存在其自己的容器（ VHD 文件）中。用于存储 FSLogix 用户配置文件容器的 SMB 文件共享在由组策略对象控制的注册表上进行配置。Citrix User Profile Management 可与 FSLogix 结合使用，以支持在虚拟应用程序上同时与虚拟桌面进行并发会话。
+
+image:citrix_image31.png["错误：缺少图形映像"]
+
+此图显示了 FSLogix SMB 位置的内容。请注意，我们切换了目录名称，以便在安全标识符（ SID ）之前显示用户名。
+
+
+
+=== 网络
+
+虚拟应用程序和桌面需要连接和资源才能托管，如一节所述 link:citrix_citrix_hypervisor.html#compute["计算"]。定义资源时，请选择必须与该资源关联的 VLAN 。在计算机目录部署期间，系统会提示您将 VM NIC 与相应的网络相关联。
+
+image:citrix_image32.png["错误：缺少图形映像"]
+
+
+
+=== GPU
+
+如上一节所述，在确定虚拟机管理程序服务器是否具有 GPU 资源时，系统会提示您启用图形虚拟化并选择 vGPU 配置文件。

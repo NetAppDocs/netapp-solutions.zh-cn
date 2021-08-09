@@ -1,0 +1,62 @@
+---
+sidebar: sidebar 
+permalink: ai/cainvidia_solution_overview.html 
+keywords: Solution Overview, ONTAP, AI, Cloud Sync, NVIDIA DGX, 
+summary:  
+---
+= 解决方案概述
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== NetApp ONTAP AI 和 Cloud Sync
+
+由 NVIDIA DGX 系统和 NetApp 云连接存储系统提供支持的 NetApp ONTAP AI 架构由 NetApp 和 NVIDIA 开发并验证。此参考架构为 IT 组织提供了以下优势：
+
+* 消除设计复杂性
+* 支持独立扩展计算和存储
+* 支持客户从小规模入手，无缝扩展
+* 为各种性能和成本点提供一系列存储选项 NetApp ONTAP AI 可将 DGX 系统和 NetApp AFF A220 存储系统与一流的网络紧密集成在一起。NetApp ONTAP AI 和 DGX 系统消除了设计复杂性和猜测性工作，从而简化了 AI 部署。客户可以从小规模入手，无中断地扩展系统，同时智能地管理从边缘到核心再到云再到云的数据。
+
+
+通过 NetApp Cloud Sync ，您可以通过各种协议轻松移动数据，无论是在两个 NFS 共享，两个 CIFS 共享还是一个文件共享与 Amazon S3 ， Amazon Elastic File System （ EFS ）或 Azure Blob 存储之间。主动 - 主动操作意味着您可以继续同时使用源和目标，并在需要时逐步同步数据更改。通过使您能够在任何源系统和目标系统之间移动和增量同步数据，无论是内部系统还是基于云的系统， Cloud Sync 为您打开了多种新的数据使用方式。在内部系统，云入网和云迁移或协作和数据分析之间迁移数据变得非常容易。下图显示了可用的源和目标。
+
+在对话式 AI 系统中，开发人员可以利用 Cloud Sync 将对话历史记录从云归档到数据中心，以便对自然语言处理（ NLP ）模型进行脱机培训。通过培训模式识别更多意向，对话式 AI 系统将更好地处理最终用户提出的更复杂的问题。
+
+
+
+== NVIDIA JarVis 多模式框架
+
+image:cainvidia_image2.png["错误：缺少图形映像"]
+
+https://devblogs.nvidia.com/introducing-jarvis-framework-for-gpu-accelerated-conversational-ai-apps/["NVIDIA JarVis"^] 是一个端到端框架，用于构建对话式 AI 服务。它包括以下经过 GPU 优化的服务：
+
+* 自动语音识别（ Automatic Speech Recognition ， As1 ）
+* 自然语言理解（ NLF ）
+* 与域特定的履行服务集成
+* 文本语音转换（ TTS- 语音转换）
+* 基于计算机视觉（ CV ） Jarvis 的服务使用最先进的深度学习模型来应对实时对话 AI 这一复杂且极具挑战性的任务。要与最终用户进行实时自然的交互，模型需要在 300 毫秒内完成计算。自然交互具有挑战性，需要多模式感知集成。模型管道也很复杂，需要在上述服务之间进行协调。
+
+
+JarVis 是一个完全加速的应用程序框架，用于构建使用端到端深度学习管道的多模式对话 AI 服务。JARVIS 框架包括经过预先培训的人工智能对话模型，工具以及针对语音，视觉和 NLU 任务优化的端到端服务。除了 AI 服务之外， JarVis 还支持您同时融合视觉，音频和其他传感器输入，以便在虚拟助手，多用户化和呼叫中心助理等应用程序中提供多用户，多上下文对话等功能。
+
+
+
+== NVIDIA Nemo
+
+https://developer.nvidia.com/nvidia-nemo["NVIDIA Nemo"^] 是一款开源 Python 工具包，用于使用易于使用的应用程序编程接口（ API ）构建，培训和微调 GPU 加速的一流对话 AI 模型。Nemo 使用 NVIDIA GPU 中的 Tensor 核心运行混合精度计算，并可轻松扩展到多个 GPU ，以提供尽可能高的训练性能。Nemo 用于为视频呼叫记录，智能视频助理以及医疗保健，金融，零售和电信等不同行业的自动呼叫中心支持等实时应用程序构建模型。
+
+我们使用 Nemo 来训练模型，以便识别归档对话历史记录中用户问题的复杂意图。此培训将零售虚拟助手的功能扩展到了 Jarvis 所提供的功能之外。
+
+
+
+== 零售用例摘要
+
+我们使用 NVIDIA Jarvis 构建了一个虚拟零售助理，可接受语音或文本输入并回答有关天气，关注点和库存定价的问题。对话式 AI 系统能够记住对话流，例如，如果用户未指定天气或感兴趣点的位置，可以询问跟进问题。系统还可以识别诸如 " 泰国食品 " 或 " 笔记本电脑内存 " 等复杂实体。 它了解自然语言问题，例如 " 下星期在洛杉矶会下雨吗？ " 有关零售虚拟助手的演示，请参见 https://cainvidia_customize_states_and_flows_for_retail_use_case.html["针对零售用例自定义状态和流程"]。
+
+link:cainvidia_solution_technology.html["接下来：解决方案技术"]

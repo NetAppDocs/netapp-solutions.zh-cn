@@ -1,0 +1,44 @@
+---
+sidebar: sidebar 
+permalink: ai/mlrun_configuring_kubernetes_cluster.html 
+keywords: NetApp, Kubernetes, Cluster, Configuring 
+summary:  
+---
+= 正在配置 Kubernetes 集群
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+本节将分别分为两部分，分别用于云和内部部署。
+
+
+
+== 云部署 Kubernetes 配置
+
+通过 NetApp Cloud Manager ，您可以定义与 Iguazio Kubernetes 集群的连接。要使卷可用， Trident 需要访问集群中的多个资源。
+
+. 要启用访问，请从一个 Iguazio 节点获取 Kubernetes 配置文件。该文件位于 ` /home/Iguazio/.Kube/config 下。` 将此文件下载到桌面。
+. 转至 Discover Cluster 以进行配置。
++
+image:mlrun_image9.png["错误：缺少图形映像"]
+
+. 上传 Kubernetes 配置文件。请参见下图。
++
+image:mlrun_image10.PNG["错误：缺少图形映像"]
+
+. 部署 Trident 并将卷与集群相关联。有关定义永久性卷并将其分配给 Iguazio 集群的信息，请参见下图。此过程将在 Iguazio 的 Kubernetes 集群中创建永久性卷（ PV ）。在使用它之前，您必须定义永久性卷声明（ PVC ）。
+
+
+image:mlrun_image5.png["错误：缺少图形映像"]
+
+
+
+== 内部部署 Kubernetes 配置
+
+有关 NetApp Trident 的内部安装，请参见 https://www.netapp.com/us/media/tr-4798.pdf["TR-4798"^] 了解详细信息。配置 Kubernetes 集群并安装 NetApp Trident 后，您可以将 Trident 连接到 Iguazio 集群以启用 NetApp 数据管理功能，例如为数据和型号创建 Snapshot 副本。
+
+link:mlrun_define_persistent_volume_claim.html["下一步：定义永久性卷声明"]

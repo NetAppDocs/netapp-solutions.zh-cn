@@ -1,0 +1,64 @@
+---
+sidebar: sidebar 
+permalink: ai/mlrun_technology_overview.html 
+keywords: NetApp Technology Overview ONTAP AI 
+summary:  
+---
+= 技术概述
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== NetApp 概述
+
+NetApp 是混合云数据管理领域的权威企业。NetApp 提供全套混合云数据服务，可简化云和内部环境中的应用程序和数据管理，加速数字化转型。NetApp 与我们的合作伙伴携手，赋予全球企业充分释放数据的全部潜能，以扩大客户接触点，促进更大的创新并优化运营的能力。
+
+
+
+== NetApp ONTAP AI
+
+NetApp ONTAP AI 由 NVIDIA DGX 系统和 NetApp 云互联全闪存存储提供支持，可可靠地简化数据流，并加快从边缘到核心再到云的数据网络结构的分析，培训和推理速度。它为 IT 组织提供了一个架构，可提供以下优势：
+
+* 消除设计复杂性
+* 支持独立扩展计算和存储
+* 支持客户从小规模入手，无缝扩展
+* 为各种性能和成本点提供一系列存储选项 NetApp ONTAP AI 提供融合基础架构堆栈，其中包括 NVIDIA DGX-1 ，一个 petaflop 级 AI 系统和 NVIDIA Mellanox 高性能以太网交换机，可统一 AI 工作负载，简化部署并加快 ROI 。在本技术报告中，我们将 ONTAP AI 与一个 DGX-1 和一个 NetApp AFF A800 存储系统结合使用。下图显示了此验证中使用的 DGX-1 系统的 ONTAP AI 拓扑。
+
+
+image:mlrun_image3.png["错误：缺少图形映像"]
+
+
+
+== NetApp AI 控制平台
+
+借助 NetApp AI 控制平台，您可以借助解决方案充分发挥 AI 和 ML 的潜能，该平台可提供极高的可扩展性，简化的部署以及无中断的数据可用性。AI 控制平面解决方案将 Kubernetes 和 Kubeflow 与 NetApp 支持的数据网络结构相集成。Kubernetes 是适用于云原生部署的行业标准容器编排平台，可实现工作负载的可扩展性和可移动性。Kubeflow 是一款开源机器学习平台，可简化管理和部署，使开发人员能够在更短的时间内完成更多的数据科学工作。NetApp 支持的 Data Fabric 可提供无与伦比的数据可用性和可移植性，确保您的数据可通过管道从边缘到核心再到云进行访问。本技术报告在 MLRun 管道中使用 NetApp AI 控制平台。下图显示了 Kubernetes 集群管理页面，您可以在其中为每个集群设置不同的端点。我们将 NFS 永久性卷连接到 Kubernetes 集群，下图显示了连接到集群的永久性卷，其中 https://www.netapp.com/us/media/ds-netapp-project-trident.pdf["NetApp Trident"^] 提供持久存储支持和数据管理功能。
+
+image:mlrun_image4.png["错误：缺少图形映像"]
+
+image:mlrun_image5.png["错误：缺少图形映像"]
+
+image:mlrun_image6.png["错误：缺少图形映像"]
+
+
+
+== Iguazio 概述
+
+Iguazio 数据科学平台是一个完全集成且安全的数据科学平台即服务（ PaaS ），可简化开发，加快性能，促进协作并解决运营难题。此平台包含以下组件， Iguazio 数据科学平台如下图所示：
+
+* 数据科学工作台，包括 Jupyter 笔记本电脑，集成分析引擎和 Python 软件包
+* 通过试验跟踪和自动化管道功能进行模型管理
+* 通过可扩展的 Kubernetes 集群管理数据和 ML 服务
+* Nutrio ，一种实时无服务器功能框架
+* 一个速度极快且安全的数据层，支持 SQL ， NoSQL ，时间序列数据库，文件（简单对象）和流式传输
+* 与 NetApp ， Amazon S3 ， HDFS ， SQL 数据库以及流式传输或消息传送协议等第三方数据源集成
+* 基于 Grafana 的实时信息板
+
+
+image:mlrun_image7.png["错误：缺少图形映像"]
+
+link:mlrun_software_and_hardware_requirements.html["接下来：软件和硬件要求"]

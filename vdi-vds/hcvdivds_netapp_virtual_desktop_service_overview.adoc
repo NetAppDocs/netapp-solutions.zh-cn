@@ -1,0 +1,57 @@
+---
+sidebar: sidebar 
+permalink: vdi-vds/hcvdivds_netapp_virtual_desktop_service_overview.html 
+keywords: virtual desktop, Azure NetApp Files, VDS 
+summary: NetApp 提供许多云服务，包括使用 WVD 或远程应用程序快速配置虚拟桌面，包括与 Azure NetApp Files 快速集成。 
+---
+= NetApp 虚拟桌面服务概述
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+NetApp 提供许多云服务，包括使用 WVD 或远程应用程序快速配置虚拟桌面以及与 Azure NetApp Files 快速集成。
+
+传统上，为客户配置和交付远程桌面服务需要数周时间。除了配置之外，管理应用程序，用户配置文件，共享数据和组策略对象以强制实施策略可能会很困难。防火墙规则可能会增加复杂性，并需要单独的技能和工具。
+
+借助 Microsoft Azure Windows 虚拟桌面服务， Microsoft 负责维护远程桌面服务组件，使客户能够专注于在云中配置工作空间。客户必须配置和管理整个堆栈，这需要具备管理 VDI 环境的特殊技能。
+
+借助 NetApp VDS ，客户可以快速部署虚拟桌面，而无需担心在何处安装架构组件，例如代理，网关，代理等。需要完全控制其环境的客户可以与专业服务团队合作来实现其目标。客户使用 VDS 即服务，因此可以专注于关键业务挑战。
+
+NetApp VDS 是一款软件即服务产品，用于集中管理 AWS ， Azure ， GCP 或私有云环境中的多个部署。Microsoft Windows 虚拟桌面仅在 Microsoft Azure 上可用。NetApp VDS 可在其他环境中编排 Microsoft 远程桌面服务。
+
+Microsoft 在 Windows 10 上提供多会话功能，专用于 Azure 上的 Windows 虚拟桌面环境。身份验证和身份由虚拟桌面技术处理； WVD 要求将 Azure Active Directory （使用 AD Connect ）同步到 Active Directory ，并将会话 VM 加入 Active Directory 。RDS 需要使用 Active Directory 进行用户身份和身份验证以及 VM 域加入和管理。
+
+下图显示了一个部署拓扑示例。
+
+image:hcvdivds_image1.png["错误：缺少图形映像"]
+
+每个部署都与一个 Active Directory 域关联，并为客户端提供一个访问工作空间和应用程序的入口点。具有多个 Active Directory 域的服务提供商或企业通常部署更多。一个跨多个区域的 Active Directory 域通常具有一个包含多个站点的部署。
+
+对于 Azure 中的 WVD ， Microsoft 提供了一种由 NetApp VDS 使用的平台即服务。对于其他环境， NetApp VDS 会协调 Microsoft 远程桌面服务的部署和配置。NetApp VDS 既支持 WVD Classic ，也支持 WVD arm ，并且还可用于升级现有版本。
+
+每个部署都有自己的平台服务，其中包括 Cloud Workspace Manager （ REST API 端点）， HTML 5 网关（从 VDS 管理门户连接到 VM ）， RDS 网关（客户端访问点）和域控制器。下图展示了用于 RDS 实施的 VDS 控制平台架构。
+
+image:hcvdivds_image2.png["错误：缺少图形映像"]
+
+对于 RDS 实施，可以使用客户端软件从 Windows 和浏览器轻松访问 NetApp VDS ，该软件可以进行自定义以包含客户标识和映像。根据用户凭据，用户可以访问已批准的工作空间和应用程序。无需配置网关详细信息。
+
+下图显示了 NetApp VDS 客户端。
+
+image:hcvdivds_image3.png["错误：缺少图形映像"]
+
+在 Azure WVD 实施中， Microsoft 负责处理客户端的访问入口点，并可供各种操作系统本机使用的 Microsoft WVD 客户端使用。也可以从基于 Web 的门户访问它。客户端软件的配置必须由组策略对象（ GPO ）或客户首选的其他方式处理。
+
+下图展示了适用于 Azure WVD 实施的 VDS 控制平面架构。
+
+image:hcvdivds_image4.png["错误：缺少图形映像"]
+
+除了部署和配置所需组件之外， NetApp VDS 还负责处理用户管理，应用程序管理，资源扩展和优化。
+
+NetApp VDS 可以创建用户或授予现有用户帐户对云工作空间或应用程序服务的访问权限。该门户还可用于重置密码和委派管理部分组件。帮助台管理员或 3 级技术人员可以对用户会话进行影子管理，以便进行故障排除或从门户中连接到服务器。
+
+NetApp VDS 可以使用您创建的映像模板，也可以使用市场上现有的映像模板进行基于云的配置。要减少要管理的映像数量，您可以使用基础映像，并且可以使用提供的框架配置所需的任何其他应用程序，以包括任何命令行工具，例如 chocolatey ， MSIX 应用程序连接， PowerShell 等。即使自定义脚本也可以用作计算机生命周期事件的一部分。
+
+link:hcvdivds_netapp_hci_overview.html["接下来： NetApp HCI 概述"]

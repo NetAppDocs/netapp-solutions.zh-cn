@@ -1,0 +1,54 @@
+---
+sidebar: sidebar 
+permalink: ent-apps-db/saphana-dr-anf_create_new_volumes_based_on_snapshot_backups_at_the_disaster_recovery_site.html 
+keywords: create, new, volumes, snapshot, backups, disaster, recovery, site 
+summary: 根据灾难恢复设置（包括或不包括日志备份复制），必须根据 Snapshot 备份创建两个或三个新卷。 
+---
+= 在灾难恢复站点基于 Snapshot 备份创建新卷
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:saphana-dr-anf_prepare_the_target_host.html["上一步：准备目标主机。"]
+
+根据灾难恢复设置（包括或不包括日志备份复制），必须根据 Snapshot 备份创建两个或三个新卷。在这两种情况下，都必须为数据创建一个新卷，并为 HANA 共享卷创建一个新卷。如果同时复制日志备份数据，则必须为日志备份卷创建一个新卷。在我们的示例中，数据和日志备份卷已复制到灾难恢复站点。以下步骤使用 Azure 门户。
+
+. 系统会选择一个应用程序一致的快照备份作为 HANA 数据卷的新卷的源。选择还原到新卷以根据快照备份创建新卷。
++
+image:saphana-dr-anf_image19.png["错误：缺少图形映像"]
+
+. 必须在用户界面中提供新的卷名称和配额。
++
+image:saphana-dr-anf_image20.png["错误：缺少图形映像"]
+
+. 在协议选项卡中，配置文件路径和导出策略。
++
+image:saphana-dr-anf_image21.png["错误：缺少图形映像"]
+
+. 创建和查看屏幕总结了配置。
++
+image:saphana-dr-anf_image22.png["错误：缺少图形映像"]
+
+. 现在，已根据 HANA 快照备份创建了一个新卷。
++
+image:saphana-dr-anf_image23.png["错误：缺少图形映像"]
+
+
+
+现在，必须对 HANA 共享卷和日志备份卷执行相同的步骤，如以下两个屏幕截图所示。由于尚未为 HANA 共享和日志备份卷创建其他快照，因此必须选择最新的 SnapMirror Snapshot 副本作为新卷的源。这是非结构化数据， SnapMirror Snapshot 副本可用于此用例。
+
+image:saphana-dr-anf_image24.png["错误：缺少图形映像"]
+
+以下屏幕截图显示了已还原到新卷的 HANA 共享卷。
+
+image:saphana-dr-anf_image25.png["错误：缺少图形映像"]
+
+
+NOTE: 如果已使用性能层较低的容量池，则现在必须将卷移至可提供所需性能的容量池。
+
+所有这三个新卷现在都可用，并且可以挂载到目标主机上。
+
+link:saphana-dr-anf_mount_the_new_volumes_at_the_target_host.html["下一步：在目标主机上挂载新卷。"]

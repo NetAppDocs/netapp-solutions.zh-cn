@@ -1,0 +1,207 @@
+---
+sidebar: sidebar 
+permalink: ent-apps-db/cli_automation.html 
+keywords: Linux, RHEL Oracle19c, NFS, ONTAP 
+summary: 此页面介绍了在 NetApp ONTAP 存储上部署 Oracle19c 的自动化方法。 
+---
+= 分步部署操作步骤
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== CLI 部署 Oracle 19c 数据库
+
+本节介绍使用 CLI 准备和部署 Oracle19c 数据库所需的步骤。确保您已查看 link:getting_started_requirements.html["入门和要求部分"] 并相应地准备好您的环境。
+
+
+
+=== 下载 Oracle19c repo
+
+
+[source, cli]
+----
+git clone https://github.com/NetApp-Automation/na_oracle19c_deploy.git
+----
+
+
+
+=== 编辑 hosts 文件
+
+在部署之前完成以下操作：
+
+. 编辑 hosts 文件 na_oracle19c_deploy 目录。
+. 在 ONTAP 下，将 IP 地址更改为集群管理 IP 。
+. 在 Oracle 组下，添加 Oracle 主机名称。主机名必须通过 DNS 或 hosts 文件解析为其 IP 地址，或者必须在主机中指定。
+. 完成这些步骤后，请保存所做的任何更改。
+
+
+以下示例说明了一个主机文件：
+
+
+此示例将执行该攻略手册，并在两个 Oracle DB 服务器上同时部署 Oracle 19c 。您也可以仅使用一个数据库服务器进行测试。在这种情况下，您只需要配置一个主机变量文件。
+
+
+NOTE: 无论您部署多少 Oracle 主机和数据库，本攻略手册的执行方式都是相同的。
+
+
+
+=== 编辑 host_vars 下的 host_name.yml 文件
+
+每个 Oracle 主机都有其主机变量文件，该文件由包含主机专用变量的主机名标识。您可以为主机指定任何名称。从 Host VARS Config 部分编辑并复制 `host_vars` ，然后将其粘贴到所需的 `host_name.yml` 文件中。
+
+
+NOTE: 必须根据您的环境更改蓝色项。
+
+
+
+=== 主机 VARS 配置
+
+
+
+
+=== 编辑 vars.yml 文件
+
+`vars.yml` 文件整合了所有环境特定的变量（ ONTAP ， Linux 或 Oracle ），用于 Oracle 部署。
+
+* 编辑并复制 VARS 部分中的变量，然后将这些变量粘贴到 `vars.yml` 文件中。
+
+
+
+
+=== VAR
+
+
+
+
+=== 运行攻略手册
+
+完成所需的环境前提条件并将变量复制到 `vars.yml` 和 `yor_host.yml` 中后，您便可部署攻略手册了。
+
+
+NOTE: 必须根据您的环境更改 < 用户名 > 。
+
+
+[source, cli]
+----
+ansible-playbook -i hosts all_playbook.yml -u username -k -K -t ontap_config -e @vars/vars.yml
+----
+
+[source, cli]
+----
+ansible-playbook -i hosts all_playbook.yml -u username -k -K -t linux_config -e @vars/vars.yml
+----
+
+[source, cli]
+----
+ansible-playbook -i hosts all_playbook.yml -u username -k -K -t oracle_config -e @vars/vars.yml
+----
+
+
+=== 在同一 Oracle 主机上部署其他数据库
+
+此攻略手册的 Oracle 部分会每次在 Oracle 服务器上创建一个 Oracle 容器数据库。要在同一服务器上创建其他容器数据库，请完成以下步骤：
+
+. 修改 host_vars 变量。
++
+.. 返回到步骤 3 - 编辑 `host_vars` 下的 `host_name.yml` 文件。
+.. 将 Oracle SID 更改为其他命名字符串。
+.. 将侦听器端口更改为其他编号。
+.. 如果已安装 EM Express ，请将 EM Express 端口更改为其他编号。
+.. 将修订后的主机变量复制并粘贴到 `host_vars` 下的 Oracle 主机变量文件中。
+
+
+. 使用 `ORACLE_CONFIG` 标记执行攻略手册，如中所示 <<Run the playbook>>。
+
+
+
+
+=== 验证 Oracle 安装
+
+
+[source, cli]
+----
+ps -ef | grep ora
+----
+
+NOTE: 如果安装按预期完成且 Oracle 数据库已启动，则此列表将列出 Oracle 进程
+
+
+[source, cli]
+----
+sqlplus / as sysdba
+----
+[Oracle@localhost ~ ]$ sqlplus / 作为 sysdba
+
+SQL* Plus ：版本 19.0.0.0.0 —在 5 月 6 日星期四 12 ： 52 ： 51 2021 年版本 19.8.0.0.0 上生产
+
+版权所有（ c ） 1982-2019 ， Oracle 。保留所有权利。
+
+已连接到： Oracle Database 19c Enterprise Edition 版本 19.0.0.0.0 - 生产版本 19.8.0.0.0
+
+SQL/
+
+[source, cli]
+----
+select name, log_mode from v$database;
+----
+sql > 从 v$database 中选择名称 log_mode ；名称 log_mode --- ------- CDB2 归档日志
+
+[source, cli]
+----
+show pdbs;
+----
+sql > 显示 PDF
+
+....
+    CON_ID CON_NAME                       OPEN MODE  RESTRICTED
+---------- ------------------------------ ---------- ----------
+         2 PDB$SEED                       READ ONLY  NO
+         3 CDB2_PDB1                      READ WRITE NO
+         4 CDB2_PDB2                      READ WRITE NO
+         5 CDB2_PDB3                      READ WRITE NO
+....
+[source, cli]
+----
+col svrname form a30
+col dirname form a30
+select svrname, dirname, nfsversion from v$dnfs_servers;
+----
+sql > col svrname form A30 sql > col dirname form A30 sql > 从 v$dnfs_servers 中选择 svrname ， dirname ， nfsversion ；
+
+SVRname 名称 NFSVERSION ----------- ----------------- --------- 172.21.126.200 /rhelora03_u02 NFSv3.0 172.21.126.200 /rhelora03_u03 NFSv3.0 172.21.126.200 /rhelora03_u01 NFSv3.0
+
+[listing]
+----
+This confirms that dNFS is working properly.
+----
+
+[source, cli]
+----
+sqlplus system@//localhost:1523/cdb2_pdb1.cie.netapp.com
+----
+[Oracle@localhost ~ ]$ sqlplus 系统@ //localhost ： 1523/ cdb2_pdb1.cie.netapp.com
+
+SQL* Plus ：版本 19.0.0.0.0 — 5 月 6 日星期四 13 ： 19 ： 57 2021 年版本 19.8.0.0.0
+
+版权所有（ c ） 1982-2019 ， Oracle 。保留所有权利。
+
+输入密码：上次成功登录时间： Wed ， 2021 年 5 月 5 日 17 ： 11 ： 11 -04 ： 00
+
+已连接到： Oracle Database 19c Enterprise Edition 版本 19.0.0.0.0 - 生产版本 19.8.0.0.0
+
+sql > show user user is "system" sql > show con_name con_name CDB2_PDB1
+
+[listing]
+----
+This confirms that Oracle listener is working properly.
+----
+
+
+=== 如何获取帮助？
+
+如果您需要有关该工具包的帮助，请加入 link:https://netapppub.slack.com/archives/C021R4WC0LC["NetApp 解决方案自动化社区支持 Slack 通道"] 并寻找解决方案自动化渠道来发布您的问题或询问。

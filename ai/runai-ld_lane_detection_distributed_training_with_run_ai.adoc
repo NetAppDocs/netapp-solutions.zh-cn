@@ -1,0 +1,784 @@
+---
+sidebar: sidebar 
+permalink: ai/runai-ld_lane_detection_distributed_training_with_run_ai.html 
+keywords: azure, lane, detection, training, case, tusimple, dataset, aks, subnet, virtual, network, run, ai, deploy, install, download, process, back, end, storage, horovod, snapshot 
+summary: 本节详细介绍了如何使用 Run AI Orchestrator 设置平台，以便大规模执行车道检测分布式培训。 
+---
+= 车道检测—使用 Run ： AI 进行分布式培训
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+本节详细介绍了如何设置平台，以便使用 run ： AI orchator 大规模执行车道检测分布式培训。我们将讨论所有解决方案要素的安装以及在所述平台上运行分布式培训作业的问题。可以使用 NetApp SnapshotTM 并将其与 run ： AI 实验相链接来完成 ML 版本控制，以实现数据和模型可重现性。在跟踪模型，团队成员之间共享工作，结果的可重现性，将新型号版本投入生产以及数据来源方面， ML 版本控制起着至关重要的作用。NetApp ML 版本控制（ Snapshot ）可以捕获与每个实验相关的数据，经过培训的模型和日志的时间点版本。它具有丰富的 API 支持，可以轻松地与运行： AI 平台集成；您只需根据训练状态触发事件即可。此外，您还必须捕获整个实验的状态，而不更改 Kubernetes （ K8 ）上运行的代码或容器中的任何内容。
+
+最后，本技术报告将对 AKS 中多个启用了 GPU 的节点进行性能评估。
+
+
+
+== 针对使用 TuSimple 数据集的通道检测用例的分布式培训
+
+在本技术报告中，对 TuSimple 数据集进行了分布式培训，用于检测通道。在本培训代码中， Horovod 用于通过 AKS 在 Kubernetes 集群中的多个 GPU 节点上同时执行数据分布式培训。代码作为容器映像打包，以供 TuSimple 数据下载和处理。处理后的数据存储在 NetApp Trident 插件分配的永久性卷上。在培训中，还会创建一个容器映像，并使用在下载数据期间创建的永久性卷上存储的数据。
+
+要提交数据和培训作业，请使用 run ： ai 编排资源分配和管理。Run ： AI 允许您执行 Horovod 所需的消息传递接口（ Message Passing Interface ， MPI ）操作。此布局允许多个 GPU 节点彼此通信，以便在每次训练迷你批处理后更新训练权重。此外，它还可以通过 UI 和 CLI 监控训练，从而轻松监控实验进度。
+
+NetApp Snapshot 集成在培训代码中，可捕获每个实验的数据状态和经过培训的模型。通过此功能，您可以跟踪所用数据和代码的版本以及生成的相关培训模型。
+
+
+
+== AK 设置和安装
+
+要设置和安装 AKS 集群，请转至 https://docs.microsoft.com/azure/aks/kubernetes-walkthrough-portal["创建 AKS 集群"^]。然后，按照以下一系列步骤进行操作：
+
+. 选择节点类型（无论是系统（ CPU ）节点还是辅助（ GPU ）节点）时，请选择以下项：
++
+.. 以 `Standard_DS2_v2` 大小添加名为 `agentpool` 的主系统节点。使用默认的三个节点。
+.. 添加工作节点 `gpupool` 并使用 `Standard_Nc6s_v3` 池大小。至少为 GPU 节点使用三个节点。
++
+image:runai-ld_image3.png["错误：缺少图形映像"]
+
++
+
+NOTE: 部署需要 5 – 10 分钟。
+
+
+
+. 部署完成后，单击 Connect to Cluster 。要连接到新创建的 AKS 集群，请从本地环境（笔记本电脑 /PC ）安装 Kubernetes 命令行工具。请访问 https://kubernetes.io/docs/tasks/tools/install-kubectl/["安装工具"^] 以根据您的操作系统进行安装。
+. https://docs.microsoft.com/cli/azure/install-azure-cli["在本地环境中安装 Azure CLI"^]。
+. 要从终端访问 AKS 集群，请先输入 `az login` 并输入凭据。
+. 运行以下两个命令：
++
+....
+az account set --subscription xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxxx
+aks get-credentials --resource-group resourcegroup --name aksclustername
+....
+. 在 Azure 命令行界面中输入此命令：
++
+....
+kubectl get nodes
+....
++
+
+NOTE: 如果所有六个节点均按此处所示启动并运行，则 AKS 集群已准备就绪并连接到本地环境。
+
++
+image:runai-ld_image4.png["错误：缺少图形映像"]
+
+
+
+
+
+== 为 Azure NetApp Files 创建委派子网
+
+要为 Azure NetApp Files 创建委派子网，请执行以下一系列步骤：
+
+. 导航到 Azure 门户中的虚拟网络。查找新创建的虚拟网络。它应具有前面板，如 AK vnet ，如此处所示。单击虚拟网络的名称。
++
+image:runai-ld_image5.png["错误：缺少图形映像"]
+
+. 单击子网，然后从顶部工具栏中选择 +Subnet 。
++
+image:runai-ld_image6.png["错误：缺少图形映像"]
+
+. 为子网提供名称，例如 `ANF.SN` ，然后在 Subnet delegation 标题下选择 Microsoft.NetApp/volumes 。请勿更改任何其他内容。单击确定。
++
+image:runai-ld_image7.png["错误：缺少图形映像"]
+
+
+
+Azure NetApp Files 卷将分配给应用程序集群，并在 Kubernetes 中用作永久性卷声明（ Persistent Volume Claim ， PVC ）。反过来，这种分配也为我们提供了将卷映射到不同服务的灵活性，包括 Jupyter 笔记本电脑，无服务器功能等
+
+服务用户可以通过多种方式使用平台中的存储。Azure NetApp Files 的主要优势包括：
+
+* 使用户能够使用快照。
+* 允许用户在 Azure NetApp Files 卷上存储大量数据。
+* 在一组大型文件上运行 Azure NetApp Files 卷的型号时，可以获得这些卷的性能优势。
+
+
+
+
+== Azure NetApp Files 设置
+
+要完成 Azure NetApp Files 的设置，必须先按照中所述对其进行配置 https://docs.microsoft.com/azure/azure-netapp-files/azure-netapp-files-quickstart-set-up-account-create-volumes["快速入门：设置 Azure NetApp Files 并创建 NFS 卷"^]。
+
+但是，您可以省略为 Azure NetApp Files 创建 NFS 卷的步骤，因为您将通过 Trident 创建卷。在继续操作之前，请确保您已：
+
+. https://docs.microsoft.com/azure/azure-netapp-files/azure-netapp-files-register["注册 Azure NetApp Files 和 NetApp 资源提供商（通过 Azure Cloud Shell ）"^]。
+. https://docs.microsoft.com/azure/azure-netapp-files/azure-netapp-files-create-netapp-account["已在 Azure NetApp Files 中创建帐户"^]。
+. https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-set-up-capacity-pool["设置容量池"^] （最低 4 TiB 标准版或高级版，具体取决于您的需求）。
+
+
+
+
+== 建立 AKS 虚拟网络和 Azure NetApp Files 虚拟网络对等关系
+
+接下来，按照以下步骤将 AKS 虚拟网络（ vNet ）与 Azure NetApp Files vNet 建立对等关系：
+
+. 在 Azure 门户顶部的搜索框中，键入虚拟网络。
+. 单击 vNet AK - vnet-name ，然后在搜索字段中输入 Peeids 。
+. 单击 +Add ，然后输入下表中提供的信息：
++
+|===
+| 字段 | 值或问题描述 
+
+
+| 对等链路名称 | aps-vnet-name_to_anf 
+
+
+| subscriptionId | 订阅要与之建立对等关系的 Azure NetApp Files vNet 
+
+
+| vNet 对等配对节点 | Azure NetApp Files vNet 
+|===
++
+
+NOTE: 保留所有非星号部分的默认设置
+
+. 单击添加或确定将对等添加到虚拟网络。
+
+
+有关详细信息，请访问 https://docs.microsoft.com/azure/virtual-network/tutorial-connect-virtual-networks-portal["创建，更改或删除虚拟网络对等关系"^]。
+
+
+
+== Trident
+
+Trident 是 NetApp 为应用程序容器永久性存储维护的一个开源项目。Trident 已作为外部配置程序控制器实施，该控制器本身作为 POD 运行，可监控卷并完全自动化配置过程。
+
+NetApp Trident 通过创建和附加永久性卷来存储培训数据集和经过培训的模型，可以与 K8 平稳集成。借助此功能，数据科学家和数据工程师可以更轻松地使用 K8 ，而无需手动存储和管理数据集。Trident 还可以通过逻辑 API 集成将数据管理相关任务集成在一起，因此数据科学家无需学习管理新的数据平台。
+
+
+
+=== 安装 Trident
+
+要安装 Trident 软件，请完成以下步骤：
+
+. https://helm.sh/docs/intro/install/["首先安装 Helm"^]。
+. 下载并解压缩 Trident 21.01.1 安装程序。
++
+....
+wget https://github.com/NetApp/trident/releases/download/v21.01.1/trident-installer-21.01.1.tar.gz
+tar -xf trident-installer-21.01.1.tar.gz
+....
+. 将目录更改为 `trident 安装程序` 。
++
+....
+cd trident-installer
+....
+. 将 `tridentctl` 复制到系统中的目录 ` $path.`
++
+....
+cp ./tridentctl /usr/local/bin
+....
+. 使用 Helm 在 K8s 集群上安装 Trident ：
++
+.. 将目录更改为 helm 目录。
++
+....
+cd helm
+....
+.. 安装 Trident 。
++
+....
+helm install trident trident-operator-21.01.1.tgz --namespace trident --create-namespace
+....
+.. 按照通常的 K8s 方式检查 Trident Pod 的状态：
++
+....
+kubectl -n trident get pods
+....
+.. 如果所有 Pod 均已启动且正在运行，则会安装 Trident ，您可以继续操作。
+
+
+
+
+
+
+== 设置 Azure NetApp Files 后端和存储类
+
+要设置 Azure NetApp Files 后端和存储类，请完成以下步骤：
+
+. 切换回主目录。
++
+....
+cd ~
+....
+. 克隆 https://github.com/dedmari/lane-detection-SCNN-horovod.git["项目存储库"^] `lan-detect-scnan-horovod` 。
+. 转至 `trident — config` 目录。
++
+....
+cd ./lane-detection-SCNN-horovod/trident-config
+....
+. 创建 Azure 服务原则（服务原则是 Trident 如何与 Azure 通信以访问 Azure NetApp Files 资源）。
++
+....
+az ad sp create-for-rbac --name
+....
++
+输出应类似于以下示例：
+
++
+....
+{
+  "appId": "xxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+   "displayName": "netapptrident",
+    "name": "http://netapptrident",
+    "password": "xxxxxxxxxxxxxxx.xxxxxxxxxxxxxx",
+    "tenant": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx"
+ }
+....
+. 创建 Trident `backend json` 文件。
+. 使用您的首选文本编辑器，填写 `anf-backend.json` 文件中下表中的以下字段。
++
+|===
+| 字段 | 价值 
+
+
+| subscriptionId | 您的 Azure 订阅 ID 
+
+
+| tenantId | 您的 Azure 租户 ID （上一步 AZ AD sp 的输出） 
+
+
+| clientId | 您的应用程序 ID （来自上一步 AZ AD sp 的输出） 
+
+
+| 客户端机密 | 您的密码（上一步 AZ AD sp 的输出） 
+|===
++
+此文件应类似于以下示例：
+
++
+....
+{
+    "version": 1,
+    "storageDriverName": "azure-netapp-files",
+    "subscriptionID": "fakec765-4774-fake-ae98-a721add4fake",
+    "tenantID": "fakef836-edc1-fake-bff9-b2d865eefake",
+    "clientID": "fake0f63-bf8e-fake-8076-8de91e57fake",
+    "clientSecret": "SECRET",
+    "location": "westeurope",
+    "serviceLevel": "Standard",
+    "virtualNetwork": "anf-vnet",
+    "subnet": "default",
+    "nfsMountOptions": "vers=3,proto=tcp",
+    "limitVolumeSize": "500Gi",
+    "defaults": {
+    "exportRule": "0.0.0.0/0",
+    "size": "200Gi"
+}
+....
+. 指示 Trident 在 `trident` 命名空间中创建 Azure NetApp Files 后端，使用 `anf-backend.json` 作为配置文件，如下所示：
++
+....
+tridentctl create backend -f anf-backend.json -n trident
+....
+. 创建存储类：
++
+.. K8 用户使用按名称指定存储类的 PVC 配置卷。指示 K8s 使用以下命令创建一个存储类 `azurenetappfiles` ，该存储类将引用上一步中创建的 Azure NetApp Files 后端：
++
+....
+kubectl create -f anf-storage-class.yaml
+....
+.. 使用以下命令检查是否已创建存储类：
++
+....
+kubectl get sc azurenetappfiles
+....
++
+输出应类似于以下示例：
+
++
+image:runai-ld_image8.png["错误：缺少图形映像"]
+
+
+
+
+
+
+
+== 在 AKS 上部署和设置卷快照组件
+
+如果集群未预安装正确的卷快照组件，则可以通过运行以下步骤手动安装这些组件：
+
+
+NOTE: AK 1.18.14 没有预安装的 Snapshot 控制器。
+
+. 使用以下命令安装 Snapshot 测试版 CRD ：
++
+....
+kubectl create -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/release-3.0/client/config/crd/snapshot.storage.k8s.io_volumesnapshotclasses.yaml
+kubectl create -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/release-3.0/client/config/crd/snapshot.storage.k8s.io_volumesnapshotcontents.yaml
+kubectl create -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/release-3.0/client/config/crd/snapshot.storage.k8s.io_volumesnapshots.yaml
+....
+. 使用 GitHub 中的以下文档安装 Snapshot 控制器：
++
+....
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/release-3.0/deploy/kubernetes/snapshot-controller/rbac-snapshot-controller.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/release-3.0/deploy/kubernetes/snapshot-controller/setup-snapshot-controller.yaml
+....
+. 设置 K8s `volumesnapshotclass` ：创建卷快照之前，请先执行 https://netapp-trident.readthedocs.io/en/stable-v20.01/kubernetes/concepts/objects.html["卷快照类"^] 必须已设置。为 Azure NetApp Files 创建卷快照类，并使用它通过 NetApp Snapshot 技术实现 ML 版本控制。create `volumesnapshotclass netapp-csI-snapclass` 并将其设置为 default `volumesnapshotclass `，如下所例：
++
+....
+kubectl create -f netapp-volume-snapshot-class.yaml
+....
++
+输出应类似于以下示例：
+
++
+image:runai-ld_image9.png["错误：缺少图形映像"]
+
+. 使用以下命令检查是否已创建卷 Snapshot 副本类：
++
+....
+kubectl get volumesnapshotclass
+....
++
+输出应类似于以下示例：
+
++
+image:runai-ld_image10.png["错误：缺少图形映像"]
+
+
+
+
+
+== 运行： AI 安装
+
+要安装 run ： ai ，请完成以下步骤：
+
+. https://docs.run.ai/Administrator/Cluster-Setup/cluster-install/["在 AKS 上安装 run ： ai 集群"^]。
+. 转至 app.runai.ai ，单击创建新项目，然后将其命名为 LAN-detection 。它将在 K8s 集群上创建一个命名空间，其开头为 `runai` - ，后跟项目名称。在这种情况下，创建的命名空间将为 runai-lane 检测。
++
+image:runai-ld_image11.png["错误：缺少图形映像"]
+
+. https://docs.run.ai/Administrator/Cluster-Setup/cluster-install/["安装 run ： ai 命令行界面"^]。
+. 在您的终端上，使用以下命令将通道检测设置为默认运行： AI project ：
++
+....
+`runai config project lane-detection`
+....
++
+输出应类似于以下示例：
+
++
+image:runai-ld_image12.png["错误：缺少图形映像"]
+
+. 为项目命名空间创建 ClusterRole 和 ClusterRoleBinding （例如， `LANE-detection ）` 因此，属于 `runai-lan-detection` namespace 的默认服务帐户有权在作业执行期间执行 `volumesnapshot` 操作：
++
+.. 使用以下命令列出命名空间以检查 `runai-lan-detection` 是否存在：
++
+....
+kubectl get namespaces
+....
++
+输出应类似于以下示例：
+
++
+image:runai-ld_image13.png["错误：缺少图形映像"]
+
+
+
+. 使用以下命令创建 ClusterRole `netappsnapshot` 和 ClusterRoleBinding`netappsnapshot` ：
++
+....
+`kubectl create -f runai-project-snap-role.yaml`
+`kubectl create -f runai-project-snap-role-binding.yaml`
+....
+
+
+
+
+== 下载并将 TuSimple 数据集作为 run ： ai 作业处理
+
+下载并处理运行时的 TuSimple 数据集的过程： AI 作业是可选的。其中包括以下步骤：
+
+. 构建并推送 Docker 映像，或者如果要使用现有 Docker 映像（例如， `muneer7589/download-tusimple ： 1.0 ）` ，则省略此步骤
++
+.. 切换到主目录：
++
+....
+cd ~
+....
+.. 转到项目的数据目录 `lan-detect-scnan-horovod` ：
++
+....
+cd ./lane-detection-SCNN-horovod/data
+....
+.. 修改 `build_image.sh` shell 脚本并将 Docker 存储库更改为您的。例如，将 `muneer7589` 替换为 Docker 存储库名称。您还可以更改 Docker 映像名称和标记（例如 `download-tusimple` 和 `1.0` ）：
++
+image:runai-ld_image14.png["错误：缺少图形映像"]
+
+.. 运行脚本以构建 Docker 映像，并使用以下命令将其推送到 Docker 存储库：
++
+....
+chmod +x build_image.sh
+./build_image.sh
+....
+
+
+. 提交运行： AI 作业，以下载，提取，预处理并将 Tubple 通道检测数据集存储在一个 `PVC` 中，该 PVC 由 NetApp Trident 动态创建：
++
+.. 使用以下命令提交运行： AI 作业：
++
+....
+runai submit
+--name download-tusimple-data
+--pvc azurenetappfiles:100Gi:/mnt
+--image muneer7589/download-tusimple:1.0
+....
+.. 输入下表中的信息以提交运行： AI 作业：
++
+|===
+| 字段 | 值或问题描述 
+
+
+| name | 作业的名称 
+
+
+| -pvc | PVC 格式为 [StorageClassName] ： size ： ContainerMountPath 在上述作业提交中，您正在使用具有存储类 azurenetappfiles 的 Trident 根据需要创建 PVC 。此处的永久性卷容量为 100Gi ，并挂载在路径 /mnt 处。 
+
+
+| 图像 | 创建此作业的容器时要使用的 Docker 映像 
+|===
++
+输出应类似于以下示例：
+
++
+image:runai-ld_image15.png["错误：缺少图形映像"]
+
+.. 列出已提交的运行： AI 作业。
++
+....
+runai list jobs
+....
++
+image:runai-ld_image16.png["错误：缺少图形映像"]
+
+.. 检查提交的作业日志。
++
+....
+runai logs download-tusimple-data -t 10
+....
++
+image:runai-ld_image17.png["错误：缺少图形映像"]
+
+.. 列出已创建的 `PVC` 。在下一步中使用此 `PVC` 命令进行培训。
++
+....
+kubectl get pvc | grep download-tusimple-data
+....
++
+输出应类似于以下示例：
+
++
+image:runai-ld_image18.png["错误：缺少图形映像"]
+
+.. 在 run ： ai UI （或 `app.run.ai` ）中检查作业。
++
+image:runai-ld_image19.png["错误：缺少图形映像"]
+
+
+
+
+
+
+
+== 使用 Horovod 执行分布式通道检测培训
+
+使用 Horovod 执行分布式通道检测培训是一个可选过程。但是，需要执行以下步骤：
+
+. 构建并推送 Docker 映像，或者如果要使用现有 Docker 映像（例如， `muneer7589/dist-lan-detection ： 3.1 ），请跳过此步骤：`
++
+.. 切换到主目录。
++
+....
+cd ~
+....
+.. 转到项目目录 `lan-detect-scnan-horovod.`
++
+....
+cd ./lane-detection-SCNN-horovod
+....
+.. 修改 `build_image.sh` shell 脚本并将 Docker 存储库更改为您的（例如，将 `muneer7589` 替换为您的 Docker 存储库名称）。您也可以更改 Docker 映像名称和标记（例如， `dist-lan-detection` 和 `3.1 ）` 。
++
+image:runai-ld_image20.png["错误：缺少图形映像"]
+
+.. 运行脚本以构建 Docker 映像并推送到 Docker 存储库。
++
+....
+chmod +x build_image.sh
+./build_image.sh
+....
+
+
+. 提交 Run ： AI 作业以执行分布式培训（ MPI ）：
++
+.. 使用提交运行： AI 在上一步中自动创建 PVC （用于下载数据）仅允许您访问 RW ，这样不允许多个 Pod 或节点在分布式培训中访问同一 PVC 。将访问模式更新为 ReadWriteMany ，然后使用 Kubernetes 修补程序执行此操作。
+.. 首先，运行以下命令以获取 PVC 的卷名称：
++
+....
+kubectl get pvc | grep download-tusimple-data
+....
++
+image:runai-ld_image21.png["错误：缺少图形映像"]
+
+.. 修补卷并将访问模式更新为 ReadWriteMany （在以下命令中将卷名称替换为您的）：
++
+....
+kubectl patch pv pvc-bb03b74d-2c17-40c4-a445-79f3de8d16d5 -p '{"spec":{"accessModes":["ReadWriteMany"]}}'
+....
+.. 使用下表中的信息提交运行： AI MPI 作业以执行分布式培训` 作业：
++
+....
+runai submit-mpi
+--name dist-lane-detection-training
+--large-shm
+--processes=3
+--gpu 1
+--pvc pvc-download-tusimple-data-0:/mnt
+--image muneer7589/dist-lane-detection:3.1
+-e USE_WORKERS="true"
+-e NUM_WORKERS=4
+-e BATCH_SIZE=33
+-e USE_VAL="false"
+-e VAL_BATCH_SIZE=99
+-e ENABLE_SNAPSHOT="true"
+-e PVC_NAME="pvc-download-tusimple-data-0"
+....
++
+|===
+| 字段 | 值或问题描述 
+
+
+| name | 分布式培训作业的名称 
+
+
+| 大型 shm | 挂载大型 /dev/shm 设备这是一个挂载在 RAM 上的共享文件系统，可为多个 CPU 工作人员提供足够大的共享内存来处理批处理并将其加载到 CPU RAM 中。 
+
+
+| 流程 | 分布式培训流程的数量 
+
+
+| GPU | 要为此作业中的作业分配的 GPU/ 进程数，有三个 GPU 工作进程（ -processes=3 ），每个进程都分配有一个 GPU （ -GPU 1 ） 
+
+
+| PVC | 使用由先前作业（ download-tusimple 数据）创建并挂载到路径 /mnt 的现有永久性卷（ vpvc 下载 -tusimple 数据 0 ） 
+
+
+| 图像 | 创建此作业的容器时要使用的 Docker 映像 
+
+
+2+| 定义要在容器中设置的环境变量 
+
+
+| use_works. | 如果将参数设置为 true ，则会启用多进程数据加载 
+
+
+| num_works. | 数据加载程序工作进程的数量 
+
+
+| batch_size | 训练批大小 
+
+
+| 使用 VAL | 如果将参数设置为 true ，则可以进行验证 
+
+
+| Val_batch_size | 验证批处理大小 
+
+
+| enable_snapshot | 如果将参数设置为 true ，则可以为 ML 版本控制创建数据和经过培训的模型快照 
+
+
+| PVC_NAME | 要为其创建快照的 PVC 的名称。在提交的上述作业中，您将创建由数据集和经过培训的模型组成的 PVC-download-tusimple data-0 的快照 
+|===
++
+输出应类似于以下示例：
+
++
+image:runai-ld_image22.png["错误：缺少图形映像"]
+
+.. 列出已提交的作业。
++
+....
+runai list jobs
+....
++
+image:runai-ld_image23.png["错误：缺少图形映像"]
+
+.. 已提交作业日志：
++
+....
+runai logs dist-lane-detection-training
+....
++
+image:runai-ld_image24.png["错误：缺少图形映像"]
+
+.. 查看 Run 中的培训作业： AI GUI （或 app.runai.ai): run ： AI Dashboard ，如下图所示。第一个图详细介绍了为分布在 AKS 三个节点上的分布式培训作业分配的三个 GPU ，以及第二个运行： AI 作业：
++
+image:runai-ld_image25.png["错误：缺少图形映像"]
+
++
+image:runai-ld_image26.png["错误：缺少图形映像"]
+
+.. 完成培训后，请检查创建的 NetApp Snapshot 副本，并将其与 run ： ai 作业链接在一起。
++
+....
+runai logs dist-lane-detection-training --tail 1
+....
++
+image:runai-ld_image27.png["错误：缺少图形映像"]
+
++
+....
+kubectl get volumesnapshots | grep download-tusimple-data-0
+....
+
+
+
+
+
+
+== 从 NetApp Snapshot 副本还原数据
+
+要从 NetApp Snapshot 副本还原数据，请完成以下步骤：
+
+. 切换到主目录。
++
+....
+cd ~
+....
+. 转到项目目录 `lan-detect-scnan-horovod` 。
++
+....
+cd ./lane-detection-SCNN-horovod
+....
+. 修改 `restore-snaphot-vc.yaml` 并将 `dataSource` `name` 字段更新到要从中还原数据的 Snapshot 副本。您也可以更改要将数据还原到的 PVC 名称，在此示例中为其 `restored-tusimple` 。
++
+image:runai-ld_image29.png["错误：缺少图形映像"]
+
+. 使用 `restore-snapshot-vc.yaml` 创建新的 PVC 。
++
+....
+kubectl create -f restore-snapshot-pvc.yaml
+....
++
+输出应类似于以下示例：
+
++
+image:runai-ld_image30.png["错误：缺少图形映像"]
+
+. 如果您要使用刚刚还原的数据进行培训，则作业提交将保持不变；在提交培训作业时，只需将 `vc_name` 替换为已还原的 `vc_name` ，如以下命令所示：
++
+....
+runai submit-mpi
+--name dist-lane-detection-training
+--large-shm
+--processes=3
+--gpu 1
+--pvc restored-tusimple:/mnt
+--image muneer7589/dist-lane-detection:3.1
+-e USE_WORKERS="true"
+-e NUM_WORKERS=4
+-e BATCH_SIZE=33
+-e USE_VAL="false"
+-e VAL_BATCH_SIZE=99
+-e ENABLE_SNAPSHOT="true"
+-e PVC_NAME="restored-tusimple"
+....
+
+
+
+
+== 性能评估
+
+为了显示解决方案的线性可扩展性，我们对以下两种情形进行了性能测试：一个 GPU 和三个 GPU 。在有关 TuSimple 通道检测数据集的培训中，我们捕获了 GPU 分配， GPU 和内存利用率，不同的单节点和三节点指标。为了分析培训过程中的资源利用率，数据增加了五倍。
+
+借助解决方案，客户可以从一个小型数据集和几个 GPU 入手。当数据量和 GPU 需求增加时，客户可以动态地横向扩展标准层中的 TB ，并快速扩展到高级层，从而在不移动任何数据的情况下获得每 TB 吞吐量的四倍。本节将进一步介绍此过程。 link:runai-ld_lane_detection_distributed_training_with_run_ai.html#azure-netapp-files-service-levels["Azure NetApp Files 服务级别"]。
+
+一个 GPU 的处理时间为 12 小时 45 分钟。三个节点上的三个 GPU 的处理时间约为 4 小时 30 分钟。
+
+本文档其余部分中显示的图说明了根据各个业务需求提供的性能和可扩展性示例。
+
+下图显示了 1 个 GPU 分配和内存利用率。
+
+image:runai-ld_image31.png["错误：缺少图形映像"]
+
+下图显示了单节点 GPU 利用率。
+
+image:runai-ld_image32.png["错误：缺少图形映像"]
+
+下图显示了单节点内存大小（ 16 GB ）。
+
+image:runai-ld_image33.png["错误：缺少图形映像"]
+
+下图显示了单节点 GPU 计数（ 1 ）。
+
+image:runai-ld_image34.png["错误：缺少图形映像"]
+
+下图显示了单节点 GPU 分配（ % ）。
+
+image:runai-ld_image35.png["错误：缺少图形映像"]
+
+下图显示了三个节点上的三个 GPU — GPU 分配和内存。
+
+image:runai-ld_image36.png["错误：缺少图形映像"]
+
+下图显示了三个节点的三个 GPU 利用率（ % ）。
+
+image:runai-ld_image37.png["错误：缺少图形映像"]
+
+下图显示了三个节点的三个 GPU 内存利用率（ % ）。
+
+image:runai-ld_image38.png["错误：缺少图形映像"]
+
+
+
+== Azure NetApp Files 服务级别
+
+您可以通过将现有卷移动到使用的另一个容量池来更改此卷的服务级别 https://docs.microsoft.com/azure/azure-netapp-files/azure-netapp-files-service-levels["服务级别"^] 所需的卷。此卷的现有服务级别更改不需要迁移数据。它也不会影响对卷的访问。
+
+
+
+=== 动态更改卷的服务级别
+
+要更改卷的服务级别，请执行以下步骤：
+
+. 在卷页面上，右键单击要更改其服务级别的卷。选择更改池。
++
+image:runai-ld_image39.png["错误：缺少图形映像"]
+
+. 在更改池窗口中，选择要将卷移动到的容量池。然后，单击确定。
++
+image:runai-ld_image40.png["错误：缺少图形映像"]
+
+
+
+
+
+=== 自动执行服务级别更改
+
+动态服务级别更改当前仍在公有预览中，但默认情况下不会启用。要在 Azure 订阅上启用此功能，请按照文档 " 中提供的步骤进行操作 file:///C:\Users\crich\Downloads\•%09https:\docs.microsoft.com\azure\azure-netapp-files\dynamic-change-volume-service-level["动态更改卷的服务级别"^]。 "
+
+* 您还可以对 Azure 使用以下命令： CLI 。有关更改 Azure NetApp Files 的池大小的详细信息，请访问 https://docs.microsoft.com/cli/azure/netappfiles/volume?view=azure-cli-latest-az_netappfiles_volume_pool_change["AZ netappfiles volume ：管理 Azure NetApp Files （ ANF ）卷资源"^]。
++
+....
+az netappfiles volume pool-change -g mygroup
+--account-name myaccname
+-pool-name mypoolname
+--name myvolname
+--new-pool-resource-id mynewresourceid
+....
+* 此处显示的 `set- aznetappfilesvolumepool` cmdlet 可更改 Azure NetApp Files 卷的池。有关更改卷池大小和 Azure PowerShell 的详细信息，请访问 https://docs.microsoft.com/powershell/module/az.netappfiles/set-aznetappfilesvolumepool?view=azps-5.8.0["更改 Azure NetApp Files 卷的池"^]。
++
+....
+Set-AzNetAppFilesVolumePool
+-ResourceGroupName "MyRG"
+-AccountName "MyAnfAccount"
+-PoolName "MyAnfPool"
+-Name "MyAnfVolume"
+-NewPoolResourceId 7d6e4069-6c78-6c61-7bf6-c60968e45fbf
+....
+

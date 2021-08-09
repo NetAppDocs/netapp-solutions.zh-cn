@@ -1,0 +1,44 @@
+---
+sidebar: sidebar 
+permalink: vdi-vds/hcvdivds_why_ontap.html 
+keywords: VDS, Virtual Desktop Service, ONTAP, FlexGroup, File System analytics, cloud tiering, global namespace 
+summary: 适用于虚拟桌面服务的 ONTAP 功能。 
+---
+= 适用于虚拟桌面服务的 ONTAP 功能
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+以下 ONTAP 功能使其成为与虚拟桌面服务结合使用的极具吸引力的选择。
+
+* * 横向扩展文件系统。 * ONTAP FlexGroup 卷的大小可以增长到 20 PB 以上，并且可以在一个命名空间中包含 4000 亿个以上的文件。此集群最多可包含 24 个存储节点，每个节点都具有一个灵活的网络接口卡数量，具体取决于使用的型号。
++
+用户的虚拟桌面，主文件夹，用户配置文件容器，共享数据等可以按需增长，而无需考虑文件系统限制。
+
+* * 文件系统分析。 * 您可以使用 XCP 工具深入了解共享数据。借助 ONTAP 9.8+ 和 ActiveIQ Unified Manager ，您可以轻松查询和检索文件元数据信息并识别冷数据。
+* * 云分层。 * 您可以将冷数据迁移到云中的对象存储或数据中心中任何与 S3 兼容的存储。
+* * 文件版本。 * 用户可以恢复受 NetApp ONTAP Snapshot 副本保护的文件。ONTAP Snapshot 副本非常节省空间，因为它们仅记录更改的块。
+* * 全局命名空间。 * ONTAP FlexCache 技术支持文件存储远程缓存，便于在包含 ONTAP 存储系统的各个位置之间管理共享数据。
+* * 安全多租户支持。 * 一个物理存储集群可以呈现为多个虚拟存储阵列，每个阵列都有自己的卷，存储协议，逻辑网络接口，身份和身份验证域，管理用户等。因此，您可以在多个业务单位或环境之间共享存储阵列，例如测试，开发和生产。
++
+为了保证性能，您可以使用自适应 QoS 根据已用空间或已分配空间设置性能级别，并且可以使用配额控制存储容量。
+
+* * VMware 集成。 * 适用于 VMware vSphere 的 ONTAP 工具提供了一个 vCenter 插件，用于配置数据存储库，实施 vSphere 主机最佳实践以及监控 ONTAP 资源。
++
+ONTAP 支持 vStorage APIs for Array Integration （ VAAI ）将 SCSI/ 文件操作卸载到存储阵列。ONTAP 还支持用于存储感知的 vStorage API （ VASA ），并支持对块和文件协议使用虚拟卷。
+
++
+适用于 VMware vSphere 的 SnapCenter 插件可通过存储阵列上的 Snapshot 功能轻松备份和还原虚拟机。
+
++
+ActiveIQ Unified Manager 可在 vSphere 环境中提供端到端存储网络可见性。管理员可以轻松识别 ONTAP 上托管的虚拟桌面环境中可能发生的任何延迟问题。
+
+* * 安全合规性。 * 借助 ActiveIQ Unified Manager ，您可以通过警报监控多个 ONTAP 系统，以发现任何策略违规。
+* * 多协议支持。 * ONTAP 支持块（ iSCSI ， FC ， FCoE 和 NVMe/FC ），文件（ NFSv3 ， NFSv4.1 ， SMB2.x 和 SMB3.x ）以及对象（ S3 ）存储协议。
+* * 自动化支持。 * ONTAP 提供 REST API ， Ansible 和 PowerShell 模块，可通过 VDS 管理门户自动执行任务。
+
+
+link:hcvdivds_data_management.html["下一步：数据管理"]

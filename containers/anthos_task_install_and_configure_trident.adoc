@@ -1,0 +1,288 @@
+---
+sidebar: sidebar 
+permalink: containers/anthos_task_install_and_configure_trident.html 
+summary: Trident 是一种用于容器的存储编排程序。借助 Trident ，微服务和容器化应用程序可以利用完整的 NetApp 存储系统产品组合提供的企业级存储服务来实现永久性存储挂载。根据应用程序的要求， Trident 会为 NetApp AFF 和 FAS 系统等基于 ONTAP 的产品以及 NetApp SolidFire ® 和 NetApp HCI 等 Element 存储系统动态配置存储。 
+keywords: Trident, ONTAP, AFF, FAS, SolidFire 
+---
+= 11. 安装和配置 NetApp Trident 存储配置程序
+
+
+Trident 是一种用于容器的存储编排程序。借助 Trident ，微服务和容器化应用程序可以利用完整的 NetApp 存储系统产品组合提供的企业级存储服务来实现永久性存储挂载。根据应用程序的要求， Trident 会为 NetApp AFF 和 FAS 系统等基于 ONTAP 的产品以及 NetApp SolidFire 和 NetApp HCI 等 Element 存储系统动态配置存储。
+
+要在已部署的用户集群上安装 Trident 并配置永久性卷，请完成以下步骤：
+
+. 将安装归档下载到管理工作站并提取内容。Trident 的当前版本为 21.01 ，可以下载 https://github.com/NetApp/trident/releases/download/v21.01.0/trident-installer-21.01.0.tar.gz["此处"]。
++
+[listing]
+----
+ubuntu@gke-admin-ws-200915-151421:~$ wget https://github.com/NetApp/trident/releases/download/v21.01.0/trident-installer-21.01.0.tar.gz
+--2021-02-17 12:40:42--  https://github.com/NetApp/trident/releases/download/v21.01.0/trident-installer-21.01.0.tar.gz
+Resolving github.com (github.com)... 140.82.121.4
+Connecting to github.com (github.com)|140.82.121.4|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://github-releases.githubusercontent.com/77179634/0a63b600-6273-11eb-98df-3d542851f6ff?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20210217%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210217T173945Z&X-Amz-Expires=300&X-Amz-Signature=58f26bcac7eeee64673a84d46696490acec357b97a651af42653f973b778ee88&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=77179634&response-content-disposition=attachment%3B%20filename%3Dtrident-installer-21.01.0.tar.gz&response-content-type=application%2Foctet-stream [following]
+--2021-02-17 12:40:43--  https://github-releases.githubusercontent.com/77179634/0a63b600-6273-11eb-98df-3d542851f6ff?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20210217%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210217T173945Z&X-Amz-Expires=300&X-Amz-Signature=58f26bcac7eeee64673a84d46696490acec357b97a651af42653f973b778ee88&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=77179634&response-content-disposition=attachment%3B%20filename%3Dtrident-installer-21.01.0.tar.gz&response-content-type=application%2Foctet-stream
+Resolving github-releases.githubusercontent.com (github-releases.githubusercontent.com)... 185.199.111.154, 185.199.108.154, 185.199.109.154, ...
+Connecting to github-releases.githubusercontent.com (github-releases.githubusercontent.com)|185.199.111.154|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 38527217 (37M) [application/octet-stream]
+Saving to: ‘trident-installer-21.01.0.tar.gz’
+
+100%[==================================================================================================================>] 38,527,217  84.9MB/s   in 0.4s
+
+2021-02-17 12:40:44 (84.9 MB/s) - ‘trident-installer-21.01.0.tar.gz’ saved [38527217/38527217]
+----
+. 从下载的软件包中提取 Trident 安装。
++
+[listing]
+----
+ubuntu@gke-admin-ws-200915-151421:~$ tar -xf trident-installer-21.01.0.tar.gz
+ubuntu@gke-admin-ws-200915-151421:~$ cd trident-installer
+----
+. 首先将用户集群的 `kubeconfig` 文件的位置设置为环境变量，以便您不必引用该文件，因为 Trident 没有传递此文件的选项。
++
+[listing]
+----
+ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ export KUBECONFIG=~/anthos-cluster01-kubeconfig
+----
+. `trident 安装程序` 目录包含用于定义所有所需资源的清单。使用适当的清单创建 `TridentOrchestrator` 自定义资源定义。
++
+[listing]
+----
+ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ kubectl create -f deploy/crds/trident.netapp.io_tridentorchestrators_crd_post1.16.yaml
+customresourcedefinition.apiextensions.k8s.io/tridentorchestrators.trident.netapp.io created
+----
+. 如果不存在 Trident 命名空间，请使用提供的清单在集群中创建一个 Trident 命名空间。
++
+[listing]
+----
+ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ kubectl apply -f deploy/namespace.yaml
+namespace/trident created
+----
+. 为 Trident 操作员部署创建所需的资源，例如为操作员创建 `ServiceAccount` ，为 `SClusterRole` 和 `ClusterRoleBinding` ，为` erviceAccount `，专用` PodSecurityPolicy `或操作员本身创建。
++
+[listing]
+----
+ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ kubectl create -f deploy/bundle.yaml
+serviceaccount/trident-operator created
+clusterrole.rbac.authorization.k8s.io/trident-operator created
+clusterrolebinding.rbac.authorization.k8s.io/trident-operator created
+deployment.apps/trident-operator created
+podsecuritypolicy.policy/tridentoperatorpods created
+----
+. 您可以使用以下命令在操作员部署后检查其状态：
++
+[listing]
+----
+ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ kubectl get deployment -n trident
+NAME               READY   UP-TO-DATE   AVAILABLE   AGE
+trident-operator   1/1     1            1           54s
+ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ kubectl get pods -n trident
+NAME                                READY   STATUS    RESTARTS   AGE
+trident-operator-5c8bbf6754-h957z   1/1     Running   0          68s
+----
+. 部署操作员后，我们现在可以使用它来安装 Trident 。这需要创建 `TridentOrchestrator` 。
++
+[listing]
+----
+ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ kubectl create -f deploy/crds/tridentorchestrator_cr.yaml
+tridentorchestrator.trident.netapp.io/trident created
+ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ kubectl describe torc trident
+Name:         trident
+Namespace:
+Labels:       <none>
+Annotations:  <none>
+API Version:  trident.netapp.io/v1
+Kind:         TridentOrchestrator
+Metadata:
+  Creation Timestamp:  2021-02-17T18:25:43Z
+  Generation:          1
+  Managed Fields:
+    API Version:  trident.netapp.io/v1
+    Fields Type:  FieldsV1
+    fieldsV1:
+      f:spec:
+        .:
+        f:debug:
+        f:namespace:
+    Manager:      kubectl
+    Operation:    Update
+    Time:         2021-02-17T18:25:43Z
+    API Version:  trident.netapp.io/v1
+    Fields Type:  FieldsV1
+    fieldsV1:
+      f:status:
+        .:
+        f:currentInstallationParams:
+          .:
+          f:IPv6:
+          f:autosupportHostname:
+          f:autosupportImage:
+          f:autosupportProxy:
+          f:autosupportSerialNumber:
+          f:debug:
+          f:enableNodePrep:
+          f:imagePullSecrets:
+          f:imageRegistry:
+          f:k8sTimeout:
+          f:kubeletDir:
+          f:logFormat:
+          f:silenceAutosupport:
+          f:tridentImage:
+        f:message:
+        f:namespace:
+        f:status:
+        f:version:
+    Manager:         trident-operator
+    Operation:       Update
+    Time:            2021-02-17T18:25:43Z
+  Resource Version:  14836643
+  Self Link:         /apis/trident.netapp.io/v1/tridentorchestrators/trident
+  UID:               0e5f2c3b-6ca2-4b85-8453-0382e1426160
+Spec:
+  Debug:      true
+  Namespace:  trident
+Status:
+  Current Installation Params:
+    IPv6:
+    Autosupport Hostname:
+    Autosupport Image:
+    Autosupport Proxy:
+    Autosupport Serial Number:
+    Debug:
+    Enable Node Prep:
+    Image Pull Secrets:         <nil>
+    Image Registry:
+    k8sTimeout:
+    Kubelet Dir:
+    Log Format:
+    Silence Autosupport:
+    Trident Image:
+  Message:                      Installing Trident
+  Namespace:                    trident
+  Status:                       Installing
+  Version:
+Events:
+  Type    Reason      Age   From                        Message
+  ----    ------      ----  ----                        -------
+  Normal  Installing  23s   trident-operator.netapp.io  Installing Trident
+  Normal  Installed   15s   trident-operator.netapp.io  Trident installed
+----
+. 您可以通过检查命名空间中运行的 Pod 或使用 tridentctl 二进制文件检查已安装的版本来验证 Trident 是否已成功安装。
++
+[listing]
+----
+ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ kubectl get pod -n trident
+NAME                                READY   STATUS    RESTARTS   AGE
+trident-csi-2cp7x                   2/2     Running   0          4m16s
+trident-csi-2xr5h                   2/2     Running   0          4m16s
+trident-csi-bnwvh                   2/2     Running   0          4m16s
+trident-csi-d6cfc6bb-lxm2p          6/6     Running   0          4m16s
+trident-operator-5c8bbf6754-h957z   1/1     Running   0          8m55s
+
+ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ ./tridentctl -n trident version
++----------------+----------------+
+| SERVER VERSION | CLIENT VERSION |
++----------------+----------------+
+| 21.01.1        | 21.01.1        |
++----------------+----------------+
+----
+. 启用 Trident 与 NetApp HCI 解决方案和 Anthos 集成的下一步是创建一个后端，以便与存储系统进行通信。NetApp 已通过 Anthos-ready 合作伙伴存储验证计划针对多种不同的协议进行了验证。这样， NetApp Trident 便可通过 ONTAP 平台在 Anthos 环境中为 NFS 提供支持，并通过 NetApp HCI 中使用的 ONTAP 和 Element 存储提供 iSCSI 支持。
++
+
+NOTE: 默认情况下， NetApp HCI 平台使用 NetApp Element 存储进行部署。在本指南中，我们专门为此系统配置后端。此外，客户还可以选择连接到远程 ONTAP 存储系统，或者将 ONTAP Select 软件定义的存储系统部署为 VMware vSphere 中的虚拟设备，以提供其他 NFS 和 iSCSI 服务。这些附加存储后端的配置不在本指南的讨论范围之内。
+
+. 下载的安装归档中的 `sample-input` 文件夹提供了示例后端文件。将 `backend-solidfire.json` 复制到您的工作目录中并对其进行编辑，以提供有关存储系统环境的详细信息。对于基于 Element 的 iSCSI 连接，复制并编辑 `backend-solidfire.json` 文件。
++
+[listing]
+----
+ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ cp sample-input/backend-solidfire.json ./
+ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ $ vi backend-solidfire.json
+----
++
+.. 编辑端点行上的用户，密码和 MVIP 值。
+.. 编辑 SVIP 值。
++
+[listing]
+----
+ {
+    "version": 1,
+    "storageDriverName": "solidfire-san",
+    "Endpoint": "https://trident:password@172.21.224.150/json-rpc/8.0",
+    "SVIP": "10.63.172.100:3260",
+    "TenantName": "trident",
+    "Types": [{"Type": "Bronze", "Qos": {"minIOPS": 1000, "maxIOPS": 2000, "burstIOPS": 4000}},
+              {"Type": "Silver", "Qos": {"minIOPS": 4000, "maxIOPS": 6000, "burstIOPS": 8000}},
+              {"Type": "Gold", "Qos": {"minIOPS": 6000, "maxIOPS": 8000, "burstIOPS": 10000}}]
+}
+----
+
+
+. 安装好此后端文件后，运行以下命令创建第一个后端。
++
+[listing]
+----
+ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ ./tridentctl -n trident create backend -f backend.json
++-------------------+----------------+--------------------------------------+--------+---------+
+|    NAME           | STORAGE DRIVER |                 UUID                 | STATE  | VOLUMES |
++-------------------+----------------+--------------------------------------+--------+---------+
+| solidfire-backend | solidfire-san  | a5f9e159-c8f4-4340-a13a-c615fef0f433 | online |       0 |
++-------------------+----------------+--------------------------------------+--------+---------+
+----
+. 创建后端后，您接下来必须创建一个存储类。与后端一样，可以在 sample-inputs 文件夹中为环境编辑一个示例存储类文件。将其复制到工作目录并进行必要的编辑，以反映所创建的后端。
++
+[listing]
+----
+ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ cp sample-input/storage-class-csi.yaml.templ ./storage-class-basic.yaml
+ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ vi storage-class-basic.yaml
+----
+. 必须对此文件进行的唯一编辑是，为新创建的后端存储驱动程序的名称定义 `backendType` 值。另请注意 name-field 值，稍后必须引用该值。
++
+[listing]
+----
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: basic-csi
+provisioner: csi.trident.netapp.io
+parameters:
+  backendType: "solidfire-san"
+----
+. 运行 `kubectl` 命令以创建存储类。
++
+[listing]
+----
+ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ kubectl create -f sample-input/storage-class-basic.yaml
+----
+. 创建存储类后，您必须创建第一个永久性卷请求（ PVC ）。此外，还可以在 sample-inputs 中使用一个示例 `pva-basic 。 yaml` file 来执行此操作。必须对此文件进行的唯一编辑是确保 storageClassName 字段与刚刚创建的字段匹配。
++
+[listing]
+----
+ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ vi sample-input/pvc-basic.yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: basic
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: basic-csi
+----
+. 发出 `kubectl` 命令创建 PVC 。根据所创建的后备卷的大小，创建可能需要一些时间，因此您可以在该过程完成后进行观察。
++
+[listing]
+----
+ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ kubectl create -f sample-input/pvc-basic.yaml
+
+ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ kubectl get pvc --watch
+NAME      STATUS    VOLUME                                     CAPACITY   ACCESS MODES  STORAGECLASS   AGE
+basic     Pending                                                                       basic          1s
+basic     Pending   pvc-2azg0d2c-b13e-12e6-8d5f-5342040d22bf   0                        basic          5s
+basic     Bound     pvc-2azg0d2c-b13e-12e6-8d5f-5342040d22bf   1Gi        RWO           basic          7s
+----
+
+
+link:anthos_reference_video_demos.html["接下来：参考视频。"]
