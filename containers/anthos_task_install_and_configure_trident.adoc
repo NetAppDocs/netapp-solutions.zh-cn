@@ -11,7 +11,10 @@ Trident 是一种用于容器的存储编排程序。借助 Trident ，微服务
 
 要在已部署的用户集群上安装 Trident 并配置永久性卷，请完成以下步骤：
 
-. 将安装归档下载到管理工作站并提取内容。Trident 的当前版本为 21.01 ，可以下载 https://github.com/NetApp/trident/releases/download/v21.01.0/trident-installer-21.01.0.tar.gz["此处"]。
+
+NOTE: 以下说明在 Trident 21.01 安装中进行了屏蔽，但手动部署 Trident 操作员的步骤也适用于当前 21.04 版本。
+
+. 将安装归档下载到管理工作站并提取内容。Trident 的当前版本为 21.04 ，可以下载 https://github.com/NetApp/trident/releases/download/v21.04.0/trident-installer-21.04.0.tar.gz["此处"]。
 +
 [listing]
 ----
@@ -52,7 +55,7 @@ ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ export KUBECONFIG=~/antho
 ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ kubectl create -f deploy/crds/trident.netapp.io_tridentorchestrators_crd_post1.16.yaml
 customresourcedefinition.apiextensions.k8s.io/tridentorchestrators.trident.netapp.io created
 ----
-. 如果不存在 Trident 命名空间，请使用提供的清单在集群中创建一个 Trident 命名空间。
+. 如果不存在 Trident 命名空间，请使用提供的清单在集群中创建一个。
 +
 [listing]
 ----
@@ -218,7 +221,7 @@ ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ $ vi backend-solidfire.js
 ----
 
 
-. 安装好此后端文件后，运行以下命令创建第一个后端。
+. 安装此后端文件后，运行以下命令以创建第一个后端。
 +
 [listing]
 ----
@@ -236,7 +239,7 @@ ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ ./tridentctl -n trident c
 ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ cp sample-input/storage-class-csi.yaml.templ ./storage-class-basic.yaml
 ubuntu@gke-admin-ws-200915-151421:~/trident-installer$ vi storage-class-basic.yaml
 ----
-. 必须对此文件进行的唯一编辑是，为新创建的后端存储驱动程序的名称定义 `backendType` 值。另请注意 name-field 值，稍后必须引用该值。
+. 必须对此文件进行的唯一编辑是，为新创建的后端存储驱动程序的名称定义 `backendType` 值。另请注意在后续步骤中必须引用的名称字段值。
 +
 [listing]
 ----

@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: containers/rh-os-n_use_case_openshift_virtualization_workflow_vm_live_migration.html 
-keywords: OpenShift, OCP, NetApp Trident, NetApp ONTAP, Red Hat OpenShift, OpenShift Virtualization, CNV, Container Native Virtualization, Red Hat OpenShift Virtualization 
+keywords: OpenShift, OCP, Astra Trident, NetApp ONTAP, Red Hat OpenShift, OpenShift Virtualization, CNV, Container Native Virtualization, Red Hat OpenShift Virtualization 
 summary: 借助 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化 
 ---
 = 工作流：使用 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化
@@ -11,7 +11,7 @@ summary: 借助 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化
 
 == VM 实时迁移
 
-实时迁移是指在不停机的情况下将 VM 实例从 OpenShift 集群中的一个节点迁移到另一个节点的过程。要在 OpenShift 集群中执行实时迁移， VM 必须绑定到具有共享 ReadWriteMany 访问模式的 PVC 。在 NetApp ONTAP 集群上配置了 SVM 并启用了 NFS 协议的 NetApp Trident 后端支持对 PVC 的共享 ReadWriteMany 访问。因此，对于从启用了 NFS 的 SVM 中由 Trident 配置的 StorageClasses 请求具有 PVC 的 VM ，可以在不停机的情况下进行迁移。
+实时迁移是指在不停机的情况下将 VM 实例从 OpenShift 集群中的一个节点迁移到另一个节点的过程。要在 OpenShift 集群中执行实时迁移， VM 必须绑定到具有共享 ReadWriteMany 访问模式的 PVC 。在启用了 NFS 协议的 NetApp ONTAP 集群上配置了 SVM 的 Astra Trident 后端支持对 PVC 的共享 ReadWriteMany 访问。因此，对于从启用了 NFS 的 SVM 中由 Trident 配置的 StorageClasses 请求具有 PVC 的 VM ，可以在不停机的情况下进行迁移。
 
 image::redhat_openshift_image55.jpg[VM 实时迁移架构]
 

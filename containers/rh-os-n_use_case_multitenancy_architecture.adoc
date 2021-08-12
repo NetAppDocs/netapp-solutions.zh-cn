@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: containers/rh-os-n_use_case_multitenancy_architecture.html 
-keywords: OpenShift, OCP, NetApp Trident, NetApp ONTAP, Red Hat OpenShift, Multitenancy, Multi-tenancy 
+keywords: OpenShift, OCP, Astra Trident, NetApp ONTAP, Red Hat OpenShift, Multitenancy, Multi-tenancy 
 summary: 在使用 NetApp 的 Red Hat OpenShift 上配置多租户 
 ---
 = 架构
@@ -12,13 +12,13 @@ summary: 在使用 NetApp 的 Red Hat OpenShift 上配置多租户
 :imagesdir: ./../media/
 
 
-虽然默认情况下， Red Hat OpenShift 和 NetApp ONTAP 支持的 NetApp Trident 不会在工作负载之间提供隔离，但它们提供了广泛的功能，可用于配置多租户。为了更好地了解如何在采用 NetApp ONTAP 支持的 NetApp Trident 的 Red Hat OpenShift 集群上设计多租户解决方案，让我们考虑一个包含一系列要求的示例，并概述其配置。
+虽然默认情况下，由 NetApp ONTAP 提供支持的 Red Hat OpenShift 和 Astra Trident 不会在工作负载之间提供隔离，但它们提供了广泛的功能，可用于配置多租户。为了更好地了解如何在采用 NetApp ONTAP 作为后盾的 Astra Trident 的 Red Hat OpenShift 集群上设计多租户解决方案，让我们考虑一个包含一系列要求的示例，并概述其配置。
 
-假设一个组织在一个 Red Hat OpenShift 集群上运行两个工作负载，作为两个不同团队正在处理的两个项目的一部分。这些工作负载的数据驻留在 PVC 上， PVC 由 NetApp Trident 在 NetApp ONTAP NAS 后端动态配置。该组织需要为这两个工作负载设计多租户解决方案，并隔离用于这些项目的资源，以确保保持安全性和性能，主要侧重于为这些应用程序提供服务的数据。
+假设一个组织在一个 Red Hat OpenShift 集群上运行两个工作负载，作为两个不同团队正在处理的两个项目的一部分。这些工作负载的数据驻留在由 NetApp ONTAP NAS 后端的 Astra Trident 动态配置的 PVC 上。该组织需要为这两个工作负载设计多租户解决方案，并隔离用于这些项目的资源，以确保保持安全性和性能，主要侧重于为这些应用程序提供服务的数据。
 
-下图展示了由 NetApp ONTAP 提供支持的具有 NetApp Trident 的 Red Hat OpenShift 集群上的多租户解决方案。
+下图展示了由 NetApp ONTAP 提供支持的带有 Astra Trident 的 Red Hat OpenShift 集群上的多租户解决方案。
 
-image::redhat_openshift_image40.jpg[Red Hat OpenShift 集群上的多租户，采用 NetApp ONTAP 作为后盾的 NetApp Trident]
+image::redhat_openshift_image40.jpg[Red Hat OpenShift 集群上的多租户，采用由 NetApp ONTAP 提供支持的 Astra Trident]
 
 
 
@@ -26,7 +26,7 @@ image::redhat_openshift_image40.jpg[Red Hat OpenShift 集群上的多租户，�
 
 . NetApp ONTAP 存储集群
 . Red Hat OpenShift 集群
-. NetApp Trident
+. Astra Trident
 
 
 
@@ -45,7 +45,7 @@ image::redhat_openshift_image40.jpg[Red Hat OpenShift 集群上的多租户，�
 
 
 
-== NetApp Trident
+== Astra Trident
 
 在 NetApp ONTAP 上为不同的项目创建不同的 SVM 之后，我们需要将每个 SVM 映射到不同的 Trident 后端。Trident 上的后端配置会将永久性存储分配给 OpenShift 集群资源，并且需要将 SVM 的详细信息映射到，后端的协议驱动程序至少要映射。此外，还可以定义如何在存储上配置卷，以及为卷大小或聚合使用量设置限制等。有关为 NetApp ONTAP 定义 Trident 后端的详细信息，请参见 https://netapp-trident.readthedocs.io/en/stable-v21.01/kubernetes/operations/tasks/backends/ontap/index.html["此处"^]。
 

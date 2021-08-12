@@ -1256,7 +1256,6 @@
   <block id="65cd53ff19e601ea00bf9688be4dd86a" category="summary">借助 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化</block>
   <block id="ad3a2e9007d848afd0c15ffc402781bb" category="doc">工作流：使用 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化</block>
   <block id="55c7e45b50d0b012faf4bce31b6ad05d" category="section-title">从 Snapshot 创建 VM</block>
-  <block id="d9f978dcaa3d819f410c132e70e26408" category="paragraph">借助 NetApp Trident 和 Red Hat OpenShift ，用户可以在所配置的存储类上创建永久性卷的快照。通过此功能，用户可以创建卷的时间点副本，并使用该副本创建新卷或将同一卷还原到先前的状态。这样可以启用或支持从回滚到克隆再到数据还原等各种使用情形。</block>
   <block id="f991e1a54e399d272c7d968dcdfdb690" category="paragraph">对于 OpenShift 中的 Snapshot 操作，必须定义资源 VolumeSnapshotClass ， VolumeSnapshot 和 VolumeSnapshotContent 。</block>
   <block id="0e2d1628ef03c4400cd293c3143cabb3" category="list-text">VolumeSnapshotContent 是从集群中的卷生成的实际快照。它是一种集群范围的资源，类似于用于存储的 PersistentVolume 。</block>
   <block id="8ca4876558d3675f7a3e2c452c62a215" category="list-text">VolumeSnapshot 是指创建卷快照的请求。它类似于 PersistentVolumeClaim 。</block>
@@ -1279,19 +1278,13 @@
   <block id="75b0d3500d81c7799a5b84eca57d6d04" category="list-text">单击创建以创建新虚拟机。</block>
   <block id="57dc3c96f32e4895e89eab4a248088f5" category="list-text">成功创建虚拟机后，访问并验证新虚拟机的状态是否与创建快照时使用 PVC 创建快照的虚拟机的状态相同。</block>
   <block id="e43e01b103914a770b6c77bb390f02a7" category="paragraph">本《基于 Red Hat 虚拟化的 NetApp HCI for Red Hat OpenShift （ RHV ）部署指南》适用于通过安装程序配置基础架构（ IPI ）方法将 Red Hat OpenShift 完全自动安装到 NVA-1148 中所述的经验证的 NetApp HCI for Red Hat Virtualization 企业架构上： 采用 Red Hat 虚拟化的 NetApp HCI 。本参考文档提供了 Red Hat OpenShift 解决方案的部署验证， NetApp Trident 存储编排程序的集成以及由示例应用程序部署组成的解决方案验证。</block>
-  <block id="5dfa5118a3d09722a57586a2a470cddf" category="summary">NetApp Trident 是一款开源且完全受支持的存储编排程序，适用于容器和 Kubernetes 分发版，包括 Red Hat OpenShift 。</block>
-  <block id="41fcb94bb02f22dd5edb35182e0dba37" category="doc">NetApp Trident 概述：采用 NetApp 的 Red Hat OpenShift</block>
   <block id="be28e82bac3cea6dd7ddd7131699071f" category="paragraph">Trident 可与包括 NetApp ONTAP 和 Element 存储系统在内的整个 NetApp 存储产品组合配合使用，并且还支持 NFS 和 iSCSI 连接。</block>
   <block id="a34989e5afa01df665a8ea9233e7309e" category="paragraph">Trident 允许最终用户从其 NetApp 存储系统配置和管理存储，而无需存储管理员干预，从而加快了 DevOps 工作流的速度。</block>
   <block id="a4957cf974ce20219897bbbf5b131cb8" category="paragraph">管理员可以根据项目需求和存储系统型号配置多个存储后端，以实现高级存储功能，包括数据压缩，特定磁盘类型或 QoS 级别，以保证一定水平的性能。定义后，开发人员可以在其项目中使用这些后端创建永久性卷声明（ PVC ），并按需将永久性存储附加到容器。</block>
   <block id="ecfb2402c181e98da49a5d763378b116" category="paragraph"><block ref="ecfb2402c181e98da49a5d763378b116" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="370b1844afd451bc4e255929279caa5c" category="paragraph">NetApp Trident 具有快速的开发周期，与 Kubernetes 一样，每年发布四次。</block>
-  <block id="17afbe6611031a7113d371acb7a9fe42" category="paragraph">最新版本的 NetApp Trident 21.04 于 2021 年 4 月发布。已测试的 Trident 版本的支持列表，可在该支持列表中找到 Kubernetes 分发版本<block ref="629f5a82616d50c6d935cb21ceaab206" category="inline-link-rx"></block>。</block>
   <block id="b62bb4786ef52ad76706950add6991dd" category="paragraph">从 20.04 版开始， Trident 设置由 Trident 操作员执行。操作员可以简化大规模部署，并为在 Trident 安装过程中部署的 Pod 提供额外的支持，包括自我修复。</block>
   <block id="4a85fdd5a26454abc330a5ec2a46a326" category="paragraph">在 21.01 版中，我们提供了一个 Helm 图表，用于简化 Trident 操作员的安装。</block>
-  <block id="ee39d021189d72e09b713c5484e86d24" category="section-title">下载 NetApp Trident</block>
   <block id="f95d0437e813349fa018b7f0e68e9a7d" category="paragraph">要在已部署的用户集群上安装 Trident 并配置永久性卷，请完成以下步骤：</block>
-  <block id="6e2253b999f307f8152cea1c3d395895" category="list-text">将安装归档下载到管理工作站并提取内容。Trident 的当前版本为 21.01 ，可以下载<block ref="c71d2968b50c4cfbb1a3b9207e6166b5" category="inline-link-rx"></block>。</block>
   <block id="422269f9bb560b76869cbd586b8370d5" category="list-text">从下载的软件包中提取 Trident 安装。</block>
   <block id="52d012c119e8e080d08f6a1592f8f9ec" category="section-title">使用 Helm 安装 Trident 操作员</block>
   <block id="68602d0447fae81afa9d0528ef0c6420" category="list-text">首先将用户集群的 `kubeconfig` 文件的位置设置为环境变量，以便您不必引用该文件，因为 Trident 没有传递此文件的选项。</block>
@@ -1316,7 +1309,6 @@
   <block id="d9f036d3b9f84b626f8a777480066cab" category="list-text">创建配置后，将此配置应用于工作节点并重新加载它们大约需要 20 到 30 分钟。使用 `oc get MCP` 验证是否应用了计算机配置，并确保已更新员工的计算机配置池。您还可以登录到工作节点，以确认 iscsid 服务正在运行（如果使用多路径，则 multipathd 服务正在运行）。</block>
   <block id="6e16409ed6038c106c7fa1dfbfb9da0f" category="admonition">此外，还可以通过使用适当的标志运行 `oc debug` 命令来确认 MachineConfig 已成功应用且服务已按预期启动。</block>
   <block id="b09d268106fd9cbfffd1dc848382a150" category="section-title">创建存储系统后端</block>
-  <block id="875b77ddbb40196325edaa8d97cb310c" category="paragraph">完成 NetApp Trident 操作员安装后，您必须为所使用的特定 NetApp 存储平台配置后端。请访问以下链接继续设置和配置 NetApp Trident 。</block>
   <block id="615767b52353571ac174e22f1a984aa3" category="inline-link-macro">NetApp ONTAP NFS</block>
   <block id="fa0fe4c03e1ba99a2cac1c4c208b7fbd" category="list-text"><block ref="fa0fe4c03e1ba99a2cac1c4c208b7fbd" category="inline-link-macro-rx"></block></block>
   <block id="c93e7ef2934826b1393251e9f7d9e331" category="inline-link-macro">NetApp ONTAP iSCSI</block>
@@ -1401,9 +1393,7 @@
   <block id="b5762731ee8c7a3d9a7ce9abe3804cf0" category="list-text">OpenShift 集群必须通过安装程序配置的基础架构（ IPI ）进行安装</block>
   <block id="7ed0bc09bfa62b64806b6b5c2f4378c7" category="list-text">部署计算机运行状况检查以保持虚拟机的 HA</block>
   <block id="43b1ab0e04b8f87e603cc790967d2886" category="list-text">NetApp ONTAP 集群</block>
-  <block id="c34d379397595a76c8fbef4afe8846bd" category="list-text">NetApp Trident 安装在 OpenShift 集群上</block>
   <block id="d4c321b9edd8d817bdc7ca442e71e3af" category="list-text">在 ONTAP 集群上配置了 SVM 的 Trident 后端</block>
-  <block id="6034c6abbd5e1f23a27301bd790892b7" category="list-text">一种在 OpenShift 集群上配置的存储类，其中 NetApp Trident 用作配置程序</block>
   <block id="cfcf3a62902e36f3d966271cc090b65c" category="list-text">对 Red Hat OpenShift 集群的集群管理员访问</block>
   <block id="af91af16b4791d61bb2e9206807a658d" category="list-text">对 NetApp ONTAP 集群的管理员访问权限</block>
   <block id="e281839ef9ef6cb1eadcc2aa7d6d63be" category="list-text">安装了 tridentctl 和 oc 工具并将其添加到 $path 中的管理工作站</block>
@@ -1480,8 +1470,6 @@
   <block id="215de8162cb5ac909005881f92812fb0" category="list-text">* 精简配置。 * 此功能可在需要时提供适当数量的存储，从而消除因过度配置卷或未充分利用卷而导致的容量消耗。</block>
   <block id="95f1b89c8e9c330fcfdc8ec84633bfe6" category="list-text">* Helix.* 单个卷的元数据存储在元数据驱动器上，并复制到二级元数据驱动器以实现冗余。</block>
   <block id="da9c9b2b4164632e569069fe1e7c53ee" category="admonition">Element 专为自动化而设计。所有存储功能均可通过 API 使用。这些 API 是 UI 用于控制系统的唯一方法。</block>
-  <block id="a9acb2e42d485247bd4a3a78f3f4b07f" category="inline-link-macro">接下来： NetApp Trident 概述。</block>
-  <block id="4eb6c6fab4ac62285b20a8230296e134" category="paragraph"><block ref="4eb6c6fab4ac62285b20a8230296e134" category="inline-link-macro-rx"></block></block>
   <block id="ec22e01e7cd5087ef746b3db5852da6e" category="doc">扩展：添加更多项目</block>
   <block id="0e4136a9f4ad3204c07db26d3c28a546" category="paragraph">在多租户配置中，使用存储资源添加新项目需要进行额外配置，以确保不会违反多租户要求。要在多租户集群中添加更多项目，请完成以下步骤：</block>
   <block id="c8acb1fa89b1ec9d78799a2dd4aa8b59" category="list-text">以存储管理员身份登录到 NetApp ONTAP 集群。</block>
@@ -1525,7 +1513,6 @@
   <block id="a883982d5f8961021329c238318d4e2b" category="inline-link-macro">接下来：功能—创建资源。</block>
   <block id="5ca146f2101c14a961df161060f86cb9" category="paragraph"><block ref="5ca146f2101c14a961df161060f86cb9" category="inline-link-macro-rx"></block></block>
   <block id="4e42a1e911325b5048e50f7b5ea73d1f" category="section-title">VM 实时迁移</block>
-  <block id="e766361609ec8e5d1ea39650a9379bd3" category="paragraph">实时迁移是指在不停机的情况下将 VM 实例从 OpenShift 集群中的一个节点迁移到另一个节点的过程。要在 OpenShift 集群中执行实时迁移， VM 必须绑定到具有共享 ReadWriteMany 访问模式的 PVC 。在 NetApp ONTAP 集群上配置了 SVM 并启用了 NFS 协议的 NetApp Trident 后端支持对 PVC 的共享 ReadWriteMany 访问。因此，对于从启用了 NFS 的 SVM 中由 Trident 配置的 StorageClasses 请求具有 PVC 的 VM ，可以在不停机的情况下进行迁移。</block>
   <block id="09e113cd46b4487f140ee07899ea3359" category="image-alt">VM 实时迁移架构</block>
   <block id="660b7fa756d01df7c4338afb9050abb1" category="paragraph">要创建绑定到具有共享 ReadWriteMany 访问权限的 PVC 的 VM ，请执行以下操作：</block>
   <block id="759f070d58033c0207487797da67763c" category="list-text">导航到 `Workloads &gt; Virtualization &gt; Virtual Machines` ，然后单击 `Create &gt; with Wizard` 。</block>
@@ -1632,12 +1619,10 @@
   <block id="b72f69cc199df637eb2011e33388a488" category="list-text"><block ref="b72f69cc199df637eb2011e33388a488" category="inline-link-macro-rx"></block></block>
   <block id="49e84ff2b826cec365a2b35502f99593" category="inline-link-macro">接下来：验证结果：基于 RHV 的适用于 Red Hat OpenShift 的 NetApp HCI</block>
   <block id="e836bcee0f8f035cd0ad5cba5f191551" category="paragraph"><block ref="e836bcee0f8f035cd0ad5cba5f191551" category="inline-link-macro-rx"></block></block>
-  <block id="78c84f9dc368f4b963d984b2db6e1643" category="summary">本参考文档对通过安装程序配置的基础架构（ IPI ）在 NetApp 验证的多种不同数据中心环境中部署的 Red Hat OpenShift 解决方案进行了部署验证。同时，还详细介绍了如何利用 NetApp Trident 存储编排程序来管理永久性存储，从而与 NetApp 存储系统实现存储集成。最后，我们还探讨并记录了许多解决方案验证和实际使用情形。</block>
   <block id="a0e01d06503f271c1de7acc0acd01733" category="doc">NVA-1160 ：采用 NetApp 技术的 Red Hat OpenShift</block>
   <block id="4711a0fd2fa3c3625080f399e5261ecd" category="paragraph">采用 NetApp 解决方案的 Red Hat OpenShift 旨在为客户提供卓越的价值，其使用情形如下：</block>
   <block id="44815e873492015d6a8ab6362de8da6c" category="list-text">使用 IPI （安装程序配置的基础架构）在裸机上， Red Hat OpenStack Platform ， Red Hat 虚拟化和 VMware vSphere 上轻松部署和管理 Red Hat OpenShift 。</block>
   <block id="03bb323d052d033ea0b5b2cab17f1219" category="list-text">将企业级容器和虚拟化工作负载的强大功能与 Red Hat OpenShift 相结合， Red Hat OpenShift 可虚拟部署在 OSP ， RHV 或 vSphere 上，也可通过 OpenShift 虚拟化部署在裸机上。</block>
-  <block id="2376d027d2fe6a2c9d187c09456caf36" category="list-text">与 NetApp 存储和适用于 Kubernetes 的开源存储编排程序 NetApp Trident 结合使用时，重点介绍 Red Hat OpenShift 功能的实际配置和使用情形。</block>
   <block id="932ba7da1da9b241bfc5ddbb10e49da2" category="paragraph">企业越来越多地采用 DevOps 实践来创建新产品，缩短发布周期并快速添加新功能。由于容器和微服务本身的灵活性，它们在支持 DevOps 实践方面发挥着至关重要的作用。但是，在企业环境中以生产规模实施 DevOps 会带来自身的挑战，并对底层基础架构提出一些要求，例如：</block>
   <block id="43ee156205e7f74e32a02d556537fe90" category="list-text">堆栈中所有层的高可用性</block>
   <block id="b59807af538b77fee1fb3d1d3c81f9a8" category="list-text">易于部署过程</block>
@@ -1646,14 +1631,11 @@
   <block id="8ca11bfd783c730b04c0c77fc7574406" category="list-text">能够同时运行虚拟化和容器化工作负载</block>
   <block id="0111977afdb7fa380f806edbe8438163" category="list-text">能够根据工作负载需求独立扩展基础架构</block>
   <block id="42c487483a8feee3cc0365881a4cc265" category="paragraph">Red Hat OpenShift with NetApp 认可这些挑战，并提供了一个解决方案，通过在客户选择的数据中心环境中实施完全自动化的 RedHat OpenShift IPI 部署，帮助解决每个问题。</block>
-  <block id="e14d89d236df03870ccdc9912d0156bc" category="paragraph">采用 NetApp 解决方案的 Red Hat OpenShift 由以下三个组件组成：</block>
   <block id="fd89bb4228981d3b22187eb451421cd6" category="section-title">Red Hat OpenShift 容器平台</block>
-  <block id="e31ed923a8ef73b709e04a076bde8504" category="paragraph">Red Hat OpenShift 容器平台是一个完全受支持的企业级 Kubernetes 平台。 Red Hat 对开源 Kubernetes 进行了多项增强，以提供一个应用程序平台，其中包含所有组件，可完全集成以构建，部署和管理容器化应用程序。</block>
   <block id="70240bc0debcb080aa08dbd9e7b9a525" category="paragraph">有关详细信息，请访问 OpenShift 网站<block ref="35d5a627a33ce17e4bd125258d59fbc4" category="inline-link-rx"></block>。</block>
   <block id="6aadb9773520cdfb40d0d5e39286b8b5" category="section-title">NetApp 存储系统</block>
   <block id="d4da7cdf6d17e02f2b4a94db5a777151" category="paragraph">NetApp 拥有多个存储系统，非常适合企业数据中心和混合云部署。NetApp 产品组合包括 NetApp ONTAP ， NetApp Element 和 NetApp E 系列存储系统，所有这些系统均可用于为容器化应用程序提供永久性存储。</block>
   <block id="aa4193984de53d2a6d8fcc2d77c09bda" category="paragraph">有关详细信息，请访问 NetApp 网站<block ref="95da63d781dead5af723667a3f69096a" category="inline-link-rx"></block>。</block>
-  <block id="ef5f371994201edba136ed71038a7179" category="paragraph">有关详细信息，请访问 Trident 网站<block ref="9a096d611f0ede2737b2fde39343b44c" category="inline-link-rx"></block>。</block>
   <block id="1a0ae7ee13ba508bc694ad82f582a17f" category="section-title">经过验证的版本的最新支持列表</block>
   <block id="e7e767d7c0e58b16e57d3ab16150db80" category="cell">技术</block>
   <block id="797a5d02c096631e27f9c43d628060d8" category="cell">软件版本</block>
@@ -1834,7 +1816,6 @@
   <block id="943a49720e6c85fa9692af2a5ebd8829" category="list-text">降低运营和管理开销</block>
   <block id="f51a58b3ab19c778652fcff9dd39ca55" category="list-text">保护工作负载免受安全违规交叉影响</block>
   <block id="181cfddfdb055879df4d55323a14c473" category="list-text">保护工作负载，防止因资源争用而导致性能意外下降</block>
-  <block id="771b4642262dcddd18822bfecc76a706" category="paragraph">对于完全实现的多租户 OpenShift 集群，必须为属于不同资源分段的集群资源配置配额和限制：计算，存储，网络连接，安全性等。虽然我们会介绍此解决方案中所有资源分段的某些方面， 我们重点介绍最佳实践，通过在 NetApp ONTAP 支持的 NetApp Trident 动态分配的存储资源上配置多租户，隔离并保护同一 Red Hat OpenShift 集群上多个工作负载提供或使用的数据。</block>
   <block id="d463f48696e58e286e9c0d594169b395" category="inline-link-macro">接下来：架构。</block>
   <block id="4fbbd2f5b2a8e82447aa1b841b2a70d0" category="paragraph"><block ref="4fbbd2f5b2a8e82447aa1b841b2a70d0" category="inline-link-macro-rx"></block></block>
   <block id="25d77826c061b84a0c036f43e02aa129" category="doc">安装 OpenShift 虚拟化：采用 NetApp 的 Red Hat OpenShift</block>
@@ -1910,8 +1891,6 @@
   <block id="946d683f2bf73d6a9ed0434157bce9f6" category="list-text">* 安全性和容器目录。 * OpenShift 可提供多租户功能，并通过使用安全性增强型 Linux （ SELinux ）， CGroups 和安全计算模式（ seccomp ）中的已建立安全性隔离和保护容器，并通过 TLS 证书对各个子系统进行加密，从而保护用户免受有害代码执行的影响。 并提供对经过 Red Hat 认证的容器（ access.redhat.com/containers ）的访问权限，这些容器经过扫描并进行分级，其中特别强调安全性，以便为最终用户提供经过认证的，值得信赖的安全应用程序容器。</block>
   <block id="16c321ec2744799f0acef92ce84d06ca" category="paragraph"><block ref="16c321ec2744799f0acef92ce84d06ca" category="inline-image-macro-rx" type="image"></block></block>
   <block id="fe8c2f8039053e077a0ca678496b72aa" category="section-title">Red Hat OpenShift 的部署方法</block>
-  <block id="570e26d1d11ce486254fc52e259e2bd9" category="paragraph">从 Red Hat OpenShift 4 开始， OpenShift 的部署方法包括使用用户配置基础架构（ User Provisioned Infrastructure ， UPI ）手动部署高度自定义的部署，或者使用 IPI （安装程序配置的基础架构）完全自动化部署。</block>
-  <block id="1781583421b1691ab8f09e39120540e3" category="paragraph">大多数情况下， IPI 安装方法是首选方法，因为它可以为开发，测试和生产环境快速部署 OCP 集群。</block>
   <block id="ec55e5ffb2376dada4b2eb066c1fd9fd" category="section-title">Red Hat OpenShift 的 IPI 安装</block>
   <block id="a91a379e59fea6610134af1efa3dfe87" category="paragraph">OpenShift 的安装程序配置基础架构（ IPI ）部署涉及以下高级步骤：</block>
   <block id="d1befa03c79ca0b84ecc488dea96bc68" category="inline-link">网站</block>
@@ -1923,7 +1902,6 @@
   <block id="7586dbf5f3ac1a66383f6c201a17a341" category="inline-link">安装说明</block>
   <block id="c9a2aa5906b4dad4a982c3a9c51d31f3" category="list-text">按照<block ref="04512308a1627dc41acfeed51ef16ba3" category="inline-link-rx"></block> 由 Red Hat 提供，用于部署到您选择的环境。</block>
   <block id="220887aee59c37fa79fc366cba7dad4e" category="section-title">经过 NetApp 验证的 OpenShift 部署</block>
-  <block id="bd71877bff964ab383ca97363c29f189" category="paragraph">NetApp 已在以下每个数据中心环境中使用 IPI （安装程序配置的基础架构）部署方法测试并验证了 Red Hat OpenShift 在其实验室中的部署：</block>
   <block id="aa9095c5ba77e3549672e5c4fae1fedc" category="inline-link-macro">裸机上的 OpenShift</block>
   <block id="fecab6277bc7322982f127ce83dee308" category="list-text"><block ref="fecab6277bc7322982f127ce83dee308" category="inline-link-macro-rx"></block></block>
   <block id="5f6a8f3661e7319797d4eab6792350e6" category="inline-link-macro">基于 Red Hat OpenStack 平台的 OpenShift</block>
@@ -1939,7 +1917,6 @@
   <block id="642c7538b544cf159c0c277e19d8553b" category="list-text">Cloud Volumes ONTAP 和 ONTAP Select 在云和虚拟空间方面的优势各不相同。</block>
   <block id="3cc957c67b836ddc993931d8d2253032" category="list-text">NetApp Cloud Volumes Service （ AWS/GCP ）和 Azure NetApp Files 可在云中提供基于文件的存储。</block>
   <block id="faad8e024544c328d584c28118fb4102" category="list-text">NetApp Element 存储系统可在高度可扩展的环境中提供基于块的（ iSCSI ）用例。</block>
-  <block id="05f6de7174ff2a357671975e197fc638" category="list-text">NetApp E 系列和 EF 系列存储系统可通过简单，快速，可靠的存储为专用高带宽应用程序提供集成的硬件和软件解决方案。</block>
   <block id="be91cbc00fab0d4481a36e3fc5092d3f" category="admonition">NetApp 产品组合中的每个存储系统都可以简化内部站点和云之间的数据管理和移动，从而确保数据位于应用程序所在位置。</block>
   <block id="85a240011ba49404bf70606e37c41c96" category="paragraph">以下页面介绍了有关已在 Red Hat OpenShift with NetApp 解决方案中验证的 NetApp 存储系统的追加信息：</block>
   <block id="3a374bfcdd912b5071f863e2b9f0eefa" category="list-text"><block ref="3a374bfcdd912b5071f863e2b9f0eefa" category="inline-link-macro-rx"></block></block>
@@ -2166,12 +2143,10 @@
   <block id="7ddb33edf227a18eb76201fcb9e2c9db" category="section-title">软件要求</block>
   <block id="2fd7b7ab504fb9f83b6ceac3888d031b" category="cell">1.8P1</block>
   <block id="52c0661db7fac20a6e9e58fa6c50c8c8" category="cell">VMware 上的 Anthos</block>
-  <block id="4341447b6ad78bf4d7eb59ebb5a53d63" category="cell">1.6</block>
   <block id="e472faa89007ceb11817045da364405f" category="cell">F5 BIG-IP 虚拟版</block>
   <block id="1c72ef556b5fc669fadc14ae383d37cf" category="cell">负载平衡</block>
   <block id="5db193ac3980d8db07588b173f3fa8ae" category="cell">15.0.1</block>
   <block id="bfd15aa26ba0ced782240c4a8b7e517e" category="cell">存储管理</block>
-  <block id="d029b605d0129cdb050642645b32b1db" category="cell">21.01</block>
   <block id="59a703e67b19adc4bdb1373c25fbca94" category="inline-link-macro">下一步：部署步骤。</block>
   <block id="b0ce5203dff757ecee48c9ed920d366d" category="paragraph"><block ref="b0ce5203dff757ecee48c9ed920d366d" category="inline-link-macro-rx"></block></block>
   <block id="2290a6c7c8943dac5f44a36f39b477c8" category="doc">4. 在 DNS 中注册 API/Apps ： NetApp HCI for Red Hat OpenShift on RHV</block>
@@ -2254,7 +2229,6 @@
   <block id="db4aaedfce5fc172481c94a8deef1f30" category="list-text"><block ref="db4aaedfce5fc172481c94a8deef1f30" category="inline-link-rx"></block></block>
   <block id="e62748eb1045c42ff87c8c08ff090373" category="inline-link">《 NetApp NDE 1.8 部署指南》</block>
   <block id="f3e7fcd6724714b811542dccbb99c2f2" category="list-text"><block ref="f3e7fcd6724714b811542dccbb99c2f2" category="inline-link-rx"></block></block>
-  <block id="66f07176244e4849ca323f4ecf2a1919" category="list-text"><block ref="66f07176244e4849ca323f4ecf2a1919" category="inline-link-rx"></block></block>
   <block id="082c3c3d9ac57d9f370a6997fccfc024" category="inline-link">VMware vSphere 6.7U3 文档</block>
   <block id="d27658bc61c351f39b585d49ca62fd56" category="list-text"><block ref="d27658bc61c351f39b585d49ca62fd56" category="inline-link-rx"></block></block>
   <block id="794e2c57a6ad3ab9ab60f9854fa225cd" category="inline-link">F5 Big-IP 文档</block>
@@ -2270,10 +2244,7 @@
   <block id="8c1be16a890d9f315f75b94de9a9c126" category="summary">Trident 是一种用于容器的存储编排程序。借助 Trident ，微服务和容器化应用程序可以利用完整的 NetApp 存储系统产品组合提供的企业级存储服务来实现永久性存储挂载。根据应用程序的要求， Trident 会为 NetApp AFF 和 FAS 系统等基于 ONTAP 的产品以及 NetApp SolidFire ® 和 NetApp HCI 等 Element 存储系统动态配置存储。</block>
   <block id="2d09294b42420cd4ec4ee6f4f5fe2548" category="doc">11. 安装和配置 NetApp Trident 存储配置程序</block>
   <block id="e77af5a9ff1422e30f57e41819791dd4" category="paragraph">Trident 是一种用于容器的存储编排程序。借助 Trident ，微服务和容器化应用程序可以利用完整的 NetApp 存储系统产品组合提供的企业级存储服务来实现永久性存储挂载。根据应用程序的要求， Trident 会为 NetApp AFF 和 FAS 系统等基于 ONTAP 的产品以及 NetApp SolidFire 和 NetApp HCI 等 Element 存储系统动态配置存储。</block>
-  <block id="0b80b305a1a264b2fc48c13d6c1422dd" category="list-text">将安装归档下载到管理工作站并提取内容。Trident 的当前版本为 21.01 ，可以下载<block ref="782e2b8c08b36eb871728ffff864bd11" category="inline-link-rx"></block>。</block>
-  <block id="c3d2ced05d1c04d9d36ec47ca8e3dcfa" category="list-text">启用 Trident 与 NetApp HCI 解决方案和 Anthos 集成的下一步是创建一个后端，以便与存储系统进行通信。NetApp 已通过 Anthos-ready 合作伙伴存储验证计划针对多种不同的协议进行了验证。这样， NetApp Trident 便可通过 ONTAP 平台在 Anthos 环境中为 NFS 提供支持，并通过 NetApp HCI 中使用的 ONTAP 和 Element 存储提供 iSCSI 支持。</block>
   <block id="8e4a243a1252a25e6583b95c6e56cff2" category="admonition">默认情况下， NetApp HCI 平台使用 NetApp Element 存储进行部署。在本指南中，我们专门为此系统配置后端。此外，客户还可以选择连接到远程 ONTAP 存储系统，或者将 ONTAP Select 软件定义的存储系统部署为 VMware vSphere 中的虚拟设备，以提供其他 NFS 和 iSCSI 服务。这些附加存储后端的配置不在本指南的讨论范围之内。</block>
-  <block id="e0529251a32f9269577c2fa800a210a9" category="list-text">下载的安装归档中的 `sample-input` 文件夹提供了示例后端文件。将 `backend-solidfire.json` 复制到您的工作目录中并对其进行编辑，以提供有关存储系统环境的详细信息。对于基于 Element 的 iSCSI 连接，复制并编辑 `backend-solidfire.json` 文件。</block>
   <block id="f2860f5966d3506cc1d9c2ed041f0ab6" category="list-text">编辑端点行上的用户，密码和 MVIP 值。</block>
   <block id="7699f0e1921a6b621f568cf8ba14ac76" category="list-text">编辑 SVIP 值。</block>
   <block id="00d32067724b7191cb5b0ffaf99cc3fe" category="list-text">运行 `kubectl` 命令以创建存储类。</block>
@@ -2513,10 +2484,6 @@
   <block id="f38d8cd9caeb9a037c470b7d061392a0" category="paragraph">要配置相关性组，请参见<block ref="eb1587f3cb611d53dba5bde41d49122a" category="inline-link-rx"></block>。</block>
   <block id="1050f3dc9e3ee559789e3b25f2e4f77e" category="inline-link">Red Hat OpenShift 通过自定义在 RHV 上安装集群</block>
   <block id="9264ce8ca54a510bc871cbfdae485699" category="paragraph">在这些情况下，无需立即部署集群，即可运行向导并为其分配任务，而是输出一个配置文件，以便稍后可以从该配置文件中部署集群。如果需要更改任何 IPI 默认设置，或者用户希望在其环境中部署多个相同的集群以用于多租户等其他用途，则此功能非常有用。有关为 OpenShift 创建自定义安装配置的详细信息，请参见<block ref="15427a9f842d7a49b872cf64115f33bc" category="inline-link-rx"></block>。</block>
-  <block id="93662857bcecb50dc12e1fb92f347e83" category="paragraph">虽然默认情况下， Red Hat OpenShift 和 NetApp ONTAP 支持的 NetApp Trident 不会在工作负载之间提供隔离，但它们提供了广泛的功能，可用于配置多租户。为了更好地了解如何在采用 NetApp ONTAP 支持的 NetApp Trident 的 Red Hat OpenShift 集群上设计多租户解决方案，让我们考虑一个包含一系列要求的示例，并概述其配置。</block>
-  <block id="cd6a57a45ce6b60dca4e0779aad9264f" category="paragraph">假设一个组织在一个 Red Hat OpenShift 集群上运行两个工作负载，作为两个不同团队正在处理的两个项目的一部分。这些工作负载的数据驻留在 PVC 上， PVC 由 NetApp Trident 在 NetApp ONTAP NAS 后端动态配置。该组织需要为这两个工作负载设计多租户解决方案，并隔离用于这些项目的资源，以确保保持安全性和性能，主要侧重于为这些应用程序提供服务的数据。</block>
-  <block id="447ef87ba965fc111907782b16af9138" category="paragraph">下图展示了由 NetApp ONTAP 提供支持的具有 NetApp Trident 的 Red Hat OpenShift 集群上的多租户解决方案。</block>
-  <block id="9f2bfaa3cb0944ba9951e339535e1086" category="image-alt">Red Hat OpenShift 集群上的多租户，采用 NetApp ONTAP 作为后盾的 NetApp Trident</block>
   <block id="3c438be737391744e2fed6f73c418638" category="section-title">技术要求</block>
   <block id="ff94444190436ee7694d15be2dde0f29" category="list-text">NetApp ONTAP 存储集群</block>
   <block id="b645e117fe786bf56128cde2dec3971a" category="list-text">Red Hat OpenShift 集群</block>
@@ -2560,7 +2527,6 @@
   <block id="3debb4f82af3beb1c5354454f2dc9170" category="paragraph">根据具体的使用情形，容器和虚拟机（ VM ）均被视为为不同类型的应用程序提供最佳平台。因此，许多组织在容器上运行部分工作负载，而在 VM 上运行部分工作负载。通常，这会导致企业面临额外的挑战，需要管理不同的平台：虚拟机管理程序和应用程序容器编排程序。</block>
   <block id="7652dcfa1608f7891f4e5c9b462354be" category="paragraph">为了应对这一挑战， Red Hat 从 OpenShift 4.6 版开始引入了 OpenShift 虚拟化（以前称为容器原生虚拟化）。通过 OpenShift 虚拟化功能，您可以在同一 OpenShift 容器平台安装中运行和管理虚拟机以及容器，从而提供混合管理功能，通过操作员自动部署和管理 VM 。除了使用 OpenShift 虚拟化在 OpenShift 中创建 VM 之外， Red Hat 还支持从 VMware vSphere ， Red Hat 虚拟化和 Red Hat OpenStack Platform 部署导入 VM 。</block>
   <block id="269bac1ed5128eacc45c06318333642a" category="image-alt">OpenShift 虚拟化</block>
-  <block id="6232c131af35b24d5f40d770d5881544" category="paragraph">OpenShift 虚拟化还支持实时 VM 迁移， VM 磁盘克隆， VM 快照等某些功能，并在 NetApp Trident 的协助下提供支持（如果由 NetApp ONTAP 提供支持）。这些工作流的示例将在本文档后面的相应章节中进行讨论。</block>
   <block id="8a5bcb32f7cb878beee68d6f84b3ada7" category="paragraph">要了解有关 Red Hat OpenShift 虚拟化的详细信息，请参见相关文档<block ref="3339eb5909b80aa35681f9f3f9478c17" category="inline-link-rx"></block>。</block>
   <block id="3a86ddb85761278fa813d15edecbc2b1" category="paragraph"><block ref="3a86ddb85761278fa813d15edecbc2b1" category="inline-link-macro-rx"></block></block>
   <block id="1e5d89e661ea9ef4d5cc0a5feeddf225" category="summary">在 NetApp HCI 上部署 Red Hat OpenShift 的最佳实践</block>
@@ -2775,7 +2741,6 @@
   <block id="465d1c9d2d9ea711e43e2e20077e10f9" category="inline-link-macro">接下来：功能—可观察性。</block>
   <block id="056789fad8ccaddf0ac3b4ef0a68b61a" category="paragraph"><block ref="056789fad8ccaddf0ac3b4ef0a68b61a" category="inline-link-macro-rx"></block></block>
   <block id="4b6826f4f20a8e7e7a3b42ccb81d514f" category="section-title">VM 克隆</block>
-  <block id="7743075eb672330e2dae5a28c6cbfd6e" category="paragraph">可以通过 NetApp Trident 的卷 CSI 克隆功能在 OpenShift 中克隆现有 VM 。通过 CSI 卷克隆，可以使用现有 PVC 作为数据源并通过复制其 PV 来创建新的 PVC 。创建新的 PVC 后，它将作为一个单独的实体运行，并且不会与源 PVC 建立任何链接或依赖关系。</block>
   <block id="0ea820e58acf3d0c3acac3f64518c517" category="image-alt">VM 克隆架构</block>
   <block id="a1dbf280b3b5da141010127710d68ba7" category="paragraph">要考虑 CSI 卷克隆的某些限制：</block>
   <block id="7f8cb9ac957166d3d134bf9df8861f5b" category="list-text">源 PVC 和目标 PVC 必须位于同一项目中。</block>
@@ -2785,7 +2750,6 @@
   <block id="e1230e5b1f51d793ea14fb31df500399" category="list-text">关闭源 VM</block>
   <block id="29ec5d7b455e19c4f8141df877a9af0a" category="list-text">使源 VM 保持活动状态</block>
   <block id="84d19f7437a8329c49099517eccd37dc" category="section-title">关闭源 VM</block>
-  <block id="f654f7a02583c49f3fa63c48391818d9" category="paragraph">通过关闭虚拟机克隆现有虚拟机是一项原生 OpenShift 功能，可在 NetApp Trident 的支持下实施。要克隆虚拟机，请完成以下步骤。</block>
   <block id="c89992fd77e7c1ce702caffd45c939a2" category="list-text">导航到 `Workloads &gt; Virtualization &gt; Virtual Machines` ，然后单击要克隆的虚拟机旁边的省略号。</block>
   <block id="375000776ee4694734b1d066c46e7096" category="list-text">单击克隆虚拟机并提供新虚拟机的详细信息。</block>
   <block id="b22c43b0906ef8ba78f3fbb7d5b1ff20" category="image-alt">克隆虚拟机</block>
@@ -9679,13 +9643,10 @@
   <block id="10a39b59adba74ee543d32447b1f0a13" category="sidebar">6. 安装 OpenShift 容器平台</block>
   <block id="daac6dcf0f6146c1e24677ed1ac4bdd0" category="sidebar">7. 访问控制台 /Web 控制台</block>
   <block id="f7ff40210abac33e761b262d75d69c5b" category="sidebar">8. 配置工作节点以运行存储服务</block>
-  <block id="f4c5a913fece42298ca7b39d4d59b5cc" category="sidebar">9. 下载并安装 NetApp Trident</block>
   <block id="814d429b5fac17e46a41fa0e251a3fb2" category="sidebar">验证结果— RHV 上适用于 Red Hat OpenShift 的 NetApp HCI</block>
   <block id="9a86c46847d383f198d956869a35cd64" category="sidebar">视频和演示—基于 Red Hat 虚拟化的适用于 Red Hat OpenShift 的 NetApp HCI</block>
   <block id="44e75f45c665003f56ce9d24389dc4e6" category="sidebar">追加信息— NetApp HCI for Red Hat OpenShift on Red Hat 虚拟化</block>
   <block id="cdc53c90644739ab9cb455ad8b663d7b" category="sidebar">Red Hat OpenShift 概述</block>
-  <block id="77caa49b32b4fc8ce3276158f57f9229" category="sidebar">NetApp 存储概述</block>
-  <block id="a1ee6a529e809ff1aa8083053c61452b" category="sidebar">NetApp Trident 概述</block>
   <block id="d48e549b4fdcc889e0243c53bbb4dda0" category="sidebar">解决方案验证和使用情形</block>
   <block id="f99e4eb05e28c150680cb72ca8410d93" category="sidebar">使用 NetApp ONTAP 在 Red Hat OpenShift 上配置多租户</block>
   <block id="51a25aff8c490f11d9be543c7af23a0d" category="sidebar">集群管理员任务</block>
@@ -9835,4 +9796,299 @@
   <block id="bdca592f24222e5064192bb9e2f9af6e" category="sidebar">FlexPod — NetApp Cisco 解决方案</block>
   <block id="0da8a1ebf94a3a1e650dbfbd01c69dd9" category="sidebar">FlexPod 解决方案技术内容</block>
   <block id="32591d046a055939af0d128133dc8606" category="sidebar">FlexPod 销售页面</block>
+  <block id="9e5a59ca9aef030e74a725dab3fb6dcf" category="paragraph">借助 Astra Trident 和 Red Hat OpenShift ，用户可以在所配置的存储类上创建永久性卷的快照。通过此功能，用户可以创建卷的时间点副本，并使用该副本创建新卷或将同一卷还原到先前的状态。这样可以启用或支持从回滚到克隆再到数据还原等各种使用情形。</block>
+  <block id="05cd0cf0962d29806df78d956f772deb" category="summary">Astra Trident 是一款开源且完全受支持的存储编排程序，适用于容器和 Kubernetes 分发版，包括 Red Hat OpenShift 。</block>
+  <block id="07326e17e354406629feb63fa74d8af6" category="doc">Astra Trident 概述：采用 NetApp 的 Red Hat OpenShift</block>
+  <block id="0626021388a8dcc9b1e26b1209550b8d" category="paragraph">Astra Trident 具有快速的开发周期，就像 Kubernetes 一样，每年发布四次。</block>
+  <block id="237e871e1624dc147663a62b220cbc11" category="paragraph">最新版本的 Astra Trident 是 2021 年 4 月发布的 21.04 。已测试的 Trident 版本的支持列表，可在该支持列表中找到 Kubernetes 分发版本<block ref="629f5a82616d50c6d935cb21ceaab206" category="inline-link-rx"></block>。</block>
+  <block id="4281e618126caa3d322e78eafddba1b2" category="section-title">下载 Astra Trident</block>
+  <block id="5125af36f8df930e653f5f48c5ada3a1" category="list-text">将安装归档下载到管理工作站并提取内容。Trident 的当前版本为 21.04 ，可以下载<block ref="f3bebe6016c350b1db8d025a14508f98" category="inline-link-rx"></block>。</block>
+  <block id="f71051465199267cbb540658a51e2957" category="paragraph">完成 Astra Trident 操作员安装后，您必须为所使用的特定 NetApp 存储平台配置后端。请访问以下链接继续设置和配置 Astra Trident 。</block>
+  <block id="7eba670f1ea5a6e2fba9cff6b6399064" category="summary">此页面详细介绍了 MetalLB 负载平衡器的安装和配置说明。</block>
+  <block id="79a2d2fa50d2b47d02c0e9dbdfadc07f" category="doc">安装 MetalLB 负载平衡器： Red Hat OpenShift 与 NetApp</block>
+  <block id="0b2da9b5fe81e13e88c9a05981a95a9e" category="paragraph">此页面列出了 MetalLB 负载平衡器的安装和配置说明。</block>
+  <block id="325bf27eae7d5277c3e84b783b7e77ee" category="paragraph">MetalLB 是一种安装在 OpenShift 集群上的自托管网络负载平衡器，可用于在未在云提供程序上运行的集群中创建类型为负载平衡器的 OpenShift 服务。MetalLB 可协同工作以支持负载平衡器服务的两个主要功能是地址分配和外部公告。</block>
+  <block id="28a4ce0a0514d0f6a6596fc7a9c5e725" category="section-title">MetalLB 配置选项</block>
+  <block id="04c22d763ca95631f9c8789eb2c6e68f" category="paragraph">根据 MetalLB 如何公布分配给 OpenShift 集群以外的负载平衡器服务的 IP 地址，它可在两种模式下运行：</block>
+  <block id="92f98c10e5e0c86bcae2e9cb58b700e3" category="list-text">* 第 2 层模式。 * 在此模式下， OpenShift 集群中的一个节点将接管此服务的所有权，并对该 IP 的 ARP 请求做出响应，使其可在 OpenShift 集群之外访问。由于只有节点才公布 IP ，因此存在带宽瓶颈和较慢的故障转移限制。有关详细信息，请参见文档 <block ref="4a1d14cac7ed68a2326a050e0f1fed80" category="inline-link-macro-rx"></block>。</block>
+  <block id="9df132e8b44548efb38b7ac1fb6e9b4b" category="list-text">* BGP 模式。 * 在此模式下， OpenShift 集群中的所有节点都与路由器建立 BGP 对等会话，并公布路由以将流量转发到服务 IP 。此操作的前提条件是，将 MetalLB 与该网络中的路由器集成在一起。由于 BGP 中采用哈希机制，因此在服务的 IP 到节点映射发生更改时，它具有一定的限制。有关详细信息，请参见文档 <block ref="fed7545a9b4a70bb7835cc8b07492cba" category="inline-link-macro-rx"></block>。</block>
+  <block id="f4936eb6cce461a05cbf0ac8de4bd30f" category="admonition">在本文档中，我们将在第 2 层模式下配置 MetalLB 。</block>
+  <block id="32333b5f74abf17bffedb6e7abeb7b5f" category="section-title">安装 MetalLB 负载平衡器</block>
+  <block id="70bd399edc6825961c98dc29c2a49299" category="list-text">下载 MetalLB 资源。</block>
+  <block id="d95ae9e4bae10f240e5577110ccbd7e6" category="list-text">编辑文件 `metallb.yaml` 并从控制器部署和主讲人 DemonSet 中删除 `spec.template.spec.securityContext` 。</block>
+  <block id="39bb715a16a6f4c1ab16bc3ad3654f0b" category="paragraph">* 要删除的行： *</block>
+  <block id="803519c541b237245faa09039c50dcaa" category="list-text">创建 `metallb-system` 命名空间。</block>
+  <block id="980aff973ca30f65ec180530f40def06" category="list-text">创建 MetalLB CR 。</block>
+  <block id="f87be5542b64a7f94a807699fd549479" category="list-text">在配置 MetalLB 扬声器之前，请授予扬声器 DemonSet 提升权限，使其能够执行使负载平衡器正常工作所需的网络配置。</block>
+  <block id="53747915d8e79873876b08edb1ce3671" category="list-text">通过在 `metallb-system` 命名空间中创建 `ConfigMap` 来配置 MetalLB 。</block>
+  <block id="2b1e829362de1a86eeb131cdc4619908" category="list-text">现在，在创建负载平衡器服务时， MetalLB 会为这些服务分配一个外部 IP ，并通过响应 ARP 请求来公布 IP 地址。</block>
+  <block id="234ce2b9b198f2acf2193cbd06120ff2" category="admonition">如果要在 BGP 模式下配置 MetalLB ，请跳过上述步骤 6 并按照 MetalLB 文档中的操作步骤进行操作 <block ref="fed7545a9b4a70bb7835cc8b07492cba" category="inline-link-macro-rx"></block>。</block>
+  <block id="0f07e63979900ab2abf6d2d578850a47" category="inline-link-macro">接下来：解决方案验证 / 使用情形：采用 NetApp 的 Red Hat OpenShift 。</block>
+  <block id="3a29a96f08f4066b544db012326464ed" category="paragraph"><block ref="3a29a96f08f4066b544db012326464ed" category="inline-link-macro-rx"></block></block>
+  <block id="dc7ec0964c3d39892e26bbe1593a79e2" category="list-text">安装在 OpenShift 集群上的 Astra Trident</block>
+  <block id="e909486a42368b2659780687c3b4a31b" category="list-text">一种在 OpenShift 集群上配置的存储类，其中使用 Astra Trident 作为配置程序</block>
+  <block id="a5369d9ec76321542413da21642ecc74" category="inline-link-macro">接下来： NetApp 存储集成概述</block>
+  <block id="1a9b0bf11ebe49684776b9ffad6b4022" category="paragraph"><block ref="1a9b0bf11ebe49684776b9ffad6b4022" category="inline-link-macro-rx"></block></block>
+  <block id="7df52e0f8b2cb2af1e107fde51d06945" category="paragraph">实时迁移是指在不停机的情况下将 VM 实例从 OpenShift 集群中的一个节点迁移到另一个节点的过程。要在 OpenShift 集群中执行实时迁移， VM 必须绑定到具有共享 ReadWriteMany 访问模式的 PVC 。在启用了 NFS 协议的 NetApp ONTAP 集群上配置了 SVM 的 Astra Trident 后端支持对 PVC 的共享 ReadWriteMany 访问。因此，对于从启用了 NFS 的 SVM 中由 Trident 配置的 StorageClasses 请求具有 PVC 的 VM ，可以在不停机的情况下进行迁移。</block>
+  <block id="a0c55f3c40b8bb2d3e26f8d11ca73cbc" category="summary">本参考文档对通过安装程序配置的基础架构（ IPI ）在 NetApp 验证的多种不同数据中心环境中部署的 Red Hat OpenShift 解决方案进行了部署验证。同时，还详细介绍了如何利用 Astra Trident 存储编排程序来管理永久性存储，从而与 NetApp 存储系统实现存储集成。最后，我们还探讨并记录了许多解决方案验证和实际使用情形。</block>
+  <block id="a2ac5b8f3de7c17418af38c828121a15" category="list-text">与 NetApp 存储和适用于 Kubernetes 的开源存储编排程序 Astra Trident 结合使用时，重点介绍 Red Hat OpenShift 的功能的实际配置和使用情形。</block>
+  <block id="d3d8eb53a347d6ffc9fb157d9ac8398b" category="paragraph">采用 NetApp 解决方案的 Red Hat OpenShift 由以下主要组件组成：</block>
+  <block id="2b8932b35916e8cecb6216546111322e" category="paragraph">Red Hat OpenShift 容器平台是一个完全受支持的企业 Kubernetes 平台。Red Hat 对开源 Kubernetes 进行了多项增强，可提供一个应用程序平台，其中包含所有组件，这些组件均已完全集成，可用于构建，部署和管理容器化应用程序。</block>
+  <block id="ddffa1813009160db4406c9ef143dd1e" category="section-title">NetApp 存储集成</block>
+  <block id="9480fd8950471a46e6b29b165ba7ae41" category="paragraph">NetApp Astra 控制中心为有状态 Kubernetes 工作负载提供了一组丰富的存储和应用程序感知型数据管理服务，这些服务部署在内部环境中，并采用 NetApp 值得信赖的数据保护技术。</block>
+  <block id="676eb65d672373423a7f460b0ee76d15" category="paragraph">有关详细信息，请访问 NetApp Astra 网站<block ref="508f471fa59796a53754f031c40091c1" category="inline-link-rx"></block>。</block>
+  <block id="0f28b648e748320ea4db6e62ec103ba9" category="paragraph">有关详细信息，请访问 Astra Trident 网站<block ref="9a096d611f0ede2737b2fde39343b44c" category="inline-link-rx"></block>。</block>
+  <block id="e15669a3c7179323f1acc08e9c744e08" category="section-title">高级配置选项</block>
+  <block id="34306e59be5281cec379b855a78c6d10" category="paragraph">本节专门介绍实际用户在将此解决方案部署到生产环境中时可能需要执行的自定义设置，例如创建专用私有映像注册表或部署自定义负载平衡器实例。</block>
+  <block id="12c17259bf3f3b36e970c9e3abbc6b43" category="cell">NetApp Astra 控制中心</block>
+  <block id="8d96276332b02a2ef892828c1d4fbab4" category="cell">应用程序感知型数据管理</block>
+  <block id="7067f7c7ef86b420751a601f1dd67ac0" category="cell">21.08.57</block>
+  <block id="8de59ec369b10820d0dd336b9765c79b" category="cell">NetApp Astra Trident</block>
+  <block id="824bd84e05db30b27e73f839dae3b8e5" category="list-text">Astra Trident 文档</block>
+  <block id="fe549ebd8a3f0fea1803cbaa947ef198" category="list-text">NetApp Astra 控制中心文档</block>
+  <block id="ad837604b59ea6a89754d8e75f595c7b" category="inline-link"><block ref="ad837604b59ea6a89754d8e75f595c7b" category="inline-link-rx"></block></block>
+  <block id="4af69e66dd3d513168080d177919dd21" category="paragraph"><block ref="4af69e66dd3d513168080d177919dd21" category="inline-link-rx"></block></block>
+  <block id="4e4757d7ca76c55b06ade139a3d1dff5" category="paragraph">对于完全实现的多租户 OpenShift 集群，必须为属于不同资源分段的集群资源配置配额和限制：计算，存储，网络连接，安全性等。虽然我们会介绍此解决方案中所有资源分段的某些方面， 我们重点介绍最佳实践，通过在由 NetApp ONTAP 提供支持的 Astra Trident 动态分配的存储资源上配置多租户，隔离并保护同一 Red Hat OpenShift 集群上多个工作负载提供或使用的数据。</block>
+  <block id="55b1699dffbeaa36335c1fd0715664a9" category="paragraph">从 Red Hat OpenShift 4 开始， OpenShift 的部署方法包括使用用户配置基础架构（ User Provisioned Infrastructure ， UPI ）手动部署高度自定义的部署，或者使用安装程序配置的基础架构（ IPI ）完全自动化部署。</block>
+  <block id="68dc46cb39cdfc93e4593bbdd5c218cf" category="paragraph">大多数情况下， IPI 安装方法是首选方法，因为它可以为开发，测试和生产环境快速部署 OCP 集群。</block>
+  <block id="f3de9b0db14638b73522af57df5adafe" category="paragraph">NetApp 已使用安装程序配置基础架构（ IPI ）部署方法在以下每个数据中心环境中测试并验证了 Red Hat OpenShift 在其实验室中的部署：</block>
+  <block id="3dbb1adfd571e8b44af1259f287d723f" category="paragraph">NetApp 拥有多个存储平台，这些平台符合我们的 Astra Trident Storage Orchestrator 标准，可为在 Red Hat OpenShift 上部署的应用程序配置存储。</block>
+  <block id="0d1d64b47559f0c28c883e7e790b8363" category="summary">本节专门介绍实际用户在将此解决方案部署到生产环境中时可能需要执行的自定义设置，例如创建专用映像注册表或部署自定义负载平衡器实例。</block>
+  <block id="5c2361d9192a56a3455df5e70145c9ea" category="doc">高级配置选项：采用 NetApp 的 Red Hat OpenShift</block>
+  <block id="6aca478ea21ea696adda3c2da926b148" category="paragraph">通常，最易于部署的解决方案被视为最佳配置，但在某些情况下，需要进行高级自定义，以满足特定应用程序或要部署解决方案的环境的要求或规范。为此，采用 NetApp 解决方案的 Red Hat OpenShift 允许进行以下自定义以满足这些需求。</block>
+  <block id="2642cf401e87de575eae139953f87134" category="admonition">在本节中，我们介绍了一些高级配置选项，例如，使用第三方负载平衡器或创建专用注册表来托管自定义容器映像，这两个选项都是安装 NetApp Astra 控制中心的前提条件。</block>
+  <block id="02b655f637212514780af2795fd74fc4" category="paragraph">以下页面介绍了有关在 Red Hat OpenShift with NetApp 解决方案中验证的高级配置选项的追加信息：</block>
+  <block id="becc5334b7f3d2f4f57fc42cd287fd54" category="inline-link-macro">了解负载平衡器选项</block>
+  <block id="22651dd64b4cd4c6d2742d1f8b126ae6" category="list-text"><block ref="22651dd64b4cd4c6d2742d1f8b126ae6" category="inline-link-macro-rx"></block></block>
+  <block id="261bdcc1d2c24d15c43c5947e69ea9e6" category="inline-link-macro">配置私有映像注册表</block>
+  <block id="c8db11b008075455562a8b598b31753c" category="list-text"><block ref="c8db11b008075455562a8b598b31753c" category="inline-link-macro-rx"></block></block>
+  <block id="767cac9667b73ee58f7081c876b9d7e7" category="doc">NetApp Astra 控制中心概述：采用 NetApp 的 Red Hat OpenShift</block>
+  <block id="75beb2bc89322c4ecf62da72cdcc104e" category="paragraph">NetApp Astra 控制中心为有状态 Kubernetes 工作负载提供了一组丰富的存储和应用程序感知型数据管理服务，这些服务部署在内部环境中，并采用 NetApp 值得信赖的数据保护技术。</block>
+  <block id="c4a7756da710a87248298a14bd0c21e6" category="paragraph"><block ref="c4a7756da710a87248298a14bd0c21e6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="93b105b74bb16b24a4b83763264e338a" category="paragraph">NetApp Astra 控制中心可以安装到 Red Hat OpenShift 集群中，该集群已部署 Astra Trident 存储编排程序，并配置了存储类，同时还将存储后端安装到 NetApp ONTAP 存储系统。</block>
+  <block id="e0ad3d9c4bbc9dd068feb30fdbd962cd" category="paragraph">有关安装和配置 Astra Trident 以支持 Astra 控制中心的信息，请参见本文档中的一节。 <block ref="7cd10e7cf66e99254d23c5e341809776" category="inline-link-macro-rx"></block>。</block>
+  <block id="bdbbfb3a35fcffd3e709725ea099ffc1" category="paragraph">在云互联环境中， Astra 控制中心使用 Cloud Insights 提供高级监控和遥测功能。如果没有 Cloud Insights 连接，则可以使用有限的（ 7 天的指标）监控和遥测功能，并且还可以通过开放式指标端点导出到 Kubernetes 原生监控工具（ Prometheus/Grafana ）。</block>
+  <block id="97c3a85151b427f4e9d5812ed92de66c" category="paragraph">Astra 控制中心完全集成到 NetApp AutoSupport/Active IQ 生态系统中，可为用户提供支持，协助进行故障排除以及显示使用情况统计信息。</block>
+  <block id="effb3f34b2138b3fc43d7bee5f690ab1" category="paragraph">除了已付费版本的 Astra 控制中心之外，客户还可以获得 90 天评估许可证。评估版将通过电子邮件和社区（ Slack 渠道）提供支持。客户可以访问这些以及其他知识库文章以及产品支持信息板上提供的文档。</block>
+  <block id="89cd64e1b818db8e8730c6c886b26cfb" category="paragraph">要开始使用 NetApp Astra 控制中心，请访问<block ref="53d9e4818d58cdd49b51739e9a6e0948" category="inline-link-rx"></block>。</block>
+  <block id="1af4dd7c63b7a3ec28f54f60863b88ab" category="section-title">安装 Astra 控制中心的前提条件</block>
+  <block id="594c3859c5adcd06da873d0c0bce0be0" category="list-text">一个或多个 Red Hat OpenShift 集群。</block>
+  <block id="6256e80811618a3a77892682ef427d75" category="admonition">目前支持版本 4.6 EUS 和 4.7 。</block>
+  <block id="66be2a1634bda5a0172ce2a1e4e8afbc" category="list-text">必须已在每个 Red Hat OpenShift 集群上安装和配置 Astra Trident 。</block>
+  <block id="e7a6c3c568d213db46836511343c4965" category="list-text">运行 ONTAP 9.5 或更高版本的一个或多个 NetApp ONTAP 存储系统。</block>
+  <block id="b7d473a2ef52b8ab65fcaca96fc790f4" category="admonition">最佳做法是，在站点上安装的每个 OpenShift 都要有一个专用的 SVM 来用于永久性存储。多站点部署需要额外的存储系统。</block>
+  <block id="c927c560df09d5ca001f99cd07b14700" category="list-text">必须在每个 OpenShift 集群上配置一个 Trident 存储后端，其中包含一个由 ONTAP 集群提供支持的 SVM 。</block>
+  <block id="67a56d728807272d2a01df50c6548f4f" category="list-text">在每个 OpenShift 集群上配置的默认 StorageClass ，其中使用 Astra Trident 作为存储配置程序。</block>
+  <block id="dda5c1363ac68168c83f72fc2645f51f" category="list-text">必须在每个 OpenShift 集群上安装和配置负载平衡器，以实现负载平衡并公开 OpenShift 服务。</block>
+  <block id="af24d8e2f7a62edb5d11d47fe40fad94" category="admonition">请参见链接 <block ref="0065297854ca0573913043e80b99a2d1" category="inline-link-macro-rx"></block> 有关已为此目的验证的负载平衡器的信息。</block>
+  <block id="7dbcc72cc3a693b8f89b064e38ed7a23" category="list-text">必须配置私有映像注册表以托管 NetApp Astra Control Center 映像。</block>
+  <block id="c7a3528c245b9ffee5862b0471d7fda1" category="admonition">请参见链接 <block ref="9d2000c3bba4885fe5f36ed192264583" category="inline-link-macro-rx"></block> 为此安装和配置 OpenShift 专用注册表。</block>
+  <block id="2c7040aa593c8b8c1e1944a0e55de462" category="list-text">您必须对 Red Hat OpenShift 集群具有集群管理员访问权限。</block>
+  <block id="537f97bbcef0e2e67d6840aa5845aa65" category="list-text">您必须对 NetApp ONTAP 集群具有管理员访问权限。</block>
+  <block id="0507b40de1fbd59b7a77b9054689e92b" category="list-text">一个管理工作站，其中安装了 Docker 或 podman ， tridentctl 以及 oc 或 kubectl 工具，并将其添加到 $path 中。</block>
+  <block id="bf3d245b9b2b3e5eeb32306c84b60d96" category="admonition">Docker 或 Podman 安装必须至少为版本 20.10 。</block>
+  <block id="8c7c70cb991e0295e289054b79308c5d" category="section-title">安装 Astra 控制中心</block>
+  <block id="b961571282445ee2fe9cc032c35fc602" category="list-text">登录到 NetApp 支持站点并下载最新版本的 NetApp Astra 控制中心。这需要在您的 NetApp 帐户中附加许可证。下载完 tarball 后，将其传输到管理工作站。</block>
+  <block id="e28d245f352d6e7b533ec6dae659d088" category="admonition">要开始获取 Astra Control 的试用许可证，请访问此站点<block ref="fabcddb484afdaf311b8977ae76541f3" category="inline-link-rx"></block></block>
+  <block id="ccab5cf8842d06d8d4e2f7f778657c4b" category="list-text">打开 tar ball 的包装并将工作目录更改为生成的文件夹。</block>
+  <block id="6c43c95403d891dc19db6a29bb4d02f2" category="list-text">在开始安装之前，我们需要将 Astra 控制中心映像推送到映像注册表。</block>
+  <block id="c3600fb3b910474f0b65592588f14e85" category="admonition">您可以选择使用 Docker 或 Podman 执行此操作，此步骤将提供这两者的说明。</block>
+  <block id="abe31bcfb59f2265c2fb97dde407366c" category="open-title">podman</block>
+  <block id="e83d8437c3befea11906e730883605bf" category="list-text">将 ‘re名称为组织 / 命名空间 / 项目的注册表 FQDN 导出为环境变量 "gregistry" 。</block>
+  <block id="9acf317cba8637e151b8daae04e3e998" category="list-text">登录到注册表。</block>
+  <block id="04ed68e8f87476ab55420cfc4db8ff89" category="list-text">创建 Shell 脚本文件并将以下内容粘贴到其中。</block>
+  <block id="ab9451b2a85dd0c9ce158112cb92805c" category="admonition">如果注册表使用的证书不可信，请编辑 shell 脚本并对 podman 推送命令使用 -tls-verify=false - `podman push $registry/$ （ echo $astraImage | sed s/^ ………^ ……………………………………………………………………………………………………………` …</block>
+  <block id="326c4e96ff06709dede5c03038f00e78" category="list-text">使文件可执行</block>
+  <block id="ed85c18933b4b240788294af279f8624" category="list-text">执行 shell 脚本。</block>
+  <block id="05b6053c41a2130afd6fc3b158bda4e6" category="open-title">Docker</block>
+  <block id="c0886a2df430b7ea240139008f6d04d6" category="admonition">如果您的注册表使用的是不可信的证书，请编辑 shell 脚本并对 Docker 推送命令使用 -tls-verify=false - `docker push $registry/$ （ echo $astraImage | sed s/^ （^ ） \/]\+///' ） -tls-verify=false`</block>
+  <block id="5f7b5da1ed57bea3ccb329f7aae8824c" category="list-text">下一步是将映像注册表 TLS 证书上传到 OpenShift 节点。为此，请使用 TLS 证书在 OpenShift-config 命名空间中创建一个配置映射，并将其修补到集群映像配置中以使此证书可信。</block>
+  <block id="a768fbfefe23b6026c35331b6ef9c56c" category="admonition">如果您使用的是路由入口操作员提供的默认 TLS 证书的 OpenShift 内部注册表，则仍需要按照上述步骤将这些证书修补到路由主机名。要从入口运算符提取证书，您可以使用命令 - `oc extract secret/router -ca -keys=tls.crt -n OpenShift-Inuse-operator`</block>
+  <block id="fdc0396d44e65af291c88c0245150c2b" category="list-text">创建一个命名空间 `Acc-operator-system` 以安装 Astra 控制中心操作员。</block>
+  <block id="afce5c24a2365e3ba0f8749d8666182f" category="list-text">使用凭据创建一个密钥，以登录到 `Acc-operator-system` namespace 中的映像注册表。</block>
+  <block id="d03e4a349f30176cdc471ed6400e5fc7" category="list-text">编辑 Astra 控制中心操作员 CR `Astra_control_center_operator_deploy.YAML` 这是 Astra 控制中心部署的一组所有资源。在操作员 CR 中，找到 `Acc-operator-controller-manager` 的部署定义，并输入注册表的 FQDN 以及将映像推送到注册表时提供的组织名称（在此示例中为 astra-registry.apps.ocp-vmw.cie.netapp.com/netapp-astra ） 替换文本 ` [y您 的 .registry.goes.here]` 并提供我们刚刚创建的密钥的名称。验证操作员的其他详细信息，保存并关闭。</block>
+  <block id="a27cc132b2f3001f3e9df9c40dad4bfb" category="list-text">运行以下命令创建运算符。</block>
+  <block id="685fe82295261a8902e709081b6c9599" category="list-text">创建一个专用命名空间以安装所有 Astra 控制中心资源。</block>
+  <block id="3fbdaed4619864c25e927117cfd57687" category="list-text">创建用于访问该命名空间中的映像注册表的密钥。</block>
+  <block id="da728b6df696b4b2c53d34b87e587439" category="list-text">下一步是编辑 Astra 控制中心 CRD 文件 `Astra_control_center_min.yaml` 并填写 FQDN ，映像注册表详细信息，管理员电子邮件地址和其他详细信息。</block>
+  <block id="d689979a6af0f5660231db187d212950" category="list-text">在为其创建的命名空间中创建 Astra 控制中心 CRD 。</block>
+  <block id="eeea3da0480473c868836662f5d6bf09" category="admonition">以上文件 `Astra_control_center_min.yaml` 是 Astra 控制中心 CRD 的最低版本。如果要创建的 CRD 具有更多的控制权，例如定义 storageclass ，而不是默认创建 PVC 或为邮件通知提供 SMTP 详细信息，则可以编辑文件 `Astra_control_center.yaml` ，填写这些详细信息并使用它创建 CRD 。</block>
+  <block id="d979a690f796fd2058e88dc79287ca07" category="section-title">安装验证</block>
+  <block id="e66d3c5d0f2cca817a873ab3107fe944" category="list-text">完成安装可能需要几分钟时间。验证 NetApp-Astra-cc 命名空间中的所有 Pod 和服务是否均已启动且正在运行。</block>
+  <block id="9904a774f242f31a5ae37c8f75bda92b" category="list-text">检查 `Acc-operator-controller-manager` 日志以确保安装已完成。</block>
+  <block id="559d62f11907d12d526f901ee8924f61" category="admonition">应显示以下消息以指示 Astra 控制中心的成功安装</block>
+  <block id="2c4f22b3db871e1e96f6f2cbf7791857" category="list-text">用于登录到 Astra 控制中心的用户名是 CRD 文件中提供的管理员电子邮件地址，密码是附加到 Astra 控制中心 UUID 的字符串 ‘Acc- ' 。运行以下命令—</block>
+  <block id="0731fc20007122de526da7b782aeffc6" category="admonition">在此示例中，密码为– `Acc-345c55a5-bf2e-21f0-84b8-b6f2bce5e95f`</block>
+  <block id="76b95160fd355bc5587dfdf2120e474d" category="list-text">现在，通过浏览到您在 CRD 文件中提供的 FQDN 登录到 Astra 控制中心图形用户界面。</block>
+  <block id="cc2ba6bb5620162b64bafdca9f089718" category="inline-image-macro">Astra 控制中心登录</block>
+  <block id="9af9ac4a3dd2ab221c2c5e2bf2aaee2a" category="paragraph"><block ref="9af9ac4a3dd2ab221c2c5e2bf2aaee2a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1d5b3da9b583552ac9a215f08a632d9c" category="list-text">首次使用 CRD 中提供的管理员电子邮件地址登录到 Astra 控制中心图形用户界面时，您需要更改密码。</block>
+  <block id="90fbead2d113af1a2680805778908d98" category="inline-image-macro">Astra 控制中心强制更改密码</block>
+  <block id="247e9fd0170ec4d9550de59ebd54787b" category="paragraph"><block ref="247e9fd0170ec4d9550de59ebd54787b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7a1c79579369851ee9b9559e16f55be7" category="list-text">如果要将用户添加到 Astra 控制中心，请转到 `Account` -&gt; `Users` ，然后单击 `Add` 并输入用户的详细信息，然后单击 `Add` 。</block>
+  <block id="0dd5915bd7ca0f5d34df18bf7a183d50" category="inline-image-macro">Astra 控制中心创建用户</block>
+  <block id="0ea309ed2f56bdc52dd6184b9043e683" category="paragraph"><block ref="0ea309ed2f56bdc52dd6184b9043e683" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6b52548324146765476a94b17dea2b01" category="list-text">要使 Astra 控制中心的所有功能正常运行，需要获得许可证。要添加许可证，请转到 `Account` -&gt; `License` ，单击 `Add License` 并上传许可证文件。</block>
+  <block id="54936e9fda3da1e56a25c0056f054bce" category="inline-image-macro">Astra Control Center 添加许可证</block>
+  <block id="02fd0244de299d20dfbaf9113b883030" category="paragraph"><block ref="02fd0244de299d20dfbaf9113b883030" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2044ecf5033cd4a7b9530b83075af99e" category="admonition">如果您在安装或配置 NetApp Astra 控制中心时遇到问题，可以参考已知问题的知识库<block ref="d775d2705bd260971e4d33c3d1094402" category="inline-link-rx"></block>。</block>
+  <block id="9204faa817ce36107d052d3cd7c886c7" category="inline-link-macro">接下来：向 NetApp 注册 Red Hat OpenShift 集群： Red Hat OpenShift 。</block>
+  <block id="8d167505bef11e381036abf56e79f457" category="paragraph"><block ref="8d167505bef11e381036abf56e79f457" category="inline-link-macro-rx"></block></block>
+  <block id="da6d08d42e3b765cb05e6e9bd35bd4e9" category="doc">安装 F5 BigIP 负载平衡器：采用 NetApp 的 Red Hat OpenShift</block>
+  <block id="9b93320aea95cfaf2e4b5c8b5857c26f" category="paragraph">此页面详细介绍了 F5 BigIP 负载平衡器的安装和配置说明。</block>
+  <block id="c217827b56d54b197e8f044ae6a65a69" category="section-title">安装 F5 BigIP 负载平衡器</block>
+  <block id="8b14fb34f5313442bf2fdc4d80edc389" category="summary">本节专门介绍要使用 NetApp 自定义 Red Hat OpenShift 部署的用户的负载平衡器选项。</block>
+  <block id="87beaa6eff6159cd7270b2a4e71c10a4" category="doc">了解负载平衡器选项： Red Hat OpenShift 与 NetApp</block>
+  <block id="4eb5f267bdf3d92b99060d794226bb60" category="paragraph">在大多数情况下， Red Hat OpenShift 会通过路由向外部世界提供应用程序。通过为服务提供一个可从外部访问的主机名来公开该服务。OpenShift 路由器可以使用定义的路由及其服务标识的端点，以便为外部客户端提供此命名连接。</block>
+  <block id="0aa971b4d33bdc82c500a35166e588c8" category="paragraph">但是，在某些情况下，应用程序需要部署和配置自定义负载平衡器才能公开相应的服务。其中一个示例是 NetApp Astra 控制中心。为了满足这一需求，我们评估了许多自定义负载平衡器选项。本节将介绍其安装和配置。</block>
+  <block id="6914d9014ff3e2cb99cabff26b55a0bc" category="paragraph">以下页面提供了有关负载平衡器选项的追加信息，这些选项已在 Red Hat OpenShift with NetApp 解决方案中进行验证：</block>
+  <block id="2b545f7c547a71eaeda9dcb451aea0c5" category="inline-link-macro">元 LB</block>
+  <block id="eaefba36e93c0d0177c3de1143bd08dd" category="list-text"><block ref="eaefba36e93c0d0177c3de1143bd08dd" category="inline-link-macro-rx"></block></block>
+  <block id="16dcf1808fc3c9a6f8342f97305d2ad6" category="doc">保护您的应用程序</block>
+  <block id="58c0d00b6ee4c263f1fbe431b41eebf4" category="paragraph">在由 Astra 控制中心管理应用程序工作负载之后，您可以为这些工作负载配置保护设置。</block>
+  <block id="59af79c7ab060b4cca322301a4729f0c" category="section-title">创建应用程序快照</block>
+  <block id="c0cf3c0162d106c6ee24b7afa9b79575" category="paragraph">应用程序的快照会创建一个 ONTAP Snapshot 副本，该副本可用于根据该 Snapshot 副本将应用程序还原或克隆到特定时间点。</block>
+  <block id="9101281f33d55e682b1a47a44251fa0e" category="list-text">要为应用程序创建快照，请导航到 "Apps" &gt; "Managed " 选项卡，然后单击要为其创建 Snapshot 副本的应用程序。单击应用程序名称旁边的下拉菜单，然后单击 Snapshot 。</block>
+  <block id="c01290a8a623e36f9bcae85b910a3410" category="inline-image-macro">Astra 控制中心快照按钮</block>
+  <block id="22434659793c78f48c7d1c7b4737d3e6" category="paragraph"><block ref="22434659793c78f48c7d1c7b4737d3e6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c5cb0ac31cda5107720fe3d594334e47" category="list-text">输入快照详细信息，单击 Review ，然后单击 Snapshot 。创建快照大约需要一分钟，在成功创建快照后，状态将变为可用。</block>
+  <block id="f40e241f10f15eb6887acbc81fec81b0" category="inline-image-macro">Astra 控制中心创建快照</block>
+  <block id="9e3f10f093546e36308573917ec43329" category="paragraph"><block ref="9e3f10f093546e36308573917ec43329" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1853746a915bea325b8b576237c24427" category="section-title">创建应用程序备份</block>
+  <block id="91796648d42dbd448c6cbb2044cb92ba" category="paragraph">应用程序的备份可捕获应用程序的活动状态及其资源的配置，将其覆盖到文件中，并将其存储在远程对象存储分段中。</block>
+  <block id="72e328bb06195897c7a644970c61d3a2" category="paragraph">要在 Astra 控制中心备份和还原受管应用程序，必须先为支持的 ONTAP 系统配置超级用户设置。为此，请输入以下命令。</block>
+  <block id="6db82a24b17137378420e9fc7961d961" category="list-text">要在 Astra 控制中心创建受管应用程序的备份，请导航到应用程序 &gt; 受管选项卡，然后单击要备份的应用程序。单击应用程序名称旁边的下拉菜单，然后单击备份。</block>
+  <block id="bc230776554b8a63af328cf9f01124e1" category="inline-image-macro">Astra 控制中心备份按钮</block>
+  <block id="61b27a816b60763bb526e19339074f61" category="paragraph"><block ref="61b27a816b60763bb526e19339074f61" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="dfade2835046a4412806486584077a75" category="list-text">输入备份详细信息，选择用于保存备份文件的对象存储分段，单击查看，然后在查看详细信息后，单击备份。根据应用程序和数据的大小，备份可能需要几分钟的时间，备份成功完成后，备份状态将变为可用。</block>
+  <block id="e10781941ccd98298d2856b437b3fb4b" category="inline-image-macro">Astra 控制中心创建备份</block>
+  <block id="b79feabe45fa973dbfc3b196e9a0b7ad" category="paragraph"><block ref="b79feabe45fa973dbfc3b196e9a0b7ad" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="39c5ec1870f7031498c4fa4634f5ca0a" category="section-title">还原或克隆应用程序</block>
+  <block id="2939764b1667f58cd22dc123966f5634" category="paragraph">只需按一个按钮，即可将应用程序还原到发起集群或将其克隆到远程集群，以用于开发 / 测试或应用程序保护和灾难恢复。</block>
+  <block id="2c2697937c7f0c07693378f58d4110c3" category="list-text">要还原或克隆应用程序，请导航到应用程序 &gt; 受管选项卡，然后单击相关应用程序。单击应用程序名称旁边的下拉菜单，然后单击克隆。</block>
+  <block id="92955527b375720b2a586155a776c0ac" category="inline-image-macro">Astra Control Center 克隆按钮</block>
+  <block id="4d69833fef921717aba648acb1677c81" category="paragraph"><block ref="4d69833fef921717aba648acb1677c81" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3055b7009a82841904eb36fa27fb7b31" category="list-text">输入新命名空间的详细信息，选择要将其还原或克隆到的集群，然后选择是要从现有快照还是从应用程序当前状态的备份还原或克隆此命名空间。查看详细信息后，单击 Review ，然后单击 Clone 。</block>
+  <block id="c4293ef1955d52694e7d2288b637df1a" category="inline-image-macro">Astra 控制中心还原</block>
+  <block id="9ad1cd254dba2b1c13c810078d947a3e" category="paragraph"><block ref="9ad1cd254dba2b1c13c810078d947a3e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c501040965cb5ca97cc675347e9ebfdf" category="list-text">当 Astra 控制中心在选定集群上创建应用程序时，新应用程序将进入 " 正在发现 " 状态。在 Astra 安装并检测到应用程序的所有资源后，该应用程序将进入可用状态。</block>
+  <block id="9ff3c5458e4a8facc6e7c25656a3baf7" category="inline-image-macro">发现 Astra Control Center 新应用程序</block>
+  <block id="32fc08fbd285649fbc9f888756113f95" category="paragraph"><block ref="32fc08fbd285649fbc9f888756113f95" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d19de154f02438c6d6918a4e016c7c62" category="doc">选择要保护的应用程序</block>
+  <block id="501195b19cb60bfec4c2e4899a2a460c" category="paragraph">注册 Red Hat OpenShift 集群后，您可以通过 Astra 控制中心发现已部署的应用程序并对其进行管理。</block>
+  <block id="a022d74e2b8b62dd9f1caa37a51aa3f3" category="section-title">管理应用程序</block>
+  <block id="d8c780951f3271e7d72b116e5f41d46b" category="list-text">在将 OpenShift 集群和 ONTAP 后端注册到 Astra 控制中心后，控制中心将自动开始发现所有命名空间中使用使用使用指定 ONTAP 后端配置的 storageclass 的应用程序。</block>
+  <block id="3b5963749d054f288f27dfb2f20d0370" category="inline-image-macro">发现 Astra 控制中心应用程序</block>
+  <block id="a78e618a70881e5c5dda311aaa61c250" category="paragraph"><block ref="a78e618a70881e5c5dda311aaa61c250" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0c46442de8c982973aeee99a9441b746" category="list-text">导航到应用程序 &gt; 已发现，然后单击要使用 Astra 管理的应用程序旁边的下拉菜单。然后单击管理。</block>
+  <block id="22d84cdf10d4c1059d68b1ab7da5b375" category="inline-image-macro">Astra 控制中心管理应用程序</block>
+  <block id="4afca1ab36db499d54b08ff38dff8a5c" category="paragraph"><block ref="4afca1ab36db499d54b08ff38dff8a5c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2d694cfe5907a4790ea939388a8cfd25" category="list-text">此应用程序将进入可用状态，并可在 "Apps" 部分的 "Managed " 选项卡下查看。</block>
+  <block id="dc496d6799e0c6ab3bdfdbdc6a086b48" category="inline-image-macro">提供 Astra 控制中心应用程序</block>
+  <block id="872adedc4ac847cec0aa8fb9299d32e5" category="paragraph"><block ref="872adedc4ac847cec0aa8fb9299d32e5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="25455d8c4f32e917913e200faff48fbf" category="inline-link-macro">接下来：保护您的应用程序：采用 NetApp 的 Red Hat OpenShift 。</block>
+  <block id="beac143fce6f36aec80e9c8aad8c718b" category="paragraph"><block ref="beac143fce6f36aec80e9c8aad8c718b" category="inline-link-macro-rx"></block></block>
+  <block id="7bd1cbf9d5bf3b10ff24ebec6fb4d38c" category="list-text"><block ref="7bd1cbf9d5bf3b10ff24ebec6fb4d38c" category="inline-link-rx"></block></block>
+  <block id="472d13eb415cd6107aeef3a1ae6cd705" category="summary">NetApp 提供了许多产品，可帮助客户在基于容器的环境中编排和管理持久数据，例如 Red Hat OpenShift 。</block>
+  <block id="059c64407df73835fa248cd9dd2b601f" category="doc">NetApp 存储集成概述： Red Hat OpenShift 与 NetApp</block>
+  <block id="ebfc0e639726a366f8eb5ac86bb7cc43" category="paragraph"><block ref="ebfc0e639726a366f8eb5ac86bb7cc43" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4815a6a7efc59ac009ada22119b82881" category="paragraph">NetApp Astra Control 采用 NetApp 值得信赖的数据保护技术，为有状态的 Kubernetes 工作负载提供丰富的存储和应用程序感知型数据管理服务。</block>
+  <block id="b0d15446e48407d79f59424beb9a0dcc" category="paragraph">Astra Control Service 可支持云原生 Kubernetes 部署中的有状态工作负载。</block>
+  <block id="9f2ff0e739885975cc4f69af1a0feccc" category="paragraph">Astra 控制中心可支持内部部署中的有状态工作负载，例如 Red Hat OpenShift 。</block>
+  <block id="6ecf67a80528b454f8dfa8ee5aa5bf31" category="paragraph">有关详细信息，请访问 NetApp Astra Control 网站<block ref="508f471fa59796a53754f031c40091c1" category="inline-link-rx"></block>。</block>
+  <block id="a1e39236ce605ae5efe8a42170e0d572" category="paragraph">NetApp Astra Trident 是一款开源且完全受支持的存储编排程序，适用于容器和 Kubernetes 分发版，包括 Red Hat OpenShift 。</block>
+  <block id="a82471a394af4fa3cdac0b94e46bae89" category="paragraph">有关详细信息，请访问 Astra Trident 网站<block ref="9a096d611f0ede2737b2fde39343b44c" category="inline-link-rx"></block>。</block>
+  <block id="cd351007d4a671a321b6881f730d0dc3" category="paragraph">以下页面介绍了有关已在 Red Hat OpenShift with NetApp 解决方案中针对应用程序和永久性存储管理进行验证的 NetApp 产品的追加信息：</block>
+  <block id="77665e15c3691d78f1b4eebb6fff579a" category="list-text"><block ref="77665e15c3691d78f1b4eebb6fff579a" category="inline-link-macro-rx"></block></block>
+  <block id="19ebd5ffa30d784aa0f379af66f810e9" category="list-text"><block ref="19ebd5ffa30d784aa0f379af66f810e9" category="inline-link-macro-rx"></block></block>
+  <block id="afa49872fb8ae001174e4c8f2cc47208" category="inline-link-macro">接下来： NetApp Astra 控制中心概述</block>
+  <block id="22fd530ae76b4bbe50669b9a4d5b72d7" category="paragraph"><block ref="22fd530ae76b4bbe50669b9a4d5b72d7" category="inline-link-macro-rx"></block></block>
+  <block id="f43b03517a6961d80a7ccf64fa8dc4da" category="admonition">以下说明在 Trident 21.01 安装中进行了屏蔽，但手动部署 Trident 操作员的步骤也适用于当前 21.04 版本。</block>
+  <block id="484e821be3ffc9c7209f7a2d55f80ca1" category="list-text">将安装归档下载到管理工作站并提取内容。Trident 的当前版本为 21.04 ，可以下载<block ref="c71d2968b50c4cfbb1a3b9207e6166b5" category="inline-link-rx"></block>。</block>
+  <block id="f8644c8b6c2cc01b16c99747131cf17d" category="list-text">如果不存在 Trident 命名空间，请使用提供的清单在集群中创建一个。</block>
+  <block id="ace016847ab0132b3549f2af92bb43d0" category="list-text">启用 Trident 与 NetApp HCI 解决方案和 Anthos 集成的下一步是创建一个后端，以便与存储系统进行通信。NetApp 已通过 Anthos-ready 合作伙伴存储验证计划针对多种不同的协议进行了验证。这样， NetApp Trident 便可通过 ONTAP 平台在 Anthos 环境中为 NFS 提供支持，并通过 NetApp HCI 中使用的 ONTAP 和 Element 存储提供 iSCSI 支持。</block>
+  <block id="4d469510d5796544d36407facbbd95a7" category="list-text">下载的安装归档中的 `sample-input` 文件夹提供了示例后端文件。将 `backend-solidfire.json` 复制到您的工作目录中并对其进行编辑，以提供有关存储系统环境的详细信息。对于基于 Element 的 iSCSI 连接，复制并编辑 `backend-solidfire.json` 文件。</block>
+  <block id="45ef73e3b96b2f670e88a2679996b257" category="list-text">必须对此文件进行的唯一编辑是，为新创建的后端存储驱动程序的名称定义 `backendType` 值。另请注意在后续步骤中必须引用的名称字段值。</block>
+  <block id="810a039d1a8524388b75a0fe8d837afc" category="summary">要使 Astra 控制中心能够管理您的工作负载，您必须先注册 Red Hat OpenShift 集群。</block>
+  <block id="3557f7a93216446476c40d54e0426c40" category="doc">将 Red Hat OpenShift 集群注册到 Astra 控制中心</block>
+  <block id="349c99fe6f384da92e5b8289b828791c" category="section-title">注册 Red Hat OpenShift 集群</block>
+  <block id="c179429ab818c9d0cca3d1db55f788bf" category="list-text">第一步是将 OpenShift 集群添加到 Astra 控制中心并对其进行管理。转至集群并单击添加集群，上传 OpenShift 集群的 kubeconfig 文件，然后单击选择存储。</block>
+  <block id="8dfc7d6b819f8c17b51391e3b3159add" category="inline-image-macro">Astra 控制中心创建集群</block>
+  <block id="7470624615914e8e3d5fdf4ea1aa31de" category="paragraph"><block ref="7470624615914e8e3d5fdf4ea1aa31de" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c7d9a690231a2d896f69e9b45c9ff4a1" category="admonition">可以生成 kubeconfig 文件，以便使用用户名和密码或令牌进行身份验证。令牌将在一段有限的时间后过期，并且可能会使注册的集群无法访问。NetApp 建议使用具有用户名和密码的 kubeconfig 文件将 OpenShift 集群注册到 Astra 控制中心。</block>
+  <block id="5f472f4659dc57a93352041cb55d96bd" category="list-text">Astra 控制中心会检测符合条件的存储类。现在，选择使用 NetApp ONTAP 上由 SVM 支持的 Trident 配置卷的 storageclass 方式，然后单击查看。在下一个窗格中，验证详细信息，然后单击 Add Cluster 。</block>
+  <block id="cab7d2cb072914c0a5a89baab41d38e8" category="inline-image-macro">Astra 控制中心创建集群选择存储</block>
+  <block id="68ac91074dd3b4e5514e5f56a6c9c756" category="paragraph"><block ref="68ac91074dd3b4e5514e5f56a6c9c756" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e964465221b592135a5f8a8fd30faffc" category="list-text">按照步骤 1 中所述注册两个 OpenShift 集群。添加后，集群将变为 " 正在发现 " 状态，而 Astra 控制中心将对其进行检查并安装必要的代理。成功注册后，集群状态将更改为 " 正在运行 " 。</block>
+  <block id="420b9c40f78cc4825914319af51801b9" category="inline-image-macro">提供 Astra 控制中心集群</block>
+  <block id="1b017a62213661e1ed3c5c581fcf74a2" category="paragraph"><block ref="1b017a62213661e1ed3c5c581fcf74a2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="01af975a310a9abe9416c82f19b7c3b1" category="admonition">由 Astra 控制中心管理的所有 Red Hat OpenShift 集群都应有权访问用于安装的映像注册表，因为受管集群上安装的代理将从该注册表中提取映像。</block>
+  <block id="8d01de34ef9b9b934d18009a1e3273a9" category="list-text">将 ONTAP 集群作为存储资源导入，以便由 Astra 控制中心作为后端进行管理。将 OpenShift 集群添加到 Astra 并配置了 storageclass 后，它会自动发现并检查支持该 storageclass 的 ONTAP 集群，但不会将其导入到要管理的 Astra 控制中心中。</block>
+  <block id="781ffd1df517a65b302412f53de974da" category="inline-image-macro">Astra 控制中心后端发现</block>
+  <block id="1fcc7977dffdc8fd8fc53582c67da895" category="paragraph"><block ref="1fcc7977dffdc8fd8fc53582c67da895" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="bc4d3bc8025c7c4e91858d8284ff74b4" category="list-text">要导入 ONTAP 集群，请转到后端，单击下拉列表，然后选择要管理的 ONTAP 集群旁边的管理。输入 ONTAP 集群凭据，单击查看信息，然后单击导入存储后端。</block>
+  <block id="4da0c23c38cf0da34e1e6660ff74542b" category="inline-image-macro">Astra 控制中心创建后端</block>
+  <block id="69dbaffc2661024ee0b5095bc3674f60" category="paragraph"><block ref="69dbaffc2661024ee0b5095bc3674f60" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="edb4425c04926a17b6ff9a4a2ecdc669" category="list-text">添加后端后，状态将更改为 Available 。现在，这些后端可提供有关 OpenShift 集群中的永久性卷以及 ONTAP 系统上的相应卷的信息。</block>
+  <block id="92c130f9be24925c7dee36f7580ea347" category="inline-image-macro">提供 Astra 控制中心后端</block>
+  <block id="e9f487b0aad6779edbf50c6092477bd5" category="paragraph"><block ref="e9f487b0aad6779edbf50c6092477bd5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f2d10d92dc9d83e3cf3514e8e883e5cb" category="list-text">要使用 Astra 控制中心在 OpenShift 集群之间进行备份和还原，您必须配置支持 S3 协议的对象存储分段。目前支持的选项包括 ONTAP S3 ， StorageGRID 和 AWS S3 。为此，我们将配置一个 AWS S3 存储分段。转到 " 分段 " ，单击 " 添加分段 " ，然后选择 " 通用 S3" 。输入有关 S3 存储分段和凭据的详细信息以访问它，单击复选框 " 将此存储分段设置为云的默认存储分段 " ，然后单击添加。</block>
+  <block id="6910cb9051734be0129cb1e7dd84ce5c" category="inline-image-macro">Astra 控制中心创建存储分段</block>
+  <block id="2786d0b632389f7cbd6c4e67fba0061f" category="paragraph"><block ref="2786d0b632389f7cbd6c4e67fba0061f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3025f9f6be844e1da030a15d642f8482" category="inline-link-macro">接下来：选择要保护的应用程序：采用 NetApp 的 Red Hat OpenShift 。</block>
+  <block id="ba8e598c89a155618fcddc06a0a77869" category="paragraph"><block ref="ba8e598c89a155618fcddc06a0a77869" category="inline-link-macro-rx"></block></block>
+  <block id="b828c2e836c9b9eeb886cdbce967be5f" category="paragraph">虽然默认情况下，由 NetApp ONTAP 提供支持的 Red Hat OpenShift 和 Astra Trident 不会在工作负载之间提供隔离，但它们提供了广泛的功能，可用于配置多租户。为了更好地了解如何在采用 NetApp ONTAP 作为后盾的 Astra Trident 的 Red Hat OpenShift 集群上设计多租户解决方案，让我们考虑一个包含一系列要求的示例，并概述其配置。</block>
+  <block id="ff62063c3d782ff938cffc9b17381509" category="paragraph">假设一个组织在一个 Red Hat OpenShift 集群上运行两个工作负载，作为两个不同团队正在处理的两个项目的一部分。这些工作负载的数据驻留在由 NetApp ONTAP NAS 后端的 Astra Trident 动态配置的 PVC 上。该组织需要为这两个工作负载设计多租户解决方案，并隔离用于这些项目的资源，以确保保持安全性和性能，主要侧重于为这些应用程序提供服务的数据。</block>
+  <block id="17ccc3eb8ea8f5f67abca5013107af2f" category="paragraph">下图展示了由 NetApp ONTAP 提供支持的带有 Astra Trident 的 Red Hat OpenShift 集群上的多租户解决方案。</block>
+  <block id="2ed5156911e542a4d3d64a6e160f6446" category="image-alt">Red Hat OpenShift 集群上的多租户，采用由 NetApp ONTAP 提供支持的 Astra Trident</block>
+  <block id="086e6c16e3fe8e13c336612ef636aa02" category="list-text">Astra Trident</block>
+  <block id="bf4e72937ad57bd2f780561c81d25d53" category="paragraph">在由 NetApp ONTAP 提供支持的 Astra Trident 的协助下， OpenShift 虚拟化还支持某些功能，例如实时 VM 迁移， VM 磁盘克隆， VM 快照等。这些工作流的示例将在本文档后面的相应章节中进行讨论。</block>
+  <block id="d55adbfc40b7bcdb0606eb0bd4d88cae" category="summary">本节专门介绍如何创建和配置由 Astra Trident 提供的永久性存储提供支持的私有映像注册表。</block>
+  <block id="fd557b52b4948b3cb4fc004738364327" category="doc">创建私有映像注册表：使用 NetApp 的 Red Hat OpenShift</block>
+  <block id="9c864113b9e4202e111b818a53d4f506" category="inline-link">Quay.io</block>
+  <block id="4b4141875f954447d204e6f73d93e2a0" category="inline-link">DockerHub</block>
+  <block id="508888fd9f92f35e5edd97bd8083e289" category="paragraph">对于大多数 Red Hat OpenShift 部署，请使用等公有注册表<block ref="b9eeebbe4a68a648d570ea2173e5ef99" category="inline-link-rx"></block> 或<block ref="0252a6b70cc5017fa1445a78532155b6" category="inline-link-rx"></block> 满足大多数客户的需求。但是，有时客户可能希望托管自己的私有或自定义映像。</block>
+  <block id="00a3f196d7f27a1f41f5d6a7f48759d0" category="paragraph">本操作步骤介绍了如何创建私有映像注册表，该注册表由 Astra Trident 和 NetApp ONTAP 提供的永久性卷提供支持。</block>
+  <block id="d9d5e29b1b83dd9c215f5ea158ca2475" category="admonition">Astra 控制中心需要注册表来托管 Astra 容器所需的映像。以下部分介绍了在 Red Hat OpenShift 集群上设置专用注册表以及推送支持安装 Astra 控制中心所需的映像的步骤。</block>
+  <block id="b7f545f2141257f987932cb16a8fdd8e" category="section-title">创建私有映像注册表</block>
+  <block id="bbd62d230a8b3dfdfb67921b04544d1e" category="list-text">编辑 imageeregistry 运算符，在 `sPec` 部分输入以下存储参数</block>
+  <block id="d511af84cac90f9ea357f19fee83b472" category="list-text">然后，在 `sPec` 部分输入以下参数，使用自定义主机名创建 OpenShift 路由，保存并退出</block>
+  <block id="d80f21b22ea8dd53eff0b67f64fbeaea" category="admonition">如果要为路由设置自定义主机名，则会使用上述路由配置。如果您希望 OpenShift 使用默认主机名创建路由，您只需将以下参数添加到 `sPec` section – `defaultRoute ： true`</block>
+  <block id="3b51893eab9fa9e4f3b88a106cbbb086" category="sidebar-title">自定义 TLS 证书</block>
+  <block id="ef978da8b4bdca7b4a81945f5c94fa3d" category="paragraph">默认情况下，当您对路由使用自定义主机名时，它会使用 OpenShift 入口操作员的默认 TLS 配置。但是，您可以向路由添加自定义 TLS 配置。为此，请执行以下步骤—</block>
+  <block id="35a26e51d5bb9fb7acfae26c544b984b" category="list-text">使用路由的 TLS 证书和密钥创建密钥—</block>
+  <block id="3f7f075b321d0bd928c64c1b584bffa7" category="list-text">编辑 imageeregistry 运算符，并将以下参数添加到 `sPec` 部分—</block>
+  <block id="d1c051ad447b479de071648dc5fc680c" category="list-text">下一步是再次编辑 imageeregistry 运算符，并将该运算符的管理状态更改为 `Maned` state ， save and exit –</block>
+  <block id="700f28ad3e7b8460f73468ad71002d30" category="list-text">如果满足所有前提条件，则应开始为专用映像注册表创建 PVC ， Pod 和服务。几分钟后，注册表就会启动。</block>
+  <block id="791fbfb1a66d41188b9ec4a12016466b" category="list-text">如果您使用的是传入操作员 OpenShift 注册表路由的默认 TLS 证书，则可以使用以下命令提取 TLS 证书。</block>
+  <block id="ebf6d39f3067009cdaeb4fa825a2b105" category="list-text">要允许 OpenShift 节点访问并从注册表中提取映像，您需要将证书添加到 OpenShift 节点上的 Docker 客户端。使用 TLS 证书在 `OpenShift-config` 命名空间中创建一个配置映射，并将其修补到集群映像配置中以使此证书可信。</block>
+  <block id="f5d329a40b626dd09e82eb7bd3fb6e0a" category="list-text">OpenShift 内部注册表由身份验证控制。所有 OpenShift 用户都可以访问 OpenShift 注册表，但登录用户可以执行的操作取决于用户权限。</block>
+  <block id="299bb461d2320d8e34b727961e257f63" category="list-text">要允许用户 / 用户组从注册表中提取映像，必须为用户分配注册表查看器角色。</block>
+  <block id="6fee5b566ae13b8ec1a09653f8c7094f" category="list-text">要允许用户 / 用户组写入或推送映像，必须为用户分配注册表编辑器角色。</block>
+  <block id="ee4321f8d3084d4d329362e156aad2db" category="list-text">要使 OpenShift 节点能够访问注册表并推 / 拉映像，您需要配置拉取密钥。</block>
+  <block id="86e93d266c168d718105c402f43fc91e" category="list-text">然后，可以将此提取密钥修补到服务帐户或在相应的 POD 定义中引用。</block>
+  <block id="288e0df39a28ea31c872c75c0a15ddc2" category="list-text">将其修补到服务帐户</block>
+  <block id="32213821f8d3749ac2af26a53e7b4220" category="list-text">要在 Pod 定义中引用拉取密钥，请将以下参数添加到 ‘sPec ' 部分。</block>
+  <block id="538969770adc4335ded7d9dbff716535" category="list-text">从 OpenShift 节点以外的工作站推送 / 拉取映像。</block>
+  <block id="18f8bf05a7a278e63d921de74d2a5966" category="list-text">将 TLS 证书添加到 Docker 客户端。</block>
+  <block id="a47ca4ca7700e9e5a0908f6a5c3729ff" category="list-text">使用 oc login 命令登录到 OpenShift 。</block>
+  <block id="622de287c602a57c421955e9c5e5d9b4" category="list-text">使用 OpenShift 用户凭据通过 podman/Docker 命令登录到注册表。</block>
+  <block id="bf41cc8536b9f081a891d95ca2ed5269" category="list-text">推 / 拉图像。</block>
+  <block id="fe70522102670f75ed2fff361701d056" category="paragraph">本参考文档对通过安装程序配置的基础架构（ IPI ）在 NetApp 验证的多种不同数据中心环境中部署的 Red Hat OpenShift 解决方案进行了部署验证。同时，还详细介绍了如何利用 Astra Trident 存储编排程序管理永久性存储，以及利用 NetApp Astra 控制中心管理和保护有状态应用程序，从而实现与 NetApp 存储系统的存储集成。最后，我们还探讨并记录了许多解决方案验证和实际使用情形。</block>
+  <block id="4a56de086437c8a56c22bccd4e7ed9ba" category="paragraph">通过支持 Astra Trident 的卷 CSI 克隆功能，可以在 OpenShift 中克隆现有虚拟机。通过 CSI 卷克隆，可以使用现有 PVC 作为数据源并通过复制其 PV 来创建新的 PVC 。创建新的 PVC 后，它将作为一个单独的实体运行，并且不会与源 PVC 建立任何链接或依赖关系。</block>
+  <block id="9057e692817874e4c563dec1fa8c1700" category="paragraph">通过关闭虚拟机克隆现有虚拟机是一项原生 OpenShift 功能，该功能在 Astra Trident 的支持下实施。要克隆虚拟机，请完成以下步骤。</block>
+  <block id="023cd4d7ed373df0d803d414e2e452bf" category="cell">2021年8月5日</block>
+  <block id="afb6b7f715f1bf6492efb8f3c279ddd7" category="cell">为基于 Red Hat OpenShift 的 NetApp Astra 控制中心 NVA-1160 增加了新的技术集成</block>
+  <block id="306a916d056a0d0a4b898b9dca9692ee" category="inline-link-macro">基于 Red Hat OpenShift 的 NetApp Astra 控制中心</block>
+  <block id="20c49a9a4d903fa259d4f8820b3755d2" category="cell"><block ref="20c49a9a4d903fa259d4f8820b3755d2" category="inline-link-macro-rx"></block></block>
+  <block id="7249cfd7bf66d557eb244611df9fad26" category="sidebar">9. 下载并安装 Astra Trident</block>
+  <block id="82ebdc178ed6bd9adb7b66c2edfb70d0" category="sidebar">NetApp 存储系统概述</block>
+  <block id="aef2d8db139dd41c9ae6c878ab92ae75" category="sidebar">NetApp 存储集成概述</block>
+  <block id="5f6fc3deb668cb75e9e6c8932620df6a" category="sidebar">NetApp Astra 控制中心概述</block>
+  <block id="846665f4ec19bffa9d9a8c3937c2f9fd" category="sidebar">注册 Red Hat OpenShift 集群</block>
+  <block id="b1dbcb80c89b000949ef64c6d6d6c42b" category="sidebar">选择要保护的应用程序</block>
+  <block id="2913361a2ab3fddb4242f1761d4a6e38" category="sidebar">保护您的应用程序</block>
+  <block id="b066abadb76f5e6776aa1e7cfdf56b38" category="sidebar">NetApp Astra Trident 概述</block>
+  <block id="938033783443233af5517c828deb6d1e" category="sidebar">OpenShift 的高级配置选项</block>
+  <block id="8252479af4b1df9b77ceaf67fa8cd07d" category="sidebar">创建私有映像注册表</block>
 </blocks>
