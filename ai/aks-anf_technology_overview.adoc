@@ -1,0 +1,49 @@
+---
+sidebar: sidebar 
+permalink: ai/aks-anf_technology_overview.html 
+keywords: overview, technology, microsoft, azure, anf, dask, nvidia, rapids 
+summary: 此页面概述了此解决方案中使用的技术。 
+---
+= 技术概述
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:aks-anf_introduction.html["上一页：简介。"]
+
+
+
+== Microsoft 和 NetApp
+
+自 2019 年 5 月起， Microsoft 推出了 Azure 原生，这是基于 NetApp ONTAP 技术的第一方门户服务，适用于企业级 NFS 和 SMB 文件服务。这一发展由 Microsoft 和 NetApp 之间的战略合作伙伴关系推动，进一步将世界级 ONTAP 数据服务的覆盖范围扩展到 Azure 。
+
+
+
+== Azure NetApp Files
+
+Azure NetApp Files 服务是一种企业级高性能计量文件存储服务。Azure NetApp Files 支持任何工作负载类型，默认情况下具有高可用性。您可以选择服务和性能级别，并通过服务设置 Snapshot 副本。Azure NetApp Files 是一项 Azure 第一方服务，用于在云中迁移和运行要求最严苛的企业文件工作负载，包括数据库， SAP 和高性能计算应用程序，并且不会更改代码。
+
+此参考架构为 IT 组织提供了以下优势：
+
+* 消除设计复杂性
+* 支持独立扩展计算和存储
+* 支持客户从小规模入手，无缝扩展
+* 为各种性能和成本点提供一系列存储层
+
+
+
+
+== Dask 和 NVIDIA 快速流概述
+
+Dask 是一款开源并行计算工具，可在多台计算机上扩展 Python 库，并加快处理大量数据的速度。它提供的 API 类似于单线程传统 Python 库，例如熊猫， Numpy 和 sciKit 学习。因此，原生 Python 用户不必对其现有代码进行大量更改，即可在整个集群中使用资源。
+
+NVIDIA RAID 是一套开源库，可以完全在 GPU 上运行端到端 ML 和数据分析工作流。通过与 dask 结合使用，您可以轻松地从 GPU 工作站（纵向扩展）扩展到多节点，多 GPU 集群（横向扩展）。
+
+要在集群上部署 dask ，您可以使用 Kubernetes 进行资源编排。您还可以根据进程要求纵向或横向扩展工作节点，进而有助于优化集群资源消耗，如下图所示。
+
+image:aks-anf_image2.png["错误：缺少图形映像"]
+
+link:aks-anf_software_requirements.html["接下来：软件要求"]

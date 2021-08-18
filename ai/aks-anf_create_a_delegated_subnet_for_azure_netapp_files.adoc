@@ -1,0 +1,43 @@
+---
+sidebar: sidebar 
+permalink: ai/aks-anf_create_a_delegated_subnet_for_azure_netapp_files.html 
+keywords: delegated subnet, virtual network, azure portal, vnet, delegation 
+summary: 此页面介绍为 Azure NetApp Files 创建委派子网所需的步骤。 
+---
+= 为 Azure NetApp Files 创建委派子网
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:aks-anf_install_and_set_up_the_aks_cluster.html["先前版本：安装和设置 AKS 集群。"]
+
+要为 Azure NetApp Files 创建委派子网，请完成以下步骤：
+
+. 导航到 Azure 门户中的虚拟网络。查找新创建的虚拟网络。它应具有 `AK -vnet` 等前缀。
+. 单击 vNet 的名称。
++
+image:aks-anf_image5.png["错误：缺少图形映像"]
+
+. 单击子网，然后单击顶部工具栏中的 +Subnet 。
++
+image:aks-anf_image6.png["错误：缺少图形映像"]
+
+. 为子网提供名称，例如 `ANF.SN` ，然后在 Subnet delegation 标题下选择 `Microsoft.Netapp/volumes` 。请勿更改任何其他内容。单击确定。
++
+image:aks-anf_image7.png["错误：缺少图形映像"]
+
+
+
+Azure NetApp Files 卷将分配给应用程序集群，并在 Kubernetes 中用作永久性卷声明（ Persistent Volume Claim ， PVC ）。反过来，通过此过程，您可以灵活地将其映射到不同的服务，例如 Jupyter 笔记本电脑，无服务器功能等。
+
+服务用户可以通过多种方式使用平台中的存储。在本技术报告讨论 NFS 时， Azure NetApp Files 的主要优势包括：
+
+* 为用户提供使用 Snapshot 副本的功能。
+* 允许用户在 Azure NetApp Files 卷上存储大量数据。
+* 在大型文件集上运行 Azure NetApp Files 卷的型号时，可以利用这些卷的性能优势。
+
+
+link:aks-anf_peer_aks_vnet_and_azure_netapp_files_vnet.html["下一步：对等 AKS vnet 和 Azure NetApp Files vnet 。"]

@@ -1,0 +1,43 @@
+---
+sidebar: sidebar 
+permalink: ai/aks-anf_training_time_comparison.html 
+keywords: training, time, comparison, pandas, dask, 
+summary: 此页面将使用传统熊猫的模型训练时间与 dask 进行比较。对于熊猫，由于处理时间较慢，我们加载的数据较少，以避免内存溢出。因此，我们对结果进行了插值计算，以便进行合理的比较。 
+---
+= 培训时间比较
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:aks-anf_monitor_dask_using_native_task_streams_dashboard.html["上一步：使用原生任务流信息板监控 dask 。"]
+
+本节将使用传统熊猫的模型训练时间与 dask 进行比较。对于熊猫，由于处理时间较慢，我们加载的数据较少，以避免内存溢出。因此，我们对结果进行了插值计算，以便进行合理的比较。
+
+下表显示了当熊猫随机林模型（数据集每天 200 亿行中的 5000 万行）所使用的数据明显减少时的原始训练时间比较。 15此示例仅使用所有可用数据的 0.25% 以下。而对于 dask-cuML ，我们在所有 200 亿行可用的行上训练了随机林模型。这两种方法的训练时间相当。
+
+|===
+| 方法 | 培训时间 
+
+
+| Scikit 学习：在 15 天仅使用 50 米行作为训练数据 | 47 分 21 秒 
+
+
+| rapids-dask ：使用第 15 天的所有 20 B 行作为训练数据 | 1 小时， 12 分钟和 11 秒 
+|===
+如果我们按线性方式插值训练时间结果，如下表所示，则使用分布式训练和 dask 具有显著优势。传统的熊猫科学学习方法需要 13 天来处理和训练 45 GB 的数据，只需一天的单击日志，而使用快速 dask 方法处理相同数量的数据则要快 262.39 倍。
+
+|===
+| 方法 | 培训时间 
+
+
+| Scikit 学习：使用第 15 天的所有 20 B 行作为训练数据 | 13 天， 3 小时， 40 分钟和 11 秒 
+
+
+| rapids-dask ：使用第 15 天的所有 20 B 行作为训练数据 | 1 小时， 12 分钟和 11 秒 
+|===
+在上表中，您可以看到，通过使用带和 dask 的快速处理功能在多个 GPU 实例之间分布数据处理和模型训练，与使用 scide-Learn 模型训练的传统熊猫 DataFrame 处理相比，运行时间要短得多。此框架支持在云端以及多节点多 GPU 集群内部进行纵向和横向扩展。
+
+link:aks-anf_monitor_dask_and_rapids_with_prometheus_and_grafana.html["接下来：使用 Prometheus 和 Grafana 监控 dask 和快速流。"]

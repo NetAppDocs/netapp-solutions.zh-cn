@@ -1,0 +1,48 @@
+---
+sidebar: sidebar 
+permalink: ai/aks-anf_install_and_set_up_the_aks_cluster.html 
+keywords: aks, install, cluster, node type, system, worker 
+summary: 此页面介绍设置 AKS 集群所需的步骤。 
+---
+= 安装和设置 AKS 集群
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:aks-anf_click-through_rate_prediction_use_case_summary.html["上一页：点击率预测用例摘要。"]
+
+要安装和设置 AKS 集群，请参见网页 https://docs.microsoft.com/azure/aks/kubernetes-walkthrough-portal["创建 AKS 集群"^] 然后完成以下步骤：
+
+. 选择节点类型（系统 CPU 或辅助 GPU 节点）时，请选择以下选项：
++
+.. 主系统节点应为标准 DS2v2 （`agentpool` 默认三个节点）。
+.. 然后，为名为 `gpupool` 的用户组（对于 GPU 节点）添加工作节点 Standard_Nc6s_v3 Pool （至少三个节点）。
++
+image:aks-anf_image3.png["错误：缺少图形映像"]
+
+
+
+. 部署需要 5 到 10 分钟。完成后，单击 Connect to Cluster 。
+. 要连接到新创建的 AKS 集群，请从本地环境（笔记本电脑 /PC ）安装以下内容：
++
+.. 使用的 Kubernetes 命令行工具 https://kubernetes.io/docs/tasks/tools/install-kubectl/["针对您的特定操作系统提供的说明"^]
+.. 文档中所述的 Azure 命令行界面， https://docs.microsoft.com/cli/azure/install-azure-cli["安装 Azure 命令行界面"^]
+
+
+. 要从终端访问 AKS 集群，请输入 `az login` 并输入凭据。
+. 运行以下两个命令：
++
+....
+az account set --subscription xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxxx
+aks get-credentials --resource-group resourcegroup --name aksclustername
+....
+. 输入 `Azure CLI ： kubectl get nodes` 。
+. 如果所有六个节点均已启动且正在运行，如以下示例所示，则 AKS 集群已准备就绪并连接到本地环境
+
+
+image:aks-anf_image4.png["错误：缺少图形映像"]
+
+link:aks-anf_create_a_delegated_subnet_for_azure_netapp_files.html["接下来：为 Azure NetApp Files 创建一个委派子网。"]

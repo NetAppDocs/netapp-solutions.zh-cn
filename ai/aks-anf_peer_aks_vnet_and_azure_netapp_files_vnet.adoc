@@ -1,0 +1,34 @@
+---
+sidebar: sidebar 
+permalink: ai/aks-anf_peer_aks_vnet_and_azure_netapp_files_vnet.html 
+keywords: aks, vnet, anf, peer 
+summary: 本节介绍如何将 AKS vNet 与 Azure NetApp Files vNet 建立对等关系。 
+---
+= 对等 AKS vNet 和 Azure NetApp Files vNet
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:aks-anf_create_a_delegated_subnet_for_azure_netapp_files.html["先前：为 Azure NetApp Files 创建委派子网。"]
+
+要将 AKS vNet 与 Azure NetApp Files vNet 建立对等关系，请完成以下步骤：
+
+. 在搜索字段中输入虚拟网络。
+. 选择 `vnet AK -vnet-name 。` 单击它并在搜索字段中输入 "Peels" 。
+. 单击 +Add 。
+. 输入以下描述符：
++
+.. 对等链路名称是 `aps-vnet-name_to_anf` 。
+.. subscriptionID 和 Azure NetApp Files vNet 作为 vNet 对等配对节点。
+.. 保留所有非星号部分的默认值。
+
+
+. 单击添加。
+
+
+有关详细信息，请参见 https://docs.microsoft.com/azure/virtual-network/virtual-network-manage-peering["创建，更改或删除虚拟网络对等关系"^]。
+
+link:aks-anf_install_trident.html["下一步：安装 Trident 。"]

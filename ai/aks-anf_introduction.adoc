@@ -1,0 +1,61 @@
+---
+sidebar: sidebar 
+permalink: ai/aks-anf_introduction.html 
+keywords: introduction, tr-4904, 4904, tr4904, kubernetes, azure, anf, rapids, dask, ml, ai, machine learning, artificial intelligence, 
+summary: 此解决方案遵循 AI/ML 应用程序的生命周期。我们从数据科学家的工作入手，确定准备数据和训练模型所需的不同步骤。通过利用 dask 上的快速访问功能，我们可以在 Azure Kubernetes Service （ AKS ）集群中执行分布式培训，与传统的 Python 科学学习方法相比，可以大幅缩短培训时间。为了完成整个周期，我们将管道与 Azure NetApp Files 集成在一起。 
+---
+= TR-4904 ： Azure Kubernetes Service ， Azure NetApp Files ， RAPID AI 和 Dask
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+Rick Huang ， Verron Martina ， Muncher ， NetApp
+
+数据科学家的工作重点应放在机器学习（ ML ）和人工智能（ AI ）模型的培训和调整上。但是，根据 Google 的研究，数据科学家花费大约 80% 的时间来研究如何使其模型能够与企业应用程序结合使用并大规模运行。
+
+要管理端到端 AI/ML 项目，需要更广泛地了解企业组件。虽然 DevOps 已接管了这些类型的组件的定义，集成和部署，但 ML 操作的目标是类似的流程，其中包括 AI/ML 项目。要了解端到端 AI/ML 管道在企业中涉及的内容，请参见以下所需组件列表：
+
+* 存储
+* 网络
+* 数据库
+* 文件系统
+* 容器
+* 持续集成和持续部署（ CI/CD ）管道
+* 集成开发环境（ IDE ）
+* 安全性
+* 数据访问策略
+* 硬件
+* 云
+* 虚拟化
+* 数据科学工具集和库
+
+
+
+
+== 目标受众
+
+数据科学领域涉及 IT 和业务领域的多个领域：
+
+* 数据科学家需要灵活地使用自己选择的工具和库。
+* 数据工程师需要了解数据的流动方式及其所在位置。
+* DevOps 工程师需要使用工具将新的 AI/ML 应用程序集成到其 CI/CD 管道中。
+* 云管理员和架构师需要能够设置和管理 Azure 资源。
+* 业务用户希望能够访问 AI/ML 应用程序。
+
+
+在本技术报告中，我们将介绍 Azure NetApp Files ，快速 AI ， dask 和 Azure 如何帮助这些角色为业务带来价值。
+
+
+
+== 解决方案概述
+
+此解决方案遵循 AI/ML 应用程序的生命周期。我们从数据科学家的工作入手，确定准备数据和训练模型所需的不同步骤。通过利用 dask 上的快速访问功能，我们可以在 Azure Kubernetes Service （ AKS ）集群中执行分布式培训，与传统的 Python 科学学习方法相比，可以大幅缩短培训时间。为了完成整个周期，我们将管道与 Azure NetApp Files 集成在一起。
+
+Azure NetApp Files 提供各种性能层。客户可以从标准层开始，无需移动任何数据即可无中断地横向扩展和纵向扩展到高性能层。数据科学家可以利用此功能大规模训练模型，而不会出现任何性能问题，从而避免集群中出现任何数据孤岛，如下图所示。
+
+image:aks-anf_image1.png["错误：缺少图形映像"]
+
+link:aks-anf_technology_overview.html["接下来：技术概述"]

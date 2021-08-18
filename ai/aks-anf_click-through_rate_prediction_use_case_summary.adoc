@@ -1,0 +1,28 @@
+---
+sidebar: sidebar 
+permalink: ai/aks-anf_click-through_rate_prediction_use_case_summary.html 
+keywords: use case, terabyte click log, random forest, training 
+summary: 本页总结了 Azure NetApp Files 在分布式或大规模培训方面的优势。 
+---
+= 点击率预测用例摘要
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:aks-anf_cloud_resource_requirements.html["先前版本：云资源要求。"]
+
+此用例基于公开发布的 http://labs.criteo.com/2013/12/download-terabyte-click-logs/["TB 单击 Logs"^] 数据集来自。随着 ML 平台的最新发展，我们现在非常关注大规模学习。在这种情况下， TB 级单击日志现在成为评估 ML 平台和算法可扩展性的参考数据集。通过预测点击率，广告宣传者可以选择最有可能对广告做出响应的看似合理的访客，分析他们的浏览历史记录，并根据用户的兴趣显示最相关的广告。
+
+本技术报告中提供的此解决方案重点介绍了以下优势：
+
+* Azure NetApp Files 在分布式或大规模培训方面的优势
+* 支持 CUDA 的数据处理（ cuDF ， cuPy 等）和 ML 算法（ cuML ）
+* 适用于分布式培训的 Dask 并行计算框架
+
+
+dask 和 Azure NetApp Files 之间的合作关系表明，随机林模型训练时间大幅缩短了两个数量级。这一改进与传统的熊猫方法类似，在每天处理实际单击日志数据时，文本（平均）为 45 GB 。
+
+link:aks-anf_install_and_set_up_the_aks_cluster.html["接下来：安装和设置 AK 集群。"]

@@ -1,0 +1,70 @@
+---
+sidebar: sidebar 
+permalink: ai/aks-anf_load_criteo_click_logs_day_15_in_pandas_and_train_a_scikit-learn_random_forest_model.html 
+keywords: criteo, click log, pandas, scikit-learn, random, forest, model, dataframes, 
+summary: 此页面介绍了我们如何使用熊猫和 dask DataFrames 从 Criteo TB 数据集中加载 Click Logs 数据。在广告交换的数字广告中，使用情形与此相关，它可以预测是否会点击广告，或者如果交换在自动管道中使用的模型不准确，从而构建用户的个人资料。 
+---
+= 在熊猫中加载 Criteo 单击 Logs Day 15 ，然后训练一个 sc科学 学习随机林模型
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:aks-anf_libraries_for_data_processing_and_model_training.html["上一页：数据处理和模型培训库。"]
+
+本节介绍如何使用熊猫和 dask DataFrames 从 Criteo TB 数据集中加载 Click Logs 数据。在广告交换的数字广告中，使用情形与此相关，它可以预测是否会点击广告，或者如果交换在自动管道中使用的模型不准确，从而构建用户的个人资料。
+
+我们从 Click Logs 数据集加载了第 15 天的数据，总计 45 GB 。在 Jupyter 笔记本电脑中运行以下单元 `CT-PandasRF-colled.ipynb` 创建一个包含前 5 ， 000 万行的熊猫 DataFrame ，并生成一个 scide-Learn 随机林模型。
+
+....
+%%time
+import pandas as pd
+import numpy as np
+header = ['col'+str(i) for i in range (1,41)] #note that according to criteo, the first column in the dataset is Click Through (CT). Consist of 40 columns
+first_row_taken = 50_000_000 # use this in pd.read_csv() if your compute resource is limited.
+# total number of rows in day15 is 20B
+# take 50M rows
+"""
+Read data & display the following metrics:
+1. Total number of rows per day
+2. df loading time in the cluster
+3. Train a random forest model
+"""
+df = pd.read_csv(file, nrows=first_row_taken, delimiter='\t', names=header)
+# take numerical columns
+df_sliced = df.iloc[:, 0:14]
+# split data into training and Y
+Y = df_sliced.pop('col1') # first column is binary (click or not)
+# change df_sliced data types & fillna
+df_sliced = df_sliced.astype(np.float32).fillna(0)
+from sklearn.ensemble import RandomForestClassifier
+# Random Forest building parameters
+# n_streams = 8 # optimization
+max_depth = 10
+n_bins = 16
+n_trees = 10
+rf_model = RandomForestClassifier(max_depth=max_depth, n_estimators=n_trees)
+rf_model.fit(df_sliced, Y)
+....
+要使用经过培训的随机林模型执行预测，请在此笔记本电脑中运行以下段落。为了避免重复，我们采用了自第 15 天起的最后 100 万行作为测试集。该单元格还会计算预测准确性，其定义为模型准确预测用户是否单击 AD 。要查看此笔记本中任何不熟悉的组件，请参见 https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html["官方科学知识工具包学习文档"^]。
+
+....
+# testing data, last 1M rows in day15
+test_file = '/data/day_15_test'
+with open(test_file) as g:
+    print(g.readline())
+
+# dataFrame processing for test data
+test_df = pd.read_csv(test_file, delimiter='\t', names=header)
+test_df_sliced = test_df.iloc[:, 0:14]
+test_Y = test_df_sliced.pop('col1')
+test_df_sliced = test_df_sliced.astype(np.float32).fillna(0)
+# prediction & calculating error
+pred_df = rf_model.predict(test_df_sliced)
+from sklearn import metrics
+# Model Accuracy
+print("Accuracy:",metrics.accuracy_score(test_Y, pred_df))
+....
+link:aks-anf_load_day_15_in_dask_and_train_a_dask_cuml_random_forest_model.html["接下来：在 dask 中加载第 15 天，训练一个 dask cuML 随机林模型。"]

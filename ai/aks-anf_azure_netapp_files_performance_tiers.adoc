@@ -1,0 +1,60 @@
+---
+sidebar: sidebar 
+permalink: ai/aks-anf_azure_netapp_files_performance_tiers.html 
+keywords: azure, service level, capacity pool, tier, standard, premium, 
+summary: 您可以通过将现有卷移动到使用所需卷服务级别的另一个容量池来更改此卷的服务级别。借助此解决方案，客户可以从标准层中的小型数据集和少量 GPU 入手，并随着数据量和 GPU 的增加而横向扩展或纵向扩展到高级层。 
+---
+= Azure NetApp Files 性能层
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:aks-anf_set_up_dask_with_rapids_deployment_on_aks_using_helm.html["上一步：使用 Helm 在 AKS 上设置带快速部署的 dask 。"]
+
+您可以通过将现有卷移动到使用所需卷服务级别的另一个容量池来更改此卷的服务级别。借助此解决方案，客户可以从标准层中的小型数据集和少量 GPU 入手，并随着数据量和 GPU 的增加而横向扩展或纵向扩展到高级层。高级层提供的每 TB 吞吐量是标准层的四倍，并且可以执行纵向扩展，而无需移动任何数据即可更改卷的服务级别。
+
+
+
+== 动态更改卷的服务级别
+
+要动态更改卷的服务级别，请完成以下步骤：
+
+. 在卷页面上，右键单击要更改其服务级别的卷。选择更改池。
++
+image:aks-anf_image10.png["错误：缺少图形映像"]
+
+. 在更改池窗口中，选择要将卷移动到的容量池。
++
+image:aks-anf_image11.png["错误：缺少图形映像"]
+
+. 单击确定。
+
+
+
+
+== 自动执行性能层更改
+
+以下选项可用于自动执行性能层更改：
+
+* 动态服务级别更改目前仍在公有预览中，默认情况下不会启用。要在 Azure 订阅上启用此功能，请参见本文档了解如何操作 https://docs.microsoft.com/azure/azure-netapp-files/dynamic-change-volume-service-level["动态更改卷的服务级别"^]。
+* 中提供了 Azure CLI 卷池更改命令 https://docs.microsoft.com/en-us/cli/azure/netappfiles/volume?view=azure-cli-latest&viewFallbackFrom=azure-cli-latest%20-%20az_netappfiles_volume_pool_change["卷池更改文档"^] 在以下示例中：
++
+....
+az netappfiles volume pool-change -g mygroup --account-name myaccname --pool-name mypoolname --name myvolname --new-pool-resource-id mynewresourceid
+....
+* PowerShell ： https://docs.microsoft.com/powershell/module/az.netappfiles/set-aznetappfilesvolumepool?view=azps-5.8.0["Set-AzNetAppFilesVolumePool cmdlet"^] 更改 Azure NetApp Files 卷的池，如以下示例所示：
++
+....
+Set-AzNetAppFilesVolumePool
+-ResourceGroupName "MyRG"
+-AccountName "MyAnfAccount"
+-PoolName "MyAnfPool"
+-Name "MyAnfVolume"
+-NewPoolResourceId 7d6e4069-6c78-6c61-7bf6-c60968e45fbf
+....
+
+
+link:aks-anf_libraries_for_data_processing_and_model_training.html["接下来：用于数据处理和模型培训的库。"]

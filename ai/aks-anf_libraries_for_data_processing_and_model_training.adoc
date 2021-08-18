@@ -1,0 +1,33 @@
+---
+sidebar: sidebar 
+permalink: ai/aks-anf_libraries_for_data_processing_and_model_training.html 
+keywords: libraries, cuml, cudf, dask, transform, load, subsetting, transformation, encoding, rapids, estimators 
+summary: 此页面列出了用于构建此任务的库和框架。所有这些组件均已与 Azure 基于角色的访问和安全控制完全集成。 
+---
+= 用于数据处理和模型培训的库
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:aks-anf_azure_netapp_files_performance_tiers.html["先前版本： Azure NetApp Files 性能层。"]
+
+下表列出了用于构建此任务的库和框架。所有这些组件均已与 Azure 基于角色的访问和安全控制完全集成。
+
+|===
+| 库 / 框架 | Description 
+
+
+| dask cuML | 要使 ML 在 GPU 上运行，请使用 https://github.com/rapidsai/cuml/tree/main/python/cuml/dask["cuML 库"^] 可通过 dask 访问快速通道 cML 软件包。与基于 CPU 的方法相比，强强联合可以通过基于 GPU 的高性能实施实施常见的 ML 算法，包括集群，维度缩减和回归方法，提供高达 100 倍的速度。 
+
+
+| dask cudf | CUDF 包括支持 GPU 加速提取，转换，加载（ ETL ）的各种其他功能，例如数据子设置，转换，单热编码等。快速发展团队会维护 https://github.com/rapidsai/cudf/tree/main/python/dask_cudf["dask-cudf 库"^] 其中包括使用 dask 和 cuDF 的帮助程序方法。 
+
+
+| Scikit 学习 | Scikit Learning 提供了数十种内置机器学习算法和模型，称为评估器。每个 https://scikit-learn.org/stable/glossary.html#term-estimators["估算器"^] 可以使用将其安装到某些数据中 方法 
+|===
+我们使用两台笔记本电脑构建 ML 管道进行比较；一台是传统的熊猫科学学习方法，另一台是使用快速和快速的分布式培训。每台笔记本电脑均可单独进行测试，以查看时间和规模方面的性能。我们会分别介绍每台笔记本电脑，以展示使用快速流和 dask 进行分布式培训的优势。
+
+link:aks-anf_load_criteo_click_logs_day_15_in_pandas_and_train_a_scikit-learn_random_forest_model.html["接下来：在熊猫中加载 Criteo 单击 Logs Day 15 ，然后训练一个 sc科学 学习随机林模型。"]

@@ -8211,4 +8211,340 @@
   <block id="c0227cef6f07a8cd2ac72f2945b031aa" category="section-title">开放源代码</block>
   <block id="9b73989307c1975dfa4d5e1581e4afe8" category="paragraph">通知文件提供有关 NetApp 软件中使用的第三方版权和许可证的信息。</block>
   <block id="d648f2a68a54fd1b3329efc3cf24d29c" category="sidebar">法律声明</block>
+  <block id="5328ed3b5c6e4726166e04c16c2e5581" category="summary">本节介绍如何在熊猫中加载 Criteo Click Logs Day 15 以及如何训练一个 sc科学 学习随机林模型。在此示例中，我们使用 dask cuDF 执行了 DataFrame 加载，并在 dask cuML 中训练了一个随机林模型。</block>
+  <block id="a0432b74d7d4d2ad68e93e947654c865" category="doc">在 dask 中加载第 15 天，训练一个 dask cuML 随机林模型</block>
+  <block id="7c784438423fe1bee9ab4f91a8fd7559" category="inline-link-macro">Previous ： Load Criteo click Logs Day 15 in 熊猫并训练一个 sc科学 学习随机林模型。</block>
+  <block id="5d5b75a952d74a7d4520c521956b9d7e" category="paragraph"><block ref="5d5b75a952d74a7d4520c521956b9d7e" category="inline-link-macro-rx"></block></block>
+  <block id="78dc33cd9d496e2466a0c1e2ba09ab3f" category="inline-link-macro">" 培训时间比较。 "</block>
+  <block id="4a2764258721dd882c9ec28454963797" category="paragraph">按照与上一节类似的方式，在熊猫中加载 Criteo 单击 Logs Day 15 ，然后训练一个 cscit-Learn 随机林模型。在此示例中，我们使用 dask cuDF 执行了 DataFrame 加载，并在 dask cuML 中训练了一个随机林模型。我们比较了本节中培训时间和规模的差异 <block ref="8d6c01ed5b9db5301efeb6183c858b76" category="inline-link-macro-rx"></block></block>
+  <block id="356d8553da3749641cb731d318c85b0c" category="section-title">Criteo_dask_rf.ipynb</block>
+  <block id="2f4f1a139be92d2b17647025ff8630ab" category="paragraph">此笔记本电脑将导入 `NumPy` ， `累积` 和必要的 `dask` 库，如以下示例所示：</block>
+  <block id="7b871613dade772ae668d694698383bf" category="paragraph">启动 dask 客户端（）。</block>
+  <block id="3e9277d3d0f0519292426b933e52f232" category="paragraph">如果集群配置正确，您可以查看工作节点的状态。</block>
+  <block id="d6b257c355ced1525e4967c96b62b83e" category="paragraph">在我们的 AKS 集群中，将显示以下状态：</block>
+  <block id="d94a77691c281e8bf418635fea6ca580" category="paragraph"><block ref="d94a77691c281e8bf418635fea6ca580" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="073b2194006d8da73b5f74f3d7224d76" category="paragraph">请注意， dask 采用了延迟执行模式： dask 不是即时执行处理代码，而是构建定向的环状图（ DAG ）执行。DAG 包含一组任务及其互动，每位员工都需要执行这些任务。此布局意味着，只有在用户指示 dask 以某种方式执行任务后，这些任务才会运行。使用 dask ，您有三个主要选项：</block>
+  <block id="a40049c3d7270ce955d2023f8e2015dc" category="list-text">在 DataFrame 上调用 compute （）。 * 此调用将处理所有分区，然后将结果返回给计划程序，以便最终聚合和转换为 cuDF DataFrame 。除非计划程序节点内存不足，否则应谨慎使用此选项，并且仅在结果大幅减少时使用。</block>
+  <block id="30e170dbe1dd223491e1a822605da52d" category="list-text">* 在 DataFrame 上调用 persiste（ ）。 * 此调用执行图形，但它不会将结果返回到计划程序节点，而是在整个集群的内存中保留这些结果，以便用户可以在管道中重复使用这些中间结果，而无需重新运行相同的处理。</block>
+  <block id="ca013764f3f6faeab137d2d529dba598" category="list-text">* 在 DataFrame 上调用 head （）。 * 与 cuDF 一样，此调用会将 10 条记录返回到计划程序节点。此选项可用于快速检查 DataFrame 是否包含所需的输出格式，或者记录本身是否合理，具体取决于您的处理和计算结果。</block>
+  <block id="7ac60f98a199ceae63010c7802a9aefa" category="paragraph">因此，除非用户调用其中任一操作，否则员工将处于闲置状态，等待计划程序启动处理。这种延迟执行模式在现代并行和分布式计算框架（如 Apache Spark ）中很常见。</block>
+  <block id="d887d6a29f39f14cec0f83c5b02c42f8" category="paragraph">下一段使用 dask cuML 进行分布式 GPU 加速计算，以此训练随机林模型，并计算模型预测准确性。</block>
+  <block id="de76ff3258bd3001f89804efae30da38" category="inline-link-macro">下一步：使用原生任务流信息板监控 dask 。</block>
+  <block id="5db30f2a693de098d03dec622875beec" category="paragraph"><block ref="5db30f2a693de098d03dec622875beec" category="inline-link-macro-rx"></block></block>
+  <block id="2e240897109c5037e05afe0bf035d177" category="inline-link-macro">上一篇：结论。</block>
+  <block id="d3202b7eec66185e032fcad76b4c2aa3" category="paragraph"><block ref="d3202b7eec66185e032fcad76b4c2aa3" category="inline-link-macro-rx"></block></block>
+  <block id="27a5a0a02525fbb66788e119b829fe28" category="list-text">Azure NetApp Files</block>
+  <block id="45bd81d391ee3bd9831a237bff32b2c1" category="list-text">Azure NetApp Files 的解决方案架构页面</block>
+  <block id="57b815cb2da0c842a09d5ef586792c0a" category="inline-link"><block ref="57b815cb2da0c842a09d5ef586792c0a" category="inline-link-rx"></block></block>
+  <block id="02508d077a7c6fbe1035568c37610d22" category="paragraph"><block ref="02508d077a7c6fbe1035568c37610d22" category="inline-link-rx"></block></block>
+  <block id="f42fced7b7a9bfef49a209632add6f80" category="list-text">适用于容器的 Trident 持久存储：</block>
+  <block id="158e66cfa121c58b072656402170ca60" category="list-text">Azure NetApp Files 和 Trident</block>
+  <block id="d9fe72ef646d82c8372b45ff009726a2" category="inline-link"><block ref="d9fe72ef646d82c8372b45ff009726a2" category="inline-link-rx"></block></block>
+  <block id="e3c781df174a80c19c70a938b96db93a" category="paragraph"><block ref="e3c781df174a80c19c70a938b96db93a" category="inline-link-rx"></block></block>
+  <block id="145f2a04d99fdbd7a450ef83e82d471b" category="list-text">dask 和 rapids ：</block>
+  <block id="df5eb1591e808e358e02221e1e0111e6" category="list-text">dask</block>
+  <block id="7db6639777894f081a3d7c055b97900a" category="inline-link"><block ref="7db6639777894f081a3d7c055b97900a" category="inline-link-rx"></block></block>
+  <block id="4846c68fb34aec3b1b7b7de96d27e71f" category="paragraph"><block ref="4846c68fb34aec3b1b7b7de96d27e71f" category="inline-link-rx"></block></block>
+  <block id="41563f9620e92fbfd1e105e32ac297e4" category="list-text">安装 dask</block>
+  <block id="8659b02378fc9b47aac4428f69411abc" category="inline-link"><block ref="8659b02378fc9b47aac4428f69411abc" category="inline-link-rx"></block></block>
+  <block id="972dffc891589785367dd3581a5abcef" category="paragraph"><block ref="972dffc891589785367dd3581a5abcef" category="inline-link-rx"></block></block>
+  <block id="3ba7abeba4fd0f5d5ca9072155319afd" category="list-text">Dask API</block>
+  <block id="f7673aa4f6b36ba9952cef7c98115776" category="inline-link"><block ref="f7673aa4f6b36ba9952cef7c98115776" category="inline-link-rx"></block></block>
+  <block id="d43a23bd530cae7ba37a2e0ed6513bad" category="paragraph"><block ref="d43a23bd530cae7ba37a2e0ed6513bad" category="inline-link-rx"></block></block>
+  <block id="1bfabf7fb7bf05567331dfc3d20c4921" category="list-text">DASK 机器学习</block>
+  <block id="9e480c1539fe5b14bbbcefb9676dc031" category="inline-link"><block ref="9e480c1539fe5b14bbbcefb9676dc031" category="inline-link-rx"></block></block>
+  <block id="d05f63d77306100c615132f350f3fafe" category="paragraph"><block ref="d05f63d77306100c615132f350f3fafe" category="inline-link-rx"></block></block>
+  <block id="90223e93e145939c9954970520e1767a" category="list-text">Dask 分布式诊断</block>
+  <block id="e7252fe9d67234e05be7dc251c48cf74" category="inline-link"><block ref="e7252fe9d67234e05be7dc251c48cf74" category="inline-link-rx"></block></block>
+  <block id="925c8b588cf5ae5fc486494a21fba8ac" category="paragraph"><block ref="925c8b588cf5ae5fc486494a21fba8ac" category="inline-link-rx"></block></block>
+  <block id="d97adf46c9b097cad5eff54e3b65a21f" category="paragraph"><block ref="d97adf46c9b097cad5eff54e3b65a21f" category="inline-link-rx"></block></block>
+  <block id="528d52adf23d34a248f0b9bf684c1832" category="paragraph"><block ref="528d52adf23d34a248f0b9bf684c1832" category="inline-link-rx"></block></block>
+  <block id="a43c7ca8f7e6a4a034f6a940ec7566f5" category="inline-link-macro">下一步：版本历史记录。</block>
+  <block id="5f751f93279ebf35ea83b9aa80ef02df" category="paragraph"><block ref="5f751f93279ebf35ea83b9aa80ef02df" category="inline-link-macro-rx"></block></block>
+  <block id="7580f940c2b73a449943bf14cfdb743e" category="summary">此页面介绍了 Azure NetApp Files 云资源的配置。</block>
+  <block id="9ab9ef31301ca94d2090a6ac7e5141f0" category="doc">云资源要求</block>
+  <block id="1cee510209f529b7ddd8911bbc6e3ee2" category="inline-link-macro">先前版本：软件要求。</block>
+  <block id="abab2b04b3822b72d0eeb7b61dd84730" category="paragraph"><block ref="abab2b04b3822b72d0eeb7b61dd84730" category="inline-link-macro-rx"></block></block>
+  <block id="00130c4c20e30be7264c0ff0d085261b" category="section-title">配置 Azure NetApp Files</block>
+  <block id="d696f60435e09b1c41d1db77b458999b" category="inline-link">快速入门：设置 Azure NetApp Files 并创建 NFS 卷</block>
+  <block id="b955f251da04c8c868b22cbe7663a4f5" category="paragraph">按照中所述配置 Azure NetApp Files<block ref="f8525997ced72f3cfd70e1aecf287af9" category="inline-link-rx"></block>。</block>
+  <block id="4ee734214d7dd4e522f2aab3d8e3d349" category="paragraph">您可以继续阅读 " 为 Azure NetApp Files 创建 NFS 卷 " 一节，因为您要通过 Trident 创建卷。在继续之前，请完成以下步骤：</block>
+  <block id="2a304a1348456ccd2234cd71a81bd338" category="inline-link">链接。</block>
+  <block id="b1d13ce152415787185b9f596f9635e1" category="list-text">注册 Azure NetApp Files 和 NetApp 资源提供商（通过 Azure Shell ）（<block ref="7a85c4f09a460b2978e2b516b5474576" category="inline-link-rx"></block>）。</block>
+  <block id="4c21364a09ae3c9dab758e383fcae62d" category="list-text">在 Azure NetApp Files 中创建帐户（<block ref="27e1abf4e17aeb1c0d418f5fee2f2b5f" category="inline-link-rx"></block>）。</block>
+  <block id="97f203356061531d1acaf022df0d4c3c" category="list-text">设置容量池（至少 4 TB 标准版或高级版，具体取决于您的需要）（<block ref="16f1daa909eef5f1fe1f552d6b28d086" category="inline-link-rx"></block>）。下表列出了在云中设置的网络配置要求。dask 集群和 Azure NetApp Files 必须位于同一个 Azure 虚拟网络（ vNet ）或对等 vNet 中。</block>
+  <block id="ddcf50c29294d4414f3f7c1bbc892cb5" category="cell">Resources</block>
+  <block id="3e19b1ddc4033d0c6c439dad720f730d" category="cell">类型 / 版本</block>
+  <block id="21b6b0c072968b7235d21d8ec72be5dc" category="cell">代理节点</block>
+  <block id="e5262abb96ddec17ecbca3557e70ea26" category="cell">3 个 Standard_DS2_v2</block>
+  <block id="c64f4eaffc33134095fd3105b3d63832" category="cell">GPU 节点</block>
+  <block id="11fed615c3da90add7abe544e965fa14" category="cell">3 个 Standard_NC6s_v3</block>
+  <block id="238f4027146f2469c7d1209e594471e4" category="cell">标准容量池</block>
+  <block id="9163995275052e5abd777ae389b15dfd" category="cell">容量（以 TB 为单位）</block>
+  <block id="a6a0cae93cb8ecdef629c6de5f05989c" category="inline-link-macro">下一步：点击速率预测用例摘要。</block>
+  <block id="a5efee0d52d97830d344cded6ac0bf5c" category="paragraph"><block ref="a5efee0d52d97830d344cded6ac0bf5c" category="inline-link-macro-rx"></block></block>
+  <block id="7b5bbbf25f07dad73859bf8d7db44f48" category="summary">Azure NetApp Files ，速写和 dask 可加快和简化大规模 ML 处理和培训的部署，并与 Docker 和 Kubernetes 等业务流程工具集成。通过统一端到端数据管道，此解决方案可降低许多高级计算工作负载固有的延迟和复杂性，从而有效地弥补开发和运营之间的差距。在培训阶段，数据科学家可以对大型数据集运行查询，并与其他用户安全地共享数据和算法模型。</block>
+  <block id="53ffd6a9e0049c8cbf7f940c2b8bc793" category="inline-link-macro">先前版本：使用 NetApp DataOps 工具包的数据集和型号版本控制。</block>
+  <block id="01643859d7e5dff013d2acd6a02af35e" category="paragraph"><block ref="01643859d7e5dff013d2acd6a02af35e" category="inline-link-macro-rx"></block></block>
+  <block id="3c9bb8cdab87fbb30c011c37abb6b3d9" category="paragraph">NetApp 和 NVIDIA 将这些技术作为托管服务相结合，可加快技术采用速度，并缩短新 AI/ML 应用程序的上市时间。这些高级服务也在 Cloud 原生环境中提供，可以轻松移植到内部部署中。</block>
+  <block id="eee817389517c17ec810d52f22a8222d" category="paragraph"><block ref="eee817389517c17ec810d52f22a8222d" category="inline-link-macro-rx"></block></block>
+  <block id="4b022a47bb6a38cb1b05a5cbec618ccd" category="inline-link-macro">先前版本：对等 AKS vNet 和 Azure NetApp Files vNet 。</block>
+  <block id="fec5fee1adce318e5e2f9ce6a66ccc02" category="paragraph"><block ref="fec5fee1adce318e5e2f9ce6a66ccc02" category="inline-link-macro-rx"></block></block>
+  <block id="999aa3cd55c654beafcfa7653b65d339" category="paragraph">要使用 Helm 安装 Trident ，请完成以下步骤：</block>
+  <block id="36cd38f49b9afa08222c0dc9ebfe35eb" category="inline-link">source</block>
+  <block id="9c5f8711af47a869d4ef82db9e55eda5" category="list-text">安装 Helm （有关安装说明，请访问<block ref="adf15389dc6d5fe4bd9024075437080f" category="inline-link-rx"></block>）。</block>
+  <block id="f7c078ec85c617d77dfa95c309e4df1b" category="list-text">下载并解压缩 Trident 20.01.1 安装程序。</block>
+  <block id="5729bb69ffc852a2e2757d743b7cb833" category="list-text">将 `tridentctl` 复制到系统中的目录 ` $path` 。</block>
+  <block id="d7fc4d1537e4623fdcebe9b8ba333cbb" category="list-text">使用 Helm （<block ref="cbc920955683fc4acb62f9ea7099333f" category="inline-link-rx"></block>）：</block>
+  <block id="f515d7de4d597c284ba8042f699a0eab" category="list-text">将目录更改为 `helm` 目录。</block>
+  <block id="6ee4094e2c3617e3e298ec79f9dc2898" category="list-text">检查 Trident Pod 的状态。</block>
+  <block id="30f93734da9765d3bc7d49ca89932736" category="paragraph">如果所有 Pod 均已启动且正在运行，则会安装 Trident ，您可以继续操作。</block>
+  <block id="cde865911fa15995bc83db30d852300b" category="list-text">为 AKS 设置 Azure NetApp Files 后端和存储类。</block>
+  <block id="476fdb61358f28988640245a33bd9199" category="list-text">创建 Azure 服务原则。</block>
+  <block id="5cdfb88cd634d9d0eb47237e3251d4bd" category="paragraph">服务主体是 Trident 如何与 Azure 通信以操作 Azure NetApp Files 资源。</block>
+  <block id="253a9ccb0f0696ed79c174b388867829" category="list-text">创建 Trident 后端 json 文件，示例名称 `anf-backend.json` 。</block>
+  <block id="c17b83e07524acc467ac01e42fa0ebdb" category="list-text">使用首选文本编辑器，完成 `anf-backend.json` 文件中的以下字段：</block>
+  <block id="1197f8dc56b70115d87008dd2ecd3fca" category="list-text">替换以下字段：</block>
+  <block id="b0b2134849d44712e969d6872e7245e5" category="list-text">`ssubscriptionID` 。您的 Azure 订阅 ID</block>
+  <block id="7b42dbe86adeab0d66f36221b33bb0f4" category="list-text">`租户 ID` 。上一步中 `az ad sp` 输出中的 Azure 租户 ID 。</block>
+  <block id="5a8bb8e509b4a424a1df50ef0bb41d89" category="list-text">`客户端 ID` 。上一步中 `az ad sp` 输出中的 appID 。</block>
+  <block id="6334b606a5807346a083767eaab3934f" category="list-text">`clientSecret` 。上一步中 `az ad sp` 输出中的密码。</block>
+  <block id="12104fe8975b3ce95324ec3cab160ffc" category="list-text">指示 Trident 在 `trident` 命名空间中使用 `anf-backend.json` 作为配置文件创建 Azure NetApp Files 后端：</block>
+  <block id="d6d34c355bcd6b2efe2795a2aeedd247" category="paragraph"><block ref="d6d34c355bcd6b2efe2795a2aeedd247" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="004530c3d3b3f442f56243625372db1d" category="list-text">创建存储类。Kubernetes 用户使用按名称指定存储类的 PVC 配置卷。指示 K8s 创建一个` azurenetappfiles `，该存储类引用上一步创建的 Trident 后端。</block>
+  <block id="e777b114d6f12bc1190a60eaf8498e37" category="list-text">为存储类和副本创建 YAML （`anf-storage-class.yaml` ）文件。</block>
+  <block id="01d45e8c6af153b1a477537e02466b5c" category="list-text">验证是否已创建存储类。</block>
+  <block id="445895be8456b7de5e864fc09994551a" category="paragraph"><block ref="445895be8456b7de5e864fc09994551a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2d3fec4cfe088bc80c2c2930f051b60b" category="inline-link-macro">下一步：使用 Helm 在 AKS 上设置带快速部署的 dask 。</block>
+  <block id="f2d1f2f412dd744c26a147e39bfa708f" category="paragraph"><block ref="f2d1f2f412dd744c26a147e39bfa708f" category="inline-link-macro-rx"></block></block>
+  <block id="4b737f96f31f513a87adcf43b83ec3a1" category="summary">此页面介绍设置 AKS 集群所需的步骤。</block>
+  <block id="a81532d943508d42466c22d8d87bb4b8" category="doc">安装和设置 AKS 集群</block>
+  <block id="ce3e1770b7ff86cfbc3a30a3e3ea87da" category="inline-link-macro">上一页：点击率预测用例摘要。</block>
+  <block id="80bf56f9bff31f7459309b983fbf8116" category="paragraph"><block ref="80bf56f9bff31f7459309b983fbf8116" category="inline-link-macro-rx"></block></block>
+  <block id="40e1cc9f8d9321cbe9c1ef090f926a2b" category="paragraph">要安装和设置 AKS 集群，请参见网页<block ref="77c1c334ebc4c997080bda32aa569d69" category="inline-link-rx"></block> 然后完成以下步骤：</block>
+  <block id="ad4af0825dd4979b7f48ae5ba031b23a" category="list-text">选择节点类型（系统 CPU 或辅助 GPU 节点）时，请选择以下选项：</block>
+  <block id="5a244a81080ee9fc08696fcbd45284e5" category="list-text">主系统节点应为标准 DS2v2 （`agentpool` 默认三个节点）。</block>
+  <block id="f3449ebebbf547282aa0562015bd360d" category="list-text">然后，为名为 `gpupool` 的用户组（对于 GPU 节点）添加工作节点 Standard_Nc6s_v3 Pool （至少三个节点）。</block>
+  <block id="d3d648c68589ef99efb6ad3ec15d1beb" category="paragraph"><block ref="d3d648c68589ef99efb6ad3ec15d1beb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d2efc2b95642d4bcc76c710a3826225c" category="list-text">部署需要 5 到 10 分钟。完成后，单击 Connect to Cluster 。</block>
+  <block id="31797d7013400422e5d589ae3d91c79a" category="list-text">要连接到新创建的 AKS 集群，请从本地环境（笔记本电脑 /PC ）安装以下内容：</block>
+  <block id="87e009e80a344ecb598be4c4bbe01c79" category="inline-link">针对您的特定操作系统提供的说明</block>
+  <block id="13a6d4f4230d0a1569b719c15884d447" category="list-text">使用的 Kubernetes 命令行工具<block ref="ad2337a31b7d16867fc954b03de661bd" category="inline-link-rx"></block></block>
+  <block id="24a109d7bba4f8808eeb0bcf64d4357b" category="inline-link">安装 Azure 命令行界面</block>
+  <block id="7feed8a8a6c680e7beeca052b9fc9ed0" category="list-text">文档中所述的 Azure 命令行界面，<block ref="8e2043d81b680dba324c5a2abbee7b3f" category="inline-link-rx"></block></block>
+  <block id="d33a4b8acf4001a4b35a2186fd020432" category="list-text">要从终端访问 AKS 集群，请输入 `az login` 并输入凭据。</block>
+  <block id="402ff6cff3671c1f49dc4af765835c14" category="list-text">输入 `Azure CLI ： kubectl get nodes` 。</block>
+  <block id="4e5d89028ffbf65df6693ef1affd6573" category="list-text">如果所有六个节点均已启动且正在运行，如以下示例所示，则 AKS 集群已准备就绪并连接到本地环境</block>
+  <block id="6b935f22371497abfe5378d4446df0da" category="paragraph"><block ref="6b935f22371497abfe5378d4446df0da" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e57b7e32f49f0297d6c7524d1da1b3c0" category="inline-link-macro">接下来：为 Azure NetApp Files 创建一个委派子网。</block>
+  <block id="46b5942a33ef6a130ca5fee3f6017bec" category="paragraph"><block ref="46b5942a33ef6a130ca5fee3f6017bec" category="inline-link-macro-rx"></block></block>
+  <block id="e1490a61359279998443f8eab1c0483e" category="summary">本页总结了 Azure NetApp Files 在分布式或大规模培训方面的优势。</block>
+  <block id="b0de8e85db65da6381bb71646929daa6" category="doc">点击率预测用例摘要</block>
+  <block id="d7550d336c660c27c3f1aa9ffdbc1e08" category="inline-link-macro">先前版本：云资源要求。</block>
+  <block id="6a4fb77bb2a725598588e7db128b749b" category="paragraph"><block ref="6a4fb77bb2a725598588e7db128b749b" category="inline-link-macro-rx"></block></block>
+  <block id="3f504d5ee520c44b83e5875afd3f2831" category="inline-link">TB 单击 Logs</block>
+  <block id="ce2803fd5e9b90b62d0792d13e715d11" category="inline-link">Criteo AI 实验室</block>
+  <block id="9ff2706860b4f64c4cb404b8006d83db" category="paragraph">此用例基于公开发布的<block ref="f00b4c49198828625540594bcd2c0e57" category="inline-link-rx"></block> 数据集来自<block ref="3ba217c046bd683ab55f300076736b4a" category="inline-link-rx"></block>。随着 ML 平台的最新发展，我们现在非常关注大规模学习。在这种情况下， TB 级单击日志现在成为评估 ML 平台和算法可扩展性的参考数据集。通过预测点击率，广告宣传者可以选择最有可能对广告做出响应的看似合理的访客，分析他们的浏览历史记录，并根据用户的兴趣显示最相关的广告。</block>
+  <block id="2955d095e6b9835bc5ab2c8a0961ded0" category="paragraph">本技术报告中提供的此解决方案重点介绍了以下优势：</block>
+  <block id="67ccf3c7c1e67c90000dfee83bab38ec" category="list-text">Azure NetApp Files 在分布式或大规模培训方面的优势</block>
+  <block id="e15bc9f9b7a013d672cb689660ab9f9f" category="list-text">支持 CUDA 的数据处理（ cuDF ， cuPy 等）和 ML 算法（ cuML ）</block>
+  <block id="331b0434801b53199ee0d8b442a0973d" category="list-text">适用于分布式培训的 Dask 并行计算框架</block>
+  <block id="cbbf80729462f5a222942edf8b1bc326" category="paragraph">dask 和 Azure NetApp Files 之间的合作关系表明，随机林模型训练时间大幅缩短了两个数量级。这一改进与传统的熊猫方法类似，在每天处理实际单击日志数据时，文本（平均）为 45 GB 。</block>
+  <block id="3876b7e4b6a608a0b9001ae2e65c91b1" category="inline-link-macro">接下来：安装和设置 AK 集群。</block>
+  <block id="2f0a1a89887d5c4f057724084bfdb718" category="paragraph"><block ref="2f0a1a89887d5c4f057724084bfdb718" category="inline-link-macro-rx"></block></block>
+  <block id="17a9b27c376a8a5f5e184b2ebce41164" category="summary">部署完所有内容后，对新数据运行推断。这些模型可根据浏览活动预测用户是否单击某个广告。预测结果存储在 dask cuDF 中。您可以使用 Prometheus 监控结果，并在 Grafana 信息板中直观显示结果。</block>
+  <block id="af4d0cbb3c6dcf4f3a5e831b08e40ace" category="doc">使用 Prometheus 和 Grafana 监控 dask 和快速流</block>
+  <block id="a5d741c60ca9280a87382bcc2667207c" category="inline-link-macro">上一步：训练时间比较。</block>
+  <block id="8162cd02e2793715a1b14265f2bfb54b" category="paragraph"><block ref="8162cd02e2793715a1b14265f2bfb54b" category="inline-link-macro-rx"></block></block>
+  <block id="23c1612202d19b502b3701f893fb2557" category="inline-link">RAPID AI 中型 POST</block>
+  <block id="9fed5c9f0dab5b88ba96d45cf450079f" category="paragraph">有关详细信息，请参见此<block ref="47200b727ab2088d205d11a973529202" category="inline-link-rx"></block>。</block>
+  <block id="a5705f3e27851573a7eafd2a00a523b5" category="inline-link-macro">接下来：使用 NetApp DataOps 工具包进行数据集和型号版本控制。</block>
+  <block id="db75fb5c1fef47405a8df61e726e3c66" category="paragraph"><block ref="db75fb5c1fef47405a8df61e726e3c66" category="inline-link-macro-rx"></block></block>
+  <block id="adb2100439d02c2978c4a5670cda87b8" category="summary">此页面列出了用于构建此任务的库和框架。所有这些组件均已与 Azure 基于角色的访问和安全控制完全集成。</block>
+  <block id="235ff38f40d20846e27b4c64e964ce28" category="doc">用于数据处理和模型培训的库</block>
+  <block id="542e61809d35e9c83a99b29c87aa40fb" category="inline-link-macro">先前版本： Azure NetApp Files 性能层。</block>
+  <block id="b7fe935ab4f924b870ae1983e3f3a271" category="paragraph"><block ref="b7fe935ab4f924b870ae1983e3f3a271" category="inline-link-macro-rx"></block></block>
+  <block id="c4e831049faaa8b89e89eebd0a105dab" category="paragraph">下表列出了用于构建此任务的库和框架。所有这些组件均已与 Azure 基于角色的访问和安全控制完全集成。</block>
+  <block id="faeae27c134f5193efb923d2492daa47" category="cell">库 / 框架</block>
+  <block id="b540cdb28de9a6c72ef1a92504e69423" category="cell">dask cuML</block>
+  <block id="1fc1b4b6567949aab2cb7e6fecb1e68f" category="inline-link">cuML 库</block>
+  <block id="efe85bbaa5690074ea98a2bfef62d930" category="cell">要使 ML 在 GPU 上运行，请使用<block ref="514c908f6fc3f426a00e1dabdf37831f" category="inline-link-rx"></block> 可通过 dask 访问快速通道 cML 软件包。与基于 CPU 的方法相比，强强联合可以通过基于 GPU 的高性能实施实施常见的 ML 算法，包括集群，维度缩减和回归方法，提供高达 100 倍的速度。</block>
+  <block id="ede0db3d6c9043439d0762ee99543654" category="cell">dask cudf</block>
+  <block id="a9c380d6e09cc11f858b53d56cf69da4" category="inline-link">dask-cudf 库</block>
+  <block id="13a7d0199f9797a3533ff335da46b446" category="cell">CUDF 包括支持 GPU 加速提取，转换，加载（ ETL ）的各种其他功能，例如数据子设置，转换，单热编码等。快速发展团队会维护<block ref="836818db4e43067816d31d2b73198787" category="inline-link-rx"></block> 其中包括使用 dask 和 cuDF 的帮助程序方法。</block>
+  <block id="0c9c2e873df681f1ab5b13053be78af7" category="cell">Scikit 学习</block>
+  <block id="cd1235fc9b090edba051d73dbc6f66bf" category="inline-link">估算器</block>
+  <block id="1977c9daa1d67de51a4651abdb160c09" category="inline-link">适合</block>
+  <block id="4f54da5a2c4a796e8215f20eb95fddcc" category="cell">Scikit Learning 提供了数十种内置机器学习算法和模型，称为评估器。每个<block ref="855747fa3f470c1754852d09071dd101" category="inline-link-rx"></block> 可以使用将其安装到某些数据中<block ref="e52e604a9dbe357e0fb9bc58f4b62add" category="inline-link-rx"></block> 方法</block>
+  <block id="0dd4d530afb3c99ab869350770d7bebd" category="paragraph">我们使用两台笔记本电脑构建 ML 管道进行比较；一台是传统的熊猫科学学习方法，另一台是使用快速和快速的分布式培训。每台笔记本电脑均可单独进行测试，以查看时间和规模方面的性能。我们会分别介绍每台笔记本电脑，以展示使用快速流和 dask 进行分布式培训的优势。</block>
+  <block id="7dd297826f91c438fab12307224d2c40" category="inline-link-macro">接下来：在熊猫中加载 Criteo 单击 Logs Day 15 ，然后训练一个 sc科学 学习随机林模型。</block>
+  <block id="ade9906123700a8bf734457510b6b3c8" category="paragraph"><block ref="ade9906123700a8bf734457510b6b3c8" category="inline-link-macro-rx"></block></block>
+  <block id="f6a738f75f76f62a241636eca02cd87d" category="doc">版本历史记录</block>
+  <block id="3993b517d983222c5b766976180367f0" category="inline-link-macro">上一步：从何处查找追加信息。</block>
+  <block id="7d5fc90090e6ef28f1b090f458e3bb91" category="paragraph"><block ref="7d5fc90090e6ef28f1b090f458e3bb91" category="inline-link-macro-rx"></block></block>
+  <block id="44749712dbec183e983dcd78a7736c41" category="cell">Date</block>
+  <block id="8002bc13927c65b5f265b031079ce1d4" category="cell">文档版本历史记录</block>
+  <block id="3798985ee5e15c84c4263815d5a4d0b7" category="cell">版本 1.0</block>
+  <block id="248f830b158797f9c038ea35ea266b89" category="cell">2021年8月</block>
+  <block id="ea9349a37bfee247df0f87cbcacca796" category="cell">初始版本。</block>
+  <block id="dfcb1d1644aa3be367d0ca7761be62ad" category="summary">此页面介绍为 Azure NetApp Files 创建委派子网所需的步骤。</block>
+  <block id="d991c79e9311d59d4e38f3115d9c5b24" category="inline-link-macro">先前版本：安装和设置 AKS 集群。</block>
+  <block id="5dd65debe44935eb5866a15b9a62237e" category="paragraph"><block ref="5dd65debe44935eb5866a15b9a62237e" category="inline-link-macro-rx"></block></block>
+  <block id="8bffe528b31ee595be868b5a4af3d25a" category="paragraph">要为 Azure NetApp Files 创建委派子网，请完成以下步骤：</block>
+  <block id="1aa0034de6393efa24703b8a479a5aa6" category="list-text">导航到 Azure 门户中的虚拟网络。查找新创建的虚拟网络。它应具有 `AK -vnet` 等前缀。</block>
+  <block id="f1621549bc319674bb9e859babb2a671" category="list-text">单击 vNet 的名称。</block>
+  <block id="c536871a8fac3a4390226f6e485cf662" category="paragraph"><block ref="c536871a8fac3a4390226f6e485cf662" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d5025fbb3995af8640cab85f4f91126b" category="list-text">单击子网，然后单击顶部工具栏中的 +Subnet 。</block>
+  <block id="22307856839205c5209cc8ce1f4ed0df" category="paragraph"><block ref="22307856839205c5209cc8ce1f4ed0df" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e45b350630c9a3b31bf0c1a1f03dffb0" category="list-text">为子网提供名称，例如 `ANF.SN` ，然后在 Subnet delegation 标题下选择 `Microsoft.Netapp/volumes` 。请勿更改任何其他内容。单击确定。</block>
+  <block id="3621b1bf0075cb659f152966504dfc0d" category="paragraph"><block ref="3621b1bf0075cb659f152966504dfc0d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e8034fc216ae23edc69bb75430f3de2f" category="paragraph">Azure NetApp Files 卷将分配给应用程序集群，并在 Kubernetes 中用作永久性卷声明（ Persistent Volume Claim ， PVC ）。反过来，通过此过程，您可以灵活地将其映射到不同的服务，例如 Jupyter 笔记本电脑，无服务器功能等。</block>
+  <block id="ac3654eb11c3b0cfc94c6c1abdc6767a" category="paragraph">服务用户可以通过多种方式使用平台中的存储。在本技术报告讨论 NFS 时， Azure NetApp Files 的主要优势包括：</block>
+  <block id="42ba8b77b788a422a7e4ba2d8bb2d45e" category="list-text">为用户提供使用 Snapshot 副本的功能。</block>
+  <block id="a51448debe1bbe5bb229b849d4057e09" category="list-text">允许用户在 Azure NetApp Files 卷上存储大量数据。</block>
+  <block id="b7c10d399d058ef3538882e444459ba5" category="list-text">在大型文件集上运行 Azure NetApp Files 卷的型号时，可以利用这些卷的性能优势。</block>
+  <block id="4b15c9979e20dd7eb0c0263e9d5ab1db" category="inline-link-macro">下一步：对等 AKS vnet 和 Azure NetApp Files vnet 。</block>
+  <block id="a9f725be439e4752193d45f7e7f41851" category="paragraph"><block ref="a9f725be439e4752193d45f7e7f41851" category="inline-link-macro-rx"></block></block>
+  <block id="74b3e84bf9817092a6f26ddf10a2f3f8" category="summary">此页面概述了此解决方案中使用的技术。</block>
+  <block id="a1f13b9a0674cc0beb81e208dfb68d05" category="doc">技术概述</block>
+  <block id="5231f9fa4d08024f4620b759f83d0e97" category="inline-link-macro">上一页：简介。</block>
+  <block id="dd5a70c15c985f455edb59eebf8d3eaa" category="paragraph"><block ref="dd5a70c15c985f455edb59eebf8d3eaa" category="inline-link-macro-rx"></block></block>
+  <block id="4b2eedb67d8fb9da01af759e6e722a13" category="section-title">Microsoft 和 NetApp</block>
+  <block id="09e4ef7b38fea4a7bdf4341b588176d6" category="paragraph">自 2019 年 5 月起， Microsoft 推出了 Azure 原生，这是基于 NetApp ONTAP 技术的第一方门户服务，适用于企业级 NFS 和 SMB 文件服务。这一发展由 Microsoft 和 NetApp 之间的战略合作伙伴关系推动，进一步将世界级 ONTAP 数据服务的覆盖范围扩展到 Azure 。</block>
+  <block id="851e5baafa3bd23201e65e29f2fdf06a" category="paragraph">Azure NetApp Files 服务是一种企业级高性能计量文件存储服务。Azure NetApp Files 支持任何工作负载类型，默认情况下具有高可用性。您可以选择服务和性能级别，并通过服务设置 Snapshot 副本。Azure NetApp Files 是一项 Azure 第一方服务，用于在云中迁移和运行要求最严苛的企业文件工作负载，包括数据库， SAP 和高性能计算应用程序，并且不会更改代码。</block>
+  <block id="f014a6e06480ef33e3f1ab027f7065ca" category="paragraph">此参考架构为 IT 组织提供了以下优势：</block>
+  <block id="5e6e9a1ee378cf26b50e61d8bd46d54d" category="list-text">为各种性能和成本点提供一系列存储层</block>
+  <block id="295f4f6daaf50c87d2639d407c47f357" category="section-title">Dask 和 NVIDIA 快速流概述</block>
+  <block id="a9dcf931a9aad845de3c5b908d562955" category="paragraph">Dask 是一款开源并行计算工具，可在多台计算机上扩展 Python 库，并加快处理大量数据的速度。它提供的 API 类似于单线程传统 Python 库，例如熊猫， Numpy 和 sciKit 学习。因此，原生 Python 用户不必对其现有代码进行大量更改，即可在整个集群中使用资源。</block>
+  <block id="955647f3573b932f8596ba04ed80b7b6" category="paragraph">NVIDIA RAID 是一套开源库，可以完全在 GPU 上运行端到端 ML 和数据分析工作流。通过与 dask 结合使用，您可以轻松地从 GPU 工作站（纵向扩展）扩展到多节点，多 GPU 集群（横向扩展）。</block>
+  <block id="7a9ece70a2d60d73203e927718fd8454" category="paragraph">要在集群上部署 dask ，您可以使用 Kubernetes 进行资源编排。您还可以根据进程要求纵向或横向扩展工作节点，进而有助于优化集群资源消耗，如下图所示。</block>
+  <block id="b3951b803e4010ed575c9238d2803949" category="paragraph"><block ref="b3951b803e4010ed575c9238d2803949" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c2e194dd3ce5b4d001a02991ef567211" category="inline-link-macro">接下来：软件要求</block>
+  <block id="23704e1baeed350311b18c3583ad89e9" category="paragraph"><block ref="23704e1baeed350311b18c3583ad89e9" category="inline-link-macro-rx"></block></block>
+  <block id="0dff6955889d5634f0212efb574ef815" category="doc">单击查看速率预测数据处理和模型训练</block>
+  <block id="19075a93ccd90f3ea7019f0572778b2a" category="summary">此页面列出了此解决方案所需的软件要求。</block>
+  <block id="b0167c15bc26c48af07aea36aba706fa" category="inline-link-macro">上一页：技术概述。</block>
+  <block id="440b940924209e1d417ef7c4ef9bce34" category="paragraph"><block ref="440b940924209e1d417ef7c4ef9bce34" category="inline-link-macro-rx"></block></block>
+  <block id="793d18702a236e0e3b768917638f0ba2" category="paragraph">下表列出了此解决方案所需的软件要求。</block>
+  <block id="8ab697a4168b5fb33603a98d6bc9a436" category="cell">流和 dask 容器映像</block>
+  <block id="9ab6289633c326d69a377cbb29bd81a3" category="cell">存储库： "rapidsai/rapidsai" 标记： 0.17-cuda11.0-runtime-ubuntu18.04</block>
+  <block id="6e1b77cc3b83d87aaee751e2eaed5044" category="inline-link-macro">接下来：云资源要求。</block>
+  <block id="58bc7690a5a3a5a1aa5dc70739fd0b53" category="paragraph"><block ref="58bc7690a5a3a5a1aa5dc70739fd0b53" category="inline-link-macro-rx"></block></block>
+  <block id="9e59f01034d2c132fac901b9c14a5d88" category="summary">适用于 Kubernetes 的 NetApp DataOps 工具包可将存储资源和 Kubernetes 工作负载抽象到数据科学工作空间级别。这些功能打包在一个简单易用的界面中，专为数据科学家和数据工程师设计。</block>
+  <block id="7aee811c7e891ab94bb5be40b333faaf" category="doc">使用 NetApp DataOps 工具包对数据集和模型进行版本控制</block>
+  <block id="f7136197d3b16131979b9319c4acce63" category="inline-link-macro">上一页：使用 Prometheus 和 Grafana 监控 dask 和 rapids 。</block>
+  <block id="402dae1972461d7e7ba986ab6728df6c" category="paragraph"><block ref="402dae1972461d7e7ba986ab6728df6c" category="inline-link-macro-rx"></block></block>
+  <block id="fd2d048a9ec0f96d89493b98f72cbe34" category="paragraph">适用于 Kubernetes 的 NetApp DataOps 工具包可将存储资源和 Kubernetes 工作负载抽象到数据科学工作空间级别。这些功能打包在一个简单易用的界面中，专为数据科学家和数据工程师设计。该工具包采用熟悉的 Python 计划形式，可帮助数据科学家和工程师在几秒钟内配置和销毁 JupyterLab 工作空间。这些工作空间可以包含数 TB 甚至数 PB 的存储容量，从而使数据科学家能够将其所有培训数据集直接存储在其项目工作空间中。单独管理工作空间和数据卷的时代已经一去不返。</block>
+  <block id="4a6c7893abd7ef92fb09d3359e17324d" category="inline-link">GitHub 存储库</block>
+  <block id="eb0d40310a9cc0432fac66dc97652c39" category="paragraph">有关详细信息，请访问工具包<block ref="64134ca6239d4056f34489b42f2baeed" category="inline-link-rx"></block>。</block>
+  <block id="1d1983037d4fd7beac963697b84f82bd" category="paragraph"><block ref="1d1983037d4fd7beac963697b84f82bd" category="inline-link-macro-rx"></block></block>
+  <block id="cff4cbb413623685c446a2632974cf62" category="summary">此页面将使用传统熊猫的模型训练时间与 dask 进行比较。对于熊猫，由于处理时间较慢，我们加载的数据较少，以避免内存溢出。因此，我们对结果进行了插值计算，以便进行合理的比较。</block>
+  <block id="014020acc8f97c1da58961d44b6301eb" category="doc">培训时间比较</block>
+  <block id="76c5145913d13d6c3105c4265a78047e" category="inline-link-macro">上一步：使用原生任务流信息板监控 dask 。</block>
+  <block id="a871e4d194e2df9c65b061a5fc7cb154" category="paragraph"><block ref="a871e4d194e2df9c65b061a5fc7cb154" category="inline-link-macro-rx"></block></block>
+  <block id="c8ed0bb49061765f5f30ba006ea7c5c0" category="paragraph">本节将使用传统熊猫的模型训练时间与 dask 进行比较。对于熊猫，由于处理时间较慢，我们加载的数据较少，以避免内存溢出。因此，我们对结果进行了插值计算，以便进行合理的比较。</block>
+  <block id="5b5214524edbd74fb721da08e61c8a41" category="paragraph">下表显示了当熊猫随机林模型（数据集每天 200 亿行中的 5000 万行）所使用的数据明显减少时的原始训练时间比较。 15此示例仅使用所有可用数据的 0.25% 以下。而对于 dask-cuML ，我们在所有 200 亿行可用的行上训练了随机林模型。这两种方法的训练时间相当。</block>
+  <block id="40a68b5da4b9b224764558bb02ecd028" category="cell">方法</block>
+  <block id="0e90ab0d7d04d2a878961f8d40071c83" category="cell">培训时间</block>
+  <block id="24cc88af022e13431f8005b38f74e0fd" category="cell">Scikit 学习：在 15 天仅使用 50 米行作为训练数据</block>
+  <block id="26e394f0b8009246698f4844db682015" category="cell">47 分 21 秒</block>
+  <block id="ed536b2798ed9f16a79fb8f772601548" category="cell">rapids-dask ：使用第 15 天的所有 20 B 行作为训练数据</block>
+  <block id="8809f6d1a4b5cbd872b52f83e378e527" category="cell">1 小时， 12 分钟和 11 秒</block>
+  <block id="57093fade268287629c2720356ecac57" category="paragraph">如果我们按线性方式插值训练时间结果，如下表所示，则使用分布式训练和 dask 具有显著优势。传统的熊猫科学学习方法需要 13 天来处理和训练 45 GB 的数据，只需一天的单击日志，而使用快速 dask 方法处理相同数量的数据则要快 262.39 倍。</block>
+  <block id="36ebc33745cb5ac06238c615c8aaebdc" category="cell">Scikit 学习：使用第 15 天的所有 20 B 行作为训练数据</block>
+  <block id="b2ab615236e8c7812b0ab7dff59c552f" category="cell">13 天， 3 小时， 40 分钟和 11 秒</block>
+  <block id="0d7cda3e89555f27bf26cf0c0c4f4fed" category="paragraph">在上表中，您可以看到，通过使用带和 dask 的快速处理功能在多个 GPU 实例之间分布数据处理和模型训练，与使用 scide-Learn 模型训练的传统熊猫 DataFrame 处理相比，运行时间要短得多。此框架支持在云端以及多节点多 GPU 集群内部进行纵向和横向扩展。</block>
+  <block id="fbd52cffa97d6ec5e0230516fc61f14c" category="inline-link-macro">接下来：使用 Prometheus 和 Grafana 监控 dask 和快速流。</block>
+  <block id="78117011d88a8971f2eadbeee6ac6474" category="paragraph"><block ref="78117011d88a8971f2eadbeee6ac6474" category="inline-link-macro-rx"></block></block>
+  <block id="57a499fcdd85136edfd1ee55dedd9675" category="summary">此解决方案遵循 AI/ML 应用程序的生命周期。我们从数据科学家的工作入手，确定准备数据和训练模型所需的不同步骤。通过利用 dask 上的快速访问功能，我们可以在 Azure Kubernetes Service （ AKS ）集群中执行分布式培训，与传统的 Python 科学学习方法相比，可以大幅缩短培训时间。为了完成整个周期，我们将管道与 Azure NetApp Files 集成在一起。</block>
+  <block id="d248b9b022a7cb278461f09bc1bf162d" category="doc">TR-4904 ： Azure Kubernetes Service ， Azure NetApp Files ， RAPID AI 和 Dask</block>
+  <block id="e6fab630e7da86a500e1e3c51fa61a00" category="paragraph">Rick Huang ， Verron Martina ， Muncher ， NetApp</block>
+  <block id="4c3816ce69205bc811aa89dbe9d09a1a" category="paragraph">数据科学家的工作重点应放在机器学习（ ML ）和人工智能（ AI ）模型的培训和调整上。但是，根据 Google 的研究，数据科学家花费大约 80% 的时间来研究如何使其模型能够与企业应用程序结合使用并大规模运行。</block>
+  <block id="a1451f6988178ae140f8da836d63a157" category="paragraph">要管理端到端 AI/ML 项目，需要更广泛地了解企业组件。虽然 DevOps 已接管了这些类型的组件的定义，集成和部署，但 ML 操作的目标是类似的流程，其中包括 AI/ML 项目。要了解端到端 AI/ML 管道在企业中涉及的内容，请参见以下所需组件列表：</block>
+  <block id="24bea3d677b34d6aea9ff01417fd9d06" category="list-text">集成开发环境（ IDE ）</block>
+  <block id="e6a53478c3fc5682c6f851672b3e7bc9" category="paragraph">数据科学领域涉及 IT 和业务领域的多个领域：</block>
+  <block id="9ca78187997ba2a23a73c094256ae63f" category="list-text">云管理员和架构师需要能够设置和管理 Azure 资源。</block>
+  <block id="060bc2911862b1ab8f6b4b77542434a2" category="paragraph">在本技术报告中，我们将介绍 Azure NetApp Files ，快速 AI ， dask 和 Azure 如何帮助这些角色为业务带来价值。</block>
+  <block id="ed8b6e047f5d4e844fe3e870c3fda4a3" category="paragraph">Azure NetApp Files 提供各种性能层。客户可以从标准层开始，无需移动任何数据即可无中断地横向扩展和纵向扩展到高性能层。数据科学家可以利用此功能大规模训练模型，而不会出现任何性能问题，从而避免集群中出现任何数据孤岛，如下图所示。</block>
+  <block id="d4dc9019b6000fd12d9dc6b091fe3e26" category="paragraph"><block ref="d4dc9019b6000fd12d9dc6b091fe3e26" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b320345f652aacf7148c76dff24e2f68" category="inline-link-macro">接下来：技术概述</block>
+  <block id="a20978df09e58f39953eb81f9368c2f2" category="paragraph"><block ref="a20978df09e58f39953eb81f9368c2f2" category="inline-link-macro-rx"></block></block>
+  <block id="d577549f9b3a229c338e203a433489f6" category="summary">本节介绍如何将 AKS vNet 与 Azure NetApp Files vNet 建立对等关系。</block>
+  <block id="e61e6d340ad05dc2e1ad0982f6857d7d" category="doc">对等 AKS vNet 和 Azure NetApp Files vNet</block>
+  <block id="1c45d541f316a23589217be5991b1545" category="inline-link-macro">先前：为 Azure NetApp Files 创建委派子网。</block>
+  <block id="786730f8769009abf0bf6400157dd16b" category="paragraph"><block ref="786730f8769009abf0bf6400157dd16b" category="inline-link-macro-rx"></block></block>
+  <block id="e6ef5f0946a89d073a8f360de1038061" category="paragraph">要将 AKS vNet 与 Azure NetApp Files vNet 建立对等关系，请完成以下步骤：</block>
+  <block id="87c2d6c506d0bf65d2c5d773474f9c0f" category="list-text">在搜索字段中输入虚拟网络。</block>
+  <block id="7680f3bc49a836c67a8b0e7d2d9ccb44" category="list-text">选择 `vnet AK -vnet-name 。` 单击它并在搜索字段中输入 "Peels" 。</block>
+  <block id="fc3bb6a018a8f599cab21678959f92b0" category="list-text">单击 +Add 。</block>
+  <block id="1991ef5bd8e165e42c56ccaefa2f640f" category="list-text">输入以下描述符：</block>
+  <block id="51e5b9c0a583a9afbc2f998e622fd30d" category="list-text">对等链路名称是 `aps-vnet-name_to_anf` 。</block>
+  <block id="14ac6521e2758ba95fe7be9ca6a82cd1" category="list-text">subscriptionID 和 Azure NetApp Files vNet 作为 vNet 对等配对节点。</block>
+  <block id="70b58cb057d859d4da9f17e43ffd238c" category="list-text">保留所有非星号部分的默认值。</block>
+  <block id="1bb250fbf1946dd1bd7ad228032f8803" category="list-text">单击添加。</block>
+  <block id="50e3209c871e4867931ef51a9344a921" category="paragraph">有关详细信息，请参见<block ref="f81943721c88f7efe9b8252470f9ea43" category="inline-link-rx"></block>。</block>
+  <block id="fd3c95528aa9718948de8d4e38b2fa2c" category="inline-link-macro">下一步：安装 Trident 。</block>
+  <block id="18337fe57049583a9c04a79f64a2088f" category="paragraph"><block ref="18337fe57049583a9c04a79f64a2088f" category="inline-link-macro-rx"></block></block>
+  <block id="dcfa517bb68d187d11e580baf2ecf588" category="summary">此页面介绍如何使用 Helm 在 AKS 上设置带快速部署的 dask 。</block>
+  <block id="fd22fb1626b987fa7b72743fa9698ec6" category="doc">使用 Helm 在 AKS 上设置带快速部署的 dask</block>
+  <block id="d74bb88aa6e4b1c540be703fda33923e" category="inline-link-macro">先前版本：安装 Trident 。</block>
+  <block id="6020c64d2124fc0caa426123bfc5ba38" category="paragraph"><block ref="6020c64d2124fc0caa426123bfc5ba38" category="inline-link-macro-rx"></block></block>
+  <block id="d81f517b6ad0d9702be81a8199a2246f" category="paragraph">要使用 Helm 在 AKS 上设置带快速部署的 dask ，请完成以下步骤：</block>
+  <block id="549c839f491ec7099a895dd1cfea7534" category="list-text">创建一个命名空间以安装带有快速流的 dask 。</block>
+  <block id="74d041e68ac2a21a636ab14ae78f279d" category="list-text">创建一个 PVC 以存储点击率数据集：</block>
+  <block id="f5008aa6b27cdcaadbe27960383c8ff6" category="list-text">将以下 YAML 内容保存到文件中以创建 PVC 。</block>
+  <block id="67d464c36bcc48173c964a780459dbfd" category="list-text">将 YAML 文件应用于 Kubernetes 集群。</block>
+  <block id="be0ca76aafd92c18792693b8f05d01ce" category="inline-link"><block ref="be0ca76aafd92c18792693b8f05d01ce" category="inline-link-rx"></block></block>
+  <block id="dc7ba914646428512334728c1f0ebd7d" category="list-text">克隆 `apidsai git` repository （<block ref="4f08c7c28c19e75f4d8607fc65d40067" category="inline-link-rx"></block>）。</block>
+  <block id="50aef45ee39d958bc589f422bfb6d1bf" category="list-text">修改 `values.yaml` 并包括先前为员工和 Jupyter 工作空间创建的 PVC 。</block>
+  <block id="06867e85b141bb9d17f8ed6b4b685c46" category="list-text">转至存储库的 `rapidsai` 目录。</block>
+  <block id="1a985ac965074fab9cfcee28ef954755" category="list-text">更新 `values.yaml` 文件并使用 PVC 挂载卷。</block>
+  <block id="52076eb1fec3929530258335052328b3" category="list-text">转到存储库的主目录，然后使用 Helm 在 AKS 上为三个辅助节点部署 dask 。</block>
+  <block id="bd4e74749939dd3c9f80ff138c18af53" category="inline-link-macro">接下来： Azure NetApp Files 性能层。</block>
+  <block id="52d5e0adb69809963ce4f94104a75b5e" category="paragraph"><block ref="52d5e0adb69809963ce4f94104a75b5e" category="inline-link-macro-rx"></block></block>
+  <block id="1a17b23dd49d997677e18c9b9fe29935" category="summary">此页面介绍如何使用原生任务流信息板监控 dask 。</block>
+  <block id="3268570ddd540695f3e92ff79d8f4684" category="doc">使用原生任务流信息板监控 dask</block>
+  <block id="1e80a6d70a902d1dae25d26917a5b490" category="inline-link-macro">上一步：在 dask 中加载 Day 15 并训练 dask cuML 随机林模型。</block>
+  <block id="3898f5ae37dfd830af10cdc128236b50" category="paragraph"><block ref="3898f5ae37dfd830af10cdc128236b50" category="inline-link-macro-rx"></block></block>
+  <block id="9eeb55820f49a600fa229f23cfe9e5b5" category="inline-link">dask 分布式计划程序</block>
+  <block id="99b248c7005783fe2682ad82217e9a24" category="paragraph">。<block ref="7df0d90bf997a373bfe85bbe10a2d2c8" category="inline-link-rx"></block> 以两种形式提供实时反馈：</block>
+  <block id="d8516bf5d94a38a1fa1d7a8c3b92dee7" category="list-text">一个交互式信息板，其中包含许多图表和包含实时信息的表</block>
+  <block id="d22ebe91c5dc1499387785da997fbe7d" category="list-text">一个适合在控制台或笔记本电脑中交互使用的进度条</block>
+  <block id="6e35e4c1cc9332ebc8028df451bc4f06" category="paragraph">在我们的案例中，下图显示了如何监控任务进度，包括存储的字节数，详细细分流数量的任务流以及执行关联功能的任务名称的进度。在我们的案例中，由于我们有三个辅助节点，因此流有三个主要区块，而颜色代码表示每个流中的不同任务。</block>
+  <block id="5743e70224503025dacaa77fae253c4f" category="paragraph"><block ref="5743e70224503025dacaa77fae253c4f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7a5c7a858f05434bf6637c3995959f49" category="paragraph">您可以选择分析单个任务并以毫秒为单位检查执行时间，或者确定任何障碍或障碍。例如，下图显示了随机林模型安装阶段的任务流。要执行的功能要多得多，包括用于 DataFrame 处理的唯一区块，用于安装随机林的 _construct_rf 等。由于 Criteo Click Logs 中一天的数据非常大（ 45 GB ），因此大部分时间都花在了 DataFrame 操作上。</block>
+  <block id="816ff133aaa3d2f46ca0c7842f5fdaab" category="paragraph"><block ref="816ff133aaa3d2f46ca0c7842f5fdaab" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f5eca1492a19a4c24071ed91262666cf" category="inline-link-macro">下一步：比较训练时间。</block>
+  <block id="d5d929f175d4a2062c661e45b9656f32" category="paragraph"><block ref="d5d929f175d4a2062c661e45b9656f32" category="inline-link-macro-rx"></block></block>
+  <block id="d68d11ee3f69a45d681f78c744cae498" category="summary">您可以通过将现有卷移动到使用所需卷服务级别的另一个容量池来更改此卷的服务级别。借助此解决方案，客户可以从标准层中的小型数据集和少量 GPU 入手，并随着数据量和 GPU 的增加而横向扩展或纵向扩展到高级层。</block>
+  <block id="2fe5665064f07acc8afc830f911c09a5" category="doc">Azure NetApp Files 性能层</block>
+  <block id="d84e339c1d1265f11e2f217f8d04354a" category="inline-link-macro">上一步：使用 Helm 在 AKS 上设置带快速部署的 dask 。</block>
+  <block id="1be55e0d10ba600a3d66b1f73f978b9f" category="paragraph"><block ref="1be55e0d10ba600a3d66b1f73f978b9f" category="inline-link-macro-rx"></block></block>
+  <block id="de524ca3fc83ef426bc329e1a8b712ea" category="paragraph">您可以通过将现有卷移动到使用所需卷服务级别的另一个容量池来更改此卷的服务级别。借助此解决方案，客户可以从标准层中的小型数据集和少量 GPU 入手，并随着数据量和 GPU 的增加而横向扩展或纵向扩展到高级层。高级层提供的每 TB 吞吐量是标准层的四倍，并且可以执行纵向扩展，而无需移动任何数据即可更改卷的服务级别。</block>
+  <block id="5f92df8a2ac38644ed8ba20e16791602" category="paragraph">要动态更改卷的服务级别，请完成以下步骤：</block>
+  <block id="8c83c4957baac2f6fea18f9d77767e3a" category="paragraph"><block ref="8c83c4957baac2f6fea18f9d77767e3a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="21ec2eabbe87e02cad1b0d4279ea00a7" category="list-text">在更改池窗口中，选择要将卷移动到的容量池。</block>
+  <block id="ef3a0105bad35ad4c385d92daf6496a6" category="paragraph"><block ref="ef3a0105bad35ad4c385d92daf6496a6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="18d0ad44a1e563aaf9f5871e32535a6c" category="list-text">单击确定。</block>
+  <block id="32ae33eea9c6b04002778d814c344fb5" category="section-title">自动执行性能层更改</block>
+  <block id="1c9506694c5a6fe83d1a0389d1d24564" category="paragraph">以下选项可用于自动执行性能层更改：</block>
+  <block id="54a3bcd89041e8f96766dcb598b15511" category="list-text">动态服务级别更改目前仍在公有预览中，默认情况下不会启用。要在 Azure 订阅上启用此功能，请参见本文档了解如何操作<block ref="773d4c9e90e7325c5fcf35857900af6e" category="inline-link-rx"></block>。</block>
+  <block id="0b01c5f61940e864222c5b29615a7eeb" category="inline-link">卷池更改文档</block>
+  <block id="265eed4df59633a830c9da49505786fc" category="list-text">中提供了 Azure CLI 卷池更改命令<block ref="db78b725076ccf0203288c6620e52eb9" category="inline-link-rx"></block> 在以下示例中：</block>
+  <block id="4455e376dc005ca0a99be0491b917ce7" category="inline-link">Set-AzNetAppFilesVolumePool cmdlet</block>
+  <block id="a5bce2f378011f6036711869a5e8073b" category="list-text">PowerShell ：<block ref="45dc9ea5ce8eabd60a14674d792889e0" category="inline-link-rx"></block> 更改 Azure NetApp Files 卷的池，如以下示例所示：</block>
+  <block id="b79b50d5bff47e3a668f266c7b9dbc7b" category="inline-link-macro">接下来：用于数据处理和模型培训的库。</block>
+  <block id="edd770dcbb857ec8f0871955fb2f7d5d" category="paragraph"><block ref="edd770dcbb857ec8f0871955fb2f7d5d" category="inline-link-macro-rx"></block></block>
+  <block id="60f89129c6220bfb3de5a84b4f6471ca" category="summary">此页面介绍了我们如何使用熊猫和 dask DataFrames 从 Criteo TB 数据集中加载 Click Logs 数据。在广告交换的数字广告中，使用情形与此相关，它可以预测是否会点击广告，或者如果交换在自动管道中使用的模型不准确，从而构建用户的个人资料。</block>
+  <block id="efdbc2f24f0a87c559175250c645b26b" category="doc">在熊猫中加载 Criteo 单击 Logs Day 15 ，然后训练一个 sc科学 学习随机林模型</block>
+  <block id="2979440f06f7cfcab78b9a92ca964f28" category="inline-link-macro">上一页：数据处理和模型培训库。</block>
+  <block id="f2982e3861753bd206faa379a769d904" category="paragraph"><block ref="f2982e3861753bd206faa379a769d904" category="inline-link-macro-rx"></block></block>
+  <block id="f82859e215621220b9aae984f796ef24" category="paragraph">本节介绍如何使用熊猫和 dask DataFrames 从 Criteo TB 数据集中加载 Click Logs 数据。在广告交换的数字广告中，使用情形与此相关，它可以预测是否会点击广告，或者如果交换在自动管道中使用的模型不准确，从而构建用户的个人资料。</block>
+  <block id="f08833dbbe310e84a1ba564838776db2" category="paragraph">我们从 Click Logs 数据集加载了第 15 天的数据，总计 45 GB 。在 Jupyter 笔记本电脑中运行以下单元 `CT-PandasRF-colled.ipynb` 创建一个包含前 5 ， 000 万行的熊猫 DataFrame ，并生成一个 scide-Learn 随机林模型。</block>
+  <block id="f9964b2f8f54a1422ac46bab70fd1216" category="inline-link">官方科学知识工具包学习文档</block>
+  <block id="5646953e1414498e1ddf2eb3ab488e27" category="paragraph">要使用经过培训的随机林模型执行预测，请在此笔记本电脑中运行以下段落。为了避免重复，我们采用了自第 15 天起的最后 100 万行作为测试集。该单元格还会计算预测准确性，其定义为模型准确预测用户是否单击 AD 。要查看此笔记本中任何不熟悉的组件，请参见<block ref="27e4d9ca2442a6439517a3ec2c7a4e73" category="inline-link-rx"></block>。</block>
+  <block id="4e5653c75e720212b79703e8083de2a8" category="inline-link-macro">接下来：在 dask 中加载第 15 天，训练一个 dask cuML 随机林模型。</block>
+  <block id="8c9976282cff1b15934d937349911c30" category="paragraph"><block ref="8c9976282cff1b15934d937349911c30" category="inline-link-macro-rx"></block></block>
+  <block id="4da2046c0d2b3e5d89fff538399dcd3c" category="sidebar">Azure Kubernetes Service ， Azure NetApp Files ， RAPID AI 和 DASK</block>
+  <block id="7f39827ac712fa5b76b27ff0b267373c" category="sidebar">使用 NetApp DataOps 工具包进行数据集和型号版本控制</block>
 </blocks>

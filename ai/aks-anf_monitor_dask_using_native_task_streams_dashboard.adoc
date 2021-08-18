@@ -1,0 +1,31 @@
+---
+sidebar: sidebar 
+permalink: ai/aks-anf_monitor_dask_using_native_task_streams_dashboard.html 
+keywords: dashboard, progress bar, bytes stored, task stream, dataframe, criteo click log 
+summary: 此页面介绍如何使用原生任务流信息板监控 dask 。 
+---
+= 使用原生任务流信息板监控 dask
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:aks-anf_load_day_15_in_dask_and_train_a_dask_cuml_random_forest_model.html["上一步：在 dask 中加载 Day 15 并训练 dask cuML 随机林模型。"]
+
+。 https://docs.dask.org/en/latest/scheduling.html["dask 分布式计划程序"^] 以两种形式提供实时反馈：
+
+* 一个交互式信息板，其中包含许多图表和包含实时信息的表
+* 一个适合在控制台或笔记本电脑中交互使用的进度条
+
+
+在我们的案例中，下图显示了如何监控任务进度，包括存储的字节数，详细细分流数量的任务流以及执行关联功能的任务名称的进度。在我们的案例中，由于我们有三个辅助节点，因此流有三个主要区块，而颜色代码表示每个流中的不同任务。
+
+image:aks-anf_image13.png["错误：缺少图形映像"]
+
+您可以选择分析单个任务并以毫秒为单位检查执行时间，或者确定任何障碍或障碍。例如，下图显示了随机林模型安装阶段的任务流。要执行的功能要多得多，包括用于 DataFrame 处理的唯一区块，用于安装随机林的 _construct_rf 等。由于 Criteo Click Logs 中一天的数据非常大（ 45 GB ），因此大部分时间都花在了 DataFrame 操作上。
+
+image:aks-anf_image14.png["错误：缺少图形映像"]
+
+link:aks-anf_training_time_comparison.html["下一步：比较训练时间。"]

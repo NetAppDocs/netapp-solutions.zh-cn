@@ -1,0 +1,76 @@
+---
+sidebar: sidebar 
+permalink: ai/aks-anf_load_day_15_in_dask_and_train_a_dask_cuml_random_forest_model.html 
+keywords: dask, cuml, dataframe, criteo, click, logs, pandas, scikit, cudf 
+summary: 本节介绍如何在熊猫中加载 Criteo Click Logs Day 15 以及如何训练一个 sc科学 学习随机林模型。在此示例中，我们使用 dask cuDF 执行了 DataFrame 加载，并在 dask cuML 中训练了一个随机林模型。 
+---
+= 在 dask 中加载第 15 天，训练一个 dask cuML 随机林模型
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:aks-anf_load_criteo_click_logs_day_15_in_pandas_and_train_a_scikit-learn_random_forest_model.html["Previous ： Load Criteo click Logs Day 15 in 熊猫并训练一个 sc科学 学习随机林模型。"]
+
+按照与上一节类似的方式，在熊猫中加载 Criteo 单击 Logs Day 15 ，然后训练一个 cscit-Learn 随机林模型。在此示例中，我们使用 dask cuDF 执行了 DataFrame 加载，并在 dask cuML 中训练了一个随机林模型。我们比较了本节中培训时间和规模的差异 link:aks-anf_training_time_comparison.html["" 培训时间比较。 ""]
+
+
+
+== Criteo_dask_rf.ipynb
+
+此笔记本电脑将导入 `NumPy` ， `累积` 和必要的 `dask` 库，如以下示例所示：
+
+....
+import cuml
+from dask.distributed import Client, progress, wait
+import dask_cudf
+import numpy as np
+import cudf
+from cuml.dask.ensemble import RandomForestClassifier as cumlDaskRF
+from cuml.dask.common import utils as dask_utils
+....
+启动 dask 客户端（）。
+
+....
+client = Client()
+....
+如果集群配置正确，您可以查看工作节点的状态。
+
+....
+client
+workers = client.has_what().keys()
+n_workers = len(workers)
+n_streams = 8 # Performance optimization
+....
+在我们的 AKS 集群中，将显示以下状态：
+
+image:aks-anf_image12.png["错误：缺少图形映像"]
+
+请注意， dask 采用了延迟执行模式： dask 不是即时执行处理代码，而是构建定向的环状图（ DAG ）执行。DAG 包含一组任务及其互动，每位员工都需要执行这些任务。此布局意味着，只有在用户指示 dask 以某种方式执行任务后，这些任务才会运行。使用 dask ，您有三个主要选项：
+
+* 在 DataFrame 上调用 compute （）。 * 此调用将处理所有分区，然后将结果返回给计划程序，以便最终聚合和转换为 cuDF DataFrame 。除非计划程序节点内存不足，否则应谨慎使用此选项，并且仅在结果大幅减少时使用。
+* * 在 DataFrame 上调用 persiste（ ）。 * 此调用执行图形，但它不会将结果返回到计划程序节点，而是在整个集群的内存中保留这些结果，以便用户可以在管道中重复使用这些中间结果，而无需重新运行相同的处理。
+* * 在 DataFrame 上调用 head （）。 * 与 cuDF 一样，此调用会将 10 条记录返回到计划程序节点。此选项可用于快速检查 DataFrame 是否包含所需的输出格式，或者记录本身是否合理，具体取决于您的处理和计算结果。
+
+
+因此，除非用户调用其中任一操作，否则员工将处于闲置状态，等待计划程序启动处理。这种延迟执行模式在现代并行和分布式计算框架（如 Apache Spark ）中很常见。
+
+下一段使用 dask cuML 进行分布式 GPU 加速计算，以此训练随机林模型，并计算模型预测准确性。
+
+....
+Adsf
+# Random Forest building parameters
+n_streams = 8 # optimization
+max_depth = 10
+n_bins = 16
+n_trees = 10
+cuml_model = cumlDaskRF(max_depth=max_depth, n_estimators=n_trees, n_bins=n_bins, n_streams=n_streams, verbose=True, client=client)
+cuml_model.fit(gdf_sliced_small, Y)
+# Model prediction
+pred_df = cuml_model.predict(gdf_test)
+# calculate accuracy
+cu_score = cuml.metrics.accuracy_score( test_y, pred_df )
+....
+link:aks-anf_monitor_dask_using_native_task_streams_dashboard.html["下一步：使用原生任务流信息板监控 dask 。"]
