@@ -7947,7 +7947,6 @@
   <block id="34306e59be5281cec379b855a78c6d10" category="paragraph">本节专门介绍实际用户在将此解决方案部署到生产环境中时可能需要执行的自定义设置，例如创建专用私有映像注册表或部署自定义负载平衡器实例。</block>
   <block id="12c17259bf3f3b36e970c9e3abbc6b43" category="cell">NetApp Astra 控制中心</block>
   <block id="8d96276332b02a2ef892828c1d4fbab4" category="cell">应用程序感知型数据管理</block>
-  <block id="7067f7c7ef86b420751a601f1dd67ac0" category="cell">21.08.57</block>
   <block id="8de59ec369b10820d0dd336b9765c79b" category="cell">NetApp Astra Trident</block>
   <block id="824bd84e05db30b27e73f839dae3b8e5" category="list-text">Astra Trident 文档</block>
   <block id="fe549ebd8a3f0fea1803cbaa947ef198" category="list-text">NetApp Astra 控制中心文档</block>
@@ -8009,8 +8008,6 @@
   <block id="c0886a2df430b7ea240139008f6d04d6" category="admonition">如果您的注册表使用的是不可信的证书，请编辑 shell 脚本并对 Docker 推送命令使用 -tls-verify=false - `docker push $registry/$ （ echo $astraImage | sed s/^ （^ ） \/]\+///' ） -tls-verify=false`</block>
   <block id="5f7b5da1ed57bea3ccb329f7aae8824c" category="list-text">下一步是将映像注册表 TLS 证书上传到 OpenShift 节点。为此，请使用 TLS 证书在 OpenShift-config 命名空间中创建一个配置映射，并将其修补到集群映像配置中以使此证书可信。</block>
   <block id="a768fbfefe23b6026c35331b6ef9c56c" category="admonition">如果您使用的是路由入口操作员提供的默认 TLS 证书的 OpenShift 内部注册表，则仍需要按照上述步骤将这些证书修补到路由主机名。要从入口运算符提取证书，您可以使用命令 - `oc extract secret/router -ca -keys=tls.crt -n OpenShift-Inuse-operator`</block>
-  <block id="fdc0396d44e65af291c88c0245150c2b" category="list-text">创建一个命名空间 `Acc-operator-system` 以安装 Astra 控制中心操作员。</block>
-  <block id="afce5c24a2365e3ba0f8749d8666182f" category="list-text">使用凭据创建一个密钥，以登录到 `Acc-operator-system` namespace 中的映像注册表。</block>
   <block id="d03e4a349f30176cdc471ed6400e5fc7" category="list-text">编辑 Astra 控制中心操作员 CR `Astra_control_center_operator_deploy.YAML` 这是 Astra 控制中心部署的一组所有资源。在操作员 CR 中，找到 `Acc-operator-controller-manager` 的部署定义，并输入注册表的 FQDN 以及将映像推送到注册表时提供的组织名称（在此示例中为 astra-registry.apps.ocp-vmw.cie.netapp.com/netapp-astra ） 替换文本 ` [y您 的 .registry.goes.here]` 并提供我们刚刚创建的密钥的名称。验证操作员的其他详细信息，保存并关闭。</block>
   <block id="a27cc132b2f3001f3e9df9c40dad4bfb" category="list-text">运行以下命令创建运算符。</block>
   <block id="685fe82295261a8902e709081b6c9599" category="list-text">创建一个专用命名空间以安装所有 Astra 控制中心资源。</block>
@@ -8547,4 +8544,7 @@
   <block id="8c9976282cff1b15934d937349911c30" category="paragraph"><block ref="8c9976282cff1b15934d937349911c30" category="inline-link-macro-rx"></block></block>
   <block id="4da2046c0d2b3e5d89fff538399dcd3c" category="sidebar">Azure Kubernetes Service ， Azure NetApp Files ， RAPID AI 和 DASK</block>
   <block id="7f39827ac712fa5b76b27ff0b267373c" category="sidebar">使用 NetApp DataOps 工具包进行数据集和型号版本控制</block>
+  <block id="efbc668592bf2cf9e84b95ff4a9de44c" category="cell">21.08.65</block>
+  <block id="6589da0279dd02b9b1d177e0ff5f457b" category="list-text">创建一个命名空间 `NetApp-Acc-operator` 以安装 Astra 控制中心操作员。</block>
+  <block id="e3990b0b892faaf03261a0a1bcd00b9b" category="list-text">使用凭据创建一个密钥，以登录到 `NetApp-Acc-operator` 命名空间中的映像注册表。</block>
 </blocks>

@@ -92,7 +92,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   namespace: metallb-system
-  name: metallb-config
+  name: config
 data:
   config: |
     address-pools:
@@ -102,7 +102,7 @@ data:
       - 10.63.17.10-10.63.17.200
 
 [netapp-user@rhel7 ~]$ oc create -f metallb-config.yaml
-configmap/metallb-config created
+configmap/config created
 ----
 . 现在，在创建负载平衡器服务时， MetalLB 会为这些服务分配一个外部 IP ，并通过响应 ARP 请求来公布 IP 地址。
 +
