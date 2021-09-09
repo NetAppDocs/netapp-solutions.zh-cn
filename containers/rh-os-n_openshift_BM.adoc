@@ -4,45 +4,38 @@ permalink: containers/rh-os-n_openshift_BM.html
 keywords: OpenShift, bare metal, IPI 
 summary:  
 ---
-= OpenShift on Bare Metal ： Red Hat OpenShift with NetApp
-:hardbreaks:
-:nofooter: 
-:icons: font
-:linkattrs: 
-:imagesdir: ./../media/
+= 裸机上的 OpenShift
 
 
 基于裸机的 OpenShift 可在商用服务器上自动部署 OpenShift 容器平台。
 
-与 OpenShift 的虚拟部署类似， OpenShift 非常受欢迎，因为它可以轻松部署，快速配置和扩展 OpenShift 集群，同时还需要为尚未准备好进行容器化的应用程序支持虚拟化工作负载。通过在裸机上部署，客户确实需要在管理主机虚拟机管理程序环境以及 OpenShift 环境方面额外增加开销。通过直接在裸机服务器上部署，客户还可以减少主机和 OpenShift 环境之间共享资源的物理开销限制。
+基于裸机的 OpenShift 类似于 OpenShift 的虚拟部署，它可以轻松部署，快速配置和扩展 OpenShift 集群，同时还可以为尚未准备好进行容器化的应用程序提供虚拟化工作负载支持。通过在裸机上部署，除了 OpenShift 环境之外，您无需额外的开销即可管理主机虚拟机管理程序环境。通过直接在裸机服务器上部署，您还可以减少主机和 OpenShift 环境之间共享资源的物理开销限制。
 
 
 
 == 裸机上的 OpenShift 可提供以下功能：
 
-* * IPI 或辅助安装程序部署 * 借助由安装程序配置基础架构（ IPI ）在裸机服务器上部署的 OpenShift 集群，客户可以直接在商用服务器上部署高度通用且易于扩展的 OpenShift 环境，而无需管理虚拟机管理程序层。
-* * 紧凑型集群设计 * 为了最大程度地降低硬件要求，在裸机上使用 OpenShift 可以使用户部署仅包含 3 个节点的集群，它还可以使 OpenShift 控制面板节点充当辅助节点和主机容器。
-* * OpenShift 虚拟化 * OpenShift 可以使用 OpenShift 虚拟化在容器中运行虚拟机。此容器本机虚拟化可在容器内运行 KVM 虚拟机管理程序，并为 VM 存储附加永久性卷。
-* * 人工智能 / 机器学习优化型基础架构 * 通过将基于 GPU 的员工节点整合到 OpenShift 环境中并利用 OpenShift 高级计划功能，为机器学习应用程序部署 Kubeflow 等应用程序。
+* * IPI 或辅助安装程序部署。 * 借助由安装程序配置基础架构（ IPI ）在裸机服务器上部署的 OpenShift 集群，客户可以直接在商用服务器上部署高度通用且易于扩展的 OpenShift 环境，而无需管理虚拟机管理程序层。
+* * 紧凑型集群设计。 * 为了最大限度地降低硬件要求，在裸机上使用 OpenShift ，用户只需部署包含 3 个节点的集群，它还允许 OpenShift 控制面板节点充当辅助节点和主机容器。
+* * OpenShift 虚拟化。 * OpenShift 可以使用 OpenShift 虚拟化在容器中运行虚拟机。此容器本机虚拟化可在容器内运行 KVM 虚拟机管理程序，并为 VM 存储附加永久性卷。
+* * 由 AI/ML 优化的基础架构。 * 通过将基于 GPU 的员工节点整合到 OpenShift 环境中并利用 OpenShift 高级计划，为机器学习应用程序部署 Kubeflow 等应用程序。
 
 
 
 
 == 网络设计
 
-NetApp 解决方案上的 Red Hat OpenShift 使用两个数据交换机提供 25 Gbps 的主数据连接。它还使用两个额外的管理交换机，这些交换机以 1 Gbps 的速度提供连接，用于存储节点的带内管理以及 IPMI 功能的带外管理。
+NetApp 解决方案上的 Red Hat OpenShift 使用两个数据交换机提供 25 Gbps 的主数据连接。它还使用两个管理交换机，这些交换机以 1 Gbps 的速度提供连接，用于存储节点的带内管理以及 IPMI 功能的带外管理。
 
-OpenShift 裸机 IPI 部署要求客户创建一个配置程序节点，即 Red Hat Enterprise Linux 8 计算机，该计算机需要将网络接口连接到不同的网络。
+对于 OpenShift 裸机 IPI 部署，您必须创建一个配置程序节点，即必须将网络接口连接到不同网络的 Red Hat Enterprise Linux 8 计算机。
 
-* * 配置网络： * 此网络用于启动裸机节点并安装部署 OpenShift 集群所需的映像和软件包。
-* * Baremetal Network ： * 部署集群后，此网络将用于进行面向公有的通信。
+* * 配置网络。 * 此网络用于启动裸机节点并安装部署 OpenShift 集群所需的映像和软件包。
+* * 裸机网络。 * 此网络用于在部署集群后进行面向公共的通信。
 
 
-在设置配置程序节点时，客户将创建网桥接口，以便在节点本身以及为用于部署的 Bootstrap 虚拟机正确路由流量。
+在设置配置程序节点时，客户会创建网桥接口，以便在节点本身以及为部署目的配置的 Bootstrap 虚拟机上正确路由流量。部署集群后， API 和传入 VIP 地址将从启动节点迁移到新部署的集群。
 
-部署集群后， API 和传入 VIP 地址将从启动节点迁移到新部署的集群。
-
-下图显示了 IPI 部署期间以及部署完成后的环境。
+以下图像显示了 IPI 部署期间和部署完成后的环境。
 
 image:redhat_openshift_image36.png["错误：缺少图形映像"]
 
@@ -69,7 +62,7 @@ image:redhat_openshift_image37.png["错误：缺少图形映像"]
 | 配置网络 | 通过 IPI 以 PXE 启动和安装裸机节点的网络 | 3485 
 |===
 
-NOTE: 虽然这些网络中的每个网络几乎都由 VLAN 分隔，但每个物理端口都需要在分配了主 VLAN 的 " 访问模式 " 下进行设置，因为在 PXE 启动序列期间无法传递 VLAN 标记。
+NOTE: 尽管这些网络中的每个网络实际上都由 VLAN 分隔，但必须在访问模式下设置每个物理端口并分配主 VLAN ，因为在 PXE 启动序列期间无法传递 VLAN 标记。
 
 
 
@@ -77,7 +70,7 @@ NOTE: 虽然这些网络中的每个网络几乎都由 VLAN 分隔，但每个�
 
 在部署 OpenShift 容器平台之前，应具备以下基础架构：
 
-* 至少一个 DNS 服务器，该服务器可提供完整的主机名解析，可从带内管理网络和 VM 网络访问。
+* 至少一个 DNS 服务器，该服务器可提供可从带内管理网络和 VM 网络访问的完整主机名解析。
 * 至少可从带内管理网络和 VM 网络访问一个 NTP 服务器。
 * （可选）带内管理网络和 VM 网络的出站 Internet 连接。
 

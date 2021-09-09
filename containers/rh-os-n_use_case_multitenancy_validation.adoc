@@ -16,7 +16,7 @@ summary: 在使用 NetApp 的 Red Hat OpenShift 上配置多租户
 
 
 
-== 验证在分配的项目中创建 PVC/Pod 的访问权限
+== 验证在分配的项目中创建 PVC 或 Pod 的访问权限
 
 . 以项目 1 中的 OCP-project-1-user 和开发人员身份登录。
 . 检查访问权限以创建新项目。
@@ -94,7 +94,7 @@ oc describe pods test-pvc-pod -n project-1
 
 
 
-== 验证在另一个项目中创建 PVC/Pod 的访问权限，或者使用专用于另一个项目的资源
+== 验证在其他项目中创建 PVC 或 Pod 的访问权限，或者使用专用于另一项目的资源
 
 . 以项目 1 中的 OCP-project-1-user 和开发人员身份登录。
 . 使用分配给 project-2 的 storageclass 在 project-1 中创建 PVC 。
@@ -169,7 +169,7 @@ EOF
 
 
 
-== 验证对查看 / 编辑项目， ResourceQuotas 和 StorageClasses 的访问权限
+== 验证对查看和编辑项目， ResourceQuotas 和 StorageClasses 的访问权限
 
 . 以项目 1 中的 OCP-project-1-user 和开发人员身份登录。
 . 检查访问权限以创建新项目。

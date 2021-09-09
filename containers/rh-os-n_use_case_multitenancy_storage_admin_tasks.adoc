@@ -15,7 +15,7 @@ summary: 在使用 NetApp 的 Red Hat OpenShift 上配置多租户
 存储管理员必须配置以下资源：
 
 . 以管理员身份登录到 NetApp ONTAP 集群。
-. 导航到 `Storage -> Storage VM` ，然后单击 `Add` 。创建两个 SVM ，一个用于 project-1 ，另一个用于 project-2 ，以提供所需的详细信息。此外，还可以创建 vsadmin 帐户来管理 SVM 及其资源。
+. 导航到存储 > Storage VM ，然后单击添加。通过提供所需的详细信息，创建两个 SVM ，一个用于 project-1 ，另一个用于 project-2 。此外，还可以创建 vsadmin 帐户来管理 SVM 及其资源。
 
 
 image::redhat_openshift_image41.jpg[在 ONTAP 上创建 SVM]
@@ -44,7 +44,7 @@ EOF
 NOTE: 在此示例中，我们使用的是 ontap-NAS 驱动程序。根据使用情形创建后端时，请使用相应的驱动程序。
 
 
-NOTE: 假设 Trident 安装在 Trident 项目中。
+NOTE: 我们假定 Trident 已安装在 Trident 项目中。
 
 . 同样，为 project-2 创建 Trident 后端，并将其映射到专用于 project-2 的 SVM 。
 . 接下来，创建存储类。为 project-1 创建存储类，并通过设置 storagePools 参数将其配置为使用后端专用于 project-1 的存储池。

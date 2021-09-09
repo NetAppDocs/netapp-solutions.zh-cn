@@ -17,11 +17,11 @@ image::redhat_openshift_image55.jpg[VM 实时迁移架构]
 
 要创建绑定到具有共享 ReadWriteMany 访问权限的 PVC 的 VM ，请执行以下操作：
 
-. 导航到 `Workloads > Virtualization > Virtual Machines` ，然后单击 `Create > with Wizard` 。
+. 导航到工作负载 > 虚拟化 > 虚拟机，然后单击创建 > 使用向导。
 . 选择所需的操作系统，然后单击下一步。假设选定操作系统已配置了启动源。
 . 在 Review and Create 窗格中，选择要在其中创建 VM 的项目并提供 VM 详细信息。确保选择了要克隆的启动源，并使用为选定操作系统分配的相应 PVC 从 CD-ROM 启动。
 . 单击自定义虚拟机，然后单击存储。
-. 单击 rootdisk 旁边的省略号，确保已选择使用 Trident 配置的 storageclass 。展开高级，然后为访问模式选择共享访问（ rwx ）。然后单击保存。
+. 单击 rootdisk 旁边的省略号，并确保已选择使用 Trident 配置的 storageclass 。展开高级，然后为访问模式选择共享访问（ rwx ）。然后单击保存。
 +
 image::redhat_openshift_image56.JPG[使磁盘 rwx 可访问]
 
@@ -30,7 +30,7 @@ image::redhat_openshift_image56.JPG[使磁盘 rwx 可访问]
 
 要手动将虚拟机迁移到 OpenShift 集群中的另一个节点，请完成以下步骤。
 
-. 导航到 `工作负载 > 虚拟化 > 虚拟机` 。
+. 导航到工作负载 > 虚拟化 > 虚拟机。
 . 对于要迁移的虚拟机，单击省略号，然后单击迁移虚拟机。
 . 当消息弹出时，单击迁移进行确认。
 

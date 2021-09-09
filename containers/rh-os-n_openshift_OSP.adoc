@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: containers/rh-os-n_openshift_OSP.html 
 keywords: OpenShift, OpenStack, private cloud 
-summary:  
+summary: Red Hat OpenStack 平台为创建，部署和扩展安全可靠的私有 OpenStack 云提供了一个集成基础。 
 ---
-= 基于 Red Hat OpenStack Platform 的 OpenShift ：采用 NetApp 的 Red Hat OpenShift
+= 基于 Red Hat OpenStack 平台的 OpenShift
 :hardbreaks:
 :nofooter: 
 :icons: font
@@ -12,11 +12,11 @@ summary:
 :imagesdir: ./../media/
 
 
-Red Hat OpenStack Platform 为创建，部署和扩展安全可靠的私有 OpenStack 云提供了一个集成基础。
+Red Hat OpenStack 平台为创建，部署和扩展安全可靠的私有 OpenStack 云提供了一个集成基础。
 
 OSP 是一种基础架构即服务（ Infrastructure-as-a-Service ， IaaS ）云，由一组控制服务实施，用于管理计算，存储和网络资源。环境可通过基于 Web 的界面进行管理，管理员和用户可以控制，配置和自动化 OpenStack 资源。此外，还通过广泛的命令行界面和 API 为 OpenStack 基础架构提供便利，为管理员和最终用户提供全面的自动化功能。
 
-OpenStack 项目是一个快速开发的社区项目，每六个月提供更新版本。最初， Red Hat OpenStack Platform 通过发布新版本以及每个上游版本并为每个第三个版本提供长期支持，跟上了此版本周期的步伐。最近，在 OSP 16.0 版（基于 OpenStack Train ）中， Red Hat 选择不跟上版本号的步伐，而是将新功能回退到子版本中。最新版本是 Red Hat OpenStack Platform 16.1 ，其中包括上游 Ussuri 和维多利亚版本的后台高级功能。
+OpenStack 项目是一个快速开发的社区项目，每六个月提供更新版本。最初， Red Hat OpenStack Platform 通过发布新版本以及每个上游版本并为每个第三个版本提供长期支持，跟上了此版本周期的步伐。最近，在 OSP 16.0 版（基于 OpenStack 训练）中， Red Hat 选择不跟上版本号的步伐，而是将新功能支持到子版本中。最新版本是 Red Hat OpenStack Platform 16.1 ，其中包括上游 Ussuri 和维多利亚版本的后台高级功能。
 
 有关 OSP 的详细信息，请参见 https://www.redhat.com/en/technologies/linux-platforms/openstack-platform["Red Hat OpenStack Platform 网站"^]。
 
@@ -66,7 +66,7 @@ image:redhat_openshift_image34.png["错误：缺少图形映像"]
 
 采用 NetApp 解决方案的 Red Hat OpenShift 使用两个数据交换机以 25 Gbps 的速度提供主数据连接。它还使用两个额外的管理交换机，这些交换机以 1 Gbps 的速度提供连接，用于存储节点的带内管理以及 IPMI 功能的带外管理。
 
-Red Hat OpenStack Director 需要 IPMI 功能才能使用具有讽刺意味的 BareMetal 配置服务部署 Red Hat OpenStack Platform 。
+Red Hat OpenStack Director 需要 IPMI 功能才能使用具有讽刺意味的裸机配置服务部署 Red Hat OpenStack Platform 。
 
 
 
@@ -125,22 +125,22 @@ Red Hat OpenStack Director 需要 IPMI 功能才能使用具有讽刺意味的 B
 
 === 将 OpenShift 部署到至少包含三个计算节点的 OSP 私有云
 
-本文档中介绍的经验证的架构通过部署三个 OSP 控制器节点和两个 OSP 计算节点提供了最适合 HA 操作的最低硬件部署。 并确保采用容错配置，使两个计算节点均可启动虚拟实例，而已部署的 VM 可在两个虚拟机管理程序之间迁移。
+本文档中介绍的经验证的架构通过部署三个 OSP 控制器节点和两个 OSP 计算节点提供了最适合 HA 操作的硬件部署。此架构可确保容错配置，其中两个计算节点均可启动虚拟实例，而已部署的 VM 则可在两个虚拟机管理程序之间迁移。
 
-由于 Red Hat OpenShift 最初使用三个主节点进行部署，因此在双节点配置中，可以确保至少有两个主节点将占用同一节点，如果特定节点不可用，可能会导致 OpenShift 中断。因此， Red Hat 的最佳实践是，在解决方案中至少部署三个 OSP 计算节点，以便 OpenShift 主节点可以均匀分布，并且解决方案可以获得更多的容错能力。
+由于 Red Hat OpenShift 最初使用三个主节点进行部署，因此双节点配置可能会发生原因至少两个主节点占用同一节点，从而可能导致 OpenShift 在特定节点不可用时发生中断。因此， Red Hat 的最佳实践是至少部署三个 OSP 计算节点，以便 OpenShift 主节点可以均匀分布，并且解决方案可以获得更多的容错能力。
 
 
 
 === 配置虚拟机 / 主机关联性
 
-通过启用虚拟机 / 主机关联性，可确保在多个虚拟机管理程序节点之间分布 OpenShift 主节点。
+通过启用虚拟机 / 主机关联性，可以在多个虚拟机管理程序节点之间分布 OpenShift 主节点。
 
 关联性是一种为一组 VM 和 / 或主机定义规则的方法，用于确定这些 VM 是在组中的同一主机上运行还是在不同主机上运行。它通过创建由具有一组相同参数和条件的 VM 和 / 或主机组成的关联组来应用于 VM 。根据关联组中的 VM 是在组中的同一主机上运行，还是在不同主机上单独运行，此关联组的参数可以定义正关联性或负关联性。在 Red Hat OpenStack 平台中，可以通过创建服务器组和配置筛选器来创建和实施主机关联性和反关联性规则，以便 Nova 在服务器组中部署的实例部署在不同的计算节点上。
 
 默认情况下，服务器组最多可管理 10 个虚拟实例的放置。可以通过更新 Nova 的默认配额来修改此设置。
 
 
-NOTE: OSP 服务器组具有特定的硬关联性 / 反关联性限制，如果没有足够的资源可在不同的节点上部署，或者没有足够的资源可用于共享节点，则 VM 将无法启动。
+NOTE: OSP 服务器组具有特定的硬关联性 / 反关联性限制；如果没有足够的资源可在不同的节点上部署，或者没有足够的资源可用于共享节点，则 VM 将无法启动。
 
 要配置相关性组，请参见 https://access.redhat.com/solutions/1977943["如何为 OpenStack 实例配置关联性和反关联性？"^]。
 
@@ -148,8 +148,8 @@ NOTE: OSP 服务器组具有特定的硬关联性 / 反关联性限制，如果�
 
 === 使用自定义安装文件进行 OpenShift 部署
 
-通过本文档前面讨论的交互式向导， IPI 可以轻松部署 OpenShift 集群。但是，在集群部署过程中，可能需要更改某些默认值。
+IPI 可通过本文档前面讨论的交互式向导轻松部署 OpenShift 集群。但是，在集群部署过程中，您可能需要更改某些默认值。
 
-在这些情况下，无需立即部署集群，即可运行向导并为其分配任务，而是输出一个配置文件，以便稍后可以从该配置文件中部署集群。如果需要更改任何 IPI 默认设置，或者用户希望在其环境中部署多个相同的集群以用于多租户等其他用途，则此功能非常有用。有关为 OpenShift 创建自定义安装配置的详细信息，请参见 https://docs.openshift.com/container-platform/4.7/installing/installing_openstack/installing-openstack-installer-custom.html["Red Hat OpenShift 通过自定义在 OpenStack 上安装集群"^]。
+在这些情况下，无需立即部署集群，即可运行并执行向导任务；而是创建一个配置文件，以便稍后可以从中部署集群。如果您需要更改任何 IPI 默认值，或者要在环境中部署多个相同的集群以用于多租户等其他用途，则此功能非常有用。有关为 OpenShift 创建自定义安装配置的详细信息，请参见 https://docs.openshift.com/container-platform/4.7/installing/installing_openstack/installing-openstack-installer-custom.html["Red Hat OpenShift 通过自定义在 OpenStack 上安装集群"^]。
 
 link:rh-os-n_overview_netapp.html["接下来： NetApp 存储概述。"]

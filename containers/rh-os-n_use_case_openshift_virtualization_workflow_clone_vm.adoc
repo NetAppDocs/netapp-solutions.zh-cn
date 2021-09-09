@@ -34,7 +34,7 @@ image::redhat_openshift_image57.jpg[VM 克隆架构]
 
 通过关闭虚拟机克隆现有虚拟机是一项原生 OpenShift 功能，该功能在 Astra Trident 的支持下实施。要克隆虚拟机，请完成以下步骤。
 
-. 导航到 `Workloads > Virtualization > Virtual Machines` ，然后单击要克隆的虚拟机旁边的省略号。
+. 导航到工作负载 > 虚拟化 > 虚拟机，然后单击要克隆的虚拟机旁边的省略号。
 . 单击克隆虚拟机并提供新虚拟机的详细信息。
 +
 image::redhat_openshift_image58.JPG[克隆虚拟机]
@@ -49,14 +49,14 @@ image::redhat_openshift_image58.JPG[克隆虚拟机]
 
 也可以通过克隆源 VM 的现有 PVC ，然后使用克隆的 PVC 创建新 VM 来克隆现有 VM 。此方法不需要关闭源 VM 。要克隆虚拟机而不关闭它，请完成以下步骤。
 
-. 导航到 Storage -> PersistentVolumeClass` ，然后单击附加到源 VM 的 PVC 旁边的省略号。
+. 导航到 "Storage">"PersistentVolumeClass" ，然后单击附加到源 VM 的 PVC 旁边的省略号。
 . 单击克隆 PVC 并提供新 PVC 的详细信息。
 +
 image::redhat_openshift_image59.JPG[克隆 PVC]
 
 . 然后单击克隆。这样就会为新虚拟机创建一个 PVC 。
-. 导航到 `Workloads > Virtualization > Virtual Machines` ，然后单击 `Create > with YAML` 。
-. 在 `sPec > template > spec> volumes` 部分中，连接克隆的 PVC 而不是容器磁盘。根据您的要求提供新虚拟机的所有其他详细信息。
+. 导航到工作负载 > 虚拟化 > 虚拟机，然后单击创建 > 使用 YAML 。
+. 在规范 > 模板 > 规范 > 卷部分中，附加克隆的 PVC ，而不是容器磁盘。根据您的要求提供新虚拟机的所有其他详细信息。
 +
 [source, cli]
 ----
