@@ -343,7 +343,7 @@ NOTE: 先前的文件 `Astra_control_center_min.yaml` 是 Astra 控制中心 CRD
 ----
 +
 
-NOTE: 应显示以下消息以指示 Astra 控制中心的成功安装
+NOTE: 以下消息指示 Astra 控制中心已成功安装。
 
 +
 [listing]
@@ -362,7 +362,20 @@ astra   345c55a5-bf2e-21f0-84b8-b6f2bce5e95f
 
 NOTE: 在此示例中，密码为 `Acc-345c55a5-bf2e-21f0-84b8-b6f2bce5e95f` 。
 
-. 通过浏览到您在 CRD 文件中提供的 FQDN 登录到 Astra 控制中心图形用户界面。
+. 获取 traefik 服务负载平衡器 IP 。
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ oc get svc -n netapp-astra-cc | egrep 'EXTERNAL|traefik'
+
+NAME                                       TYPE           CLUSTER-IP       EXTERNAL-IP     PORT(S)                                                                   AGE
+traefik                                    LoadBalancer   172.30.99.142    10.61.186.181   80:30343/TCP,443:30060/TCP                                                16m
+----
+. 在 DNS 服务器中添加一个条目，将 Astra 控制中心 CRD 文件中提供的 FQDN 指向 traefik 服务的 `external-IP` 。
++
+image:redhat_openshift_image122.jpg["为 Accc 图形用户界面添加 DNS 条目"]
+
+. 通过浏览到 Astra 控制中心 GUI 的 FQDN 登录到该 GUI 。
 +
 image:redhat_openshift_image87.jpg["Astra 控制中心登录"]
 
@@ -374,7 +387,7 @@ image:redhat_openshift_image88.jpg["Astra 控制中心强制更改密码"]
 +
 image:redhat_openshift_image89.jpg["Astra 控制中心创建用户"]
 
-. 要使 Astra 控制中心的所有功能正常运行，需要获得许可证。要添加许可证，请转到 " 帐户 ">" 许可证 " ，单击 " 添加许可证 " 并上传许可证文件。
+. 要使 Astra 控制中心的所有功能正常运行，需要获得许可证。要添加许可证，请导航到 " 帐户 ">" 许可证 " ，单击 " 添加许可证 " ，然后上传许可证文件。
 +
 image:redhat_openshift_image90.jpg["Astra Control Center 添加许可证"]
 
