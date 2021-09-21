@@ -1,0 +1,26 @@
+---
+sidebar: sidebar 
+permalink: virtualization/vsphere_admin_unified_storage.html 
+keywords: vSphere, cloud, hybrid cloud, AWS, Azure, Google cloud, snapmirror cloud, cloud backup service, Cloud Sync, FabricPool, ONTAP 
+summary: 本页介绍在 VMware vSphere 环境中实施 NetApp ONTAP Storage 解决方案的最佳实践。 
+---
+= ONTAP 统一存储
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== 关于统一存储
+
+运行 ONTAP 软件的系统在多个重要方面实现了统一。最初，这种方法是指在一个存储系统上同时支持 NAS 和 SAN 协议，而 ONTAP 仍然是 SAN 的领先平台，同时也是其在 NAS 中的原始优势。Storage Virtual Machine （ SVM ）是一种逻辑构造，允许客户端访问运行 ONTAP 软件的系统。SVM 可以通过多个数据访问协议通过逻辑接口（ Logical Interface ， LIF ）同时提供数据。SVM 可通过 CIFS 和 NFS 等 NAS 协议提供文件级数据访问，并通过 iSCSI ， FC/FCoE 和 NVMe 等 SAN 协议提供块级数据访问。SVM 可以同时单独为 SAN 和 NAS 客户端提供数据。
+
+image:vsphere_admin_unified_storage.png["统一存储"]
+
+在 vSphere 环境中，这种方法还可能意味着为虚拟桌面基础架构 (VDI) 和虚拟服务器基础架构（ VSI ）提供一个统一的系统。与传统企业阵列相比，运行 ONTAP 软件的系统的 VSI 成本通常更低，但具有高级存储效率功能，可以在同一系统中处理 VDI 。ONTAP 还统一了从 SSD 到 SATA 的各种存储介质，并可轻松地将其扩展到云。无需购买一个闪存阵列即可提高性能，一个 SATA 阵列可用于归档，以及单独的系统可用于云。ONTAP 将所有这些问题联系在一起。
+
+
+NOTE: 有关 SVM ，统一存储和客户端访问的详细信息，请参见 https://docs.netapp.com/ontap-9/index.jsp?lang=en["存储虚拟化"^] 在 ONTAP 9 文档中心。

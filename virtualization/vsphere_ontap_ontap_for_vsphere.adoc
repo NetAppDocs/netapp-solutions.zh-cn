@@ -1,0 +1,38 @@
+---
+sidebar: sidebar 
+permalink: virtualization/vsphere_ontap_ontap_for_vsphere.html 
+keywords: introduction, unified storage, virtual volumes, storage efficiency, hybrid cloud 
+summary: 近 20 年来， NetApp ONTAP 软件一直是 VMware vSphere 环境中的领先存储解决方案，并不断增加创新功能来简化管理，同时降低成本。本文档介绍了适用于 vSphere 的 ONTAP 解决方案，其中包括用于简化部署，降低风险和简化管理的最新产品信息和最佳实践。 
+---
+= TR-4597 ：适用于 ONTAP 的 VMware vSphere
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+NetApp 公司 Karl Konnerth
+
+近 20 年来， NetApp ONTAP 软件一直是 VMware vSphere 环境中的领先存储解决方案，并不断增加创新功能来简化管理，同时降低成本。本文档介绍了适用于 vSphere 的 ONTAP 解决方案，其中包括用于简化部署，降低风险和简化管理的最新产品信息和最佳实践。
+
+最佳实践是指南和兼容性列表等其他文档的补充。它们是根据 NetApp 工程师和客户的实验室测试和丰富的现场经验开发的。它们可能并不是在每个环境中都能使用的唯一受支持的实践，但它们通常是最简单的解决方案，可满足大多数客户的需求。
+
+本文档重点介绍在 vSphere 6.0 或更高版本上运行的 ONTAP （ 9.x ）的最新版本中的功能。请参见一节 link:vsphere_ontap_ontap_and_vsphere_release-specific_information.html["ONTAP 和 vSphere 版本专用信息"] 有关特定版本的详细信息。
+
+
+
+== 为什么选择适用于 vSphere 的 ONTAP ？
+
+成千上万的客户之所以选择 ONTAP 作为其适用于 vSphere 的存储解决方案，有许多原因，例如支持 SAN 和 NAS 协议的统一存储系统，使用节省空间的 NetApp Snapshot 副本提供强大的数据保护功能， 以及大量工具，可帮助您管理应用程序数据。使用与虚拟机管理程序不同的存储系统，您可以卸载许多功能，并最大程度地提高对 vSphere 主机系统的投资。这种方法不仅可以确保主机资源专注于应用程序工作负载，还可以避免存储操作对应用程序造成随机性能影响。
+
+将 ONTAP 与 vSphere 结合使用是一个很好的组合，可帮助您降低主机硬件和 VMware 软件支出。您还可以通过稳定一致的高性能以更低的成本保护数据。由于虚拟化工作负载是移动的，因此您可以使用 Storage vMotion 探索不同的方法，以便在 VMFS ， NFS 或 VVOL 数据存储库之间移动 VM ，所有这些都位于同一存储系统上。
+
+以下是客户目前重视的关键因素：
+
+* * 统一存储。 * 运行 ONTAP 软件的系统在多个重要方面实现了统一。最初，这种方法既指 NAS 协议，也指 SAN 协议，而 ONTAP 除了在 NAS 中具有最初的优势之外，仍然是 SAN 的领先平台。在 vSphere 环境中，这种方法还可能意味着为虚拟桌面基础架构 (VDI) 和虚拟服务器基础架构（ VSI ）提供一个统一的系统。与传统企业阵列相比，运行 ONTAP 软件的系统的 VSI 成本通常更低，但具有高级存储效率功能，可以在同一系统中处理 VDI 。ONTAP 还统一了从 SSD 到 SATA 的各种存储介质，并可轻松地将其扩展到云。无需购买一个闪存阵列即可提高性能，一个 SATA 阵列可用于归档，以及单独的系统可用于云。ONTAP 将所有这些问题联系在一起。
+* * 基于虚拟卷和存储策略的管理。 * NetApp 是 VMware 在 vSphere 虚拟卷（ VVOL ）开发方面的早期设计合作伙伴，为 VVOL 和 VMware vSphere 存储感知 API （ VASA ）提供架构输入和早期支持。这种方法不仅为 VMFS 提供了粒度虚拟机存储管理，还支持通过基于存储策略的管理实现存储配置自动化。通过这种方法，存储架构师可以设计具有不同功能的存储池， VM 管理员可以轻松地使用这些功能。ONTAP 在 VVOL 规模方面处于存储行业的领先地位，在一个集群中支持数十万个 VVOL ，而企业级阵列和小型闪存阵列供应商则支持每个阵列仅支持数千个 VVOL 。此外， NetApp 还在推动细粒度虚拟机管理的发展，即将推出支持 VVOL 3.0 的功能。
+* * 存储效率。 * 虽然 NetApp 率先为生产工作负载提供重复数据删除功能，但这一创新并不是这方面的第一项或最后一项创新。它从 ONTAP Snapshot 副本开始，该副本是一种节省空间的数据保护机制，不会影响性能，同时还采用了 FlexClone 技术，可即时为 VM 创建读 / 写副本，以供生产和备份使用。NetApp 继续提供包括重复数据删除，数据压缩和零块重复数据删除在内的实时功能，以从昂贵的 SSD 中挤出最大的存储空间。最近， ONTAP 增加了使用数据缩减将较小的 I/O 操作和文件打包到磁盘块中的功能。这些功能相结合，客户发现 VSI 可节省高达 5 ： 1 的空间， VDI 可节省高达 30 ： 1 的空间。
+* * 混合云。 * 无论是用于内部私有云，公有云基础架构还是结合两者优势的混合云， ONTAP 解决方案均可帮助您构建数据网络结构，以简化和优化数据管理。从高性能全闪存系统开始，然后将其与磁盘或云存储系统结合使用，以实现数据保护和云计算。您可以选择 Azure ， AWS ， IBM 或 Google 云来优化成本并避免受制于云。根据需要利用对 OpenStack 和容器技术的高级支持。NetApp 还为 ONTAP 提供基于云的备份（ SnapMirror 云， Cloud Backup Service 和 Cloud Sync ）以及存储分层和归档工具（ FabricPool ），以帮助降低运营支出并利用云的广泛覆盖范围。
+* 等等。 * 利用 NetApp AFF A 系列阵列的极致性能，在管理成本的同时加快虚拟化基础架构的运行速度。使用横向扩展 ONTAP 集群享受从维护到升级到完全更换存储系统的无中断运行。利用 NetApp 加密功能保护空闲数据，无需额外付费。通过精细的服务质量功能确保性能满足业务服务级别要求。它们都属于行业领先的企业数据管理软件 ONTAP 所提供的广泛功能。
+

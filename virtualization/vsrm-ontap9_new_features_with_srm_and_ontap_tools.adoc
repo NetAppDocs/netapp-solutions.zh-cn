@@ -1,0 +1,84 @@
+---
+sidebar: sidebar 
+permalink: virtualization/vsrm-ontap9_new_features_with_srm_and_ontap_tools.html 
+keywords: vmware, site, recovery manager, vsrm, vsphere, ipv6, support, rest, api, replication, ccols, spbm, srm, appliance based 
+summary: 从传统虚拟设备过渡后， ONTAP 工具可提供大量新功能，更高的限制以及新的 VVOL 支持。 
+---
+= SRM 和 ONTAP 工具的新增功能
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+从传统虚拟设备过渡后， ONTAP 工具可提供大量新功能，更高的限制以及新的 VVOL 支持。
+
+
+
+== 最新版本的 vSphere 和 Site Recovery Manager
+
+随着 SRM 8.3 及更高版本以及 ONTAP 工具 9.7.1 及更高版本的发布，您现在可以保护在 VMware vSphere 7 上运行的 VM 。
+
+近二十年来， NetApp 与 VMware 建立了深厚的合作关系，并努力尽快为最新版本提供支持。请始终查看 NetApp 互操作性表工具（ IMT ）以了解最新的合格软件组合。
+
+可以找到 NetApp IMT https://mysupport.netapp.com/matrix["此处"^]。
+
+
+
+== VVOL 支持（以及 SPBM 为何如此重要，即使使用 SRM 也是如此）
+
+从 8.3 版开始， SRM 现在支持利用 VVOL 和基于阵列的复制进行基于存储策略的复制管理（ SPBM ）。为此， SRM 服务器进行了更新，加入了一项新的 SRM VVol 提供程序服务，该服务可与 vCenter 服务器的 SMS 服务通信以执行与 VASA 相关的任务。
+
+此架构的一个优势是不再需要 SRA ，因为所有内容都使用 VASA 进行处理。
+
+SPBM 是 vSphere 工具箱中的一款功能强大的工具，可提供简化，可预测且一致的存储服务，供私有云和混合云环境中的自动化框架使用。从根本上说， SPBM 允许您定义满足不同客户群需求的服务级别。现在，您可以通过 SRM 向客户展示复制功能，以处理需要强大的行业标准灾难恢复流程编排和自动化功能的关键工作负载。
+
+image:vsrm-ontap9_image1.png["错误：缺少图形映像"]
+
+
+
+== VVOL 架构 2.3 支持基于设备的 SRM 服务器
+
+除了基于 Windows 的传统平台之外，现在还支持基于 Photon OS 的 SRM 服务器。
+
+现在，无论首选 SRM 服务器类型如何，您都可以安装 SRA 适配器。
+
+
+
+== 支持 IPv6
+
+现在支持 IPv6 ，但有以下限制：
+
+* vCenter 6.7 或更高版本
+* SRM 8.2 （ 8.1 ， 8.3 和 8 ）不支持。支持 4 个）
+* 检查 https://mysupport.netapp.com/matrix/imt.jsp?components=84943;&solution=1777&isHWU&src=IMT["互操作性表工具"^] 适用于最新的合格版本。
+
+
+
+
+== 提高了性能
+
+运行性能是执行 SRM 任务的关键要求。为满足现代 RTO 和 RPO 的要求，采用 ONTAP 工具的 SRA 增加了两项新改进。
+
+* * 支持并发重新保护操作。 * SRA 9.1.1 首次推出此功能，通过启用此功能，您可以同时对两个或多个恢复计划运行重新保护，从而缩短故障转移或迁移后重新保护数据存储库所需的时间，并使其保持在 RTO 和 RPO 参数范围内。
+* ONTAP 工具 9.8 新增了一种仅限 NAS 的新优化模式。 * 如果使用 SVM 范围的帐户并连接到仅包含基于 NFS 的数据存储库的 ONTAP 集群，则可以在支持的环境中启用仅 NAS 优化模式以实现峰值性能。
+
+
+
+
+== 扩展性更强
+
+现在，在与 SRM 8.3 及更高版本结合使用时， ONTAP 工具 SRA 最多可支持 500 个保护组（ PG ）。
+
+
+
+== 同步复制
+
+期待已久的一项新功能是采用 ONTAP 9.5 及更高版本的 SnapMirror 同步（ SM-S ），该功能可为任务关键型应用程序提供卷粒度零 RPO 数据复制解决方案。SM-S 需要使用 ONTAP 工具 9.8 或更高版本。
+
+
+
+== REST API 支持
+
+现在， SRA 服务器配置可通过 REST API 进行管理。Swagger UI 可帮助您构建自动化工作流，您可以在 ONTAP 工具设备上找到，网址为 `https://<appliance>:8143/api/rest/swagger-ui.html#/` 。
