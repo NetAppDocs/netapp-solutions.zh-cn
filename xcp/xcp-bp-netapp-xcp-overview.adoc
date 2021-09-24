@@ -1,0 +1,98 @@
+---
+sidebar: sidebar 
+permalink: xcp/xcp-bp-netapp-xcp-overview.html 
+keywords: multithread, nas, analytics, directory tree, deletion, delete, prerequisites 
+summary: NetApp XCP 使用多线程和可自定义的功能传输数据。它专为三种主要使用情形而设计—数据移动或迁移，文件系统分析和快速目录树删除。 
+---
+= NetApp XCP
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:/xcp/xcp-bp-introduction.html["上一页：简介。"]
+
+NetApp XCP 使用多线程和可自定义的功能传输数据。它专为三大用例而设计：数据移动或迁移，文件系统分析和快速目录树删除。
+
+
+
+== 数据移动或迁移
+
+NetApp XCP 可将数据从任何 NAS 传输到 NetApp NAS 。此过程包括四个主要操作：扫描，复制，同步和验证。此外，还有一些有助于数据监控和传输的其他功能：
+
+* * 扫描。 * 提供 NAS 数据的高级布局。
+* * 复制。 * 执行基线数据传输。
+* * 同步 * 执行增量数据传输。
+* * 验证。 * 对目标执行全面验证。
+* * 显示（可选）。 * 发现 NAS 共享。
+
+
+下图显示了 XCP 数据迁移和复制操作。
+
+image:xcp-bp_image1.png["错误：缺少图形映像"]
+
+
+
+== 文件系统分析
+
+NetApp XCP 本机支持您识别，检查和分析非结构化数据以提高洞察力，这是企业客户的一项重要要求，他们需要利用这些洞察力更好地进行规划，实施高价值数字资产，并通过报告和评估实现数据监管。
+
+处理敏感数据的客户可以使用 NetApp XCP 问题解答解决典型的操作问题，例如：
+
+* 我的数据在哪里？
+* 我们拥有多少数据和哪些类型的文件？
+* 哪些数据正在使用中，有多少数据处于休眠状态？
+
+
+下图显示了 GUI 中的 NetApp XCP 文件分析通信。
+
+image:xcp-bp_image2.png["错误：缺少图形映像"]
+
+
+
+== 删除
+
+存储团队和电子设计自动化（ Electronic Design Automation ， EDA ）工作负载清理大型目录可能非常困难，无论是陈旧的数据还是需要清理以恢复存储空间的测试数据。XCP 提供了快速删除功能，可以删除完整的目录树。NetApp XCP 删除功能可从给定 NAS 路径中删除文件和文件夹。您可以利用匹配筛选器删除一组特定的文件和文件夹。对于大量文件和文件夹，您可以使用强制选项，该选项不需要确认即可删除。
+
+
+
+== 支持实时源迁移
+
+XCP 1.7 中提供的实时源迁移支持允许从正在使用的数据源（读写活动）进行迁移。XCP 会删除迁移作业期间正在使用的文件，例如正在运行复制和同步，跳过的文件信息会捕获到 XCP 日志中。
+
+此功能支持源上的更改，但不支持目标上的更改。在迁移期间，目标不应处于活动状态。只有 NFS 迁移才支持实时源迁移。
+
+
+NOTE: 实时源迁移不需要特殊设置。
+
+
+
+== XCP 的前提条件
+
+在部署 NetApp XCP 之前，必须满足以下前提条件：
+
+. 运行以下命令，验证 NFS 服务器使用的 NFS 端口：
++
+....
+rpcinfo -p < NAS IP or on-prem nfs data LIF ip >
+....
+. 要访问执行 XCP 操作的位置，例如内部或云实例（例如 Azure ， AWS 或 Google 虚拟机虚拟机虚拟机虚拟机虚拟机虚拟机虚拟机虚拟机虚拟机虚拟机实例），请打开 NFS 端口的防火墙端口。
+. 使用 telnet 命令 ` <on-prem nfs data LIF IP 或 NAS IP > 2049` 确认 NFS 端口可从 XCP 服务器访问。默认端口为 2049. 。如果您的环境具有其他端口，请使用该 IP 。
+. 对于 NFS ，使用 `showmount -e < NAS IP >` 命令验证共享是否可从 XCP 服务器访问。
+. 将目标卷上的索引节点数增加到源文件上的文件数（文件数）以上。
+. 从下载 XCP 许可证 https://xcp.netapp.com/license/xcp.xwic["NetApp XCP 许可证门户"^]。
++
+.. 您必须在 mysupport.netapp.com 上拥有 NetApp 帐户，或者可以免费注册。
+.. 下载许可证并准备好。
+
+
+. 为每个 Azure NetApp 卷或云中的 Cloud Volume Service （高级服务级别）为 XCP 目录创建一个内部 NFS 共享。
+. 创建 NAS 卷并为数据目标配置共享。
+. 对于多个 XCP 实例，您必须有一个或多个服务器或云实例才能将数据从多个源文件夹或文件传输到目标。
+. maxdir size （默认值为 308MB ）用于定义单个文件夹中的最大文件数（大约 100 万个）。增加 maxdir size 值以增加文件数。增加此值会影响额外的 CPU 周期。
+. 在云环境中， NetApp 建议您在内部环境和云环境之间设置 ExpressRoute （ Azure ）， Direct Connect （ AWS ）或 Cloud Interconnect （ GCP ）。
+
+
+link:/xcp/xcp-bp-migration-workflow-overview.html["下一步：迁移工作流。"]

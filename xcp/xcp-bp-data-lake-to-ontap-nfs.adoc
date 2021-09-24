@@ -1,0 +1,44 @@
+---
+sidebar: sidebar 
+permalink: xcp/xcp-bp-data-lake-to-ontap-nfs.html 
+keywords: requirements, proof of concept, AI, data mover, mapr 
+summary: 此用例基于我们所做的最大的财务客户概念验证（ CPOC ）。过去，我们使用 NetApp 原位分析模块（ NIPAM ）将分析数据迁移到 NetApp ONTAP AI 。但是，由于 NetApp XCP 的最新增强功能和性能的提高，以及 NetApp 独特的数据移动工具解决方案方法，我们使用 NetApp XCP 重新注册数据迁移。 
+---
+= 数据湖到 ONTAP NFS
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:xcp-bp-customer-scenarios-overview.html["先前：客户场景。"]
+
+此用例基于我们所做的最大的财务客户概念验证（ CPOC ）。过去，我们使用 NetApp 原位分析模块（ NIPAM ）将分析数据迁移到 NetApp ONTAP AI 。但是，由于 NetApp XCP 的最新增强功能和性能的提高，以及 NetApp 独特的数据移动工具解决方案方法，我们使用 NetApp XCP 重新注册数据迁移。
+
+
+
+== 客户面临的挑战和要求
+
+值得注意的客户挑战和要求包括：
+
+* 客户拥有不同类型的数据，包括结构化数据，非结构化数据和半结构化数据，日志， 以及数据湖中的机器到机器数据。AI 系统需要处理所有这些类型的数据，才能执行预测操作。如果数据位于数据湖本机文件系统中，则很难处理。
+* 客户的 AI 架构无法从 Hadoop 分布式文件系统（ Hadoop Distributed File System ， HDFS ）和 Hadoop 兼容文件系统（ Hadoop Compatible File System ， HCFS ）访问数据，因此 AI 操作无法使用这些数据。AI 要求数据采用可理解的文件系统格式，例如 NFS 。
+* 由于数据量大，吞吐量大，因此需要采用一些特殊的流程从数据湖中移动数据，并且需要采用经济高效的方法将数据移动到 AI 系统。
+
+
+
+
+== 数据移动者解决方案
+
+在此解决方案中， MapR 文件系统（ MapR-FS ）是从 MapR 集群中的本地磁盘创建的。MapR NFS 网关在每个数据节点上使用虚拟 IP 进行配置。文件服务器服务用于存储和管理 MapR-FS 数据。NFS 网关使 Map-FS 数据可通过虚拟 IP 从 NFS 客户端访问。每个 MapR 数据节点上都运行一个 XCP 实例，用于将数据从映射 NFS 网关传输到 NetApp ONTAP NFS 。每个 XCP 实例都会将一组特定的源文件夹传输到目标位置。
+
+下图显示了使用 XCP 的 MapR 集群的 NetApp 数据移动工具解决方案。
+
+image:xcp-bp_image30.png["错误：缺少图形映像"]
+
+有关详细的客户使用情形，录制的演示以及测试结果，请参见 https://blog.netapp.com/data-migration-xcp["使用 XCP 将数据从数据湖和高性能计算迁移到 ONTAP NFS"^] 博客
+
+有关使用 NetApp XCP 将 MapR-FS 数据移动到 ONTAP NFS 中的详细步骤，请参见中的附录 B https://www.netapp.com/pdf.html?item=/media/17082-tr4732pdf.pdf&ntap-no-cache["TR-4732 ：从大数据分析数据到人工智能"^]。
+
+link:xcp-bp-high-performance-computing-to-ontap-nfs.html["接下来：将高性能计算迁移到 ONTAP NFS 。"]

@@ -1,0 +1,40 @@
+---
+sidebar: sidebar 
+permalink: xcp/xcp-bp-creating-a-csv-file-from-smb-cifs-share.html 
+keywords: csv, data dump 
+summary: '本节中的命令以 CSV 格式转储数据。您可以对 " 大小 " 列求和以获取数据的总大小。' 
+---
+= 从 SMB/CIFS 共享创建 CSV 文件
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:xcp-bp-specific-date-based-scan-and-copy-of-data.html["Previous ：基于日期的特定数据扫描和复制。"]
+
+以下命令将以 CSV 格式转储数据。您可以对 " 大小 " 列求和以获取数据的总大小。
+
+....
+xcp scan -match "((now-x.atime) / 3600) > 31*day" -fmt "'{}, {}, {}, {}'.format(relpath, name, strftime(x.atime, '%y-%m-%d-%H:%M:%S'), humanize_size(size))" -preserve-atime  >file.csv
+....
+输出应类似于以下示例：
+
+....
+erase\report_av_fp_cdot_crosstab.csvreport_av_fp_cdot_crosstab.csv20-01-29-10:26:2449.6MiB
+....
+要扫描三个子目录的深度并按排序顺序提供结果，请运行 `XCP -du` 命令，并将每个目录级别的大小转储到三个子目录的深度。
+
+....
+./xcp  scan -du -depth 3 NFS_Server_IP:/source_vol
+ 
+....
+要进行排序，请将信息转储到 CSV 文件并对信息进行排序。
+
+....
+xcp scan -match “type == d” -depth 3 -fmt "'{}, {}, {}, {}'.format(name, relpath, size)" NFS_Server_IP:/share > directory_report.csv
+....
+这是使用 ` -fmt` 命令的自定义报告。它会扫描所有目录，并将目录的名称，路径和大小转储到 CSV 文件中。您可以从电子表格应用程序对大小列进行排序。
+
+link:xcp-bp-data-migration-from-7-mode-to-ontap.html["接下来：将数据从 7- 模式迁移到 ONTAP 。"]

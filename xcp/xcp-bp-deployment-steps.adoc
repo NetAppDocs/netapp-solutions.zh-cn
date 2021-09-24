@@ -1,0 +1,233 @@
+---
+sidebar: sidebar 
+permalink: xcp/xcp-bp-deployment-steps.html 
+keywords: deployment, solution components, linux server, windows server aff a800, ha 
+summary: 本节介绍 NetApp XCP 的数据传输部署步骤。 
+---
+= 部署步骤
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:xcp-bp-file-analytics.html["上一篇：文件分析。"]
+
+
+
+== 测试台详细信息
+
+下表提供了用于此部署和性能验证的测试台的详细信息。
+
+|===
+| 解决方案组件 | 详细信息 
+
+
+| XCP 1.7 版  a| 
+* 一台 Linux 服务器— Linux （ RHEL 7.9 或 RHEL 8 ）
+* 一台 Windows 服务器— Windows Server 2019 标准版
+
+
+
+
+| 源卷的 NetApp AFF 存储阵列 HA 对  a| 
+* AFF8080
+* NetApp ONTAP 9.
+* NFS 协议
+
+
+
+
+| 用于目标卷的 NetApp AFF 存储阵列 HA 对  a| 
+* AFF A800
+* ONTAP 9.
+* NFS 协议
+
+
+
+
+| Fujitsu PRIMERGY RX2540 服务器 | 每个均配备： * 48 个 CPU * Intel Xeon * 256 GB 物理内存 * 10GbE 双端口 
+
+
+| 网络 | 10GbE 
+|===
+
+
+== 部署步骤
+
+要部署 NetApp XCP 以进行数据传输，请先在目标位置安装并激活 XCP 软件。您可以在中查看详细信息 https://mysupport.netapp.com/documentation/productlibrary/index.html?productID=63064["《 NetApp XCP 用户指南》"^]。为此，请完成以下步骤：
+
+. 满足（ xref ） " XCP 的前提条件 " 一节中详细介绍的前提条件。
+. 从下载 XCP 软件 https://mysupport.netapp.com/site/products/all/details/netapp-xcp/downloads-tab["NetApp XCP （下载）页面"^]。
+. 将下载的 XCP tar 文件复制到 XCP 服务器。
++
+....
+# scp Documents/OneDrive\ -\ NetApp\ Inc/XCP/software/1.6.1/NETAPP_XCP_1.6.1.tgz
+....
+. 取消压缩 tarball 。
++
+....
+[root@mastr-53 src]# tar -zxvf NETAPP_XCP_1.6.1.tgz
+....
+. 从下载许可证 https://xcp.netapp.com/license/xcp.xwic%20["https://xcp.netapp.com/license/xcp.xwic"^] 并复制到 XCP 服务器。
+. 激活许可证。
++
+....
+[root@mastr-53 linux]# ./xcp activate
+[root@mastr-53 src]# cp license /opt/NetApp/xFiles/xcp/license
+[root@mastr-53 src]# cd /usr/src/xcp/linux/
+[root@mastr-53 linux]# ./xcp activate
+....
+. 找到源 NFS 端口和目标 NFS 服务器。默认端口为 2049. 。
++
+....
+[root@mastr-53 ~]# rpcinfo -p 10.63.150.213
+[root@mastr-53 ~]# rpcinfo -p 10.63.150.63
+....
+. 检查 NFS 连接。使用 telnet 访问 NFS 服务器端口，检查 NFS 服务器（源和目标）。
++
+....
+[root@mastr-53 ~]# telnet 10.63.150.127 2049
+[root@mastr-53 ~]# telnet 10.63.150.63 2049
+....
+. 配置目录。
++
+.. 为 XCP 目录创建 NFS 卷并导出 NFS 。您还可以利用操作系统 NFS 导出来导出 XCP 目录。
++
+....
+A800-Node1-2::> volume create -vserver Hadoop_SVM -volume xcpcatalog -aggregate aggr_Hadoop_1 -size 50GB -state online -junction-path /xcpcatalog -policy default -unix-permissions ---rwxr-xr-x -type RW -snapshot-policy default -foreground true
+A800-Node1-2::> volume mount -vserver Hadoop_SVM -volume xcpcatalog_vol -junction-path /xcpcatalog
+....
+.. 检查 NFS 导出。
++
+....
+[root@mastr-53 ~]# showmount -e 10.63.150.63 | grep xcpca
+/xcpcatalog (everyone)
+....
+.. 更新 `xcp.ini` 。
++
+....
+[root@mastr-53 ~]# cat /opt/NetApp/xFiles/xcp/xcp.ini
+# Sample xcp config
+[xcp]
+catalog = 10.63.150.64:/xcpcatalog
+
+[root@mastr-53 ~]#
+....
+
+
+. 使用 `XCP show` 查找源 NAS 导出。查找：
++
+....
+== NFS Exports ==
+== Attributes of NFS Exports ==
+....
++
+....
+[root@mastr-53 linux]# ./xcp show 10.63.150.127
+== NFS Exports ==
+<check here>
+== Attributes of NFS Exports ==
+<check here>
+....
+. （可选）扫描源 NAS 数据。
++
+....
+[root@mastr-53 linux]# ./xcp scan -newid xcpscantest4 -stats 10.63.150.127:/xcpsrc_vol
+....
++
+扫描源 NAS 数据有助于您了解数据布局并发现任何可能的迁移问题。XCP 扫描操作时间与文件数量和目录深度成比例。如果您熟悉 NAS 数据，可以跳过此步骤。
+
+. 检查 `XCP scan` 创建的报告。主要搜索无法读取的文件夹和无法读取的文件。
++
+....
+[root@mastr-53 linux]# mount 10.63.150.64:/xcpcatalog  /xcpcatalog
+base) nkarthik-mac-0:~ karthikeyannagalingam$ scp -r root@10.63.150.53:/xcpcatalog/catalog/indexes/xcpscantest4 Documents/OneDrive\ -\ NetApp\ Inc/XCP/customers/reports/
+....
+. （可选）更改索引节点。查看索引节点数，并根据目录卷和目标卷要迁移或复制的文件数（如果需要）修改索引节点数。
++
+....
+A800-Node1-2::> volume show -volume xcpcatalog -fields files,files-used
+A800-Node1-2::> volume show -volume xcpdest -fields files,files-used
+A800-Node1-2::> volume modify -volume xcpcatalog -vserver A800-Node1_vs1 -files 2000000
+Volume modify successful on volume xcpcatalog of Vserver A800-Node1_vs1.
+
+A800-Node1-2::> volume show -volume xcpcatalog -fields files,files-used
+....
+. 扫描目标卷。
++
+....
+[root@mastr-53 linux]# ./xcp scan -stats 10.63.150.63:/xcpdest
+....
+. 检查源卷和目标卷空间。
++
+....
+[root@mastr-53 ~]# df -h /xcpsrc_vol
+[root@mastr-53 ~]# df -h /xcpdest/
+....
+. 使用 `XCP copy` 将数据从源复制到目标并检查摘要。
++
+....
+[root@mastr-53 linux]# ./xcp copy -newid create_Sep091599198212 10.63.150.127:/xcpsrc_vol 10.63.150.63:/xcpdest
+<command inprogress results removed>
+Xcp command : xcp copy -newid create_Sep091599198212 -parallel 23 10.63.150.127:/xcpsrc_vol 10.63.150.63:/xcpdest
+Stats       : 9.07M scanned, 9.07M copied, 118 linked, 9.07M indexed, 173 giants
+Speed       : 1.57 TiB in (412 MiB/s), 1.50 TiB out (392 MiB/s)
+Total Time  : 1h6m.
+STATUS      : PASSED
+[root@mastr-53 linux]#
+....
++
+
+NOTE: 默认情况下， XCP 会创建七个并行进程来复制数据。可以对此进行调整。
+
++
+
+NOTE: NetApp 建议源卷为只读卷。源卷是实时活动文件系统。`XCP 副本` 操作可能会失败，因为 NetApp XCP 不支持由应用程序持续更改的实时源。
+
++
+对于 Linux ， XCP 需要索引 ID ，因为 XCP Linux 会执行目录编制。
+
+. （可选）检查目标 NetApp 卷上的索引节点。
++
+....
+A800-Node1-2::> volume show -volume xcpdest -fields files,files-used
+vserver        volume  files    files-used
+-------------- ------- -------- ----------
+A800-Node1_vs1 xcpdest 21251126 15039685
+
+A800-Node1-2::>
+....
+. 使用 `XCP sync` 执行增量更新。
++
+....
+[root@mastr-53 linux]# ./xcp sync -id create_Sep091599198212
+Xcp command : xcp sync -id create_Sep091599198212
+Stats       : 9.07M reviewed, 9.07M checked at source, no changes, 9.07M reindexed
+Speed       : 1.73 GiB in (8.40 MiB/s), 1.98 GiB out (9.59 MiB/s)
+Total Time  : 3m31s.
+STATUS      : PASSED
+....
++
+在本文档中，为了模拟实时，对源数据中的 100 万个文件进行了重命名，然后使用 `XCP sync` 将更新后的文件复制到目标。对于 Windows ， XCP 既需要源路径，也需要目标路径。
+
+. 验证数据传输。您可以使用 `XCP verify` 来验证源和目标是否具有相同的数据。
++
+....
+Xcp command : xcp verify 10.63.150.127:/xcpsrc_vol 10.63.150.63:/xcpdest
+Stats       : 9.07M scanned, 9.07M indexed, 173 giants, 100% found (6.01M have data), 6.01M compared, 100% verified (data, attrs, mods)
+Speed       : 3.13 TiB in (509 MiB/s), 11.1 GiB out (1.76 MiB/s)
+Total Time  : 1h47m.
+STATUS      : PASSED
+....
+
+
+XCP 文档为 `scan` ， `copy` ， `sync` 和 `verify` 操作提供了多个选项（包括示例）。有关详细信息，请参见 https://mysupport.netapp.com/documentation/productlibrary/index.html?productID=63064["《 NetApp XCP 用户指南》"^]。
+
+
+NOTE: Windows 客户应使用访问控制列表（ ACL ）复制数据。NetApp 建议使用命令 `XCP copy -acl -fallbackuser\<username> -fallbackgroup\<username or groupname> <source> <destination>` 。考虑到包含使用 ACL 的 SMB 数据的源卷以及 NFS 和 SMB 均可访问的数据，目标卷必须为 NTFS 卷，以获得最佳性能。使用 XCP （ NFS 版本）从 Linux 服务器复制数据，并使用 Windows 服务器中的 ` -acl` 和 ` -noddata` 选项执行 XCP （ SMB 版本） sync ，以便将 ACL 从源数据复制到目标 SMB 数据。
+
+有关详细步骤，请参见 https://helpcenter.netwrix.com/NA/Configure_IT_Infrastructure/Accounts/DCA_Manage_Auditing_Security_Log.html["正在配置 " 管理审核和安全日志 " 策略"^]。
+
+link:xcp-bp-sizing-guidelines-overview.html["接下来：规模估算准则。"]

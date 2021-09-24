@@ -1,0 +1,60 @@
+---
+sidebar: sidebar 
+permalink: xcp/xcp-bp-troubleshooting.html 
+keywords: troubleshooting, problems, error 70, 
+summary: 本节提供使用 NetApp XCP 进行数据迁移的故障排除指导。 
+---
+= 故障排除
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:xcp-bp-best-practice-guidelines-and-recommendations.html["先前版本：最佳实践准则和建议。"]
+
+
+
+= 错误 1 ： XCP 失败， nfs3 错误 70 ： xcp.log 中的文件句柄陈旧错误
+
+* 原因和指导。 *
+
+挂载源文件夹并验证此文件夹是否存在。如果该错误不存在或已删除，您将收到 `stale filehandle` 错误，在这种情况下，您可以忽略该错误。
+
+
+
+= 错误 2 ： NetApp NFS 目标卷有空间，但 XCP 失败，并显示 nfs3 错误 28 ：设备上没有剩余空间
+
+* 原因和指导。 *
+
+. 运行 `df` 命令检查 NFS 目标卷的空间或检查存储。
++
+....
+root@workr-140: USER3# df -h /xcpdest
+Filesystem                 Size  Used Avail Use% Mounted on
+10.63.150.127:/xcpsrc_vol  4.3T  1.7T  2.6T  40% /xcpsrc_vol
+....
+. 检查存储控制器中的索引节点。
++
+....
+A800-Node1-2::> volume show -volume xcpdest -fields files,files-used
+vserver        volume  files    files-used
+-------------- ------- -------- ----------
+A800-Node1_vs1 xcpdest 21251126 21251126
+A800-Node1-2::>
+....
+. 如果使用索引节点，请运行以下命令以增加索引节点数：
++
+....
+A800-Node1-2::> volume modify -volume xcpdest -vserver A800-Node1_vs1 -files 40000000
+Volume modify successful on volume xcpdest of Vserver A800-Node1_vs1.
+A800-Node1-2::> volume show -volume xcpdest -fields files,files-used
+vserver        volume  files    files-used
+-------------- ------- -------- ----------
+A800-Node1_vs1 xcpdest 39999990 21251126
+A800-Node1-2::>
+....
+
+
+link:xcp-bp-where-to-find-additional-information.html["下一步：从何处查找追加信息。"]

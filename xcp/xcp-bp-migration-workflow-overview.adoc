@@ -1,0 +1,55 @@
+---
+sidebar: sidebar 
+permalink: xcp/xcp-bp-migration-workflow-overview.html 
+keywords: migration, workflow, nas, shares, copy, sync, truck, azure, expressroute 
+summary: 要更好地规划和完成迁移，需要遵循不同的迁移阶段。要使用 NetApp XCP 从第三方 NAS 存储或直连 NAS 导出存储迁移数据，请遵循本节中提供的迁移准则。 
+---
+= 迁移工作流
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:xcp-bp-netapp-xcp-overview.html["先前版本： NetApp XCP 。"]
+
+要更好地规划和完成迁移，需要遵循不同的迁移阶段。要使用 NetApp XCP 从第三方 NAS 存储或直连 NAS 导出存储迁移数据，请遵循本节中提供的迁移准则。
+
+下图显示了从任何 NAS 到 NetApp NAS 的迁移工作流。
+
+image:xcp-bp_image3.png["错误：缺少图形映像"]
+
+
+
+== 内部部署
+
+从任何 NAS 到 NetApp NAS 的迁移工作流包括以下步骤：
+
+. 发现 NAS 共享和数据。
+. 扫描数据并生成报告以查找数据布局。
+. 运行 XCP Copy 命令创建基线。要加快迁移速度，请选择更多 XCP 实例并在子文件夹级别拆分工作负载，以启动并行迁移作业。
+. 对于增量更新，请使用 XCP sync ，直到转换窗口的更改率较低为止。
+. 运行 XCP sync 命令以完成迁移，将源标记为只读以执行最终同步。
+. 要验证数据传输是否正确，请运行 `XCP verify` 命令来比较源和目标。
+
+
+
+
+== 云
+
+对于云，如果内部和云之间的连接为直接连接（ AWS ）， ExpressRoute （ Azure ）或云互连（ GCP ），则可以遵循类似的内部迁移工作流。
+
+下图显示了从内部迁移到云的工作流。
+
+image:xcp-bp_image4.png["错误：缺少图形映像"]
+
+如果内部与云之间没有直接互联网连接，您必须通过叉车等脱机数据传输方法将数据从内部传输到云。每个云服务提供商都有一种不同的方法，使用不同的术语将数据移动到其数据中心。
+
+下图展示了在不使用 ExpressRoute 的情况下从内部部署到 Azure 的数据移动程序解决方案。
+
+image:xcp-bp_image5.png["错误：缺少图形映像"]
+
+您可以对不同云服务提供商提供的相应组件使用类似的架构。
+
+link:xcp-bp-file-analytics.html["接下来：文件分析。"]

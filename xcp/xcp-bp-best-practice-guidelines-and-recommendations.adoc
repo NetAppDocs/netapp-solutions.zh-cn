@@ -1,0 +1,26 @@
+---
+sidebar: sidebar 
+permalink: xcp/xcp-bp-best-practice-guidelines-and-recommendations.html 
+keywords: best practices, guidelines, recommendations, IMT 
+summary: 本节介绍使用 NetApp XCP 迁移数据的最佳实践，准则和建议。 
+---
+= 最佳实践准则和建议
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:xcp-bp-cifs-data-migration-with-acls-from-a-source-storage-box-to-ontap.html["先前版本：使用 ACL 将 CIFS 数据从源存储箱迁移到 ONTAP 。"]
+
+* 使用支持 IMT 的 XCP 客户端操作系统。IMT 支持的客户端已通过 NetApp 认证。
+* 在 Linux 操作系统中以 root 用户身份运行 XCP 以执行迁移。您可以以 sudo 用户身份运行 XCP 命令，但 XCP 不支持此命令。
+* 每个客户端仅运行一个 XCP 实例。从技术上讲，您可以从不同的位置在同一主机上运行多个 XCP 实例，但这不是受支持的做法。确实，运行许多实例可能会导致失败。
+* 在当前 XCP 版本中，不支持实时源。如果源 NetApp 卷处于活动状态，并由应用程序和用户持续更改，则应创建源卷的快照以执行迁移。
+* 最佳做法是，为每个增量同步创建一个名称不同的新快照，以便在发生故障时根据快照名称轻松创建增量迁移路径。
+* 如果要执行基于快照的迁移，最佳做法是继续执行基于快照的迁移，直到转换为止。
+* 如果您的文件数超过 1000 万个，并且增量数据更改率超过 50% ，则最佳做法是使用比安装和管理指南中的最低建议更高的核心数和更多的内存。
+
+
+link:xcp-bp-troubleshooting.html["下一步：故障排除。"]
