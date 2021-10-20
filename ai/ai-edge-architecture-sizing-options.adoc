@@ -1,0 +1,33 @@
+---
+sidebar: sidebar 
+permalink: ai/ai-edge-architecture-sizing-options.html 
+keywords: architecture, sizing, computer server, shared storage 
+summary: 您可以调整用于验证的设置，以适合其他使用情形。 
+---
+= 架构规模估算选项
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:ai-edge-test-results.html["上一步：测试结果。"]
+
+您可以调整用于验证的设置，以适合其他使用情形。
+
+
+
+== 计算服务器
+
+我们使用的是 Intel Xeon D-2123IT CPU ，这是 SE350 支持的最低 CPU 级别，具有四个物理核心和 60 瓦 TDP 。虽然服务器不支持更换 CPU ，但可以订购功能更强大的 CPU 。支持的最大 CPU 是 Intel Xeon D-2183IT ， 16 核， 100 瓦，运行频率为 2.20 GHz 。这样可以显著提高 CPU 计算能力。虽然 CPU 本身并不是运行推理工作负载的瓶颈，但它有助于处理数据以及执行与推理相关的其他任务。目前， NVIDIA T4 是唯一可用于边缘使用情形的 GPU ；因此，目前无法升级或降级 GPU 。
+
+
+
+== 共享存储
+
+在测试和验证中，我们在本文档中使用了 NetApp AFF C190 系统，该系统的最大存储容量为 50.5 TB ，连续读取的吞吐量为 4.4 GBps ，小型随机读取的 IOPS 为 230k ，经证实非常适合边缘推理工作负载。
+
+但是，如果您需要更多存储容量或更快的网络速度，则应使用 NetApp AFF A220 或 https://tv.netapp.com/detail/video/6211798209001/netapp-aff-a250-virtual-tour-and-demo["NetApp AFF A250"^] 存储系统此外， NetApp EF280 系统的最大容量为 1.5 PB ，带宽为 10 Gbps ，也用于此解决方案验证。如果您希望使用更高带宽获得更多存储容量， 可以使用。
+
+link:ai-edge-conclusion.html["接下来：总结。"]

@@ -23,6 +23,16 @@ NOTE: Astra 控制中心需要注册表来托管 Astra 容器所需的映像。�
 
 == 创建私有映像注册表
 
+. 从当前默认存储类中删除默认标注，并将支持 Trident 的存储类标注为 OpenShift 集群的默认值。
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ oc patch storageclass thin -p '{"metadata": {"annotations": {"storageclass.kubernetes.io/is-default-class": "false"}}}'
+storageclass.storage.k8s.io/thin patched
+
+[netapp-user@rhel7 ~]$ oc patch storageclass ocp-trident -p '{"metadata": {"annotations": {"storageclass.kubernetes.io/is-default-class": "true"}}}'
+storageclass.storage.k8s.io/ocp-trident patched
+----
 . 在 `sPec` 部分中输入以下存储参数，以编辑 imageeregistry 运算符。
 +
 [listing]
@@ -165,7 +175,7 @@ route.route.openshift.io/public-routes   astra-registry.apps.ocp-vmw.cie.netapp.
 +
 [listing]
 ----
-[netapp-user@rhel7 ~]$ oc create secret docker-registry astra-registry-credentials --docker-server= astra-registry.apps.ocp-vmw.cie.netapp.com --docker-username=ocp-user --docker-password=password
+[netapp-user@rhel7 ~]$ oc create secret docker-registry astra-registry-credentials --docker-server=astra-registry.apps.ocp-vmw.cie.netapp.com --docker-username=ocp-user --docker-password=password
 ----
 . 然后，可以将此提取密钥修补到服务帐户或在相应的 POD 定义中引用。
 +
@@ -208,8 +218,10 @@ imagePullSecrets:
 --
 [listing]
 ----
-[netapp-user@rhel7 ~]$ podman login astra-registry.apps.ocp-vmw.cie.netapp.com -u kubeadmin -p $(oc whoami -t)
+[netapp-user@rhel7 ~]$ podman login astra-registry.apps.ocp-vmw.cie.netapp.com -u kubeadmin -p $(oc whoami -t) --tls-verify=false
 ----
++ 注意：如果您使用 `kubeadmin` user 登录到专用注册表，请使用 token 代替密码。
+
 --
 .Docker
 --
@@ -217,6 +229,8 @@ imagePullSecrets:
 ----
 [netapp-user@rhel7 ~]$ docker login astra-registry.apps.ocp-vmw.cie.netapp.com -u kubeadmin -p $(oc whoami -t)
 ----
++ 注意：如果您使用 `kubeadmin` user 登录到专用注册表，请使用 token 代替密码。
+
 --
 ====
 .. 推送或拉图像。

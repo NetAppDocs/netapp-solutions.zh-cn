@@ -54,10 +54,11 @@ NOTE: 请参见链接 link:rh-os-n_private_registry.html["此处"] 为此安装�
 . 您必须对 Red Hat OpenShift 集群具有集群管理员访问权限。
 . 您必须对 NetApp ONTAP 集群具有管理员访问权限。
 . 一个管理工作站，其中安装了 Docker 或 podman ， tridentctl 以及 oc 或 kubectl 工具，并将其添加到 $path 中。
++
+
+NOTE: Docker 安装的 Docker 版本必须大于 20.10 ，而 Podman 安装的 Podman 版本必须大于 3.0 。
 
 
-
-NOTE: Docker 或 Podman 安装必须至少为版本 20.10 。
 
 
 
@@ -98,6 +99,14 @@ NOTE: 您可以选择使用 Docker 或 Podman 执行此操作，此步骤将提�
 ----
 [netapp-user@rhel7 ~]$ podman login -u ocp-user -p password --tls-verify=false astra-registry.apps.ocp-vmw.cie.netapp.com
 ----
++
+
+NOTE: 如果使用 `kubeadmin` user 登录到专用注册表，请使用 token 代替 password - `podman login -u Ocp-user -p token -tls-verify=false astra-registry.apps.ocp-vmw.cie.netapp.com` 。
+
++
+
+NOTE: 或者，您也可以创建服务帐户，分配注册表编辑器和 / 或注册表查看器角色（取决于您是否需要推 / 拉访问），并使用服务帐户的令牌登录到注册表。
+
 . 创建 Shell 脚本文件并将以下内容粘贴到其中。
 +
 [listing]
@@ -141,8 +150,16 @@ NOTE: 如果您的注册表使用的是不可信的证书，请编辑 shell 脚�
 +
 [listing]
 ----
-[netapp-user@rhel7 ~]$ docker login -u ocp-user -p password --tls-verify=false astra-registry.apps.ocp-vmw.cie.netapp.com
+[netapp-user@rhel7 ~]$ docker login -u ocp-user -p password astra-registry.apps.ocp-vmw.cie.netapp.com
 ----
++
+
+NOTE: 如果使用 `kubeadmin` user 登录到专用注册表，请使用 token 代替 password - `docker login -u Ocp-user -p token astra-registry.apps.ocp-vmw.cie.netapp.com` 。
+
++
+
+NOTE: 或者，您也可以创建服务帐户，分配注册表编辑器和 / 或注册表查看器角色（取决于您是否需要推 / 拉访问），并使用服务帐户的令牌登录到注册表。
+
 . 创建 Shell 脚本文件并将以下内容粘贴到其中。
 +
 [listing]
@@ -155,10 +172,6 @@ for astraImageFile in $(ls images/*.tar); do
    docker push $registry/$(echo $astraImage | sed 's/^[^\/]\+\///')
 done
 ----
-+
-
-NOTE: 如果您的注册表使用的是不可信的证书，请编辑 shell 脚本并对 Docker 推送命令使用 ` -tls-verify=false` `d^ ocker push $registry/$ （ echo $astraImage | sed s/^ ………………………………………………………………………………………………………………` …
-
 . 使文件可执行
 +
 [listing]
@@ -200,7 +213,7 @@ NOTE: 如果您使用的是包含传入操作员的默认 TLS 证书的 OpenShif
 [netapp-user@rhel7 ~]$ oc create secret docker-registry astra-registry-cred --docker-server=astra-registry.apps.ocp-vmw.cie.netapp.com --docker-username=ocp-user --docker-password=password -n netapp-acc-operator
 secret/astra-registry-cred created
 ----
-. 编辑 Astra 控制中心操作员 CR `Astra_control_center_operator_deploy.YAML` 这是 Astra 控制中心部署的一组所有资源。在操作员 CR 中，找到 `Acc-operator-controller-manager` 的部署定义，并输入注册表的 FQDN 以及将映像推送到注册表时提供的组织名称（在此示例中为 `astra-registry.apps.ocp-vmw.cie.netapp.com/netapp-astra` ） 替换文本 ` [y您 的 .registry.goes.here]` 并提供我们刚刚创建的密钥的名称。验证操作员的其他详细信息，保存并关闭。
+. 编辑 Astra 控制中心操作员 CR `Astra_control_center_operator_deploy.YAML` 这是 Astra 控制中心部署的一组所有资源。在操作员 CR 中，找到 `Acc-operator-controller-manager` 的部署定义，并输入注册表的 FQDN 以及将映像推送到注册表时提供的组织名称（在此示例中为 `astra-registry.apps.ocp-vmw.cie.netapp.com/netapp-astra` ） 替换文本 `ASTRA_image_regRegistry` 并提供我们刚刚在 `imagePullSecret` 部分中创建的密钥名称。验证操作员的其他详细信息，保存并关闭。
 +
 [listing]
 ----
@@ -229,7 +242,7 @@ spec:
         - --upstream=http://127.0.0.1:8080/
         - --logtostderr=true
         - --v=10
-        image: astra-registry.apps.ocp-vmw.cie.netapp.com/netapp-astra/kube-rbac-proxy:v0.5.0
+        image: ASTRA_IMAGE_REGISTRY/kube-rbac-proxy:v0.5.0
         name: kube-rbac-proxy
         ports:
         - containerPort: 8443
@@ -243,7 +256,7 @@ spec:
         env:
         - name: ACCOP_LOG_LEVEL
           value: "2"
-        image: astra-registry.apps.ocp-vmw.cie.netapp.com/netapp-astra/acc-operator:21.05.68
+        image: astra-registry.apps.ocp-vmw.cie.netapp.com/netapp-astra/acc-operator:21.08.7
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -260,11 +273,11 @@ spec:
           periodSeconds: 10
         resources:
           limits:
-            cpu: 100m
-            memory: 150Mi
+            cpu: 300m
+            memory: 750Mi
           requests:
             cpu: 100m
-            memory: 50Mi
+            memory: 75Mi
         securityContext:
           allowPrivilegeEscalation: false
       imagePullSecrets: [name: astra-registry-cred]
@@ -289,7 +302,7 @@ namespace/netapp-astra-cc created
 +
 [listing]
 ----
-[netapp-user@rhel7 ~]$ oc create secret docker-registry astra-registry-cred --docker-server= astra-registry.apps.ocp-vmw.cie.netapp.com --docker-username=ocp-user --docker-password=password -n netapp-astra-cc
+[netapp-user@rhel7 ~]$ oc create secret docker-registry astra-registry-cred --docker-server=astra-registry.apps.ocp-vmw.cie.netapp.com --docker-username=ocp-user --docker-password=password -n netapp-astra-cc
 
 secret/astra-registry-cred created
 ----
@@ -304,11 +317,14 @@ kind: AstraControlCenter
 metadata:
   name: astra
 spec:
+  accountName: "NetApp HCG Solutions"
   astraVersion: "21.08.65"
   astraAddress: "astra-control-center.cie.netapp.com"
   autoSupport:
     enrolled: true
   email: "solutions_tme@netapp.com"
+  firstName: "NetApp HCG"
+  lastName: "Admin"
   imageRegistry:
     name: "astra-registry.apps.ocp-vmw.cie.netapp.com/netapp-astra"     # use your registry
     secret: "astra-registry-cred"             # comment out if not needed
@@ -375,7 +391,7 @@ traefik                                    LoadBalancer   172.30.99.142    10.61
 +
 image:redhat_openshift_image122.jpg["为 Accc 图形用户界面添加 DNS 条目"]
 
-. 通过浏览到 Astra 控制中心 GUI 的 FQDN 登录到该 GUI 。
+. 通过浏览 Astra 控制中心的 FQDN 登录到该 GUI 。
 +
 image:redhat_openshift_image87.jpg["Astra 控制中心登录"]
 

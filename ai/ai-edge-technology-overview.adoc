@@ -1,0 +1,223 @@
+---
+sidebar: sidebar 
+permalink: ai/ai-edge-technology-overview.html 
+keywords: tech, technology, overview, aff, a220, a250, ef280, ef300, 
+summary: 本节介绍此 AI 解决方案的技术基础。 
+---
+= 技术概述
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:ai-edge-introduction.html["上一页：简介。"]
+
+
+
+== NetApp AFF 系统
+
+一流的 NetApp AFF 存储系统支持在边缘进行 AI 推理部署，通过行业领先的性能，卓越的灵活性，云集成和一流的数据管理满足企业级存储需求。NetApp AFF 系统专为闪存设计，可帮助加速，管理和保护业务关键型数据。
+
+* 入门级 NetApp AFF 存储系统基于 FAS2750 硬件和 SSD 闪存介质
+* HA 配置中的两个控制器
+
+
+image:ai-edge-image5.png["错误：缺少图形映像"]
+
+NetApp 入门级 AFF C190 存储系统支持以下功能：
+
+* 最大驱动器数为 24 个 960 GB SSD
+* 两种可能的配置：
++
+** 以太网（ 10GbE ）： 4 个 10GBASE-T （ RJ-45 ）端口
+** 统一（ 16 Gb FC 或 10GbE ）： 4 个统一目标适配器 2 （ UTA2 ）端口
+
+
+* 最大有效容量为 50.5 TB
++
+
+NOTE: 对于 NAS 工作负载，一个入门级 AFF C190 系统支持连续读取吞吐量为 4.4 GBps ，延迟为 1 毫秒或更短的小型随机读取吞吐量为 230 K IOPS 。
+
+
+
+
+
+== NetApp AFF A220
+
+NetApp 还提供了其他入门级存储系统，可为大规模部署提供更高的性能和可扩展性。对于 NAS 工作负载，一个入门级 AFF A220 系统支持：
+
+* 顺序读取的吞吐量为 6.2 GBps
+* 在延迟不超过 1 毫秒的情况下进行小型随机读取时，可实现 375000 IOPS
+* 最大驱动器数为 144 个 960 GB ， 3.8 TB 或 7.6 TB SSD
+* AFF A220 可扩展到 1 PB 以上的有效容量
+
+
+
+
+== NetApp AFF A250
+
+* 最大有效容量为 35 PB ，最大横向扩展为 2-24 个节点（ 12 个 HA 对）
+* 与 AFF A220 相比，性能提高≥ 45%
+* 440 ， 000 次 IOPS 随机读取 @1 毫秒
+* 基于最新的 NetApp ONTAP 版本 ONTAP 9.8 构建
+* 利用两个 25 Gb 以太网实现 HA 和集群互连
+
+
+
+
+== NetApp E 系列 EF 系统
+
+EF 系列是一组入门级和中端全闪存 SAN 存储阵列，可通过 NetApp SANtricity 软件加快数据访问速度，并帮助您更快地从中获得价值。这些系统提供 SAS 和 NVMe 闪存存储，并为您提供经济实惠的至极高 IOPS ， 100 微秒以下的响应时间以及高达 44 GBps 的带宽，使其成为混合工作负载以及 AI 推理和高性能计算（ HPC ）等要求苛刻的应用程序的理想之选。
+
+image:ai-edge-image7.png["错误：缺少图形映像"]
+
+
+
+== NetApp EF280
+
+* 支持 32 Gb/16 Gb FC ， 25 Gb/10 Gb iSCSI 和 12 Gb SAS
+* 最大有效容量为 96 个驱动器，总容量为 1.5 PB
+* 10 Gbps 吞吐量（顺序读取）
+* 30 万次 IOPS （随机读取）
+* NetApp EF280 是 NetApp 产品组合中成本最低的全闪存阵列（ AFA ）
+
+
+
+
+== NetApp EF300
+
+* 24 个 NVMe SSD 驱动器，总容量为 367 TB
+* 扩展选项，总容量为 240 个 NL-SAS HDD ， 96 个 SAS SSD 或两者的组合
+* 100 GB NVMe/IB ， NVMe/RoCE ， iSE/IB 和 SRP/IB
+* 32 GB NVMe/FC ， FCP
+* 25 GB iSCSI
+* 20 Gbps （顺序读取）
+* 670K IOPS （随机读取）
+
+
+
+NOTE: 有关详细信息，请参见 https://www.netapp.com/pdf.html?item=/media/19339-DS-4082.pdf["NetApp EF 系列 NetApp EF 系列全闪存阵列 EF600 ， F300 ， EF570 和 EF280 产品规格"^]。
+
+
+
+== NetApp ONTAP 9.
+
+ONTAP 9.8 是 NetApp 推出的最新一代存储管理软件，可帮助企业打造现代化的基础架构并过渡到云就绪数据中心。借助行业领先的数据管理功能，无论数据位于何处， ONTAP 都可以通过一组工具来管理和保护数据。您还可以将数据自由移动到需要的任何位置：边缘，核心或云。ONTAP 9.8 包含许多功能，可简化数据管理，加快和保护关键数据，并在混合云架构中实现下一代基础架构功能。
+
+
+
+=== 简化数据管理
+
+数据管理对于企业 IT 运营至关重要，以便将适当的资源用于应用程序和数据集。ONTAP 具有以下功能，可简化操作并降低总运营成本：
+
+* * 实时数据缩减和扩展的重复数据删除。 * 数据缩减可减少存储块中浪费的空间，重复数据删除可显著提高有效容量。此适用场景数据存储在本地，并分层到云。
+* * 最低，最高和自适应服务质量（ AQoS ）。 * 细粒度服务质量（ QoS ）控制有助于在高度共享的环境中保持关键应用程序的性能水平。
+* * NetApp FabricPool 。 * 此功能可将冷数据自动分层到公有和私有云存储选项，包括 Amazon Web Services （ AWS ）， Azure 和 NetApp StorageGRID Storage 解决方案。有关 FabricPool 的详细信息，请参见 link:https://www.netapp.com/pdf.html?item=/media/17239-tr4598pdf.pdf["TR-4598"^]。
+
+
+
+
+=== 加速和保护数据
+
+ONTAP 9 可提供卓越的性能和数据保护，并通过以下方式扩展这些功能：
+
+* * 性能和低延迟。 * ONTAP 可提供尽可能高的吞吐量，并尽可能降低延迟。
+* * 数据保护。 * ONTAP 提供内置数据保护功能，并在所有平台之间进行通用管理。
+* * NetApp 卷加密（ NVE ）。 * ONTAP 提供原生卷级加密，并支持板载和外部密钥管理。
+* * 多租户和多因素身份验证。 * ONTAP 支持以最高的安全性级别共享基础架构资源。
+
+
+
+
+=== Future-Proof 基础架构
+
+ONTAP 9 具有以下功能，可满足不断变化的苛刻业务需求：
+
+* * 无缝扩展和无中断运行。 * ONTAP 支持向现有控制器和横向扩展集群无中断添加容量。客户可以升级到 NVMe 和 32 Gb FC 等最新技术，而无需进行成本高昂的数据迁移或中断。
+* * 云连接。 * ONTAP 是云连接最广泛的存储管理软件，可在所有公有云中选择软件定义的存储（ ONTAP Select ）和云原生实例（ NetApp Cloud Volumes Service ）。
+* * 与新兴应用程序集成。 * ONTAP 使用支持现有企业级应用程序的相同基础架构，为下一代平台和应用程序（例如自动驾驶汽车，智能城市和行业 4.0 ）提供企业级数据服务。
+
+
+
+
+== NetApp SANtricity
+
+NetApp SANtricity 旨在为 E 系列混合闪存和 EF 系列全闪存阵列提供行业领先的性能，可靠性和精简性。为繁重工作负载应用程序（包括数据分析，视频监控以及备份和恢复）实现 E 系列混合闪存和 EF 系列全闪存阵列的最高性能和利用率。借助 SANtricity ，可以在存储保持联机状态的同时完成配置调整，维护，容量扩展和其他任务。SANtricity 还提供卓越的数据保护，主动监控和认证安全性—所有这些功能均可通过易于使用的机载 System Manager 界面进行访问。要了解更多信息，请参见 https://www.netapp.com/pdf.html?item=/media/7676-ds-3891.pdf["NetApp E 系列 SANtricity 软件产品规格"^]。
+
+
+
+=== 性能优化
+
+经过性能优化的 SANtricity 软件可为您的所有数据分析，视频监控和备份应用程序提供具有高 IOPS ，高吞吐量和低延迟的数据。提高高 IOPS ，低延迟应用程序和高带宽，高吞吐量应用程序的性能。
+
+
+
+=== 最大限度地延长正常运行时间
+
+在存储保持联机的情况下完成所有管理任务。在不中断 I/O 的情况下调整配置，执行维护或扩展容量借助自动化功能，联机配置，最先进的动态磁盘池（ Dynamic Disk Pool ， DPP ）技术等实现同类最佳的可靠性。
+
+
+
+=== 请轻松休息
+
+SANtricity 软件可通过易于使用的机载 System Manager 界面提供卓越的数据保护，主动监控和认证安全性。简化存储管理任务。获得对所有 E 系列存储系统进行高级调整所需的灵活性。随时随地管理您的 NetApp E 系列系统。我们基于 Web 的盒装界面简化了您的管理工作流。
+
+
+
+== NetApp Trident
+
+https://netapp.io/persistent-storage-provisioner-for-kubernetes/["Trident"^] NetApp 是适用于 Docker 和 Kubernetes 的开源动态存储编排程序，可简化永久性存储的创建，管理和使用。Trident 是 Kubernetes 原生应用程序，直接在 Kubernetes 集群中运行。借助 Trident ，客户可以将 DL 容器映像无缝部署到 NetApp 存储上，并为 AI 容器部署提供企业级体验。Kubernetes 用户（例如 ML 开发人员和数据科学家）可以创建，管理和自动化流程编排和克隆，从而充分利用 NetApp 技术提供的 NetApp 高级数据管理功能。
+
+
+
+== NetApp Cloud Sync
+
+https://docs.netapp.com/us-en/occm/concept_cloud_sync.html["Cloud Sync"^] 是一项 NetApp 服务，用于快速安全地同步数据。无论您是需要在内部 NFS 还是 SMB 文件共享， NetApp StorageGRID ， NetApp ONTAP S3 ， NetApp Cloud Volumes Service ， Azure NetApp Files ， Amazon Simple Storage Service （ Amazon S3 ）， Amazon Elastic File System （ Amazon EFS ）， Azure Blob ， Google Cloud Storage 之间传输文件， 或者 IBM 云对象存储， Cloud Sync 可以将文件快速安全地移动到您需要的位置。数据传输完成后，即可在源和目标上完全使用。Cloud Sync 会根据您预定义的计划持续同步数据，并仅移动增量，从而最大限度地减少在数据复制上花费的时间和金钱。Cloud Sync 是一款软件即服务（ SaaS ）工具，设置和使用极其简单。由 Cloud Sync 触发的数据传输由数据代理执行。您可以在 AWS ， Azure ， Google 云平台或内部部署 Cloud Sync 数据代理。
+
+
+
+=== 联想 ThinkSystem 服务器
+
+联想 ThinkSystem 服务器采用创新的硬件，软件和服务，可解决客户当前面临的挑战，并提供一种循序渐进的模块化设计方法来应对未来的挑战。这些服务器利用同类最佳的行业标准技术以及联想的差异化创新技术，为 x86 服务器提供最大的灵活性。
+
+部署联想 ThinkSystem 服务器的主要优势包括：
+
+* 高度可扩展的模块化设计，可随业务发展而扩展
+* 行业领先的弹性，可节省数小时的成本高昂的计划外停机时间
+* 快速闪存技术可实现更低的延迟，更快的响应速度以及更智能的实时数据管理
+
+
+在 AI 领域，联想正在采取切实可行的方法帮助企业了解 ML 和 AI 的优势并将其用于工作负载。联想客户可以在联想 AI 创新中心探索和评估联想 AI 产品，以充分了解其特定用例的价值。为了缩短实现价值的时间，这种以客户为中心的方法可以为客户提供解决方案开发平台的概念验证，这些平台已准备就绪，可供 AI 使用并进行优化。
+
+
+
+=== 联想 ThinkSystem SE350 边缘服务器
+
+通过边缘计算，可以在将 IoT 设备中的数据发送到数据中心或云之前在网络边缘对其进行分析。如下图所示，联想 ThinkSystem SE350 专为满足边缘部署的独特要求而设计，采用紧凑的加固型环境加固外形，重点关注灵活性，连接性，安全性和远程易管理性。
+
+SE350 采用 Intel Xeon D 处理器，可以灵活地支持边缘 AI 工作负载的加速，专为应对数据中心以外各种环境中服务器部署的挑战而构建。
+
+image:ai-edge-image8.png["错误：缺少图形映像"]
+
+image:ai-edge-image9.png["错误：缺少图形映像"]
+
+
+
+==== MLPerf
+
+MLPerf 是用于评估 AI 性能的行业领先基准套件。它涵盖应用 AI 的许多方面，包括图像分类，对象检测，医学影像和自然语言处理（ NLP ）。在此验证中，我们使用了推理 v0.7 工作负载，这是此验证完成时 MLPerf 推理的最新迭代。。 https://mlcommons.org/en/news/mlperf-inference-v07/["MLPerf 推理 v0.7"^] 套件包括四个适用于数据中心和边缘系统的新基准：
+
+* Transformers （ Bert ）提供的 * 双向编码器表示法经过微调，可使用 squad 数据集回答问题。
+* * 深度学习建议模式（ DLRM ）是一种个性化和建议模式，经过培训可优化点击率（ CTR ）。
+* * 3D U-Net.* 3D U-Net 架构接受过有关脑肿瘤分段（ Bras ）数据集的培训。
+* * RNN-T.* 经常性神经网络传感器（ RNNP-T ）是一种自动语音识别（ Automatic Speech Recognition ， ASR ）模型，该模型经过部分 LibriSpeech 的训练。MLPerf 推理结果和代码已公开发布，并已获得 Apache 许可证。MLPerf 推理具有一个 Edge 分支，可支持以下情形：
+* * 单一流。 * 此场景模拟响应能力是关键因素的系统，例如在智能手机上执行脱机 AI 查询。各个查询将发送到系统并记录响应时间。结果将报告所有响应的 90 百分位延迟。
+* * 多流。 * 此基准测试适用于处理来自多个传感器的输入的系统。在测试期间，系统会按固定的时间间隔发送查询。会施加 QoS 限制（允许的最大延迟）。此测试将报告系统在满足 QoS 限制的情况下可以处理的流数量。
+* * 脱机。 * 这是涉及批处理应用程序的最简单情形，指标是每秒样本吞吐量。系统可以使用所有数据，基准测试可测量处理所有样本所需的时间。
+
+
+联想已发布了本文档中使用的服务器 SE350 与 T4 的 MLPerf 推理得分。有关结果，请参见 https://mlperf.org/inference-results-0-7/["https://mlperf.org/inference-results-0-7/"] 在条目 #0.7-145 的 " 边缘，封闭分区 " 一节中。
+
+link:ai-edge-test-plan.html["下一步：测试计划。"]

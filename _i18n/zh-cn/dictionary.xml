@@ -7635,7 +7635,6 @@
   <block id="356e214e50112dd7af5a0e5e2af6cc8c" category="sidebar">部署 NetApp Trident 自动化部署</block>
   <block id="b41c68814bb9724ba6c8856503a91924" category="sidebar">部署 NVIDIA Triton 推理服务器自动部署</block>
   <block id="7fca09994c8655e89977166c6bfeec8f" category="sidebar">部署客户端以进行 Triton 推理服务器自动化部署</block>
-  <block id="04ae8c17e9bb9281470b546d459555d3" category="sidebar">边缘人工智能推理：采用联想 ThinkSystem 解决方案设计的 NetApp ONTAP</block>
   <block id="f1e7c981dec3bcee348bda96c55363c4" category="sidebar">使用 NVIDIA 的对话 AI</block>
   <block id="d5c1931461d1e204a84a486796df2cca" category="sidebar">NetApp Orchestration 解决方案与 Run ： AI</block>
   <block id="c0a0f5bbb431dea70000d73b29e50249" category="sidebar">使用 Run AI 优化集群和 GPU 利用率</block>
@@ -7771,10 +7770,8 @@
   <block id="67a56d728807272d2a01df50c6548f4f" category="list-text">在每个 OpenShift 集群上配置的默认 StorageClass ，其中使用 Astra Trident 作为存储配置程序。</block>
   <block id="dda5c1363ac68168c83f72fc2645f51f" category="list-text">必须在每个 OpenShift 集群上安装和配置负载平衡器，以实现负载平衡并公开 OpenShift 服务。</block>
   <block id="7dbcc72cc3a693b8f89b064e38ed7a23" category="list-text">必须配置私有映像注册表以托管 NetApp Astra Control Center 映像。</block>
-  <block id="2c7040aa593c8b8c1e1944a0e55de462" category="list-text">您必须对 Red Hat OpenShift 集群具有集群管理员访问权限。</block>
   <block id="537f97bbcef0e2e67d6840aa5845aa65" category="list-text">您必须对 NetApp ONTAP 集群具有管理员访问权限。</block>
   <block id="0507b40de1fbd59b7a77b9054689e92b" category="list-text">一个管理工作站，其中安装了 Docker 或 podman ， tridentctl 以及 oc 或 kubectl 工具，并将其添加到 $path 中。</block>
-  <block id="bf3d245b9b2b3e5eeb32306c84b60d96" category="admonition">Docker 或 Podman 安装必须至少为版本 20.10 。</block>
   <block id="8c7c70cb991e0295e289054b79308c5d" category="section-title">安装 Astra 控制中心</block>
   <block id="ccab5cf8842d06d8d4e2f7f778657c4b" category="list-text">打开 tar ball 的包装并将工作目录更改为生成的文件夹。</block>
   <block id="abe31bcfb59f2265c2fb97dde407366c" category="open-title">podman</block>
@@ -8397,10 +8394,8 @@
   <block id="25b4e951c048e2ae39554f36af8824b9" category="admonition">您可以选择使用 Docker 或 Podman 执行此操作，此步骤将提供这两者的说明。</block>
   <block id="a53846d7be2355a59af69a47e2cf4637" category="list-text">创建 Shell 脚本文件并将以下内容粘贴到其中。</block>
   <block id="ad3318a786149147666e961c291c6875" category="admonition">如果您的注册表使用的是不可信的证书，请编辑 shell 脚本并对` podman 推送命令 ` `podman 推送 $registry/$ （ echo $astraImage^ s/^ ……………………………………………………………………………………………………………………………………………` …</block>
-  <block id="97838523e03dab1e62576933425adcee" category="admonition">如果您的注册表使用的是不可信的证书，请编辑 shell 脚本并对 Docker 推送命令使用 ` -tls-verify=false` `d^ ocker push $registry/$ （ echo $astraImage | sed s/^ ………………………………………………………………………………………………………………` …</block>
   <block id="f39d61476380fc033f45c2d744596b00" category="list-text">接下来，将映像注册表 TLS 证书上传到 OpenShift 节点。为此，请使用 TLS 证书在 OpenShift-config 命名空间中创建一个配置映射，并将其修补到集群映像配置中以使此证书可信。</block>
   <block id="508ca0ca5ae419c052d9a8487bb0b2d0" category="admonition">如果您使用的是包含传入操作员的默认 TLS 证书的 OpenShift 内部注册表和路由，则仍需要按照上一步将这些证书修补到路由主机名。要从 `运算符提取证书，您可以使用命令` oc extract secret/router -ca -keys=tls.crt -n OpenShift-Inuse-operator 。</block>
-  <block id="1163c8d7d7213f35ddc27c475d39da42" category="list-text">编辑 Astra 控制中心操作员 CR `Astra_control_center_operator_deploy.YAML` 这是 Astra 控制中心部署的一组所有资源。在操作员 CR 中，找到 `Acc-operator-controller-manager` 的部署定义，并输入注册表的 FQDN 以及将映像推送到注册表时提供的组织名称（在此示例中为 `astra-registry.apps.ocp-vmw.cie.netapp.com/netapp-astra` ） 替换文本 ` [y您 的 .registry.goes.here]` 并提供我们刚刚创建的密钥的名称。验证操作员的其他详细信息，保存并关闭。</block>
   <block id="6d71c41a686bcfc0b0866044afd43f2b" category="list-text">创建用于访问该命名空间中的映像注册表的密钥。</block>
   <block id="25eb68598d15a49d385089020950412c" category="list-text">编辑 Astra 控制中心 CRD 文件 `Astra_control_center_min.yaml` 并输入 FQDN ，映像注册表详细信息，管理员电子邮件地址和其他详细信息。</block>
   <block id="42b9bde28896d6478a324770641ac301" category="admonition">先前的文件 `Astra_control_center_min.yaml` 是 Astra 控制中心 CRD 的最低版本。如果要创建具有更多控制权的 CRD ，例如定义非默认创建 PVC 的 storageclass 或为邮件通知提供 SMTP 详细信息，则可以编辑文件 `Astra_control_center.YAML` ，输入所需详细信息，然后使用它创建 CRD 。</block>
@@ -8531,7 +8526,6 @@
   <block id="298a1e8781e536e60684ab1700c60962" category="list-text">在 DNS 服务器中添加一个条目，将 Astra 控制中心 CRD 文件中提供的 FQDN 指向 traefik 服务的 `external-IP` 。</block>
   <block id="0c64767e085896708adcbcc1c32c55fe" category="inline-image-macro">为 Accc 图形用户界面添加 DNS 条目</block>
   <block id="1c278e58c0255ae1f09fc4fa520160b6" category="paragraph"><block ref="1c278e58c0255ae1f09fc4fa520160b6" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="904e209c16ee0d70635e5bdaa091bafa" category="list-text">通过浏览到 Astra 控制中心 GUI 的 FQDN 登录到该 GUI 。</block>
   <block id="a37ba7c36c036650f5e1e7ded5232245" category="list-text">要使 Astra 控制中心的所有功能正常运行，需要获得许可证。要添加许可证，请导航到 " 帐户 "&gt;" 许可证 " ，单击 " 添加许可证 " ，然后上传许可证文件。</block>
   <block id="a003986254b5a6c136733113505348da" category="doc">安装 F5 BIG-IP 负载平衡器</block>
   <block id="048600e045fd4c5afe58ec9d65aa4b19" category="paragraph">F5 BIG-IP 是一款应用程序交付控制器（ Application Delivery Controller ， AD ），可提供一系列高级生产级流量管理和安全服务，例如 L4-L7 负载平衡， SSL/TLS 卸载， DNS ，防火墙等。这些服务可显著提高应用程序的可用性，安全性和性能。</block>
@@ -9130,4 +9124,1087 @@
   <block id="de8f12d6d2f85119918d1bbb774d43c8" category="list-text"><block ref="de8f12d6d2f85119918d1bbb774d43c8" category="inline-link-macro-rx"></block></block>
   <block id="00d07ce14f227693b9dabba2f52b53a5" category="inline-link-macro">使用基于 NetApp 的云产品开始使用 Azure VMware 解决方案</block>
   <block id="ac66988ead29ba5f4ed32ec3894527e7" category="list-text"><block ref="ac66988ead29ba5f4ed32ec3894527e7" category="inline-link-macro-rx"></block></block>
+  <block id="3123a26626e19f387157faf3a8e35e86" category="list-text">您必须对 Red Hat OpenShift 集群具有集群管理员访问权限。</block>
+  <block id="abfe00e88b26a267771078e0295b1573" category="admonition">Docker 安装的 Docker 版本必须大于 20.10 ，而 Podman 安装的 Podman 版本必须大于 3.0 。</block>
+  <block id="e2f745ac603721ed9903b0acea00d059" category="admonition">如果使用 `kubeadmin` user 登录到专用注册表，请使用 token 代替 password - `podman login -u Ocp-user -p token -tls-verify=false astra-registry.apps.ocp-vmw.cie.netapp.com` 。</block>
+  <block id="e4b91f5b748fa6ef8813d2871257b134" category="admonition">或者，您也可以创建服务帐户，分配注册表编辑器和 / 或注册表查看器角色（取决于您是否需要推 / 拉访问），并使用服务帐户的令牌登录到注册表。</block>
+  <block id="ad533c54cadd80fbf8f60e58b7d3abd6" category="admonition">如果使用 `kubeadmin` user 登录到专用注册表，请使用 token 代替 password - `docker login -u Ocp-user -p token astra-registry.apps.ocp-vmw.cie.netapp.com` 。</block>
+  <block id="4324c8f0a70a221bdde33868774e5a76" category="list-text">编辑 Astra 控制中心操作员 CR `Astra_control_center_operator_deploy.YAML` 这是 Astra 控制中心部署的一组所有资源。在操作员 CR 中，找到 `Acc-operator-controller-manager` 的部署定义，并输入注册表的 FQDN 以及将映像推送到注册表时提供的组织名称（在此示例中为 `astra-registry.apps.ocp-vmw.cie.netapp.com/netapp-astra` ） 替换文本 `ASTRA_image_regRegistry` 并提供我们刚刚在 `imagePullSecret` 部分中创建的密钥名称。验证操作员的其他详细信息，保存并关闭。</block>
+  <block id="0f436b7e192eae471d7abf1265bb4c02" category="list-text">通过浏览 Astra 控制中心的 FQDN 登录到该 GUI 。</block>
+  <block id="8b2aacc194c3dc4c36ce93a57e31685c" category="list-text">从当前默认存储类中删除默认标注，并将支持 Trident 的存储类标注为 OpenShift 集群的默认值。</block>
+  <block id="53557215e4d209eda16495dbe5f7c505" category="paragraph">+ 注意：如果您使用 `kubeadmin` user 登录到专用注册表，请使用 token 代替密码。</block>
+  <block id="6c2749dd86f49cdb85fde6976a317e4b" category="summary">本节介绍此 AI 解决方案的技术基础。</block>
+  <block id="42b507999e258502c07acce91c03de9f" category="paragraph"><block ref="42b507999e258502c07acce91c03de9f" category="inline-link-macro-rx"></block></block>
+  <block id="b7bec75e06d57a8576b1ec632131ea53" category="paragraph">一流的 NetApp AFF 存储系统支持在边缘进行 AI 推理部署，通过行业领先的性能，卓越的灵活性，云集成和一流的数据管理满足企业级存储需求。NetApp AFF 系统专为闪存设计，可帮助加速，管理和保护业务关键型数据。</block>
+  <block id="45f242ad7738d4805c03311378260bbf" category="list-text">入门级 NetApp AFF 存储系统基于 FAS2750 硬件和 SSD 闪存介质</block>
+  <block id="d308392edcd4d2f839897b51e24cf6f6" category="list-text">HA 配置中的两个控制器</block>
+  <block id="7df12cd193e8452ed6fc45ca8bcd3771" category="paragraph"><block ref="7df12cd193e8452ed6fc45ca8bcd3771" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a6b0a1e5585dc8095dd546c5930f1a6c" category="paragraph">NetApp 入门级 AFF C190 存储系统支持以下功能：</block>
+  <block id="42087aa1683ece2ea30ab7fa45862cd6" category="list-text">最大驱动器数为 24 个 960 GB SSD</block>
+  <block id="d7123d8583ed65e3090da25ea5aee965" category="list-text">两种可能的配置：</block>
+  <block id="35b9fc01c3820062d5969f142bdc5ce5" category="list-text">以太网（ 10GbE ）： 4 个 10GBASE-T （ RJ-45 ）端口</block>
+  <block id="f5e2ae88aead451be011eb9f8abfdd6e" category="list-text">统一（ 16 Gb FC 或 10GbE ）： 4 个统一目标适配器 2 （ UTA2 ）端口</block>
+  <block id="1e927fd215e516034d85785b393b0efb" category="list-text">最大有效容量为 50.5 TB</block>
+  <block id="aa9cba7f7b6d2ff8fb2251620a584dcd" category="admonition">对于 NAS 工作负载，一个入门级 AFF C190 系统支持连续读取吞吐量为 4.4 GBps ，延迟为 1 毫秒或更短的小型随机读取吞吐量为 230 K IOPS 。</block>
+  <block id="ac7bdd389786fda32ee572c48eef4838" category="paragraph">NetApp 还提供了其他入门级存储系统，可为大规模部署提供更高的性能和可扩展性。对于 NAS 工作负载，一个入门级 AFF A220 系统支持：</block>
+  <block id="732568c5581337c7341011c38721e2db" category="list-text">顺序读取的吞吐量为 6.2 GBps</block>
+  <block id="4900f6d90a4169888690f2c04f3c6603" category="list-text">在延迟不超过 1 毫秒的情况下进行小型随机读取时，可实现 375000 IOPS</block>
+  <block id="fbcd9d84b2d7be8631cbf7226884f17a" category="list-text">最大驱动器数为 144 个 960 GB ， 3.8 TB 或 7.6 TB SSD</block>
+  <block id="db527e605a2eacc627448a70b8a745db" category="list-text">AFF A220 可扩展到 1 PB 以上的有效容量</block>
+  <block id="25297dbc8df2aecff2fa2e9e47638d35" category="section-title">NetApp AFF A250</block>
+  <block id="cac36335022421f12e1c8e999ffeb1af" category="list-text">最大有效容量为 35 PB ，最大横向扩展为 2-24 个节点（ 12 个 HA 对）</block>
+  <block id="62a23a7791227c5f5e3d068e70759128" category="list-text">与 AFF A220 相比，性能提高≥ 45%</block>
+  <block id="dc7ac33362f108fc7f4b7d8eb0e2cf4e" category="list-text">440 ， 000 次 IOPS 随机读取 @1 毫秒</block>
+  <block id="0f4615fb8d6105bcb2cbce504f8f091c" category="list-text">基于最新的 NetApp ONTAP 版本 ONTAP 9.8 构建</block>
+  <block id="440a976974d702d027543e058c1fffc0" category="list-text">利用两个 25 Gb 以太网实现 HA 和集群互连</block>
+  <block id="4dc1c0d5a0f0257d8d9e183bc226ab45" category="section-title">NetApp E 系列 EF 系统</block>
+  <block id="f5e23a285b378cde99c2d7fb43586c1b" category="paragraph">EF 系列是一组入门级和中端全闪存 SAN 存储阵列，可通过 NetApp SANtricity 软件加快数据访问速度，并帮助您更快地从中获得价值。这些系统提供 SAS 和 NVMe 闪存存储，并为您提供经济实惠的至极高 IOPS ， 100 微秒以下的响应时间以及高达 44 GBps 的带宽，使其成为混合工作负载以及 AI 推理和高性能计算（ HPC ）等要求苛刻的应用程序的理想之选。</block>
+  <block id="51ffc2dfd09bb521be00106f197d1009" category="paragraph"><block ref="51ffc2dfd09bb521be00106f197d1009" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e6f17b7c2ad64f8977585fc43d702abf" category="section-title">NetApp EF280</block>
+  <block id="2d6477e98cb834485323c97da975c640" category="list-text">支持 32 Gb/16 Gb FC ， 25 Gb/10 Gb iSCSI 和 12 Gb SAS</block>
+  <block id="d637a0904677ae775d98b9ce0beda3d6" category="list-text">最大有效容量为 96 个驱动器，总容量为 1.5 PB</block>
+  <block id="6f409cb54d8cb27deac8a918fe03f3cc" category="list-text">10 Gbps 吞吐量（顺序读取）</block>
+  <block id="7c61b8793dbe5a66cbf144bdabcf76cd" category="list-text">30 万次 IOPS （随机读取）</block>
+  <block id="4c5a963973ae3026e92baab2ef522c6c" category="list-text">NetApp EF280 是 NetApp 产品组合中成本最低的全闪存阵列（ AFA ）</block>
+  <block id="44114b1635cead15f56735bad0467251" category="section-title">NetApp EF300</block>
+  <block id="f1330bea5ad6aa446aa17d0a324bb579" category="list-text">24 个 NVMe SSD 驱动器，总容量为 367 TB</block>
+  <block id="6768e0b9e957297070e3822e98a4b8f9" category="list-text">扩展选项，总容量为 240 个 NL-SAS HDD ， 96 个 SAS SSD 或两者的组合</block>
+  <block id="0fa40de31cbd933cc9a954d82204feb9" category="list-text">100 GB NVMe/IB ， NVMe/RoCE ， iSE/IB 和 SRP/IB</block>
+  <block id="aee7a4e3788dbbff7166952ed0e2d2c9" category="list-text">32 GB NVMe/FC ， FCP</block>
+  <block id="c4b9deb88d9cf1b1a2160cb28a2c41ca" category="list-text">25 GB iSCSI</block>
+  <block id="03597240f9b0b4a23f3ffdf6e159d6ca" category="list-text">20 Gbps （顺序读取）</block>
+  <block id="ffe3b3adfe232ee25f1914e7e7d266c4" category="list-text">670K IOPS （随机读取）</block>
+  <block id="7105ea3513c2bdae1a0d63a9f0703579" category="inline-link">NetApp EF 系列 NetApp EF 系列全闪存阵列 EF600 ， F300 ， EF570 和 EF280 产品规格</block>
+  <block id="6e69804b180359b12a32a56c17c0641e" category="admonition">有关详细信息，请参见<block ref="5f5484869dc0c271e2b062d172d38bee" category="inline-link-rx"></block>。</block>
+  <block id="d462fbf88533ddbaad86fe47336ef3fa" category="paragraph">ONTAP 9.8 是 NetApp 推出的最新一代存储管理软件，可帮助企业打造现代化的基础架构并过渡到云就绪数据中心。借助行业领先的数据管理功能，无论数据位于何处， ONTAP 都可以通过一组工具来管理和保护数据。您还可以将数据自由移动到需要的任何位置：边缘，核心或云。ONTAP 9.8 包含许多功能，可简化数据管理，加快和保护关键数据，并在混合云架构中实现下一代基础架构功能。</block>
+  <block id="f1586460cef11d0abaaf5270f37f18d7" category="section-title">简化数据管理</block>
+  <block id="2e2b24551fd50942c6da57d4f8efdfae" category="paragraph">数据管理对于企业 IT 运营至关重要，以便将适当的资源用于应用程序和数据集。ONTAP 具有以下功能，可简化操作并降低总运营成本：</block>
+  <block id="4934cd09a8e487be128d2b6321ee3279" category="list-text">* 实时数据缩减和扩展的重复数据删除。 * 数据缩减可减少存储块中浪费的空间，重复数据删除可显著提高有效容量。此适用场景数据存储在本地，并分层到云。</block>
+  <block id="0ddc097c124782f16e8a0a1b014fc2bb" category="list-text">* 最低，最高和自适应服务质量（ AQoS ）。 * 细粒度服务质量（ QoS ）控制有助于在高度共享的环境中保持关键应用程序的性能水平。</block>
+  <block id="0c720f269a89477f24f77f6f027719cc" category="inline-link-macro">TR-4598</block>
+  <block id="7920a2957aeb5c70e8ee2fa43c94e741" category="list-text">* NetApp FabricPool 。 * 此功能可将冷数据自动分层到公有和私有云存储选项，包括 Amazon Web Services （ AWS ）， Azure 和 NetApp StorageGRID Storage 解决方案。有关 FabricPool 的详细信息，请参见 <block ref="38e4393e170a142db2e52760317ecb7f" category="inline-link-macro-rx"></block>。</block>
+  <block id="28e23b5888c04e1859e75c594c6cec26" category="section-title">加速和保护数据</block>
+  <block id="85e643b872d0d98ec2251220de803a1f" category="paragraph">ONTAP 9 可提供卓越的性能和数据保护，并通过以下方式扩展这些功能：</block>
+  <block id="bfb9fa643243eb975ccd9d158cf97800" category="list-text">* 性能和低延迟。 * ONTAP 可提供尽可能高的吞吐量，并尽可能降低延迟。</block>
+  <block id="86a12b3dbbf039b371f714a515919535" category="list-text">* NetApp 卷加密（ NVE ）。 * ONTAP 提供原生卷级加密，并支持板载和外部密钥管理。</block>
+  <block id="b3023c0a4db125fc22f0d6056c6e379d" category="list-text">* 多租户和多因素身份验证。 * ONTAP 支持以最高的安全性级别共享基础架构资源。</block>
+  <block id="685f280ead44650493627d9ac47818e1" category="section-title">Future-Proof 基础架构</block>
+  <block id="f9eaef0b2cf89b234c431c18aec36bf3" category="paragraph">ONTAP 9 具有以下功能，可满足不断变化的苛刻业务需求：</block>
+  <block id="9e98379ad83b5c60933a3437c7fb61c7" category="list-text">* 无缝扩展和无中断运行。 * ONTAP 支持向现有控制器和横向扩展集群无中断添加容量。客户可以升级到 NVMe 和 32 Gb FC 等最新技术，而无需进行成本高昂的数据迁移或中断。</block>
+  <block id="0cee26e8172666a9085f957269fc4b64" category="list-text">* 云连接。 * ONTAP 是云连接最广泛的存储管理软件，可在所有公有云中选择软件定义的存储（ ONTAP Select ）和云原生实例（ NetApp Cloud Volumes Service ）。</block>
+  <block id="b5dc6026803056308b6bf7007af32a2b" category="list-text">* 与新兴应用程序集成。 * ONTAP 使用支持现有企业级应用程序的相同基础架构，为下一代平台和应用程序（例如自动驾驶汽车，智能城市和行业 4.0 ）提供企业级数据服务。</block>
+  <block id="e4872d9c30e978d9408425f0e08882c5" category="section-title">NetApp SANtricity</block>
+  <block id="965539211ad2d7bc981e7e954db08850" category="inline-link">NetApp E 系列 SANtricity 软件产品规格</block>
+  <block id="568549d316f6f749a07012e522e0bca3" category="paragraph">NetApp SANtricity 旨在为 E 系列混合闪存和 EF 系列全闪存阵列提供行业领先的性能，可靠性和精简性。为繁重工作负载应用程序（包括数据分析，视频监控以及备份和恢复）实现 E 系列混合闪存和 EF 系列全闪存阵列的最高性能和利用率。借助 SANtricity ，可以在存储保持联机状态的同时完成配置调整，维护，容量扩展和其他任务。SANtricity 还提供卓越的数据保护，主动监控和认证安全性—所有这些功能均可通过易于使用的机载 System Manager 界面进行访问。要了解更多信息，请参见<block ref="64769f0652e98a060ba5d2cd17320298" category="inline-link-rx"></block>。</block>
+  <block id="c4cf91172f1e96366d0dfa38c1167df9" category="section-title">性能优化</block>
+  <block id="3d615c3559b8d33749ea23cf3a34b759" category="paragraph">经过性能优化的 SANtricity 软件可为您的所有数据分析，视频监控和备份应用程序提供具有高 IOPS ，高吞吐量和低延迟的数据。提高高 IOPS ，低延迟应用程序和高带宽，高吞吐量应用程序的性能。</block>
+  <block id="8238dd9365065265be82d79d4dd38a98" category="section-title">最大限度地延长正常运行时间</block>
+  <block id="28ed557ae8b4ff60f83da71465cbcb9b" category="paragraph">在存储保持联机的情况下完成所有管理任务。在不中断 I/O 的情况下调整配置，执行维护或扩展容量借助自动化功能，联机配置，最先进的动态磁盘池（ Dynamic Disk Pool ， DPP ）技术等实现同类最佳的可靠性。</block>
+  <block id="2b34e4806834294a7dd611ad1d7d0308" category="section-title">请轻松休息</block>
+  <block id="7847b3892c0f355acdb3fe824654e209" category="paragraph">SANtricity 软件可通过易于使用的机载 System Manager 界面提供卓越的数据保护，主动监控和认证安全性。简化存储管理任务。获得对所有 E 系列存储系统进行高级调整所需的灵活性。随时随地管理您的 NetApp E 系列系统。我们基于 Web 的盒装界面简化了您的管理工作流。</block>
+  <block id="2758085534b10a85f702f6a61737eefb" category="paragraph"><block ref="d14308042ff124582c531f74c03d90f3" category="inline-link-rx"></block> NetApp 是适用于 Docker 和 Kubernetes 的开源动态存储编排程序，可简化永久性存储的创建，管理和使用。Trident 是 Kubernetes 原生应用程序，直接在 Kubernetes 集群中运行。借助 Trident ，客户可以将 DL 容器映像无缝部署到 NetApp 存储上，并为 AI 容器部署提供企业级体验。Kubernetes 用户（例如 ML 开发人员和数据科学家）可以创建，管理和自动化流程编排和克隆，从而充分利用 NetApp 技术提供的 NetApp 高级数据管理功能。</block>
+  <block id="e367efbc26bd12c0d6ae37dd6a55ef9b" category="inline-link">Cloud Sync</block>
+  <block id="2d76806bea2175a1c575d37015a3621b" category="paragraph"><block ref="f0ec1a9d50acb3759e364a1cdfa9961d" category="inline-link-rx"></block> 是一项 NetApp 服务，用于快速安全地同步数据。无论您是需要在内部 NFS 还是 SMB 文件共享， NetApp StorageGRID ， NetApp ONTAP S3 ， NetApp Cloud Volumes Service ， Azure NetApp Files ， Amazon Simple Storage Service （ Amazon S3 ）， Amazon Elastic File System （ Amazon EFS ）， Azure Blob ， Google Cloud Storage 之间传输文件， 或者 IBM 云对象存储， Cloud Sync 可以将文件快速安全地移动到您需要的位置。数据传输完成后，即可在源和目标上完全使用。Cloud Sync 会根据您预定义的计划持续同步数据，并仅移动增量，从而最大限度地减少在数据复制上花费的时间和金钱。Cloud Sync 是一款软件即服务（ SaaS ）工具，设置和使用极其简单。由 Cloud Sync 触发的数据传输由数据代理执行。您可以在 AWS ， Azure ， Google 云平台或内部部署 Cloud Sync 数据代理。</block>
+  <block id="d552f08a6baeb9bee58f2ca6ff5090d2" category="section-title">联想 ThinkSystem 服务器</block>
+  <block id="e76fa728781968dd4a707e2d3b1d8108" category="paragraph">联想 ThinkSystem 服务器采用创新的硬件，软件和服务，可解决客户当前面临的挑战，并提供一种循序渐进的模块化设计方法来应对未来的挑战。这些服务器利用同类最佳的行业标准技术以及联想的差异化创新技术，为 x86 服务器提供最大的灵活性。</block>
+  <block id="493e1540ce727fb5f465fff015aa4733" category="paragraph">部署联想 ThinkSystem 服务器的主要优势包括：</block>
+  <block id="b7c6c5eb82b90f69eddd06060626e5e3" category="list-text">高度可扩展的模块化设计，可随业务发展而扩展</block>
+  <block id="c2599c559a0be54b242b8aa3c67325c8" category="list-text">行业领先的弹性，可节省数小时的成本高昂的计划外停机时间</block>
+  <block id="c57cb88fcbeb47afa8496b8fc32cbf03" category="list-text">快速闪存技术可实现更低的延迟，更快的响应速度以及更智能的实时数据管理</block>
+  <block id="6d72d9a0181555ca86c9562861e47058" category="paragraph">在 AI 领域，联想正在采取切实可行的方法帮助企业了解 ML 和 AI 的优势并将其用于工作负载。联想客户可以在联想 AI 创新中心探索和评估联想 AI 产品，以充分了解其特定用例的价值。为了缩短实现价值的时间，这种以客户为中心的方法可以为客户提供解决方案开发平台的概念验证，这些平台已准备就绪，可供 AI 使用并进行优化。</block>
+  <block id="13f9a963bd60406520ccdc128d44b54a" category="section-title">联想 ThinkSystem SE350 边缘服务器</block>
+  <block id="6bf0f92a7340921305982a91f7277085" category="paragraph">通过边缘计算，可以在将 IoT 设备中的数据发送到数据中心或云之前在网络边缘对其进行分析。如下图所示，联想 ThinkSystem SE350 专为满足边缘部署的独特要求而设计，采用紧凑的加固型环境加固外形，重点关注灵活性，连接性，安全性和远程易管理性。</block>
+  <block id="72dd0df190a1bdc8d3043fafdba7122b" category="paragraph">SE350 采用 Intel Xeon D 处理器，可以灵活地支持边缘 AI 工作负载的加速，专为应对数据中心以外各种环境中服务器部署的挑战而构建。</block>
+  <block id="b739a166d96ffd72ac4d456012bfbe21" category="paragraph"><block ref="b739a166d96ffd72ac4d456012bfbe21" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1e8dc5b3fbe4fe568bf4cc78b4a053fd" category="paragraph"><block ref="1e8dc5b3fbe4fe568bf4cc78b4a053fd" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6bd5e585bc974f029ff9c7cc8a2b68dd" category="section-title">MLPerf</block>
+  <block id="45c08b3aee1d5fb5dc3447ec1271a853" category="inline-link">MLPerf 推理 v0.7</block>
+  <block id="f6922096e43c9e99d2be9d521357ff1c" category="paragraph">MLPerf 是用于评估 AI 性能的行业领先基准套件。它涵盖应用 AI 的许多方面，包括图像分类，对象检测，医学影像和自然语言处理（ NLP ）。在此验证中，我们使用了推理 v0.7 工作负载，这是此验证完成时 MLPerf 推理的最新迭代。。<block ref="1303efdddf9d8dbc0de31c402aa4ef22" category="inline-link-rx"></block> 套件包括四个适用于数据中心和边缘系统的新基准：</block>
+  <block id="c781a146774780843a929b97004ba720" category="list-text">Transformers （ Bert ）提供的 * 双向编码器表示法经过微调，可使用 squad 数据集回答问题。</block>
+  <block id="cb93b50c2b2216543a9eee4d9a38b38c" category="list-text">* 深度学习建议模式（ DLRM ）是一种个性化和建议模式，经过培训可优化点击率（ CTR ）。</block>
+  <block id="16139bb6e8da8fe8f8aaf1e5fb8bde0d" category="list-text">* 3D U-Net.* 3D U-Net 架构接受过有关脑肿瘤分段（ Bras ）数据集的培训。</block>
+  <block id="5691eec0e5e0ea401478ea67b8168d64" category="list-text">* RNN-T.* 经常性神经网络传感器（ RNNP-T ）是一种自动语音识别（ Automatic Speech Recognition ， ASR ）模型，该模型经过部分 LibriSpeech 的训练。MLPerf 推理结果和代码已公开发布，并已获得 Apache 许可证。MLPerf 推理具有一个 Edge 分支，可支持以下情形：</block>
+  <block id="e772865569495cb43ba25be1d6eed756" category="list-text">* 单一流。 * 此场景模拟响应能力是关键因素的系统，例如在智能手机上执行脱机 AI 查询。各个查询将发送到系统并记录响应时间。结果将报告所有响应的 90 百分位延迟。</block>
+  <block id="f9cf7025c2d80af397a9b960974631e2" category="list-text">* 多流。 * 此基准测试适用于处理来自多个传感器的输入的系统。在测试期间，系统会按固定的时间间隔发送查询。会施加 QoS 限制（允许的最大延迟）。此测试将报告系统在满足 QoS 限制的情况下可以处理的流数量。</block>
+  <block id="78a9abbe3c771a5882830fc8e2a73a8f" category="list-text">* 脱机。 * 这是涉及批处理应用程序的最简单情形，指标是每秒样本吞吐量。系统可以使用所有数据，基准测试可测量处理所有样本所需的时间。</block>
+  <block id="cc8cc2653d3a795d17b5d90b14d00e19" category="inline-link"><block ref="cc8cc2653d3a795d17b5d90b14d00e19" category="inline-link-rx"></block></block>
+  <block id="c953c121914b99f83398f20ab2160ed1" category="paragraph">联想已发布了本文档中使用的服务器 SE350 与 T4 的 MLPerf 推理得分。有关结果，请参见<block ref="8efc95b379113ebfb6f66010213223ce" category="inline-link-rx"></block> 在条目 #0.7-145 的 " 边缘，封闭分区 " 一节中。</block>
+  <block id="26cb2cd90a9e0e03f63323eab13f117d" category="inline-link-macro">下一步：测试计划。</block>
+  <block id="91666b8460dc62d134fe80c31f05d28b" category="paragraph"><block ref="91666b8460dc62d134fe80c31f05d28b" category="inline-link-macro-rx"></block></block>
+  <block id="58415f353579ec62f4e5d8047761a3cc" category="summary">AI 驱动的自动化和边缘计算是帮助业务组织实现数字化转型并最大限度地提高运营效率和安全性的领先方法。借助边缘计算，数据处理速度更快，因为它不必往返于数据中心。因此，将数据来回发送到数据中心或云的相关成本会降低。</block>
+  <block id="1490b4526090ba1052ae7d989d2f44df" category="inline-link-macro">上一页：架构规模估算选项。</block>
+  <block id="9d58af74dd11a7bf0a907e66af94ae03" category="paragraph"><block ref="9d58af74dd11a7bf0a907e66af94ae03" category="inline-link-macro-rx"></block></block>
+  <block id="7d7c5045abef00692470c8d5ed1aeebd" category="paragraph">AI 驱动的自动化和边缘计算是帮助业务组织实现数字化转型并最大限度地提高运营效率和安全性的领先方法。借助边缘计算，数据处理速度更快，因为它不必往返于数据中心。因此，将数据来回发送到数据中心或云的相关成本会降低。如果企业必须使用部署在边缘的人工智能推理模型近乎实时地做出决策，则降低延迟和提高速度将非常有用。</block>
+  <block id="691e8c5d8b13259848ef2e5515d14ca9" category="paragraph">NetApp 存储系统可提供与本地 SSD 存储相同或更好的性能，并为数据科学家，数据工程师， AI/ML 开发人员以及业务或 IT 决策者带来以下优势：</block>
+  <block id="59ceee4c2b9743d6e9aae43f1e9ee547" category="list-text">在 AI 系统，分析和其他关键业务系统之间轻松共享数据。这种数据共享可减少基础架构开销，提高性能并简化整个企业的数据管理。</block>
+  <block id="b9f30f0e1030c74a0db7ca1a1e82a22f" category="list-text">可独立扩展的计算和存储，最大限度地降低成本并提高资源利用率。</block>
+  <block id="40454c2a63608aacf0433b6a47f388f4" category="list-text">利用集成的 Snapshot 副本和克隆简化开发和部署工作流，实现瞬时且节省空间的用户工作空间，集成版本控制和自动化部署。</block>
+  <block id="0543f71645ff9108a860d92965cc1383" category="list-text">企业级数据保护，可实现灾难恢复和业务连续性。本文档中介绍的 NetApp 和联想解决方案是一种灵活的横向扩展架构，非常适合在边缘进行企业级 AI 推理部署。</block>
+  <block id="68c8080de8c25b2c95e86546db2c34f4" category="list-text">J.Falkanger ，高级联想 HPC &amp; AI 解决方案经理</block>
+  <block id="a1be3af64bad65325413de79cbdd38ec" category="list-text">NetApp 技术营销工程师 Dave Arnette</block>
+  <block id="ab7eb4cf2e6900db95523411e2e2d968" category="list-text">NetApp E 系列 AI 解决方案技术主管 Joey Parnell</block>
+  <block id="7506341ffff969b3db4120a09a3cd873" category="list-text">NetApp QA 工程师 Cody Harryman</block>
+  <block id="16d9e623379df2a050a5042b643bf4fc" category="list-text">NetApp AFF A 系列阵列产品页面</block>
+  <block id="2eea2276b1fb61cd770f311f77c0f440" category="inline-link"><block ref="2eea2276b1fb61cd770f311f77c0f440" category="inline-link-rx"></block></block>
+  <block id="3ac5561d8de2087fdd9ac49ace880bff" category="paragraph"><block ref="3ac5561d8de2087fdd9ac49ace880bff" category="inline-link-rx"></block></block>
+  <block id="ac2e4973250b614c4ffed16837be9bda" category="list-text">NetApp ONTAP 数据管理软件— ONTAP 9 信息库</block>
+  <block id="8ac8a4cdf844ed67e9ec6ddc4b3e95ad" category="paragraph"><block ref="8ac8a4cdf844ed67e9ec6ddc4b3e95ad" category="inline-link-rx"></block></block>
+  <block id="5dbac8b4dac620b04fd11b54388ac506" category="list-text">TR-4727 ：《 NetApp EF 系列简介》</block>
+  <block id="3df74183de4e18a002d0a9dadd2b4b41" category="inline-link"><block ref="3df74183de4e18a002d0a9dadd2b4b41" category="inline-link-rx"></block></block>
+  <block id="5e60359f54f57375f6417990b408bc8d" category="paragraph"><block ref="5e60359f54f57375f6417990b408bc8d" category="inline-link-rx"></block></block>
+  <block id="bf8eb67f3476640d74487d7395b166a8" category="list-text">NetApp E 系列 SANtricity 软件产品规格</block>
+  <block id="01e4cb0e0f13f033fd419d3abf905d34" category="inline-link"><block ref="01e4cb0e0f13f033fd419d3abf905d34" category="inline-link-rx"></block></block>
+  <block id="62cabab367af4d0d4f74456d673e91e7" category="paragraph"><block ref="62cabab367af4d0d4f74456d673e91e7" category="inline-link-rx"></block></block>
+  <block id="f11b61c13d771c4795415471f8362f8c" category="list-text">适用于容器的 NetApp 持久存储— NetApp Trident</block>
+  <block id="856500f909a4984692886f9549398b67" category="inline-link"><block ref="856500f909a4984692886f9549398b67" category="inline-link-rx"></block></block>
+  <block id="fe6e33e3be237f2a488d04432ad4b35f" category="list-text"><block ref="fe6e33e3be237f2a488d04432ad4b35f" category="inline-link-rx"></block></block>
+  <block id="9083657cbd1d0fb49ada01ab2e2cc193" category="inline-link"><block ref="9083657cbd1d0fb49ada01ab2e2cc193" category="inline-link-rx"></block></block>
+  <block id="3de4b3f21621e41c0738a82d4e694114" category="list-text"><block ref="3de4b3f21621e41c0738a82d4e694114" category="inline-link-rx"></block></block>
+  <block id="1f07318e5a4df96a96fc92d83bbe5d70" category="inline-link"><block ref="1f07318e5a4df96a96fc92d83bbe5d70" category="inline-link-rx"></block></block>
+  <block id="25b3dca46bdabc4612ba4ba5dac0f9db" category="list-text"><block ref="25b3dca46bdabc4612ba4ba5dac0f9db" category="inline-link-rx"></block></block>
+  <block id="b658c024dad07cbf1d8523e4c3ba8d21" category="inline-link"><block ref="b658c024dad07cbf1d8523e4c3ba8d21" category="inline-link-rx"></block></block>
+  <block id="fdad8301fde8271edff994d643d18865" category="paragraph"><block ref="fdad8301fde8271edff994d643d18865" category="inline-link-rx"></block></block>
+  <block id="7749687216549469e9a78db087fbb44b" category="list-text">TensorFlow 基准测试</block>
+  <block id="7c8f9b5afa9dfab5f8f375d1b977b046" category="inline-link"><block ref="7c8f9b5afa9dfab5f8f375d1b977b046" category="inline-link-rx"></block></block>
+  <block id="be1b7087c9993d320070b1e676c832f9" category="paragraph"><block ref="be1b7087c9993d320070b1e676c832f9" category="inline-link-rx"></block></block>
+  <block id="e15fea5c6bb7e2f7d8e055fbb773fc11" category="inline-link"><block ref="e15fea5c6bb7e2f7d8e055fbb773fc11" category="inline-link-rx"></block></block>
+  <block id="b1a88588a48ee9492506277f8561b392" category="paragraph"><block ref="b1a88588a48ee9492506277f8561b392" category="inline-link-rx"></block></block>
+  <block id="f9732caa47051768fc11729f5535891b" category="list-text">联想 ThinkSystem DM5100F 统一闪存存储阵列</block>
+  <block id="a031d2e6ff4219cf38830b0db9d366b1" category="inline-link"><block ref="a031d2e6ff4219cf38830b0db9d366b1" category="inline-link-rx"></block></block>
+  <block id="f8287e56c1a5982e49b792d1116aa372" category="paragraph"><block ref="f8287e56c1a5982e49b792d1116aa372" category="inline-link-rx"></block></block>
+  <block id="5e79a20254a28ffdb604f6cba5216c75" category="cell">2021年3月</block>
+  <block id="dfd02aef9802f4824ead7c08b8f81f1f" category="cell">初始版本。</block>
+  <block id="304f30474edd152dc34aef7dbb123607" category="cell">版本 2.0</block>
+  <block id="a5f3f63c2f6e1d6d4605650633b9ce8a" category="cell">2021年10月</block>
+  <block id="71b3f2dc39aa770e58cd3fad98b76c37" category="cell">更新了 EF 和 MLPerf 推理 v1.1</block>
+  <block id="354967c7509f48d7d8a6d2845803bfbc" category="summary">您可以调整用于验证的设置，以适合其他使用情形。</block>
+  <block id="c4236be1a211aab0c15476d08b3e7e0c" category="doc">架构规模估算选项</block>
+  <block id="ac0ec60d36dfa69ed9c33bff90080b23" category="inline-link-macro">上一步：测试结果。</block>
+  <block id="389a3124af7d4b9dc7165b05fd96a378" category="paragraph"><block ref="389a3124af7d4b9dc7165b05fd96a378" category="inline-link-macro-rx"></block></block>
+  <block id="9d8c4ebebb4b789e6ec48dda7ac54406" category="section-title">计算服务器</block>
+  <block id="1b3bfec82c01730e4379631c5f74db2d" category="paragraph">我们使用的是 Intel Xeon D-2123IT CPU ，这是 SE350 支持的最低 CPU 级别，具有四个物理核心和 60 瓦 TDP 。虽然服务器不支持更换 CPU ，但可以订购功能更强大的 CPU 。支持的最大 CPU 是 Intel Xeon D-2183IT ， 16 核， 100 瓦，运行频率为 2.20 GHz 。这样可以显著提高 CPU 计算能力。虽然 CPU 本身并不是运行推理工作负载的瓶颈，但它有助于处理数据以及执行与推理相关的其他任务。目前， NVIDIA T4 是唯一可用于边缘使用情形的 GPU ；因此，目前无法升级或降级 GPU 。</block>
+  <block id="928fe421f0c735b90f3b3ec353741235" category="section-title">共享存储</block>
+  <block id="ba49c21e7aa335a8ea452042c02f306a" category="paragraph">在测试和验证中，我们在本文档中使用了 NetApp AFF C190 系统，该系统的最大存储容量为 50.5 TB ，连续读取的吞吐量为 4.4 GBps ，小型随机读取的 IOPS 为 230k ，经证实非常适合边缘推理工作负载。</block>
+  <block id="bb33c803e43b816786d862bbbbf2c824" category="paragraph">但是，如果您需要更多存储容量或更快的网络速度，则应使用 NetApp AFF A220 或<block ref="03f94a30ec5c979321fdd9a1ba99a1c6" category="inline-link-rx"></block> 存储系统此外， NetApp EF280 系统的最大容量为 1.5 PB ，带宽为 10 Gbps ，也用于此解决方案验证。如果您希望使用更高带宽获得更多存储容量，<block ref="ab4f2e0c1e56faa457a7a1f93253a647" category="inline-link-rx"></block> 可以使用。</block>
+  <block id="fdd5191dcc2e7fa6e2ec4d0618cf2a40" category="paragraph"><block ref="fdd5191dcc2e7fa6e2ec4d0618cf2a40" category="inline-link-macro-rx"></block></block>
+  <block id="b481424c052310e67a9b67a931165509" category="summary">本节介绍用于验证此解决方案的测试过程。</block>
+  <block id="3562305aa864cd56d3e2840eb5071caa" category="doc">测试操作步骤</block>
+  <block id="e46c1f341c1cea1321f4c00d15e90b0d" category="inline-link-macro">先前：测试配置。</block>
+  <block id="ed760d2dffd7d011a7870619f7884005" category="paragraph"><block ref="ed760d2dffd7d011a7870619f7884005" category="inline-link-macro-rx"></block></block>
+  <block id="bff816e8e8ddbe2a3b705d92abba6627" category="paragraph">在此验证中，我们使用了以下测试操作步骤。</block>
+  <block id="1b0981f820949c10d68daad3fdf03976" category="section-title">操作系统和 AI 推理设置</block>
+  <block id="c13367945d5d4c91047b3b50234aa7ab" category="inline-link">code</block>
+  <block id="fe03e7fb4a8d3a1afb24c94c4c88d32f" category="paragraph">对于 AFF C190 ，我们使用支持 NVIDIA GPU 的 Ubuntu 18.04 和 Docker ，并使用 MLPerf<block ref="72ea1359ddbf7a99cdb0a438fda3e022" category="inline-link-rx"></block> 在联想提交到 MLPerf 推理 v0.7 的过程中提供。</block>
+  <block id="504812acf44740b8f536a0d166375734" category="paragraph">对于 EF280 ，我们将 Ubuntu 20.04 与 NVIDIA 驱动程序结合使用，并将 Docker 与 NVIDIA GPU 和 MLPerf 结合使用<block ref="7dc141edfa21f33dbd4b0757be1ad69f" category="inline-link-rx"></block> 在联想提交到 MLPerf 推理 v1.1 的过程中提供。</block>
+  <block id="fbd2228a821a8ab1948d4a8c3121fb0e" category="paragraph">要设置 AI 推理，请执行以下步骤：</block>
+  <block id="fd5c043d17a289fb46a606f44e155987" category="list-text">下载需要注册的数据集： ImageNet 2012 验证集， Criteo TB 数据集和 Brats 2019 训练集，然后解压缩这些文件。</block>
+  <block id="ab7831d45f94acd260ff74b6b22cadab" category="list-text">创建一个至少包含 1 TB 的工作目录，并定义引用该目录的环境变量 MLPERF_scrating_path 。</block>
+  <block id="342ecacc441a9548b60eae46065039f8" category="paragraph">在使用本地数据进行测试时，您应在共享存储上共享此目录以供网络存储使用情形使用，或者在本地磁盘上共享此目录。</block>
+  <block id="a3f85d3d212be9b540b801c9e5dfa2da" category="list-text">运行 make prebuild 命令，该命令将为所需的推理任务构建并启动 Docker 容器。</block>
+  <block id="9cfc451dfe052c5c3835b0355375b1b7" category="admonition">以下命令全部从正在运行的 Docker 容器中执行：</block>
+  <block id="583121c0a7f29574c74157300f771aa2" category="list-text">为 MLPerf 推理任务下载经过预先培训的 AI 型号： make download_model</block>
+  <block id="c598be3fcd4980550a6ef2ee6c7029ce" category="list-text">下载可免费下载的其他数据集： make download_data</block>
+  <block id="f5de6fa7b079108ef95ae25226d1fd9d" category="list-text">预处理数据： make preprocess_data</block>
+  <block id="66d1c1861ea2e832d9b7d7060fc24fc9" category="list-text">运行：构建。</block>
+  <block id="2204f2159df9145661590b2b3eb4d3e7" category="list-text">针对计算服务器中的 GPU 进行优化的构建推理引擎： make generate_enginers</block>
+  <block id="4efea18a74f8c5a6fa0f4b239ff2d734" category="list-text">要运行推理工作负载，请运行以下命令（一个命令）：</block>
+  <block id="9ce2624cb32bec75a2ad4e276fa594f6" category="section-title">AI 推理运行</block>
+  <block id="2a71d3fa50a14f6fa9c62d9fe3935d5d" category="paragraph">执行了三种类型的运行：</block>
+  <block id="3a4a320ee019614122e99baebf056b86" category="list-text">使用本地存储的单服务器 AI 推理</block>
+  <block id="adf25fe660bba733a104887732393fdd" category="list-text">使用网络存储的单服务器 AI 推理</block>
+  <block id="34e4c32e4097a70208139be85d5dc892" category="list-text">使用网络存储的多服务器 AI 推理</block>
+  <block id="7dc96590f7bab3379a7a79986056d22a" category="inline-link-macro">接下来：测试结果。</block>
+  <block id="697d202c2969580ba0434be04d39a929" category="paragraph"><block ref="697d202c2969580ba0434be04d39a929" category="inline-link-macro-rx"></block></block>
+  <block id="207e9f2f3c6b5a3e8c9228ceadc806b2" category="summary">本节介绍测试的配置，网络基础架构， SE350 服务器以及存储配置详细信息。</block>
+  <block id="32d798df7254f6703ed2262024e0e174" category="doc">测试配置</block>
+  <block id="b1ee26c1917a17c30b17d7cd6b01e2cd" category="inline-link-macro">上一步：测试计划。</block>
+  <block id="7dffe110836fe412eac19d0f63cf5b5b" category="paragraph"><block ref="7dffe110836fe412eac19d0f63cf5b5b" category="inline-link-macro-rx"></block></block>
+  <block id="a55faacbe457d923ebd296421a71b898" category="paragraph">下图显示了测试配置。我们使用了 NetApp AFF C190 存储系统和两个联想 ThinkSystem SE350 服务器（每个服务器都有一个 NVIDIA T4 加速器）。这些组件通过 10GbE 网络交换机进行连接。网络存储包含验证 / 测试数据集和经过预先培训的模型。这些服务器可提供计算功能，并可通过 NFS 协议访问存储。</block>
+  <block id="d8c97013f1e301478b23530ad6ed1ef6" category="paragraph">本节介绍测试的配置，网络基础架构， SE350 服务器以及存储配置详细信息。下表列出了解决方案架构的基本组件。</block>
+  <block id="fe8ab8cb391be4f8cf88a9b64c3ce3cd" category="list-text">2 个 SE350 服务器，每个服务器具有一个 NVIDIA T4 GPU 卡</block>
+  <block id="acd4671bd4d78c7fc0ac8cbc66a01483" category="list-text">每个服务器都包含一个 Intel Xeon D-2123IT CPU ，其中四个物理核心运行速度为 2.20GHz ，并具有 128 GB RAM</block>
+  <block id="d7d02fd9ab069a2d95dee248370100f9" category="cell">入门级 NetApp AFF 存储系统（ HA 对）</block>
+  <block id="1d680806b37a387e8d84b0c21be4d816" category="list-text">NetApp ONTAP 9 软件</block>
+  <block id="0c1dcc458c4dd96728e0b0998cba7305" category="list-text">24 个 960 GB SSD</block>
+  <block id="d8e87bd5878266cd4137e82d919799eb" category="list-text">每个控制器一个接口组，挂载点有四个逻辑 IP 地址</block>
+  <block id="1a538c197da3186f1eba50d82572dc34" category="paragraph"><block ref="1a538c197da3186f1eba50d82572dc34" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="208eac927f1261c6e6eaa3135a529cf3" category="paragraph">下表列出了存储配置：具有 2RU 的 AFF C190 ， 24 个驱动器插槽。</block>
+  <block id="9bbf373797bf7cf7ba62c80023682e25" category="cell">控制器</block>
+  <block id="2ee34178bb8415b7d7234cd27b83aed6" category="cell">聚合</block>
+  <block id="e9db3004828d9514fafc57881dfbdbd2" category="cell">FlexGroup 卷</block>
+  <block id="2e0fb97d51b96b1635dcc3ca51f74fee" category="cell">聚合大小</block>
+  <block id="b94c9ec583603e13b5c32d83199c7376" category="cell">卷大小</block>
+  <block id="53a35f8b51acc9748a3e172a76f542a7" category="cell">操作系统挂载点</block>
+  <block id="6a1ab89ed912a96429c83ff1ba0f48d0" category="cell">控制器 1</block>
+  <block id="4d80d82716f0b771738e7fad121e059a" category="cell">aggr1.</block>
+  <block id="e39298390e27007517a0cb199728188a" category="cell">/netapplenovo_AI_fg</block>
+  <block id="4923ec171d721fba1d4547deefc98e8c" category="cell">8.42 TiB</block>
+  <block id="f13cb116755b4e8fa1af1b201025f377" category="cell">15 TB</block>
+  <block id="3fe74875837b518b23813988af1e39d9" category="cell">/NetApp_Lenovo ， fg</block>
+  <block id="3877384a92be771d61972d07648b799f" category="cell">控制器 2.</block>
+  <block id="f3913037ef38679d334aa0cf30e2b6fd" category="cell">Aggr2.</block>
+  <block id="6b02e3a677be18a8be3641bb43e8b220" category="paragraph">/netappLenovo AI_fg 文件夹包含用于模型验证的数据集。</block>
+  <block id="e4239f67d8e47773c69a7cb4be34d949" category="paragraph">下图显示了测试配置。我们使用了 NetApp EF280 存储系统和两个联想 ThinkSystem SE350 服务器（每个服务器都有一个 NVIDIA T4 加速器）。这些组件通过 10GbE 网络交换机进行连接。网络存储包含验证 / 测试数据集和经过预先培训的模型。这些服务器可提供计算功能，并可通过 NFS 协议访问存储。</block>
+  <block id="efb90877bc42cc445eb6e1b59c0e1b16" category="paragraph">下表列出了 EF280 的存储配置。</block>
+  <block id="0951a6690e5dc87411346792c9f941c7" category="cell">卷组</block>
+  <block id="bd7a9717d29c5ddcab1bc175eda1e298" category="cell">Volume</block>
+  <block id="6c88d21af6046f64871457b825dcf1c8" category="cell">DDP 大小</block>
+  <block id="59b02558285aa326c0e9018324ed0c4f" category="cell">连接方法</block>
+  <block id="db320b0194c895c7ac56fedae7928e63" category="cell">DDP1</block>
+  <block id="fc452c26db3c4aa6f6213b9c5d9e3abc" category="cell">卷 1</block>
+  <block id="fe066d0b9d36398d5f525d6ac7f8e8c5" category="cell">16 TB</block>
+  <block id="e0d2b052ec3dbd102ff7a7f2b356ea41" category="cell">SE350-1 到 iSCSI LUN 0</block>
+  <block id="ef0e038a9f9b0db74b504d5521e7a0fc" category="cell">第 2 卷</block>
+  <block id="5b846730a13fc5ea0a76a6b7b9a69d5a" category="cell">SE350-2 到 iSCSI LUN 1</block>
+  <block id="43fa57e4031b0f759153c9c9fa49e6ed" category="paragraph"><block ref="43fa57e4031b0f759153c9c9fa49e6ed" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0fccd40a3886a1e5dc539059407586a0" category="inline-link-macro">下一步：测试操作步骤。</block>
+  <block id="3bee5237e36a9a0dc60fd351ce904544" category="paragraph"><block ref="3bee5237e36a9a0dc60fd351ce904544" category="inline-link-macro-rx"></block></block>
+  <block id="290612199861c31d1036b185b4e69b75" category="doc">摘要</block>
+  <block id="ee0e2e290e4e02a3860382ef2cc42ca0" category="paragraph">高级驾驶辅助系统（ ADAS ），行业 4.0 ，智能城市和物联网（ IoT ）等多种新兴应用场景需要在近乎零的延迟下处理持续数据流。本文档介绍了一种计算和存储架构，用于在边缘环境中为 NetApp 存储控制器和联想 ThinkSystem 服务器部署基于 GPU 的人工智能（ AI ）推理。本文档还提供了行业标准 MLPerf 推理基准测试的性能数据，用于评估配备 NVIDIA T4 GPU 的边缘服务器上的各种推理任务。我们对脱机，单流和多流推理情形的性能进行了调查，并显示具有经济高效的共享网络存储系统的架构具有高性能，为多个边缘服务器的数据和模型管理提供了一个中心。</block>
+  <block id="8708911de20cfce9bafb315fd0cde0a2" category="summary">我们会运行大量测试来评估建议的架构的性能。有六种不同的工作负载（图像分类，对象检测（小），对象检测（大），医学影像，语音到文本， 和自然语言处理（ NLP ），您可以在三种不同的情形下运行：脱机，单流和多流。</block>
+  <block id="3274a50ba9f0d3c0adefdfa11c5094be" category="doc">测试结果</block>
+  <block id="5e2777e1d5ba6adfeabc55064de508f5" category="inline-link-macro">先前版本： Test 操作步骤。</block>
+  <block id="3ee9fa6b3e5baa3db7a7d6587d8d590b" category="paragraph"><block ref="3ee9fa6b3e5baa3db7a7d6587d8d590b" category="inline-link-macro-rx"></block></block>
+  <block id="507b481f4f0fb36b82f97222c73fb91d" category="section-title">AFF 的测试结果</block>
+  <block id="817fbb6103e6cb6855c19a5c1b25f817" category="paragraph">我们会运行大量测试来评估建议的架构的性能。有六种不同的工作负载（图像分类，对象检测（小），对象检测（大），医学影像，语音到文本， 和自然语言处理（ NLP ），您可以在三种不同的情形下运行：脱机，单流和多流。</block>
+  <block id="aaabb57453387e4d8fdae92cdf5d558b" category="admonition">最后一种情形仅适用于映像分类和对象检测。</block>
+  <block id="e7b8f9d880e5e20f44e5277ba99d101b" category="paragraph">这样可以提供 15 个可能的工作负载，这些工作负载都在三种不同的设置下进行了测试：</block>
+  <block id="6beb824a1e58582d2c0c733600244087" category="list-text">单个服务器 / 本地存储</block>
+  <block id="0ce03975d1039901bae5d17f67b2ac39" category="list-text">单个服务器 / 网络存储</block>
+  <block id="ffac1c611ceb8a0bd6268359872e3e68" category="list-text">多服务器 / 网络存储</block>
+  <block id="f5b98cda08f17c4b221c6ef2fbf7217f" category="paragraph">以下各节将介绍这些结果。</block>
+  <block id="18d566b8a783b6684a78fc2924714180" category="section-title">AFF 脱机情形中的 AI 推理</block>
+  <block id="0aee493b887954641c1ba2e779adcf85" category="paragraph">在这种情况下，服务器可以使用所有数据，并测量了处理所有样本所需的时间。我们会将带宽报告为每秒样本数作为测试结果。如果使用了多个计算服务器，则会报告所有服务器的总带宽总和。下图显示了所有这三种使用情形的结果。对于双服务器情形，我们会报告两个服务器的总带宽。</block>
+  <block id="d39bc80b598327ae50c15f64c44bb6ea" category="paragraph"><block ref="d39bc80b598327ae50c15f64c44bb6ea" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a0d89c8c627ec0463d3f82a6cbbc04bd" category="paragraph">结果显示，网络存储不会对性能产生负面影响，更改极少，对于某些任务，未找到任何结果。添加第二台服务器时，总带宽恰好是两倍，或者最差情况下，更改率小于 1% 。</block>
+  <block id="d0be2e7e62dc4b0bdbb35ded9b6d842e" category="section-title">在 AFF 的单个流方案中进行 AI 推理</block>
+  <block id="fbbf5a4ee90b9175f00f7c8cab5a0670" category="paragraph">此基准测试可测量延迟。对于多个计算服务器案例，我们会报告平均延迟。下图显示了这组任务的结果。对于双服务器案例，我们会报告两个服务器的平均延迟。</block>
+  <block id="01f3906715186988e276bc34ebc661c0" category="paragraph"><block ref="01f3906715186988e276bc34ebc661c0" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9ef9ced66e0746938556409b4c473052" category="paragraph">结果再次表明，网络存储足以处理这些任务。在一台服务器的情况下，本地存储与网络存储之间的差别很小或没有差别。同样，当两个服务器使用相同的存储时，两个服务器上的延迟保持不变或变化量非常小。</block>
+  <block id="64a84459b695510c92164965941ad8f1" category="section-title">在 AFF 的多流方案中进行 AI 推理</block>
+  <block id="22ca0fa830d8fd46fe137f6748374c21" category="paragraph">在这种情况下，结果是系统在满足 QoS 限制的情况下可以处理的流数量。因此，结果始终为整数。对于多个服务器，我们会报告所有服务器上的流总数。并非所有工作负载都支持此方案，但我们已执行了这些工作负载。下图总结了我们的测试结果。对于双服务器案例，我们会报告两个服务器的流总数。</block>
+  <block id="758b60f43cbc650fded1dcf9be428fa5" category="paragraph"><block ref="758b60f43cbc650fded1dcf9be428fa5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f3eefb9cc4232b7df67a3c63566ae707" category="paragraph">结果显示了设置的完美性能—本地存储和网络存储的结果相同，添加第二个服务器会使建议设置可以处理的流数量增加一倍。</block>
+  <block id="4ecb5ff41d7f3bd6f1c92bc183f1cb32" category="section-title">EF 的测试结果</block>
+  <block id="ee7c693721c881b091fdb1adf8a37707" category="paragraph">我们会运行大量测试来评估建议的架构的性能。有六种不同的工作负载（图像分类，对象检测（小），对象检测（大），医学影像，语音到文本， 和自然语言处理（ NLP ）），这两种情况下运行：脱机和单流。以下各节将介绍这些结果。</block>
+  <block id="010bb9776a194ae73e567f4812c8be99" category="section-title">EF 脱机情形中的 AI 推理</block>
+  <block id="f4fc0d2711e472dedfd5d2952191989c" category="paragraph">在这种情况下，服务器可以使用所有数据，并测量了处理所有样本所需的时间。我们会将带宽报告为每秒样本数作为测试结果。对于单节点运行，我们会报告两个服务器的平均值，而对于两个服务器运行，我们会报告所有服务器的总带宽总和。下图显示了使用情形的结果。</block>
+  <block id="8e793f971410e2b57df427d1305ee0a2" category="paragraph"><block ref="8e793f971410e2b57df427d1305ee0a2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="fb71ae4a7513a21f0771b9aa65aeef9c" category="section-title">在一个流场景中对 EF 进行 AI 推理</block>
+  <block id="5656e3a262dfb3d6e1cba96551717de0" category="paragraph"><block ref="5656e3a262dfb3d6e1cba96551717de0" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="268cbad72959a02a6f9e00c87334c56d" category="paragraph">结果再次表明，网络存储足以处理这些任务。在一台服务器的情况下，本地存储与网络存储之间的差别很小或没有差别。同样，当两个服务器使用相同的存储时，两个服务器上的延迟保持不变或变化量非常小。</block>
+  <block id="516a608926718d1a912cf9404f1a63ac" category="inline-link-macro">接下来：架构规模估算选项。</block>
+  <block id="9cedf0fb8faddf365d88f523ae482015" category="paragraph"><block ref="9cedf0fb8faddf365d88f523ae482015" category="inline-link-macro-rx"></block></block>
+  <block id="00760d3595ff19f6db2da5213b1fdd58" category="summary">本文档介绍了一种计算和存储架构，用于在边缘环境中针对新兴应用程序场景在 NetApp 存储控制器和联想 ThinkSystem 服务器上部署基于 GPU 的人工智能（ AI ）推理。</block>
+  <block id="09f4ae28e2596e14a7568f3e12a77834" category="doc">TR-4886 ：《前沿人工智能推理—采用联想 ThinkSystem 的 NetApp —解决方案设计》</block>
+  <block id="6671938f046112e34e990cb75cc642dd" category="paragraph">NetApp 公司 Sathish Thyagarajan ，联想公司 Mirosav Hodak</block>
+  <block id="a27de0758c1fc778a0fb19ebcb6a8aff" category="paragraph">企业越来越多地在网络边缘生成海量数据。为了从智能传感器和物联网数据中获得最大价值，企业正在寻找支持边缘计算的实时事件流式解决方案。因此，在数据中心以外的边缘执行计算要求苛刻的作业的情况越来越多。AI 推理是这一趋势的推动因素之一。边缘服务器可以为这些工作负载提供足够的计算能力，尤其是在使用加速器时，但有限的存储通常是问题描述，尤其是在多服务器环境中。在本文档中，我们将介绍如何在边缘环境中部署共享存储系统，以及该系统如何在不影响性能的情况下为 AI 推理工作负载带来优势。</block>
+  <block id="c22ef83c0446b759f6cd8835206adaae" category="paragraph">本文档介绍了边缘 AI 推理的参考架构。它将多个联想 ThinkSystem 边缘服务器与一个 NetApp 存储系统相结合，创建了一个易于部署和管理的解决方案。本指南旨在为各种情形下的实际部署提供一个基线指南，例如，在工厂车间安装多个摄像头和工业传感器，零售交易中的销售点（ POS ）系统或用于识别自动驾驶车辆中的视觉异常的完全自驾（ FSD ）系统。</block>
+  <block id="36d77288dbd3663ec436c43b32682300" category="paragraph">本文档介绍了对由联想 ThinkSystem SE350 边缘服务器和入门级 NetApp AFF 和 EF 系列存储系统组成的计算和存储配置的测试和验证。这些参考架构可为 AI 部署提供高效且经济高效的解决方案，同时还可通过 NetApp ONTAP 和 NetApp SANtricity 数据管理软件提供全面的数据服务，集成数据保护，无缝可扩展性以及云连接数据存储。</block>
+  <block id="5dd536dd8122d7ba5df3ce642e603305" category="paragraph">本文档面向以下受众：</block>
+  <block id="ebb25f3a3991f2ad744d7ec643c950fe" category="list-text">希望在边缘将 AI 产品化的业务主管和企业架构师。</block>
+  <block id="c19c4b63370004c67b540d52ae4d0ba3" category="list-text">数据科学家，数据工程师，人工智能 / 机器学习（ AI / 机器学习， ML ）研究人员和人工智能系统开发人员。</block>
+  <block id="d64b2d5963d22d2d9c15222cbbe4a41c" category="list-text">设计用于开发 AI/ML 模型和应用程序的解决方案的企业架构师。</block>
+  <block id="563f47ae807a7a985313a5186e239a5d" category="list-text">数据科学家和 AI 工程师正在寻找部署深度学习（ DL ）和 ML 模型的高效方法。</block>
+  <block id="c1df171c3c219ea01c2724d28fa03f93" category="list-text">边缘设备管理器和边缘服务器管理员，负责部署和管理边缘推理模型。</block>
+  <block id="a40893fa754ed62d5268702b023fea91" category="section-title">解决方案架构</block>
+  <block id="efe1a080e82d44bdb17dc824833d2c58" category="paragraph">此联想 ThinkSystem 服务器和 NetApp ONTAP 或 NetApp SANtricity 存储解决方案旨在利用 GPU 与传统 CPU 的处理能力处理大型数据集上的 AI 推理。此验证可通过一个架构来展示高性能和最佳数据管理，该架构使用一个或多个与单个 NetApp AFF 存储系统互连的联想 SR350 边缘服务器，如下图所示。</block>
+  <block id="609a6122ae6df623927a4eb8273bd076" category="paragraph">下图中的逻辑架构概述显示了此架构中计算和存储要素的角色。具体而言，它显示以下内容：</block>
+  <block id="f2e5640bc98f623bd0a257e3088ead2c" category="list-text">边缘计算设备对从摄像机，传感器等接收的数据执行推理。</block>
+  <block id="ba8dee772ce5a627767af000b8bbb826" category="list-text">一种可用于多种用途的共享存储元素：</block>
+  <block id="8a1d15a179258733a83884fac2d16e38" category="list-text">为推理模型和执行推理所需的其他数据提供一个中央位置。计算服务器可以直接访问存储，并在网络中使用推理模型，而无需将其复制到本地。</block>
+  <block id="6c20432374a9a40cfb818250edf55367" category="list-text">此处推送更新的型号。</block>
+  <block id="4a32229da6d6fceda48d909ad92a952a" category="list-text">对边缘服务器接收的输入数据进行归档，以供日后分析。例如，如果边缘设备连接到摄像机，则存储元素会保留摄像机捕获的视频。</block>
+  <block id="45d9a14c8d568ce70d22acbde8373657" category="paragraph"><block ref="45d9a14c8d568ce70d22acbde8373657" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="bda9643ac6601722a28f238714274da4" category="cell">红色</block>
+  <block id="48d6215903dff56238e52e8891380c8f" category="cell">蓝色</block>
+  <block id="95e6ac9e87f07caf580a7b83adb1526b" category="cell">联想计算系统</block>
+  <block id="81a15d59c420e43b55830213cc8c16b9" category="cell">NetApp AFF 存储系统</block>
+  <block id="f46e4977aa2e9918471e011cafc5cbe1" category="cell">边缘设备对来自摄像机，传感器等的输入执行推理。</block>
+  <block id="edb1af4b83edf30ec5e56e3f4a6352f3" category="cell">共享存储，用于存放边缘设备的推理模型和数据，以供日后分析。</block>
+  <block id="6fa1f5494d341a20c6c746a33cbb31b3" category="paragraph">NetApp 和联想解决方案具有以下主要优势：</block>
+  <block id="f1bd3fc2711f634964362fb2a96445bf" category="list-text">GPU 加快了边缘计算速度。</block>
+  <block id="a644cc245485a603217667e7cbdb7ef9" category="list-text">部署从共享存储提供支持和管理的多个边缘服务器。</block>
+  <block id="d649f2b00c65fe4953b1a7e7469c9431" category="list-text">强大的数据保护功能，可满足低恢复点目标（ RPO ）和恢复时间目标（ RTO ）的要求，而不会丢失任何数据。</block>
+  <block id="2d0fcf5abf2f152f10ecfbf80a62e9db" category="list-text">利用 NetApp Snapshot 副本和克隆优化数据管理，以简化开发工作流。</block>
+  <block id="94d9a1cd726b8a3fed2b6beb07904959" category="section-title">如何使用此架构</block>
+  <block id="9a22eb3c4ef782aa04a39e5ad3ffc8b5" category="paragraph">本文档将验证建议架构的设计和性能。但是，我们尚未测试某些软件级别的组件，例如容器，工作负载或模型管理以及与内部云或数据中心的数据同步，因为它们是特定于部署情形的。此处有多种选择。</block>
+  <block id="e5881392a9b20c55ad87365d4c3cf1d7" category="paragraph">在容器管理级别， Kubernetes 容器管理是一个不错的选择，完全上游版本（ Canonical ）或适用于企业部署的修改版本（ Red Hat ）均支持此功能。。<block ref="867c096c6407993e530788b4fa5e4592" category="inline-link-rx"></block>https://www.netapp.com/pdf.html?item=/media/17241-tr4798pdf.pdf[,^] ，它利用 NetApp Trident 和新添加的<block ref="18f9f1b3975974bec435249b1752c2d6" category="inline-link-rx"></block>https://github.com/NetApp/netapp-data-science-toolkit[,^] 可为数据科学家和数据工程师提供内置的可追溯性，数据管理功能，接口和工具，以便与 NetApp 存储集成。Kubeflow 是适用于 Kubernetes 的 ML 工具包，可在 TensorFlow Serving 或 NVIDIA Triton 推理服务器等多个平台上提供额外的 AI 功能以及对型号版本控制和 KFServing 的支持。另一个选项是 NVIDIA EGX 平台，它可提供工作负载管理以及对支持 GPU 的 AI 推理容器目录的访问。但是，这些选项可能需要大量的精力和专业知识才能投入生产，并且可能需要第三方独立软件供应商（ ISV ）或顾问的协助。</block>
+  <block id="1a667cf8dc2ace931f29baf9aeed69d9" category="section-title">解决方案区域</block>
+  <block id="560d585bccd63f1ccf34b07b325adbcd" category="paragraph">AI 推理和边缘计算的主要优势是设备能够在无延迟的情况下以高质量计算，处理和分析数据。本文档中需要介绍的边缘计算用例太多，但下面是几个突出的示例：</block>
+  <block id="8106f228c3a2b774c2e47d0d2ca766eb" category="section-title">汽车：自动驾驶汽车</block>
+  <block id="49f3cb6fe79fc77d0b151dcc2f7d7109" category="paragraph">典型的边缘计算图示位于自动驾驶汽车（ AV ）中的高级驾驶辅助系统（ ADAS ）中。无人驾驶汽车中的 AI 必须快速处理来自摄像机和传感器的大量数据，才能成为成功的安全驱动器。在对象和人类之间进行解释所花费的时间过长可能意味着生命或死亡，因此能够尽可能接近车辆处理数据至关重要。在这种情况下，一个或多个边缘计算服务器处理来自摄像机，雷达， LIDAR 和其他传感器的输入，而共享存储则保存推理模型并存储来自传感器的输入数据。</block>
+  <block id="e5e51dcd521792cb797e6e3c53736987" category="section-title">医疗保健：患者监控</block>
+  <block id="a5031cd8ea18cb91370c532194ecd58e" category="paragraph">AI 和边缘计算的最大影响之一是，它能够在家庭护理和集中护理部门（ ICU ）中增强对慢性病患者的持续监控。监控 Insulin 级别，呼吸，神经活动，心率和消化系统功能的边缘设备中的数据需要即时分析数据，必须立即对这些数据执行操作，因为拯救生命的行动时间有限。</block>
+  <block id="7e4b8a4224f71143d7bd188ceeea4acd" category="section-title">零售：无收银员付款</block>
+  <block id="a8712e81fee7af830aa2cd6466cfb339" category="paragraph">边缘计算可以为 AI 和 ML 提供支持，帮助零售商缩短结账时间并增加流量。无收银员系统支持各种组件，例如：</block>
+  <block id="dbc0817910529140e6894b79ec51b412" category="list-text">身份验证和访问。将物理购物者连接到经过验证的帐户并允许访问零售空间。</block>
+  <block id="349a2650c71706ec201ef08d57dc58e7" category="list-text">清单监控。使用传感器， RFID 标签和计算机视觉系统帮助确认买家选择或取消选择商品。</block>
+  <block id="86f5df5b4d7496a74d1d41bed2929983" category="paragraph">此处，每个边缘服务器都会处理每个签出计数器，而共享存储系统则充当一个中央同步点。</block>
+  <block id="498375fc1d2fd41616385f8abfd37893" category="section-title">金融服务：信息亭的人员安全和防止欺诈</block>
+  <block id="1dd0f8c70693faa846f69d76af9ffbf7" category="paragraph">银行组织正在使用 AI 和边缘计算来创新和打造个性化的银行体验。利用实时数据分析和人工智能推理的交互式信息亭现在不仅可以帮助客户提取资金，还可以通过从摄像机捕获的图像主动监控信息亭，以识别对人类安全或欺诈行为的风险。在这种情况下，边缘计算服务器和共享存储系统连接到交互式信息亭和摄像机，以帮助银行使用 AI 推理模型收集和处理数据。</block>
+  <block id="0014200d8a9f4fe7a8b65ae923557be6" category="section-title">制造业：行业 4.0</block>
+  <block id="18bfb27ab22a9db6eb932a3bfe5f51a4" category="paragraph">第四次工业革命（工业 4.0 ）已经开始，同时也出现了 Smart Factory 和 3D 打印等新兴趋势。为迎接数据主导的未来，大规模机器到机器（ M2M ）通信和物联网已集成在一起，可提高自动化程度，无需人工干预。制造业已经高度自动化，增加 AI 功能是长期趋势的自然延续。AI 可实现自动化操作，借助计算机视觉和其他 AI 功能，可以实现自动化操作。您可以自动执行质量控制或依赖于人类远见或决策的任务，以便更快地分析工厂车间内装配线上的材料，从而帮助制造工厂满足所需的 ISO 安全和质量管理标准。此处，每个计算边缘服务器都连接到一组传感器，用于监控制造过程，更新的推理模型会根据需要推送到共享存储。</block>
+  <block id="a2df8c6c694bb6d9b42851d95a6d7814" category="section-title">电信：防锈检测，塔式检查和网络优化</block>
+  <block id="d562d0e475687af21d44b6ea803c10a8" category="paragraph">电信行业使用计算机视觉和人工智能技术来处理图像，这些图像可自动检测到是否存在防腐问题，并识别含有防腐问题的单元塔，因此需要进一步检查。近年来，使用无人机图像和 AI 模型来识别塔中不同的区域，以分析防腐，表面裂纹和防腐的情况有所增加。对 AI 技术的需求继续增长，这些技术可以高效地检查电信基础架构和单元塔，定期评估其降级情况，并在需要时及时修复。</block>
+  <block id="50dba7db75064ae2e0beea487226ed46" category="paragraph">此外，电信领域另一个新兴的使用情形是，使用 AI 和 ML 算法预测数据流量模式，检测支持 5G 的设备，以及自动化和增强多输入和多输出（ MIMG ）能源管理。在无线电塔上使用了 MIMO 硬件来增加网络容量，但这会带来额外的能源成本。在单元站点上部署的 ML 型号的 "MIMO 休眠模式 " 可以预测是否高效使用了无线电，并有助于降低移动网络运营商（ MNO ）的能耗成本。AI 推理和边缘计算解决方案可帮助 MNO 减少来回传输到数据中心的数据量，降低 TCO ，优化网络运营并提高最终用户的整体性能。</block>
+  <block id="f45c430b02aac052aef8d958c80ff351" category="paragraph"><block ref="f45c430b02aac052aef8d958c80ff351" category="inline-link-macro-rx"></block></block>
+  <block id="228af426af79aabaa0b969d8cee05002" category="summary">本文档遵循 MLPerf 推理 v0.7 代码， MLPerf 推理 v1.1 代码和规则。我们运行的基准测试是为在边缘进行推理而设计的，如本节所示的表中所定义。</block>
+  <block id="b3e6ac4f3c523ea5a90f4f79ca3e585d" category="doc">测试计划</block>
+  <block id="35e08a3e7b357a4284ef29b287063ae5" category="paragraph"><block ref="35e08a3e7b357a4284ef29b287063ae5" category="inline-link-macro-rx"></block></block>
+  <block id="a4f86f7bfc24194b276c22e0ef158197" category="inline-link">rules</block>
+  <block id="0a71a97af090b2deb93aa661a90005f7" category="paragraph">本文档遵循 MLPerf 推理 v0.7<block ref="72ea1359ddbf7a99cdb0a438fda3e022" category="inline-link-rx"></block>， MLPerf 推理 v1.1<block ref="7dc141edfa21f33dbd4b0757be1ad69f" category="inline-link-rx"></block> 和<block ref="efc21f34f290528320a21a8cc99ffcfc" category="inline-link-rx"></block>。我们运行的基准测试是为在边缘进行推理而设计的，如下表所述。</block>
+  <block id="deec4ff19974f12ed781cb9a59064214" category="cell">区域</block>
+  <block id="eaeb30f9f18e0c50b178676f3eaef45f" category="cell">任务</block>
+  <block id="e110cde47b67924ec0ef64500e8cb067" category="cell">QSL 大小</block>
+  <block id="571094bb27864b600d8e6b561a137a55" category="cell">质量</block>
+  <block id="77f086368f7402e03b21bb823cda2eb3" category="cell">多流延迟限制</block>
+  <block id="99a0628d9f7179c032e0cf59efbc0fad" category="cell">愿景</block>
+  <block id="c84e3388f5bc3e4ce028dc81625bf819" category="cell">映像分类</block>
+  <block id="4cf67db3abdf54de6064fce40cf27398" category="cell">Resnet50v1.5</block>
+  <block id="05e96e35d2778a07f18ff8b414821ee8" category="cell">ImageNet （ 224x224 ）</block>
+  <block id="021bbc7ee20b71134d53e20206bd6feb" category="cell">1024</block>
+  <block id="79267804a18aa7217c234994e26bb5c7" category="cell">FP32 的 99%</block>
+  <block id="c2010c9d1312ce345a2313d3acb5c6d5" category="cell">50 毫秒</block>
+  <block id="5d9387d7bf46f8c6854a5caafd6cfbf3" category="cell">对象检测（大型）</block>
+  <block id="7dd82182395c2720676a1e82b781ef04" category="cell">SSD - ResNet34</block>
+  <block id="0505dc2363120e454308e12e47f6d354" category="cell">可可可（ 1200 x 1200 ）</block>
+  <block id="f336aeb0ea3de7c70100c292338460e3" category="cell">66 毫秒</block>
+  <block id="a3e1c35debe58b3684abba30911eb0f9" category="cell">对象检测（小型）</block>
+  <block id="d05a0b1a6c857a559314f24c10825416" category="cell">SSD — MobileNetsv1</block>
+  <block id="f471fd17e298022a58bcbd05aa25a819" category="cell">可可可（ 300 x 300 ）</block>
+  <block id="f718499c1c8cef6730f9fd03c8125cab" category="cell">256</block>
+  <block id="ed076605284997250d9cc771eedbfc61" category="cell">医学影像分段</block>
+  <block id="b8ffefa5ddac895023e8ab6fe1b55b45" category="cell">3D UNET</block>
+  <block id="5ea5e4840c21271f42762e8b9271527a" category="cell">Brats 2019 （ 224x224x160 ）</block>
+  <block id="8322d3768dee2653e9cc15c955ee60a8" category="cell">FP32 的 99% 和 99.9%</block>
+  <block id="274b68192b056e268f128ff63bfcd4a4" category="cell">不适用</block>
+  <block id="04a83927cfa1af6ae14f94e90aab9ebb" category="cell">语音</block>
+  <block id="ade9e8d743e7e78d87c5c5603b0aa4ae" category="cell">语音到文本</block>
+  <block id="69ee0ff6f427bb2dfd286a55bbc181ea" category="cell">RNNT</block>
+  <block id="d3c7d61f6e8ea0b76fd8b65e5115b28b" category="cell">Libraispeech 开发清理</block>
+  <block id="84b20b1f5a0d103f5710bb67a043cd78" category="cell">2513</block>
+  <block id="4994a8ffeba4ac3140beb89e8d41f174" category="cell">language</block>
+  <block id="f8672b43ad1f9d3531557d69b6da380c" category="cell">语言处理</block>
+  <block id="221c3eff38f8ab54d359694f9da63c6e" category="cell">Bert</block>
+  <block id="f50c0cca078c7426bed1eb196911c809" category="cell">Sad v1.1</block>
+  <block id="d56da061d55e2175bd67901d5f0948be" category="cell">10833</block>
+  <block id="85051346c766b4444af7bfaaa0c189f5" category="cell">场景</block>
+  <block id="4bb9c2b62dbc9558da74af948130693b" category="cell">映像分类</block>
+  <block id="d5348bf8d0ff8e72043bdbb08aef9767" category="cell">单流，脱机，多流</block>
+  <block id="468acb809a41b49bb7fcdf7425dcd7ee" category="cell">单个流，脱机</block>
+  <block id="3d1aa46be43bf2f29633e829d42082af" category="cell">语音到文本</block>
+  <block id="7966e67de4ba20fb5412257b4023f4d1" category="paragraph">我们使用在此验证中开发的网络存储架构执行了这些基准测试，并将结果与先前提交给 MLPerf 的边缘服务器上本地运行的结果进行了比较。比较结果是，确定共享存储对推理性能有多大影响。</block>
+  <block id="a53c037982ff4e0cd4a61ba90c4c21d3" category="inline-link-macro">下一步：测试配置。</block>
+  <block id="50cbf9a915ce97c432035077add8a92f" category="paragraph"><block ref="50cbf9a915ce97c432035077add8a92f" category="inline-link-macro-rx"></block></block>
+  <block id="012b603d852affe4779f095a5c59f0c5" category="summary">公有云的灵活性，实现价值的时间和成本节省都是企业采用公有云进行数据库应用程序开发和测试的有意义的价值主张。SnapCenter 是快速实现这一目标的最佳工具。SnapCenter 不仅可以在内部保护您的生产数据库，还可以在公有云中快速克隆副本以进行应用程序开发或代码测试，同时只需极少的额外存储。下面详细介绍了使用该工具的分步过程。</block>
+  <block id="38da6679588aeb2754e14dd58994685e" category="doc">用于将开发 / 测试容量激增到云的工作流</block>
+  <block id="5b9681a3caf5db6230c17718122074d3" category="inline-link-macro">先前版本： AWS 公有云入门。</block>
+  <block id="e9e59a2a982f81f5f964248f351b2446" category="paragraph"><block ref="e9e59a2a982f81f5f964248f351b2446" category="inline-link-macro-rx"></block></block>
+  <block id="4d8a5b6bc9c43ab79e376d1aa4d83217" category="paragraph">对于采用公有云进行数据库应用程序开发和测试的企业而言，公有云的灵活性，价值实现时间和成本节省都是有意义的价值主张。SnapCenter 是实现这一目标的最佳工具。SnapCenter 不仅可以在内部保护生产数据库，而且还可以在公有云中快速克隆副本以进行应用程序开发或代码测试，同时只需极少的额外存储。下面详细介绍了使用此工具的分步过程。</block>
+  <block id="b47b42841be2e173707ab5884714970b" category="section-title">从复制的 Snapshot 备份克隆 Oracle 数据库以进行开发 / 测试</block>
+  <block id="8d90529d1117b8d3781bd6781acf4e91" category="list-text">使用适用于 Oracle 的数据库管理用户 ID 登录到 SnapCenter 。导航到资源选项卡，其中显示了受 SnapCenter 保护的 Oracle 数据库。</block>
+  <block id="a95ff2a2ae2905b0bb3bd0efa211a040" category="paragraph"><block ref="a95ff2a2ae2905b0bb3bd0efa211a040" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8d539d2e9659870aa79747206fac4769" category="list-text">单击备份拓扑和详细视图的预期内部数据库名称。如果启用了二级复制位置，则会显示链接镜像备份。</block>
+  <block id="20111f4a74a9c065157aa13379000a73" category="paragraph"><block ref="20111f4a74a9c065157aa13379000a73" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d4a9c1f33e524696d6f3adebf89947bb" category="list-text">通过单击镜像备份切换到镜像备份视图。然后显示二级镜像备份。</block>
+  <block id="e1cbaea95bcc154ccf9e8aece7fc73b3" category="paragraph"><block ref="e1cbaea95bcc154ccf9e8aece7fc73b3" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4726a244c3941457e8f62b49c83d35d1" category="list-text">选择要克隆的镜像二级数据库备份副本，并按时间和系统更改编号或 SCN 确定恢复点。通常，恢复点应是完整数据库备份时间的末尾，或者要克隆的 SCN 。确定恢复点后，必须挂载所需的日志文件备份以进行恢复。日志文件备份应挂载到要托管克隆数据库的目标数据库服务器。</block>
+  <block id="81d132cd1ae26e007bb608e5f8609288" category="paragraph"><block ref="81d132cd1ae26e007bb608e5f8609288" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b2dc441031605bf54d78fde13b3efc3c" category="paragraph"><block ref="b2dc441031605bf54d78fde13b3efc3c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="22a17e5abcfc4b5e70ebdea098cd1891" category="admonition">如果启用了日志修剪，并且恢复点扩展到上次日志修剪之后，则可能需要挂载多个归档日志备份。</block>
+  <block id="e9606676533bbe916f4b4b6824eac195" category="list-text">突出显示要克隆的完整数据库备份副本，然后单击克隆按钮以启动数据库克隆工作流。</block>
+  <block id="48493c19ee97a291cd320501daf5c721" category="paragraph"><block ref="48493c19ee97a291cd320501daf5c721" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6c06d82b497809fcc0fd06d00c6d91a5" category="list-text">为完整的容器数据库或 CDB 克隆选择正确的克隆数据库 SID 。</block>
+  <block id="f6ee6a459784097119ec1eee6224152e" category="paragraph"><block ref="f6ee6a459784097119ec1eee6224152e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e2c50a030b1c5313fca09568edf8c0f9" category="list-text">选择云中的目标克隆主机，数据文件，控制文件和重做日志目录将通过克隆工作流创建。</block>
+  <block id="323554a005f5e77dfaa765ea81e645be" category="paragraph"><block ref="323554a005f5e77dfaa765ea81e645be" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="701f017aeafb71656cf2bc3a9bd34862" category="list-text">无凭据名称用于基于操作系统的身份验证，这会使数据库端口变得不相关。按照目标克隆数据库服务器中的配置填写正确的 Oracle 主目录， Oracle 操作系统用户和 Oracle 操作系统组。</block>
+  <block id="c5237b674d4a9cd38d44c5e546cc51d4" category="paragraph"><block ref="c5237b674d4a9cd38d44c5e546cc51d4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="26a911f3c85fc3c73d79253e65bf30e3" category="list-text">指定克隆操作前要运行的脚本。更重要的是，可以在此处调整或定义数据库实例参数。</block>
+  <block id="56774e452bc62021e52de3e3fea844a2" category="paragraph"><block ref="56774e452bc62021e52de3e3fea844a2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="09d7240367714707474d63a3a574222b" category="list-text">按日期和时间或 SCN 指定恢复点。直到 " 取消 " 将数据库恢复到可用的归档日志为止。从挂载归档日志卷的目标主机指定外部归档日志位置。如果目标服务器 Oracle 所有者与内部生产服务器不同，请验证目标服务器 Oracle 所有者是否可以读取归档日志目录。</block>
+  <block id="6cb86841376102e5b8924f9909b8f570" category="paragraph"><block ref="6cb86841376102e5b8924f9909b8f570" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="70b171a9c984de6358afb3557fe84586" category="paragraph"><block ref="70b171a9c984de6358afb3557fe84586" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a752afaf144d06159ca3eec8bb23455f" category="list-text">如果需要，配置 SMTP 服务器以发送电子邮件通知。</block>
+  <block id="b30b70196320d22207ea0d5d95d2c841" category="paragraph"><block ref="b30b70196320d22207ea0d5d95d2c841" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0421be6f676ac1ddace9e39eeeb54f0f" category="list-text">克隆摘要。</block>
+  <block id="a930a442bf914f516109fbb28bf2fbd1" category="paragraph"><block ref="a930a442bf914f516109fbb28bf2fbd1" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="69d929881b22cd699e243e2343bd707d" category="list-text">您应在克隆后进行验证，以确保克隆的数据库正常运行。可以在开发 / 测试数据库上执行一些附加任务，例如启动侦听器或关闭数据库日志归档模式。</block>
+  <block id="9991775de6f914e5a41601ba523e3193" category="paragraph"><block ref="9991775de6f914e5a41601ba523e3193" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="58732c8d9b1293bb6666ef2284840fd3" category="section-title">克隆 SQL 数据库，以便从复制的 Snapshot 备份进行开发 / 测试</block>
+  <block id="605f2bb9d099f78e26260848db117df7" category="list-text">使用 SQL Server 的数据库管理用户 ID 登录到 SnapCenter 。导航到 " 资源 " 选项卡，其中显示了受 SnapCenter 保护的 SQL Sever 用户数据库以及公有云中的目标备用 SQL 实例。</block>
+  <block id="d238acd8e02d4df70c9b55828a4b8801" category="paragraph"><block ref="d238acd8e02d4df70c9b55828a4b8801" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="39c34a717e197c67b1fc8d678db5815b" category="list-text">单击备份拓扑和详细视图的预期内部 SQL Server 用户数据库名称。如果启用了二级复制位置，则会显示链接镜像备份。</block>
+  <block id="8c57a9d29ca9640330e03e6edca2b6e5" category="paragraph"><block ref="8c57a9d29ca9640330e03e6edca2b6e5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a5910fa5df5b6482c00b15ae683eef0f" category="list-text">通过单击镜像备份切换到镜像备份视图。然后显示二级镜像备份。由于 SnapCenter 会将 SQL Server 事务日志备份到专用驱动器进行恢复，因此此处仅显示完整的数据库备份。</block>
+  <block id="f8d3ed6786c765a87cec8464a574076a" category="paragraph"><block ref="f8d3ed6786c765a87cec8464a574076a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="368014bae8201ab49d2207a53c907069" category="list-text">选择备份副本，然后单击克隆按钮以启动从备份克隆工作流。</block>
+  <block id="87dbbaf733c71b9d4e0027ad4a85e709" category="paragraph"><block ref="87dbbaf733c71b9d4e0027ad4a85e709" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="75c22c861d423e3f3450da18d56f0599" category="paragraph"><block ref="75c22c861d423e3f3450da18d56f0599" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="44258030a87117191bde6d62511ddb9a" category="list-text">选择一个云服务器作为目标克隆服务器，克隆实例名称和克隆数据库名称。选择自动分配挂载点或用户定义的挂载点路径。</block>
+  <block id="7841eed97c9a860bcb6a46b08ea08c11" category="paragraph"><block ref="7841eed97c9a860bcb6a46b08ea08c11" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="18145dc97ae06034ae9aafa8b98cb36e" category="list-text">按日志备份时间或特定日期和时间确定恢复点。</block>
+  <block id="b2798123b4d42e447362355b510a424c" category="paragraph"><block ref="b2798123b4d42e447362355b510a424c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0b9becceddf802cada91d9e2aa84ac5a" category="list-text">指定在克隆操作前后运行的可选脚本。</block>
+  <block id="adee0219db450497bd0f545df8d862c7" category="paragraph"><block ref="adee0219db450497bd0f545df8d862c7" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e41b01ffd717fd3d0b5788e608e50b52" category="list-text">如果需要电子邮件通知，请配置 SMTP 服务器。</block>
+  <block id="9b758c550d5da3ecb44f04ae804293d4" category="paragraph"><block ref="9b758c550d5da3ecb44f04ae804293d4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="fc89ae2ec0203249b8e60785a63ca258" category="list-text">克隆摘要。</block>
+  <block id="ab74d2d908acf5c3e01544cd4b871b73" category="paragraph"><block ref="ab74d2d908acf5c3e01544cd4b871b73" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="28725828580a55d904e8b2a39f377eb9" category="list-text">监控作业状态并验证目标用户数据库是否已连接到云克隆服务器中的目标 SQL 实例。</block>
+  <block id="766259946fc034002a24d5f23655c73e" category="paragraph"><block ref="766259946fc034002a24d5f23655c73e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d512bf68b17268adfe539f9722d869b4" category="section-title">克隆后配置</block>
+  <block id="50d9180ea26c89fbe6506d71d81d3fb1" category="list-text">内部 Oracle 生产数据库通常以日志归档模式运行。开发或测试数据库不需要此模式。要关闭日志归档模式，请以 sysdba 身份登录到 Oracle 数据库，执行 log mode change 命令并启动数据库以进行访问。</block>
+  <block id="b205237d51ff9525496f4b2252942213" category="list-text">配置 Oracle 侦听器，或者向现有侦听器注册新克隆的数据库以供用户访问。</block>
+  <block id="800699a04cdaa75b2219988799b0a048" category="list-text">对于 SQL Server ，将日志模式从 Full 更改为 Easy ，以便 SQL Server 开发 / 测试日志文件在填满日志卷时可以随时缩减。</block>
+  <block id="89e018d207fd292a4926870904035c18" category="section-title">刷新克隆数据库</block>
+  <block id="d84550ba9a340ebf4fa6698dff5ba344" category="list-text">丢弃克隆的数据库并清理云数据库服务器环境。然后，按照上述过程使用新数据克隆新数据库。克隆新数据库只需几分钟。</block>
+  <block id="1170d6f09309cb8dc382034a34680937" category="inline-link-macro">刷新克隆</block>
+  <block id="fef062eeb7771b01e620bb2460b1bf9a" category="list-text">关闭克隆数据库，使用命令行界面运行克隆刷新命令。有关详细信息，请参见以下 SnapCenter 文档： <block ref="1e4035dee07650c706f8f0714c384872" category="inline-link-macro-rx"></block>。</block>
+  <block id="2d6962c20ba37b34437afc30e6838e0d" category="inline-link-macro">NetApp 解决方案自动化社区支持 Slack 通道</block>
+  <block id="7b88d7d11804db6b079e226a6f043ea7" category="paragraph">如果您需要有关此解决方案和用例的帮助，请加入 <block ref="f9456f3b54a140d5d3858823c684363f" category="inline-link-macro-rx"></block> 并寻找解决方案自动化渠道来发布您的问题或询问。</block>
+  <block id="e2a76301a4117f21d6192304aa650018" category="inline-link-macro">接下来：灾难恢复工作流。</block>
+  <block id="28a87ee64d4675e6c24cd960fe71d9bf" category="paragraph"><block ref="28a87ee64d4675e6c24cd960fe71d9bf" category="inline-link-macro-rx"></block></block>
+  <block id="d83342bb55cac062a4841a3b7a62a7fd" category="summary">本节概述了为满足上一节所述的前提条件要求而必须完成的任务。下一节提供了内部部署和公有云操作的高级任务列表。可以通过单击相关链接访问详细的流程和过程。</block>
+  <block id="21475c5fe4cf73cfbf7756ed71e43375" category="doc">入门概述</block>
+  <block id="fa952e93a2f3bc19270cbedd1510f523" category="inline-link-macro">先前版本：公有云的前提条件。</block>
+  <block id="f50eb88fd106752cf99e25d4a7259bb7" category="paragraph"><block ref="f50eb88fd106752cf99e25d4a7259bb7" category="inline-link-macro-rx"></block></block>
+  <block id="b2e7ae8381268c9d97dc3576aa67da04" category="list-text">在 SnapCenter 中设置数据库管理员用户</block>
+  <block id="e1c4efcd7b5b155c8a6e57d348b6c071" category="list-text">SnapCenter 插件安装前提条件</block>
+  <block id="cf69df8da81eda7b468d606f3e9aff06" category="list-text">SnapCenter 主机插件安装</block>
+  <block id="2a6faa57bc6cc0f7a4c90cebd5e63344" category="list-text">数据库资源发现</block>
+  <block id="2a36af746a3cc41f6964edac717b5206" category="list-text">设置存储集群对等和数据库卷复制</block>
+  <block id="a227a5da83d0a04e6e8e7e76a89eba09" category="list-text">将 CVO 数据库存储 SVM 添加到 SnapCenter</block>
+  <block id="c615eed91e2ab578525394d0ff0138d9" category="list-text">在 SnapCenter 中设置数据库备份策略</block>
+  <block id="8ecb914dad4186dafb38268be6fc8a1f" category="list-text">实施备份策略以保护数据库</block>
+  <block id="3041fe5faf49efefd030e278790b4faf" category="list-text">验证备份</block>
+  <block id="8a3f037eef48de78bfe13d14e3d7cdfa" category="section-title">AWS 公有云</block>
+  <block id="0bcf61b20ebca1ef90cb7982284867a6" category="list-text">飞行前检查</block>
+  <block id="c27b238e54d27696cafed4684c6f1335" category="list-text">在 AWS 中部署 Cloud Manager 和 Cloud Volumes ONTAP 的步骤</block>
+  <block id="2bb50575568fc6429e2c1cef751d40f4" category="list-text">为数据库工作负载部署 EC2 计算实例</block>
+  <block id="bc2dcb446bec0ecd131a2e612dbd1ecd" category="paragraph">有关详细信息，请单击以下链接：</block>
+  <block id="7146594a919f2b006b1b0911c7b6d7da" category="inline-link-macro">内部部署</block>
+  <block id="21aa279d0a145dcaab5feaa02df2c02a" category="inline-link-macro">公有云— AWS</block>
+  <block id="fd0476c0c92270df2d75402a67cfe0f4" category="paragraph"><block ref="8f0e2d08c6bad9ef491c2061921b9d90" category="inline-link-macro-rx"></block>， <block ref="11145243f1982fd305768240bff5daad" category="inline-link-macro-rx"></block></block>
+  <block id="ff9d8653752bd48bb6b73cf97f207af1" category="summary">采用 SnapCenter 灾难恢复工作流的混合云数据库解决方案</block>
+  <block id="ac2e8778240cb518ee14b1defbf55765" category="doc">灾难恢复工作流</block>
+  <block id="461887ca64f2d60da58c130a00656a96" category="inline-link-macro">上一页：开发 / 测试向云突发的工作流。</block>
+  <block id="b8499237e1a42a05b5306219f80b35ba" category="paragraph"><block ref="b8499237e1a42a05b5306219f80b35ba" category="inline-link-macro-rx"></block></block>
+  <block id="8e84608bd62584b2f262d60fd734714f" category="paragraph">企业已将公有云作为灾难恢复的可行资源和目标。SnapCenter 可以尽可能无缝地执行此过程。此灾难恢复工作流与克隆工作流非常相似，但数据库恢复会通过复制到云的最后一个可用日志运行，以恢复所有可能的业务事务。但是，对于灾难恢复，还需要执行其他预配置和后配置步骤。</block>
+  <block id="e230d95c57c5534b3e90b93fddbcb1c9" category="section-title">将内部 Oracle 生产数据库克隆到云中进行灾难恢复</block>
+  <block id="db9517755259859dbae095126c803544" category="list-text">为了验证克隆恢复是否通过最后一个可用日志运行，我们创建了一个小测试表并插入了一行。测试数据将在完全恢复到最后一个可用日志后进行恢复。</block>
+  <block id="39f00f2f1a95739a075844dcffac1441" category="paragraph"><block ref="39f00f2f1a95739a075844dcffac1441" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4fd1337293be82f7472d90bc35f51e90" category="list-text">以 Oracle 的数据库管理用户 ID 登录到 SnapCenter 。导航到资源选项卡，其中显示了受 SnapCenter 保护的 Oracle 数据库。</block>
+  <block id="1ddb1f7854ac534473544de627fc5289" category="paragraph"><block ref="1ddb1f7854ac534473544de627fc5289" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e795ef17ab8e08159909afe558c32a1c" category="list-text">选择 Oracle 日志资源组，然后单击立即备份以手动运行 Oracle 日志备份，以便将最新事务刷新到云中的目标。在实际灾难恢复场景中，最后一个可恢复的事务取决于向云复制数据库日志卷的频率，而这反过来又取决于公司的 RTO 或 RPO 策略。</block>
+  <block id="e3ea77c81b6559a6984aee62074951ec" category="paragraph"><block ref="e3ea77c81b6559a6984aee62074951ec" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="44d1c907c1d5302eb896d76cae9b5e7f" category="paragraph"><block ref="44d1c907c1d5302eb896d76cae9b5e7f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d77575716b9cd49ab1453e367c405abe" category="admonition">在灾难恢复情形下，异步 SnapMirror 会在数据库日志备份间隔内丢失未将其备份到云目标的数据。为了最大限度地减少数据丢失，可以计划更频繁的日志备份。但是，在技术上可以实现的日志备份频率有一定限制。</block>
+  <block id="c684c2587fa959f3df40953faab1c1a1" category="list-text">选择二级镜像备份上的最后一个日志备份，然后挂载日志备份。</block>
+  <block id="4d27921136b62a393650eec8f38c5a39" category="paragraph"><block ref="4d27921136b62a393650eec8f38c5a39" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6784de36878125b88feb4c3192d2aa3d" category="paragraph"><block ref="6784de36878125b88feb4c3192d2aa3d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="fbfa0a2a63c1090863dedb14664d443c" category="list-text">选择上次完整数据库备份，然后单击克隆以启动克隆工作流。</block>
+  <block id="ecafa568fe2f36fee38130d0f80eeafc" category="paragraph"><block ref="ecafa568fe2f36fee38130d0f80eeafc" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3aa765536eeb5bd55823afbb43c9efdc" category="list-text">在主机上选择一个唯一的克隆数据库 ID 。</block>
+  <block id="6d4d1ea488e25d46cd7824491f3f98fb" category="paragraph"><block ref="6d4d1ea488e25d46cd7824491f3f98fb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d57d235b31b66e982ae6d433fa33948e" category="list-text">为 Oracle 闪存恢复区域和联机日志配置日志卷并将其挂载到目标灾难恢复服务器。</block>
+  <block id="4ef6ef644cc7510226d8d150ce9cfe73" category="paragraph"><block ref="4ef6ef644cc7510226d8d150ce9cfe73" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4d5730b3167534121e5ac4fcdf84cf1f" category="paragraph"><block ref="4d5730b3167534121e5ac4fcdf84cf1f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6142419cbd2b279a240db52011ea3cab" category="admonition">Oracle 克隆操作步骤不会创建日志卷，而是需要在克隆之前在灾难恢复服务器上配置日志卷。</block>
+  <block id="b20da77a777ef0a84d95f447b254387c" category="list-text">选择目标克隆主机和位置以放置数据文件，控制文件和重做日志。</block>
+  <block id="326062662ffdb461c61b5ddfc54974bc" category="paragraph"><block ref="326062662ffdb461c61b5ddfc54974bc" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6b126b14adfdc04f12e6a00531155f4a" category="list-text">选择克隆的凭据。填写目标服务器上 Oracle 主配置的详细信息。</block>
+  <block id="ee4a9d80953ee6db29e5577ef13327ba" category="paragraph"><block ref="ee4a9d80953ee6db29e5577ef13327ba" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c76f59dc52686a71eb5917bbcabfa212" category="list-text">指定克隆前要运行的脚本。可以根据需要调整数据库参数。</block>
+  <block id="31b131b08153ae34a96d1e17fa891e1f" category="paragraph"><block ref="31b131b08153ae34a96d1e17fa891e1f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7018f70f78c5e3154b2620e31167c12e" category="list-text">选择直到取消作为恢复选项，以便恢复通过所有可用的归档日志运行，以重新输出复制到二级云位置的最后一个事务。</block>
+  <block id="57fa7fef5a8266470204775391a701d3" category="paragraph"><block ref="57fa7fef5a8266470204775391a701d3" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6233d74c8f9820a1029624d60ab66049" category="list-text">如果需要，配置 SMTP 服务器以发送电子邮件通知。</block>
+  <block id="a563132424d4d3d255697521a0446bc9" category="paragraph"><block ref="a563132424d4d3d255697521a0446bc9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="99a0cd00abfa258b121d480ce7d27e63" category="list-text">灾难恢复克隆摘要。</block>
+  <block id="0f66818ccf8a8dd3d6491b9bcf74c02e" category="paragraph"><block ref="0f66818ccf8a8dd3d6491b9bcf74c02e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b4ff014e6bff5ee06349d607c14fcf9e" category="list-text">克隆的数据库会在克隆完成后立即注册到 SnapCenter 中，然后可用于备份保护。</block>
+  <block id="18eac7477ab0c6038ec443444677a1eb" category="paragraph"><block ref="18eac7477ab0c6038ec443444677a1eb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="22d74aee547ad10d104f875521cfa6d7" category="section-title">对 Oracle 进行灾难恢复克隆后验证和配置</block>
+  <block id="9d58cce71d4c85948ccecfea105367ed" category="list-text">验证在云中的灾难恢复位置上刷新，复制和恢复的最后一个测试事务。</block>
+  <block id="1db3ba1f62cbb82a66232de851bad3ce" category="paragraph"><block ref="1db3ba1f62cbb82a66232de851bad3ce" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="61b3573abc722a493f53ed27503f7eff" category="list-text">配置闪存恢复区域。</block>
+  <block id="71ca9fe67f8c3826e171fb227af4f666" category="paragraph"><block ref="71ca9fe67f8c3826e171fb227af4f666" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4005d553f013abc53c6a1a65aed1d65f" category="list-text">配置用于用户访问的 Oracle 侦听器。</block>
+  <block id="0c79c2a9e4fd1ea908a63d58f1f44917" category="list-text">将克隆的卷拆离复制的源卷。</block>
+  <block id="42e82bb35283d9f2e2b444419f518667" category="list-text">将复制从云反向复制到内部，并重建发生故障的内部数据库服务器。</block>
+  <block id="4ce2420dd00dd0b543e2e51bf7c1c135" category="admonition">克隆拆分可能会产生比正常操作高得多的临时存储空间利用率。但是，在重建内部数据库服务器后，可以释放额外的空间。</block>
+  <block id="0e70133bb418f4025b82a6a35301e209" category="section-title">将内部 SQL 生产数据库克隆到云中进行灾难恢复</block>
+  <block id="32bfa00a92b9f85d791a43f6d70a35cd" category="list-text">同样，为了验证 SQL 克隆恢复是否经过了最后一个可用日志，我们创建了一个小测试表并插入了一行。测试数据将在完全恢复到最后一个可用日志后进行恢复。</block>
+  <block id="321bd96e83b00fcd04bfcc72ec4564ff" category="paragraph"><block ref="321bd96e83b00fcd04bfcc72ec4564ff" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a3b7f1fcf93afdd055ec19e230b54347" category="list-text">使用 SQL Server 的数据库管理用户 ID 登录到 SnapCenter 。导航到资源选项卡，其中显示了 SQL Server 保护资源组。</block>
+  <block id="c9673e38d22c239c3b46259620b7b190" category="paragraph"><block ref="c9673e38d22c239c3b46259620b7b190" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="608bfa3334f97023b71f6b7a04742bd6" category="list-text">手动运行日志备份以将最后一个事务刷新到公有云中的二级存储。</block>
+  <block id="94ca8d0daf1445cae1bbc5a13d7b0c42" category="paragraph"><block ref="94ca8d0daf1445cae1bbc5a13d7b0c42" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a9b9ced1d8d8e91eb2606cb7d0932fa4" category="list-text">为克隆选择最后一个完整的 SQL Server 备份。</block>
+  <block id="f93fa51d605a26ef233b6fb9c5489266" category="paragraph"><block ref="f93fa51d605a26ef233b6fb9c5489266" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="82efcc579f2220a65dbe5cdd64f47253" category="list-text">设置克隆设置，例如克隆服务器，克隆实例，克隆名称和挂载选项。执行克隆的二级存储位置会自动填充。</block>
+  <block id="bb5bdefa03845f9483d1e3fcf8d3b40f" category="paragraph"><block ref="bb5bdefa03845f9483d1e3fcf8d3b40f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9d84ecf0ed314694d6e3ad9b2a96a198" category="list-text">选择要应用的所有日志备份。</block>
+  <block id="79284af3915a1bc3e4d4d3993acd9042" category="paragraph"><block ref="79284af3915a1bc3e4d4d3993acd9042" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6f68fbd76be71ebe267aa207f7bef25f" category="list-text">指定克隆前后要运行的任何可选脚本。</block>
+  <block id="1f29cf99c49ef1910181e451424c3796" category="paragraph"><block ref="1f29cf99c49ef1910181e451424c3796" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0ac43ede08a0b7154673a619b979f17d" category="list-text">如果需要电子邮件通知，请指定 SMTP 服务器。</block>
+  <block id="e8aa5b543b67c22f0a2a205562794787" category="paragraph"><block ref="e8aa5b543b67c22f0a2a205562794787" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f7338d3af995c4a281de85493129cc18" category="list-text">灾难恢复克隆摘要。克隆的数据库会立即注册到 SnapCenter 中，并可用于备份保护。</block>
+  <block id="332fb27e1cc349fc79252fbfc5de6ad0" category="paragraph"><block ref="332fb27e1cc349fc79252fbfc5de6ad0" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8be7490bb89f986a83768e6a71d78ee8" category="paragraph"><block ref="8be7490bb89f986a83768e6a71d78ee8" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5f01a56e31a650c5bb83408b5238270e" category="section-title">SQL 的灾难恢复克隆后验证和配置</block>
+  <block id="029640b7bf09578f05703e407e99b8d7" category="list-text">监控克隆作业状态。</block>
+  <block id="d5f350d5580b71105a1718557ce88137" category="paragraph"><block ref="d5f350d5580b71105a1718557ce88137" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="68236fcee9bee8dbdc1c54b7b2d84b34" category="list-text">验证是否已使用所有日志文件克隆和恢复来复制和恢复最后一个事务。</block>
+  <block id="3ebb58ab28579acf2742808bf95fc07e" category="paragraph"><block ref="3ebb58ab28579acf2742808bf95fc07e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="50159c53d6f87eb33c314abd9f0bd28f" category="list-text">在灾难恢复服务器上配置一个新的 SnapCenter 日志目录以进行 SQL Server 日志备份。</block>
+  <block id="50f8c30e062c542679b96127a844db6a" category="paragraph">如果您需要有关此解决方案和用例的帮助，请加入 <block ref="f9456f3b54a140d5d3858823c684363f" category="inline-link-macro-rx"></block> 并寻找解决方案自动化渠道来发布您的问题或询问。</block>
+  <block id="467bda78c0e1adcc5ed650843fbfbdf5" category="summary">本节介绍在 AWS 中部署 Cloud Manager 和 Cloud Volumes ONTAP 的过程。</block>
+  <block id="298a4809d5445df75b6c4a9fb94074a4" category="doc">AWS 公有云入门</block>
+  <block id="b8f5ff8c1ae69fa5befe459d3f34b68a" category="inline-link-macro">先前版本：内部部署入门。</block>
+  <block id="19f84106226ff97c314f55dd621bbd98" category="paragraph"><block ref="19f84106226ff97c314f55dd621bbd98" category="inline-link-macro-rx"></block></block>
+  <block id="87aa698992e009d04733c9906225592c" category="admonition">为了便于操作，我们根据 AWS 中的部署创建了本文档。但是， Azure 和 GCP 的过程非常相似。</block>
+  <block id="39845311263ccad04c0d4f0b9aa9d4c6" category="section-title">1 ，飞行前检查</block>
+  <block id="12ed93944854c12caa37886d620f16db" category="paragraph">在部署之前，请确保基础架构已准备就绪，以便在下一阶段进行部署。其中包括：</block>
+  <block id="c6368ae044df0f7bb26ed60afda5c591" category="list-text">AWS 帐户</block>
+  <block id="4019c185756035c18c03fabfccd7d4b2" category="list-text">您选择的地区的 VPC</block>
+  <block id="fca5d2fece6e360f78dff4573ba04a20" category="list-text">可访问公有 Internet 的子网</block>
+  <block id="e3e5c3dadc3e70d536645a3be9744f79" category="list-text">向 AWS 帐户添加 IAM 角色的权限</block>
+  <block id="bd5c82fb0e0371a168f609848b11e92a" category="list-text">AWS 用户的机密密钥和访问密钥</block>
+  <block id="c3d1ff3c88148b2246bb0972916da82a" category="section-title">在 AWS 中部署 Cloud Manager 和 Cloud Volumes ONTAP 的步骤</block>
+  <block id="6d0eb695a99109617b806676e9610075" category="inline-link">NetApp Cloud 文档</block>
+  <block id="593581e466784760a050bceaea5e0c48" category="admonition">部署 Cloud Manager 和 Cloud Volumes ONTAP 的方法有多种；此方法最简单，但需要的权限最多。如果此方法不适用于您的 AWS 环境，请参考<block ref="97a20614f8c0e53f461a9353634e5e51" category="inline-link-rx"></block>。</block>
+  <block id="bb3e779fdf877143137572122cf424e3" category="section-title">部署 Cloud Manager 连接器</block>
+  <block id="4c6e32ff373dc3ce5b49202f92f01b08" category="list-text">导航到<block ref="143fea272f01f72dbdc942451156df21" category="inline-link-rx"></block> 并登录或注册。</block>
+  <block id="356cf5e12d635c19d987b1b195ff5a40" category="paragraph"><block ref="356cf5e12d635c19d987b1b195ff5a40" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2300b8579a8761e452d89a2af6636b7d" category="list-text">登录后，您应转到 " 画布 " 。</block>
+  <block id="af93b0b88e1db5f3aa229d2336fedb3c" category="paragraph"><block ref="af93b0b88e1db5f3aa229d2336fedb3c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a3fbf2c408ce86ff3403990e7e32dcb3" category="list-text">单击 " 添加工作环境 " ，然后在 AWS 中选择 Cloud Volumes ONTAP 。您还可以在此处选择是要部署单节点系统还是高可用性对。我已选择部署高可用性对。</block>
+  <block id="bb18ff1ebac7ea2039aa297469c76b76" category="paragraph"><block ref="bb18ff1ebac7ea2039aa297469c76b76" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="016aa0c0a7322975ec4b8eeac805f2c0" category="list-text">如果尚未创建连接器，则会显示一个弹出窗口，要求您创建连接器。</block>
+  <block id="a05691eb0d806668c3796d3d6fe01157" category="paragraph"><block ref="a05691eb0d806668c3796d3d6fe01157" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4fc3362a0d8ab63cc8fa21bbd0fb07db" category="list-text">单击 " 让我们开始 " ，然后选择 "AWS" 。</block>
+  <block id="55f5adc74d49945abd7798742f307124" category="paragraph"><block ref="55f5adc74d49945abd7798742f307124" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="deae4c054bb3102bbf634b14534da9bf" category="inline-link">NetApp 策略页面</block>
+  <block id="651d429a2b6cfcd93f6adb1d4825a214" category="list-text">输入您的机密密钥和访问密钥。确保您的用户具有上所述的正确权限<block ref="fb0c65a047527c32e46baadcaacb4fe2" category="inline-link-rx"></block>。</block>
+  <block id="94497191b0b0c6d05a2df7d2175e87f5" category="paragraph"><block ref="94497191b0b0c6d05a2df7d2175e87f5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d8d59b60a74630e45f83fd3c48207b47" category="list-text">为连接器指定一个名称，并使用上所述的预定义角色<block ref="fb0c65a047527c32e46baadcaacb4fe2" category="inline-link-rx"></block> 或者要求 Cloud Manager 为您创建角色。</block>
+  <block id="1e64ebe4af05f5d4a8b8c6542e7a09e9" category="paragraph"><block ref="1e64ebe4af05f5d4a8b8c6542e7a09e9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="02d395705fb063ad8d33d8c83c856e6f" category="list-text">提供部署连接器所需的网络信息。验证是否已通过以下方式启用出站 Internet 访问：</block>
+  <block id="8215126360cbe5d8f5566c7ffc8cf224" category="list-text">为连接器提供公有 IP 地址</block>
+  <block id="22adb619c008bfd7495288573093ae44" category="list-text">为连接器提供一个代理以供其使用</block>
+  <block id="58a149795bbe86e4e0d4ab8f10413219" category="list-text">为连接器提供通过 Internet 网关到公有 Internet 的路由</block>
+  <block id="5908ad1cf5bd748238e305dd5fc52fac" category="paragraph"><block ref="5908ad1cf5bd748238e305dd5fc52fac" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7c58ebc9f032dc8d2e5c4f522cedbe0b" category="list-text">通过提供安全组或创建新的安全组，通过 SSH ， HTTP 和 HTTPS 提供与连接器的通信。我已启用仅从 IP 地址访问此连接器的功能。</block>
+  <block id="1d39d9c13f50dd25f7e54173c87c633a" category="paragraph"><block ref="1d39d9c13f50dd25f7e54173c87c633a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="cb444cfaba774437ecdbbb95856d94cd" category="list-text">查看摘要页面上的信息，然后单击添加以部署连接器。</block>
+  <block id="5576df68e3720f55e585e7e091d5b9e3" category="paragraph"><block ref="5576df68e3720f55e585e7e091d5b9e3" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4255ace47c9ad7f2907c18df7512bb9f" category="list-text">现在，此连接器将使用云形成堆栈进行部署。您可以从 Cloud Manager 或通过 AWS 监控其进度。</block>
+  <block id="ff7fb4bedc0d09880f85d9745ec258a5" category="paragraph"><block ref="ff7fb4bedc0d09880f85d9745ec258a5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="ca320cc147e2b9fac2dd7379e91012b6" category="list-text">部署完成后，将显示一个成功页面。</block>
+  <block id="f5bbadf1ed57058e80e27764684e6314" category="paragraph"><block ref="f5bbadf1ed57058e80e27764684e6314" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6382283fd45b13b5c983745731fec990" category="section-title">部署 Cloud Volumes ONTAP</block>
+  <block id="5fe90897c7135ba3020c4a397f55adb6" category="list-text">根据您的要求选择 AWS 和部署类型。</block>
+  <block id="63b636f2002a2e7b7c2e2420cd64ff73" category="paragraph"><block ref="63b636f2002a2e7b7c2e2420cd64ff73" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="ccf1300c5621fdebe8c1a70fade44f3b" category="list-text">如果尚未分配任何订阅，而您希望使用 PAYGO 购买，请选择编辑凭据。</block>
+  <block id="b893bded7e1bd3419a443758a8ef410f" category="paragraph"><block ref="b893bded7e1bd3419a443758a8ef410f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="88eb84b1a8f0417c9de6e1202125df56" category="list-text">选择添加订阅。</block>
+  <block id="0b5d3e3d1a9347ff4a7395d09208a8f4" category="paragraph"><block ref="0b5d3e3d1a9347ff4a7395d09208a8f4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="052208bafdfe08bc8f0735a78226e541" category="list-text">选择要订阅的合同类型。我选择了按需购买。</block>
+  <block id="4d5ab1ed0682fe644e831558598d4638" category="paragraph"><block ref="4d5ab1ed0682fe644e831558598d4638" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="65577508f7897e730adb501d0db73913" category="list-text">系统会将您重定向到 AWS ；选择 Continue to Subscribe 。</block>
+  <block id="ac33260d1e06f504f1dcac229aeb269c" category="paragraph"><block ref="ac33260d1e06f504f1dcac229aeb269c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="439c4fb23c120f0a99894c630cedaabd" category="list-text">订阅后，您将重定向回 NetApp Cloud Central 。如果您已订阅，但未被重定向，请选择 " 单击此处 " 链接。</block>
+  <block id="a90c8b1fc04a41aff490fd2b269f5932" category="paragraph"><block ref="a90c8b1fc04a41aff490fd2b269f5932" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="14b9e98d2b57da92c29826ce7de32c32" category="list-text">系统会将您重定向到 Cloud Central ，您必须在其中为订阅命名并将其分配给 Cloud Central 帐户。</block>
+  <block id="c89376fd9624f6ebda7959df6176ef34" category="paragraph"><block ref="c89376fd9624f6ebda7959df6176ef34" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4508f5994d1b34ff85cd1e8a1884d6c1" category="list-text">成功后，将显示一个复选标记页面。导航回 Cloud Manager 选项卡。</block>
+  <block id="2b206bbd8f3b20e3282b660a356d90be" category="paragraph"><block ref="2b206bbd8f3b20e3282b660a356d90be" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b3294e5fb9ec1c42cde7ebf9b206c583" category="list-text">现在，此订阅将显示在 Cloud Central 中。单击应用以继续。</block>
+  <block id="37ce5c33a55d907edabe632c39a2707c" category="paragraph"><block ref="37ce5c33a55d907edabe632c39a2707c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9f7927b068a5dddb4852b2e7dc256544" category="list-text">输入工作环境详细信息，例如：</block>
+  <block id="0dbae4d42c7a0db53e2eb32adee12892" category="list-text">Cluster name</block>
+  <block id="0c191ee206a91460fd94e2ff976a38e7" category="list-text">Cluster password</block>
+  <block id="53aa18427d1e2c7b7113c668561a62d2" category="list-text">AWS 标记（可选）</block>
+  <block id="d3b6ff1e8c6317d132d3a5e974f1374c" category="paragraph"><block ref="d3b6ff1e8c6317d132d3a5e974f1374c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4fb5b261ae3a3581304a283ef70a5246" category="inline-link">NetApp Cloud 主页</block>
+  <block id="e7b29c75e71a48483734401322ef6e92" category="list-text">选择要部署的其他服务。要了解有关这些服务的更多信息，请访问<block ref="1bb1213784e04e4f47d06f252d1ba164" category="inline-link-rx"></block>。</block>
+  <block id="88e71a2c19d98c79d2ed51a753c8a4c2" category="paragraph"><block ref="88e71a2c19d98c79d2ed51a753c8a4c2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e0dffa77d5644a3816ba69e24ce813ff" category="list-text">选择是部署在多个可用性区域中（即三个子网，每个子网位于不同的 AZ 中），还是部署一个可用性区域。我选择了多个 AZs 。</block>
+  <block id="6e4a3fe2b0629dae504d8e727147f709" category="paragraph"><block ref="6e4a3fe2b0629dae504d8e727147f709" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4b889b7255c34e7f230e392668605860" category="list-text">选择要部署到的集群的区域， VPC 和安全组。在本节中，您还可以为每个节点（和调解器）分配可用性分区以及它们所占用的子网。</block>
+  <block id="9ad68c9f72863557931a8569462bff52" category="paragraph"><block ref="9ad68c9f72863557931a8569462bff52" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="be43ebbf5380089f153e4f1b13e35e6f" category="list-text">选择节点和调解器的连接方法。</block>
+  <block id="8bf6da8b537127466c4421c1ae3169be" category="paragraph"><block ref="8bf6da8b537127466c4421c1ae3169be" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="204bd52e1d13052712299779cf041df6" category="admonition">调解器需要与 AWS API 进行通信。只要在部署调解器 EC2 实例后可以访问公有，就不需要 API IP 地址。</block>
+  <block id="52fade87431f9acc43b7bf6e4c5fd2f1" category="inline-link">NetApp Cloud 文档</block>
+  <block id="0c79e4a46253eeb94ba6b8218928aa99" category="list-text">浮动 IP 地址用于访问 Cloud Volumes ONTAP 使用的各种 IP 地址，包括集群管理和数据提供 IP 。这些地址必须是您的网络中尚未可路由的地址，并且已添加到 AWS 环境中的路由表中。要在故障转移期间为 HA 对启用一致的 IP 地址，需要使用这些地址。有关浮动 IP 地址的详细信息，请参见<block ref="72cde540b4f97efa19e071f729439801" category="inline-link-rx"></block>。</block>
+  <block id="fd4a46ceddfb2402b7e37177af575e04" category="paragraph"><block ref="fd4a46ceddfb2402b7e37177af575e04" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="95ca6b5e9b64aed9132a6be07d061f3b" category="list-text">选择将浮动 IP 地址添加到的路由表。客户端使用这些路由表与 Cloud Volumes ONTAP 进行通信。</block>
+  <block id="3453ab81a2f04d5c39ae750fb79ece2a" category="paragraph"><block ref="3453ab81a2f04d5c39ae750fb79ece2a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="af918e519f9c0db1ed5ab4fd4b6e9e05" category="list-text">选择是启用 AWS 托管加密还是启用 AWS KMS 对 ONTAP 根磁盘，启动磁盘和数据磁盘进行加密。</block>
+  <block id="058eaefa711702bd45c5f6650cf01e4c" category="paragraph"><block ref="058eaefa711702bd45c5f6650cf01e4c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="01bd54fa77587425fca4a6c352309b5c" category="list-text">选择您的许可模式。如果您不知道选择哪种，请联系您的 NetApp 代表。</block>
+  <block id="e5e49184799594a9fa690c9122eb883e" category="paragraph"><block ref="e5e49184799594a9fa690c9122eb883e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="04110b24d1459a6e21e35ad976a8f10e" category="list-text">选择最适合您的用例的配置。这与 " 前提条件 " 页面中所述的规模估算注意事项相关。</block>
+  <block id="e19584159c9c3791a9e3c462cb0aa451" category="paragraph"><block ref="e19584159c9c3791a9e3c462cb0aa451" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3ed47788a525c6d08246bfa2f90922da" category="list-text">也可以创建卷。这不是必需的，因为后续步骤使用 SnapMirror ，这将为我们创建卷。</block>
+  <block id="01da9401385484b72ba9c016ac6c19ab" category="paragraph"><block ref="01da9401385484b72ba9c016ac6c19ab" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="76011f95c4e1b3f68fa5829dab0fb786" category="list-text">查看所做的选择并勾选相应的复选框，确认您了解 Cloud Manager 是否已将资源部署到 AWS 环境中。准备好后，单击 "Go" 。</block>
+  <block id="7b78e746aa55ffe6fee1f3e0b65b8cca" category="paragraph"><block ref="7b78e746aa55ffe6fee1f3e0b65b8cca" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="13b7f009673a469e5482a96832be1473" category="list-text">Cloud Volumes ONTAP 现在开始其部署过程。Cloud Manager 使用 AWS API 和云构成堆栈来部署 Cloud Volumes ONTAP 。然后，它会根据您的规格对系统进行配置，为您提供一个可立即使用的即用系统。此过程的时间安排因所做的选择而异。</block>
+  <block id="11d15d8a4bb9195b48d5010fa30fa547" category="paragraph"><block ref="11d15d8a4bb9195b48d5010fa30fa547" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5e63d2329924bb302fb012e7916b3614" category="list-text">您可以通过导航到时间线来监控进度。</block>
+  <block id="77405312cc4c1e96d3f7f796e838bf89" category="paragraph"><block ref="77405312cc4c1e96d3f7f796e838bf89" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4b4df7cc92b3ee31f5d95082a78c7903" category="list-text">时间线可作为对 Cloud Manager 中执行的所有操作的审核。您可以查看 Cloud Manager 在设置到 AWS 和 ONTAP 集群期间发出的所有 API 调用。此外，还可以有效地使用此功能对您遇到的任何问题进行故障排除。</block>
+  <block id="8c17e020c76595308d57605fa71dc7af" category="paragraph"><block ref="8c17e020c76595308d57605fa71dc7af" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4c5674ad1910f0a25455fdeb0f3f097a" category="list-text">部署完成后， CVO 集群将显示在当前容量所在的 Canvas 上。处于当前状态的 ONTAP 集群已完全配置，可以实现真正的即装即用体验。</block>
+  <block id="db044bc640be9fc8227b7ada891f279d" category="paragraph"><block ref="db044bc640be9fc8227b7ada891f279d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="28d2e01957d5845ff59688f17bd34339" category="section-title">从内部部署到云配置 SnapMirror</block>
+  <block id="081494b1a178710486921a42e2bdfa87" category="paragraph">现在，您已部署源 ONTAP 系统和目标 ONTAP 系统，您可以将包含数据库数据的卷复制到云中。</block>
+  <block id="cb3269c2496a99fb03bebe82b6a3e4bc" category="inline-link">SnapMirror 兼容性表</block>
+  <block id="46aad6288d89ba29f38b4742bf018aca" category="paragraph">有关适用于 SnapMirror 的兼容 ONTAP 版本的指南，请参见<block ref="f75a4f2138bf92eb17ef87cad85a9e34" category="inline-link-rx"></block>。</block>
+  <block id="36c5350a8474f2212fecc811eb77df57" category="list-text">单击源 ONTAP 系统（内部），然后将其拖放到目标，选择复制 &gt; 启用或选择复制 &gt; 菜单 &gt; 复制。</block>
+  <block id="5dbe69ec28d70286f46385336e96d003" category="paragraph"><block ref="5dbe69ec28d70286f46385336e96d003" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8771a8fdaa9e84a7eef7540edcca5f40" category="paragraph">选择启用。</block>
+  <block id="ac21962f3f0ae9f9c17b26196452f903" category="paragraph"><block ref="ac21962f3f0ae9f9c17b26196452f903" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a6a8dc55f6f333187a100f6ed328bdc0" category="paragraph">或选项。</block>
+  <block id="949fa0a5e194cf44c9e08903cb914566" category="paragraph"><block ref="949fa0a5e194cf44c9e08903cb914566" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="066bf779660ad446aa9b0d4021c4bf40" category="paragraph">复制。</block>
+  <block id="deafbb4908c633cb93a7f7e76b31da08" category="paragraph"><block ref="deafbb4908c633cb93a7f7e76b31da08" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5a803b2a55429f981d25fbb8da94aef7" category="list-text">如果未拖放，请选择要复制到的目标集群。</block>
+  <block id="630e74180bc1b6c0c0c866d5478ff029" category="paragraph"><block ref="630e74180bc1b6c0c0c866d5478ff029" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="761124dc5e0730086556a7d33d43418c" category="list-text">选择要复制的卷。我们复制了数据和所有日志卷。</block>
+  <block id="7bec2596a51a0d4a808a37dec9e6c540" category="paragraph"><block ref="7bec2596a51a0d4a808a37dec9e6c540" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="bde4e8497f5ecaef866c0f049aada776" category="list-text">选择目标磁盘类型和分层策略。对于灾难恢复，我们建议使用 SSD 作为磁盘类型，并保持数据分层。数据分层可将镜像数据分层为低成本的对象存储，并节省使用本地磁盘的成本。中断关系或克隆卷时，数据将使用快速的本地存储。</block>
+  <block id="a7d9908d0f610b3db167c894d109d1ec" category="paragraph"><block ref="a7d9908d0f610b3db167c894d109d1ec" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="52f06f2f09c024b69ef3944a8cd78ad9" category="list-text">选择目标卷名称： we chose ` [source_volume_name]_dr` 。</block>
+  <block id="6f8ba85bc89d216799431f124e48b25f" category="paragraph"><block ref="6f8ba85bc89d216799431f124e48b25f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2882a0dbc1a6ad74198ac2cb6316870d" category="list-text">选择复制的最大传输速率。这样，如果您与云的连接带宽较低，例如 VPN ，则可以节省带宽。</block>
+  <block id="041263f562a9058ae414685962469951" category="paragraph"><block ref="041263f562a9058ae414685962469951" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f81dd66e0f0847d4cb1d2d12fadcc2f3" category="list-text">定义复制策略。我们选择了镜像，它会获取最新的数据集并将其复制到目标卷。您也可以根据自己的要求选择其他策略。</block>
+  <block id="d0b86e2934c870915aaa77674d1d79d7" category="paragraph"><block ref="d0b86e2934c870915aaa77674d1d79d7" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4db5384e8d04b01ff24a9178b3efaf6a" category="list-text">选择触发复制的计划。NetApp 建议为数据卷设置 " 每日 " 计划，并为日志卷设置 " 每小时 " 计划，但可以根据要求进行更改。</block>
+  <block id="c6715d4de4d68a1f8eb9cb8acb63b097" category="paragraph"><block ref="c6715d4de4d68a1f8eb9cb8acb63b097" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="02e3a269661e3c96a86a075872a1b269" category="list-text">查看输入的信息，单击 Go 以触发集群对等方和 SVM 对等方（如果这是您首次在两个集群之间复制），然后实施并初始化 SnapMirror 关系。</block>
+  <block id="75c2d297cd7282b30ce0400170110307" category="paragraph"><block ref="75c2d297cd7282b30ce0400170110307" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3c160366cab97ee8f1a35416d1294ddb" category="list-text">继续对数据卷和日志卷执行此过程。</block>
+  <block id="64853c47f4f907262466c1e5ad154c8c" category="list-text">要检查所有关系，请导航到 Cloud Manager 中的复制选项卡。您可以在此处管理您的关系并检查其状态。</block>
+  <block id="641e620fe8c714d7381775d20a707726" category="paragraph"><block ref="641e620fe8c714d7381775d20a707726" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c88bec52f9e24233a78b6a90efa32ec6" category="list-text">复制完所有卷后，您将处于稳定状态，并准备好继续执行灾难恢复和开发 / 测试工作流。</block>
+  <block id="86fb3ee49ae2f8c0ee121c551a8f08c2" category="section-title">3. 为数据库工作负载部署 EC2 计算实例</block>
+  <block id="91ba52045df2b9244f28270482f749c9" category="inline-link">EC2 实例类型</block>
+  <block id="33aaa72e62140af9cecb2c48f836b84b" category="paragraph">AWS 已为各种工作负载预配置 EC2 计算实例。选择实例类型可确定 CPU 核数，内存容量，存储类型和容量以及网络性能。在使用情形中，除了操作系统分区之外，用于运行数据库工作负载的主存储是从 CVO 或 FSX ONTAP 存储引擎分配的。因此，需要考虑的主要因素是 CPU 核心，内存和网络性能级别的选择。可在此处找到典型的 AWS EC2 实例类型：<block ref="9334d5b9e602c5921b4f295f6041489b" category="inline-link-rx"></block>。</block>
+  <block id="0af43c3d809d6e56a6a7a0d1ed039bbc" category="section-title">调整计算实例大小</block>
+  <block id="0b6e77aedd6bd733f979314fef2a98d7" category="list-text">根据所需的工作负载选择正确的实例类型。需要考虑的因素包括要支持的业务事务数，并发用户数，数据集规模估算等。</block>
+  <block id="c421d122321bec48d6b30858f4e7b515" category="inline-link">Amazon EC2</block>
+  <block id="ed4b68006572e288530a2152f7fbe5fe" category="list-text">可以通过 EC2 信息板启动 EC2 实例部署。确切的部署过程不在此解决方案的范围内。请参见<block ref="3a5862dd365e3998013717e9cf118a9a" category="inline-link-rx"></block> 了解详细信息。</block>
+  <block id="708991723f71fa1bd7b8081be442552c" category="section-title">Oracle 工作负载的 Linux 实例配置</block>
+  <block id="5c17b7d75ff16063f772234e1ea8eeb1" category="paragraph">本节介绍部署 EC2 Linux 实例后的其他配置步骤。</block>
+  <block id="39d786446455bb2b3017b793805fc902" category="list-text">将 Oracle 备用实例添加到 DNS 服务器，以便在 SnapCenter 管理域中进行名称解析。</block>
+  <block id="385a2a4f5305fe5ce8017f18fb7eabd4" category="list-text">添加一个 Linux 管理用户 ID 作为 SnapCenter OS 凭据，并具有 sudo 权限，而不需要密码。在 EC2 实例上启用 ID 和 SSH 密码身份验证。（默认情况下，在 EC2 实例上， SSH 密码身份验证和无密码 sudo 处于关闭状态。）</block>
+  <block id="a2b4677d7a72840a78373c600441681a" category="list-text">将 Oracle 安装配置为与内部 Oracle 安装相匹配，例如操作系统修补程序， Oracle 版本和修补程序等。</block>
+  <block id="66b65364302a847feb2630bfd7974256" category="inline-link">Oracle 19c 自动化部署</block>
+  <block id="fa470598a181c1ed905bace243e46aa3" category="list-text">可以利用 NetApp Ansible DB 自动化角色为数据库开发 / 测试和灾难恢复用例配置 EC2 实例。可以从 NetApp 公有 GitHub 站点下载自动化代码：<block ref="437f8b44ff65600fb5697e9d369a0c54" category="inline-link-rx"></block>。目标是在 EC2 实例上安装和配置数据库软件堆栈，以匹配内部操作系统和数据库配置。</block>
+  <block id="97875b4799caf4c948118e7b4776c9fb" category="section-title">SQL Server 工作负载的 Windows 实例配置</block>
+  <block id="c63751cfdcf8c0b4e26635a47c7f0d97" category="paragraph">本节列出了最初部署 EC2 Windows 实例后的其他配置步骤。</block>
+  <block id="5f44e6a78874f9f49acae3caa71cc14d" category="list-text">检索 Windows 管理员密码以通过 RDP 登录到实例。</block>
+  <block id="eabafc642b0901afd6622ab0f19d9ef0" category="list-text">禁用 Windows 防火墙，将主机加入 Windows SnapCenter 域，然后将实例添加到 DNS 服务器以进行名称解析。</block>
+  <block id="08bf2d7ff3ac9ab37cfa8dc449b3c8da" category="list-text">配置 SnapCenter 日志卷以存储 SQL Server 日志文件。</block>
+  <block id="f97ac9d1946c873247af15165559b47a" category="list-text">在 Windows 主机上配置 iSCSI 以挂载卷并格式化磁盘驱动器。</block>
+  <block id="6c2a9c611f48cae767f6ebea6fca0457" category="inline-link">NetApp 自动化</block>
+  <block id="6dea6226167bd38268de4c4d948d72de" category="list-text">同样，以前的许多任务都可以通过适用于 SQL Server 的 NetApp 自动化解决方案实现自动化。有关新发布的角色和解决方案，请访问 NetApp Automation 公有 GitHub 站点：<block ref="8cafb3a3b1222d318fcd262791229701" category="inline-link-rx"></block>。</block>
+  <block id="752c08adf364adb2721c9a373759f8f6" category="inline-link-macro">接下来：开发 / 测试向云突发的工作流。</block>
+  <block id="4e3fc3c2eb04754fcac9e4e23b6de054" category="paragraph"><block ref="4e3fc3c2eb04754fcac9e4e23b6de054" category="inline-link-macro-rx"></block></block>
+  <block id="ac9bef0f960e3a46befd2d06b223b61d" category="summary">本节介绍了开发 / 测试和灾难恢复操作的典型混合云架构。</block>
+  <block id="fece52c505c48f2979e3fa0c8b6bd8bc" category="paragraph"><block ref="fece52c505c48f2979e3fa0c8b6bd8bc" category="inline-link-macro-rx"></block></block>
+  <block id="4085a97aa705c0122bbcec0c84dd97d3" category="paragraph">以下架构图展示了在混合云中实施企业数据库操作的典型实施，用于开发 / 测试和灾难恢复操作。</block>
+  <block id="acb339f710a626679c374df5b90c5416" category="paragraph"><block ref="acb339f710a626679c374df5b90c5416" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3cdc302c6d83b60c8ec7ad0b550e55a8" category="paragraph">在正常业务运营中，可以克隆云中的同步数据库卷并将其挂载到开发 / 测试数据库实例中，以进行应用程序开发或测试。如果发生故障，则可以激活云中的同步数据库卷以进行灾难恢复。</block>
+  <block id="fbfd3304757c668454a7bdd10f9de200" category="inline-link-macro">接下来：解决方案要求。</block>
+  <block id="ae3b1bce66c4c75d8abf9828ec9f2608" category="paragraph"><block ref="ae3b1bce66c4c75d8abf9828ec9f2608" category="inline-link-macro-rx"></block></block>
+  <block id="c94d29f1f4f8ef37e9d27f30b7d7c67d" category="summary">必须在内部完成本节所述的任务，以便准备 SnapCenter 混合云数据库工作负载环境。</block>
+  <block id="f6a196d9d3a941e76765e4a9395630c4" category="doc">内部部署的前提条件</block>
+  <block id="eac55cbc45bfe6b98b8847b3952de7d3" category="inline-link-macro">先前版本：前提条件配置。</block>
+  <block id="e63a288cc25b5c4127d3021b339c9f20" category="paragraph"><block ref="e63a288cc25b5c4127d3021b339c9f20" category="inline-link-macro-rx"></block></block>
+  <block id="40931dcd4d9132545ec0faf2c5fb1b64" category="paragraph">要准备 SnapCenter 混合云数据库工作负载环境，必须在内部完成以下任务。</block>
+  <block id="79daf399b9626cde309801f41a1e2e14" category="section-title">SnapCenter 安装和配置</block>
+  <block id="2607530756fefa4173e12cfcd5fbfb01" category="paragraph">NetApp SnapCenter 工具是一款基于 Windows 的应用程序，通常在 Windows 域环境中运行，但也可以部署工作组。它基于多层架构，其中包括用于数据库工作负载的集中式管理服务器（ SnapCenter 服务器）和数据库服务器主机上的 SnapCenter 插件。以下是混合云部署的几个主要注意事项。</block>
+  <block id="9f8c0bcd11d7afd1dd2ee818191cb914" category="list-text">* 单实例或 HA 部署。 * HA 部署可在单个 SnapCenter 实例服务器发生故障时提供冗余。</block>
+  <block id="1bfa2867d5aa49106efbf3ac752f3084" category="list-text">* 名称解析。 * 必须在 SnapCenter 服务器上配置 DNS 以解析所有数据库主机，并在存储 SVM 上配置 DNS 以进行正向和反向查找。此外，还必须在数据库服务器上配置 DNS ，以解析 SnapCenter 服务器和存储 SVM ，以便进行正向和反向查找。</block>
+  <block id="41f54308d86c1d7b525475d6ead22892" category="list-text">* 基于角色的访问控制（ Role-Based Access Control ， RBAC ）配置。 * 对于混合数据库工作负载，您可能需要使用 RBAC 隔离不同数据库平台的管理职责，例如 Oracle 数据库管理员或 SQL Server 管理员。必须为数据库管理员用户授予必要的权限。</block>
+  <block id="5aee5dffd2e329652ec35995add763ae" category="list-text">* 启用基于策略的备份策略。 * 以强制实施备份一致性和可靠性。</block>
+  <block id="dde4790e572aa9d01cd58fcfd8498766" category="list-text">* 在防火墙上打开所需的网络端口。 * 用于使内部 SnapCenter 服务器与云数据库主机中安装的代理进行通信。</block>
+  <block id="e2962676531ebdcf62cb2a7b96042e77" category="list-text">* 端口必须处于打开状态，才能在内部和公有云之间传输 SnapMirror 流量。 * SnapCenter 服务器依靠 ONTAP SnapMirror 将现场 Snapshot 备份复制到云 CVO 存储 SVM 。</block>
+  <block id="549762060d7242346fa79f39cba51791" category="inline-link-macro">SnapCenter 安装工作流</block>
+  <block id="aec875397d57826c45f7072636026a07" category="paragraph">仔细规划安装前的规划和考虑后，单击此项 <block ref="f44e9d032441cc842cad02c3aab57d84" category="inline-link-macro-rx"></block> 有关 SnapCenter 安装和配置的详细信息。</block>
+  <block id="df3fb602185c77a88bab186791d02636" category="section-title">内部数据库服务器存储配置</block>
+  <block id="f7f3a649be867b87ccb26789453199db" category="paragraph">存储性能在数据库和应用程序的整体性能中发挥着重要作用。精心设计的存储布局不仅可以提高数据库性能，还可以轻松管理数据库备份和恢复。在定义存储布局时，应考虑多个因素，包括数据库大小，数据库的预期数据更改率以及执行备份的频率。</block>
+  <block id="8481231881c8e64b34aa3c7e29510a25" category="paragraph">对于虚拟化数据库工作负载，通过 NFS 或 iSCSI 将存储 LUN 直接连接到子虚拟机通常比通过 VMDK 分配的存储性能更高。NetApp 建议采用下图所示的 LUN 上的大型 SQL Server 数据库的存储布局。</block>
+  <block id="cc75f443d22e45e490468a8f20689d77" category="paragraph"><block ref="cc75f443d22e45e490468a8f20689d77" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="99aea05cf884bfdec230afa5250968b2" category="paragraph">下图显示了 NetApp 为 LUN 上的小型或中型 SQL Server 数据库建议的存储布局。</block>
+  <block id="9fc72535f1113895818f8aa60ef773e7" category="paragraph"><block ref="9fc72535f1113895818f8aa60ef773e7" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="76ecde8f778d0dd0676f392793ce4382" category="admonition">日志目录专用于 SnapCenter ，用于执行事务日志汇总以恢复数据库。对于超大型数据库，可以为一个卷分配多个 LUN ，以提高性能。</block>
+  <block id="ee9158729a15dbd90d166650ba285d0e" category="paragraph">对于 Oracle 数据库工作负载， SnapCenter 支持以 ONTAP 存储为后盾的数据库环境，这些环境作为物理设备或虚拟设备挂载到主机上。您可以根据环境的严重性将整个数据库托管在一个或多个存储设备上。通常，客户会将专用存储上的数据文件与控制文件，重做文件和归档日志文件等所有其他文件隔离。这有助于管理员在几秒到几分钟内使用 Snapshot 技术快速还原（ ONTAP 单文件 SnapRestore ）或克隆大型关键数据库（ PB 级）。</block>
+  <block id="b31fbb7e1a6e863315e431fdf9c00db9" category="paragraph"><block ref="b31fbb7e1a6e863315e431fdf9c00db9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="959a3405dfdfb0469534f5276ffb8e5e" category="paragraph">对于对延迟敏感的任务关键型工作负载，应将专用存储卷部署到不同类型的 Oracle 文件，以尽可能实现最佳延迟。对于大型数据库，应为数据文件分配每个卷的多个 LUN （ NetApp 建议最多八个）。</block>
+  <block id="ac111cbcae2e9eaedafe418acc3a2cab" category="paragraph"><block ref="ac111cbcae2e9eaedafe418acc3a2cab" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2702ce3d59ec94853fa030462b309f2f" category="paragraph">对于较小的 Oracle 数据库， SnapCenter 支持共享存储布局，在此布局中，您可以在同一个存储卷或 LUN 上托管多个数据库或数据库的一部分。作为此布局的一个示例，您可以将所有数据库的数据文件托管在 +data ASM 磁盘组或卷组上。其余文件（重做，归档日志和控制文件）可以托管在另一个专用磁盘组或卷组（ LVM ）上。此类部署场景如下所示。</block>
+  <block id="6c12e98a6e201f55836390c2a6232e5a" category="paragraph"><block ref="6c12e98a6e201f55836390c2a6232e5a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="93cf45b97655292e0536b810cb248828" category="paragraph">为了便于重新定位 Oracle 数据库， Oracle 二进制文件应安装在常规备份策略中包含的单独 LUN 上。这样可以确保在将数据库重新定位到新服务器主机时，可以启动 Oracle 堆栈进行恢复，而不会因 Oracle 二进制文件不同步而出现任何潜在问题。</block>
+  <block id="1e69a4a8adec0842d1e110e970112268" category="section-title">许可要求</block>
+  <block id="7f59934b2c0edd33f0d981f3bc4d12e7" category="paragraph">SnapCenter 是 NetApp 提供的许可软件。它通常包含在内部 ONTAP 许可证中。但是，对于混合云部署，要将 CVO 作为目标数据复制目标添加到 SnapCenter ，还需要 SnapCenter 的云许可证。有关详细信息，请查看以下 SnapCenter 基于容量的标准许可证链接：</block>
+  <block id="9e86ae6c96041e3cb31e88116102ee35" category="inline-link-macro">基于容量的 SnapCenter 标准版许可证</block>
+  <block id="a1d51b5b5f3258b40cbe392146bc8868" category="paragraph"><block ref="a1d51b5b5f3258b40cbe392146bc8868" category="inline-link-macro-rx"></block></block>
+  <block id="85db56d490cdd7a31d40697ad1c9be3c" category="section-title">网络和安全性</block>
+  <block id="254215e6d18fb5582ba78464fa468553" category="paragraph">在混合数据库操作中，如果需要一个可通过卷到云进行开发 / 测试和灾难恢复的内部生产数据库，则在设置环境并从内部数据中心连接到公有云时，网络连接和安全性是一个重要的考虑因素。</block>
+  <block id="1e356fab450b44971b6cdbd1c25586b8" category="paragraph">公有云通常使用虚拟私有云（ Virtual Private Cloud ， VPC ）隔离公共云平台中的不同用户。在单个 VPC 中，可以使用安全组等措施来控制安全性，这些安全组可根据用户锁定 VPC 的需求进行配置。</block>
+  <block id="5192a6d33c7a0127a67cbd7e07801735" category="paragraph">可以通过 VPN 通道保护从内部数据中心到 VPC 的连接。在 VPN 网关上，可以使用 NAT 和防火墙规则来加强安全性，这些规则可以阻止尝试从 Internet 上的主机与企业数据中心内的主机建立网络连接。</block>
+  <block id="04a3995237c020c6a587d8a7723af6a6" category="paragraph">有关网络和安全注意事项，请查看您选择的公有云的相关入站和出站 CVO 规则：</block>
+  <block id="d15513a147fbd525b88805bee9ea17ea" category="inline-link-macro">CVO - AWS 的安全组规则</block>
+  <block id="f8d1f085169118c4d407be16136389c6" category="list-text"><block ref="f8d1f085169118c4d407be16136389c6" category="inline-link-macro-rx"></block></block>
+  <block id="39f48b44d100d16ed6e2b931111663b7" category="inline-link-macro">CVO 的安全组规则— Azure</block>
+  <block id="bcde746324630d82052a4fc9861cfea6" category="list-text"><block ref="bcde746324630d82052a4fc9861cfea6" category="inline-link-macro-rx"></block></block>
+  <block id="7b20c547f2fd113499deaa3c0e418282" category="inline-link-macro">CVO - GCP 的防火墙规则</block>
+  <block id="acde731d82a437ab33cb200791f7a197" category="list-text"><block ref="acde731d82a437ab33cb200791f7a197" category="inline-link-macro-rx"></block></block>
+  <block id="d9446a69434b7c7fdec5c9e35d222834" category="section-title">使用 Ansible 自动化在内部和云之间同步数据库实例—可选</block>
+  <block id="1c7c9b49a62ea0dc765d1439120cfc8f" category="paragraph">为了简化混合云数据库环境的管理， NetApp 强烈建议您部署 Ansible 控制器来自动执行某些管理任务，例如将计算实例保持在内部和云中的同步。这一点尤其重要，因为云中的不同步计算实例可能会因缺少内核软件包和其他问题而导致云中恢复的数据库出现错误。</block>
+  <block id="7468552c7fc3a7ca377b7fc2405a9940" category="paragraph">此外， Ansible 控制器的自动化功能还可用于在某些任务中扩充 SnapCenter ，例如，拆分 SnapMirror 实例以激活灾难恢复数据副本以投入生产。</block>
+  <block id="6ac547919eb6ca11f5a8387eaf990843" category="inline-link-macro">RedHat/CentOS Ansible Controller 设置</block>
+  <block id="c8e133fc33bbdb52f84b3532496f2ac8" category="inline-link-macro">Ubuntu 或 Debian Ansible 控制器设置</block>
+  <block id="6f332c2f54a4d49478f9588c5cd6c57c" category="paragraph">按照以下说明为 RedHat 或 CentOS 计算机设置 Ansible 控制节点： <block ref="fedce547519117863322cfa54cc2ba7d" category="inline-link-macro-rx"></block>。按照以下说明为 Ubuntu 或 Debian 计算机设置 Ansible 控制节点： <block ref="1c50818f5fe40dbc8b2e05138d554fa4" category="inline-link-macro-rx"></block>。</block>
+  <block id="d5316785c089f90464e8e683aadd02e1" category="inline-link-macro">接下来：公有云。</block>
+  <block id="d09f79a080b121cb1acc181711b5d02a" category="paragraph"><block ref="d09f79a080b121cb1acc181711b5d02a" category="inline-link-macro-rx"></block></block>
+  <block id="d89002d36151bd13d2bba69f3533ee5f" category="summary">此解决方案为 NetApp 现场人员和客户提供了在公有云中使用基于 NetApp SnapCenter 图形用户界面的工具和 NetApp 存储服务 CVO 配置，操作数据库并将其迁移到混合云环境的说明和指导。</block>
+  <block id="8269707c3930f3cbcd49193be33bc125" category="doc">TR-4908 ：《采用 SnapCenter 的混合云数据库解决方案概述》</block>
+  <block id="7c4d94e1b484fb577b0aeafbec788ea1" category="paragraph">NetApp 公司 Alan Cao ， Felix Melligan</block>
+  <block id="268a30b4d0cad062acd42967ce0fab50" category="paragraph">在以下使用情形下，此解决方案可为 NetApp 现场人员和客户提供有关使用基于 NetApp SnapCenter 图形用户界面的工具和公有云中的 NetApp 存储服务 CVO 配置，操作数据库以及将数据库迁移到混合云环境的说明和指导：</block>
+  <block id="e88a2467c8ad8bf481854b1a745a875b" category="list-text">混合云中的数据库开发 / 测试操作</block>
+  <block id="3c9552536897a076f75b078a5e2a3703" category="list-text">混合云中的数据库灾难恢复</block>
+  <block id="a1ac690c228caf22f3228d3a4d8b5cab" category="paragraph">如今，出于性能，安全性和 / 或其他原因，许多企业数据库仍驻留在私有企业数据中心。这种混合云数据库解决方案支持企业在站点上运行主数据库，同时使用公有云进行开发 / 测试数据库操作以及灾难恢复，以降低许可和运营成本。</block>
+  <block id="d900d125b3be40bcb79452d624c38561" category="paragraph">许多企业数据库，例如 Oracle ， SQL Server ， SAP HANA 等， 许可和运营成本高昂。许多客户会根据其数据库环境中的计算核心数量支付一次性许可证费用以及年度支持成本，无论这些核心是用于开发，测试，生产还是灾难恢复。其中许多环境可能无法在整个应用程序生命周期内得到充分利用。</block>
+  <block id="1f49cc83c5c3735827e3353f320f5f7f" category="paragraph">这些解决方案为客户提供了一个选项，可通过将专用于开发，测试或灾难恢复的数据库环境迁移到云来降低可获得许可的核心数量。通过使用公共云规模，冗余，高可用性和基于消费的计费模式，许可和运营成本可以大幅节省，同时不会影响任何应用程序的可用性或可用性。</block>
+  <block id="1a197dd926608052c7d43edfd09556fa" category="paragraph">除了潜在的数据库许可证成本节省之外， NetApp 基于容量的 CVO 许可证模式还可以帮助客户节省每 GB 的存储成本，同时还可以为客户提供竞争对手的存储服务所不具备的高数据库易管理性。下图显示了公有云中常见存储服务的存储成本比较。</block>
+  <block id="810fba7bc9a3829eb522ebbc24326a08" category="paragraph"><block ref="810fba7bc9a3829eb522ebbc24326a08" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8e222eb27a0002f2960d1cf1e14bbf7d" category="paragraph">此解决方案表明，通过使用基于 SnapCenter 图形用户界面的软件工具和 NetApp SnapMirror 技术，可以轻松设置，实施和操作混合云数据库操作。</block>
+  <block id="26cc8c416b5c9fd6bec3dc68e6f2f0c8" category="paragraph">以下视频演示了 SnapCenter 的实际应用：</block>
+  <block id="edc6673fe24c4867029921bbe72f25cb" category="inline-link">使用 SnapCenter 在混合云中备份 Oracle 数据库</block>
+  <block id="b10d6cd72b187359c3769fbf5ff10e4c" category="list-text"><block ref="0d160cec2141981b284cd9986321651e" category="inline-link-rx"></block></block>
+  <block id="68d9033a95c0ed286c9b7e0e7454cd86" category="inline-link">SnapCenter - 将开发 / 测试克隆到 AWS 云以创建 数据库</block>
+  <block id="da8d0116fa67f0499837675277668911" category="list-text"><block ref="da8d0116fa67f0499837675277668911" category="inline-link-rx"></block></block>
+  <block id="3b04263461ad5a7b57aa872e093ec9fa" category="paragraph">值得注意的是，尽管本文档中的插图显示 CVO 是公有云中的目标存储实例，但解决方案也已通过全面验证，适用于 AWS 的新版本 FSX ONTAP 存储引擎已发布。</block>
+  <block id="c5a6d2f45fc4352f35e95d92c804b6f2" category="paragraph">要自行测试解决方案和用例，可通过以下链接请求 NetApp 按需实验室 SL10680 ： https://labondemand.netapp.com/lod3/labtest/request?nodeid=68761&amp;destination=lod3/testlabs[TL_AWS_004 HCOD ： AWS - nw ， SnapCenter （ OnPrem ）^ 。</block>
+  <block id="d31314285161c777a09609cc4fb2d07a" category="inline-link-macro">接下来：解决方案架构。</block>
+  <block id="0830319fc7a6b051bbb0602c2778e67c" category="paragraph"><block ref="0830319fc7a6b051bbb0602c2778e67c" category="inline-link-macro-rx"></block></block>
+  <block id="8f7280c86689be0a39cdf74aa673040d" category="summary">此解决方案在混合云环境中设计，用于支持内部生产数据库，这些数据库可以突发到所有常见的公有云中进行开发 / 测试和灾难恢复操作。</block>
+  <block id="132f2888eb2cfdeef2730212f50c53e3" category="doc">SnapCenter 要求</block>
+  <block id="e2a7d0854ef572e10255339732bb005d" category="inline-link-macro">上一篇：解决方案架构。</block>
+  <block id="b10927905ed5379ba0d73333abdbe06d" category="paragraph"><block ref="b10927905ed5379ba0d73333abdbe06d" category="inline-link-macro-rx"></block></block>
+  <block id="bc3a731533b339cd62ba7f7149313e3b" category="paragraph">此解决方案支持 SnapCenter 当前支持的所有数据库，但此处仅展示了 Oracle 和 SQL Server 数据库。此解决方案已通过虚拟化数据库工作负载的验证，但也支持裸机工作负载。</block>
+  <block id="185b108b21dccef917f415be6026c91c" category="paragraph">我们假定生产数据库服务器托管在内部，并从 ONTAP 存储集群向数据库主机提供数据库卷。SnapCenter 软件安装在内部，用于将数据库备份和数据复制到云。建议使用 Ansible 控制器，但在与公有云中的备用灾难恢复实例或开发 / 测试实例同步的数据库部署自动化或操作系统内核和数据库配置时不需要此控制器。</block>
+  <block id="47099d9ea153f8abfa5b6b70da253b3a" category="cell">* 内部部署 *</block>
+  <block id="d36407241494bfc1e84614ad1b0dd6a4" category="cell">SnapCenter 支持的任何数据库和版本</block>
+  <block id="8c8c8ca7a4093a1210412a3a5e5ad55f" category="cell">SnapCenter v4.4 或更高版本</block>
+  <block id="9d9ebf67dab68c3c892de99e981039cf" category="cell">Ansible v2.09 或更高版本</block>
+  <block id="62dd4f48e99b13c8a00fbaba684f9592" category="cell">ONTAP 集群 9.x</block>
+  <block id="d0fdc58e1e05d6cbc8b1beb072bfa235" category="cell">已配置集群间 LIF</block>
+  <block id="7135df562bcb25bfdf20e4317b923b88" category="cell">从内部到云 VPC 的连接（ VPN ，互连等）</block>
+  <block id="8c27863f5ffd0e66a9304eaca2e47fde" category="cell">网络端口打开 - ssh 22 - TCP 8145 ， 8146 ， 10000 ， 11104 ， 11105</block>
+  <block id="bcb9f3419f724f768e30956a4427261d" category="cell">* 云 - AWS*</block>
+  <block id="61c90d44785278f980592f082ef500f1" category="inline-link">Cloud Manager Connector</block>
+  <block id="97bc5062dceccb6827b1e3f0522035f0" category="cell"><block ref="97bc5062dceccb6827b1e3f0522035f0" category="inline-link-rx"></block></block>
+  <block id="2f077494ceff1f33085c5b163c3673b3" category="cell"><block ref="2f077494ceff1f33085c5b163c3673b3" category="inline-link-rx"></block></block>
+  <block id="59b2c9424963f98d73ec69c59dde54cb" category="cell">将数据库操作系统 EC2 实例与本地匹配</block>
+  <block id="e26786a16da88ee829ab76c48fd3b003" category="cell">* 云 - Azure*</block>
+  <block id="c2f8674b07907f393b67a3f9e98d3d56" category="cell"><block ref="c2f8674b07907f393b67a3f9e98d3d56" category="inline-link-rx"></block></block>
+  <block id="a8dd724647657a383eb37fd8775ec1a9" category="cell"><block ref="a8dd724647657a383eb37fd8775ec1a9" category="inline-link-rx"></block></block>
+  <block id="8bede1f0e559918be01f0646b75b4257" category="cell">将数据库操作系统 Azure 虚拟机与本地匹配</block>
+  <block id="b2a454fb4ff03b84162c59d674fdae25" category="cell">* 云 - GCP*</block>
+  <block id="af072236983e991ab34e773871b10236" category="cell"><block ref="af072236983e991ab34e773871b10236" category="inline-link-rx"></block></block>
+  <block id="499477cf7953707f63a1b1313c8c065a" category="cell"><block ref="499477cf7953707f63a1b1313c8c065a" category="inline-link-rx"></block></block>
+  <block id="2900c5e1ee191606f20d007194e70edf" category="cell">将数据库操作系统 Google 计算引擎实例与内部环境匹配</block>
+  <block id="126b29c0beff0884077277115103a374" category="inline-link-macro">下一步：前提条件配置。</block>
+  <block id="a6d027dea0e97ba248528210d36e5475" category="paragraph"><block ref="a6d027dea0e97ba248528210d36e5475" category="inline-link-macro-rx"></block></block>
+  <block id="d0bb28dcc0cc1b523a41bbb46875db9e" category="summary">在安装 Cloud Manager Connector 和 Cloud Volumes ONTAP 并配置 SnapMirror 之前，我们必须为云环境做一些准备。此页面介绍了部署 Cloud Volumes ONTAP 时需要执行的工作以及注意事项。</block>
+  <block id="8c6fb9ece3bad11d3e76d1344d9ed9ab" category="doc">公有云的前提条件</block>
+  <block id="ac7eeb8ecebe00daa1fdf4fd06cc46de" category="inline-link-macro">先前版本：内部前提条件。</block>
+  <block id="70ba5e430ac8eade85f8e01e51412fe4" category="paragraph"><block ref="70ba5e430ac8eade85f8e01e51412fe4" category="inline-link-macro-rx"></block></block>
+  <block id="5a2798d22185b0e40ea502bbbb171d38" category="section-title">Cloud Manager 和 Cloud Volumes ONTAP 部署前提条件检查清单</block>
+  <block id="1e094e6477be231098329b0096c7221f" category="list-text">NetApp Cloud Central 登录</block>
+  <block id="b59e275c4ece2430dff67db92845ab7f" category="list-text">从 Web 浏览器到多个端点的网络访问</block>
+  <block id="d2ed5c7ede8a1ce9d218ec60b0f03935" category="list-text">连接器的网络位置</block>
+  <block id="0d07862d67097acd517fe27c0de099d7" category="list-text">云提供商权限</block>
+  <block id="203802866ac2835e79bd76c94a3761c2" category="list-text">为单个服务建立网络</block>
+  <block id="c4d5e1cbdfc47a0fdcb4a1a9dddd9e17" category="inline-link">云文档</block>
+  <block id="1a22a3f7b690b2ec8919c8806633fb26" category="paragraph">有关入门内容的详细信息，请访问我们的<block ref="247d95fa755d21bb8790cc6d7a2fc412" category="inline-link-rx"></block>。</block>
+  <block id="ea61e2c2ff507048203824add1eb7c21" category="section-title">注意事项</block>
+  <block id="176ca67b83510a1281a4cfc749a3543a" category="section-title">1. 什么是 Cloud Manager 连接器？</block>
+  <block id="1681641037afae45bd6074dcde9eed00" category="paragraph">在大多数情况下， Cloud Central 帐户管理员必须在云或内部网络中部署连接器。借助此连接器， Cloud Manager 可以管理公有云环境中的资源和流程。</block>
+  <block id="8a78be5d168f00b24bf1625de3d5409c" category="paragraph">有关连接器的详细信息，请访问我们的<block ref="f39c14bbbbdd46ca70a63fb06046c789" category="inline-link-rx"></block>。</block>
+  <block id="fcc2bf38b8157a22b5fc6975b7054acc" category="section-title">2. Cloud Volumes ONTAP 规模估算和架构</block>
+  <block id="1c09b5154aa1f43cb9ebcbd6fea5eadc" category="paragraph">部署 Cloud Volumes ONTAP 时，您可以选择预定义的软件包或创建自己的配置。虽然其中许多值稍后可以无中断地进行更改，但在部署之前，需要根据要在云中部署的工作负载做出一些关键决策。</block>
+  <block id="331ce28903aee0b30cd3c94e5483edf5" category="inline-link">CVO 规模估算工具</block>
+  <block id="acaed5d74e38e1779b3831dcf51c7600" category="paragraph">每个云提供商都有不同的部署选项，几乎每个工作负载都有自己的独特属性。NetApp 具有<block ref="6a71e7e42ab9335484c5530029f79b92" category="inline-link-rx"></block> 这有助于根据容量和性能正确估算部署规模，但它是围绕一些基本概念构建的，值得考虑：</block>
+  <block id="145c90afb7955854f2371e9decf3de9b" category="list-text">所需容量</block>
+  <block id="f1521b662bf51f1af6c2d38bd610afae" category="list-text">云虚拟机的网络功能</block>
+  <block id="f75d8ba5edc8017382d5df68baf9e30f" category="list-text">云存储的性能特征</block>
+  <block id="af9d66ea3132fcfeb46b85557bc1af1b" category="paragraph">关键在于规划的配置不仅要满足当前的容量和性能要求，还要考虑未来的增长。这通常称为容量余量和性能余量。</block>
+  <block id="4847e034bb0a55fcbc8a3380d6a3ab80" category="inline-link">AWS</block>
+  <block id="3a580f142203677f1f0bc30898f63f53" category="inline-link">Azure 酒店</block>
+  <block id="c731f72e1d22a7c5e01a7cb789a8885e" category="inline-link">GCP</block>
+  <block id="180f0326dff3a03aecf5e184943d108a" category="paragraph">如果您希望了解更多信息，请阅读有关正确规划的文档<block ref="af5d70b69c3436f8bcf6f7b9579c4e83" category="inline-link-rx"></block>，<block ref="c2e85b51d3015b4c720388e64a3de23e" category="inline-link-rx"></block>，和<block ref="b1068926334a08925797774f64291db4" category="inline-link-rx"></block>。</block>
+  <block id="c50ea1f0c6dcf02fbdd39e1e6b5befc2" category="section-title">3. 单节点还是高可用性？</block>
+  <block id="eadb13b9c72271dbf16967e78059fea4" category="paragraph">在所有云中，您可以选择在单个节点或具有两个节点的集群模式高可用性对中部署 CVO 。根据使用情形，您可能希望部署一个节点以节省成本，或者部署一个 HA 对以提供进一步的可用性和冗余。</block>
+  <block id="9cbd119b18cd836b6020fcfd3bfbe37f" category="paragraph">对于灾难恢复使用情形或为开发和测试而启动临时存储的情形，单个节点很常见，因为突然的区域或基础架构中断所造成的影响较小。但是，对于任何生产用例，如果数据仅位于一个位置，或者数据集必须具有更多冗余和可用性，则建议使用高可用性。</block>
+  <block id="83d2ad0cda1f71c52878284cc7c1f713" category="paragraph">有关每个云高可用性版本的架构的详细信息，请访问的文档<block ref="4344469628657b2a6a0d147e5e6fbc9a" category="inline-link-rx"></block>，<block ref="28a8305eced80cb5b1351f5cffb268ae" category="inline-link-rx"></block> 和<block ref="1b945d178a8347e94e5c5456dc9e6db8" category="inline-link-rx"></block>。</block>
+  <block id="f0d106c1997a933ecb53ee88e83670e7" category="inline-link-macro">下一步：入门概述。</block>
+  <block id="fd43d07d375b44f30fde6995279b9265" category="paragraph"><block ref="fd43d07d375b44f30fde6995279b9265" category="inline-link-macro-rx"></block></block>
+  <block id="a10998cc3e1dc7f2a013754d935c4f26" category="summary">NetApp SnapCenter 工具使用基于角色的访问控制（ Role-Based Access Control ， RBAC ）来管理用户资源访问和权限授予，而 SnapCenter 安装会创建预先填充的角色。您还可以根据需要或应用程序创建自定义角色。</block>
+  <block id="7e3b07f9add4cd78ade3c795a52dfad2" category="doc">内部部署入门</block>
+  <block id="32229cff9e0b41c513b3e3b9e19cec88" category="inline-link-macro">上一步：入门概述。</block>
+  <block id="6be036b00e3db4159514171a989cacd6" category="paragraph"><block ref="6be036b00e3db4159514171a989cacd6" category="inline-link-macro-rx"></block></block>
+  <block id="d30e54646ba482722332f48ddc22bde5" category="section-title">1. 在 SnapCenter 中设置数据库管理员用户</block>
+  <block id="72f706d19ed0d09889b4fbc7578cd1a3" category="paragraph">NetApp SnapCenter 工具使用基于角色的访问控制（ Role-Based Access Control ， RBAC ）来管理用户资源访问和权限授予，而 SnapCenter 安装会创建预先填充的角色。您还可以根据需要或应用程序创建自定义角色。SnapCenter 支持的每个数据库平台都有一个专用的管理员用户 ID ，用于数据库备份，还原和 / 或灾难恢复，这一点很有意义。您也可以使用一个 ID 来管理所有数据库。在测试用例和演示中，我们分别为 Oracle 和 SQL Server 创建了一个专用管理员用户。</block>
+  <block id="27733e8f07432bb94ac7621b28d3b2c8" category="paragraph">某些 SnapCenter 资源只能使用 SnapCenterAdmin 角色进行配置。然后，可以将资源分配给其他用户 ID 以进行访问。</block>
+  <block id="64784aa3cec13e83af6e941f8489cf06" category="paragraph">在预安装和配置的内部 SnapCenter 环境中，以下任务可能已完成。如果不是，以下步骤将创建一个数据库管理员用户：</block>
+  <block id="c8867eac833e7bb55520105b00139f1a" category="list-text">将管理员用户添加到 Windows Active Directory 。</block>
+  <block id="dd3e743eb52cbe7c2b6104573a9767e0" category="list-text">使用 SnapCenterAdmin 角色授予的 ID 登录到 SnapCenter 。</block>
+  <block id="a6bd76cb24271ba173d16f01bf4108d0" category="list-text">导航到设置和用户下的访问选项卡，然后单击添加以添加新用户。新用户 ID 将链接到步骤 1 中在 Windows Active Directory 中创建的管理员用户。。根据需要为用户分配适当的角色。根据需要向管理员用户分配资源。</block>
+  <block id="6a67bb048bd14dd348cca7f81b62d699" category="paragraph"><block ref="6a67bb048bd14dd348cca7f81b62d699" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5d2c51e83f473f137861a132554d1916" category="section-title">2. SnapCenter 插件安装前提条件</block>
+  <block id="7bd973d4d28d6fcf5f50379b33a49758" category="paragraph">SnapCenter 使用数据库主机上运行的插件代理执行备份，还原，克隆和其他功能。它会通过在设置和凭据选项卡下配置的凭据连接到数据库主机和数据库，以便安装插件和执行其他管理功能。根据目标主机类型（如 Linux 或 Windows ）以及数据库类型，有特定的权限要求。</block>
+  <block id="c342f214098114b90cb67297a2ef5dc3" category="paragraph">在安装 SnapCenter 插件之前，必须配置数据库主机凭据。通常，您希望使用数据库主机上的管理员用户帐户作为插件安装的主机连接凭据。您还可以使用基于操作系统的身份验证为数据库访问授予相同的用户 ID 。另一方面，您还可以使用不同数据库用户 ID 进行数据库身份验证，以进行数据库管理访问。如果您决定使用基于操作系统的身份验证，则必须为操作系统管理员用户 ID 授予数据库访问权限。对于基于 Windows 域的 SQL Server 安装，可以使用域管理员帐户管理域中的所有 SQL Server 。</block>
+  <block id="19df1192effefad83e57653fd3a47415" category="paragraph">适用于 SQL Server 的 Windows 主机：</block>
+  <block id="e1cc3ce53d7753e33588201db3d3b147" category="list-text">如果使用 Windows 凭据进行身份验证，则必须在安装插件之前设置凭据。</block>
+  <block id="a82f1290b72a26d654b93632a1ec50bb" category="list-text">如果使用 SQL Server 实例进行身份验证，则必须在安装插件后添加凭据。</block>
+  <block id="63f74bef6650942c6795f96366a39e6a" category="list-text">如果在设置凭据时启用了 SQL 身份验证，则发现的实例或数据库将显示一个红色锁定图标。如果显示锁定图标，则必须指定实例或数据库凭据才能成功将实例或数据库添加到资源组。</block>
+  <block id="b61dad3bbbf3270bf2dada5c2ac1f775" category="list-text">满足以下条件时，必须将凭据分配给不具有 sysadmin 访问权限的 RBAC 用户：</block>
+  <block id="34cefb5a19894e4f9b1b068544c0f591" category="list-text">此凭据将分配给 SQL 实例。</block>
+  <block id="6707464a5871a6aa26dcf785bea4052c" category="list-text">SQL 实例或主机已分配给 RBAC 用户。</block>
+  <block id="4bc8aac02ff00d874ad8b4ccd4d745ed" category="list-text">RBAC DB 管理员用户必须同时具有资源组和备份权限。</block>
+  <block id="9198b455aa67840c7a69c7a54e94301a" category="paragraph">适用于 Oracle 的 UNIX 主机：</block>
+  <block id="71d53e54a48cfe7de69347bcd854ef30" category="list-text">您必须已通过编辑 sshd.conf 并重新启动 sshd 服务为 root 或非 root 用户启用基于密码的 SSH 连接。默认情况下， AWS 实例上基于密码的 SSH 身份验证处于关闭状态。</block>
+  <block id="efa873f0464a14d54b066f475ad74480" category="list-text">为非 root 用户配置 sudo 权限以安装和启动插件过程。安装插件后，这些进程将以有效 root 用户身份运行。</block>
+  <block id="82a2174029175f8fbc3f52fea4e18c84" category="list-text">使用 Linux 身份验证模式为安装用户创建凭据。</block>
+  <block id="86b3cc44ebd8e0a9185e48c4f22e81e9" category="list-text">必须在 Linux 主机上安装 Java 1.8.x （ 64 位）。</block>
+  <block id="c1e8851d10ecc615c47a47f704569d29" category="list-text">安装 Oracle 数据库插件还会安装适用于 Unix 的 SnapCenter 插件。</block>
+  <block id="7efb27733d1fb21feae901a41580dced" category="section-title">3. SnapCenter 主机插件安装</block>
+  <block id="37a5c714defad8175b81b4d49eb0544c" category="admonition">在尝试在云数据库服务器实例上安装 SnapCenter 插件之前，请确保已完成计算实例部署的相关云部分中列出的所有配置步骤。</block>
+  <block id="283aa502c28fe1c9ff8dadd1700955fc" category="paragraph">以下步骤说明了在主机上安装 SnapCenter 插件时如何将数据库主机添加到 SnapCenter 中。操作步骤适用场景同时添加内部主机和云主机。以下演示将添加驻留在 AWS 中的 Windows 或 Linux 主机。</block>
+  <block id="81ed46777c39c0d0618953601572fc27" category="section-title">配置 SnapCenter VMware 全局设置</block>
+  <block id="2aa8a40dbbfb6b52621408c81aa5373c" category="paragraph">导航到设置 &gt; 全局设置。在 Hypervisor Settings 下选择 "VM have iSCSI direct attached disks or NFS for all the hosts" ，然后单击 Update 。</block>
+  <block id="4c120331c9eea223eee675b6588d76ee" category="paragraph"><block ref="4c120331c9eea223eee675b6588d76ee" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1f63a469619859e4cfab52fd63523aca" category="section-title">添加 Windows 主机并在主机上安装插件</block>
+  <block id="997da6deedab4436b559e3a8f7f05a2e" category="list-text">使用具有 SnapCenterAdmin 权限的用户 ID 登录到 SnapCenter 。</block>
+  <block id="97e7f600216a2e9ae18423777e11ad9c" category="list-text">单击左侧菜单中的主机选项卡，然后单击添加以打开添加主机工作流。</block>
+  <block id="35314bae57d7ff62ab36156211c1cc71" category="list-text">选择 Windows 作为主机类型；主机名可以是主机名或 IP 地址。主机名必须从 SnapCenter 主机解析为正确的主机 IP 地址。选择在步骤 2 中创建的主机凭据。选择 Microsoft Windows 和 Microsoft SQL Server 作为要安装的插件软件包。</block>
+  <block id="b9740ae9eb2ef0fe27e4c541d06a961f" category="paragraph"><block ref="b9740ae9eb2ef0fe27e4c541d06a961f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="31efcd689861354799bb539ab2571ebe" category="list-text">在 Windows 主机上安装此插件后，其整体状态将显示为 "Configure log directory" 。</block>
+  <block id="0e15e25c5ee21469698f72cf35caa7bf" category="paragraph"><block ref="0e15e25c5ee21469698f72cf35caa7bf" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d2aeaa4503c6d72513c0dbe0f205ee3b" category="list-text">单击主机名以打开 SQL Server 日志目录配置。</block>
+  <block id="6fc78660a180b747f815b878c89e3cb0" category="paragraph"><block ref="6fc78660a180b747f815b878c89e3cb0" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8cb2b40646a77b4f044e7fa04ea20306" category="list-text">单击 " 配置日志目录 " 以打开 " 为 SQL Server 配置插件 " 。</block>
+  <block id="5e3bf9ddacfcad12c5cf63614a869ad4" category="paragraph"><block ref="5e3bf9ddacfcad12c5cf63614a869ad4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f7143b5d162d385dfb1af07f61c59f65" category="list-text">单击浏览以发现 NetApp 存储，以便可以设置日志目录； SnapCenter 使用此日志目录来汇总 SQL Server 事务日志文件。然后单击保存。</block>
+  <block id="50eb49de485da684ac1556947ac46aba" category="paragraph"><block ref="50eb49de485da684ac1556947ac46aba" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b0d88588bdb07dd412a4ba1d08348b29" category="admonition">要发现配置到数据库主机的 NetApp 存储，必须将存储（内部或 CVO ）添加到 SnapCenter 中，如 CVO 的步骤 6 中所示。</block>
+  <block id="d744af12906d55ab51aa932b3ffcd121" category="list-text">配置日志目录后， Windows 主机插件的整体状态将更改为正在运行。</block>
+  <block id="3f7bfffdbb76fd620b0a31d300415528" category="paragraph"><block ref="3f7bfffdbb76fd620b0a31d300415528" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f41517f2e270a138f4ae92988a4cbdd2" category="list-text">要将主机分配给数据库管理用户 ID ，请导航到 " 设置和用户 " 下的 " 访问 " 选项卡，单击数据库管理用户 ID （在我们的情况下，是指需要将主机分配到的 sqldba ），然后单击 " 保存 " 完成主机资源分配。</block>
+  <block id="b21f826d2ea15e58b9c8aadccb566cfe" category="paragraph"><block ref="b21f826d2ea15e58b9c8aadccb566cfe" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="021de72edbb0f174ffe954c5e5367b80" category="paragraph"><block ref="021de72edbb0f174ffe954c5e5367b80" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e2fe19c733a6342990513e02264db163" category="section-title">添加 Unix 主机并在主机上安装插件</block>
+  <block id="6a0f36be9f208d20c3c1145c3a09b876" category="list-text">单击左侧菜单中的主机选项卡，然后单击添加以打开添加主机工作流。</block>
+  <block id="dd8c6d773e31c4254eb58b4b5e2ae1be" category="list-text">选择 Linux 作为主机类型。主机名可以是主机名或 IP 地址。但是，必须解析主机名，以更正 SnapCenter 主机的主机 IP 地址。选择在步骤 2 中创建的主机凭据。主机凭据需要 sudo 权限。选中 Oracle Database 作为要安装的插件，该插件将同时安装 Oracle 和 Linux 主机插件。</block>
+  <block id="7d4cdef2144fd1466fae298bd27476d1" category="paragraph"><block ref="7d4cdef2144fd1466fae298bd27476d1" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="711730391561a228d41f7fede13ca6e8" category="list-text">单击更多选项并选择 " 跳过预安装检查 " 。 系统会提示您确认是否跳过预安装检查。单击是，然后单击保存。</block>
+  <block id="3511b18d059f3f300b5fbe827f7273ac" category="paragraph"><block ref="3511b18d059f3f300b5fbe827f7273ac" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e095a093138c6b1968d313d5f799255a" category="list-text">单击提交以开始安装插件。系统将提示您确认指纹，如下所示。</block>
+  <block id="146c4805beb9310e4554842f776cb88b" category="paragraph"><block ref="146c4805beb9310e4554842f776cb88b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="53dcda6f2c03efbe73ae5eb311852a8d" category="list-text">SnapCenter 将执行主机验证和注册，然后该插件将安装在 Linux 主机上。状态将从 " 正在安装插件 " 更改为 " 正在运行 " 。</block>
+  <block id="2636403a6c50748422736d9d84a3e4be" category="paragraph"><block ref="2636403a6c50748422736d9d84a3e4be" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="33ea9d9313933c68d640ebb655ec43dc" category="list-text">将新添加的主机分配给正确的数据库管理用户 ID （在我们的案例中为 oradba ）。</block>
+  <block id="2815d2f5e3b49d9332a320ec997271dd" category="paragraph"><block ref="2815d2f5e3b49d9332a320ec997271dd" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="eb6a9566891a97e0f8fbaefbd4878bdd" category="paragraph"><block ref="eb6a9566891a97e0f8fbaefbd4878bdd" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2b4c839521fd41e845e6e8c3158b809b" category="section-title">4. 数据库资源发现</block>
+  <block id="45e46a9524f23884445bf542bf464b93" category="paragraph">成功安装插件后，可以立即发现主机上的数据库资源。单击左侧菜单中的 "Resources" 选项卡。根据数据库平台的类型，可以使用多种视图，例如数据库，资源组等。如果未发现和显示主机上的资源，则可能需要单击刷新资源选项卡。</block>
+  <block id="79fca6395972f8079320d3229822e491" category="paragraph"><block ref="79fca6395972f8079320d3229822e491" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="66789731e61fd3d4b6024e5fcb0945e1" category="paragraph">首次发现数据库时，整体状态显示为 " 不受保护 " 。 上一屏幕截图显示了一个尚未受备份策略保护的 Oracle 数据库。</block>
+  <block id="68148a1249ca9110d03c698ae152932a" category="paragraph">设置备份配置或策略并执行备份后，数据库的整体状态会将备份状态显示为 " 备份成功 " ，并显示上次备份的时间戳。以下屏幕截图显示了 SQL Server 用户数据库的备份状态。</block>
+  <block id="2cdfb74ac3aabfde7e1fae347ed5afc7" category="paragraph"><block ref="2cdfb74ac3aabfde7e1fae347ed5afc7" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a9c9616324bc00808729d46fba94ad75" category="paragraph">如果未正确设置数据库访问凭据，则红色锁定按钮表示数据库不可访问。例如，如果 Windows 凭据不具有对数据库实例的 sysadmin 访问权限，则必须重新配置数据库凭据以解除红色锁定。</block>
+  <block id="dd4606e87689c86d82a694412c5654a5" category="paragraph"><block ref="dd4606e87689c86d82a694412c5654a5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="884f07ad394b89553e7d6d1f90fae584" category="paragraph"><block ref="884f07ad394b89553e7d6d1f90fae584" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0024854a814ddd68bcf3907357c46bc2" category="paragraph">在 Windows 级别或数据库级别配置相应的凭据后，红色锁定将消失，并收集和查看 SQL Server 类型信息。</block>
+  <block id="95c88e08b2fd416b4514ce2454af2038" category="paragraph"><block ref="95c88e08b2fd416b4514ce2454af2038" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="864f4d2595d06e5e8b46b08edb3899e6" category="section-title">5. 设置存储集群对等和数据库卷复制</block>
+  <block id="785196ec55a9e713ad1a4f962baa31dd" category="paragraph">为了使用公有云作为目标目标目标来保护内部数据库数据，使用 NetApp SnapMirror 技术将内部 ONTAP 集群数据库卷复制到云 CVO 。然后，可以克隆复制的目标卷以进行开发 / 运营或灾难恢复。通过以下高级步骤，您可以设置集群对等和数据库卷复制。</block>
+  <block id="1f1927293f04e4cf0fc91a7e389612eb" category="list-text">在内部集群和 CVO 集群实例上配置集群间 LIF 以建立集群对等关系。此步骤可使用 ONTAP 系统管理器执行。默认 CVO 部署会自动配置集群间 LIF 。</block>
+  <block id="9547803d96e78bbc38305e6300f7a800" category="paragraph">内部集群：</block>
+  <block id="2ef6da9ba547bc5361495650ac3fc992" category="paragraph"><block ref="2ef6da9ba547bc5361495650ac3fc992" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f3c5b3e342f57b792e2263e69e41677a" category="paragraph">目标 CVO 集群：</block>
+  <block id="d94586e4cd285619a4f1ef0e06636dd1" category="paragraph"><block ref="d94586e4cd285619a4f1ef0e06636dd1" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="79d372933b80ed2ca8ca14d8458828af" category="inline-link-macro">入门— AWS 公有云</block>
+  <block id="6a87ea28950f9209121872c9d2690049" category="list-text">配置集群间 LIF 后，可以使用 NetApp Cloud Manager 中的拖放功能设置集群对等和卷复制。请参见 <block ref="28783e162df4af496939d6f9f6f31d5f" category="inline-link-macro-rx"></block> 了解详细信息。</block>
+  <block id="d1567c6c8f0752cbc7deb6d9f639ba12" category="paragraph">或者，也可以使用 ONTAP 系统管理器执行集群对等和数据库卷复制，如下所示：</block>
+  <block id="494c0b53ff31502c0c1105881e2e389a" category="list-text">登录到 ONTAP 系统管理器。导航到集群 &gt; 设置，然后单击对等集群，以便与云中的 CVO 实例建立集群对等关系。</block>
+  <block id="ba770272a0f634af47a5788634e80d54" category="paragraph"><block ref="ba770272a0f634af47a5788634e80d54" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="54de72c782c4b4ccc7f2914a858d5356" category="list-text">转到卷选项卡。选择要复制的数据库卷，然后单击保护。</block>
+  <block id="32588f46a47679329b03194fd2e9084f" category="paragraph"><block ref="32588f46a47679329b03194fd2e9084f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b0aace069b478e8b2b0753f855f2be94" category="list-text">将保护策略设置为异步。选择目标集群和 Storage SVM 。</block>
+  <block id="7dbec53b432ae53f7e454836ad0dad00" category="paragraph"><block ref="7dbec53b432ae53f7e454836ad0dad00" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1a2a64fe8af0790615a9344069794e2e" category="list-text">验证卷是否已在源和目标之间同步，以及复制关系是否运行正常。</block>
+  <block id="97edcd79a5e90d9caafde40fcb586185" category="paragraph"><block ref="97edcd79a5e90d9caafde40fcb586185" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="36097c4ad6058de288de8992f89adbb8" category="section-title">6. 将 CVO 数据库存储 SVM 添加到 SnapCenter</block>
+  <block id="ebcf85d67af3f672ade8bd7b224a8a2b" category="list-text">从菜单中单击存储系统选项卡，然后单击新建将托管复制的目标数据库卷的 CVO 存储 SVM 添加到 SnapCenter 。在存储系统字段中输入集群管理 IP ，然后输入相应的用户名和密码。</block>
+  <block id="41e9c94a0c8cb108959099b8f87adb82" category="paragraph"><block ref="41e9c94a0c8cb108959099b8f87adb82" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a27406b63f99780f65572b95f2f72348" category="list-text">单击更多选项以打开其他存储配置选项。在平台字段中，选择 Cloud Volumes ONTAP ，选中二级，然后单击保存。</block>
+  <block id="8a60464ab91cb2499a03c722639c3aee" category="paragraph"><block ref="8a60464ab91cb2499a03c722639c3aee" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b474a0a2de59b8e3013112beb48af7b7" category="list-text">将存储系统分配给 SnapCenter 数据库管理用户 ID ，如所示 <block ref="8a46cbc3838a53b9205abb25a577bbc8" category="inline-xref-macro-rx"></block>。</block>
+  <block id="8691f91a1fe977fd76aa5e53b0f71034" category="paragraph"><block ref="8691f91a1fe977fd76aa5e53b0f71034" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="39ec95149453e7bb6b73f1c03228e85c" category="section-title">7. 在 SnapCenter 中设置数据库备份策略</block>
+  <block id="37d9f685e375f77a2231e13c88ccc606" category="paragraph">以下过程演示了如何创建完整的数据库或日志文件备份策略。然后，可以实施此策略来保护数据库资源。恢复点目标（ RPO ）或恢复时间目标（ RTO ）决定了数据库和 / 或日志备份的频率。</block>
+  <block id="739184f368f13e142dd034fcdc853594" category="section-title">为 Oracle 创建完整的数据库备份策略</block>
+  <block id="94b39254a7aba068b68fec64f6331b0b" category="list-text">以数据库管理用户 ID 身份登录到 SnapCenter ，单击设置，然后单击策略。</block>
+  <block id="90affc4ffbb767a3d1272be5e1ad8f0c" category="paragraph"><block ref="90affc4ffbb767a3d1272be5e1ad8f0c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a1d144b8c78fc8541b57aa9f0ca863a6" category="list-text">单击 " 新建 " 启动新的备份策略创建工作流或选择要修改的现有策略。</block>
+  <block id="29618ae8465c694d23d68e171fe9d905" category="paragraph"><block ref="29618ae8465c694d23d68e171fe9d905" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8c9dac29c26006ce512153a9bdabcc95" category="list-text">选择备份类型和计划频率。</block>
+  <block id="10e2791563a2891fd7e4e68c5673671b" category="paragraph"><block ref="10e2791563a2891fd7e4e68c5673671b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4df94ad44381c9fb7fe2f8d01dcd16d8" category="list-text">设置备份保留设置。此选项用于定义要保留的完整数据库备份副本数。</block>
+  <block id="6dcc4aa023085480846059b6b1d5e5b3" category="paragraph"><block ref="6dcc4aa023085480846059b6b1d5e5b3" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="fd634020906b35a41e0ba633eddeb96a" category="list-text">选择二级复制选项以将要复制到云中二级位置的本地主快照备份推送到云中。</block>
+  <block id="25ef9e4c73a2da8519e8d232b6a95fcb" category="paragraph"><block ref="25ef9e4c73a2da8519e8d232b6a95fcb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b2e3af55a4355bc46e91425ac5701174" category="list-text">指定在备份运行前后运行的任何可选脚本。</block>
+  <block id="326d50fae4f713cebe97d0f6bb23a2d9" category="paragraph"><block ref="326d50fae4f713cebe97d0f6bb23a2d9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="cd009bc210e371d36d466b592179e883" category="list-text">根据需要运行备份验证。</block>
+  <block id="0b132e3438f5cf31e90f45e79710f0b9" category="paragraph"><block ref="0b132e3438f5cf31e90f45e79710f0b9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="dba73d3ec3f929ff18665087076291ac" category="list-text">摘要</block>
+  <block id="4f92fa99421beeb9f74ee7613de52706" category="paragraph"><block ref="4f92fa99421beeb9f74ee7613de52706" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b3594f2789840eda9633139ca530384a" category="section-title">为 Oracle 创建数据库日志备份策略</block>
+  <block id="be763ec2afcb0358426bb0abcae4dd60" category="list-text">使用数据库管理用户 ID 登录到 SnapCenter ，单击设置，然后单击策略。</block>
+  <block id="b0e663a3d363868d6c71ab9ec37940c6" category="list-text">单击 " 新建 " 启动新的备份策略创建工作流，或者选择现有策略进行修改。</block>
+  <block id="fa2687f5a5fbedb43745f649a2e11950" category="paragraph"><block ref="fa2687f5a5fbedb43745f649a2e11950" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0938f6574b189bdac27cdd92abc521c5" category="paragraph"><block ref="0938f6574b189bdac27cdd92abc521c5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="59480846ec23463481d361bf3026235e" category="list-text">设置日志保留期限。</block>
+  <block id="c8df578fbf71151edda735bc81e8511c" category="paragraph"><block ref="c8df578fbf71151edda735bc81e8511c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="04ba33c0584145006ca637b4556aa919" category="list-text">启用复制到公有云中的二级位置。</block>
+  <block id="fdbe42a8484a3e984e4aacb6a31cccef" category="paragraph"><block ref="fdbe42a8484a3e984e4aacb6a31cccef" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="ab9406cbd3a8f082700523fdac8a0c1d" category="list-text">指定在日志备份前后运行的任何可选脚本。</block>
+  <block id="5b04423521e56720f1f5d0291db584ef" category="paragraph"><block ref="5b04423521e56720f1f5d0291db584ef" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f4b55e05a9ae89fe14377b98bc8a8166" category="list-text">指定任何备份验证脚本。</block>
+  <block id="c4dc219fd9466ab86c22ac8e859384ea" category="paragraph"><block ref="c4dc219fd9466ab86c22ac8e859384ea" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2564f2d008c62044da1b7f7397252edf" category="paragraph"><block ref="2564f2d008c62044da1b7f7397252edf" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="fe147647227dfec6603bc76daf30463e" category="section-title">为 SQL 创建完整的数据库备份策略</block>
+  <block id="fa726a7e85857bee77ace96dcf7e5316" category="paragraph"><block ref="fa726a7e85857bee77ace96dcf7e5316" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="ce2168daff0c9b1a74e59d999d6ead44" category="paragraph"><block ref="ce2168daff0c9b1a74e59d999d6ead44" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="30637cfd5a5cc820d6bc4116fccfff7e" category="list-text">定义备份选项和计划频率。对于配置了可用性组的 SQL Server ，可以设置首选备份副本。</block>
+  <block id="b520dcfd25c4b29395bb9b12ac643bb2" category="paragraph"><block ref="b520dcfd25c4b29395bb9b12ac643bb2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5f74ada8393aecd40e892de04b5b30f8" category="list-text">设置备份保留期限。</block>
+  <block id="4ade95d8122243cda1455b04504d3367" category="paragraph"><block ref="4ade95d8122243cda1455b04504d3367" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f1a67a80a7ad9403781b210983ea778d" category="list-text">启用备份副本复制到云中的二级位置。</block>
+  <block id="caf8324e53d9bb41b3ecb64f3e3b7dda" category="paragraph"><block ref="caf8324e53d9bb41b3ecb64f3e3b7dda" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="17b7b360fc2163537795a34cd8d14d6a" category="list-text">指定在备份作业之前或之后运行的任何可选脚本。</block>
+  <block id="abbc7de57d2b0d5d1c462b7513199253" category="paragraph"><block ref="abbc7de57d2b0d5d1c462b7513199253" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="fb836d972496d965dd2170ed1480917b" category="list-text">指定用于运行备份验证的选项。</block>
+  <block id="b4dd01df6b310e6b0814328a86bd6ed6" category="paragraph"><block ref="b4dd01df6b310e6b0814328a86bd6ed6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="67cfb8548ccb78172db31d7af494fa02" category="paragraph"><block ref="67cfb8548ccb78172db31d7af494fa02" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="02b67ed2348002e614d5a35151577632" category="section-title">为 SQL 创建数据库日志备份策略。</block>
+  <block id="b405195aec7cf62440373fcdc490dec6" category="list-text">使用数据库管理用户 ID 登录到 SnapCenter ，单击 " 设置 "&gt;" 策略 " ，然后单击 " 新建 " 以启动新的策略创建工作流。</block>
+  <block id="c236030076b67936a7c1c11d49408838" category="paragraph"><block ref="c236030076b67936a7c1c11d49408838" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="acdaf46fc90606d68f3f2b52cca5e95b" category="list-text">定义日志备份选项和计划频率。对于配置了可用性组的 SQL Server ，可以设置首选备份副本。</block>
+  <block id="19ab604707a9384fa4883cedd5a525f9" category="paragraph"><block ref="19ab604707a9384fa4883cedd5a525f9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="da00d968a5d810d846ddc815b8f405a4" category="list-text">SQL Server 数据备份策略定义日志备份保留；接受此处的默认值。</block>
+  <block id="783828e5ae6dcfd713966e7301831296" category="paragraph"><block ref="783828e5ae6dcfd713966e7301831296" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d04d89062d3ed67bbc9c4aee35bdba7f" category="list-text">启用日志备份复制到云中的二级卷。</block>
+  <block id="b1968bd01bc5c402dcd27c99ce6326cc" category="paragraph"><block ref="b1968bd01bc5c402dcd27c99ce6326cc" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="30c50cf9d6726341a29a3caf97dc84e8" category="paragraph"><block ref="30c50cf9d6726341a29a3caf97dc84e8" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c4d9b291b4ffaddb50c99313e530077f" category="paragraph"><block ref="c4d9b291b4ffaddb50c99313e530077f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f28f6c36698b3a4cd47cbeead15eddf2" category="section-title">8. 实施备份策略以保护数据库</block>
+  <block id="37b889cc1b57f66ae9018b6eacb891ba" category="paragraph">SnapCenter 使用资源组以数据库资源的逻辑分组形式备份数据库，例如，服务器上托管的多个数据库，共享相同存储卷的数据库，支持业务应用程序的多个数据库等。保护单个数据库会创建自己的资源组。以下过程演示如何实施第 7 节中创建的备份策略来保护 Oracle 和 SQL Server 数据库。</block>
+  <block id="0603dbbe978e4cd3ee1c45ba96a1aa6f" category="section-title">创建一个资源组以对 Oracle 进行完整备份</block>
+  <block id="5f4e02f34bcd7993867c4b3297a171d0" category="list-text">使用数据库管理用户 ID 登录到 SnapCenter ，然后导航到资源选项卡。在视图下拉列表中，选择数据库或资源组以启动资源组创建工作流。</block>
+  <block id="6eac6f96ac8d968dfec8184d16a73d43" category="paragraph"><block ref="6eac6f96ac8d968dfec8184d16a73d43" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="98dcf41bcde9cb6c4235a6a7dfe69346" category="list-text">提供资源组的名称和标记。您可以为 Snapshot 副本定义命名格式，并绕过冗余归档日志目标（如果已配置）。</block>
+  <block id="a75ba82042ae54dd2e68cf6c7a26614c" category="paragraph"><block ref="a75ba82042ae54dd2e68cf6c7a26614c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0cd85a82e6f02b779006b158b9c5f828" category="list-text">将数据库资源添加到资源组。</block>
+  <block id="3836a8be1f86b6658a7fa6b180e4a72d" category="paragraph"><block ref="3836a8be1f86b6658a7fa6b180e4a72d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="cee52cb6702e7590fbef45eccc8fb2df" category="list-text">从下拉列表中选择在第 7 节中创建的完整备份策略。</block>
+  <block id="af900bffdda986bc1db955ae78832742" category="paragraph"><block ref="af900bffdda986bc1db955ae78832742" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8fe872cd84ea2e9051770379e63f9caf" category="list-text">单击（ + ）号可配置所需的备份计划。</block>
+  <block id="9da504fd8ab60cfcc873608530cf5d56" category="paragraph"><block ref="9da504fd8ab60cfcc873608530cf5d56" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="fdc27a4c5d48dbfc04f81ecac85acd64" category="list-text">单击 Load Locators 以加载源卷和目标卷。</block>
+  <block id="7242164857e43688f8a7bec97559c36e" category="paragraph"><block ref="7242164857e43688f8a7bec97559c36e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b612dc8868902cf8fbf2b1024ad94e65" category="paragraph"><block ref="b612dc8868902cf8fbf2b1024ad94e65" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="95633243861715786b64e1554b629435" category="paragraph"><block ref="95633243861715786b64e1554b629435" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6f7192b9766e6f09c261f3ca3d3bddc8" category="section-title">为 Oracle 的日志备份创建一个资源组</block>
+  <block id="1a0cd5de7c84ddbf632838dd9f510d37" category="paragraph"><block ref="1a0cd5de7c84ddbf632838dd9f510d37" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f0ad3d9537c50952c04b71be3f9d4579" category="paragraph"><block ref="f0ad3d9537c50952c04b71be3f9d4579" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c33c31714f671e112fbe52b660d3e7a4" category="paragraph"><block ref="c33c31714f671e112fbe52b660d3e7a4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="03955b73285eab0d68e90c627da9726d" category="list-text">从下拉列表中选择在第 7 节中创建的日志备份策略。</block>
+  <block id="6286629570d2ca91cf6860e7da6e9073" category="paragraph"><block ref="6286629570d2ca91cf6860e7da6e9073" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="88c73129e9a418955658ce5c48d9d8b5" category="list-text">单击（ + ）号可配置所需的备份计划。</block>
+  <block id="8cdd30063d988671ffa9240fe171b1ce" category="paragraph"><block ref="8cdd30063d988671ffa9240fe171b1ce" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="eacfd6f10777b8dfb41199e4d4dfa915" category="list-text">如果配置了备份验证，则会显示在此处。</block>
+  <block id="69911c1794125b768effca94c8153987" category="paragraph"><block ref="69911c1794125b768effca94c8153987" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1a27fac4b1d49d5468930a56c3a6de56" category="list-text">如果需要，配置用于电子邮件通知的 SMTP 服务器。</block>
+  <block id="fd540644538dcedf1f6543455447728f" category="paragraph"><block ref="fd540644538dcedf1f6543455447728f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="554dbe35f6afa38e8232497f5d05d1c1" category="paragraph"><block ref="554dbe35f6afa38e8232497f5d05d1c1" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="cf688c7a95f421447e84a47fd03f3aa2" category="section-title">创建用于 SQL Server 完整备份的资源组</block>
+  <block id="d08ef097ee33c4a3506183adeb51c5e7" category="list-text">使用数据库管理用户 ID 登录到 SnapCenter ，然后导航到资源选项卡。在视图下拉列表中，选择数据库或资源组以启动资源组创建工作流。提供资源组的名称和标记。您可以为 Snapshot 副本定义命名格式。</block>
+  <block id="87d2630813d214672697efc01974d64e" category="paragraph"><block ref="87d2630813d214672697efc01974d64e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="ec1ace5324d60cb3faa1863efd675149" category="list-text">选择要备份的数据库资源。</block>
+  <block id="15330fe5b8f32032bd3b30c091d7dc4b" category="paragraph"><block ref="15330fe5b8f32032bd3b30c091d7dc4b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2fc1974f486effa4a60bf216e63a88d5" category="list-text">选择在第 7 节中创建的完整 SQL 备份策略。</block>
+  <block id="dc34bd5487acb7fcd3dcc3f23b2bbc5e" category="paragraph"><block ref="dc34bd5487acb7fcd3dcc3f23b2bbc5e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="12b70beeb570488ba753a620378cacd8" category="list-text">添加准确的备份时间以及频率。</block>
+  <block id="8fa0a3897bc03e9b1653d17308464031" category="paragraph"><block ref="8fa0a3897bc03e9b1653d17308464031" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="49252579bd8140847f4bbac20ef89b07" category="list-text">如果要执行备份验证，请在二级系统上为备份选择验证服务器。单击加载定位器以填充二级存储位置。</block>
+  <block id="355e5eb56524b7365674014ea5868ee6" category="paragraph"><block ref="355e5eb56524b7365674014ea5868ee6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="19e819eadb96ee5769ff4c6309352a62" category="paragraph"><block ref="19e819eadb96ee5769ff4c6309352a62" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0be278d93ec2e64895e31bf440c54b98" category="paragraph"><block ref="0be278d93ec2e64895e31bf440c54b98" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b4dd921984d3a8a89e7df5c97875b923" category="section-title">为 SQL Server 的日志备份创建一个资源组</block>
+  <block id="4e94ca9b995e68691b4e67b82b9f5bce" category="list-text">使用数据库管理用户 ID 登录到 SnapCenter ，然后导航到资源选项卡。在视图下拉列表中，选择数据库或资源组以启动资源组创建工作流。提供资源组的名称和标记。您可以为 Snapshot 副本定义命名格式。</block>
+  <block id="4e71263f0aec815017fd21a22ddb87d6" category="paragraph"><block ref="4e71263f0aec815017fd21a22ddb87d6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="013faf9f6cde83814469c6d583e10702" category="paragraph"><block ref="013faf9f6cde83814469c6d583e10702" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="23e15d7c127e66b1da1d72072a29e9eb" category="list-text">选择在第 7 节中创建的 SQL 日志备份策略。</block>
+  <block id="52a8553e4c33eb8353d56286d3845b28" category="paragraph"><block ref="52a8553e4c33eb8353d56286d3845b28" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7e7cac98c16b45d7e4ebec8786b8fda1" category="list-text">添加准确的备份时间以及频率。</block>
+  <block id="acfaadb1bfb8a5c0a2c39c1f64291ea3" category="paragraph"><block ref="acfaadb1bfb8a5c0a2c39c1f64291ea3" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="68398b6746dde91649e96505d97acc40" category="list-text">如果要执行备份验证，请在二级系统上为备份选择验证服务器。单击负载定位器以填充二级存储位置。</block>
+  <block id="3bde998a2436b40589b20d91a713d3ee" category="paragraph"><block ref="3bde998a2436b40589b20d91a713d3ee" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="80000e8cb7742af4686df786fdf38249" category="paragraph"><block ref="80000e8cb7742af4686df786fdf38249" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d32fb038efa6b409f8dedd0e02a10f26" category="paragraph"><block ref="d32fb038efa6b409f8dedd0e02a10f26" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a9c72629a46c2e88cf7f6a012167bb16" category="section-title">9. 验证备份</block>
+  <block id="d1c55c296cbdaa8d88eda765a6158b62" category="paragraph">创建数据库备份资源组以保护数据库资源后，备份作业将根据预定义的计划运行。在监控选项卡下检查作业执行状态。</block>
+  <block id="5f9af2a4e435e2b39c27f43b580d6d20" category="paragraph"><block ref="5f9af2a4e435e2b39c27f43b580d6d20" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="57882e224a8cbe8f694da9b1d8fa503e" category="paragraph">转到资源选项卡，单击数据库名称以查看数据库备份的详细信息，然后在本地副本和镜像副本之间切换，以验证 Snapshot 备份是否已复制到公有云中的二级位置。</block>
+  <block id="f9b40afbdb387dd32b8523c95080a898" category="paragraph"><block ref="f9b40afbdb387dd32b8523c95080a898" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="28268d417882b5cf7a3d3ee3a15834c8" category="paragraph">此时，云中的数据库备份副本已做好克隆准备，可以运行开发 / 测试流程，或者在发生主故障时进行灾难恢复。</block>
+  <block id="78b29bbf3f07a44b62307ce90b34904e" category="inline-link-macro">接下来： AWS 公有云入门。</block>
+  <block id="7d32c0298884bcc4c0211357748d0e6e" category="paragraph"><block ref="7d32c0298884bcc4c0211357748d0e6e" category="inline-link-macro-rx"></block></block>
+  <block id="0f22160e43c900ef7426d8a19e9f482d" category="summary">在执行混合云数据库工作负载之前，必须在内部和云中配置某些前提条件。下一节简要介绍了此过程，以下链接提供了有关必要的系统配置的详细信息。</block>
+  <block id="1dad826770c4d2c619351c974f725b36" category="doc">前提条件配置</block>
+  <block id="ce38f65c711e7e3047c9350abe42c0c3" category="inline-link-macro">先前版本：解决方案要求。</block>
+  <block id="d3fe0eebddd46d46399cb319c7219427" category="paragraph"><block ref="d3fe0eebddd46d46399cb319c7219427" category="inline-link-macro-rx"></block></block>
+  <block id="4df40e141b0559f15db8f84f78aed013" category="section-title">内部部署</block>
+  <block id="caea8340e2d186a540518d08602aa065" category="list-text">自动化</block>
+  <block id="761883c0d5c55fba5b200ac8ac0d86e5" category="section-title">公有云</block>
+  <block id="37aa83a33297d9d16b4423be342598bb" category="list-text">连接器的网络位置</block>
+  <block id="74c043a4451dd260729a23ce96aa1550" category="paragraph">重要注意事项：</block>
+  <block id="7aee27c83b5e3622c1d8cbd5c2098c60" category="list-text">在何处部署 Cloud Manager Connector ？</block>
+  <block id="43fd5c6fa3d9ba8a215c31f3bf0a9859" category="list-text">Cloud Volume ONTAP 规模估算和架构</block>
+  <block id="7a0e00d70e3b0ff06476a52565f923c4" category="list-text">单节点还是高可用性？</block>
+  <block id="2d0b46fff3ae203a435b167c7111b389" category="paragraph">以下链接提供了更多详细信息：</block>
+  <block id="cfd98f49422c4fba755a2ff74c55a4a0" category="paragraph"><block ref="cfd98f49422c4fba755a2ff74c55a4a0" category="inline-link-macro-rx"></block></block>
+  <block id="704849d56e695ab8f9df0b106e0d7e33" category="inline-link-macro">公有云</block>
+  <block id="96e41b2b281ca4b71edf4ed16e46a2be" category="paragraph"><block ref="96e41b2b281ca4b71edf4ed16e46a2be" category="inline-link-macro-rx"></block></block>
+  <block id="7c12725837ee75c4c0a9bbc14f99934d" category="inline-link-macro">接下来：内部部署的前提条件。</block>
+  <block id="bc57dd30a9059d494c9d76e4b0a9ce8f" category="paragraph"><block ref="bc57dd30a9059d494c9d76e4b0a9ce8f" category="inline-link-macro-rx"></block></block>
+  <block id="18e04180e0442e18a559941bb8de310c" category="sidebar">边缘人工智能推理—采用联想 ThinkSystem 的 NetApp —解决方案设计</block>
+  <block id="30b22b544972f5adb280ca2975099846" category="sidebar">采用 SnapCenter 的混合云数据库解决方案</block>
+  <block id="59f8ae0d5c4ba13dee4828e2727c8859" category="sidebar">内部部署入门</block>
 </blocks>

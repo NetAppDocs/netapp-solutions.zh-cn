@@ -1,0 +1,80 @@
+---
+sidebar: sidebar 
+permalink: ent-apps-db/hybrid_dbops_snapcenter_requirements.html 
+summary: 此解决方案在混合云环境中设计，用于支持内部生产数据库，这些数据库可以突发到所有常见的公有云中进行开发 / 测试和灾难恢复操作。 
+keywords: requirements, virtualized, bare metal, versions, automation 
+---
+= SnapCenter 要求
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:table-stripes: odd
+:imagesdir: ./../media/
+
+
+link:hybrid_dbops_snapcenter_architecture.html["上一篇：解决方案架构。"]
+
+此解决方案在混合云环境中设计，用于支持内部生产数据库，这些数据库可以突发到所有常见的公有云中进行开发 / 测试和灾难恢复操作。
+
+此解决方案支持 SnapCenter 当前支持的所有数据库，但此处仅展示了 Oracle 和 SQL Server 数据库。此解决方案已通过虚拟化数据库工作负载的验证，但也支持裸机工作负载。
+
+我们假定生产数据库服务器托管在内部，并从 ONTAP 存储集群向数据库主机提供数据库卷。SnapCenter 软件安装在内部，用于将数据库备份和数据复制到云。建议使用 Ansible 控制器，但在与公有云中的备用灾难恢复实例或开发 / 测试实例同步的数据库部署自动化或操作系统内核和数据库配置时不需要此控制器。
+
+
+
+== 要求
+
+[cols="3, 9"]
+|===
+| environment | 要求 
+
+
+.7+| * 内部部署 * | SnapCenter 支持的任何数据库和版本 
+
+
+| SnapCenter v4.4 或更高版本 
+
+
+| Ansible v2.09 或更高版本 
+
+
+| ONTAP 集群 9.x 
+
+
+| 已配置集群间 LIF 
+
+
+| 从内部到云 VPC 的连接（ VPN ，互连等） 
+
+
+| 网络端口打开 - ssh 22 - TCP 8145 ， 8146 ， 10000 ， 11104 ， 11105 
+
+
+.3+| * 云 - AWS* | https://docs.netapp.com/us-en/occm/task_creating_connectors_aws.html["Cloud Manager Connector"^] 
+
+
+| https://docs.netapp.com/us-en/occm/task_getting_started_aws.html["Cloud Volumes ONTAP"^] 
+
+
+| 将数据库操作系统 EC2 实例与本地匹配 
+
+
+.3+| * 云 - Azure* | https://docs.netapp.com/us-en/occm/task_creating_connectors_azure.html["Cloud Manager Connector"^] 
+
+
+| https://docs.netapp.com/us-en/occm/task_getting_started_azure.html["Cloud Volumes ONTAP"^] 
+
+
+| 将数据库操作系统 Azure 虚拟机与本地匹配 
+
+
+.3+| * 云 - GCP* | https://docs.netapp.com/us-en/occm/task_creating_connectors_gcp.html["Cloud Manager Connector"^] 
+
+
+| https://docs.netapp.com/us-en/occm/task_getting_started_gcp.html["Cloud Volumes ONTAP"^] 
+
+
+| 将数据库操作系统 Google 计算引擎实例与内部环境匹配 
+|===
+link:hybrid_dbops_snapcenter_prerequisite.html["下一步：前提条件配置。"]

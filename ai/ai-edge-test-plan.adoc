@@ -1,0 +1,63 @@
+---
+sidebar: sidebar 
+permalink: ai/ai-edge-test-plan.html 
+keywords: test, plan, mlperf, inference, benchmarks 
+summary: 本文档遵循 MLPerf 推理 v0.7 代码， MLPerf 推理 v1.1 代码和规则。我们运行的基准测试是为在边缘进行推理而设计的，如本节所示的表中所定义。 
+---
+= 测试计划
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:ai-edge-technology-overview.html["上一页：技术概述。"]
+
+本文档遵循 MLPerf 推理 v0.7 https://github.com/mlperf/inference_results_v0.7/tree/master/closed/Lenovo["code"^]， MLPerf 推理 v1.1 和。我们运行的基准测试是为在边缘进行推理而设计的，如下表所述。
+
+|===
+| 区域 | 任务 | 型号 | 数据集 | QSL 大小 | 质量 | 多流延迟限制 
+
+
+| 愿景 | 映像分类 | Resnet50v1.5 | ImageNet （ 224x224 ） | 1024 | FP32 的 99% | 50 毫秒 
+
+
+| 愿景 | 对象检测（大型） | SSD - ResNet34 | 可可可（ 1200 x 1200 ） | 64 | FP32 的 99% | 66 毫秒 
+
+
+| 愿景 | 对象检测（小型） | SSD — MobileNetsv1 | 可可可（ 300 x 300 ） | 256 | FP32 的 99% | 50 毫秒 
+
+
+| 愿景 | 医学影像分段 | 3D UNET | Brats 2019 （ 224x224x160 ） | 16. | FP32 的 99% 和 99.9% | 不适用 
+
+
+| 语音 | 语音到文本 | RNNT | Libraispeech 开发清理 | 2513 | FP32 的 99% | 不适用 
+
+
+| language | 语言处理 | Bert | Sad v1.1 | 10833 | FP32 的 99% | 不适用 
+|===
+|===
+| 区域 | 任务 | 场景 
+
+
+| 愿景 | 映像分类 | 单流，脱机，多流 
+
+
+| 愿景 | 对象检测（大型） | 单流，脱机，多流 
+
+
+| 愿景 | 对象检测（小型） | 单流，脱机，多流 
+
+
+| 愿景 | 医学影像分段 | 单个流，脱机 
+
+
+| 语音 | 语音到文本 | 单个流，脱机 
+
+
+| language | 语言处理 | 单个流，脱机 
+|===
+我们使用在此验证中开发的网络存储架构执行了这些基准测试，并将结果与先前提交给 MLPerf 的边缘服务器上本地运行的结果进行了比较。比较结果是，确定共享存储对推理性能有多大影响。
+
+link:ai-edge-test-configuration.html["下一步：测试配置。"]
