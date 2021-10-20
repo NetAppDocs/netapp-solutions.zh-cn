@@ -9176,7 +9176,6 @@
   <block id="ffe3b3adfe232ee25f1914e7e7d266c4" category="list-text">670K IOPS （随机读取）</block>
   <block id="7105ea3513c2bdae1a0d63a9f0703579" category="inline-link">NetApp EF 系列 NetApp EF 系列全闪存阵列 EF600 ， F300 ， EF570 和 EF280 产品规格</block>
   <block id="6e69804b180359b12a32a56c17c0641e" category="admonition">有关详细信息，请参见<block ref="5f5484869dc0c271e2b062d172d38bee" category="inline-link-rx"></block>。</block>
-  <block id="d462fbf88533ddbaad86fe47336ef3fa" category="paragraph">ONTAP 9.8 是 NetApp 推出的最新一代存储管理软件，可帮助企业打造现代化的基础架构并过渡到云就绪数据中心。借助行业领先的数据管理功能，无论数据位于何处， ONTAP 都可以通过一组工具来管理和保护数据。您还可以将数据自由移动到需要的任何位置：边缘，核心或云。ONTAP 9.8 包含许多功能，可简化数据管理，加快和保护关键数据，并在混合云架构中实现下一代基础架构功能。</block>
   <block id="f1586460cef11d0abaaf5270f37f18d7" category="section-title">简化数据管理</block>
   <block id="2e2b24551fd50942c6da57d4f8efdfae" category="paragraph">数据管理对于企业 IT 运营至关重要，以便将适当的资源用于应用程序和数据集。ONTAP 具有以下功能，可简化操作并降低总运营成本：</block>
   <block id="4934cd09a8e487be128d2b6321ee3279" category="list-text">* 实时数据缩减和扩展的重复数据删除。 * 数据缩减可减少存储块中浪费的空间，重复数据删除可显著提高有效容量。此适用场景数据存储在本地，并分层到云。</block>
@@ -9297,16 +9296,8 @@
   <block id="fe03e7fb4a8d3a1afb24c94c4c88d32f" category="paragraph">对于 AFF C190 ，我们使用支持 NVIDIA GPU 的 Ubuntu 18.04 和 Docker ，并使用 MLPerf<block ref="72ea1359ddbf7a99cdb0a438fda3e022" category="inline-link-rx"></block> 在联想提交到 MLPerf 推理 v0.7 的过程中提供。</block>
   <block id="504812acf44740b8f536a0d166375734" category="paragraph">对于 EF280 ，我们将 Ubuntu 20.04 与 NVIDIA 驱动程序结合使用，并将 Docker 与 NVIDIA GPU 和 MLPerf 结合使用<block ref="7dc141edfa21f33dbd4b0757be1ad69f" category="inline-link-rx"></block> 在联想提交到 MLPerf 推理 v1.1 的过程中提供。</block>
   <block id="fbd2228a821a8ab1948d4a8c3121fb0e" category="paragraph">要设置 AI 推理，请执行以下步骤：</block>
-  <block id="fd5c043d17a289fb46a606f44e155987" category="list-text">下载需要注册的数据集： ImageNet 2012 验证集， Criteo TB 数据集和 Brats 2019 训练集，然后解压缩这些文件。</block>
-  <block id="ab7831d45f94acd260ff74b6b22cadab" category="list-text">创建一个至少包含 1 TB 的工作目录，并定义引用该目录的环境变量 MLPERF_scrating_path 。</block>
   <block id="342ecacc441a9548b60eae46065039f8" category="paragraph">在使用本地数据进行测试时，您应在共享存储上共享此目录以供网络存储使用情形使用，或者在本地磁盘上共享此目录。</block>
-  <block id="a3f85d3d212be9b540b801c9e5dfa2da" category="list-text">运行 make prebuild 命令，该命令将为所需的推理任务构建并启动 Docker 容器。</block>
   <block id="9cfc451dfe052c5c3835b0355375b1b7" category="admonition">以下命令全部从正在运行的 Docker 容器中执行：</block>
-  <block id="583121c0a7f29574c74157300f771aa2" category="list-text">为 MLPerf 推理任务下载经过预先培训的 AI 型号： make download_model</block>
-  <block id="c598be3fcd4980550a6ef2ee6c7029ce" category="list-text">下载可免费下载的其他数据集： make download_data</block>
-  <block id="f5de6fa7b079108ef95ae25226d1fd9d" category="list-text">预处理数据： make preprocess_data</block>
-  <block id="66d1c1861ea2e832d9b7d7060fc24fc9" category="list-text">运行：构建。</block>
-  <block id="2204f2159df9145661590b2b3eb4d3e7" category="list-text">针对计算服务器中的 GPU 进行优化的构建推理引擎： make generate_enginers</block>
   <block id="4efea18a74f8c5a6fa0f4b239ff2d734" category="list-text">要运行推理工作负载，请运行以下命令（一个命令）：</block>
   <block id="9ce2624cb32bec75a2ad4e276fa594f6" category="section-title">AI 推理运行</block>
   <block id="2a71d3fa50a14f6fa9c62d9fe3935d5d" category="paragraph">执行了三种类型的运行：</block>
@@ -9392,7 +9383,6 @@
   <block id="8e793f971410e2b57df427d1305ee0a2" category="paragraph"><block ref="8e793f971410e2b57df427d1305ee0a2" category="inline-image-macro-rx" type="image"></block></block>
   <block id="fb71ae4a7513a21f0771b9aa65aeef9c" category="section-title">在一个流场景中对 EF 进行 AI 推理</block>
   <block id="5656e3a262dfb3d6e1cba96551717de0" category="paragraph"><block ref="5656e3a262dfb3d6e1cba96551717de0" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="268cbad72959a02a6f9e00c87334c56d" category="paragraph">结果再次表明，网络存储足以处理这些任务。在一台服务器的情况下，本地存储与网络存储之间的差别很小或没有差别。同样，当两个服务器使用相同的存储时，两个服务器上的延迟保持不变或变化量非常小。</block>
   <block id="516a608926718d1a912cf9404f1a63ac" category="inline-link-macro">接下来：架构规模估算选项。</block>
   <block id="9cedf0fb8faddf365d88f523ae482015" category="paragraph"><block ref="9cedf0fb8faddf365d88f523ae482015" category="inline-link-macro-rx"></block></block>
   <block id="00760d3595ff19f6db2da5213b1fdd58" category="summary">本文档介绍了一种计算和存储架构，用于在边缘环境中针对新兴应用程序场景在 NetApp 存储控制器和联想 ThinkSystem 服务器上部署基于 GPU 的人工智能（ AI ）推理。</block>
@@ -9408,8 +9398,6 @@
   <block id="563f47ae807a7a985313a5186e239a5d" category="list-text">数据科学家和 AI 工程师正在寻找部署深度学习（ DL ）和 ML 模型的高效方法。</block>
   <block id="c1df171c3c219ea01c2724d28fa03f93" category="list-text">边缘设备管理器和边缘服务器管理员，负责部署和管理边缘推理模型。</block>
   <block id="a40893fa754ed62d5268702b023fea91" category="section-title">解决方案架构</block>
-  <block id="efe1a080e82d44bdb17dc824833d2c58" category="paragraph">此联想 ThinkSystem 服务器和 NetApp ONTAP 或 NetApp SANtricity 存储解决方案旨在利用 GPU 与传统 CPU 的处理能力处理大型数据集上的 AI 推理。此验证可通过一个架构来展示高性能和最佳数据管理，该架构使用一个或多个与单个 NetApp AFF 存储系统互连的联想 SR350 边缘服务器，如下图所示。</block>
-  <block id="609a6122ae6df623927a4eb8273bd076" category="paragraph">下图中的逻辑架构概述显示了此架构中计算和存储要素的角色。具体而言，它显示以下内容：</block>
   <block id="f2e5640bc98f623bd0a257e3088ead2c" category="list-text">边缘计算设备对从摄像机，传感器等接收的数据执行推理。</block>
   <block id="ba8dee772ce5a627767af000b8bbb826" category="list-text">一种可用于多种用途的共享存储元素：</block>
   <block id="8a1d15a179258733a83884fac2d16e38" category="list-text">为推理模型和执行推理所需的其他数据提供一个中央位置。计算服务器可以直接访问存储，并在网络中使用推理模型，而无需将其复制到本地。</block>
@@ -9453,7 +9441,6 @@
   <block id="b3e6ac4f3c523ea5a90f4f79ca3e585d" category="doc">测试计划</block>
   <block id="35e08a3e7b357a4284ef29b287063ae5" category="paragraph"><block ref="35e08a3e7b357a4284ef29b287063ae5" category="inline-link-macro-rx"></block></block>
   <block id="a4f86f7bfc24194b276c22e0ef158197" category="inline-link">rules</block>
-  <block id="0a71a97af090b2deb93aa661a90005f7" category="paragraph">本文档遵循 MLPerf 推理 v0.7<block ref="72ea1359ddbf7a99cdb0a438fda3e022" category="inline-link-rx"></block>， MLPerf 推理 v1.1<block ref="7dc141edfa21f33dbd4b0757be1ad69f" category="inline-link-rx"></block> 和<block ref="efc21f34f290528320a21a8cc99ffcfc" category="inline-link-rx"></block>。我们运行的基准测试是为在边缘进行推理而设计的，如下表所述。</block>
   <block id="deec4ff19974f12ed781cb9a59064214" category="cell">区域</block>
   <block id="eaeb30f9f18e0c50b178676f3eaef45f" category="cell">任务</block>
   <block id="e110cde47b67924ec0ef64500e8cb067" category="cell">QSL 大小</block>
@@ -10207,4 +10194,22 @@
   <block id="18e04180e0442e18a559941bb8de310c" category="sidebar">边缘人工智能推理—采用联想 ThinkSystem 的 NetApp —解决方案设计</block>
   <block id="30b22b544972f5adb280ca2975099846" category="sidebar">采用 SnapCenter 的混合云数据库解决方案</block>
   <block id="59f8ae0d5c4ba13dee4828e2727c8859" category="sidebar">内部部署入门</block>
+  <block id="96e4797e3006bef737785f8627faae06" category="paragraph">下图显示了 NetApp EF280 存储系统。</block>
+  <block id="b407d5a86fd662f03d5a1615963e0827" category="paragraph">ONTAP 9.8.1 是 NetApp 推出的最新一代存储管理软件，可帮助企业打造现代化的基础架构并过渡到云就绪数据中心。借助行业领先的数据管理功能，无论数据位于何处， ONTAP 都可以通过一组工具来管理和保护数据。您还可以将数据自由移动到需要的任何位置：边缘，核心或云。ONTAP 9.8.1 提供了许多功能，可简化数据管理，加快和保护关键数据，并在混合云架构中实现下一代基础架构功能。</block>
+  <block id="9177ba75c6dc50d818c52360f10e2fe1" category="list-text">下载需要注册的数据集， ImageNet 2012 验证集， Criteo TB 数据集和 Brats 2019 训练集，然后解压缩这些文件。</block>
+  <block id="12dda17fb1d76556387dceb2e85a9290" category="list-text">创建一个至少包含 1 TB 的工作目录，并定义环境变量 `MLPERF_scrating_path` 引用该目录。</block>
+  <block id="7c5f7553ff57e0548889000668d1cf39" category="list-text">运行 make `prebuild` 命令，该命令可为所需的推理任务构建并启动 Docker 容器。</block>
+  <block id="b25e1e6ba392fe4c0e0da7617a67fa4d" category="list-text">为 MLPerf 推理任务下载经过预先培训的 AI 型号： `make download_model`</block>
+  <block id="ed43016366915f1fc65fe332de60965f" category="list-text">下载可免费下载的其他数据集： `make download_data`</block>
+  <block id="41165a10471c0644aef30b976f113946" category="list-text">预处理数据： make `preprocess_data`</block>
+  <block id="f0bacb5df46d2e8bed3d6d0d863fce01" category="list-text">运行： `m构建` 。</block>
+  <block id="189eed4566c6894d64b4d4f8bc9df94c" category="list-text">针对计算服务器中的 GPU 优化的构建推理引擎： `make generate_engine`</block>
+  <block id="ca0aa5c3a448e511d9334d94174b8b85" category="paragraph">此基准测试可测量延迟。对于所有情况，我们都会报告运行中涉及的所有服务器的平均延迟。系统将提供此任务套件的结果。</block>
+  <block id="f02eaec2bc90de6689765cffde92e809" category="paragraph">结果再次显示，网络存储足以处理这些任务。在一台服务器的情况下，本地存储与网络存储之间的差别很小或没有差别。同样，当两个服务器使用相同的存储时，两个服务器上的延迟保持不变或变化量非常小。</block>
+  <block id="cc402abc10a0191493024c4510783afc" category="paragraph">此联想 ThinkSystem 服务器和 NetApp ONTAP 或 NetApp SANtricity 存储解决方案旨在利用 GPU 与传统 CPU 的处理能力处理大型数据集上的 AI 推理。此验证通过一个架构来展示高性能和最佳数据管理，该架构使用一个或多个与单个 NetApp AFF 存储系统互连的联想 SR350 边缘服务器，如以下两个图所示。</block>
+  <block id="aa8af408f2dd6ce3e407f4979ab2bb2d" category="paragraph"><block ref="aa8af408f2dd6ce3e407f4979ab2bb2d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="aacb24ff7918ccc37aea66f8c9548b68" category="paragraph"><block ref="aacb24ff7918ccc37aea66f8c9548b68" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="fa68c0f0557e1b1d9b151c9be9aae26a" category="paragraph">下图中的逻辑架构概述显示了此架构中计算和存储元素的角色。具体而言，它显示以下内容：</block>
+  <block id="eb190159f20d63d1c7687ecafd03fc73" category="paragraph">本文档遵循 MLPerf 推理 v0.7<block ref="72ea1359ddbf7a99cdb0a438fda3e022" category="inline-link-rx"></block>， MLPerf 推理 v1.1<block ref="7dc141edfa21f33dbd4b0757be1ad69f" category="inline-link-rx"></block>，和<block ref="efc21f34f290528320a21a8cc99ffcfc" category="inline-link-rx"></block>。我们运行了专为在边缘进行推理而设计的 MLPerf 基准测试，如下表所述。</block>
+  <block id="816720c0b642aa1eef01c4f9108f54c5" category="paragraph">下表介绍了 Edge 基准测试场景。</block>
 </blocks>

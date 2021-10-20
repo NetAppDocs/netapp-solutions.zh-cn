@@ -26,22 +26,22 @@ link:ai-edge-test-configuration.html["先前：测试配置。"]
 
 要设置 AI 推理，请执行以下步骤：
 
-. 下载需要注册的数据集： ImageNet 2012 验证集， Criteo TB 数据集和 Brats 2019 训练集，然后解压缩这些文件。
-. 创建一个至少包含 1 TB 的工作目录，并定义引用该目录的环境变量 MLPERF_scrating_path 。
+. 下载需要注册的数据集， ImageNet 2012 验证集， Criteo TB 数据集和 Brats 2019 训练集，然后解压缩这些文件。
+. 创建一个至少包含 1 TB 的工作目录，并定义环境变量 `MLPERF_scrating_path` 引用该目录。
 +
 在使用本地数据进行测试时，您应在共享存储上共享此目录以供网络存储使用情形使用，或者在本地磁盘上共享此目录。
 
-. 运行 make prebuild 命令，该命令将为所需的推理任务构建并启动 Docker 容器。
+. 运行 make `prebuild` 命令，该命令可为所需的推理任务构建并启动 Docker 容器。
 +
 
 NOTE: 以下命令全部从正在运行的 Docker 容器中执行：
 
 +
-** 为 MLPerf 推理任务下载经过预先培训的 AI 型号： make download_model
-** 下载可免费下载的其他数据集： make download_data
-** 预处理数据： make preprocess_data
-** 运行：构建。
-** 针对计算服务器中的 GPU 进行优化的构建推理引擎： make generate_enginers
+** 为 MLPerf 推理任务下载经过预先培训的 AI 型号： `make download_model`
+** 下载可免费下载的其他数据集： `make download_data`
+** 预处理数据： make `preprocess_data`
+** 运行： `m构建` 。
+** 针对计算服务器中的 GPU 优化的构建推理引擎： `make generate_engine`
 ** 要运行推理工作负载，请运行以下命令（一个命令）：
 
 
