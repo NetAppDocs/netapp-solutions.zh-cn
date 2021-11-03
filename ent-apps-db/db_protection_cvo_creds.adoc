@@ -1,0 +1,95 @@
+= 
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+. 配置凭据。
+. 创建凭据类型。对于涉及 ONTAP 的解决方案，您必须配置凭据类型以匹配用户名和密码条目，我们还会为 Cloud Central 和 AWS 添加条目。
++
+.. 导航到管理→凭据类型，然后单击添加。
+.. 提供名称和问题描述。
+.. 将以下内容粘贴到输入配置中：
++
+[source, cli]
+----
+fields:
+  - id: dst_cluster_username
+    type: string
+    label: CVO Username
+  - id: dst_cluster_password
+    type: string
+    label: CVO Password
+    secret: true
+  - id: cvo_svm_password
+    type: string
+    label: CVO SVM Password
+    secret: true
+  - id: src_cluster_username
+    type: string
+    label: Source Cluster Username
+  - id: src_cluster_password
+    type: string
+    label: Source Cluster Password
+    secret: true
+  - id: access_key
+    type: string
+    label: AWS Access Key
+    secret: true
+  - id: secret_key
+    type: string
+    label: AWS Secret Key
+    secret: true
+  - id: token
+    type: string
+    label: Cloud Central Refresh Token
+    secret: true
+----
+.. 将以下内容粘贴到 "Injector Configuration" 中，然后单击 "Save ：
++
+[source, cli]
+----
+extra_vars:
+  dst_cluster_username: '{{ dst_cluster_username }}'
+  dst_cluster_password: '{{ dst_cluster_password }}'
+  cvo_svm_password: '{{ cvo_svm_password }}'
+  src_cluster_username: '{{ src_cluster_username }}'
+  src_cluster_password: '{{ src_cluster_password }}'
+  access_key: '{{ access_key }}'
+  secret_key: '{{ secret_key }}'
+  token: '{{ token }}'
+----
+
+
+. 为 ontap/CVO/AWS 创建凭据
++
+.. 导航到资源→凭据，然后单击添加。
+.. 输入 ONTAP 凭据的名称和组织详细信息
+.. 选择上一步中创建的凭据类型。
+.. 在 Type Details 下，输入源集群和 CVO 集群，访问 / 机密密钥和 Cloud Central 刷新令牌的用户名和密码。
+.. 单击保存。
+
+
+. 为 Oracle 创建凭据（源）
++
+.. 导航到资源→凭据，然后单击添加。
+.. 输入 Oracle 主机的名称和组织详细信息
+.. 选择计算机凭据类型。
+.. 在 Type Details 下，输入 Oracle 主机的 Username 和 Password 。
+.. 选择正确的权限升级方法，然后输入用户名和密码。
+.. 单击保存。
+
+
+. 为 Oracle 目标创建凭据
++
+.. 导航到资源→凭据，然后单击添加。
+.. 输入 DR Oracle 主机的名称和组织详细信息
+.. 选择计算机凭据类型。
+.. 在 Type Details 下，输入 Username （ EC2-user ，或者如果您已对其进行了默认更改，请输入该用户名）和 SSH 私钥
+.. 选择正确的权限升级方法（ sudo ），然后根据需要输入用户名和密码。
+.. 单击保存。
+
+
+

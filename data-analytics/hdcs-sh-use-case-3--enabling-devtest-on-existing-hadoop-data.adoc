@@ -1,0 +1,53 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/hdcs-sh-use-case-3--enabling-devtest-on-existing-hadoop-data.html 
+keywords: devtest, hadoop, spark, analytics data, reporting 
+summary: 在此使用情形中，客户要求在同一数据中心和远程位置快速高效地基于包含大量分析数据以用于 DevTest 和报告目的的现有 Hadoop 集群构建新的 Hadoop/Spark 集群。 
+---
+= 用例 3 ：对现有 Hadoop 数据启用 DevTest
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:hdcs-sh-use-case-2--backup-and-disaster-recovery-from-the-cloud-to-on-premises.html["先前版本：用例 2 —从云备份和灾难恢复到内部环境。"]
+
+在此使用情形中，客户要求在同一数据中心和远程位置快速高效地基于包含大量分析数据以用于 DevTest 和报告目的的现有 Hadoop 集群构建新的 Hadoop/Spark 集群。
+
+
+
+== 场景
+
+在这种情况下，多个 Spark 或 Hadoop 集群是通过在内部以及灾难恢复位置实施大型 Hadoop 数据湖而构建的。
+
+
+
+== 要求和挑战
+
+此用例的主要要求和挑战包括：
+
+* 创建多个 Hadoop 集群以实现 DevTest ， QA 或任何其他需要访问相同生产数据的目的。此处的挑战是，以节省空间的方式瞬时克隆多个非常大的 Hadoop 集群。
+* 将 Hadoop 数据同步到 DevTest 和报告团队，以提高运营效率。
+* 使用相同的凭据在生产集群和新集群之间分发 Hadoop 数据。
+* 使用计划策略高效创建 QA 集群，而不会影响生产集群。
+
+
+
+
+== 解决方案
+
+FlexClone 技术用于问题解答上述要求。FlexClone 技术是 Snapshot 副本的读 / 写副本。它会从父 Snapshot 副本数据读取数据，并且只会为新的 / 修改的块占用额外空间。速度快，节省空间。
+
+首先，使用 NetApp 一致性组创建现有集群的 Snapshot 副本。
+
+NetApp System Manager 或存储管理员提示符中的 Snapshot 副本。一致性组 Snapshot 副本是应用程序一致的组 Snapshot 副本， FlexClone 卷是根据一致性组 Snapshot 副本创建的。值得一提的是， FlexClone 卷会继承父卷的 NFS 导出策略。创建 Snapshot 副本后，必须安装一个新的 Hadoop 集群以用于 DevTest 和报告目的，如下图所示。原位分析模块通过原位分析模块用户和 NFS 数据的组授权从新 Hadoop 集群访问克隆的 NFS 卷。
+
+要获得正确的访问权限，新集群必须具有在原位分析模块用户和组配置中配置的用户的相同 UID 和 GUID 。
+
+此图显示了用于 DevTest 的 Hadoop 集群。
+
+image:hdcs-sh-image11.png["错误：缺少图形映像"]
+
+link:hdcs-sh-use-case-4--data-protection-and-multicloud-connectivity.html["接下来：用例 4 —数据保护和多云连接。"]

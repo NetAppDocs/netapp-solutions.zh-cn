@@ -1,0 +1,88 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/hdcs-sh-data-fabric-powered-by-netapp-for-big-data-architecture.html 
+keywords: architecture, data fabric, use cases, nfs, big data 
+summary: 由 NetApp 提供支持的 Data Fabric 可简化并集成云环境和内部环境中的数据管理，以加速数字化转型。由 NetApp 提供支持的 Data Fabric 可提供一致且集成的数据管理服务和应用程序（组件），以实现数据可见性和洞察力，数据访问和控制以及数据保护和安全。 
+---
+= NetApp 为大数据架构提供支持的 Data Fabric
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:hdcs-sh-solution-overview.html["上一步：解决方案概述。"]
+
+由 NetApp 提供支持的 Data Fabric 可简化并集成云环境和内部环境中的数据管理，以加速数字化转型。
+
+由 NetApp 提供支持的 Data Fabric 可提供一致且集成的数据管理服务和应用程序（组件），以实现数据可见性和洞察力，数据访问和控制以及数据保护和安全，如下图所示。
+
+image:hdcs-sh-image1.png["错误：缺少图形映像"]
+
+
+
+== 经验证的 Data Fabric 客户用例
+
+由 NetApp 提供支持的 Data Fabric 为客户提供了以下九个经验证的使用情形：
+
+* 加快分析工作负载的速度
+* 加快开发运营转型
+* 构建云托管基础架构
+* 集成云数据服务
+* 保护和保护数据
+* 优化非结构化数据
+* 提高数据中心效率
+* 提供数据洞察力和控制力
+* 简化和自动化
+
+
+本文档涵盖九个使用情形中的两个（及其解决方案）：
+
+* 加快分析工作负载的速度
+* 保护和保护数据
+
+
+
+
+=== NetApp NFS 直接访问
+
+NetApp NFS 直接访问（以前称为 NetApp 原位分析模块）（如下图所示）允许客户在不移动或复制数据的情况下，对现有或新的 NFSv3 或 NFSv4 数据运行大数据分析作业。它可以防止多个数据副本，并且无需将数据与源进行同步。例如，在金融领域，将数据从一个位置移动到另一个位置必须履行法律义务，这不是一项容易的任务。在这种情况下， NetApp NFS 直接访问会分析其原始位置的财务数据。另一个主要优势是，使用 NetApp NFS 直接访问可通过使用原生 Hadoop 命令简化对 Hadoop 数据的保护，并利用 NetApp 丰富的数据管理产品组合支持数据保护工作流。
+
+image:hdcs-sh-image2.png["错误：缺少图形映像"]
+
+NetApp NFS 直接访问为 Hadoop/Spark 集群提供了两种部署选项：
+
+* 默认情况下， Hadoop/Spark 集群使用 Hadoop 分布式文件系统（ HDFS ）进行数据存储和默认文件系统。NetApp NFS 直接访问可以将默认 HDFS 替换为 NFS 存储作为默认文件系统，从而对 NFS 数据执行直接分析操作。
+* 在另一种部署选项中， NetApp NFS 直接访问支持在一个 Hadoop/Spark 集群中将 NFS 与 HDFS 配置为额外的存储。在这种情况下，客户可以通过 NFS 导出共享数据，并从同一集群访问数据以及 HDFS 数据。
+
+
+使用 NetApp NFS 直接访问的主要优势包括：
+
+* 分析当前位置的数据，防止执行将分析数据移动到 HDFS 等 Hadoop 基础架构这一耗时且性能极高的任务。
+* 将副本数量从三个减少为一个。
+* 支持用户分离计算和存储，以便独立扩展。
+* 利用 ONTAP 丰富的数据管理功能提供企业数据保护。
+* 已通过 Hortonworks 数据平台认证。
+* 支持混合数据分析部署。
+* 利用动态多线程功能缩短备份时间。
+
+
+
+
+=== 大数据的组件
+
+由 NetApp 提供支持的 Data Fabric 集成了数据管理服务和应用程序（组件），用于实现数据访问，控制，保护和安全性，如下图所示。
+
+image:hdcs-sh-image3.png["错误：缺少图形映像"]
+
+上图中的组件包括：
+
+* * NetApp NFS 直接访问。 * 为最新的 Hadoop 和 Spark 集群提供对 NetApp NFS 卷的直接访问，而无需额外的软件或驱动程序要求。
+* * NetApp Cloud Volumes ONTAP 和云卷服务。 * 基于在 Microsoft Azure 云服务的 Amazon Web Services （ AWS ）或 Azure NetApp Files （ ANF ）中运行的 ONTAP 的软件定义的连接存储。
+* * NetApp SnapMirror 技术 * 。在内部部署和 ONTAP 云或 NPS 实例之间提供数据保护功能。
+* * 云服务提供商。 * 这些提供商包括 AWS ， Microsoft Azure ， Google Cloud 和 IBM Cloud 。
+* * PaaaS 。 * 基于云的分析服务，例如 AWS 中的 Amazon Elastic MapReduce （ EMR ）和 Databricks 以及 Microsoft Azure HDInsight 和 Azure Databricks 。
+
+
+link:hdcs-sh-hadoop-data-protection-and-netapp.html["接下来： Hadoop 数据保护和 NetApp 。"]

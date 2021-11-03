@@ -1,0 +1,40 @@
+---
+sidebar: sidebar 
+permalink: ai/ai-sent-videos-and-demos.html 
+keywords: video, demo, notebook 
+summary: 本节列出了适用于此解决方案的 Jupyter 笔记本电脑和其他资源。 
+---
+= 视频和演示
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:ai-sent-validation-results.html["先前：验证结果。"]
+
+有两台笔记本电脑包含情感分析管道： https://nbviewer.jupyter.org/github/NetAppDocs/netapp-solutions/blob/main/media/Support-Center-Model-Transfer-Learning-and-Fine-Tuning.ipynb[""Support-Center-Mode-Transfer-Learning-and-fine-Tuned.ipynb ""] 和 link:https://nbviewer.jupyter.org/github/NetAppDocs/netapp-solutions/blob/main/media/Support-Center-Sentiment-Analysis-Pipeline.ipynb[""Support-Center-sentiment-Analysis-Pipeline.ipynb ""]。这些笔记本电脑共同演示了如何开发管道，以便使用根据用户数据微调的最先进深度学习模型，载入支持中心数据并从每句话中提取情感。
+
+
+
+== 支持中心—情感分析管道 .ipynb
+
+此笔记本电脑包含推理 Riva 管道，用于载入音频，将其转换为文本以及提取情感以供外部信息板使用。如果尚未下载和处理数据集，则会自动下载和处理该数据集。该笔记本电脑的第一部分是语音到文本，用于将音频文件转换为文本。接下来是 " 情感分析 " 部分，该部分将提取每个文本句子的感受，并以类似于建议的信息板的格式显示这些结果。
+
+
+NOTE: 此笔记本电脑必须在模型训练和微调之前运行，因为必须下载并转换为正确格式的 mp3 数据集。
+
+image:ai-sent-image12.png["错误：缺少图形映像"]
+
+
+
+== 支持中心—模型训练和微调。 ipynb
+
+在执行此笔记本电脑之前，必须先设置 TAO 工具包虚拟环境（有关安装说明，请参见 " 命令概述 " 中的 "TAO 工具包 " 一节）。
+
+此笔记本电脑依靠 TAO 工具包根据客户数据微调深度学习模型。与上一个笔记本电脑一样，这一款笔记本电脑分为两个部分，分别用于语音到文本和情感分析组件。每个部分都将介绍数据处理，模型培训和微调，结果评估和模型导出。最后，我们将在最后一节中介绍如何部署这两种经过微调的型号，以便在 Riva 中使用。
+
+image:ai-sent-image13.png["错误：缺少图形映像"]
+
+link:ai-sent-conclusion.html["接下来：总结。"]

@@ -4955,23 +4955,16 @@
   <block id="9de8e04d062d5eb8e2ff199783964174" category="paragraph">概述最新的业务应用程序和企业数据库解决方案和解决方案宣传材料。</block>
   <block id="2dc95f2080ad2dba9a9207db808106e5" category="cell">* Oracle 数据库 *</block>
   <block id="14c4dbb7c61081eee1c499c4cf138c96" category="inline-link-macro">FlexPod 数据中心上的 Oracle 19c RAC 数据库，采用 Cisco UCS 和基于 FC 的 NetApp AFF A800</block>
-  <block id="d34170bf5ff04b4c514180b56a13c23e" category="cell"><block ref="d34170bf5ff04b4c514180b56a13c23e" category="inline-link-macro-rx"></block></block>
   <block id="e9dcec3e531a3cec5ee733f23baab91d" category="inline-link-macro">在 NFS 上自动部署适用于 ONTAP 的 Oracle 19c</block>
   <block id="e10944318a093524b44d6671144720e9" category="cell"><block ref="e10944318a093524b44d6671144720e9" category="inline-link-macro-rx"></block></block>
   <block id="71e4dd221a9f0c3610e81f8ebab870ea" category="cell">* SAP HANA *</block>
   <block id="c55aef4f96cafe48d6e5cf37af33721b" category="inline-link-macro">采用 SnapCenter 的 SAP HANA B&amp;M 和 R</block>
-  <block id="bfb3689ba8280e81607e2cc630474f7b" category="cell"><block ref="34ad6bc30349591d481de2c660380153" category="inline-link-macro-rx"></block></block>
   <block id="ffbfe314fcb0f0531b18b666e3f70bcc" category="inline-link-macro">基于 FC SAN 的 SAP HANA</block>
-  <block id="cef42e3e830a5b99fbd149ad0dfcab4c" category="cell"><block ref="cef42e3e830a5b99fbd149ad0dfcab4c" category="inline-link-macro-rx"></block></block>
   <block id="03bd539868199e3d2eb12809418e0815" category="cell">* Microsoft SQL Server*</block>
   <block id="760b7d532df381143dc946fd59bf0b62" category="inline-link-macro">Azure NetApp Files 上的 SQL Server</block>
-  <block id="80f2de379b3df3a4911848e3c41a803d" category="cell"><block ref="80f2de379b3df3a4911848e3c41a803d" category="inline-link-macro-rx"></block></block>
   <block id="9b849a5e6a46a992279087781315f191" category="inline-link-macro">Microsoft SQL Server 上的 SAP 应用程序</block>
-  <block id="5acb2edcc53a9f2b0ad9d5953a88a270" category="cell"><block ref="5acb2edcc53a9f2b0ad9d5953a88a270" category="inline-link-macro-rx"></block></block>
   <block id="77c484629c9e9b5aed6fa32ebb0e7229" category="inline-link-macro">基于 SolidFire ESDS 的 SQL Server ，用于虚拟化基础架构</block>
-  <block id="240930e7b086c623c1760f7b6059e78c" category="cell"><block ref="240930e7b086c623c1760f7b6059e78c" category="inline-link-macro-rx"></block></block>
   <block id="91be6e42fe122f20831dcd474322dc82" category="inline-link-macro">SQL Server —使用 NetApp HCI 确保数据库性能</block>
-  <block id="28fbedcd1ec8fbbb429a4f7ac188d9f9" category="cell"><block ref="28fbedcd1ec8fbbb429a4f7ac188d9f9" category="inline-link-macro-rx"></block></block>
   <block id="d4c96dcd516adf0c5bde093b0b7b7255" category="summary">此页面介绍了在 NetApp ONTAP 存储上部署 Oracle19c 的自动化方法。</block>
   <block id="cb59b87e00d11222bfd9159d0d23836f" category="doc">入门</block>
   <block id="def8ebf26c2dec5f6af5a00893fae037" category="paragraph">此解决方案可以在 AWX/Tower 环境中运行，也可以通过命令行界面在 Ansible 控制主机上运行。</block>
@@ -10212,4 +10205,756 @@
   <block id="eb190159f20d63d1c7687ecafd03fc73" category="paragraph">本文档遵循 MLPerf 推理 v0.7<block ref="72ea1359ddbf7a99cdb0a438fda3e022" category="inline-link-rx"></block>， MLPerf 推理 v1.1<block ref="7dc141edfa21f33dbd4b0757be1ad69f" category="inline-link-rx"></block>，和<block ref="efc21f34f290528320a21a8cc99ffcfc" category="inline-link-rx"></block>。我们运行了专为在边缘进行推理而设计的 MLPerf 基准测试，如下表所述。</block>
   <block id="816720c0b642aa1eef01c4f9108f54c5" category="paragraph">下表介绍了 Edge 基准测试场景。</block>
   <block id="5174c42549c4dd0407a40298a4d9e362" category="paragraph"><block ref="5174c42549c4dd0407a40298a4d9e362" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2c755351ada495582a6d9015943de077" category="summary">在此使用情形中，客户要求在同一数据中心和远程位置快速高效地基于包含大量分析数据以用于 DevTest 和报告目的的现有 Hadoop 集群构建新的 Hadoop/Spark 集群。</block>
+  <block id="acb2dd720b2161405c8cb1ca6035618b" category="doc">用例 3 ：对现有 Hadoop 数据启用 DevTest</block>
+  <block id="aeab228f25b5fbe0b00f83117579246e" category="inline-link-macro">先前版本：用例 2 —从云备份和灾难恢复到内部环境。</block>
+  <block id="cf44ed74ea7e07a8e4478e43d9537e07" category="paragraph"><block ref="cf44ed74ea7e07a8e4478e43d9537e07" category="inline-link-macro-rx"></block></block>
+  <block id="54861efdd06fc309e1c9a420feff98eb" category="section-title">场景</block>
+  <block id="4e19c1aafa6d3711ae619f7e1621a61e" category="paragraph">在这种情况下，多个 Spark 或 Hadoop 集群是通过在内部以及灾难恢复位置实施大型 Hadoop 数据湖而构建的。</block>
+  <block id="5f5e12d29ffccf33e8cb5a30f4d2fe8c" category="section-title">要求和挑战</block>
+  <block id="c04f16bb8233216a472d30b6c509b230" category="paragraph">此用例的主要要求和挑战包括：</block>
+  <block id="5768edca640abf2b08dd5ba0e593dcc7" category="list-text">创建多个 Hadoop 集群以实现 DevTest ， QA 或任何其他需要访问相同生产数据的目的。此处的挑战是，以节省空间的方式瞬时克隆多个非常大的 Hadoop 集群。</block>
+  <block id="529c78f9988d342b33707ecaae7d2576" category="list-text">将 Hadoop 数据同步到 DevTest 和报告团队，以提高运营效率。</block>
+  <block id="07178cfd87815398d5079e55c257f96c" category="list-text">使用相同的凭据在生产集群和新集群之间分发 Hadoop 数据。</block>
+  <block id="b26eaa756d7ec14dcec5c25d7d9ad6b6" category="list-text">使用计划策略高效创建 QA 集群，而不会影响生产集群。</block>
+  <block id="49b21ad0d38942f635877e7bbc5d7a1e" category="section-title">解决方案</block>
+  <block id="6442ec446d11bbd47497299e0ffceed5" category="paragraph">FlexClone 技术用于问题解答上述要求。FlexClone 技术是 Snapshot 副本的读 / 写副本。它会从父 Snapshot 副本数据读取数据，并且只会为新的 / 修改的块占用额外空间。速度快，节省空间。</block>
+  <block id="51a22383ed7ac5a70a455d81a9bad789" category="paragraph">首先，使用 NetApp 一致性组创建现有集群的 Snapshot 副本。</block>
+  <block id="4b481b20e942087b64c5bb7b07d9dca9" category="paragraph">NetApp System Manager 或存储管理员提示符中的 Snapshot 副本。一致性组 Snapshot 副本是应用程序一致的组 Snapshot 副本， FlexClone 卷是根据一致性组 Snapshot 副本创建的。值得一提的是， FlexClone 卷会继承父卷的 NFS 导出策略。创建 Snapshot 副本后，必须安装一个新的 Hadoop 集群以用于 DevTest 和报告目的，如下图所示。原位分析模块通过原位分析模块用户和 NFS 数据的组授权从新 Hadoop 集群访问克隆的 NFS 卷。</block>
+  <block id="4c490dfedbcc5a021b8a4c823e337d41" category="paragraph">要获得正确的访问权限，新集群必须具有在原位分析模块用户和组配置中配置的用户的相同 UID 和 GUID 。</block>
+  <block id="6ee7e035a9c46bb26ee76c40aa671148" category="paragraph">此图显示了用于 DevTest 的 Hadoop 集群。</block>
+  <block id="4157075925c8c1518cc71d1d0abab403" category="paragraph"><block ref="4157075925c8c1518cc71d1d0abab403" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e10ad11fd299ee6f161f17d772a78a48" category="inline-link-macro">接下来：用例 4 —数据保护和多云连接。</block>
+  <block id="8109e574f349ced8f667b9389c9189a4" category="paragraph"><block ref="8109e574f349ced8f667b9389c9189a4" category="inline-link-macro-rx"></block></block>
+  <block id="a64b3943d4911d301243b8ac8779ba53" category="summary">本节概述了 NetApp 为满足各种 Hadoop 数据保护要求而提供的使用情形和解决方案。</block>
+  <block id="23496143e5ca83c13eb4d953786abdcd" category="inline-link-macro">先前：用例 5 —加快分析工作负载的速度。</block>
+  <block id="09b7371b2ae3168a3c54b30e4966e86e" category="paragraph"><block ref="09b7371b2ae3168a3c54b30e4966e86e" category="inline-link-macro-rx"></block></block>
+  <block id="ac81718eacd21c51db78a7185a5c0a96" category="paragraph">本节概述了 NetApp 为满足各种 Hadoop 数据保护要求而提供的使用情形和解决方案。通过使用 NetApp 提供支持的 Data Fabric ，客户可以：</block>
+  <block id="ce0bf05854efb234905c751e40774ab5" category="list-text">利用 NetApp 丰富的数据管理功能并与 Hadoop 原生工作流集成，灵活选择合适的数据保护解决方案。</block>
+  <block id="925b1719b2db8532854b1de76f928f31" category="list-text">将 Hadoop 集群备份窗口时间缩短近 70% 。</block>
+  <block id="7de96884f777b768ef12e40582f4d816" category="list-text">消除 Hadoop 集群备份所带来的任何性能影响。</block>
+  <block id="d5235d7ce8947322a12272f0c6dc7e24" category="list-text">同时提供从不同云提供商到单个分析数据源的多云数据保护和数据访问。</block>
+  <block id="61e7eb3536cca4c51ae700159e1d247a" category="list-text">使用 FlexClone 技术快速创建节省空间的 Hadoop 集群副本。</block>
+  <block id="64bb4a6337ad7b2efa8dc5d43d492edf" category="paragraph">要了解有关本文档中所述信息的更多信息，请参见以下文档和 / 或网站：</block>
+  <block id="253914d41704f0f326f6595e14005170" category="list-text">NetApp 大数据分析解决方案</block>
+  <block id="85eb07da2e4fd15718f8d05d269a4e30" category="inline-link"><block ref="85eb07da2e4fd15718f8d05d269a4e30" category="inline-link-rx"></block></block>
+  <block id="f87d78d98a2357057eba948402e285f0" category="paragraph"><block ref="f87d78d98a2357057eba948402e285f0" category="inline-link-rx"></block></block>
+  <block id="b2eb92b872fe536c4a859e695eaf280d" category="list-text">采用 NetApp 存储的 Apache Spark 工作负载</block>
+  <block id="a904c9f7327a2cbf0c9411dd8b7551fa" category="inline-link"><block ref="a904c9f7327a2cbf0c9411dd8b7551fa" category="inline-link-rx"></block></block>
+  <block id="3db0ab5f6c6b92b8d32d80cb1a83e214" category="paragraph"><block ref="3db0ab5f6c6b92b8d32d80cb1a83e214" category="inline-link-rx"></block></block>
+  <block id="1bff250c7118efa9007019415bb2730d" category="list-text">适用于 Apache Spark 的 NetApp 存储解决方案</block>
+  <block id="83d445161ea1f91a19d552f783018ea5" category="inline-link"><block ref="83d445161ea1f91a19d552f783018ea5" category="inline-link-rx"></block></block>
+  <block id="142c737f7563ed12b8b08b6fc8779b8c" category="paragraph"><block ref="142c737f7563ed12b8b08b6fc8779b8c" category="inline-link-rx"></block></block>
+  <block id="df245018c012fa9deefc0e1d65196e46" category="list-text">NetApp 支持的 Data Fabric 上的 Apache Hadoop</block>
+  <block id="143ece864a38e1c8267bd8318d458955" category="inline-link"><block ref="143ece864a38e1c8267bd8318d458955" category="inline-link-rx"></block></block>
+  <block id="b890b67174812331efb42656a186fa42" category="paragraph"><block ref="b890b67174812331efb42656a186fa42" category="inline-link-rx"></block></block>
+  <block id="49d7c87b66a2b688ec65b1a4fe9b5ddc" category="list-text">NetApp 原位分析模块</block>
+  <block id="1d669c79bffe95dd384dffb8309a0d40" category="inline-link"><block ref="1d669c79bffe95dd384dffb8309a0d40" category="inline-link-rx"></block></block>
+  <block id="fde1cd76fa73f8065aeb8a97c77b40ec" category="paragraph"><block ref="fde1cd76fa73f8065aeb8a97c77b40ec" category="inline-link-rx"></block></block>
+  <block id="0407c27180c9b019e644e8ad4c6a9324" category="section-title">致谢</block>
+  <block id="c4f052e8512b2541f8154dd256a529d6" category="list-text">NetApp ANZ 维多利亚地区销售代表 Paul Burland</block>
+  <block id="5d14432aa90b3b3ebfa87b98a1844edb" category="list-text">NetApp 业务开发经理 Hoseb Dermanilian</block>
+  <block id="929bdc02c2d9943ae8cb52786476e6c6" category="list-text">NetApp MPSG 总监 Lee Dorrier</block>
+  <block id="a3ed56594a87e322fbcf5a6e705a4134" category="list-text">NetApp ANZ 维多利亚区 SE 系统工程师 David Thiessen</block>
+  <block id="effdc6a5d743a9db1cd347a2ac8d6b80" category="cell">2018 年 1 月</block>
+  <block id="81d2cd2b484f8c425c2146303b9f1c55" category="cell">更新了用例 5 ：加快分析工作负载的速度</block>
+  <block id="1dca3067f5c6c2fa6b32ef683fcab56f" category="summary">在这种情况下，客户拥有一个大型内部 Hadoop 存储库，并希望对其进行备份以实现灾难恢复。但是，客户当前的备份解决方案成本高昂，并且备份时间过长，超过 24 小时。</block>
+  <block id="817ac2975197bd6c376a7918a798981f" category="doc">用例 1 ：备份 Hadoop 数据</block>
+  <block id="8efec9e11b7742f59dbe1af079e1c1d0" category="inline-link-macro">先前版本： Hadoop 数据保护使用情形概述。</block>
+  <block id="259b434ecfae95df231c879645a98918" category="paragraph"><block ref="259b434ecfae95df231c879645a98918" category="inline-link-macro-rx"></block></block>
+  <block id="7ffe71c29f8ea391bbd80c1e8441af9a" category="list-text">软件向后兼容性：</block>
+  <block id="d96828d85e8cc053407a391bee52257f" category="list-text">建议的备用备份解决方案应与生产 Hadoop 集群中当前正在运行的软件版本兼容。</block>
+  <block id="dd5bb530e532c011487ffc3a69e56f57" category="list-text">为了满足承诺的 SLA ，建议的替代解决方案应实现极低的 RPO 和 RTO 。</block>
+  <block id="4783ab1f0401dc9c24cc9afa6dc5823e" category="list-text">NetApp 备份解决方案创建的备份可以在本地构建于数据中心的 Hadoop 集群中使用，也可以在远程站点的灾难恢复位置运行的 Hadoop 集群中使用。</block>
+  <block id="1dbc869d2df036d4d6e732e9c680ab6b" category="list-text">建议的解决方案必须经济高效。</block>
+  <block id="7405e6ba4b630f11b88a7976325a95e4" category="list-text">建议的解决方案必须减少备份期间对当前正在运行的生产分析作业的性能影响。</block>
+  <block id="e3d4f6860e578b28733c41c2c852f821" category="section-title">客户的现有备份解决方案</block>
+  <block id="f350f804f84a5bf788cd78cd4aae7eab" category="paragraph">下图显示了原始 Hadoop 原生备份解决方案。</block>
+  <block id="2975218bd3c71a4ac4eac95d3529a9cb" category="paragraph"><block ref="2975218bd3c71a4ac4eac95d3529a9cb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="76b8e496c38192b97fdfa6cae2ba2bb4" category="paragraph">生产数据通过中间备份集群保护到磁带：</block>
+  <block id="d07ca391addc59b7408fb88541552b43" category="list-text">通过运行 `hadoop distcp -update &lt;hdfs1&gt; &lt;hdfs2&gt;` 命令，可以将 HDFS1 数据复制到 HDFS2 。</block>
+  <block id="2c4cadbb7f122d1d0cd988a11681248a" category="list-text">备份集群充当 NFS 网关，数据通过 Linux `CP` 命令通过磁带库手动复制到磁带。</block>
+  <block id="b73035943c8623cbdb7bd67992201012" category="paragraph">原始 Hadoop 原生备份解决方案的优势包括：</block>
+  <block id="5bdb90a1352ca42ab8dde5b9ab7ffac3" category="list-text">解决方案基于 Hadoop 原生命令，用户无需学习新过程。</block>
+  <block id="f581d1b5f93adda1865bad95e215a7b9" category="list-text">解决方案采用行业标准架构和硬件。</block>
+  <block id="ddd131647a4d5e1b5bcb983ec8872ff9" category="paragraph">原始 Hadoop 原生备份解决方案的缺点包括：</block>
+  <block id="2cd5e9eae715f3bb0475ed032bf56190" category="list-text">备份窗口时间过长超过 24 小时，因此生产数据容易受到影响。</block>
+  <block id="b22d500a5624a2c57ec5bda86aa57011" category="list-text">备份期间集群性能显著下降。</block>
+  <block id="69bfe7f4231b0c1d65247d0abfc89cb3" category="list-text">复制到磁带是一个手动过程。</block>
+  <block id="6ef8e4ec49425ac5ded9c6cc599c17d2" category="list-text">备份解决方案在所需的硬件和手动过程所需的工时方面成本高昂。</block>
+  <block id="1b4d2bf420e7f05ecb82ecf2197ab810" category="section-title">备份解决方案</block>
+  <block id="6d977e36854ae6439cbc4fe8e0c1b227" category="paragraph">根据这些挑战和要求，并考虑到现有备份系统，建议了三种可能的备份解决方案。以下各小节分别介绍了这三种不同的备份解决方案，分别标记为解决方案 A 到解决方案 C</block>
+  <block id="c5a6c012dc14dc7f9d2fa0df0ccb0cdf" category="section-title">解决方案 A</block>
+  <block id="8ee7b0fbb95cf5b1c98578a7ef03b9eb" category="paragraph">解决方案 A 会将原位分析模块添加到备份 Hadoop 集群中，从而可以对 NetApp NFS 存储系统进行二级备份，从而消除了磁带需求，如下图所示。</block>
+  <block id="411ee6c684ee720eff303771433e41d6" category="paragraph"><block ref="411ee6c684ee720eff303771433e41d6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2813f022c034c63ad3d6efeeb503eb70" category="paragraph">解决方案 A 的详细任务包括：</block>
+  <block id="0406c5ca05cfb5f7a0c02971c3962460" category="list-text">生产 Hadoop 集群的 HDFS 中包含需要保护的客户分析数据。</block>
+  <block id="feb7749ff700168c127dfbd8376b35f7" category="list-text">具有 HDFS 的备份 Hadoop 集群充当数据的中间位置。在生产和备份 Hadoop 集群中，只需一组磁盘（ JBOD ）即可为 HDFS 提供存储。</block>
+  <block id="b3f54540429c806b8cf0080fd78b34bc" category="list-text">运行 `hadoop distcp – update – diff &lt;hdfs1&gt; &lt;hdfs2&gt;` 命令，保护 Hadoop 生产数据，使其从生产集群 HDFS 传输到备份集群 HDFS 。</block>
+  <block id="2de4833848a0b94bd672bdf9bc60d4aa" category="admonition">Hadoop 快照用于保护数据从生产环境传输到备份 Hadoop 集群。</block>
+  <block id="79ef8fc2c565c69b33f5918c3a0bdd9a" category="list-text">NetApp ONTAP 存储控制器可提供一个 NFS 导出卷，该卷会配置到备份 Hadoop 集群。</block>
+  <block id="b0e42779d51b21a745cae08f938ec60a" category="list-text">通过利用 MapReduce 和多个映射程序运行 `Hadoop distcp` 命令，可以使用原位分析模块保护分析数据，使其从 Hadoop 集群备份到 NFS 。</block>
+  <block id="738997de22c6371f563f69e1bb57b6e5" category="paragraph">将数据存储在 NetApp 存储系统的 NFS 中后，将使用 NetApp Snapshot ， SnapRestore 和 FlexClone 技术根据需要备份，还原和复制 Hadoop 数据。</block>
+  <block id="0bd252182290e872b264ad65d369637f" category="admonition">使用 SnapMirror 技术，可以将 Hadoop 数据保护到云端以及灾难恢复位置。</block>
+  <block id="4a1b9aaeaa6487c6df7072326cf3798e" category="paragraph">解决方案 A 的优势包括：</block>
+  <block id="0843e6a882cae98851adbefb52d05827" category="list-text">Hadoop 生产数据受备份集群保护。</block>
+  <block id="522d0cf303cbf1b16ea5cc33480ce02f" category="list-text">HDFS 数据通过 NFS 进行保护，从而可以保护云和灾难恢复位置。</block>
+  <block id="298d20d1ae9110668e52c07776f62948" category="list-text">通过将备份操作卸载到备份集群来提高性能。</block>
+  <block id="4c10451e9e5bf987bc3ab16a9fce3966" category="list-text">无需手动执行磁带操作</block>
+  <block id="0ff20f264e79e773549ded37f50f4b3b" category="list-text">支持通过 NetApp 工具实现企业管理功能。</block>
+  <block id="4c84f95e2dad9b5385151a736e89f0c3" category="list-text">只需对现有环境进行极少的更改。</block>
+  <block id="66f3b3a8c99e03a363a88a58fabe03cc" category="list-text">是一种经济高效的解决方案。</block>
+  <block id="4e941dea7920913a2c3a6d2a11a0936f" category="paragraph">此解决方案的缺点是，它需要一个备份集群和额外的映射器来提高性能。</block>
+  <block id="0628ac302dce6afb9d95a6b8ebd0d013" category="paragraph">由于解决方案 A 的简单性，成本和整体性能，客户最近部署了它。</block>
+  <block id="7a3ba8b554aec9832f399bff2ba17c74" category="paragraph">在此解决方案中，可以使用 ONTAP 中的 SAN 磁盘，而不是 JBOD 。此选项会将备份集群存储负载卸载到 ONTAP ；但是，缺点是需要 SAN 网络结构交换机。</block>
+  <block id="501a1b4ce382e8e2da0089aded30d11e" category="section-title">解决方案 B</block>
+  <block id="304af2b0b47890c7db8f6097978fdede" category="paragraph">解决方案 B 将原位分析模块添加到生产 Hadoop 集群中，这样就无需备份 Hadoop 集群，如下图所示。</block>
+  <block id="303388aba87d7dcff207a6cd098b0cfe" category="paragraph"><block ref="303388aba87d7dcff207a6cd098b0cfe" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8ca30c628556726e2038c5df9689fd91" category="paragraph">解决方案 B 的详细任务包括：</block>
+  <block id="e493f6dc701d2253466d5705af2e5bb1" category="list-text">NetApp ONTAP 存储控制器可为生产 Hadoop 集群配置 NFS 导出。</block>
+  <block id="3c321f811c173c1f133bdcc77fc81a33" category="paragraph">Hadoop 原生 `Hadoop distcp` 命令可通过原位分析模块保护从生产集群 HDFS 到 NFS 的 Hadoop 数据。</block>
+  <block id="665cfb3949b836c368d9be47d34bcbba" category="list-text">将数据存储在 NetApp 存储系统的 NFS 中后，将使用 Snapshot ， SnapRestore 和 FlexClone 技术根据需要备份，还原和复制 Hadoop 数据。</block>
+  <block id="4f1aeb2a94e89562b7bef27c368ed9cc" category="paragraph">解决方案 B 的优势包括：</block>
+  <block id="748dc25f775dc78e1da24328f753d1e1" category="list-text">生产集群针对备份解决方案进行了少许修改，从而简化了实施并降低了额外的基础架构成本。</block>
+  <block id="a565a40a6656693466a7da18be6d44ca" category="list-text">备份操作不需要备份集群。</block>
+  <block id="fa6ae9dfac02b933ef93450603114fce" category="list-text">HDFS 生产数据在转换为 NFS 数据时会受到保护。</block>
+  <block id="cf7952142a1253af6b9394a3f01408b3" category="list-text">解决方案支持通过 NetApp 工具执行企业管理功能。</block>
+  <block id="02946730aaff0e3d8abfa986a2fe949d" category="paragraph">此解决方案的缺点是它在生产集群中实施，这可能会在生产集群中添加其他管理员任务。</block>
+  <block id="0a3b8c5fab2a32545423ade2927b1185" category="section-title">解决方案 C</block>
+  <block id="6c176725a15c1c609d24387ddf6600da" category="paragraph">在解决方案 C 中， NetApp SAN 卷会直接配置到 Hadoop 生产集群中以用于 HDFS 存储，如下图所示。</block>
+  <block id="dc460b3501caf17186202576855a6d3c" category="paragraph"><block ref="dc460b3501caf17186202576855a6d3c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c0d09b63c2b939de22a3b5d0f4cb3c87" category="paragraph">解决方案 C 的详细步骤包括：</block>
+  <block id="35edf0b5a2042b4561d4d499298010e6" category="list-text">NetApp ONTAP SAN 存储在生产 Hadoop 集群上配置为用于 HDFS 数据存储。</block>
+  <block id="3b694951a08990d1243da1dd36e6cd07" category="list-text">NetApp Snapshot 和 SnapMirror 技术用于备份生产 Hadoop 集群中的 HDFS 数据。</block>
+  <block id="c32b4eb407751e515d7d037629b66dfb" category="list-text">在 Snapshot 副本备份过程中， Hadoop/Spark 集群的生产不会对性能产生影响，因为备份位于存储层。</block>
+  <block id="ef54974b65426daa87a86290447ed9a6" category="admonition">无论数据大小如何， Snapshot 技术均可在数秒内完成备份。</block>
+  <block id="f499d7fd731eb2bb1efe6c4069efcb47" category="paragraph">解决方案 C 的优势包括：</block>
+  <block id="abe0be0b8deb695793caa75a1dcfc4b3" category="list-text">可以使用 Snapshot 技术创建节省空间的备份。</block>
+  <block id="5788267ffe4023e91b333de591766cca" category="inline-link-macro">接下来：用例 2 —从云到内部环境的备份和灾难恢复。</block>
+  <block id="1619284091911820ebd1407554fb6da7" category="paragraph"><block ref="1619284091911820ebd1407554fb6da7" category="inline-link-macro-rx"></block></block>
+  <block id="9d9b3c1914053d9ff102d01b77ab40a9" category="summary">此使用情形基于广播客户，该客户需要将基于云的分析数据备份到其内部数据中心。</block>
+  <block id="0abf694ae9fa8ac43b805ba39a10d143" category="doc">用例 2 ：从云到内部环境的备份和灾难恢复</block>
+  <block id="d05b5b5452aa966fcd3c8947a172f44a" category="inline-link-macro">先前：用例 1 —备份 Hadoop 数据。</block>
+  <block id="d6b3b64a2054103914910c4432cc9e18" category="paragraph"><block ref="d6b3b64a2054103914910c4432cc9e18" category="inline-link-macro-rx"></block></block>
+  <block id="733d8d14fe9ffb98d02b33079e3d3db2" category="paragraph">此使用情形基于广播客户，该客户需要将基于云的分析数据备份到其内部数据中心，如下图所示。</block>
+  <block id="063e138ba69a95a99bd2f908b540e210" category="paragraph"><block ref="063e138ba69a95a99bd2f908b540e210" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="26fea23389e404e4cb8cf9be2c100cbd" category="paragraph">在这种情况下， IoT 传感器数据会载入云中，并使用 AWS 中的开源 Apache Spark 集群进行分析。需要将处理后的数据从云备份到内部环境。</block>
+  <block id="bb446485afc21a80bc5f26a9131de160" category="list-text">启用数据保护不会发生原因对云中的生产 Spark 或 Hadoop 集群产生任何性能影响。</block>
+  <block id="dbb6231aec34eed7c53cff2d4a2d43ef" category="list-text">云传感器数据需要以高效安全的方式移动和保护到内部。</block>
+  <block id="848b66ad8aca524142404de79ce64c73" category="list-text">可以在不同条件下灵活地将数据从云传输到内部环境，例如按需，瞬时以及在集群负载较低的情况下。</block>
+  <block id="4d8011e28e4ef4359ca7c169e7797091" category="paragraph">客户使用 AWS Elastic Block Store （ EBS ）作为其 Spark 集群 HDFS 存储，通过 Kafka 从远程传感器接收和载入数据。因此， HDFS 存储充当备份数据的源。</block>
+  <block id="e55d60f6f17896ce9b53a0ef23e23413" category="paragraph">为了满足这些要求， NetApp ONTAP 云部署在 AWS 中，并创建一个 NFS 共享作为 Spark 或 Hadoop 集群的备份目标。</block>
+  <block id="c260f0b6bfdb6eff1473aafbf5bd075a" category="paragraph">创建 NFS 共享后，将利用原位分析模块将数据从 HDFS EBS 存储复制到 ONTAP NFS 共享。数据驻留在 ONTAP 云的 NFS 中后，可以根据需要使用 SnapMirror 技术将数据从云镜像到内部存储，从而实现安全高效的方式。</block>
+  <block id="aecad7c5bdfba92aa6cd945a9045c37f" category="paragraph">此图显示了从云到内部解决方案的备份和灾难恢复。</block>
+  <block id="94c7a6b63152038de5e8b2763cdef06c" category="paragraph"><block ref="94c7a6b63152038de5e8b2763cdef06c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="bbd6a10b63926b84e9a28da6d4214925" category="inline-link-macro">下一步：用例 3 —对现有 Hadoop 数据启用 DevTest 。</block>
+  <block id="e0f915fb1893e398d54abc6f9d00ca57" category="paragraph"><block ref="e0f915fb1893e398d54abc6f9d00ca57" category="inline-link-macro-rx"></block></block>
+  <block id="69efde21ccf40f1dda4d665f81bacefe" category="summary">在这种情况下，一家大型金融服务和投资银行的分析平台使用 NetApp NFS 存储解决方案进行了现代化改造，从而显著改进了资产管理和定量业务部门的投资风险和衍生产品分析。</block>
+  <block id="0158648474e8dffab94ca58af2257b92" category="doc">用例 5 ：加快分析工作负载的速度</block>
+  <block id="c8ea1eda8e0ac121148ac86dee9649a7" category="inline-link-macro">先前版本：用例 4 —数据保护和多云连接。</block>
+  <block id="87fb2a1eb3f12014af6e5dd36ba66e5e" category="paragraph"><block ref="87fb2a1eb3f12014af6e5dd36ba66e5e" category="inline-link-macro-rx"></block></block>
+  <block id="24b0e878b8196875cd088397ac8312a9" category="paragraph">在客户的现有环境中，用于分析平台的 Hadoop 基础架构利用了 Hadoop 服务器的内部存储。由于 JBOD 环境的专有性，组织内的许多内部客户无法利用其蒙特卡罗量化模型，这种模拟依赖于重复的实时数据样本。无法以最佳方式了解市场波动的不确定性影响，这对量化资产管理业务单位不利。</block>
+  <block id="788ab145281501314f18747a0ab1eaea" category="paragraph">该银行的量化业务部门需要一种高效的预测方法来实现准确，及时的预测。为此，该团队认识到需要对基础架构进行现代化改造，减少现有 I/O 等待时间并提高 Hadoop 和 Spark 等分析应用程序的性能，以便高效模拟投资模型，衡量潜在收益并分析风险。</block>
+  <block id="5ff37557b096819452a25d129a312360" category="paragraph">客户的现有 Spark 解决方案具有 JBOD 。然后，利用 NetApp ONTAP ， NetApp StorageGRID 和从 MinIO 网关到 NFS ，减少了银行的量化财务团队对评估潜在收益和风险的投资模型进行模拟和分析的 I/O 等待时间。此图显示了采用 NetApp 存储的 Spark 解决方案。</block>
+  <block id="095ba715431845442ef6bf2f4283ad1c" category="paragraph"><block ref="095ba715431845442ef6bf2f4283ad1c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c3a052314babbb25c995c7b6b2b18d04" category="paragraph">如上图所示，我们部署了 AFF A800 ， A700 系统和 StorageGRID ，以便在具有 Spark 的六节点 Hadoop 集群中通过 NFS 和 S3 协议访问 parquet 文件，并为数据分析操作提供了 YARN 和 Hive 元数据服务。</block>
+  <block id="bc12facb8aa0a34db56b00fdbc21c351" category="paragraph">客户旧环境中的直连存储（ DAS ）解决方案在独立扩展计算和存储方面存在缺点。借助 NetApp ONTAP 解决方案 for Spark ，该银行的财务分析业务部门能够将存储与计算分离，并根据需要无缝地更有效地提供基础架构资源。</block>
+  <block id="582c4aa65d1bd005ddc785db8b807fca" category="paragraph">通过将 ONTAP 与 NFS 结合使用，计算服务器 CPU 几乎可以完全用于 Spark SQL 作业， I/O 等待时间缩短了近 70% ，从而为 Spark 工作负载提供了更好的计算能力和性能提升。随后，随着 CPU 利用率的提高，客户还可以利用 GPUDirect 等 GPU 进一步实现平台现代化。此外， StorageGRID 还为 Spark 工作负载提供了低成本存储选项，而 MinIO 网关则可通过 S3 协议安全访问 NFS 数据。对于云中的数据， NetApp 建议使用 Cloud Volumes ONTAP ， Azure NetApp Files 和 NetApp Cloud Volumes Service 。</block>
+  <block id="6e362ed6e741056d737b93021ab2f3f9" category="paragraph"><block ref="6e362ed6e741056d737b93021ab2f3f9" category="inline-link-macro-rx"></block></block>
+  <block id="df343d31543826a7505d157cf243c96a" category="summary">Hadoop DistCp 是一款原生工具，用于大型集群间和集群内复制。Hadoop DistCp 基本过程是一个典型的备份工作流，它使用诸如 MapReduce 等 Hadoop 原生工具将 Hadoop 数据从 HDFS 源复制到相应目标。</block>
+  <block id="2a377dc939cca8cab65101c1869d628d" category="doc">Hadoop 数据保护和 NetApp</block>
+  <block id="9445444fbd9e863564ea85ad226c0e80" category="inline-link-macro">先前版本：由 NetApp 为大数据架构提供支持的 Data Fabric 。</block>
+  <block id="e30c587da81860e05b3f8ecfb5b9965b" category="paragraph"><block ref="e30c587da81860e05b3f8ecfb5b9965b" category="inline-link-macro-rx"></block></block>
+  <block id="5f45c95989226891db648114a547a6bd" category="paragraph">Hadoop DistCp 是一款原生工具，用于大型集群间和集群内复制。下图所示的 Hadoop DistCp 基本过程是一个典型的备份工作流，它使用诸如 MapReduce 等 Hadoop 原生工具将 Hadoop 数据从 HDFS 源复制到相应目标。通过 NetApp NFS 直接访问，客户可以将 NFS 设置为 Hadoop DistCp 工具的目标，以便通过 MapReduce 将数据从 HDFS 源复制到 NFS 共享。NetApp NFS 直接访问可用作 DistCp 工具的 NFS 驱动程序。</block>
+  <block id="6369c8cb38b142174d2f84d12d2f0420" category="paragraph"><block ref="6369c8cb38b142174d2f84d12d2f0420" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a4849340a20db94ed712aca71c30b915" category="inline-link-macro">接下来： Hadoop 数据保护用例概述。</block>
+  <block id="817c6593a9a8efc031ec597b5d11d605" category="paragraph"><block ref="817c6593a9a8efc031ec597b5d11d605" category="inline-link-macro-rx"></block></block>
+  <block id="fa7dcae8e4f7d8ecc191c3ce8547a53a" category="summary">此使用情形适用于负责为客户的大数据分析数据提供多云连接的云服务合作伙伴。</block>
+  <block id="2268700ee8bd2216d594273e566b0cc9" category="doc">用例 4 ：数据保护和多云连接</block>
+  <block id="2c8eccdfa6390b1d09b2527f7d7d2cc5" category="inline-link-macro">先前版本：用例 3 —对现有 Hadoop 数据启用 DevTest 。</block>
+  <block id="fda5cc5b496f5f7aa6de18740227bc15" category="paragraph"><block ref="fda5cc5b496f5f7aa6de18740227bc15" category="inline-link-macro-rx"></block></block>
+  <block id="3cec8f6cf1ce867e7f73dd5132b7fbf3" category="paragraph">在这种情况下，在 AWS 中从不同来源接收的物联网数据存储在 NPS 的中央位置。NPS 存储连接到 AWS 和 Azure 中的 Spark 或 Hadoop 集群，从而支持在多个云中运行的大数据分析应用程序访问相同的数据。</block>
+  <block id="bed6436414550585ccb4ac4c67a449a3" category="list-text">客户希望使用多个云对相同数据运行分析作业。</block>
+  <block id="6af3e1f448b2a56e9bd0fbbd43b31bc8" category="list-text">必须通过不同的传感器和中心从内部和云等不同来源接收数据。</block>
+  <block id="e3c7f1ced05166adfc90c26337389e3e" category="list-text">解决方案必须高效且经济高效。</block>
+  <block id="b320f1b1ab6d0a21e40ee3d444669645" category="list-text">主要挑战是构建一个经济高效的解决方案，以便在内部和不同云之间提供混合分析服务。</block>
+  <block id="0d4b3cfa555ff36cd92fb4e36fb69fbf" category="paragraph">此图显示了数据保护和多云连接解决方案。</block>
+  <block id="faaf8e6278dc7a68fd1dd98dfe7f525a" category="paragraph"><block ref="faaf8e6278dc7a68fd1dd98dfe7f525a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="14c23633f1ab374f4c801386847ba2f8" category="paragraph">如上图所示，来自传感器的数据会通过 Kafka 流式传输并输入到 AWS Spark 集群中。数据存储在 NPS 中的 NFS 共享中， NPS 位于 Equinix 数据中心内的云提供商之外。由于 NetApp NPS 分别通过 Direct Connect 和 Express Route 连接连接到 Amazon AWS 和 Microsoft Azure ，因此客户可以利用原位分析模块从 Amazon 和 AWS 分析集群访问数据。这种方法解决了跨多个超大规模云提供商进行云分析的问题。</block>
+  <block id="4089db0b43263b1f59a9c2db909edf6e" category="paragraph">因此，由于内部和 NPS 存储均运行 ONTAP 软件，因此 SnapMirror 可以将 NPS 数据镜像到内部集群，从而在内部和多个云之间提供混合云分析。</block>
+  <block id="d446808fb03b5fae4f2e518cbc7d767f" category="paragraph">为了获得最佳性能， NetApp 通常建议使用多个网络接口和直接连接 / 快速路由从云实例访问数据。</block>
+  <block id="1ef541fe0fa79d247c0f1751629bb504" category="inline-link-macro">接下来：用例 5 —加快分析工作负载的速度。</block>
+  <block id="7dfabd0b120fe0403ff107668db4094a" category="paragraph"><block ref="7dfabd0b120fe0403ff107668db4094a" category="inline-link-macro-rx"></block></block>
+  <block id="f9fe6a27dc7f13d26e9416153b950597" category="summary">本节将简要介绍数据保护使用情形的问题描述，这是本白皮书的重点内容。其余部分将详细介绍每个使用情形，例如客户问题（场景），要求和挑战以及解决方案。</block>
+  <block id="6a15e1dac7cc5c330a1da84c32b3ff2e" category="doc">Hadoop 数据保护用例概述</block>
+  <block id="d161097dc6596d3807b21a5635856d71" category="inline-link-macro">先前版本： Hadoop 数据保护和 NetApp 。</block>
+  <block id="1a5df0b83f496dc00b4a331caac0d5cd" category="paragraph"><block ref="1a5df0b83f496dc00b4a331caac0d5cd" category="inline-link-macro-rx"></block></block>
+  <block id="385dae214dc9bab52698dc7cd42632ad" category="paragraph">在这种使用情形中，原位分析模块帮助一家大型金融机构将备份时间从 24 小时以上缩短到几小时以内。</block>
+  <block id="06b83cb579d9aaf1f26d8c4284a5a42e" category="paragraph">一家大型广播公司利用 NetApp 提供支持的 Data Fabric 作为组件，根据不同的数据传输模式（例如按需，即时， 或基于 Hadoop/Spark 集群负载。</block>
+  <block id="da17b6db6e3e50f66b5bcaee1d74f8b1" category="paragraph">NetApp 解决方案帮助在线音乐分销商在不同的分支中快速构建多个节省空间的 Hadoop 集群，以便使用计划的策略创建报告并运行每日 DevTest 任务。</block>
+  <block id="90fc62f886a8c33032d4db8b79ec5814" category="paragraph">一家大型服务提供商使用由 NetApp 提供支持的 Data Fabric ，从不同的云实例为其客户提供多云分析。</block>
+  <block id="67f07a55567ecfc26b3c7b54823a43ee" category="paragraph">最大的金融服务和投资银行之一使用 NetApp 网络连接存储解决方案来缩短 I/O 等待时间并加快其量化金融分析平台的运行速度。</block>
+  <block id="2afe208a471bf6c54f0ccc97f4c6508d" category="inline-link-macro">下一步：用例 1 —备份 Hadoop 数据。</block>
+  <block id="aac250a096aacf9aed26ebbd137818da" category="paragraph"><block ref="aac250a096aacf9aed26ebbd137818da" category="inline-link-macro-rx"></block></block>
+  <block id="5e524f38cae9a99f3ebbaf012df2894e" category="summary">由 NetApp 提供支持的 Data Fabric 可简化并集成云环境和内部环境中的数据管理，以加速数字化转型。由 NetApp 提供支持的 Data Fabric 可提供一致且集成的数据管理服务和应用程序（组件），以实现数据可见性和洞察力，数据访问和控制以及数据保护和安全。</block>
+  <block id="3c2db15f0fee10b08496ec1701f104d8" category="doc">NetApp 为大数据架构提供支持的 Data Fabric</block>
+  <block id="32e0d2b797e6706a73e8146d103572c7" category="inline-link-macro">上一步：解决方案概述。</block>
+  <block id="45af7a946606481f9e2b5f0434aa0484" category="paragraph"><block ref="45af7a946606481f9e2b5f0434aa0484" category="inline-link-macro-rx"></block></block>
+  <block id="981d357acc471e35d8d150f861ff1828" category="paragraph">由 NetApp 提供支持的 Data Fabric 可简化并集成云环境和内部环境中的数据管理，以加速数字化转型。</block>
+  <block id="d5a64464c1e1f9d8be4cafc8b2325fa6" category="paragraph">由 NetApp 提供支持的 Data Fabric 可提供一致且集成的数据管理服务和应用程序（组件），以实现数据可见性和洞察力，数据访问和控制以及数据保护和安全，如下图所示。</block>
+  <block id="22313f8779f9135c9b421ac0d4b320fb" category="paragraph"><block ref="22313f8779f9135c9b421ac0d4b320fb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5083bdadc0fe82e6398670e5dcc6bff9" category="section-title">经验证的 Data Fabric 客户用例</block>
+  <block id="3c1223e53bc7b972a018d3e2597e0bfd" category="paragraph">由 NetApp 提供支持的 Data Fabric 为客户提供了以下九个经验证的使用情形：</block>
+  <block id="a6800f5cacde75e6f1cfb931a6f2dba6" category="list-text">加快分析工作负载的速度</block>
+  <block id="5b0fa9517345824f19ceddd9d0cd39de" category="list-text">加快开发运营转型</block>
+  <block id="90ed50a34505fc6883bd65c36ed8b810" category="list-text">构建云托管基础架构</block>
+  <block id="f3933541659deec9d28aa584238f0468" category="list-text">集成云数据服务</block>
+  <block id="d70909396aef5247a5a1b17dd15cf43d" category="list-text">保护和保护数据</block>
+  <block id="7af5a6e7f241b8d284656f20880db36f" category="list-text">优化非结构化数据</block>
+  <block id="2c63452d476328fa43a39c00bef366f1" category="list-text">提高数据中心效率</block>
+  <block id="0f72ba4c2b371e4f9f47e7d8c61468a5" category="list-text">提供数据洞察力和控制力</block>
+  <block id="0da79db0a9974fc0002f744165467752" category="list-text">简化和自动化</block>
+  <block id="5d5b69e7e19270db49a42eb4e96be2ee" category="paragraph">本文档涵盖九个使用情形中的两个（及其解决方案）：</block>
+  <block id="7adb8b5c573e74594feeb2f74e1ffc96" category="section-title">NetApp NFS 直接访问</block>
+  <block id="233060aa11b5715000c000e94576cca9" category="paragraph">NetApp NFS 直接访问（以前称为 NetApp 原位分析模块）（如下图所示）允许客户在不移动或复制数据的情况下，对现有或新的 NFSv3 或 NFSv4 数据运行大数据分析作业。它可以防止多个数据副本，并且无需将数据与源进行同步。例如，在金融领域，将数据从一个位置移动到另一个位置必须履行法律义务，这不是一项容易的任务。在这种情况下， NetApp NFS 直接访问会分析其原始位置的财务数据。另一个主要优势是，使用 NetApp NFS 直接访问可通过使用原生 Hadoop 命令简化对 Hadoop 数据的保护，并利用 NetApp 丰富的数据管理产品组合支持数据保护工作流。</block>
+  <block id="96e1e6bac181280c42ba5de56a8ef4c2" category="paragraph"><block ref="96e1e6bac181280c42ba5de56a8ef4c2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="aa47c768dc0f007b4606d394be4330c3" category="paragraph">NetApp NFS 直接访问为 Hadoop/Spark 集群提供了两种部署选项：</block>
+  <block id="cc7514a5b2b35641026a81211ae7fe9a" category="list-text">默认情况下， Hadoop/Spark 集群使用 Hadoop 分布式文件系统（ HDFS ）进行数据存储和默认文件系统。NetApp NFS 直接访问可以将默认 HDFS 替换为 NFS 存储作为默认文件系统，从而对 NFS 数据执行直接分析操作。</block>
+  <block id="5a5dace50e75999dec9323da42fe5410" category="list-text">在另一种部署选项中， NetApp NFS 直接访问支持在一个 Hadoop/Spark 集群中将 NFS 与 HDFS 配置为额外的存储。在这种情况下，客户可以通过 NFS 导出共享数据，并从同一集群访问数据以及 HDFS 数据。</block>
+  <block id="933871f01596456078e75585ab9480ae" category="paragraph">使用 NetApp NFS 直接访问的主要优势包括：</block>
+  <block id="bc3221e251e23e5ee9782e37b0337c38" category="list-text">分析当前位置的数据，防止执行将分析数据移动到 HDFS 等 Hadoop 基础架构这一耗时且性能极高的任务。</block>
+  <block id="fe5efea0cd6733d158bfb04016f055f0" category="list-text">将副本数量从三个减少为一个。</block>
+  <block id="21b00f92397ca3c72f6407dd3a873e23" category="list-text">支持用户分离计算和存储，以便独立扩展。</block>
+  <block id="be7e2eb6e940a1e798db3abedc75b7a8" category="list-text">利用 ONTAP 丰富的数据管理功能提供企业数据保护。</block>
+  <block id="acc50ec5f7ffe1b08ee357afcb502a0f" category="list-text">已通过 Hortonworks 数据平台认证。</block>
+  <block id="be5acbdc2ea462a8345ea92d4c42511c" category="list-text">支持混合数据分析部署。</block>
+  <block id="227afbdb4ab9214131d6ca5ca3df3cd6" category="list-text">利用动态多线程功能缩短备份时间。</block>
+  <block id="787364630dc10cfc2657bc82f289a9fb" category="section-title">大数据的组件</block>
+  <block id="7698deb733ad601844c58f0102d0470c" category="paragraph">由 NetApp 提供支持的 Data Fabric 集成了数据管理服务和应用程序（组件），用于实现数据访问，控制，保护和安全性，如下图所示。</block>
+  <block id="f0a67f0f8f389fb239ce107f693a7e68" category="paragraph"><block ref="f0a67f0f8f389fb239ce107f693a7e68" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="162f2b2249f4b8bda40b0c01043779b3" category="paragraph">上图中的组件包括：</block>
+  <block id="e64f250539a531b81423d6f3f4729665" category="list-text">* NetApp NFS 直接访问。 * 为最新的 Hadoop 和 Spark 集群提供对 NetApp NFS 卷的直接访问，而无需额外的软件或驱动程序要求。</block>
+  <block id="2867a490011894512662b9423698d0e0" category="list-text">* NetApp Cloud Volumes ONTAP 和云卷服务。 * 基于在 Microsoft Azure 云服务的 Amazon Web Services （ AWS ）或 Azure NetApp Files （ ANF ）中运行的 ONTAP 的软件定义的连接存储。</block>
+  <block id="5d382bdcedb0a9c7aa214b09e129e5e7" category="list-text">* NetApp SnapMirror 技术 * 。在内部部署和 ONTAP 云或 NPS 实例之间提供数据保护功能。</block>
+  <block id="e2d911047fad9851fae1d7c4e71b2fab" category="list-text">* 云服务提供商。 * 这些提供商包括 AWS ， Microsoft Azure ， Google Cloud 和 IBM Cloud 。</block>
+  <block id="486add91df5cb94a1fee5fccffe4f39b" category="list-text">* PaaaS 。 * 基于云的分析服务，例如 AWS 中的 Amazon Elastic MapReduce （ EMR ）和 Databricks 以及 Microsoft Azure HDInsight 和 Azure Databricks 。</block>
+  <block id="35848dde21e4a5f344385ead6dec9a43" category="inline-link-macro">接下来： Hadoop 数据保护和 NetApp 。</block>
+  <block id="149584f581a09d835c88f233c514412e" category="paragraph"><block ref="149584f581a09d835c88f233c514412e" category="inline-link-macro-rx"></block></block>
+  <block id="cedd54d52b90b58fb9615e956db81629" category="summary">本文档介绍使用 NetApp AFF 和 FAS 存储系统， NetApp Cloud Volumes ONTAP ， NetApp 互联存储以及适用于 Spark 和 Hadoop 的 NetApp FlexClone 技术的混合云数据解决方案。客户可以通过这些解决方案架构为其环境选择合适的数据保护解决方案。NetApp 在与客户及其业务用例进行交互的基础上设计了这些解决方案。</block>
+  <block id="6a604a825549ac87ecf8a00412ee6365" category="doc">TR-4657 ： NetApp 混合云数据解决方案—基于客户用例的 Spark 和 Hadoop</block>
+  <block id="71932d00608c3a9fe13a866ab35227f6" category="paragraph">NetApp 公司 Karthikeyan Nagalingam 和 Sathish Thyagarajan</block>
+  <block id="8b6b60ca3f35331d22d686d9c4e12871" category="paragraph">本文档介绍使用 NetApp AFF 和 FAS 存储系统， NetApp Cloud Volumes ONTAP ， NetApp 互联存储以及适用于 Spark 和 Hadoop 的 NetApp FlexClone 技术的混合云数据解决方案。客户可以通过这些解决方案架构为其环境选择合适的数据保护解决方案。NetApp 在与客户及其业务用例进行交互的基础上设计了这些解决方案。本文档提供了以下详细信息：</block>
+  <block id="d928ac205302ed3d60386e2a4759c6d6" category="list-text">为什么我们需要针对 Spark 和 Hadoop 环境以及客户面临的挑战提供数据保护。</block>
+  <block id="4444991e618ed955b12fdbcf746ad762" category="list-text">由 NetApp 愿景提供支持的 Data Fabric 及其组件和服务。</block>
+  <block id="018b3e5bb8ca92450618b4f5ff9719f7" category="list-text">如何使用这些组件构建灵活的数据保护工作流。</block>
+  <block id="30b68051de2b69f7d6ab186bed865f7c" category="list-text">根据实际客户使用情形确定的多个架构的优缺点。每个用例都包含以下组件：</block>
+  <block id="2a9dbfa4b74c53d7304fc8b79a1874d3" category="list-text">解决方案</block>
+  <block id="cb9825c3c7619f7000c8452d9005aa5b" category="list-text">解决方案摘要</block>
+  <block id="40300466f60ef41f731d7fd45a1024e2" category="section-title">为什么选择 Hadoop 数据保护？</block>
+  <block id="d54234515a0cb2905eb88ccb03d85491" category="paragraph">在 Hadoop 和 Spark 环境中，必须解决以下问题：</block>
+  <block id="9ed257b8e8a9504946fcf430ea2e12e3" category="list-text">* 软件或人为故障。 * 执行 Hadoop 数据操作时，软件更新中出现人为错误，可能导致出现错误行为，发生原因从而可能导致作业产生意外结果。在这种情况下，我们需要保护数据，以避免出现故障或出现不合理的结果。例如，由于对流量信号分析应用程序进行的软件更新执行不当，这是一项新功能，无法以纯文本的形式正确分析流量信号数据。该软件仍会分析 JSON 和其他非文本文件格式，从而导致实时流量控制分析系统生成缺少数据点的预测结果。这种情况可能会导致发生原因输出出现故障，从而可能导致交通信号发生意外。通过提供快速回滚到先前工作应用程序版本的功能，数据保护可以解决此问题描述问题。</block>
+  <block id="38b145294d087c4d733df994e6a7b6c1" category="list-text">* 大小和规模。 * 由于数据源和卷的数量不断增加，分析数据的大小每天都在增长。社交媒体，移动应用程序，数据分析和云计算平台是当前大数据市场中的主要数据源，该市场的增长速度非常快，因此需要对数据进行保护，以确保准确的数据运行。</block>
+  <block id="80908b4b31d37977701d3694fbc636ac" category="list-text">* Hadoop 的原生数据保护。 * Hadoop 具有一个原生命令来保护数据，但此命令不会在备份期间提供数据的一致性。它仅支持目录级备份。Hadoop 创建的快照为只读快照，不能用于直接重复使用备份数据。</block>
+  <block id="e664ca405ed3e90fecf2e085985fe24c" category="section-title">Hadoop 和 Spark 客户面临的数据保护挑战</block>
+  <block id="c2d49a2ee903d6d86976c3618079a61d" category="paragraph">Hadoop 和 Spark 客户面临的一个常见挑战是，在数据保护期间，在不对生产集群性能产生负面影响的情况下，缩短备份时间并提高备份可靠性。</block>
+  <block id="8d54bea5cb89e665d1a703529f703765" category="paragraph">客户还需要最大限度地减少恢复点目标（ RPO ）和恢复时间目标（ RTO ）停机时间，并控制其内部和基于云的灾难恢复站点，以实现最佳业务连续性。这种控制通常来自企业级管理工具。</block>
+  <block id="042be4d2813fd31d6b49e6eeaa1a42c3" category="paragraph">Hadoop 和 Spark 环境非常复杂，因为不仅数据量庞大且不断增长，而且数据的到达速度也在不断提高。在这种情况下，很难从源数据快速创建高效，最新的 DevTest 和 QA 环境。NetApp 认识到这些挑战，并提供了本白皮书中介绍的解决方案。</block>
+  <block id="1f60e9ce60971dc2129b30c8820ff343" category="inline-link-macro">接下来： NetApp 为大数据架构提供支持的 Data Fabric 。</block>
+  <block id="b8d3f7ee1ffc74c6a96c88a193dc6f1e" category="paragraph"><block ref="b8d3f7ee1ffc74c6a96c88a193dc6f1e" category="inline-link-macro-rx"></block></block>
+  <block id="a8a1e11a906a27bd156606bf4717e8e8" category="summary">此支持中心解决方案的架构以 NVIDIA 的预构建工具和 NetApp DataOps 工具包为核心。NVIDIA 的工具可用于使用预构建的型号和管道快速部署高性能 AI 解决方案。NetApp DataOps 工具包可简化各种数据管理任务，以加快开发速度。</block>
+  <block id="d51083e81cbf0ec7828af24692206315" category="inline-link-macro">先前：用例。</block>
+  <block id="beff34f173af198016bee889c9f9ed7a" category="paragraph"><block ref="beff34f173af198016bee889c9f9ed7a" category="inline-link-macro-rx"></block></block>
+  <block id="c779b37f861deb44744634dea201514f" category="inline-link-macro">NVIDIA RIVA</block>
+  <block id="ccfdc9ae99a97b7a6b8ad83a329bcdc8" category="paragraph"><block ref="eb3a0fd60dc608626ce6d809beb18359" category="inline-link-macro-rx"></block> 是一款 GPU 加速 SDK ，用于构建多模式对话 AI 应用程序，在 GPU 上提供实时性能。NVIDIA Train ， Aadapt ， and Optimize （ TAO ）工具包提供了一种更快，更简单的方法来加快训练速度，并快速创建高度准确且性能优异的特定域 AI 模型。</block>
+  <block id="600ff5755ecd6aa4213eb806162b679e" category="paragraph">NetApp DataOps 工具包是一个 Python 库，可使开发人员，数据科学家，开发运营工程师和数据工程师轻松执行各种数据管理任务。其中包括近乎即时地配置新的数据卷或 JupyterLab 工作空间，近乎即时地克隆数据卷或 JupyterLab 工作空间，以及近乎即时地对数据卷或 JupyterLab 工作空间进行快照，以实现可追溯性和基线化。</block>
+  <block id="1c8bd88c9d2cb845c6c27915f4a3fe8e" category="paragraph">下图显示了解决方案架构。环境分为三大类：云，核心和边缘。每个类别都可能在不同的地理位置上分散。例如，云中包含的对象存储包含不同区域的存储分段中的音频文件，而核心则可能包含通过高速网络或 NetApp Cloud Sync 链接的数据中心。边缘节点表示各个人工代理的日常工作平台，在这些平台中，交互式信息板工具和麦克风可用于直观显示情绪并从与客户的对话中收集音频数据。</block>
+  <block id="5d103a663d28ddc9aa2af5f7b958e52c" category="inline-link">Riva</block>
+  <block id="cc7a5a83afae781789c3a002465500b5" category="inline-link">TAO 工具包</block>
+  <block id="9595827147dc1170c44979ae1fcabaa6" category="paragraph">在 GPU 加速数据中心中，企业可以使用 NVIDIA<block ref="cfd3aefe24e0725c1b0424dd8b503dc1" category="inline-link-rx"></block> 用于构建对话式 AI 应用程序的框架<block ref="ccdd6931e40e98163a0ae3c3c3bfb185" category="inline-link-rx"></block> 使用传输 L 学习技术连接模型修剪和重新培训。这些计算应用程序和工作流由提供支持<block ref="5d9fb1d86d92052bc5dca8ba91d13ff2" category="inline-link-rx"></block>，实现 ONTAP 提供的最佳数据管理功能。通过该工具包，企业数据团队可以利用相关的结构化和非结构化数据，通过快照和克隆快速构建模型的原型，以实现可追溯性，版本控制， A/B 测试，从而提供安全性，监管， 和合规性。请参见一节 <block ref="3f1432f6921bc0c51d34759cb0d748ab" category="inline-link-macro-rx"></block> 有关详细信息：</block>
+  <block id="816c3453eeba98af344f96d7eefe8834" category="paragraph">此解决方案演示了音频文件处理， NLP 模型培训，传输学习和数据管理详细步骤。生成的端到端管道生成一个情感摘要，该摘要会实时显示在人力支持代理的信息板上。</block>
+  <block id="b6fb1598d37d2537eed4160a485b790e" category="paragraph"><block ref="b6fb1598d37d2537eed4160a485b790e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="62519b55e4debcf57caf02c89620de61" category="cell">响应延迟测试</block>
+  <block id="b763dc0a5ffab97a986c74098214cae6" category="cell">时间（毫秒）</block>
+  <block id="08fa9c0a2e18301dd14e18c393fb4280" category="cell">数据处理</block>
+  <block id="d3d9446802a44259755d38e6d163e820" category="cell">10</block>
+  <block id="08db96f19d3c99c2b42fd180d9d81580" category="cell">推理</block>
+  <block id="212e6da10eee5f14935bd37b84fe9684" category="paragraph">这些响应时间测试针对 560 个对话中 50 ， 000 多个音频文件运行。每个音频文件的大小为 ~100KB ，转换为 wav 时大小为 ~1 MB 。数据处理步骤会将 MP3 转换为 wav 文件。推理步骤会将音频文件转换为文本，并从文本中提取感受。这些步骤彼此独立，可以并行处理以加快此过程。</block>
+  <block id="c18e24981c583441c6975f2116288cb7" category="paragraph">考虑到在商店之间传输数据的延迟，经理应该能够在句子结尾的一秒内看到实时情感分析的更新。</block>
+  <block id="1c4968697a5851a64ad0fbf1b594e919" category="section-title">NVIDIA Riva 硬件</block>
+  <block id="17bc10091293fdc562a6db69940ee924" category="cell">os</block>
+  <block id="4c8be35e5fe3d8471f378a69f74c0ab6" category="cell">Linux x86_64</block>
+  <block id="4d240f00b5a82cfaaf594cdc72f552f3" category="cell">GPU 内存（ As1 ）</block>
+  <block id="3fa503e0bb3bf46423ef9176821a1f6c" category="cell">流模型： ~5600 MB 非流模型： ~3100 MB</block>
+  <block id="6345afe417f42d9e0cf6a269bff00b4c" category="cell">GPU 内存（ NLP ）</block>
+  <block id="217941fb2e441b0bae1b5fec0b454c31" category="cell">~每个 Bert 型号 500 MB</block>
+  <block id="7e04ebd38c78635d1f8aa53de0dde49b" category="section-title">NVIDIA TAO 工具包硬件</block>
+  <block id="03282e46abfd7449ab38bb851caf2c8d" category="cell">系统 RAM</block>
+  <block id="edaf98e5dae9931cbd74a93b3dd93849" category="cell">32 GB</block>
+  <block id="6ddfc451ef4f9a7613468cd288d2ab3e" category="cell">GPU RAM</block>
+  <block id="2b55387dd066c5bac646ac61543d152d" category="cell">CPU</block>
+  <block id="04911a799cc8712b473ed5a3cb2b8904" category="cell">8 个核心</block>
+  <block id="fceec3562665d08f1dd24689f68f0f29" category="cell">NVIDIA （ A100 ， V100 和 RTX 30x0 ）</block>
+  <block id="34df20bab5e85dc75bfc94ef569cced9" category="cell">SSD</block>
+  <block id="2f9289dfcac06a2ba95650d7e24ea9e8" category="cell">100 GB</block>
+  <block id="19aa61315132dbea1d19c7aeeef5f5b2" category="section-title">闪存存储系统</block>
+  <block id="fd5487a1e906d6cd514dbbc16f17a489" category="paragraph">ONTAP 9.9 是 NetApp 推出的最新一代存储管理软件，可帮助企业打造现代化的基础架构并过渡到云就绪数据中心。借助行业领先的数据管理功能，无论数据位于何处， ONTAP 都可以通过一组工具来管理和保护数据。您还可以将数据自由移动到需要的任何位置：边缘，核心或云。ONTAP 9.9 包含许多功能，可简化数据管理，加快和保护关键数据，并在混合云架构中实现下一代基础架构功能。</block>
+  <block id="78a2efe59d4ad6ad51556ea77f5fdec3" category="paragraph"><block ref="f0ec1a9d50acb3759e364a1cdfa9961d" category="inline-link-rx"></block> 是一项 NetApp 服务，用于快速安全地同步数据，使您可以在内部 NFS 或 SMB 文件共享之间将文件传输到以下任一目标：</block>
+  <block id="df2c24964ca3e99761acc48b2c8a75c9" category="list-text">NetApp ONTAP S3</block>
+  <block id="1a4c7c9b6e3157ccd0101fd0836c0bfc" category="list-text">NetApp Cloud Volumes Service</block>
+  <block id="ddcf3699b41cd4c4ee5be4b9dd95c1e6" category="list-text">Amazon Simple Storage Service （ Amazon S3 ）</block>
+  <block id="8224436b00c48149c863f4b17219a19d" category="list-text">Amazon Elastic File System （ Amazon EFS ）</block>
+  <block id="52745271323ee9ea30e3a37d0338d118" category="list-text">Azure Blob</block>
+  <block id="833c2c211a541e50ad94433664e4b5c1" category="list-text">Google Cloud 存储</block>
+  <block id="5446a6bee3301e1f52824fc0affa6299" category="list-text">IBM 云对象存储</block>
+  <block id="1b238365e840da0711b49e8f646e2fdf" category="paragraph">Cloud Sync 可将文件快速安全地移动到您需要的位置。数据传输完成后，即可在源和目标上完全使用。Cloud Sync 会根据您预定义的计划持续同步数据，并仅移动增量，从而最大限度地减少在数据复制上花费的时间和金钱。Cloud Sync 是一款软件即服务（ SaaS ）工具，易于设置和使用。由 Cloud Sync 触发的数据传输由数据代理执行。您可以在 AWS ， Azure ， Google 云平台或内部部署 Cloud Sync 数据代理。</block>
+  <block id="a5c952f5be43013a024d778712474fbc" category="paragraph">StorageGRID 软件定义的对象存储套件可无缝支持公有，私有云和混合多云环境中的各种用例。借助行业领先的创新技术， NetApp StorageGRID 可存储，保护和保留非结构化数据，以供多用途使用，包括长期的自动化生命周期管理。有关详细信息，请参见<block ref="7660f0463c83c682b9f091117b07c3b3" category="inline-link-rx"></block> 站点</block>
+  <block id="6ffce2da93d4b296032f30d7b2adea01" category="paragraph">下表列出了实施此解决方案所需的软件组件。在任何特定解决方案实施中使用的软件组件可能会因客户要求而异。</block>
+  <block id="d20072ce64f4d9efd57e036d2b7c30ec" category="cell">主机</block>
+  <block id="7915eebeca25d928212b5d457786a549" category="cell">Riva （原 JarVis ）</block>
+  <block id="1bf6e69c18341244d990250bf5aa3ce0" category="cell">1.4.0</block>
+  <block id="7a2cd4790985cbbb0b362dfe8e59d991" category="cell">TAO 工具包（以前称为传输学习工具包）</block>
+  <block id="55c82b601deae028c1c5e87fd820923d" category="cell">3.0</block>
+  <block id="67c6ecbcd91c613e8659b3f0c4b01510" category="cell">9.9.1</block>
+  <block id="8bec4fb7fbc1430e393d3f41063748e7" category="cell">DGX 操作系统</block>
+  <block id="43ff194f410f3e93a8680bef5ba51e50" category="cell">5.1</block>
+  <block id="1b13fe3d4acac980a061d9efb92000d5" category="cell">DOTK</block>
+  <block id="d233662f9c26d1a06118c93ef2fd1de9" category="cell">2.0.0</block>
+  <block id="76e535c7d7533499b0d86f60a0d15b84" category="section-title">NVIDIA Riva 软件</block>
+  <block id="5d7bf724a19463b3251c61a94a446c4c" category="cell">如果不使用 DGX ，则大于 19.02 （安装了 NVIDI-Docker ） &gt;=19.03</block>
+  <block id="3ff6010d41ffb33d6f0971a202e76ad7" category="cell">NVIDIA 驱动程序</block>
+  <block id="616120c1963dd46f2321dd37e823f8a0" category="cell">对于数据中心 GPU ，则为 465.19.01+ 418.40+ ， 440.33+ ， 450.51+ ， 460.27+</block>
+  <block id="88f8128d405513d54a3e9831c73f87a0" category="cell">容器操作系统</block>
+  <block id="73611f9a837b7a25dad3a9c5d1a98658" category="cell">Ubuntu 20.04</block>
+  <block id="a33b7755e5f9b504d2d038eaca4ff28d" category="cell">CUDA</block>
+  <block id="a26b47ba45087eadbeaa7c4802b3a8c8" category="cell">11.3.0</block>
+  <block id="d92ef06e9564a9db573d075b4220057e" category="cell">cucBLAS</block>
+  <block id="a8a364c27ce7406b7be591b4f973d5bb" category="cell">11.5.1.101</block>
+  <block id="9bfd6cd63a5597c998aa2d96564f5c34" category="cell">cuDNN</block>
+  <block id="15daa8f1432fd7e2b07f63097623dfab" category="cell">8.2.0.41</block>
+  <block id="1ed15cc4178fd8ec4d845042a8f1ead0" category="cell">NCCL</block>
+  <block id="f10585a0c5c8f535143471006baef867" category="cell">2.9.6</block>
+  <block id="61918500e2bc645b2aea3f447086a8a5" category="cell">TensorRT</block>
+  <block id="086934e5e95d3c797fc75f38fb3d086c" category="cell">7.2.3.4</block>
+  <block id="d024876954df77538311467564f00917" category="cell">Triton 推理服务器</block>
+  <block id="0d6f7e6ce6f1553544acb14682c8eb07" category="cell">2.9.0</block>
+  <block id="2efc85a476098fde0ecbf8d81505b612" category="section-title">NVIDIA TAO 工具包软件</block>
+  <block id="cb6c22f673a55391483c7f040d8cf637" category="cell">Ubuntu 18.04 LTS</block>
+  <block id="23eeeb4347bdd26bfc6b7ee9a3b755dd" category="cell">Python</block>
+  <block id="c80362c25c18981fcf433e78dda5de78" category="cell">&gt;=3.6.9</block>
+  <block id="aec7ff22e2f74b581cffbfa59e63f347" category="cell">Docker — ce</block>
+  <block id="21ca3af3ea5e6a282911a64dbf5ced7a" category="cell">19.03.5</block>
+  <block id="0cf76d9b00333f4396d0424ae164dd07" category="cell">Docker API</block>
+  <block id="ca2b7e7213f7ba5d4b3923e807af27df" category="cell">1.40</block>
+  <block id="ad2f80b0463af47fcb7430e0e1789841" category="cell">nvidia-container-toolkit</block>
+  <block id="12b58130c1d9383cf3bf63391bd04721" category="cell">&gt;1.3.0-1</block>
+  <block id="cec57b9746d41fd1c1749d591dbd7baf" category="cell">nvidia-container-runtime</block>
+  <block id="68b90d96e3d934d65890ff695d37f354" category="cell">3.4.0-1.</block>
+  <block id="f235b98dbe494fca328354abf0b52858" category="cell">nvidia-docker2.</block>
+  <block id="10439f6f665bce43173e2871a0b7bfc6" category="cell">2.5.0-1.</block>
+  <block id="fd3811d814e856dc6a43152673bb6753" category="cell">NVIDIA 驱动程序</block>
+  <block id="06c61cdd8c93e750b3e0d4e2537416ea" category="cell">&gt;455</block>
+  <block id="b6da1806d8ccb5327c3d80bbcfea4737" category="cell">Python-pip</block>
+  <block id="7b043cb99d00fe56df3fead569b1a4de" category="cell">&gt;21.06</block>
+  <block id="3bdf92e45d10e51e2bdc2b16cf33f345" category="cell">nvidia-pyindex</block>
+  <block id="9ca445b9db010a99239196af5ac3a8b9" category="cell">最新版本</block>
+  <block id="cf87f69879c53ebf670ee8bd793ad7ba" category="section-title">用例详细信息</block>
+  <block id="7cb906d40b2e5bad2205a60ef8b6a019" category="list-text">情感分析</block>
+  <block id="52a38da70697d6c80e3b6a204f64263f" category="paragraph"><block ref="52a38da70697d6c80e3b6a204f64263f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a8ff4a485cc084b2a4b5bb829cf18055" category="paragraph">语音到文本使用情形首先会为支持中心载入音频文件。然后，根据 Riva 所需的结构对该音频进行处理。如果尚未将音频文件拆分为其分析单元，则必须先执行此操作，然后再将音频传递给 Riva 。处理完此音频文件后，它将作为 API 调用传递到 Riva 服务器。该服务器采用其托管的众多型号之一，并返回响应。此语音到文本（自动语音识别的一部分）将返回音频的文本表示形式。此时，管道将切换到情感分析部分。</block>
+  <block id="230007c23660d290efdea5586b1716aa" category="paragraph">对于情感分析，自动语音识别输出的文本将作为文本分类的输入。文本分类是用于将文本分类为任意数量的类别的 NVIDIA 组件。对于支持中心对话，情绪类别从正面到负面不等。可以使用一个组套来评估模型的性能，以确定微调步骤是否成功。</block>
+  <block id="3390cebd79348bc76a1e5eb5f169bedf" category="paragraph"><block ref="3390cebd79348bc76a1e5eb5f169bedf" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="952b3f5758e644ef2558d59d3aace0b1" category="inline-link">NVIDIA NGC 目录</block>
+  <block id="4fa0a0d712258621946173068bf4f7e0" category="paragraph">在 TAO 工具包中，语音到文本和情感分析也使用类似的管道。主要区别在于使用了微调模型所需的标签。TAO 工具包管道从处理数据文件开始。然后是经过预先培训的型号（来自<block ref="aaddb3bb47bcb0ca6e2a55cdce808e9b" category="inline-link-rx"></block>）。经过微调的模型会根据其相应的性能指标进行评估，如果性能比预先训练的模型更高，则会部署到 Riva 服务器。</block>
+  <block id="587796d49571c1c4d5c89993d7ed01dd" category="inline-link-macro">接下来：设计注意事项</block>
+  <block id="1165e49145cd3a7ebc2b75e325d8797a" category="paragraph"><block ref="1165e49145cd3a7ebc2b75e325d8797a" category="inline-link-macro-rx"></block></block>
+  <block id="431db7b0dc79bb29f07c20c6060c3338" category="summary">本节列出了适用于此解决方案的 Jupyter 笔记本电脑和其他资源。</block>
+  <block id="de42653a3a04e4aefa258105632011d4" category="doc">视频和演示</block>
+  <block id="eeb22c31d24f52a9b8225da48c32dd15" category="inline-link-macro">先前：验证结果。</block>
+  <block id="234bbb7420397102b6a782bcaafff71a" category="paragraph"><block ref="234bbb7420397102b6a782bcaafff71a" category="inline-link-macro-rx"></block></block>
+  <block id="4b8db041d93aa27fd0cc94a261e224ca" category="inline-link-macro">"Support-Center-sentiment-Analysis-Pipeline.ipynb "</block>
+  <block id="4e336784d7218f9fd7024470cba6b522" category="inline-link">"Support-Center-Mode-Transfer-Learning-and-fine-Tuned.ipynb "</block>
+  <block id="46e3dcdd2c6c30a1d9fcf40d37f0deb3" category="paragraph">有两台笔记本电脑包含情感分析管道：<block ref="8ed620ac9482ce00db4c0f6de7250148" category="inline-link-rx"></block> 和 <block ref="ff8619e3bd3fbeea07c38337a7b773f7" category="inline-link-macro-rx"></block>。这些笔记本电脑共同演示了如何开发管道，以便使用根据用户数据微调的最先进深度学习模型，载入支持中心数据并从每句话中提取情感。</block>
+  <block id="fa8c0b2056c13341c1455ad44cc91889" category="section-title">支持中心—情感分析管道 .ipynb</block>
+  <block id="6b3450c2b921c398bbf90a1aee0b016c" category="paragraph">此笔记本电脑包含推理 Riva 管道，用于载入音频，将其转换为文本以及提取情感以供外部信息板使用。如果尚未下载和处理数据集，则会自动下载和处理该数据集。该笔记本电脑的第一部分是语音到文本，用于将音频文件转换为文本。接下来是 " 情感分析 " 部分，该部分将提取每个文本句子的感受，并以类似于建议的信息板的格式显示这些结果。</block>
+  <block id="63abda3d2c420172da9a3a20c7f64dda" category="admonition">此笔记本电脑必须在模型训练和微调之前运行，因为必须下载并转换为正确格式的 mp3 数据集。</block>
+  <block id="33e7b29c6dc1bb2252ba04ad52f5b1aa" category="paragraph"><block ref="33e7b29c6dc1bb2252ba04ad52f5b1aa" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="295c2feb943bbe2efca238849828084e" category="section-title">支持中心—模型训练和微调。 ipynb</block>
+  <block id="6efbeb8cfc7e387edbf91bad41170349" category="paragraph">在执行此笔记本电脑之前，必须先设置 TAO 工具包虚拟环境（有关安装说明，请参见 " 命令概述 " 中的 "TAO 工具包 " 一节）。</block>
+  <block id="a9d805c9ddfdf62e60632a9754e29404" category="paragraph">此笔记本电脑依靠 TAO 工具包根据客户数据微调深度学习模型。与上一个笔记本电脑一样，这一款笔记本电脑分为两个部分，分别用于语音到文本和情感分析组件。每个部分都将介绍数据处理，模型培训和微调，结果评估和模型导出。最后，我们将在最后一节中介绍如何部署这两种经过微调的型号，以便在 Riva 中使用。</block>
+  <block id="b40454c57dd60f999f3243514cd90ede" category="paragraph"><block ref="b40454c57dd60f999f3243514cd90ede" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f89bf51287609a0c0cf7563b31265c06" category="paragraph"><block ref="f89bf51287609a0c0cf7563b31265c06" category="inline-link-macro-rx"></block></block>
+  <block id="00a9f41b5383bf6bcb5b7f6540d427b4" category="summary">NVIDIA ， AWS ， Google 等公司发布的经过预先训练的建模工具，凭借当前最先进的状态，现在可以相对轻松地建立一个包含复杂模型的端到端管道并进行自定义。</block>
+  <block id="14e5cae1e8e56eca8add5bdcedfe2335" category="inline-link-macro">上一篇：支持中心分析。</block>
+  <block id="d39a6e05d58eb4f71cae7257dc52a1d0" category="paragraph"><block ref="d39a6e05d58eb4f71cae7257dc52a1d0" category="inline-link-macro-rx"></block></block>
+  <block id="710217ef02bea8d1d76bc6fc0e7bc056" category="paragraph">由于这些支持中心处理的呼叫数量众多，如果手动执行，则可能需要很长时间才能评估呼叫性能。传统方法，例如字包计数和其他方法，可以实现一定程度的自动化，但这些方法不能捕获动态语言的更细微的方面和语义上下文。AI 建模技术可用于自动执行其中一些更精细的分析。此外，随着 NVIDIA ， AWS ， Google 等公司发布的最新的经过预先培训的建模工具，现在可以相对轻松地建立一个包含复杂模型的端到端管道并进行自定义。</block>
+  <block id="dd4541bcdb4728a1a380e825494f08e2" category="paragraph">支持中心情感分析的端到端管道，可在员工与来电者交谈时实时载入音频文件。然后，这些音频文件将进行处理，以便在将其转换为文本格式的语音到文本组件中使用。对话中的每一句话都会收到一个标签，用于指示情绪（积极，消极或中立）。</block>
+  <block id="cfc9b6a29659e2208f66d876bd355200" category="paragraph">情绪分析可以为对话提供一个重要方面，用于评估通话性能。这些情感为员工和来电者之间的互动增加了一个深度。人工智能辅助的情绪信息板可为经理实时跟踪对话中的情绪，并对员工过去的通话进行回顾性分析。</block>
+  <block id="2357d01362feabb1716e49b27d23f9cf" category="inline-link">NVIDIA Maxine</block>
+  <block id="a2415fcdba82ba111e08286b17d98943" category="paragraph">预构建的工具可以通过强大的方式组合在一起，快速创建端到端 AI 管道来解决此问题。在这种情况下，可以使用 NVIDIA Riva 库执行两项串联任务：音频抄写和情感分析。第一种是受监控学习信号处理算法，第二种是受监控学习 NLP 分类算法。这些即装即用的算法可以使用 NVIDIA TAO 工具包针对与业务相关的数据的任何相关使用情形进行微调。这样，构建的解决方案就会更加准确，功能更强大，只需成本和资源的一小部分。客户可以采用<block ref="2aa9e1b3ec0ddf7f0bf09cdb2976222a" category="inline-link-rx"></block> 支持中心设计中 GPU 加速视频会议应用程序的框架。</block>
+  <block id="076dd41fe8ba902e5439b5ba07f330ee" category="paragraph">以下用例是此解决方案的核心。这两种使用情形都使用 TAO 工具包进行模型微调，使用 Riva 进行模型部署。</block>
+  <block id="bc176e8f914533ec222bba678e13955f" category="paragraph">为了分析员工和客户之间的支持中心互动，可以通过管道进行每一次以音频通话形式进行的客户对话，以得出句子级别的感受。然后，人类可以验证这些情感，为这些情感提供合理的理由，或者根据需要进行调整。然后，标记的数据将传递到微调步骤，以改善情绪预测。如果已存在标记的情感数据，则可以加快模型微调。无论哪种情况，管道都可通用于需要输入音频和对句子进行分类的其他解决方案。</block>
+  <block id="91fa9ce0e0cb723f35d6cc55f796be7e" category="paragraph"><block ref="91fa9ce0e0cb723f35d6cc55f796be7e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8836d456396ee0865c317994c018a24b" category="paragraph">AI Sentiment 输出会上传到外部云数据库或公司管理的存储系统。情感输出将从这一更大的数据库传输到本地存储，以在为经理显示情感分析的信息板中使用。信息板的主要功能是与客户服务员工实时互动。经理可以通过实时更新每句话的感受，并对员工过去的表现或客户反应进行历史回顾，评估员工的通话并提供反馈。</block>
+  <block id="586779135ffb596b1f1844ada64164b6" category="paragraph"><block ref="586779135ffb596b1f1844ada64164b6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="539788a6fdaffc74393f282739bdd3e2" category="paragraph">。 <block ref="95472f01c3cd86dddef6619dbb9af815" category="inline-link-macro-rx"></block> 即使在 Riva 推理管道生成情感标签之后，也可以继续管理数据存储系统。这些 AI 结果可以上传到 NetApp DataOps 工具包管理的数据存储系统。数据存储系统必须能够管理数百个插件并每分钟进行一次选择。本地设备存储系统实时查询较大的数据存储以进行提取。此外，还可以查询较大的数据存储实例以查找历史数据，从而进一步增强信息板体验。NetApp DataOps 工具包可通过快速克隆数据并将其分发到使用该数据的所有信息板，从而为这两种用途提供便利。</block>
+  <block id="679db67ee98260ef471da732862ed356" category="list-text">员工经理</block>
+  <block id="7e6beec614d536589c47de8f77fa1b1a" category="list-text">数据工程师 / 数据科学家</block>
+  <block id="a2ce7e25564bee3c78076bcff87d1329" category="list-text">IT 管理员（内部，云或混合）</block>
+  <block id="8dcd09ac05ad9012a6ff01f7b5fc337b" category="paragraph">在整个对话过程中跟踪情绪是评估员工绩效的宝贵工具。通过使用 AI 信息板，经理可以实时了解员工和来电者如何改变自己的感受，从而可以开展实时评估和指导会议。此外，企业还可以从参与语音对话，文本聊天机器人和视频会议的客户中获得宝贵的客户见解。此类客户分析可利用大规模多模式处理功能以及现代化的一流 AI 模型和工作流。</block>
+  <block id="b7c29e65097b6ed45e464f6492ff670d" category="paragraph">在数据方面，支持中心每天都会处理大量音频文件。NetApp DataOps 工具包可帮助执行此数据处理任务，以便定期对模型和情感分析信息板进行微调。</block>
+  <block id="1da289b166db713f9283c5be78ef5b96" category="paragraph">IT 管理员还可以从 NetApp DataOps 工具包中受益，因为它允许他们在部署和生产环境之间快速移动数据。此外，还必须对 NVIDIA 环境和服务器进行管理和分布，以便进行实时推理。</block>
+  <block id="7179915e029316714169ac136027ef31" category="paragraph"><block ref="7179915e029316714169ac136027ef31" category="inline-link-macro-rx"></block></block>
+  <block id="c1579c333c7c7a4e52136c7f58a7efc6" category="summary">本技术报告中建议的解决方案已经证明能够为交付如此卓越的客户体验提供支持，现在的挑战是确保企业采取行动来实现 AI 基础架构和工作流的现代化。</block>
+  <block id="9c5e72cb1709251063c12e4bddb1ba12" category="inline-link-macro">上一页：视频和演示。</block>
+  <block id="2f6461cd01fcb0c2d85704a563bd7c19" category="paragraph"><block ref="2f6461cd01fcb0c2d85704a563bd7c19" category="inline-link-macro-rx"></block></block>
+  <block id="50d6e8cef34560d1d68c6688a12b1cb8" category="paragraph">随着客户体验日益被视为关键的竞争战场， AI 增强型全球支持中心成为几乎每个行业的公司都无法忽视的关键组成部分。本技术报告中建议的解决方案已经证明能够为交付如此卓越的客户体验提供支持，现在的挑战是确保企业采取行动来实现 AI 基础架构和工作流的现代化。</block>
+  <block id="f6e349295b2165b25a412793116b8675" category="paragraph">AI 在客户服务中的最佳实施方式不是取代人工代理。相反， AI 可以通过实时情感分析，争议上报和多模式情感计算，让他们能够创造卓越的客户体验，从而检测语言，非语言和面部线索，通过这些线索，全面的 AI 模型可以大规模地提出建议，并补充个人代理可能缺少的内容。AI 还可以更好地匹配具有当前可用代理的特定客户。利用 AI ，企业可以从客户对提供商产品，服务和品牌形象的想法和印象中汲取宝贵的意见。</block>
+  <block id="eb5cb6f03236a80f7ddd5085afa95729" category="paragraph">解决方案还可用于为支持代理构建时间序列数据，以用作客观的性能评估指标。传统的客户满意度调查通常缺乏足够的响应。通过收集员工和客户的长期情绪，雇主可以就支持代理的表现做出明智的决策。</block>
+  <block id="aa20fc291fbb8ceda8651d8d8ee9dba6" category="paragraph">NetApp ， SFL 科学，开源业务流程框架和 NVIDIA 相结合，将最新技术作为托管服务集于一身，并具有极大的灵活性，可加快技术采用速度，加快新 AI/ML 应用程序的上市速度。这些高级服务在内部环境中提供，可轻松移植到云原生环境以及混合部署架构中。</block>
+  <block id="71fd14327d5bf7e725ab97e00192b238" category="paragraph"><block ref="71fd14327d5bf7e725ab97e00192b238" category="inline-link-macro-rx"></block></block>
+  <block id="9c08a0abcced906f3225e86f61dd598c" category="paragraph"><block ref="9c08a0abcced906f3225e86f61dd598c" category="inline-link-macro-rx"></block></block>
+  <block id="c5648cc9e6e76ab4aa041d71661d0288" category="list-text">3D 交互式演示</block>
+  <block id="26e071d5769be8e940617a0c8dd5c22d" category="inline-link">www.netapp.com/ai</block>
+  <block id="9e22db1b830d668e86d5dc1b5c204555" category="paragraph"><block ref="9e22db1b830d668e86d5dc1b5c204555" category="inline-link-rx"></block></block>
+  <block id="1fa584a3d1190f1a7fdded0c91412cac" category="list-text">直接与 NetApp AI 专家联系</block>
+  <block id="91fc02253adb6a9eea2156b684aa70f5" category="inline-link"><block ref="91fc02253adb6a9eea2156b684aa70f5" category="inline-link-rx"></block></block>
+  <block id="488d7301e5d1a52040c33186d7e11657" category="paragraph"><block ref="488d7301e5d1a52040c33186d7e11657" category="inline-link-rx"></block></block>
+  <block id="787dd83fbbc162f0279e320ada1f7c0b" category="list-text">《采用 NetApp 解决方案的 NVDIA 基本命令平台》简介</block>
+  <block id="5541299dd0999c42fcd24fd754001e38" category="inline-link"><block ref="5541299dd0999c42fcd24fd754001e38" category="inline-link-rx"></block></block>
+  <block id="ac527e3c2b2d8a080840aa28c13b127b" category="paragraph"><block ref="ac527e3c2b2d8a080840aa28c13b127b" category="inline-link-rx"></block></block>
+  <block id="465b9c508fba1d27d188eb21e0655293" category="list-text">NetApp 的 AI 10 大理由信息图</block>
+  <block id="75048e22ffd1c45ce07e6cae3170780a" category="inline-link"><block ref="75048e22ffd1c45ce07e6cae3170780a" category="inline-link-rx"></block></block>
+  <block id="e2435a6f01dee5a11f6cd698a292183d" category="paragraph"><block ref="e2435a6f01dee5a11f6cd698a292183d" category="inline-link-rx"></block></block>
+  <block id="66d4373905c5c7c0a3f51e5480d443b2" category="list-text">医疗保健领域的人工智能：深入学习如何在 lung-CT 扫描中识别 COVID-19 病变白皮书</block>
+  <block id="2fb5802df8b60fe09d232df217cc9ba6" category="inline-link"><block ref="2fb5802df8b60fe09d232df217cc9ba6" category="inline-link-rx"></block></block>
+  <block id="d1e9d43080e6c2364ee86ac930ae1341" category="paragraph"><block ref="d1e9d43080e6c2364ee86ac930ae1341" category="inline-link-rx"></block></block>
+  <block id="2ece031fbb30496ba2ec244a07557107" category="list-text">医疗保健领域的人工智能：监控医疗保健环境中的面部掩模使用情况白皮书</block>
+  <block id="aa895997d9bc7e84d90779885cb936b7" category="inline-link"><block ref="aa895997d9bc7e84d90779885cb936b7" category="inline-link-rx"></block></block>
+  <block id="4ac3d75f4e132824f0fe3a418d42a9f9" category="paragraph"><block ref="4ac3d75f4e132824f0fe3a418d42a9f9" category="inline-link-rx"></block></block>
+  <block id="ff11da2c36a9883c6eb658395f3de353" category="list-text">医疗保健领域的人工智能：诊断成像技术报告</block>
+  <block id="41575d740e0d837694e2fa66ce618124" category="inline-link"><block ref="41575d740e0d837694e2fa66ce618124" category="inline-link-rx"></block></block>
+  <block id="61a15cd6b61d637fb54ae6ae99ae39d5" category="paragraph"><block ref="61a15cd6b61d637fb54ae6ae99ae39d5" category="inline-link-rx"></block></block>
+  <block id="1527888e6b729290296c51cf9c3aeeec" category="list-text">AI for Retail ：使用 NVIDIA Riva 的 NetApp 对话 AI</block>
+  <block id="17a311ea95071308f8bb7a7ce3b073ee" category="inline-link"><block ref="17a311ea95071308f8bb7a7ce3b073ee" category="inline-link-rx"></block></block>
+  <block id="dc1f6c62d8de3b68ec946b66d053f5a7" category="paragraph"><block ref="dc1f6c62d8de3b68ec946b66d053f5a7" category="inline-link-rx"></block></block>
+  <block id="2281741ceb773b1efc91b48b4e5e04fe" category="list-text">NetApp ONTAP AI 解决方案简介</block>
+  <block id="4070d4ea40d3cf7f99e4e941ca73d200" category="inline-link"><block ref="4070d4ea40d3cf7f99e4e941ca73d200" category="inline-link-rx"></block></block>
+  <block id="a32cc63ad53dc74caf680b96a921ad3b" category="paragraph"><block ref="a32cc63ad53dc74caf680b96a921ad3b" category="inline-link-rx"></block></block>
+  <block id="c6b4ec978259e83d537f6a179912448a" category="list-text">NetApp DataOps 工具包解决方案简介</block>
+  <block id="c50b3ec30c711b6233dd7753f12165d4" category="inline-link"><block ref="c50b3ec30c711b6233dd7753f12165d4" category="inline-link-rx"></block></block>
+  <block id="a045bf4eb32fbbf6c351d4c3cbd5932c" category="paragraph"><block ref="a045bf4eb32fbbf6c351d4c3cbd5932c" category="inline-link-rx"></block></block>
+  <block id="9399af78c2a9b2a197612e42bf8b8f79" category="list-text">NetApp AI 控制平面解决方案简介</block>
+  <block id="c771257beb97f479ebb6d342d91b61bd" category="inline-link"><block ref="c771257beb97f479ebb6d342d91b61bd" category="inline-link-rx"></block></block>
+  <block id="ce6060d7bc79a57fdb337f6364f0e8a9" category="paragraph"><block ref="ce6060d7bc79a57fdb337f6364f0e8a9" category="inline-link-rx"></block></block>
+  <block id="b6e1af8dc83073dfa46f061507b15586" category="list-text">《利用 Data Drive AI 转变行业》电子书</block>
+  <block id="795a425d6438d3f619ddd3a7ac1ff64c" category="inline-link"><block ref="795a425d6438d3f619ddd3a7ac1ff64c" category="inline-link-rx"></block></block>
+  <block id="195010aa6331d4b94de36f6aa5cf3fc7" category="paragraph"><block ref="195010aa6331d4b94de36f6aa5cf3fc7" category="inline-link-rx"></block></block>
+  <block id="4dcaafba5ac7511b65c0f3a3688f8d81" category="list-text">NetApp EF 系列 AI 解决方案简介</block>
+  <block id="385bae1ac9580238d4ef22dad99878c3" category="inline-link"><block ref="385bae1ac9580238d4ef22dad99878c3" category="inline-link-rx"></block></block>
+  <block id="5bbcd3b785c7ecb740b1302ea68fb4ff" category="paragraph"><block ref="5bbcd3b785c7ecb740b1302ea68fb4ff" category="inline-link-rx"></block></block>
+  <block id="e72de1f0850154df8bf93fae76b2276d" category="list-text">NetApp AI 和联想 ThinkSystem for AI 推理解决方案简介</block>
+  <block id="883d1d69b62bc20ea26446649b6c95b0" category="inline-link"><block ref="883d1d69b62bc20ea26446649b6c95b0" category="inline-link-rx"></block></block>
+  <block id="74686a12110c0c39ad22ac2252bcb1a1" category="paragraph"><block ref="74686a12110c0c39ad22ac2252bcb1a1" category="inline-link-rx"></block></block>
+  <block id="8954bee2812529847e7f3108185fc57d" category="list-text">NetApp AI 和联想 ThinkSystem for Enterprise AI 和 ML 解决方案简介</block>
+  <block id="f877ccffca68b901c2c61513c04dbf37" category="inline-link"><block ref="f877ccffca68b901c2c61513c04dbf37" category="inline-link-rx"></block></block>
+  <block id="214ebd5c8513ce31087d4bf0cd12af76" category="paragraph"><block ref="214ebd5c8513ce31087d4bf0cd12af76" category="inline-link-rx"></block></block>
+  <block id="7cbca96fc14ecadf4054303e98a81787" category="list-text">NetApp 和 NVIDIA —重新定义人工智能视频的可能</block>
+  <block id="cb9dfd830902f3481279d486cd9ddd0d" category="inline-link"><block ref="cb9dfd830902f3481279d486cd9ddd0d" category="inline-link-rx"></block></block>
+  <block id="c7531fbb829ae07f04aab76de6fad46c" category="paragraph"><block ref="c7531fbb829ae07f04aab76de6fad46c" category="inline-link-rx"></block></block>
+  <block id="f521e3eae9fd2145ce8aeede6602641d" category="summary">本节介绍此解决方案的不同组件的设计注意事项。</block>
+  <block id="5b1c62f1e35074e19185d9341b492c54" category="inline-link-macro">先前版本：架构。</block>
+  <block id="b180067c966e23ba80c92f3bb1bf6745" category="paragraph"><block ref="b180067c966e23ba80c92f3bb1bf6745" category="inline-link-macro-rx"></block></block>
+  <block id="35ff22a5291df56d5075c29d8dc65044" category="section-title">网络和计算设计</block>
+  <block id="49d41bdb2234e0a4330f0c9d7d03853a" category="paragraph">根据数据安全性的限制，所有数据都必须保留在客户的基础架构或安全环境中。</block>
+  <block id="5a20c2b759137410d60f5ce368ca45d2" category="paragraph"><block ref="5a20c2b759137410d60f5ce368ca45d2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4d6e133bd239a98d559f693ee2ff5ecc" category="section-title">存储设计</block>
+  <block id="3051d856c7b26f6d385279d67a8a532b" category="paragraph">NetApp DataOps 工具包是用于管理存储系统的主要服务。DataOps 工具包是一个 Python 库，可使开发人员，数据科学家，开发运营工程师和数据工程师轻松执行各种数据管理任务，例如近乎即时地配置新的数据卷或 JupyterLab 工作空间，近乎即时地克隆数据卷或 JupyterLab 工作空间， 以及接近瞬时的数据卷快照或 JupyterLab 工作空间快照，以实现可追溯性或基线化。此 Python 库可以用作命令行实用程序或函数库，可以导入到任何 Python 程序或 Jupyter Notebook 中。</block>
+  <block id="6f9e8585e5f750b8ceb149639b1e25e6" category="section-title">RIVA 最佳实践</block>
+  <block id="7ecab6bd65c2f169e987be2f59219357" category="inline-link">最佳数据实践</block>
+  <block id="f51b8fa6c731ea53318149e50e826ddb" category="paragraph">NVIDIA 提供了多种常规功能<block ref="f6aee1daf7f2fd9cd207fcd26f08d8be" category="inline-link-rx"></block> 要使用 Riva ，请执行以下操作：</block>
+  <block id="20430e77ba2ecbe15261761c8f4fa2c4" category="list-text">* 如果可能，请使用无损音频格式。 * 使用像 mp3 这样的有损编解码器可能会降低质量。</block>
+  <block id="8b3e389f067f32da1e1ab7df2b8d8155" category="list-text">* 扩充训练数据。 * 在音频训练数据中增加背景噪声最初会降低准确性，但同时提高稳定性。</block>
+  <block id="b37d69a795b4d7bb6e0f28a42c3ef8ae" category="list-text">* 如果使用的是擦文本，请限制词汇大小。 * 许多在线源都包含拼写错误或辅助发音以及不常见的词。删除这些内容可以改进语言模式。</block>
+  <block id="6afe4c71ada39a70da349380efbad345" category="list-text">* 如果可能，请使用最小采样速率 16kH* 。但是，请尝试不要重新采样，因为这样做会降低音频质量。</block>
+  <block id="cab3977e4ad163e19ab6245a9b09f541" category="paragraph">除了这些最佳实践之外，客户还必须优先收集具有代表性的样本数据集，并为管道的每个步骤提供准确的标签。换言之，样本数据集应按比例反映目标数据集所示的指定特征。同样，数据集标注器也有责任平衡标记的准确性和速度，以便最大限度地提高数据的质量和数量。例如，此支持中心解决方案需要音频文件，带标签的文本和情感标签。此解决方案的顺序性意味着从管道开始的错误会一直传播到管道的末尾如果音频文件质量较差，则文本抄录和情感标签也会是。</block>
+  <block id="0b6b65c9613285433178682e3550355c" category="paragraph">此错误传播方式与此类似，适用场景是对接受过此数据培训的模型进行的。如果情感预测 100% 准确，但语音到文本模式表现不佳，则最终管道将受初始音频到文本抄录的限制。开发人员必须单独考虑每个模型的性能，并将其作为更大管道的组成部分。在这种特定情况下，最终目标是开发一个能够准确预测情绪的渠道。因此，评估管道的总体指标是感受的准确性，而语音到文本的文字记录直接影响到这一点。</block>
+  <block id="f3b552e561f520013398b3be885a4420" category="paragraph"><block ref="f3b552e561f520013398b3be885a4420" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="ac1ce31a9f2a1a3a478bb69589e180bd" category="paragraph">NetApp DataOps 工具包利用其近乎瞬时的数据克隆技术补充了数据质量检查管道。必须对每个标记的文件进行评估，并将其与现有标记的文件进行比较。在各种数据存储系统之间分布这些质量检查可确保快速高效地执行这些检查。</block>
+  <block id="6d61a746e66a6545c5c9faf68668e013" category="inline-link-macro">接下来：部署支持中心观点分析。</block>
+  <block id="58a113e09ecc7941870d9bcc2d2ee3df" category="paragraph"><block ref="58a113e09ecc7941870d9bcc2d2ee3df" category="inline-link-macro-rx"></block></block>
+  <block id="34d110ef6b6b3684adfe9c791fce2f95" category="summary">本节介绍部署此解决方案所需的详细步骤。</block>
+  <block id="e0673e67d0ae2470ff4a9a3a926792b0" category="doc">部署支持中心观点分析</block>
+  <block id="0c7ee1e6d81ae421558f2979d46adb5d" category="inline-link-macro">先前：设计注意事项。</block>
+  <block id="2e4639bc721df1da69c19fe5c10f5764" category="paragraph"><block ref="2e4639bc721df1da69c19fe5c10f5764" category="inline-link-macro-rx"></block></block>
+  <block id="b23f4e3eb5ff4f900ba54c824bf7a676" category="paragraph">部署解决方案涉及以下组件：</block>
+  <block id="1b497bff4e1d2dff7f8855237612936b" category="list-text">NGC 配置</block>
+  <block id="2dcf1afb8ed1445e4b167ef91fdd8a1b" category="list-text">NVIDIA Riva 服务器</block>
+  <block id="6894a1e922948fc0bc9cc96291183448" category="list-text">NVIDIA TAO 工具包</block>
+  <block id="3b498dd8feee94c2dbcb419be10d3b70" category="list-text">将 TAO 模型导出到 Riva</block>
+  <block id="534b37206d500ff97473ada660fb69d3" category="paragraph">要执行部署，请完成以下步骤：</block>
+  <block id="2f6c7bd50828792593b3aa4deff875cc" category="section-title">NetApp DataOps 工具包：支持中心情感分析</block>
+  <block id="3b84de14b99e2695fdfd099f56b254be" category="paragraph">以使用<block ref="5d9fb1d86d92052bc5dca8ba91d13ff2" category="inline-link-rx"></block>，完成以下步骤：</block>
+  <block id="d19523f192f664c9e34bf949d6f084c3" category="list-text">通过 Pip 安装工具包。</block>
+  <block id="1fe6ae43439f5ccecf9883686d6b3784" category="list-text">配置数据管理</block>
+  <block id="36b413e2c45a91e66db4aac6abd67ba1" category="section-title">NGC 配置：支持中心情感分析</block>
+  <block id="e3ab64bcab09d9eb8219520405242267" category="inline-link">NVIDIA NGC</block>
+  <block id="f526ba073cf7bc97c2b0d3bfe091e293" category="paragraph">进行设置<block ref="5b4e29c9d8254a25bb1abc36cd17ca4c" category="inline-link-rx"></block>，完成以下步骤：</block>
+  <block id="a485a457c113aa9f2f8096ac1ca500d7" category="list-text">下载 NGC 。</block>
+  <block id="7438544460c4a4fdf0b70bb65bb03a92" category="list-text">将当前目录添加到路径。</block>
+  <block id="4f1208b2473595e5f4c3118c13de0fcc" category="list-text">您必须配置 NGC 命令行界面以供使用，才能运行命令。出现提示时，输入以下命令，包括 API 密钥。</block>
+  <block id="5307692c5f99e57b8002a6a87f08c240" category="paragraph">对于不基于 Linux 的操作系统，请访问<block ref="481e32faa0c657434738f6f0a550651b" category="inline-link-rx"></block>。</block>
+  <block id="326419ec6a380f68d7d15a373452bf35" category="section-title">NVIDIA Riva 服务器：支持中心情感分析</block>
+  <block id="92ed82a726e834b50a6863c8c4e9db4e" category="paragraph">进行设置<block ref="fb85035785391c7c4b815d01de952f38" category="inline-link-rx"></block>，完成以下步骤：</block>
+  <block id="a4fc5fd3d1cea05f031d5adc045dc1e0" category="list-text">从 NGC 下载 Riva 文件。</block>
+  <block id="5f2573d8cf9e274560d9a9b3eb2e1aaa" category="list-text">初始化 Riva 设置（`Riva_init.sh` ）。</block>
+  <block id="3b570ac682cfeffcdb2c7243afdbf285" category="list-text">启动 Riva 服务器（`Riva_start.sh` ）。</block>
+  <block id="d44d4e10378cce2928c99a4b49e45cea" category="list-text">启动 Riva 客户端（`Riva_start_client.sh` ）。</block>
+  <block id="6846c1a17ddaf84e01f26ec51c151e78" category="inline-link">FFmpeg</block>
+  <block id="22c9c751571566e0566c448194d9d64f" category="list-text">在 Riva 客户端中，安装音频处理库（<block ref="3e294dfc4ee3a49adac5a070482274ce" category="inline-link-rx"></block>）</block>
+  <block id="8637711b2ee1b94fe789bb28e88c4b61" category="list-text">启动<block ref="37a4c4b3ad3c3851ac5717bfd3104346" category="inline-link-rx"></block> 服务器</block>
+  <block id="b57a5203a9fd3e877aacee6cba6bc9c8" category="list-text">运行 Riva 推理管道笔记本电脑。</block>
+  <block id="5dceab25ae38dae0d7ed3167abd32377" category="section-title">NVIDIA TAO 工具包：支持中心情感分析</block>
+  <block id="2418d4c7f6be40d5c9a50e4aecab1b27" category="paragraph">要设置 NVIDIA TAO 工具包，请完成以下步骤：</block>
+  <block id="630eef78d15fd844ba4a38ea7f7a9c79" category="inline-link">虚拟环境</block>
+  <block id="35fb58d5f90347e4f0c445b4968db5f6" category="list-text">准备并激活<block ref="3d97a4392c0af686650645d1371fa8ef" category="inline-link-rx"></block> 适用于 TAO 工具包。</block>
+  <block id="0a80b2068950d6e04f34c0142a10e719" category="inline-link">所需的软件包</block>
+  <block id="40eb0bd8a87ab1b39e8f2ee5ea287a22" category="list-text">安装<block ref="3646357cb54591ae95dd3b8f0889f0c2" category="inline-link-rx"></block>。</block>
+  <block id="c0e95a7dacbc170e387c4e1a0fe41a0b" category="list-text">手动拉取训练和微调期间使用的图像。</block>
+  <block id="b5a6ae7c1df936b55910309efc466f01" category="list-text">运行 TAO 微调笔记本电脑。</block>
+  <block id="e6dda626093691f78b3127a8faa82b6e" category="section-title">将 TAO 模型导出到 Riva ：支持中心情感分析</block>
+  <block id="6a358d81cb24a7e408b0339062f6bb92" category="inline-link">Riva 中的 TAO 工具包模型</block>
+  <block id="53ace4ba305859107cead3e5b0b53b8b" category="paragraph">以使用<block ref="ce50a5bf8eb35af9ad9bb322336ee3af" category="inline-link-rx"></block>，完成以下步骤：</block>
+  <block id="08c3be8307b7659c6ad67ee4d9659d58" category="list-text">将模型保存在 TAO 微调笔记本中。</block>
+  <block id="ac711bb6af28947dfa8b29512acb36e8" category="list-text">将经过 TAO 训练的型号复制到 Riva 型号目录。</block>
+  <block id="1317e1d8d20d5c44c680825aba2196e6" category="section-title">部署障碍</block>
+  <block id="6e3da39922ebbd1a8a1a5a7238a89168" category="paragraph">在开发您自己的解决方案时，请谨记以下几点：</block>
+  <block id="47c0613abd5b97b67a94c2355692cf08" category="list-text">首先安装 NetApp DataOps 工具包，以确保数据存储系统以最佳状态运行。</block>
+  <block id="943f803f8c6b4c6508bc97536a6d7b2b" category="list-text">必须先安装 NVIDIA NGC ，再安装其他任何版本，因为它会对映像和型号的下载进行身份验证。</block>
+  <block id="70367b72bfd96b5608a7c72ac3f983bf" category="list-text">必须先安装 Riva ，然后再安装 TAO 工具包。Riva 安装会根据需要配置 Docker 守护进程以提取映像。</block>
+  <block id="1ed7124aa68792cb6ce3049f6f1d4f7b" category="list-text">DGX 和 Docker 必须能够访问 Internet 才能下载这些型号。</block>
+  <block id="de9b04ca3177b736c9f3cc74d62f5088" category="inline-link-macro">接下来：验证结果</block>
+  <block id="3556370bb03d018998375ff0476db59a" category="paragraph"><block ref="3556370bb03d018998375ff0476db59a" category="inline-link-macro-rx"></block></block>
+  <block id="0e85d8fd0ce7acdba87f57325a14b3fb" category="summary">如上一节所述，只要有两个或更多机器学习模型按顺序运行，错误就会传播到整个管道中。对于此解决方案，句子的感受是衡量公司股票风险水平的最重要因素。语音到文本模式虽然对管道至关重要，但在预测情感之前，它是预处理单元。</block>
+  <block id="6700d3710d10e74d6e48f994b760d48b" category="doc">验证结果</block>
+  <block id="ee4eec78ae095f539af53c130e976afa" category="inline-link-macro">先前：部署支持中心观点分析。</block>
+  <block id="ac96c8f3af95b93c2683c2124998e668" category="paragraph"><block ref="ac96c8f3af95b93c2683c2124998e668" category="inline-link-macro-rx"></block></block>
+  <block id="2e10a4ae90aad11c07592a14fbf8c5c6" category="paragraph">如上一节所述，只要有两个或更多机器学习模型按顺序运行，错误就会传播到整个管道中。对于此解决方案，句子的感受是衡量公司股票风险水平的最重要因素。语音到文本模式虽然对管道至关重要，但在预测情感之前，它是预处理单元。真正重要的是基本事实句子与预测的句子之间的情感差异。此选项用作错误率（ WER ）一词的代理。语音到文本的准确性非常重要，但 WER 不会直接用于最终管道指标。</block>
+  <block id="0fc4c7871adf5db8dd2b13fc4c381da8" category="paragraph">可以根据每句话的 F1 分数，回顾和精确度计算这些情感指标。然后，可以汇总结果并将其显示在混乱列表中，同时还可以显示每个指标的置信区间。</block>
+  <block id="66554c8f1474c5658d17e23710901f98" category="paragraph">使用传输学习的优势在于，模型性能提高，只需满足极少的数据要求，培训时间和成本。此外，还应将经过微调的模型与其基线版本进行比较，以确保传输学习可以提高性能，而不会影响性能。换言之，经过微调的模型在支持中心数据上的性能应比预先训练的模型更好。</block>
+  <block id="6e979ee914c9401fddd049d16cdef66a" category="section-title">渠道评估</block>
+  <block id="7f109f66c71a1fd15436d1c413354c41" category="cell">测试用例</block>
+  <block id="e7f1ec3a5f35af805407a8a531eefb79" category="cell">测试编号</block>
+  <block id="6bf1af9a7f1b6dd6cca4b7434097ad94" category="cell">渠道感受指标</block>
+  <block id="beed3529b961c63b785104d7a17cf5f4" category="cell">测试前提条件</block>
+  <block id="c7320b1f70fd8a9831e530d17a82f34d" category="cell">经过微调的语音到文本和情感分析模型模型</block>
+  <block id="9d5b1bc6dcdedf0c8750e543fab75738" category="cell">预期结果</block>
+  <block id="74015a89b882f01e94433a9c1f1c904c" category="cell">经过微调的模型的情感指标比原始的预先训练模型的性能更好。</block>
+  <block id="68d279a19e31962e0ab0b648f25c07ee" category="list-text">计算基线模型的情感指标。</block>
+  <block id="b6168629c9e5a47b0637aa362112642d" category="list-text">计算经过微调的模型的情感指标。</block>
+  <block id="97ae5da5f745d90cf815a206b3549e0a" category="list-text">计算这些指标之间的差异。</block>
+  <block id="fc997f472d1b5e66aadb364e10c29f4f" category="list-text">计算所有句子之间的差异平均值。</block>
+  <block id="c6b3b1378b2e31169a4a1cd4c20691c8" category="inline-link-macro">接下来：视频和演示。</block>
+  <block id="6016219a0b0ad0bb3594f964b5e6396d" category="paragraph"><block ref="6016219a0b0ad0bb3594f964b5e6396d" category="inline-link-macro-rx"></block></block>
+  <block id="67d45a00257105f21f4427f31e0c9fa1" category="summary">本技术报告为客户在企业级全球支持中心内使用 NetApp 数据管理技术和 NVIDIA 软件框架以及传输学习和对话 AI 执行情感分析提供了设计指导。</block>
+  <block id="494027a6b5e9fc8bb84443d03b97a9b7" category="doc">TR-4910 ：《利用 NetApp AI 进行客户沟通时的情感分析》</block>
+  <block id="22268d4ee4f32cda2f20141957aac961" category="paragraph">SML 科学公司 Rick Huang ， Sathish Thyagarajan 和 NetApp 公司迭戈 Sosa-Coba 的 David Arnette</block>
+  <block id="0c450c48691e7a55b657f2cb7d18a0dd" category="paragraph">本技术报告为客户在企业级全球支持中心内使用 NetApp 数据管理技术和 NVIDIA 软件框架以及传输学习和对话 AI 执行情感分析提供了设计指导。此解决方案适用于希望从代表聊天日志，电子邮件和其他文本或音频通信的录制语音或文本文件中获得客户见解的任何行业。我们实施了一个端到端管道，用于在采用 NetApp 云连接全闪存存储的 GPU 加速计算集群上展示自动语音识别，实时情感分析和深度学习的自然语言处理模式 - 再培训功能。可以对大规模的一流语言模型进行培训和优化，以便与全球支持中心快速进行推理，从而打造卓越的客户体验，并对员工的长期业绩进行客观评估。</block>
+  <block id="549c85ede9b39be6ef0eec80db7e098c" category="paragraph">情绪分析是自然语言处理（ NLP ）中的一个研究领域，通过该领域，可以从文本中提取积极，负面或中立的情绪。随着越来越多的人与人工智能系统互动，对话式人工智能系统的集成程度已提升到接近全球水平。情感分析有多种使用情形，从确定支持中心员工在与来电者对话中的表现，提供适当的自动聊天机器人响应，到根据公司代表与受众在季度收益通话中的互动预测公司的股票价格。此外，情感分析可用于确定客户对品牌提供的产品，服务或支持的看法。</block>
+  <block id="5855677156d63ad3c93a7b5382098060" category="paragraph">此端到端解决方案使用 NLP 模型执行高级别的情感分析，从而支持支持中心分析框架。录音会处理成书面文本，并从对话的每一句话中提取情感。可以将结果汇总到信息板中，以便对对话感受进行分析，包括历史和实时分析。此解决方案可以概括为具有类似数据模式和输出需求的其他解决方案。利用适当的数据，可以完成其他使用情形。例如，可以使用相同的端到端管道分析公司收益调用的情绪。由于管道的灵活性，还可以进行其他形式的 NLP 分析，例如主题建模和命名实体识别（ NER ）。</block>
+  <block id="ea4f750fd9fd89aeff4ca8d4162fb673" category="paragraph">NVIDIA Riva ， NVIDIA TAO 工具包和 NetApp DataOps 工具包共同实现了这些 AI 实施。NVIDIA 的工具可用于使用预构建的型号和管道快速部署高性能 AI 解决方案。NetApp DataOps 工具包可简化各种数据管理任务，以加快开发速度。</block>
+  <block id="7a7e97f7fcf4e2974d9a6feee2b056f8" category="section-title">客户价值</block>
+  <block id="3815ef30c3d6c6bdc3862cc9530d091e" category="paragraph">企业可以通过员工评估和客户响应工具在文本，音频和视频对话中获得价值，以便进行情绪分析。经理可以从信息板中提供的信息中受益，从而可以根据对话的两个方面评估员工和客户满意度。</block>
+  <block id="da210ea22d819ca26070a3795f9a14d4" category="paragraph">此外， NetApp DataOps 工具包还可管理客户基础架构中数据的版本控制和分配。这样就会频繁更新信息板中提供的分析，而不会产生庞大的数据存储成本。</block>
+  <block id="e5fcadecc4515efec9267b8ad57b28a5" category="inline-link-macro">下一步：用例</block>
+  <block id="93b7bce28e36a4eebec23c8fd4be315d" category="paragraph"><block ref="93b7bce28e36a4eebec23c8fd4be315d" category="inline-link-macro-rx"></block></block>
+  <block id="815425a7766095190649a3f9ecbc1828" category="cell">2021年10月26日</block>
+  <block id="29dba58128fc1c22c063703456513cc4" category="cell">在 NetApp 解决方案区块中添加了有关企业级应用程序和数据库的博客部分。在企业数据库博客中添加了两个博客</block>
+  <block id="8493c4f1797303a6de2524a60adcf058" category="cell">2021年10月18日</block>
+  <block id="46909e0894b9a0cd51ae179c9aa90a85" category="cell">添加了解决方案：采用 SnapCenter 的混合云数据库解决方案</block>
+  <block id="4878d0f06c45c7f565e6545cccf18c88" category="inline-link-macro">采用 SnapCenter 的 HYBIRD 云数据库解决方案</block>
+  <block id="a07f396f8180d71ad8372bd51f3800d7" category="cell">* 混合云数据库解决方案 *<block ref="642bb53d1747dfdf3e6f0ebcbb604cfe" category="inline-link-macro-rx"></block></block>
+  <block id="24743f8350683e7f1d7d5f6802de3aab" category="cell"><block ref="24743f8350683e7f1d7d5f6802de3aab" category="inline-link-macro-rx"></block></block>
+  <block id="dcad2dec3906d4a902bdfb0b7093ce21" category="cell"><block ref="dcad2dec3906d4a902bdfb0b7093ce21" category="inline-link-macro-rx"></block></block>
+  <block id="59fbb2b8017dcaa261a32ed33941a3bd" category="cell"><block ref="41f97968c03372ffce726ec89c54fc9a" category="inline-link-macro-rx"></block></block>
+  <block id="8e7cb8af41001c3eeb84421bdf0bf30f" category="cell"><block ref="8e7cb8af41001c3eeb84421bdf0bf30f" category="inline-link-macro-rx"></block></block>
+  <block id="5a6ed16cce1a08e1b3de84293a1c0a11" category="cell"><block ref="5a6ed16cce1a08e1b3de84293a1c0a11" category="inline-link-macro-rx"></block></block>
+  <block id="7dffec91055830f84efb7bc18ab4f86d" category="cell"><block ref="7dffec91055830f84efb7bc18ab4f86d" category="inline-link-macro-rx"></block></block>
+  <block id="cce65a4a66212b1b6a69449993338407" category="cell"><block ref="cce65a4a66212b1b6a69449993338407" category="inline-link-macro-rx"></block></block>
+  <block id="de2b8e7716b57342938375941b7e521a" category="cell"><block ref="de2b8e7716b57342938375941b7e521a" category="inline-link-macro-rx"></block></block>
+  <block id="ea490901c403ce2b2a89f80227d0fb90" category="paragraph">计划二进制文件和数据库复制攻略手册</block>
+  <block id="931ea399c80122517d9eeb617f1594a0" category="list-text">配置并启动作业模板。</block>
+  <block id="2c777d857235f251004d6d8d70c9751d" category="list-text">复制先前创建的作业模板。</block>
+  <block id="1eb977b1f69b531db931e9c62c1a0de9" category="list-text">找到 ontap/CVO 设置模板，然后在最右侧单击复制模板</block>
+  <block id="3c96e57d33780bedfb652def025f39de" category="list-text">单击复制的模板上的编辑模板，然后将名称更改为二进制和数据库复制攻略手册。</block>
+  <block id="b07fb736e8c17cea7e9e3753e7a67fd1" category="list-text">保留该模板的相同清单，项目和凭据。</block>
+  <block id="f42c6e71dcb07b403b8393d5ab7f7fe4" category="list-text">选择 ora_replication cc.yml 作为要执行的攻略手册。</block>
+  <block id="69fa06239fd734936aac1af5250c7f57" category="list-text">这些变量将保持不变，但需要在变量 dst_cluster_ip 中设置 CVO 集群 IP 。</block>
+  <block id="ec7445bbcbadd1f11fe1bc3e5e56eef9" category="list-text">计划作业模板。</block>
+  <block id="ce0d20e65f0354847807516cbcc696f6" category="list-text">单击二进制和数据库复制攻略手册模板，然后单击顶部选项集的计划。</block>
+  <block id="d9a6405dc4a6cd71f6d77c749070a5e6" category="list-text">单击添加，为二进制和数据库复制添加名称计划，在小时开始时选择开始日期 / 时间，选择您的本地时区以及运行频率。运行频率通常会更新 SnapMirror 复制。</block>
+  <block id="2dc4dec75c83aeb010419dc2a02da40b" category="admonition">系统将为日志卷复制创建一个单独的计划，以便可以更频繁地进行复制。</block>
+  <block id="cc335cb73dc47f7a9b404288e3b4330f" category="paragraph">ONTAP 和 CVO 设置</block>
+  <block id="6bc14a28f101e9d80ecc643ef13ef7fb" category="list-text">输入名称 ontap/CVO 设置</block>
+  <block id="a7244f663b97629084f004e6c89b4a75" category="list-text">选择作业类型；运行将根据攻略手册配置系统。</block>
+  <block id="57344b3bd58c0e451513e303e45d49b7" category="list-text">为内部环境选择 ontap_setup.yml 攻略手册，或者选择 CVO_setup.yml 以复制到 CVO 实例。</block>
+  <block id="41c1d72990c270d0221458749497c3e6" category="admonition">我们将使用此模板并将其复制到其他攻略手册中。</block>
+  <block id="63c0320f73b5f4e528bbe1488acc5103" category="section-title">为 Oracle 数据库提供自动化数据保护</block>
+  <block id="d798c6a829fee4b3d8316144e8769e91" category="paragraph">企业正在对其环境进行自动化，以提高效率，加快部署速度并减少手动操作。Ansible 等配置管理工具正在用于简化企业数据库操作。在本解决方案中，我们演示了如何使用 Ansible 通过 NetApp ONTAP 自动保护 Oracle 数据。通过使存储管理员，系统管理员和 DBA 能够一致快速地将数据复制到异地数据中心或公有云，您可以获得以下优势：</block>
+  <block id="1d4694b7ed077df8b2c51d4ef956ce0c" category="list-text">缩短配置集群间复制， CVO 实例化和恢复 Oracle 数据库的时间</block>
+  <block id="60bcf8682ddc3583a74e6cd2d95e1ccb" category="list-text">提供数据库恢复工作流，以便于测试灾难恢复场景。</block>
+  <block id="7fa4d3428dbef9829f6325b288c071bc" category="section-title">在内部复制到内部复制</block>
+  <block id="911a9e8dd85bfeeba31c1ed049e41e1c" category="list-text">在源和目标上创建集群间 LIF</block>
+  <block id="2f4eb56dd9301fc33f559b4345b90eb3" category="list-text">建立集群和 SVM 对等关系</block>
+  <block id="2b71f4136dce37491ef0f319f5d1fbd9" category="list-text">创建并初始化 Oracle 卷的 SnapMirror</block>
+  <block id="20f4a46f5b12b0533f7a2268c4c2bf41" category="list-text">通过 AWX/Tower 为 Oracle 二进制文件，数据库和日志创建复制计划</block>
+  <block id="6ef1c2ae7c9ca61a54d88de28349a772" category="list-text">还原目标上的 Oracle 数据库，并使数据库联机</block>
+  <block id="f4ec61d9ffa147f621f854609523a0fb" category="section-title">在内部迁移到 AWS 中的 CVO</block>
+  <block id="3f155aa6a9345b3e25f3bb44ecccfc0a" category="list-text">创建 AWS 连接器</block>
+  <block id="1531cb3c2d4db27dcd3bfa2ad4711ec5" category="list-text">在 AWS 中创建 CVO 实例</block>
+  <block id="2f159b717f78e9925b219e87cbd20f9a" category="list-text">将内部集群添加到 Cloud Manager</block>
+  <block id="df16a1e23dbbcc2f19f07ab1af741617" category="list-text">在源上创建集群间 LIF</block>
+  <block id="d1f660bb2bff2f31a46c751115155999" category="list-text">第 1 部分：待定</block>
+  <block id="1ee2253d8fe666dbea54ab3648a62511" category="list-text">第 2 部分：待定</block>
+  <block id="0679a51ae3a4071a6bd3dedbe97fd329" category="summary">此页面介绍了在 NetApp ONTAP 存储上部署 Oracle 数据保护的自动化方法。</block>
+  <block id="22e3bbd761fbb7ae69b8035eb12f222d" category="paragraph">此解决方案设计为在 AWX/ 塔式环境中运行。</block>
+  <block id="ad5310e9dcd8f367be2b92490488d86d" category="list-text">解决方案设计用于在私有云环境（内部到内部）和混合云（内部到公有 Cloud Cloud Volumes ONTAP （ CVO ））中运行</block>
+  <block id="f0800f628bb56853d682f3fcd16e3694" category="list-text">此自动化设置为运行三个阶段（设置， Oracle 二进制文件和数据库复制计划以及日志复制计划），以及在灾难恢复站点恢复数据库的第四个阶段。</block>
+  <block id="936c99ed52ca08a052ebf611285dd998" category="inline-link-macro">收集 CVO 和连接器部署的前提条件</block>
+  <block id="ec329a9106131eb9bf99b0f9e67b0564" category="list-text">有关获取 CVO 数据保护所需密钥和令牌的详细说明，请访问 <block ref="e21f73de51752f791cddc773d1f38740" category="inline-link-macro-rx"></block></block>
+  <block id="13716f12996b882bb4c7e0bd84c7c128" category="open-title">&lt;Strong class="bi"&gt; 内部部署 &lt;/Strong&gt; &lt;Strong&gt;|&lt;/Strong&gt;</block>
+  <block id="72bd33cc372377848ab3bb360deb365e" category="cell">ONTAP 版本 9.8 及更高版本</block>
+  <block id="3ca63226b942aff3abcf62934a91e382" category="cell">源上的现有 Oracle 环境以及目标上的等效 Linux 操作系统（灾难恢复站点或公有云）</block>
+  <block id="6114118ecf4e8d86a2e7c80bfab462f6" category="open-title">&lt;strong class="bi"&gt;CVO&lt;/Strong&gt;</block>
+  <block id="2f960df807c8ad51e74c447149eb2033" category="cell">* Cloud Manager/AWS*</block>
+  <block id="571f37fae4494df03321c2abe1fcc053" category="cell">AWS 访问 / 机密密钥</block>
+  <block id="7a5be8c4513f3bd0696db24a6bd977f4" category="cell">NetApp Cloud Manager 帐户</block>
+  <block id="99e55608ac5f1697eb6804aaf586af09" category="cell">NetApp Cloud Manager 刷新令牌</block>
+  <block id="3f9ec2a23fee1cafeb1a700de677caac" category="cell">攻略手册</block>
+  <block id="1f959110c5104b300b1a3d5fe3ee80dc" category="cell">* ontap_setup*</block>
+  <block id="b7ed1e5c864a764f83f035d7f4f774ee" category="cell">在源集群上创建集群间 LIF （可选）</block>
+  <block id="73ddb5848c16203494697871a4e993cd" category="cell">在目标集群上创建集群间 LIF （可选）</block>
+  <block id="04a35ce053d611d390fc192544fa4899" category="cell">创建集群和 SVM 对等关系</block>
+  <block id="4605aea1d05aa2979e72d73dd2c51773" category="cell">创建目标 SnapMirror 并初始化指定的 Oracle 卷</block>
+  <block id="0dd4c7b6672d8937b6eb899b454fb7fe" category="cell">* 复制 _cg</block>
+  <block id="7187aaa97acef94360159347d76a84c9" category="cell">在 /etc/oratab 中为每个数据库启用备份模式</block>
+  <block id="f9198142d6e5690166713858ae8a0cdd" category="cell">为 Oracle 二进制卷和数据库卷创建的快照</block>
+  <block id="23ba14a0a5cf33c38faec5b66fff712e" category="cell">已更新 SnapMirror</block>
+  <block id="114debcae141b96db77c72e8a1e8fadb" category="cell">关闭 /etc/oratab 中每个数据库的备份模式</block>
+  <block id="682094861a79bcba0e0ab2e193198762" category="cell">* 。 ora_replication ； log*</block>
+  <block id="1d03ae98454d1c807318a1e29a4e2736" category="cell">切换 /etc/oratab 中每个数据库的当前日志</block>
+  <block id="47e4696811eedec695f727189503e8df" category="cell">为 Oracle 日志卷创建的快照</block>
+  <block id="86836efae3e3d868a96ae69bcbc987ba" category="cell">* ora_recovery*</block>
+  <block id="6ceab4515ef4144abed0f0ce5ed3038f" category="cell">中断 SnapMirror</block>
+  <block id="a6066c717f63ac99226b48abb4cf1d85" category="cell">在目标上启用 NFS 并为 Oracle 卷创建接合路径</block>
+  <block id="aa46cdc29b66725a1180f57d02f0cee3" category="cell">配置 DR Oracle 主机</block>
+  <block id="dea9253f9b15f57a0c2161848a3c27a3" category="cell">挂载并验证 Oracle 卷</block>
+  <block id="ee95819ff53983a149759d555a93ba4b" category="cell">恢复并启动 Oracle 数据库</block>
+  <block id="5a6b57bc1fdf2f0e1259ed22f1d027a4" category="cell">* CVO_setup*</block>
+  <block id="331c87cd495ffdc9cd55d8b3935a75f5" category="cell">对环境进行预检查</block>
+  <block id="5f17c8d8d95282db12506044ba4d6ab9" category="cell">AWS 配置 /AWS 访问密钥 ID/ 机密密钥 / 默认区域</block>
+  <block id="cef449920fe163cdd74231266cbdf23d" category="cell">创建 AWS 角色</block>
+  <block id="85a4bcbc96cde90931ad369de96535b2" category="cell">在 AWS 中创建 NetApp Cloud Manager Connector 实例</block>
+  <block id="abe14752834b641e86064c7214f6719c" category="cell">在 AWS 中创建 Cloud Volumes ONTAP （ CVO ）实例</block>
+  <block id="c2a9449cd3b0ae879520f450b65b1621" category="cell">将内部源 ONTAP 集群添加到 NetApp Cloud Manager 中</block>
+  <block id="fbb54d6efa6ca64af90fbe2289812be8" category="cell">在目标 CVO 上启用 NFS 并为 Oracle 卷创建接合路径</block>
+  <block id="3ef6389d9b9aacdce331793dd2a96ce8" category="paragraph">为了简化自动化，我们已使用默认值预设了许多必需的 Oracle 参数。通常，无需更改大多数部署的默认参数。更高级的用户可以谨慎地更改默认参数。默认参数位于每个角色文件夹的默认目录下。</block>
+  <block id="a98d844e94ad28c8e0fb089e005d6b9f" category="inline-link-macro">此处可查看 AWX/ 塔式服务器的详细流程</block>
+  <block id="7e599865fd1cdad0e26add5715f65267" category="paragraph">准备就绪后，单击 <block ref="d28bc5520349bb0598caaa5132432326" category="inline-link-macro-rx"></block>。</block>
+  <block id="47373f46adef617d17665b0b94be8f67" category="paragraph">计划日志复制攻略手册</block>
+  <block id="8e43fbf8e210fdbb3e1d59ca59cde628" category="list-text">单击复制的模板上的 Edit Template ，然后将名称更改为 Restore and Recovery Playbook 。</block>
+  <block id="42f2159b893bbf4b6bf098ba9a026a1c" category="list-text">选择 ora_recovery.yml 作为要执行的攻略手册。</block>
+  <block id="0a3fe9b740fe79971ae2379eaec4822c" category="admonition">只有在准备好在远程站点还原数据库后，才会运行此攻略手册。</block>
+  <block id="40640c0c34d4427f5d18b9ca476e3158" category="summary">本页介绍了 NetApp ONTAP 存储上 Oracle19c 的自动数据保护。</block>
+  <block id="261e91a1afdfe1123497b1b9ba5ab3e1" category="section-title">AWX/ 塔式 Oracle 数据保护</block>
+  <block id="db2b28449b6d868d910cd53527934988" category="list-text">提供第一个组的名称 oracle ，然后单击 Save 。</block>
+  <block id="200e1fa09608b23de5cd04d22d3a5bdb" category="list-text">对名为 dr_oracle 的第二个组重复此过程。</block>
+  <block id="1e29c17b60e9145858da82263315e402" category="list-text">选择已创建的 Oracle 组，转至主机子菜单，然后单击添加新主机。</block>
+  <block id="250d5368537e295251f9ccf63f950087" category="list-text">提供源 Oracle 主机管理 IP 的 IP 地址，然后单击保存。</block>
+  <block id="22dcd973cf7a10ed9d03c5b959e65807" category="list-text">必须对 dr_oracle 组重复此过程，并添加 DR/Destination Oracle 主机的管理 IP/ 主机名。</block>
+  <block id="1a4eca6a53be80f21117669b80a5dbc8" category="admonition">下面介绍了如何使用 ONTAP 为内部部署或 AWS 上的 CVO 创建凭据类型和凭据。</block>
+  <block id="cea575677c47839fde1e59dbfc9ad5bb" category="open-title">内部</block>
+  <block id="50d33cb309a9ea4bacb0a5541498b670" category="list-text">创建凭据类型。对于涉及 ONTAP 的解决方案，您必须配置凭据类型以匹配用户名和密码条目。</block>
+  <block id="c048e95ab07253cc1cb87bef130c410b" category="list-text">将以下内容粘贴到 " 注入器配置 " 中，然后单击保存：</block>
+  <block id="9302fe5c60a983a24bb8787c00db4862" category="list-text">为 ONTAP 创建凭据</block>
+  <block id="0a0aab79fb5a20fa5f830947226ef87c" category="list-text">输入 ONTAP 凭据的名称和组织详细信息</block>
+  <block id="81999e930ad44af27e84682c3ea1e750" category="list-text">选择上一步中创建的凭据类型。</block>
+  <block id="1546222d368538c25b5704b5fcf160f5" category="list-text">在 Type Details 下，输入源集群和目标集群的用户名和密码。</block>
+  <block id="c4be718383c8ca0aa17633d911fc38fd" category="list-text">单击保存。</block>
+  <block id="39f6f9fe82cbf0c0970d13b6a043ad84" category="list-text">为 Oracle 创建凭据</block>
+  <block id="30d4be106e7fb63befec4c8c7c815ad0" category="list-text">输入 Oracle 的名称和组织详细信息。</block>
+  <block id="61d6c643401e4a602f3c8b4b6fc0a93c" category="list-text">如果需要为 dr_oracle 主机配置其他凭据，请重复此过程。</block>
+  <block id="f7fc367b5de87581ac78fc80805439af" category="open-title">CVO</block>
+  <block id="61efb6ce79debd57f1e5eb28b08f94ba" category="list-text">创建凭据类型。对于涉及 ONTAP 的解决方案，您必须配置凭据类型以匹配用户名和密码条目，我们还会为 Cloud Central 和 AWS 添加条目。</block>
+  <block id="b95cd128bfca5d5c9181a46d0392c360" category="list-text">将以下内容粘贴到 "Injector Configuration" 中，然后单击 "Save ：</block>
+  <block id="75f3f97810b5eef177a5355b86dabfd0" category="list-text">为 ontap/CVO/AWS 创建凭据</block>
+  <block id="7c2157bb96b30c41117253c18e425dc1" category="list-text">在 Type Details 下，输入源集群和 CVO 集群，访问 / 机密密钥和 Cloud Central 刷新令牌的用户名和密码。</block>
+  <block id="922922f515b0ac072e20128999512b50" category="list-text">为 Oracle 创建凭据（源）</block>
+  <block id="7ebca140d5dcaa006aeda44b19cfc52e" category="list-text">输入 Oracle 主机的名称和组织详细信息</block>
+  <block id="ca530facf78f2112c60ee838d85b9b5b" category="list-text">为 Oracle 目标创建凭据</block>
+  <block id="063e8368b0de123266b00f2c88e317fb" category="list-text">输入 DR Oracle 主机的名称和组织详细信息</block>
+  <block id="0d28c8cc8415971cf2cd02507176bf94" category="list-text">在 Type Details 下，输入 Username （ EC2-user ，或者如果您已对其进行了默认更改，请输入该用户名）和 SSH 私钥</block>
+  <block id="cb8f433dfb62a17f7a02f4d7a8839b1c" category="list-text">选择正确的权限升级方法（ sudo ），然后根据需要输入用户名和密码。</block>
+  <block id="791ef966f9be349751448b9066bdd8fa" category="list-text">输入 ... <block ref="1881636a0f344e587cc2202e2db4c5ac" category="inline-link-rx"></block> 作为源控制 URL 。</block>
+  <block id="07ecfe1ec895f624e5c5d082fb961d1c" category="section-title">3. 配置全局变量</block>
+  <block id="dad1349ef99312028aeda3703d53efdb" category="section-title">4. 自动化攻略手册</block>
+  <block id="285a3bb8fb6f692046facadb3c0984cf" category="paragraph">需要运行四本单独的攻略手册。</block>
+  <block id="37472723bc7712fedddee6d02e29228d" category="list-text">用于设置环境的攻略手册，内部部署或 CVO 。</block>
+  <block id="5138c89250c5086accf2d1a5961c9b17" category="list-text">用于按计划复制 Oracle 二进制文件和数据库的攻略手册</block>
+  <block id="3e552d6e5b2c316c63eb1fc2081d42a8" category="list-text">用于按计划复制 Oracle 日志的攻略手册</block>
+  <block id="33f4f1514dc2ceb963af16685f4de58c" category="list-text">用于在目标主机上恢复数据库的攻略手册</block>
+  <block id="17ae7167fac3c2364c6ad7b58819a920" category="open-title">ONTAP/CVO 设置</block>
+  <block id="16f928d0ebd67060f6b3b2abf0481928" category="open-title">二进制卷和数据库卷的复制</block>
+  <block id="b723f9a72bec39ac17d89e51ff0ba336" category="open-title">复制日志卷</block>
+  <block id="048f2ee27b8617cb0e13b6a0b7da956f" category="list-text">单击复制的模板上的 Edit Template ，然后将名称更改为 Log Replication 攻略手册。</block>
+  <block id="d4a86123c8e623e35eaa51ab9583e03b" category="list-text">选择 ora_replication logs.yml 作为要执行的攻略手册。</block>
+  <block id="d6e504930da1d0732ea4162514a38e8e" category="list-text">单击日志复制攻略手册模板，然后单击顶部选项集的计划。</block>
+  <block id="1c03188c731004905466903c2eb763c4" category="list-text">单击添加，为日志复制添加名称计划，选择开始日期 / 时间，选择本地时区和运行频率。运行频率通常会更新 SnapMirror 复制。</block>
+  <block id="d23bfe090a9fd09613c7a6573f619c02" category="admonition">建议将日志计划设置为每小时更新一次，以确保恢复到上一个每小时更新。</block>
+  <block id="f76dbca531ab83300165aacf97e1b7ff" category="open-title">还原和恢复数据库</block>
+  <block id="8cc6746c11a65da30c7d875819acecfe" category="section-title">5. 恢复 Oracle 数据库</block>
+  <block id="b8a177e5fd059f33473cad4d1d073d38" category="list-text">内部生产 Oracle 数据库数据卷通过 NetApp SnapMirror 复制到二级数据中心的冗余 ONTAP 集群或公有云中的 Cloud Volume ONTAP 进行保护。在完全配置的灾难恢复环境中，二级数据中心或公有云中的恢复计算实例处于备用状态，可以在发生灾难时恢复生产数据库。备用计算实例通过在操作系统内核修补程序上运行准面更新或在一个锁定步骤中进行升级，与内部实例保持同步。</block>
+  <block id="57d8ad774cb4fef3d53ee8836bfee761" category="list-text">在此解决方案演示中， Oracle 二进制卷会复制到目标并挂载到目标实例，以启动 Oracle 软件堆栈。与灾难发生时的最后一分钟全新安装 Oracle 相比，这种恢复 Oracle 的方法更有优势。它可以保证 Oracle 安装与当前内部生产软件安装和修补程序级别等完全同步。但是，根据 Oracle 软件许可的结构，这可能会对恢复站点上复制的 Oracle 二进制卷产生额外的软件许可影响，也可能不会产生额外的软件许可影响。建议用户在决定使用相同方法之前，先咨询其软件许可人员，以评估潜在的 Oracle 许可要求。</block>
+  <block id="74eaa493ffed695592003e0844d93c46" category="list-text">目标位置的备用 Oracle 主机已配置 Oracle 前提条件配置。</block>
+  <block id="0be4357ac224d44b11800179b23eb202" category="list-text">SnapMirrors 已损坏，卷可写并挂载到备用 Oracle 主机。</block>
+  <block id="69504b415e8aad20e18beca0de96ab6a" category="list-text">在备用计算实例上挂载所有数据库卷后， Oracle 恢复模块将在恢复站点执行以下恢复和启动 Oracle 任务。</block>
+  <block id="5e52a9563e31960cdf02c7b83e6495e7" category="list-text">同步控制文件：我们在不同的数据库卷上部署了重复的 Oracle 控制文件，以保护关键数据库控制文件。一个位于数据卷上，另一个位于日志卷上。由于数据卷和日志卷的复制频率不同，因此在恢复时它们将不同步。</block>
+  <block id="26b9a788a0ef0527f25f68892b364d19" category="list-text">重新链接 Oracle 二进制文件：由于 Oracle 二进制文件已重新定位到新主机，因此需要重新链接。</block>
+  <block id="b66ad18a7982f7c233e9d0af2f867856" category="list-text">恢复 Oracle 数据库：恢复机制从控制文件中检索 Oracle 日志卷中最后一个可用归档日志中的最后一个系统更改编号，并恢复 Oracle 数据库以重新处理在发生故障时能够复制到灾难恢复站点的所有业务事务。然后，数据库将在新的形式中启动，以在恢复站点执行用户连接和业务事务。</block>
+  <block id="247a7a6af0249b8455fff0e5d9015b47" category="admonition">运行恢复攻略手册之前，请确保您具备以下条件：确保它通过 /etc/oratab 和 /etc/oraInstall.oc 从源 Oracle 主机复制到目标主机</block>
+  <block id="c4ff33edf6e94fb434fb59e4ad2c286b" category="inline-link-macro">采用 SnapCenter 的混合云数据库解决方案</block>
+  <block id="dcf8c21fbb1d22c97f20ace5649e8918" category="list-text"><block ref="dcf8c21fbb1d22c97f20ace5649e8918" category="inline-link-macro-rx"></block></block>
+  <block id="fc25c016a8fb35a621842044a8d4f2e7" category="inline-link-macro">在混合云中自动化 Oracle 数据库基础架构</block>
+  <block id="59a4cf9e5720080358e0622f3c948571" category="list-text"><block ref="59a4cf9e5720080358e0622f3c948571" category="inline-link-macro-rx"></block></block>
+  <block id="b9b07f10c0ce1735548942e3abaa3447" category="summary">此页面提供了有关通过 NetApp Cloud Manager 收集 CVO 和 Cloud Manager Connector 部署所需的刷新令牌和访问 / 机密密钥的详细信息。</block>
+  <block id="a660fb1089a2b2ca95deaf8b9853be5c" category="section-title">使用 NetApp Cloud Manger 的 CVO 和 Connector 的 AWS 身份验证要求</block>
+  <block id="bcc03f70ea2e77a98ddb6e8267e4892f" category="paragraph">要通过 AWX/Ansible 塔使用 Ansible 攻略手册配置 CVO 和连接器的自动部署，需要以下信息：</block>
+  <block id="193fc1c355935356ecd5d07811792512" category="section-title">从 AWS 获取访问 / 机密密钥</block>
+  <block id="60b6439418495e0d1821d169b7d4b885" category="list-text">要在 Cloud Manager 中部署 CVO 和 Connector ，我们需要 AWS 访问 / 机密密钥。通过启动 IAM -&gt; 用户 -&gt; 您的用户名 -&gt; 安全凭据 -&gt; 创建访问密钥，在 AWS 控制台中获取密钥。</block>
+  <block id="ad1cc06192440312813c412c9cf08bc5" category="list-text">复制访问密钥并确保其安全，以便在 Connector 和 CVO 部署中使用。</block>
+  <block id="4ba9f13f5b12512f3651d5ea2d3ffa05" category="admonition">如果您丢失了密钥，则可以创建另一个访问密钥并删除丢失的密钥</block>
+  <block id="ad35fbaef240a8ec1f43e8a0d5e15099" category="image-alt">刷新令牌</block>
+  <block id="89d8fe92eb33da3c73df38422c3fa73e" category="section-title">从 NetApp Cloud Central 获取刷新令牌</block>
+  <block id="3d7e1d21530a3a98c74b0b7484c84516" category="list-text">使用您的帐户凭据登录到云中心帐户，网址为<block ref="ddbd83acb6424bbb7fa6878eff0976a1" category="inline-link-rx"></block></block>
+  <block id="a95c6d24569073e45c394bcbd6a2c0e4" category="list-text">生成刷新令牌并将其保存以供部署使用。</block>
+  <block id="ecd636681b83fa2697020594594aea14" category="section-title">正在获取客户端 ID</block>
+  <block id="2a1ed6ca97aeb484a26d6e0d625af96b" category="list-text">访问 API 页面以复制客户端 ID<block ref="06324b77583872f7e211b3e7ec3f882f" category="inline-link-rx"></block>。</block>
+  <block id="1093ef7993a1f3824edbf581bb54b571" category="list-text">单击右上角的 " 了解如何进行身份验证 " 。</block>
+  <block id="622dcb1fafb9f30d36b32341e23ae7a0" category="list-text">从弹出的身份验证窗口中，如果您需要用户名 / 密码才能登录，请从常规访问复制客户端 ID 。使用 SSO 的联合用户应从 " 刷新令牌选项卡 " 复制客户端 ID 。</block>
+  <block id="76525f0f34b48475e5ca33f71d296f3b" category="image-alt">客户端 ID</block>
+  <block id="6090065e2462d5f96ebac132568bdf46" category="section-title">从 AWS 获取密钥对</block>
+  <block id="294b903c23e96b98876b04f51502cec4" category="list-text">在 AWS 控制台中，搜索 "Key Pair" 并创建一个带有 "pem" 的密钥对。记住 key_pair 的名称，我们将使用它来部署连接器。</block>
+  <block id="ddb20e807acdf5ddf189dd213ff6d0cf" category="image-alt">Key Pair</block>
+  <block id="3ce1d7d6e1b4509256dd2574b6b5d290" category="section-title">正在获取帐户 ID</block>
+  <block id="8f19980a36fbde35540547e8f630c9e5" category="list-text">在 Cloud Manager 中，单击 Account – &gt; Manage Accounts ，然后复制帐户 ID 以用于 AWX 的变量。</block>
+  <block id="c9f0818cde41901681a02b50763ec342" category="sidebar">NetApp 混合云数据解决方案—基于客户用例的 Spark 和 Hadoop</block>
+  <block id="924f605d39858bdb10692c8d8f810464" category="sidebar">用例 1 —备份 Hadoop 数据</block>
+  <block id="c028df954696d2e4011963e651237b7c" category="sidebar">用例 2 —从云到内部环境的备份和灾难恢复</block>
+  <block id="f1ab9c16fee4088d930b2a43e3d48f64" category="sidebar">用例 3 —对现有 Hadoop 数据启用 DevTest</block>
+  <block id="4e7c79467b7b25f0415a3a4538d3e2f5" category="sidebar">用例 4 —数据保护和多云连接</block>
+  <block id="f38bc790ec57f948f20cbd270b996cc6" category="sidebar">用例 5 —加快分析工作负载的速度</block>
+  <block id="ae270ffdc87820776fadfe121aa13143" category="sidebar">使用 NetApp AI 进行情感分析</block>
+  <block id="f74720767a0bf20cfdb6bba5f215d795" category="sidebar">部署支持中心情感分析</block>
+  <block id="12367669ba6a0b6e059b69b5a95f2902" category="sidebar">Oracle 数据库数据保护</block>
+  <block id="3e9d3644ee18a66c51ddd16b668eaa5a" category="sidebar">自动化 Oracle 数据保护</block>
+  <block id="82be90bcfc8fd03855e030edaa25583a" category="sidebar">适用于 AWX/ 塔式服务器的自动化 Oracle 数据保护</block>
 </blocks>

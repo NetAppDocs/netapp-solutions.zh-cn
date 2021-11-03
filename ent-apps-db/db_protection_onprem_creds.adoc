@@ -1,0 +1,66 @@
+= 
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+. 配置凭据。
+. 创建凭据类型。对于涉及 ONTAP 的解决方案，您必须配置凭据类型以匹配用户名和密码条目。
++
+.. 导航到管理→凭据类型，然后单击添加。
+.. 提供名称和问题描述。
+.. 将以下内容粘贴到输入配置中：
++
+[source, cli]
+----
+fields:
+  - id: dst_cluster_username
+    type: string
+    label: Destination Cluster Username
+  - id: dst_cluster_password
+    type: string
+    label: Destination Cluster Password
+    secret: true
+  - id: src_cluster_username
+    type: string
+    label: Source Cluster Username
+  - id: src_cluster_password
+    type: string
+    label: Source Cluster Password
+    secret: true
+----
+.. 将以下内容粘贴到 " 注入器配置 " 中，然后单击保存：
++
+[source, cli]
+----
+extra_vars:
+  dst_cluster_username: '{{ dst_cluster_username }}'
+  dst_cluster_password: '{{ dst_cluster_password }}'
+  src_cluster_username: '{{ src_cluster_username }}'
+  src_cluster_password: '{{ src_cluster_password }}'
+----
+
+
+. 为 ONTAP 创建凭据
++
+.. 导航到资源→凭据，然后单击添加。
+.. 输入 ONTAP 凭据的名称和组织详细信息
+.. 选择上一步中创建的凭据类型。
+.. 在 Type Details 下，输入源集群和目标集群的用户名和密码。
+.. 单击保存。
+
+
+. 为 Oracle 创建凭据
++
+.. 导航到资源→凭据，然后单击添加。
+.. 输入 Oracle 的名称和组织详细信息。
+.. 选择计算机凭据类型。
+.. 在 Type Details 下，输入 Oracle 主机的 Username 和 Password 。
+.. 选择正确的权限升级方法，然后输入用户名和密码。
+.. 单击保存。
+.. 如果需要为 dr_oracle 主机配置其他凭据，请重复此过程。
+
+
+

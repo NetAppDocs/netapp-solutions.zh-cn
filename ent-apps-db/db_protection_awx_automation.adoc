@@ -1,0 +1,397 @@
+---
+sidebar: sidebar 
+permalink: ent-apps-db/db_protection_awx_automation.html 
+keywords: Linux, RHEL Oracle19c, NFS, ONTAP 
+summary: 本页介绍了 NetApp ONTAP 存储上 Oracle19c 的自动数据保护。 
+---
+= 分步部署操作步骤
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== AWX/ 塔式 Oracle 数据保护
+
+
+
+=== 1. 为您的环境创建清单，组，主机和凭据
+
+本节介绍如何在 AWX/Ansible 塔中设置清单，组，主机和访问凭据，以便为使用 NetApp 自动化解决方案的环境做好准备。
+
+. 配置清单。
++
+.. 导航到资源→清单→添加，然后单击添加清单。
+.. 提供名称和组织详细信息，然后单击保存。
+.. 在清单页面上，单击已创建的清单。
+.. 导航到组子菜单，然后单击添加。
+.. 提供第一个组的名称 oracle ，然后单击 Save 。
+.. 对名为 dr_oracle 的第二个组重复此过程。
+.. 选择已创建的 Oracle 组，转至主机子菜单，然后单击添加新主机。
+.. 提供源 Oracle 主机管理 IP 的 IP 地址，然后单击保存。
+.. 必须对 dr_oracle 组重复此过程，并添加 DR/Destination Oracle 主机的管理 IP/ 主机名。
+
+
++
+
+NOTE: 下面介绍了如何使用 ONTAP 为内部部署或 AWS 上的 CVO 创建凭据类型和凭据。
+
+
+
+[role="tabbed-block"]
+====
+.内部
+--
+. 配置凭据。
+. 创建凭据类型。对于涉及 ONTAP 的解决方案，您必须配置凭据类型以匹配用户名和密码条目。
++
+.. 导航到管理→凭据类型，然后单击添加。
+.. 提供名称和问题描述。
+.. 将以下内容粘贴到输入配置中：
++
+[source, cli]
+----
+fields:
+  - id: dst_cluster_username
+    type: string
+    label: Destination Cluster Username
+  - id: dst_cluster_password
+    type: string
+    label: Destination Cluster Password
+    secret: true
+  - id: src_cluster_username
+    type: string
+    label: Source Cluster Username
+  - id: src_cluster_password
+    type: string
+    label: Source Cluster Password
+    secret: true
+----
+.. 将以下内容粘贴到 " 注入器配置 " 中，然后单击保存：
++
+[source, cli]
+----
+extra_vars:
+  dst_cluster_username: '{{ dst_cluster_username }}'
+  dst_cluster_password: '{{ dst_cluster_password }}'
+  src_cluster_username: '{{ src_cluster_username }}'
+  src_cluster_password: '{{ src_cluster_password }}'
+----
+
+
+. 为 ONTAP 创建凭据
++
+.. 导航到资源→凭据，然后单击添加。
+.. 输入 ONTAP 凭据的名称和组织详细信息
+.. 选择上一步中创建的凭据类型。
+.. 在 Type Details 下，输入源集群和目标集群的用户名和密码。
+.. 单击保存。
+
+
+. 为 Oracle 创建凭据
++
+.. 导航到资源→凭据，然后单击添加。
+.. 输入 Oracle 的名称和组织详细信息。
+.. 选择计算机凭据类型。
+.. 在 Type Details 下，输入 Oracle 主机的 Username 和 Password 。
+.. 选择正确的权限升级方法，然后输入用户名和密码。
+.. 单击保存。
+.. 如果需要为 dr_oracle 主机配置其他凭据，请重复此过程。
+
+
+
+
+--
+.CVO
+--
+. 配置凭据。
+. 创建凭据类型。对于涉及 ONTAP 的解决方案，您必须配置凭据类型以匹配用户名和密码条目，我们还会为 Cloud Central 和 AWS 添加条目。
++
+.. 导航到管理→凭据类型，然后单击添加。
+.. 提供名称和问题描述。
+.. 将以下内容粘贴到输入配置中：
++
+[source, cli]
+----
+fields:
+  - id: dst_cluster_username
+    type: string
+    label: CVO Username
+  - id: dst_cluster_password
+    type: string
+    label: CVO Password
+    secret: true
+  - id: cvo_svm_password
+    type: string
+    label: CVO SVM Password
+    secret: true
+  - id: src_cluster_username
+    type: string
+    label: Source Cluster Username
+  - id: src_cluster_password
+    type: string
+    label: Source Cluster Password
+    secret: true
+  - id: access_key
+    type: string
+    label: AWS Access Key
+    secret: true
+  - id: secret_key
+    type: string
+    label: AWS Secret Key
+    secret: true
+  - id: token
+    type: string
+    label: Cloud Central Refresh Token
+    secret: true
+----
+.. 将以下内容粘贴到 "Injector Configuration" 中，然后单击 "Save ：
++
+[source, cli]
+----
+extra_vars:
+  dst_cluster_username: '{{ dst_cluster_username }}'
+  dst_cluster_password: '{{ dst_cluster_password }}'
+  cvo_svm_password: '{{ cvo_svm_password }}'
+  src_cluster_username: '{{ src_cluster_username }}'
+  src_cluster_password: '{{ src_cluster_password }}'
+  access_key: '{{ access_key }}'
+  secret_key: '{{ secret_key }}'
+  token: '{{ token }}'
+----
+
+
+. 为 ontap/CVO/AWS 创建凭据
++
+.. 导航到资源→凭据，然后单击添加。
+.. 输入 ONTAP 凭据的名称和组织详细信息
+.. 选择上一步中创建的凭据类型。
+.. 在 Type Details 下，输入源集群和 CVO 集群，访问 / 机密密钥和 Cloud Central 刷新令牌的用户名和密码。
+.. 单击保存。
+
+
+. 为 Oracle 创建凭据（源）
++
+.. 导航到资源→凭据，然后单击添加。
+.. 输入 Oracle 主机的名称和组织详细信息
+.. 选择计算机凭据类型。
+.. 在 Type Details 下，输入 Oracle 主机的 Username 和 Password 。
+.. 选择正确的权限升级方法，然后输入用户名和密码。
+.. 单击保存。
+
+
+. 为 Oracle 目标创建凭据
++
+.. 导航到资源→凭据，然后单击添加。
+.. 输入 DR Oracle 主机的名称和组织详细信息
+.. 选择计算机凭据类型。
+.. 在 Type Details 下，输入 Username （ EC2-user ，或者如果您已对其进行了默认更改，请输入该用户名）和 SSH 私钥
+.. 选择正确的权限升级方法（ sudo ），然后根据需要输入用户名和密码。
+.. 单击保存。
+
+
+
+
+--
+====
+
+
+=== 2. 创建项目
+
+. 转至 "Resources" → "projects" ，然后单击 "Add" 。
++
+.. 输入名称和组织详细信息。
+.. 在源控制凭据类型字段中选择 Git 。
+.. 输入 ... <https://github.com/NetApp-Automation/na_oracle19c_data_protection.git>[] 作为源控制 URL 。
+.. 单击保存。
+.. 当源代码发生更改时，项目可能偶尔需要同步。
+
+
+
+
+
+
+=== 3. 配置全局变量
+
+本节中定义的变量适用于所有 Oracle 主机，数据库和 ONTAP 集群。
+
+. 在以下嵌入式全局变量或变量表单中输入环境特定的参数。
++
+
+NOTE: 必须根据您的环境更改蓝色项。
+
++
+[role="tabbed-block"]
+====
+.内部
+--
+
+--
+.CVO
+--
+
+--
+====
+
+
+
+
+=== 4. 自动化攻略手册
+
+需要运行四本单独的攻略手册。
+
+. 用于设置环境的攻略手册，内部部署或 CVO 。
+. 用于按计划复制 Oracle 二进制文件和数据库的攻略手册
+. 用于按计划复制 Oracle 日志的攻略手册
+. 用于在目标主机上恢复数据库的攻略手册
+
+
+[role="tabbed-block"]
+====
+.ONTAP/CVO 设置
+--
+ONTAP 和 CVO 设置
+
+. 配置并启动作业模板。
++
+.. 创建作业模板。
++
+... 导航到资源→模板→添加，然后单击添加作业模板。
+... 输入名称 ontap/CVO 设置
+... 选择作业类型；运行将根据攻略手册配置系统。
+... 为攻略手册选择相应的清单，项目，攻略手册和凭据。
+... 为内部环境选择 ontap_setup.yml 攻略手册，或者选择 CVO_setup.yml 以复制到 CVO 实例。
+... 将从步骤 4 复制的全局变量粘贴到 YAML 选项卡下的模板变量字段中。
+... 单击保存。
+
+
+.. 启动作业模板。
++
+... 导航到资源→模板。
+... 单击所需模板，然后单击启动。
++
+
+NOTE: 我们将使用此模板并将其复制到其他攻略手册中。
+
+
+
+
+
+
+
+--
+.二进制卷和数据库卷的复制
+--
+计划二进制文件和数据库复制攻略手册
+
+. 配置并启动作业模板。
++
+.. 复制先前创建的作业模板。
++
+... 导航到资源→模板。
+... 找到 ontap/CVO 设置模板，然后在最右侧单击复制模板
+... 单击复制的模板上的编辑模板，然后将名称更改为二进制和数据库复制攻略手册。
+... 保留该模板的相同清单，项目和凭据。
+... 选择 ora_replication cc.yml 作为要执行的攻略手册。
+... 这些变量将保持不变，但需要在变量 dst_cluster_ip 中设置 CVO 集群 IP 。
+... 单击保存。
+
+
+.. 计划作业模板。
++
+... 导航到资源→模板。
+... 单击二进制和数据库复制攻略手册模板，然后单击顶部选项集的计划。
+... 单击添加，为二进制和数据库复制添加名称计划，在小时开始时选择开始日期 / 时间，选择您的本地时区以及运行频率。运行频率通常会更新 SnapMirror 复制。
++
+
+NOTE: 系统将为日志卷复制创建一个单独的计划，以便可以更频繁地进行复制。
+
+
+
+
+
+
+
+--
+.复制日志卷
+--
+计划日志复制攻略手册
+
+. 配置并启动作业模板。
++
+.. 复制先前创建的作业模板。
++
+... 导航到资源→模板。
+... 找到 ontap/CVO 设置模板，然后在最右侧单击复制模板
+... 单击复制的模板上的 Edit Template ，然后将名称更改为 Log Replication 攻略手册。
+... 保留该模板的相同清单，项目和凭据。
+... 选择 ora_replication logs.yml 作为要执行的攻略手册。
+... 这些变量将保持不变，但需要在变量 dst_cluster_ip 中设置 CVO 集群 IP 。
+... 单击保存。
+
+
+.. 计划作业模板。
++
+... 导航到资源→模板。
+... 单击日志复制攻略手册模板，然后单击顶部选项集的计划。
+... 单击添加，为日志复制添加名称计划，选择开始日期 / 时间，选择本地时区和运行频率。运行频率通常会更新 SnapMirror 复制。
+
+
+
+
++
+
+NOTE: 建议将日志计划设置为每小时更新一次，以确保恢复到上一个每小时更新。
+
+
+
+--
+.还原和恢复数据库
+--
+计划日志复制攻略手册
+
+. 配置并启动作业模板。
++
+.. 复制先前创建的作业模板。
++
+... 导航到资源→模板。
+... 找到 ontap/CVO 设置模板，然后在最右侧单击复制模板
+... 单击复制的模板上的 Edit Template ，然后将名称更改为 Restore and Recovery Playbook 。
+... 保留该模板的相同清单，项目和凭据。
+... 选择 ora_recovery.yml 作为要执行的攻略手册。
+... 这些变量将保持不变，但需要在变量 dst_cluster_ip 中设置 CVO 集群 IP 。
+... 单击保存。
+
+
+
+
++
+
+NOTE: 只有在准备好在远程站点还原数据库后，才会运行此攻略手册。
+
+
+
+--
+====
+
+
+=== 5. 恢复 Oracle 数据库
+
+. 内部生产 Oracle 数据库数据卷通过 NetApp SnapMirror 复制到二级数据中心的冗余 ONTAP 集群或公有云中的 Cloud Volume ONTAP 进行保护。在完全配置的灾难恢复环境中，二级数据中心或公有云中的恢复计算实例处于备用状态，可以在发生灾难时恢复生产数据库。备用计算实例通过在操作系统内核修补程序上运行准面更新或在一个锁定步骤中进行升级，与内部实例保持同步。
+. 在此解决方案演示中， Oracle 二进制卷会复制到目标并挂载到目标实例，以启动 Oracle 软件堆栈。与灾难发生时的最后一分钟全新安装 Oracle 相比，这种恢复 Oracle 的方法更有优势。它可以保证 Oracle 安装与当前内部生产软件安装和修补程序级别等完全同步。但是，根据 Oracle 软件许可的结构，这可能会对恢复站点上复制的 Oracle 二进制卷产生额外的软件许可影响，也可能不会产生额外的软件许可影响。建议用户在决定使用相同方法之前，先咨询其软件许可人员，以评估潜在的 Oracle 许可要求。
+. 目标位置的备用 Oracle 主机已配置 Oracle 前提条件配置。
+. SnapMirrors 已损坏，卷可写并挂载到备用 Oracle 主机。
+. 在备用计算实例上挂载所有数据库卷后， Oracle 恢复模块将在恢复站点执行以下恢复和启动 Oracle 任务。
++
+.. 同步控制文件：我们在不同的数据库卷上部署了重复的 Oracle 控制文件，以保护关键数据库控制文件。一个位于数据卷上，另一个位于日志卷上。由于数据卷和日志卷的复制频率不同，因此在恢复时它们将不同步。
+.. 重新链接 Oracle 二进制文件：由于 Oracle 二进制文件已重新定位到新主机，因此需要重新链接。
+.. 恢复 Oracle 数据库：恢复机制从控制文件中检索 Oracle 日志卷中最后一个可用归档日志中的最后一个系统更改编号，并恢复 Oracle 数据库以重新处理在发生故障时能够复制到灾难恢复站点的所有业务事务。然后，数据库将在新的形式中启动，以在恢复站点执行用户连接和业务事务。
+
+
+
+
+
+NOTE: 运行恢复攻略手册之前，请确保您具备以下条件：确保它通过 /etc/oratab 和 /etc/oraInstall.oc 从源 Oracle 主机复制到目标主机

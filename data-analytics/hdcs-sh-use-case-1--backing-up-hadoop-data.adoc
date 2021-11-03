@@ -1,0 +1,170 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/hdcs-sh-use-case-1--backing-up-hadoop-data.html 
+keywords: use case 2, Hadoop repository, dr, disaster recovery 
+summary: 在这种情况下，客户拥有一个大型内部 Hadoop 存储库，并希望对其进行备份以实现灾难恢复。但是，客户当前的备份解决方案成本高昂，并且备份时间过长，超过 24 小时。 
+---
+= 用例 1 ：备份 Hadoop 数据
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:hdcs-sh-overview-of-hadoop-data-protection-use-cases.html["先前版本： Hadoop 数据保护使用情形概述。"]
+
+
+
+== 场景
+
+在这种情况下，客户拥有一个大型内部 Hadoop 存储库，并希望对其进行备份以实现灾难恢复。但是，客户当前的备份解决方案成本高昂，并且备份时间过长，超过 24 小时。
+
+
+
+== 要求和挑战
+
+此用例的主要要求和挑战包括：
+
+* 软件向后兼容性：
++
+** 建议的备用备份解决方案应与生产 Hadoop 集群中当前正在运行的软件版本兼容。
+
+
+* 为了满足承诺的 SLA ，建议的替代解决方案应实现极低的 RPO 和 RTO 。
+* NetApp 备份解决方案创建的备份可以在本地构建于数据中心的 Hadoop 集群中使用，也可以在远程站点的灾难恢复位置运行的 Hadoop 集群中使用。
+* 建议的解决方案必须经济高效。
+* 建议的解决方案必须减少备份期间对当前正在运行的生产分析作业的性能影响。
+
+
+
+
+== 客户的现有备份解决方案
+
+下图显示了原始 Hadoop 原生备份解决方案。
+
+image:hdcs-sh-image5.png["错误：缺少图形映像"]
+
+生产数据通过中间备份集群保护到磁带：
+
+* 通过运行 `hadoop distcp -update <hdfs1> <hdfs2>` 命令，可以将 HDFS1 数据复制到 HDFS2 。
+* 备份集群充当 NFS 网关，数据通过 Linux `CP` 命令通过磁带库手动复制到磁带。
+
+
+原始 Hadoop 原生备份解决方案的优势包括：
+
+* 解决方案基于 Hadoop 原生命令，用户无需学习新过程。
+* 解决方案采用行业标准架构和硬件。
+
+
+原始 Hadoop 原生备份解决方案的缺点包括：
+
+* 备份窗口时间过长超过 24 小时，因此生产数据容易受到影响。
+* 备份期间集群性能显著下降。
+* 复制到磁带是一个手动过程。
+* 备份解决方案在所需的硬件和手动过程所需的工时方面成本高昂。
+
+
+
+
+== 备份解决方案
+
+根据这些挑战和要求，并考虑到现有备份系统，建议了三种可能的备份解决方案。以下各小节分别介绍了这三种不同的备份解决方案，分别标记为解决方案 A 到解决方案 C
+
+
+
+=== 解决方案 A
+
+解决方案 A 会将原位分析模块添加到备份 Hadoop 集群中，从而可以对 NetApp NFS 存储系统进行二级备份，从而消除了磁带需求，如下图所示。
+
+image:hdcs-sh-image6.png["错误：缺少图形映像"]
+
+解决方案 A 的详细任务包括：
+
+* 生产 Hadoop 集群的 HDFS 中包含需要保护的客户分析数据。
+* 具有 HDFS 的备份 Hadoop 集群充当数据的中间位置。在生产和备份 Hadoop 集群中，只需一组磁盘（ JBOD ）即可为 HDFS 提供存储。
+* 运行 `hadoop distcp – update – diff <hdfs1> <hdfs2>` 命令，保护 Hadoop 生产数据，使其从生产集群 HDFS 传输到备份集群 HDFS 。
+
+
+
+NOTE: Hadoop 快照用于保护数据从生产环境传输到备份 Hadoop 集群。
+
+* NetApp ONTAP 存储控制器可提供一个 NFS 导出卷，该卷会配置到备份 Hadoop 集群。
+* 通过利用 MapReduce 和多个映射程序运行 `Hadoop distcp` 命令，可以使用原位分析模块保护分析数据，使其从 Hadoop 集群备份到 NFS 。
++
+将数据存储在 NetApp 存储系统的 NFS 中后，将使用 NetApp Snapshot ， SnapRestore 和 FlexClone 技术根据需要备份，还原和复制 Hadoop 数据。
+
+
+
+
+NOTE: 使用 SnapMirror 技术，可以将 Hadoop 数据保护到云端以及灾难恢复位置。
+
+解决方案 A 的优势包括：
+
+* Hadoop 生产数据受备份集群保护。
+* HDFS 数据通过 NFS 进行保护，从而可以保护云和灾难恢复位置。
+* 通过将备份操作卸载到备份集群来提高性能。
+* 无需手动执行磁带操作
+* 支持通过 NetApp 工具实现企业管理功能。
+* 只需对现有环境进行极少的更改。
+* 是一种经济高效的解决方案。
+
+
+此解决方案的缺点是，它需要一个备份集群和额外的映射器来提高性能。
+
+由于解决方案 A 的简单性，成本和整体性能，客户最近部署了它。
+
+在此解决方案中，可以使用 ONTAP 中的 SAN 磁盘，而不是 JBOD 。此选项会将备份集群存储负载卸载到 ONTAP ；但是，缺点是需要 SAN 网络结构交换机。
+
+
+
+=== 解决方案 B
+
+解决方案 B 将原位分析模块添加到生产 Hadoop 集群中，这样就无需备份 Hadoop 集群，如下图所示。
+
+image:hdcs-sh-image7.png["错误：缺少图形映像"]
+
+解决方案 B 的详细任务包括：
+
+* NetApp ONTAP 存储控制器可为生产 Hadoop 集群配置 NFS 导出。
++
+Hadoop 原生 `Hadoop distcp` 命令可通过原位分析模块保护从生产集群 HDFS 到 NFS 的 Hadoop 数据。
+
+* 将数据存储在 NetApp 存储系统的 NFS 中后，将使用 Snapshot ， SnapRestore 和 FlexClone 技术根据需要备份，还原和复制 Hadoop 数据。
+
+
+解决方案 B 的优势包括：
+
+* 生产集群针对备份解决方案进行了少许修改，从而简化了实施并降低了额外的基础架构成本。
+* 备份操作不需要备份集群。
+* HDFS 生产数据在转换为 NFS 数据时会受到保护。
+* 解决方案支持通过 NetApp 工具执行企业管理功能。
+
+
+此解决方案的缺点是它在生产集群中实施，这可能会在生产集群中添加其他管理员任务。
+
+
+
+=== 解决方案 C
+
+在解决方案 C 中， NetApp SAN 卷会直接配置到 Hadoop 生产集群中以用于 HDFS 存储，如下图所示。
+
+image:hdcs-sh-image8.png["错误：缺少图形映像"]
+
+解决方案 C 的详细步骤包括：
+
+* NetApp ONTAP SAN 存储在生产 Hadoop 集群上配置为用于 HDFS 数据存储。
+* NetApp Snapshot 和 SnapMirror 技术用于备份生产 Hadoop 集群中的 HDFS 数据。
+* 在 Snapshot 副本备份过程中， Hadoop/Spark 集群的生产不会对性能产生影响，因为备份位于存储层。
+
+
+
+NOTE: 无论数据大小如何， Snapshot 技术均可在数秒内完成备份。
+
+解决方案 C 的优势包括：
+
+* 可以使用 Snapshot 技术创建节省空间的备份。
+* 支持通过 NetApp 工具实现企业管理功能。
+
+
+link:hdcs-sh-use-case-2--backup-and-disaster-recovery-from-the-cloud-to-on-premises.html["接下来：用例 2 —从云到内部环境的备份和灾难恢复。"]

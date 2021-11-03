@@ -1,0 +1,246 @@
+---
+sidebar: sidebar 
+permalink: ai/ai-sent-architecture.html 
+keywords: technology, architectural diagram, hardware requirements, NVIDIA RIVA, NVIDIA TAO Toolkit, Flash storage system, Cloud Sync 
+summary: 此支持中心解决方案的架构以 NVIDIA 的预构建工具和 NetApp DataOps 工具包为核心。NVIDIA 的工具可用于使用预构建的型号和管道快速部署高性能 AI 解决方案。NetApp DataOps 工具包可简化各种数据管理任务，以加快开发速度。 
+---
+= 架构
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:ai-sent-use-cases.html["先前：用例。"]
+
+此支持中心解决方案的架构以 NVIDIA 的预构建工具和 NetApp DataOps 工具包为核心。NVIDIA 的工具可用于使用预构建的型号和管道快速部署高性能 AI 解决方案。NetApp DataOps 工具包可简化各种数据管理任务，以加快开发速度。
+
+
+
+== 解决方案技术
+
+link:https://developer.nvidia.com/riva["NVIDIA RIVA"^] 是一款 GPU 加速 SDK ，用于构建多模式对话 AI 应用程序，在 GPU 上提供实时性能。NVIDIA Train ， Aadapt ， and Optimize （ TAO ）工具包提供了一种更快，更简单的方法来加快训练速度，并快速创建高度准确且性能优异的特定域 AI 模型。
+
+NetApp DataOps 工具包是一个 Python 库，可使开发人员，数据科学家，开发运营工程师和数据工程师轻松执行各种数据管理任务。其中包括近乎即时地配置新的数据卷或 JupyterLab 工作空间，近乎即时地克隆数据卷或 JupyterLab 工作空间，以及近乎即时地对数据卷或 JupyterLab 工作空间进行快照，以实现可追溯性和基线化。
+
+
+
+== 架构图
+
+下图显示了解决方案架构。环境分为三大类：云，核心和边缘。每个类别都可能在不同的地理位置上分散。例如，云中包含的对象存储包含不同区域的存储分段中的音频文件，而核心则可能包含通过高速网络或 NetApp Cloud Sync 链接的数据中心。边缘节点表示各个人工代理的日常工作平台，在这些平台中，交互式信息板工具和麦克风可用于直观显示情绪并从与客户的对话中收集音频数据。
+
+在 GPU 加速数据中心中，企业可以使用 NVIDIA https://docs.nvidia.com/deeplearning/riva/user-guide/docs/index.html["Riva"^] 用于构建对话式 AI 应用程序的框架 使用传输 L 学习技术连接模型修剪和重新培训。这些计算应用程序和工作流由提供支持，实现 ONTAP 提供的最佳数据管理功能。通过该工具包，企业数据团队可以利用相关的结构化和非结构化数据，通过快照和克隆快速构建模型的原型，以实现可追溯性，版本控制， A/B 测试，从而提供安全性，监管， 和合规性。请参见一节 link:ai-sent-design-considerations.html#storage-design["存储设计"] 有关详细信息：
+
+此解决方案演示了音频文件处理， NLP 模型培训，传输学习和数据管理详细步骤。生成的端到端管道生成一个情感摘要，该摘要会实时显示在人力支持代理的信息板上。
+
+image:ai-sent-image4.png["错误：缺少图形映像"]
+
+
+
+=== 硬件要求
+
+下表列出了实施解决方案所需的硬件组件。在任何特定解决方案实施中使用的硬件组件可能会因客户要求而异。
+
+|===
+| 响应延迟测试 | 时间（毫秒） 
+
+
+| 数据处理 | 10 
+
+
+| 推理 | 10 
+|===
+这些响应时间测试针对 560 个对话中 50 ， 000 多个音频文件运行。每个音频文件的大小为 ~100KB ，转换为 wav 时大小为 ~1 MB 。数据处理步骤会将 MP3 转换为 wav 文件。推理步骤会将音频文件转换为文本，并从文本中提取感受。这些步骤彼此独立，可以并行处理以加快此过程。
+
+考虑到在商店之间传输数据的延迟，经理应该能够在句子结尾的一秒内看到实时情感分析的更新。
+
+
+
+==== NVIDIA Riva 硬件
+
+|===
+| 硬件 | 要求 
+
+
+| os | Linux x86_64 
+
+
+| GPU 内存（ As1 ） | 流模型： ~5600 MB 非流模型： ~3100 MB 
+
+
+| GPU 内存（ NLP ） | ~每个 Bert 型号 500 MB 
+|===
+
+
+==== NVIDIA TAO 工具包硬件
+
+|===
+| 硬件 | 要求 
+
+
+| 系统 RAM | 32 GB 
+
+
+| GPU RAM | 32 GB 
+
+
+| CPU | 8 个核心 
+
+
+| GPU | NVIDIA （ A100 ， V100 和 RTX 30x0 ） 
+
+
+| SSD | 100 GB 
+|===
+
+
+=== 闪存存储系统
+
+
+
+==== NetApp ONTAP 9.
+
+ONTAP 9.9 是 NetApp 推出的最新一代存储管理软件，可帮助企业打造现代化的基础架构并过渡到云就绪数据中心。借助行业领先的数据管理功能，无论数据位于何处， ONTAP 都可以通过一组工具来管理和保护数据。您还可以将数据自由移动到需要的任何位置：边缘，核心或云。ONTAP 9.9 包含许多功能，可简化数据管理，加快和保护关键数据，并在混合云架构中实现下一代基础架构功能。
+
+
+
+==== NetApp Cloud Sync
+
+https://docs.netapp.com/us-en/occm/concept_cloud_sync.html["Cloud Sync"^] 是一项 NetApp 服务，用于快速安全地同步数据，使您可以在内部 NFS 或 SMB 文件共享之间将文件传输到以下任一目标：
+
+* NetApp StorageGRID
+* NetApp ONTAP S3
+* NetApp Cloud Volumes Service
+* Azure NetApp Files
+* Amazon Simple Storage Service （ Amazon S3 ）
+* Amazon Elastic File System （ Amazon EFS ）
+* Azure Blob
+* Google Cloud 存储
+* IBM 云对象存储
+
+
+Cloud Sync 可将文件快速安全地移动到您需要的位置。数据传输完成后，即可在源和目标上完全使用。Cloud Sync 会根据您预定义的计划持续同步数据，并仅移动增量，从而最大限度地减少在数据复制上花费的时间和金钱。Cloud Sync 是一款软件即服务（ SaaS ）工具，易于设置和使用。由 Cloud Sync 触发的数据传输由数据代理执行。您可以在 AWS ， Azure ， Google 云平台或内部部署 Cloud Sync 数据代理。
+
+
+
+==== NetApp StorageGRID
+
+StorageGRID 软件定义的对象存储套件可无缝支持公有，私有云和混合多云环境中的各种用例。借助行业领先的创新技术， NetApp StorageGRID 可存储，保护和保留非结构化数据，以供多用途使用，包括长期的自动化生命周期管理。有关详细信息，请参见 https://www.netapp.com/data-storage/storagegrid/documentation/["NetApp StorageGRID"^] 站点
+
+
+
+=== 软件要求
+
+下表列出了实施此解决方案所需的软件组件。在任何特定解决方案实施中使用的软件组件可能会因客户要求而异。
+
+|===
+| 主机 | 要求 
+
+
+| Riva （原 JarVis ） | 1.4.0 
+
+
+| TAO 工具包（以前称为传输学习工具包） | 3.0 
+
+
+| ONTAP | 9.9.1 
+
+
+| DGX 操作系统 | 5.1 
+
+
+| DOTK | 2.0.0 
+|===
+
+
+==== NVIDIA Riva 软件
+
+|===
+| 软件 | 要求 
+
+
+| Docker | 如果不使用 DGX ，则大于 19.02 （安装了 NVIDI-Docker ） >=19.03 
+
+
+| NVIDIA 驱动程序 | 对于数据中心 GPU ，则为 465.19.01+ 418.40+ ， 440.33+ ， 450.51+ ， 460.27+ 
+
+
+| 容器操作系统 | Ubuntu 20.04 
+
+
+| CUDA | 11.3.0 
+
+
+| cucBLAS | 11.5.1.101 
+
+
+| cuDNN | 8.2.0.41 
+
+
+| NCCL | 2.9.6 
+
+
+| TensorRT | 7.2.3.4 
+
+
+| Triton 推理服务器 | 2.9.0 
+|===
+
+
+==== NVIDIA TAO 工具包软件
+
+|===
+| 软件 | 要求 
+
+
+| Ubuntu 18.04 LTS | 18.04 
+
+
+| Python | >=3.6.9 
+
+
+| Docker — ce | 19.03.5 
+
+
+| Docker API | 1.40 
+
+
+| nvidia-container-toolkit | >1.3.0-1 
+
+
+| nvidia-container-runtime | 3.4.0-1. 
+
+
+| nvidia-docker2. | 2.5.0-1. 
+
+
+| NVIDIA 驱动程序 | >455 
+
+
+| Python-pip | >21.06 
+
+
+| nvidia-pyindex | 最新版本 
+|===
+
+
+=== 用例详细信息
+
+此解决方案适用场景的使用情形如下：
+
+* 语音到文本
+* 情感分析
+
+
+image:ai-sent-image6.png["错误：缺少图形映像"]
+
+语音到文本使用情形首先会为支持中心载入音频文件。然后，根据 Riva 所需的结构对该音频进行处理。如果尚未将音频文件拆分为其分析单元，则必须先执行此操作，然后再将音频传递给 Riva 。处理完此音频文件后，它将作为 API 调用传递到 Riva 服务器。该服务器采用其托管的众多型号之一，并返回响应。此语音到文本（自动语音识别的一部分）将返回音频的文本表示形式。此时，管道将切换到情感分析部分。
+
+对于情感分析，自动语音识别输出的文本将作为文本分类的输入。文本分类是用于将文本分类为任意数量的类别的 NVIDIA 组件。对于支持中心对话，情绪类别从正面到负面不等。可以使用一个组套来评估模型的性能，以确定微调步骤是否成功。
+
+image:ai-sent-image8.png["错误：缺少图形映像"]
+
+在 TAO 工具包中，语音到文本和情感分析也使用类似的管道。主要区别在于使用了微调模型所需的标签。TAO 工具包管道从处理数据文件开始。然后是经过预先培训的型号（来自 https://ngc.nvidia.com/catalog["NVIDIA NGC 目录"^]）。经过微调的模型会根据其相应的性能指标进行评估，如果性能比预先训练的模型更高，则会部署到 Riva 服务器。
+
+link:ai-sent-design-considerations.html["接下来：设计注意事项"]

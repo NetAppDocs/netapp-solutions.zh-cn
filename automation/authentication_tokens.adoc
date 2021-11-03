@@ -1,0 +1,72 @@
+---
+sidebar: sidebar 
+permalink: automation/authentication_tokens.html 
+summary: 此页面提供了有关通过 NetApp Cloud Manager 收集 CVO 和 Cloud Manager Connector 部署所需的刷新令牌和访问 / 机密密钥的详细信息。 
+keywords: netapp, solutions, automation, ansible 
+---
+= NetApp 解决方案自动化
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:table-stripes: odd
+:imagesdir: ./../media/
+
+
+
+
+== 使用 NetApp Cloud Manger 的 CVO 和 Connector 的 AWS 身份验证要求
+
+要通过 AWX/Ansible 塔使用 Ansible 攻略手册配置 CVO 和连接器的自动部署，需要以下信息：
+
+
+
+=== 从 AWS 获取访问 / 机密密钥
+
+. 要在 Cloud Manager 中部署 CVO 和 Connector ，我们需要 AWS 访问 / 机密密钥。通过启动 IAM -> 用户 -> 您的用户名 -> 安全凭据 -> 创建访问密钥，在 AWS 控制台中获取密钥。
+. 复制访问密钥并确保其安全，以便在 Connector 和 CVO 部署中使用。
+
+
+
+NOTE: 如果您丢失了密钥，则可以创建另一个访问密钥并删除丢失的密钥
+
+image::access_keys.png[刷新令牌]
+
+
+
+=== 从 NetApp Cloud Central 获取刷新令牌
+
+. 使用您的帐户凭据登录到云中心帐户，网址为 https://services.cloud.netapp.com/refresh-token[]
+. 生成刷新令牌并将其保存以供部署使用。
+
+
+image::token_authentication.png[刷新令牌]
+
+
+
+=== 正在获取客户端 ID
+
+. 访问 API 页面以复制客户端 ID https://services.cloud.netapp.com/developer-hub[]。
+. 单击右上角的 " 了解如何进行身份验证 " 。
+. 从弹出的身份验证窗口中，如果您需要用户名 / 密码才能登录，请从常规访问复制客户端 ID 。使用 SSO 的联合用户应从 " 刷新令牌选项卡 " 复制客户端 ID 。
+
+
+image::client_id.JPG[客户端 ID]
+
+
+
+=== 从 AWS 获取密钥对
+
+. 在 AWS 控制台中，搜索 "Key Pair" 并创建一个带有 "pem" 的密钥对。记住 key_pair 的名称，我们将使用它来部署连接器。
+
+
+image::key_pair.png[Key Pair]
+
+
+
+=== 正在获取帐户 ID
+
+. 在 Cloud Manager 中，单击 Account – > Manage Accounts ，然后复制帐户 ID 以用于 AWX 的变量。
+
+
+image::account_id.JPG[客户端 ID]
