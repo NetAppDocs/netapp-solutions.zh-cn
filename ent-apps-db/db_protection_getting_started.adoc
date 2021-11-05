@@ -24,7 +24,7 @@ summary: 此页面介绍了在 NetApp ONTAP 存储上部署 Oracle 数据保护�
 . 解决方案设计用于在私有云环境（内部到内部）和混合云（内部到公有 Cloud Cloud Volumes ONTAP （ CVO ））中运行
 . 填写特定于您的环境的变量，然后将其复制并粘贴到作业模板中的额外 VAR 字段中。
 . 将额外的变量添加到作业模板后，您可以启动自动化。
-. 此自动化设置为运行三个阶段（设置， Oracle 二进制文件和数据库复制计划以及日志复制计划），以及在灾难恢复站点恢复数据库的第四个阶段。
+. 此自动化设置为运行三个阶段（安装， Oracle 二进制文件复制计划，数据库，日志和仅适用于日志的复制计划），以及第四个阶段以在灾难恢复站点恢复数据库。
 . 有关获取 CVO 数据保护所需密钥和令牌的详细说明，请访问 link:automation/authentication_tokens.html["收集 CVO 和连接器部署的前提条件"]
 
 
@@ -102,7 +102,7 @@ summary: 此页面介绍了在 NetApp ONTAP 存储上部署 Oracle 数据保护�
 | 已创建 NFS VLAN 和 ifgrp 
 
 
-.5+| * Oracle 服务器 * |  
+.6+| * Oracle 服务器 * |  
 
 
 | RHEL 7/8 
@@ -115,6 +115,9 @@ summary: 此页面介绍了在 NetApp ONTAP 存储上部署 Oracle 数据保护�
 
 
 | 源上的现有 Oracle 环境以及目标上的等效 Linux 操作系统（灾难恢复站点或公有云） 
+
+
+| 在 Oracle EC2 实例上设置适当的交换空间，默认情况下，某些 EC2 实例使用 0 交换部署 
 
 
 .3+| * Cloud Manager/AWS* | AWS 访问 / 机密密钥 

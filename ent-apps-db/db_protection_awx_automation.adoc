@@ -135,6 +135,18 @@ fields:
     type: string
     label: Source Cluster Password
     secret: true
+  - id: regular_id
+    type: string
+    label: Cloud Central ID
+    secret: true
+  - id: email_id
+    type: string
+    label: Cloud Manager Email
+    secret: true
+  - id: cm_password
+    type: string
+    label: Cloud Manager Password
+    secret: true
   - id: access_key
     type: string
     label: AWS Access Key
@@ -158,6 +170,9 @@ extra_vars:
   cvo_svm_password: '{{ cvo_svm_password }}'
   src_cluster_username: '{{ src_cluster_username }}'
   src_cluster_password: '{{ src_cluster_password }}'
+  regular_id: '{{ regular_id }}'
+  email_id: '{{ email_id }}'
+  cm_password: '{{ cm_password }}'
   access_key: '{{ access_key }}'
   secret_key: '{{ secret_key }}'
   token: '{{ token }}'
@@ -169,7 +184,7 @@ extra_vars:
 .. 导航到资源→凭据，然后单击添加。
 .. 输入 ONTAP 凭据的名称和组织详细信息
 .. 选择上一步中创建的凭据类型。
-.. 在 Type Details 下，输入源集群和 CVO 集群，访问 / 机密密钥和 Cloud Central 刷新令牌的用户名和密码。
+.. 在 Type Details 下，输入源集群和 CVO 集群， Cloud Central/Manager ， AWS 访问 / 机密密钥和 Cloud Central 刷新令牌的用户名和密码。
 .. 单击保存。
 
 
@@ -394,4 +409,4 @@ NOTE: 只有在准备好在远程站点还原数据库后，才会运行此攻�
 
 
 
-NOTE: 运行恢复攻略手册之前，请确保您具备以下条件：确保它通过 /etc/oratab 和 /etc/oraInstall.oc 从源 Oracle 主机复制到目标主机
+NOTE: 运行恢复攻略手册之前，请确保您具备以下条件：确保它通过 /etc/oratab 和 /etc/oraInst.oc 从源 Oracle 主机复制到目标主机
