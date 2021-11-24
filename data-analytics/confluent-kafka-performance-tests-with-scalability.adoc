@@ -1,0 +1,29 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/confluent-kafka-performance-tests-with-scalability.html 
+keywords: performance, tests, scalability 
+summary: 我们使用 NetApp StorageGRID 设置对生产和消费工作负载执行了三到四个节点的分层存储测试。 
+---
+= 性能测试与可扩展性
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:confluent-kafka-confluent-kafka-certification.html["先前版本： Confluent Kafka 认证。"]
+
+我们使用 NetApp StorageGRID 设置对生产和消费工作负载执行了三到四个节点的分层存储测试。根据我们的测试，完成时间和性能结果与 StorageGRID 节点数成正比。StorageGRID 设置至少需要三个节点。
+
+* 当存储节点数量增加时，完成生产和消费模式操作所需的时间呈线性下降趋势。
+
+
+image:confluent-kafka-image9.png["错误：缺少图形映像"]
+
+* 根据 StorageGRID 节点的数量， S3 检索操作的性能呈线性增长。StorageGRID 最多支持 200 个 StorgeGRID 节点。
+
+
+image:confluent-kafka-image10.png["错误：缺少图形映像"]
+
+link:confluent-kafka-kafka-s3-connector.html["接下来： Kafka S3 连接器。"]

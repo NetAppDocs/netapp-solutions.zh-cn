@@ -1,0 +1,97 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/confluent-kafka-confluent-kafka-certification.html 
+keywords: certification, setup, configuration, benchmark 
+summary: 我们已通过与 Kafka 的 Confluent Platform 的 NetApp StorageGRID 分层存储认证。 
+---
+= Confuent Kafka 认证
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:confluent-kafka-technology-overview.html["上一页：技术概述。"]
+
+我们已通过与 Kafka 的 Confluent Platform 的 NetApp StorageGRID 分层存储认证。分层存储将数据处理和存储管理分开，有助于降低运营负担和成本，并根据计算要求扩展代理。分层存储可将热数据发送到经济高效的对象存储。NetApp 和 Confluent 团队共同参与了此认证，并运行了认证所需的测试用例。
+
+
+
+== Confuent Kafka 设置
+
+我们使用以下设置进行认证。
+
+在此认证中，我们使用了三个 Zookepers ，五个代理和五个工具服务器，这些服务器具有 256 GB RAM 和 16 个 CPU 。对于 NetApp 存储，我们使用的是带有四个 SG6024 的 SG1000 负载平衡器的 StorageGRID 。存储和代理通过 100GbE 连接进行连接。
+
+下图显示了用于 Confluent Kafka 认证的配置的网络拓扑。
+
+image:confluent-kafka-image7.png["错误：缺少图形映像"]
+
+这些工具服务器充当将 Kafka 请求发送到 Kafka 代理的应用程序客户端。
+
+
+
+== 融合的分层存储配置
+
+分层存储配置在 Kafka 中需要以下参数：
+
+....
+Confluent.tier.archiver.num.threads=16
+confluent.tier.fetcher.num.threads=32
+confluent.tier.enable=true
+confluent.tier.feature=true
+confluent.tier.backend=S3
+confluent.tier.s3.bucket=kafkasgdbucket1-2
+confluent.tier.s3.region=us-west-2
+confluent.tier.s3.cred.file.path=/data/kafka/.ssh/credentials
+confluent.tier.s3.aws.endpoint.override=http://kafkasgd.rtpppe.netapp.com:10444/
+confluent.tier.s3.force.path.style.access=true
+....
+对于认证，我们使用的是 StorageGRID 与 HTTP 协议，但 HTTPS 也有效。访问密钥和机密密钥存储在 `confuent.tier.s3.cred.file.path` 参数中提供的文件名中。
+
+
+
+== NetApp 存储控制器— StorageGRID
+
+我们在 StorageGRID 中配置了单站点配置以进行认证。
+
+image:confluent-kafka-image8.png["错误：缺少图形映像"]
+
+
+
+== 认证测试
+
+我们已完成以下五个认证测试案例。前两项是功能测试，其余三项是性能测试。
+
+
+
+=== 对象存储正确性测试
+
+此测试使用 API 调用对绑定存储所使用的对象存储执行基本操作，例如 GET ， PUT 和 DELETE 。
+
+
+
+=== 分层功能正确性测试
+
+此测试将检查对象存储的端到端功能。它会创建一个主题，为新创建的主题生成一个事件流，等待代理将这些分段归档到对象存储，使用事件流，并验证已用流与已生成流的匹配情况。我们执行此测试时，无论是否注入了对象存储故障。我们通过在 StorageGRID 中的一个节点中停止服务管理器服务并验证端到端功能是否适用于对象存储来模拟节点故障。
+
+
+
+=== 层提取基准测试
+
+此测试验证了分层对象存储的读取性能，并检查了基准测试生成的区块在负载过重时的范围提取读取请求。在此基准测试中， Confluent 开发了自定义客户端来处理层提取请求。
+
+
+
+=== 生成并使用工作负载生成器
+
+此测试会通过归档区块在对象存储上间接生成写入工作负载。读取工作负载（区块读取）是在使用者组提取区块时从对象存储生成的。此工作负载由 TOCC 脚本生成。此测试检查了并行线程中对象存储上的读写性能。我们采用和不采用对象存储故障注入的方式进行了测试，就像分层功能正确性测试一样。
+
+
+
+=== 保留工作负载生成器
+
+此测试检查了在主题保留工作负载繁重的情况下对象存储的删除性能。保留工作负载是使用 TOCC 脚本生成的，该脚本会与测试主题并行生成大量消息。本测试主题使用主动式基于大小和基于时间的保留设置进行配置，此设置会导致从对象存储中持续清除事件流。然后，这些区块会归档。这导致代理在对象存储中删除了大量内容，并收集了对象存储删除操作的性能。
+
+link:confluent-kafka-performance-tests-with-scalability.html["接下来：性能测试和可扩展性。"]
