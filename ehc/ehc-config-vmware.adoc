@@ -1,0 +1,75 @@
+---
+sidebar: sidebar 
+permalink: ehc/ehc-config-vmware.html 
+keywords: NetApp Solutions, amazon, vmc, aws, microsoft azure, avs, azure, google cloud, gcp, gcve, vmware managed cloud, enterprise, hybrid, cloud, config, configuration 
+summary:  
+---
+= 在云提供商中配置虚拟化环境
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+此处详细介绍了如何在每个受支持的超大规模主机中配置虚拟化环境。
+
+通过从以下选项中选择，跳至所需超大规模器的部分：
+
+* link:#aws-config["配置 Amazon VMware 解决方案（ AVS ）"]
+* link:#azure-config["配置 Azure VMware 托管云（ VMC ）"]
+* link:#gcp-config["配置 Google Cloud 虚拟化引擎（ GCVE ）"]
+
+
+
+
+== 为 AWS 配置 VMC
+
+与内部部署一样，在 AWS 上规划 VMware Cloud 对于成功打造可随时投入生产的环境以创建 VM 和迁移至关重要。
+
+本节介绍如何在 AWS SDDC 上设置和管理 VMware Cloud ，并将其与连接 NetApp 存储的可用选项结合使用。
+
+
+NOTE: 只支持使用来宾存储将 FSX ONTAP 和 Cloud Volumes ONTAP 连接到 AWS VMC 。
+
+设置过程可细分为以下步骤：
+
+* link:aws-deploy-config.html["部署和配置适用于 AWS 的 VMware Cloud"]
+* link:aws-connect-fsx.html["将 VMware Cloud 连接到 FSX ONTAP"]
+
+
+
+
+== 为 Azure 配置 VMC
+
+与内部部署一样，规划 Azure VMware 解决方案对于成功创建 VM 和迁移生产就绪环境至关重要。
+
+本节介绍如何设置和管理 Azure VMware 解决方案并将其与连接 NetApp 存储的可用选项结合使用。
+
+
+NOTE: 将 Azure NetApp Files 和 Cloud Volumes ONTAP 连接到 Azure VMware 解决方案的唯一受支持方法是子系统内存储。
+
+设置过程可细分为以下步骤：
+
+* link:azure-register-create-pc.html["注册资源提供商并创建私有云"]
+* link:azure-connect-virtual-gateway.html["连接到新的或现有的 ExpressRoute 虚拟网络网关"]
+* link:azure-validate-network.html["验证网络连接并访问私有云"]
+
+
+
+
+== 配置适用于 Google Cloud Platform 的 GCVE
+
+与内部部署一样，规划 Google Cloud VMware Engine （ GCVE ）对于成功创建虚拟机和迁移可随时投入生产的环境至关重要。
+
+本节介绍如何设置和管理 GCVE ，并将其与连接 NetApp 存储的可用选项结合使用。
+
+
+NOTE: 来宾存储是将 Cloud Volumes ONTAP 和云卷服务连接到 GCVE 的唯一受支持方法。
+
+设置过程可细分为以下步骤：
+
+* link:gcve-deploy-config.html["部署和配置 GCVE"]
+* link:gcve-enable-access.html["启用对 GCVE 的私有访问"]
+

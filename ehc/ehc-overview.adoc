@@ -1,0 +1,152 @@
+---
+sidebar: sidebar 
+permalink: ehc/ehc-overview.html 
+keywords: NetApp Solutions, ehc, enterprise hybrid cloud, hyperscalers, vmware 
+summary:  
+---
+= 企业混合云（ EHC ）概述
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+大多数 IT 组织都采用混合云优先的方法。这些组织处于转型阶段，客户正在评估其当前 IT 环境，然后根据评估和发现练习将工作负载迁移到云。
+
+客户迁移到云的因素包括弹性和突发，数据中心退出，数据中心整合，寿命终结情形，合并， 采集等。迁移的原因可能因组织及其各自的业务优先级而异。迁移到混合云时，在云中选择合适的存储对于充分发挥云部署和弹性的潜能非常重要。
+
+
+
+== 公有云中的 VMware 云选项
+
+
+
+=== Azure VMware 解决方案
+
+image::avs-logo.png[AVS,60,60]
+
+Azure VMware 解决方案是一种混合云服务，支持在 Microsoft Azure 公有云中实现完全正常运行的 VMware SDDC 。Azure VMware 解决方案是由 Microsoft 全面管理和支持的第一方解决方案，由 VMware 利用 Azure 基础架构进行验证。这意味着，在部署 Azure VMware 解决方案时，客户可以获得用于计算虚拟化的 VMware ESXi ，用于超融合存储的 vSAN ， 和 NSX 实现网络连接和安全性，同时充分利用 Microsoft Azure 的全球影响力，一流的数据中心设施以及邻近丰富的原生 Azure 服务和解决方案生态系统的优势。
+
+
+
+=== 基于 AWS 的 VMware Cloud
+
+image::vmc-logo.png[VMC,60,60]
+
+基于 AWS 的 VMware 云通过优化对原生 AWS 服务的访问，将 VMware 企业级 SDDC 软件引入 AWS 云。VMware Cloud on AWS 由 VMware Cloud Foundation 提供支持，它将 VMware 的计算，存储和网络虚拟化产品（ VMware vSphere ， VMware vSAN 和 VMware NSX ）与 VMware vCenter Server 管理相集成，并经过优化，可在专用的弹性裸机 AWS 基础架构上运行。
+
+
+
+=== Google Cloud VMware 引擎
+
+image::gcve-logo.png[gcve,60,60]
+
+Google Cloud VMware Engine 是一款基础架构即服务（ Infrastructure-as-a-Service ， IaaS ）产品，基于 Google Cloud 高性能可扩展基础架构和 VMware Cloud Foundation 堆栈（ VMware vSphere ， vCenter ， vSAN 和 NSX-T ）构建此服务支持快速迁移到云，将现有 VMware 工作负载从内部环境无缝迁移或扩展到 Google Cloud Platform ，而无需花费成本，精力或风险来重新构建应用程序或重新调整操作。这是一项由 Google 销售和支持的服务，与 VMware 密切合作。
+
+
+NOTE: SDDC 私有云和 NetApp Cloud Volumes 主机代管功能可提供最佳性能，并将网络延迟降至最低。
+
+
+
+== 您知道吗？
+
+无论使用何种云，在部署 VMware SDDC 时，初始集群都包括以下产品：
+
+* 用于计算虚拟化的 VMware ESXi 主机，以及用于管理的 vCenter Server 设备
+* VMware vSAN 超融合存储，整合了每个 ESXi 主机的物理存储资产
+* VMware NSX 用于虚拟网络连接和安全性，并使用 NSX Manager 集群进行管理
+
+
+
+
+== 存储配置
+
+对于计划托管存储密集型工作负载并在任何云托管的 VMware 解决方案上横向扩展的客户，默认的超融合基础架构要求扩展应同时位于计算和存储资源上。
+
+通过与 Azure NetApp Files ，适用于 NetApp ONTAP 的 Amazon FSx ，适用于所有三种主要超大规模云产品的 Cloud Volumes ONTAP 以及适用于 Google Cloud 的 Cloud Volumes Service 等 NetApp Cloud Volumes 相集成，客户现在可以选择单独扩展其存储。 并且仅根据需要向 SDDC 集群添加计算节点。
+
+
+
+=== 注释：
+
+* VMware 不建议使用不平衡的集群配置，因此扩展存储意味着添加更多主机，这意味着 TCO 增加。
+* 只能使用一个 vSAN 环境。因此，所有存储流量都将直接与生产工作负载竞争。这不是一个很好的模式。
+* 无法提供多个性能层来满足应用程序要求，性能和成本要求。
+* 很容易达到基于集群主机构建的 vSAN 的存储容量限制。使用 NetApp Cloud Volumes 扩展存储以托管活动数据集或将较冷的数据分层到永久性存储。
+
+
+Azure NetApp Files ，适用于 NetApp ONTAP 的 Amazon FSx ， Cloud Volumes ONTAP （在所有三个主要超大规模企业中均有提供）和适用于 Google Cloud 的 Cloud Volumes Service 可与子虚拟机结合使用。此混合存储架构由一个 vSAN 数据存储库组成，用于存放子操作系统和应用程序二进制数据。应用程序数据通过基于子系统的 iSCSI 启动程序或 NFS/SMB 挂载连接到 VM ，这些启动程序或挂载可分别直接与适用于 NetApp ONTAP 的 Amazon FSx ， Cloud Volume ONTAP ， Azure NetApp Files 和适用于 Google Cloud 的 Cloud Volumes Service 进行通信。此配置可让您轻松克服存储容量方面的挑战，就像使用 vSAN 一样，可用空间取决于可宽空间和所使用的存储策略。
+
+
+NOTE: NetApp 存储作为数据存储库，目前可在所有主要超大规模云中作为私有预览版使用。
+
+我们来考虑一下 AWS 上的 VMware Cloud 上的三节点 SDDC 集群：
+
+* 三节点 SDDC 的总原始容量 = 31.1TB （每个节点大约 10 TB ）。
+* 在添加其他主机之前要保留的可宽空间 = 25% = （ .25 x 31.1TB ） = 7.6 TB 。
+* 可宽空间扣除后的可用原始容量 = 23.4TB
+* 有效可用空间取决于应用的存储策略。
++
+例如：
+
++
+** RAID 0 = 有效可用空间 = 23.4TB （可用原始容量 /1 ）
+** RAID 1 = 有效可用空间 = 11.7TB （可用原始容量 /2 ）
+** RAID 5 = 有效可用空间 = 17.5 TB （可用原始容量 /1.33 ）
+
+
+
+
+因此，使用 NetApp Cloud Volumes 作为子系统连接的存储有助于扩展存储和优化 TCO ，同时满足性能和数据保护要求。
+
+
+
+=== 需要记住的要点
+
+* 在混合存储模型中，将第 1 层或高优先级工作负载放置在 vSAN 数据存储库上，以满足任何特定延迟要求，因为它们是主机本身的一部分且位于邻近位置。对事务处理延迟可接受的任何工作负载 VM 使用来宾机制。
+* 使用 NetApp SnapMirror ® 技术将工作负载数据从内部 ONTAP 系统复制到 Cloud Volumes ONTAP 或 Amazon FSx for NetApp ONTAP ，以便使用块级机制轻松迁移。这不适用于 Azure NetApp Files 和 Cloud Volumes 服务。要将数据迁移到 Azure NetApp Files 或云卷服务，请根据所使用的文件协议使用 NetApp XCP ， Cloud Sync ， rysnc 或 Robocopy 。
+* 测试显示，从相应 SDDC 访问存储时会出现 2 到 4 毫秒的额外延迟。在映射存储时，将此额外延迟考虑到应用程序要求。
+* 要在测试故障转移和实际故障转移期间挂载来宾连接的存储，请确保重新配置 iSCSI 启动程序，更新 SMB 共享的 DNS 以及在 fstab 中更新 NFS 挂载点。
+* 确保已在 VM 中正确配置来宾系统内 Microsoft 多路径 I/O （ MPIO ），防火墙和磁盘超时注册表设置。
+
+
+
+NOTE: 此适用场景子系统连接的存储。
+
+
+
+== NetApp 云存储的优势
+
+NetApp 云存储具有以下优势：
+
+* 通过独立于计算扩展存储，提高计算到存储的密度。
+* 可用于减少主机数量，从而降低总 TCO 。
+* 计算节点故障不会影响存储性能。
+* 借助 Azure NetApp Files 的卷重塑和动态服务级别功能，您可以根据稳定状态工作负载进行规模估算，从而防止过度配置，从而优化成本。
+* Cloud Volumes ONTAP 的存储效率，云分层和实例类型修改功能可以提供最佳的存储添加和扩展方式。
+* 防止过度配置存储资源仅在需要时添加。
+* 通过高效的 Snapshot 副本和克隆，您可以快速创建副本，而不会对性能造成任何影响。
+* 通过从 Snapshot 副本快速恢复来帮助解决勒索软件攻击。
+* 提供基于增量块传输的高效区域灾难恢复以及跨区域的集成备份块级别，从而提供更好的 RPO 和 RTO 。
+
+
+
+
+== 假设
+
+* 已启用 SnapMirror 技术或其他相关数据迁移机制。从内部环境到任何超大规模云，有许多连接选项可供选择。使用适当的路径并与相关网络团队合作。
+* 在编写本文档时，来宾存储是唯一可用的选项。
+
+
+
+NOTE: 请联系 NetApp 解决方案架构师和相应的超大规模云架构师来规划和估算存储以及所需数量的主机。NetApp 建议先确定存储性能要求，然后再使用 Cloud Volumes ONTAP 规模估算器以正确的吞吐量最终确定存储实例类型或相应的服务级别。
+
+
+
+== 详细的架构
+
+从高层面来看，此架构（如下图所示）介绍了如何使用 NetApp Cloud Volumes ONTAP ， Cloud Volumes Service for Google Cloud 和 Azure NetApp Files 作为额外的子系统内存储选项，在多个云提供商之间实现混合多云连接和应用程序可移植性。
+
+image:ehc-architecture.png["企业混合云架构"]

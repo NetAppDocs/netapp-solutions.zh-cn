@@ -1,0 +1,69 @@
+---
+sidebar: sidebar 
+permalink: ehc/aws-connect-fsx.html 
+keywords: NetApp Solutions, aws, vmc, fsx, vmware managed cloud, enterprise, hybrid, cloud, config, configuration, 
+summary:  
+---
+= 将 VMware Cloud 连接到 FSX ONTAP
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+要将 VMware Cloud 连接到 FSX ONTAP ，请完成以下步骤：
+
+. 完成 VMware Cloud 部署并连接到 AWS VPC 后，您必须将适用于 NetApp ONTAP 的 Amazon FSx 部署到新的 VPC 中，而不是原始连接的 VPC 中（请参见下面的屏幕截图）。如果在连接的 VPC 中部署了 FSX （ NFS 和 SMB 浮动 IP ），则无法访问它。请注意， Cloud Volumes ONTAP 等 iSCSI 端点在连接的 VPC 上运行正常。
++
+image:aws-connect-fsx-1.png[""]
+
+. 在同一地区部署一个额外的 VPC ，然后将适用于 NetApp ONTAP 的 Amazon FSx 部署到新的 VPC 中。
++
+通过在 VMware Cloud 控制台中配置 SDDC 组，可以使用所需的网络配置选项连接到部署了 FSX 的新 VPC 。在第 3 步中，验证是否已选中 " 为组配置 VMware Transit Connect 将在每个附件和数据传输中产生费用 " ，然后选择创建组。完成此过程可能需要几分钟时间。
+
++
+image:aws-connect-fsx-2.png[""]
+image:aws-connect-fsx-3.png[""]
+image:aws-connect-fsx-4.png[""]
+
+. 将新创建的 VPC 附加到刚刚创建的 SDDC 组。选择外部 VPC 选项卡，然后按照进行操作 link:https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-operations/GUID-A3D03968-350E-4A34-A53E-C0097F5F26A9.html["连接外部 VPC 的说明"] 组。完成此过程可能需要 10 到 15 分钟。
++
+image:aws-connect-fsx-5.png[""]
+image:aws-connect-fsx-6.png[""]
+
+. 在外部 VPC 过程中，系统会通过 AWS 控制台通过资源访问管理器提示您访问新的共享资源。共享资源为 link:https://aws.amazon.com/transit-gateway["AWS 传输网关"] 由 VMware Transit Connect 管理。
++
+image:aws-connect-fsx-7.png[""]
+image:aws-connect-fsx-8.png[""]
+
+. 创建传输网关附件。
++
+image:aws-connect-fsx-9.png[""]
+
+. 返回 VMC 控制台，接受 VPC 连接。完成此过程大约需要 10 分钟。
++
+image:aws-connect-fsx-10.png[""]
+
+. 在外部 VPC 选项卡中，单击路由列中的编辑图标，然后添加以下所需的路由：
++
+** 适用于 NetApp ONTAP 的 Amazon FSX 的浮动 IP 范围的路由 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/supported-fsx-clients.html["浮动 IP"]。
+** Cloud Volumes ONTAP 的浮动 IP 范围的路由（如果适用）。
+** 新创建的外部 VPC 地址空间的路由。
++
+image:aws-connect-fsx-11.png[""]
+
+
+
+. 最后，允许双向流量 link:https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-operations/GUID-DE330202-D63D-408A-AECF-7CDC6ADF7EAC.html["防火墙规则"] 用于访问 FSX/CVO 。请按照以下说明操作  SDDC 工作负载连接的计算网关防火墙规则。
++
+image:aws-connect-fsx-12.png[""]
+
+. 为管理和计算网关配置防火墙组后，可以按如下方式访问 vCenter ：
++
+image:aws-connect-fsx-13.png[""]
+
+
+
+下一步是验证是否已根据您的需求配置 Amazon FSX ONTAP 或 Cloud Volumes ONTAP ，以及是否已配置卷以从 vSAN 卸载存储组件以优化部署。

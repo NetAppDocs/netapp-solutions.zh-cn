@@ -1,0 +1,195 @@
+---
+sidebar: sidebar 
+permalink: ehc/gcp-cvo-guest.html 
+keywords: NetApp Solutions, google cloud, gcp, gcve, enterprise, hybrid, cloud, cloud volumes ontap, cvo 
+summary:  
+---
+= 在 Google Cloud 中部署 Cloud Volumes ONTAP （自行部署）
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+可以从在 GCVE 私有云环境中创建的 VM 挂载 Cloud Volumes ONTAP 共享和 LUN 。这些卷还可以挂载到 Linux 客户端和 Windows 客户端上，并且在通过 iSCSI 挂载时，可以在 Linux 或 Windows 客户端上以块设备的形式访问 LUN ，因为 Cloud Volumes ONTAP 支持 iSCSI ， SMB 和 NFS 协议。只需几个简单的步骤即可设置 Cloud Volumes ONTAP 卷。
+
+要将卷从内部环境复制到云以实现灾难恢复或迁移，请使用站点到站点 VPN 或云互连建立与 Google Cloud 的网络连接。将数据从内部复制到 Cloud Volumes ONTAP 不在本文档的讨论范围之内。要在内部系统和 Cloud Volumes ONTAP 系统之间复制数据，请参见 link:mailto:CloudOwner@gve.local#setting-up-data-replication-between-systems["在系统之间设置数据复制"]。
+
+
+NOTE: 使用 ... link:https://cloud.netapp.com/cvo-sizer["Cloud Volumes ONTAP 规模估算工具"] 以准确估算 Cloud Volumes ONTAP 实例的大小。此外，还可以监控内部性能，以用作 Cloud Volumes ONTAP 规模估算器中的输入。
+
+. 登录到 NetApp Cloud Central —此时将显示 Fabric View 屏幕。找到 Cloud Volumes ONTAP 选项卡，然后选择转到 Cloud Manager 。登录后，将显示 " 画布 " 屏幕。
++
+image:gcve-cvo-guest-1.png[""]
+
+. 在 Cloud Manager 的 " 画布 " 选项卡上，单击添加工作环境，然后选择 Google Cloud Platform 作为云以及系统配置的类型。然后，单击下一步。
++
+image:gcve-cvo-guest-2.png[""]
+
+. 提供要创建的环境的详细信息，包括环境名称和管理员凭据。完成后，单击 Continue 。
++
+image:gcve-cvo-guest-3.png[""]
+
+. 选择或取消选择 Cloud Volumes ONTAP 部署的附加服务，包括数据感知与合规性或备份到云。然后，单击 Continue 。
++
+提示：停用附加服务时，将显示验证弹出消息。可以在部署 CVO 后添加 / 删除附加服务，如果不需要，请考虑从一开始就取消选择这些附加服务，以避免成本。
+
++
+image:gcve-cvo-guest-4.png[""]
+
+. 选择一个位置，选择一个防火墙策略，然后选中此复选框以确认与 Google Cloud 存储的网络连接。
++
+image:gcve-cvo-guest-5.png[""]
+
+. 选择许可证选项：按需购买或自带许可证以使用现有许可证。在此示例中，使用了 freemium 选项。然后，单击 Continue 。
++
+image:gcve-cvo-guest-6.png[""]
+
+. 根据要部署在 AWS SDDC 上的 VMware 云上运行的 VM 上的工作负载类型，在多个预配置的软件包之间进行选择。
++
+提示：将鼠标悬停在图块上可查看详细信息，或者单击更改配置来自定义 CVO 组件和 ONTAP 版本。
+
++
+image:gcve-cvo-guest-7.png[""]
+
+. 在审核和批准页面上，查看并确认所做的选择。要创建 Cloud Volumes ONTAP 实例，请单击执行。
++
+image:gcve-cvo-guest-8.png[""]
+
+. 配置 Cloud Volumes ONTAP 后，它将在 " 画布 " 页面的工作环境中列出。
++
+image:gcve-cvo-guest-9.png[""]
+
+
+
+
+
+=== SMB 卷的其他配置
+
+. 准备好工作环境后，请确保为 CIFS 服务器配置了适当的 DNS 和 Active Directory 配置参数。要创建 SMB 卷，必须执行此步骤。
++
+提示：单击菜单图标（ º ），选择高级以显示更多选项，然后选择 CIFS 设置。
+
++
+image:gcve-cvo-guest-10.png[""]
+
+. 创建 SMB 卷的过程非常简单。在 " 画布 " 中，双击 Cloud Volumes ONTAP 工作环境以创建和管理卷，然后单击创建卷选项。选择适当的大小， Cloud Manager 选择包含的聚合或使用高级分配机制将其放置在特定聚合上。在此演示中，选择 CIFS/SMB 作为协议。
++
+image:gcve-cvo-guest-11.png[""]
+
+. 配置卷后，卷将显示在卷窗格下。由于已配置 CIFS 共享，因此请为用户或组授予对文件和文件夹的权限，并验证这些用户是否可以访问此共享并创建文件。如果从内部环境复制卷，则不需要执行此步骤，因为文件和文件夹权限均会在 SnapMirror 复制过程中保留。
++
+提示：单击卷菜单（ º ）可显示其选项。
+
++
+image:gcve-cvo-guest-12.png[""]
+
+. 创建卷后，使用 mount 命令显示卷连接说明，然后从 Google Cloud VMware Engine 上的 VM 连接到共享。
++
+image:gcve-cvo-guest-13.png[""]
+
+. 复制以下路径并使用映射网络驱动器选项将卷挂载到 Google Cloud VMware 引擎上运行的虚拟机上。
++
+image:gcve-cvo-guest-14.png[""]
+
++
+映射后，可以轻松访问该文件，并相应地设置 NTFS 权限。
+
++
+image:gcve-cvo-guest-15.png[""]
+
+
+
+
+
+== 将 Cloud Volumes ONTAP 上的 LUN 连接到主机
+
+要将 Cloud Volumes ONTAP LUN 连接到主机，请完成以下步骤：
+
+. 在 " 画布 " 页面上，双击 Cloud Volumes ONTAP 工作环境以创建和管理卷。
+. 单击 "Add Volume" （添加卷） >"New Volume" （新卷），然后选择 "iSCSI" ，然后单击 "Create Initiator Group" （单击 Continue （继续）。
++
+image:gcve-cvo-guest-16.png[""]
+image:gcve-cvo-guest-17.png[""]
+
+. 配置卷后，选择卷菜单（ º ），然后单击目标 IQN 。要复制 iSCSI 限定名称（ IQN ），请单击复制。设置从主机到 LUN 的 iSCSI 连接。
+
+
+要对驻留在 Google Cloud VMware Engine 上的主机执行相同操作，请执行以下操作：
+
+. RDP 到 Google Cloud VMware Engine 上托管的 VM 。
+. 打开 iSCSI 启动程序属性对话框：服务器管理器 > 信息板 > 工具 > iSCSI 启动程序。
+. 在发现选项卡中，单击发现门户或添加门户，然后输入 iSCSI 目标端口的 IP 地址。
+. 从目标选项卡中，选择已发现的目标，然后单击登录或连接。
+. 选择启用多路径，然后选择计算机启动时自动还原此连接或将此连接添加到收藏目标列表。单击高级。
++
+
+NOTE: Windows 主机必须与集群中的每个节点建立 iSCSI 连接。原生 DSM 会选择要使用的最佳路径。
+
++
+image:gcve-cvo-guest-18.png[""]
+
++
+Storage Virtual Machine （ SVM ）上的 LUN 在 Windows 主机中显示为磁盘。主机不会自动发现添加的任何新磁盘。通过完成以下步骤触发手动重新扫描以发现磁盘：
+
++
+.. 打开 Windows 计算机管理实用程序：开始 > 管理工具 > 计算机管理。
+.. 在导航树中展开存储节点。
+.. 单击磁盘管理。
+.. 单击操作 > 重新扫描磁盘。
++
+image:gcve-cvo-guest-19.png[""]
+
++
+当新 LUN 首次由 Windows 主机访问时，它没有分区或文件系统。初始化 LUN ；也可以通过完成以下步骤使用文件系统格式化 LUN ：
+
+.. 启动 Windows 磁盘管理。
+.. 右键单击 LUN ，然后选择所需的磁盘或分区类型。
+.. 按照向导中的说明进行操作。在此示例中，驱动器 F ：已挂载。
+
+
+
+
+image:gcve-cvo-guest-20.png[""]
+
+在 Linux 客户端上，确保 iSCSI 守护进程正在运行。配置 LUN 后，请参见有关使用 Ubuntu 进行 iSCSI 配置的详细指南，作为示例。要进行验证，请从 shell 运行 lsblk cmd 。
+
+image:gcve-cvo-guest-21.png[""]
+image:gcve-cvo-guest-22.png[""]
+
+
+
+== 在 Linux 客户端上挂载 Cloud Volumes ONTAP NFS 卷
+
+要从 Google Cloud VMware 引擎中的 VM 挂载 Cloud Volumes ONTAP （ DIY ）文件系统，请执行以下步骤：
+
+按照以下步骤配置卷
+
+. 在 Volumes （卷）选项卡中，单击 Create New Volume （创建新卷）。
+. 在 "Create New Volume" 页面上，选择卷类型：
++
+image:gcve-cvo-guest-23.png[""]
+
+. 在卷选项卡中，将鼠标光标置于卷上方，选择菜单图标（ º ），然后单击挂载命令。
++
+image:gcve-cvo-guest-24.png[""]
+
+. 单击复制。
+. 连接到指定的 Linux 实例。
+. 使用安全 Shell （ SSH ）在实例上打开一个终端，并使用相应的凭据登录。
+. 使用以下命令为卷的挂载点创建一个目录。
++
+ $ sudo mkdir /cvogcvetst
++
+image:gcve-cvo-guest-25.png[""]
+
+. 将 Cloud Volumes ONTAP NFS 卷挂载到上一步创建的目录。
++
+ sudo mount 10.0.6.251:/cvogcvenfsvol01 /cvogcvetst
++
+image:gcve-cvo-guest-26.png[""]
+image:gcve-cvo-guest-27.png[""]
+
+

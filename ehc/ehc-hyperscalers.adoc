@@ -1,0 +1,156 @@
+---
+sidebar: sidebar 
+permalink: ehc/ehc-hyperscalers.html 
+keywords: NetApp Solutions, hyperscalers, amazon, vmc, vmware managed cloud, microsoft, azure, avs, azure vmware solution, google cloud platform, gcp, google cloud virtualization engine, gcve, enterprise, hybrid, cloud, migrate, migration, disaster recovery, dr 
+summary:  
+---
+= 适用于超大规模云提供商的 VMware 的 NetApp 解决方案
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+详细了解 NetApp 为三（ 3 ）个主要超大规模提供商提供的功能—从作为子系统连接存储设备或原生数据存储库的 NetApp 到迁移工作流，扩展 / 突发云，备份 / 还原和灾难恢复。
+
+选择您的云，让 NetApp 完成其余工作！
+
+image:netapp-cloud.png[""]
+
+
+NOTE: 要查看特定超大规模提供商的功能，请单击该超大规模提供商的相应选项卡。
+
+从以下选项中选择，跳至所需内容部分：
+
+* link:#config["超大规模部署中的 VMware"]
+* link:#datastore["NetApp 存储选项"]
+
+
+
+
+== 超大规模部署中的 VMware
+
+与内部部署一样，规划基于云的虚拟化环境对于成功创建 VM 和迁移生产就绪环境至关重要。
+
+[role="tabbed-block"]
+====
+.Azure 酒店
+--
+与内部部署一样，规划 Azure VMware 解决方案对于成功创建 VM 和迁移生产就绪环境至关重要。
+
+本节介绍如何设置和管理 Azure VMware 解决方案并将其与连接 NetApp 存储的可用选项结合使用。
+
+
+NOTE: 将 Azure NetApp Files 和 Cloud Volumes ONTAP 连接到 Azure VMware 解决方案的唯一受支持方法是子系统内存储。
+
+设置过程可细分为以下步骤：
+
+* link:azure-register-create-pc.html["注册资源提供商并创建私有云"]
+* link:azure-connect-virtual-gateway.html["连接到新的或现有的 ExpressRoute 虚拟网络网关"]
+* link:azure-validate-network.html["验证网络连接并访问私有云"]
+
+
+--
+.AWS
+--
+与内部部署一样，在 AWS 上规划 VMware Cloud 对于成功打造可随时投入生产的环境以创建 VM 和迁移至关重要。
+
+本节介绍如何在 AWS SDDC 上设置和管理 VMware Cloud ，并将其与连接 NetApp 存储的可用选项结合使用。
+
+
+NOTE: 只支持使用来宾存储将 FSX ONTAP 和 Cloud Volumes ONTAP 连接到 AWS VMC 。
+
+设置过程可细分为以下步骤：
+
+* link:aws-deploy-config.html["部署和配置适用于 AWS 的 VMware Cloud"]
+* link:aws-connect-fsx.html["将 VMware Cloud 连接到 FSX ONTAP"]
+
+
+--
+.Google Cloud
+--
+与内部部署一样，规划 Google Cloud VMware Engine （ GCVE ）对于成功创建虚拟机和迁移可随时投入生产的环境至关重要。
+
+本节介绍如何设置和管理 GCVE ，并将其与连接 NetApp 存储的可用选项结合使用。
+
+
+NOTE: 来宾存储是将 Cloud Volumes ONTAP 和云卷服务连接到 GCVE 的唯一受支持方法。
+
+设置过程可细分为以下步骤：
+
+* link:gcve-deploy-config.html["部署和配置 GCVE"]
+* link:gcve-enable-access.html["启用对 GCVE 的私有访问"]
+
+
+--
+====
+
+
+== NetApp 存储选项
+
+NetApp 存储可以通过多种方式在 3 个主要超大规模主机中的每一个上进行利用—要么作为推测连接的数据存储库，要么作为原生数据存储库。
+
+请访问 link:ehc-support-configs.html["支持的 NetApp 存储选项"] 有关详细信息 ...
+
+[role="tabbed-block"]
+====
+.Azure 酒店
+--
+Azure 支持以下配置中的 NetApp 存储：
+
+* 来宾连接存储 *
+
+* link:azure-anf-guest.html["Azure NetApp Files （ ANF ）作为子系统连接的存储"]
+* link:azure-cvo-guest.html["Cloud Volumes ONTAP （ CVO ）作为子系统连接的存储"]
+
+
+* 原生数据存储库 *
+
+* link:https://azure.microsoft.com/en-us/updates/azure-netapp-files-datastores-for-azure-vmware-solution-is-coming-soon/["Azure NetApp Files （ ANF ）作为原生数据存储库^1."^]
+
+
+
+NOTE: 1 —当前处于私有预览模式
+
+--
+.AWS
+--
+AWS 支持以下配置中的 NetApp 存储：
+
+* 来宾连接存储 *
+
+* link:aws-fsx-ontap-guest.html["FSX ONTAP 作为子系统连接的存储"]
+* link:aws-cvo-guest.html["Cloud Volumes ONTAP （ CVO ）作为子系统连接的存储"]
+
+
+* 原生数据存储库 *
+
+* link:https://blogs.vmware.com/cloud/2021/12/01/vmware-cloud-on-aws-going-big-reinvent2021/["FSX ONTAP 作为原生数据存储库^1."^]
+
+
+
+NOTE: 1 —当前处于私有预览模式
+
+--
+.Google Cloud
+--
+Google Cloud 支持以下配置中的 NetApp 存储：
+
+* 来宾连接存储 *
+
+* link:gcp-cvo-guest.html["Cloud Volumes ONTAP （ CVO ）作为子系统连接的存储"]
+* link:gcp-cvs-guest.html["Cloud Volumes Service （ CVS ）作为子系统连接的存储"]
+
+
+* 原生数据存储库 *
+
+* link:https://www.netapp.com/google-cloud/google-cloud-vmware-engine-registration/["Cloud Volumes Service （ CVS ）作为原生数据存储库^1."^]
+
+
+
+NOTE: 1 —当前处于私有预览模式
+
+--
+====

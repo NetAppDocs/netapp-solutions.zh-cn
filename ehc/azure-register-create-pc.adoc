@@ -1,0 +1,50 @@
+---
+sidebar: sidebar 
+permalink: ehc/azure-register-create-pc.html 
+keywords: NetApp Solutions, microsoft azure, avs, azure, vmware managed cloud, enterprise, hybrid, cloud, cloud volumes ontap, cvo 
+summary:  
+---
+= 注册资源提供商并创建私有云
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+要使用 Azure VMware 解决方案，请先在标识的订阅中注册资源提供程序：
+
+. 登录到 Azure 门户。
+. 在 Azure 门户菜单上，选择所有服务。
+. 在所有服务对话框中，输入订阅，然后选择订阅。
+. 要查看此订阅，请从订阅列表中选择此订阅。
+. 选择资源提供程序，然后在搜索中输入 microsoft.AVS 。
+. 如果资源提供程序未注册，请选择注册。
++
+image:avs-register-create-pc-1.png[""]
+
++
+image:avs-register-create-pc-2.png[""]
+
+. 注册资源提供程序后，使用 Azure 门户创建 Azure VMware 解决方案私有云。
+. 登录到 Azure 门户。
+. 选择创建新资源。
+. 在 Search the Marketplace 文本框中，输入 Azure VMware 解决方案并从结果中选择它。
+. 在 Azure VMware 解决方案页面上，选择创建。
+. 在基础选项卡的字段中输入值，然后选择查看 + 创建。
+
+
+注释：
+
+* 要快速入门，请在规划阶段收集所需信息。
+* 选择现有资源组或为私有云创建新资源组。资源组是部署和管理 Azure 资源的逻辑容器。
+* 确保 CIDR 地址是唯一的，不会与其他 Azure 虚拟网络或内部网络重叠。CIDR 表示私有云管理网络，并用于 vCenter Server 和 NSX-T Manager 等集群管理服务。NetApp 建议使用 22 地址空间。在此示例中，使用了 10.21.0.0/22 。
+
+
+image:avs-register-create-pc-3.png[""]
+
+配置过程大约需要 4 – 5 小时。此过程完成后，通过从 Azure 门户访问私有云来验证部署是否成功。部署完成后，系统将显示状态 " 成功 " 。
+
+Azure VMware 解决方案私有云需要 Azure 虚拟网络。由于 Azure VMware 解决方案不支持内部 vCenter ，因此需要执行其他步骤才能与现有内部环境集成。此外，还需要设置 ExpressRoute 电路和虚拟网络网关。在等待集群配置完成时，创建新的虚拟网络或使用现有虚拟网络连接到 Azure VMware 解决方案。
+
+image:avs-register-create-pc-4.png[""]
