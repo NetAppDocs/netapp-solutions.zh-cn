@@ -22,7 +22,7 @@ NetApp XCP 使用多线程和可自定义的功能传输数据。它专为三大
 
 NetApp XCP 可将数据从任何 NAS 传输到 NetApp NAS 。此过程包括四个主要操作：扫描，复制，同步和验证。此外，还有一些有助于数据监控和传输的其他功能：
 
-* * 扫描。 * 提供 NAS 数据的高级布局。
+* * 扫描。 * 提供 NAS 和 MapR/HDFS 数据的高级布局。
 * * 复制。 * 执行基线数据传输。
 * * 同步 * 执行增量数据传输。
 * * 验证。 * 对目标执行全面验证。
@@ -88,7 +88,7 @@ rpcinfo -p < NAS IP or on-prem nfs data LIF ip >
 .. 下载许可证并准备好。
 
 
-. 为每个 Azure NetApp 卷或云中的 Cloud Volume Service （高级服务级别）为 XCP 目录创建一个内部 NFS 共享。
+. 为每个 Azure NetApp 卷或云中的 Cloud Volume Service （高级服务级别）为 XCP 目录在内部创建一个 NFS 共享。
 . 创建 NAS 卷并为数据目标配置共享。
 . 对于多个 XCP 实例，您必须有一个或多个服务器或云实例才能将数据从多个源文件夹或文件传输到目标。
 . maxdir size （默认值为 308MB ）用于定义单个文件夹中的最大文件数（大约 100 万个）。增加 maxdir size 值以增加文件数。增加此值会影响额外的 CPU 周期。

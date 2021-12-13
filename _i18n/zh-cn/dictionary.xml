@@ -5794,7 +5794,6 @@
   <block id="57324e972ea87c8e788d9831e510bc6d" category="list-text">对于增量更新，请使用 XCP sync ，直到转换窗口的更改率较低为止。</block>
   <block id="3812202d715addac73d7122672d3c8d0" category="list-text">运行 XCP sync 命令以完成迁移，将源标记为只读以执行最终同步。</block>
   <block id="2c1d8a91f274a7723f6ad2ffefc81b62" category="list-text">要验证数据传输是否正确，请运行 `XCP verify` 命令来比较源和目标。</block>
-  <block id="12750e54260da668490732c9045967ec" category="paragraph">对于云，如果内部和云之间的连接为直接连接（ AWS ）， ExpressRoute （ Azure ）或云互连（ GCP ），则可以遵循类似的内部迁移工作流。</block>
   <block id="8f4cde54f5af74d15d142ad98344aab6" category="paragraph">下图显示了从内部迁移到云的工作流。</block>
   <block id="9d1b3862e72bece8266c1c8b1098c696" category="paragraph"><block ref="9d1b3862e72bece8266c1c8b1098c696" category="inline-image-macro-rx" type="image"></block></block>
   <block id="6e2fef7fa18bd688132425321b9188bb" category="paragraph">如果内部与云之间没有直接互联网连接，您必须通过叉车等脱机数据传输方法将数据从内部传输到云。每个云服务提供商都有一种不同的方法，使用不同的术语将数据移动到其数据中心。</block>
@@ -5830,7 +5829,6 @@
   <block id="1bed902c0754e4abc7598b7f1a0450e0" category="paragraph">输出应类似于以下示例：</block>
   <block id="f7c322db5a6c805aed8a38858c7ba770" category="paragraph">要扫描三个子目录的深度并按排序顺序提供结果，请运行 `XCP -du` 命令，并将每个目录级别的大小转储到三个子目录的深度。</block>
   <block id="7c12bd6fa64456eb3a61460a4bbb98e6" category="paragraph">要进行排序，请将信息转储到 CSV 文件并对信息进行排序。</block>
-  <block id="f4c3dd29e6e508e2ea879ed0bccc3468" category="paragraph">这是使用 ` -fmt` 命令的自定义报告。它会扫描所有目录，并将目录的名称，路径和大小转储到 CSV 文件中。您可以从电子表格应用程序对大小列进行排序。</block>
   <block id="c2e9a8d6d376247b10a1ab4624bd2610" category="inline-link-macro">接下来：将数据从 7- 模式迁移到 ONTAP 。</block>
   <block id="7155e60f207d105fa4db5d15efdce133" category="paragraph"><block ref="7155e60f207d105fa4db5d15efdce133" category="inline-link-macro-rx"></block></block>
   <block id="2246a929033f1d77a86efa97dda42849" category="inline-link-macro">上一步：故障排除。</block>
@@ -5848,7 +5846,6 @@
   <block id="f688414f56f567909ca9a570f161016e" category="inline-link-macro">上一步：部署步骤。</block>
   <block id="fb58e731328976afe8beac53cbe55ee7" category="paragraph"><block ref="fb58e731328976afe8beac53cbe55ee7" category="inline-link-macro-rx"></block></block>
   <block id="5224a4cb1d59edb5630ae27e640409e9" category="section-title">根据测试估计时间</block>
-  <block id="2928c19c19fa25bf625368eeeeaf68ff" category="paragraph">XCP 复制和同步操作测试使用的测试平台与部署时使用的测试平台相同。我们创建了 100 万个文件，其中包括三组 8 K ， 16 K 和 1 MB 文件，并实时执行了更改。XCP 同步功能在文件级别执行从源到目标的差异增量更新。增量更新操作是以下四项操作中的一项或多项：重命名现有文件和文件夹，将数据附加到现有文件，删除文件和文件夹，以及添加其他硬链接，软链接和多链接。出于测试目的，我们重点关注重命名，附加，删除和链接操作。换言之，重命名，附加和删除等修改操作对 100 万个文件执行的更改率为 10% 到 90% 。</block>
   <block id="1112334374c9149cc8ad8e80a76f2e56" category="paragraph">下图显示了 XCP 复制操作的结果。</block>
   <block id="d6852faef2642951731c8d64e3009dbe" category="paragraph"><block ref="d6852faef2642951731c8d64e3009dbe" category="inline-image-macro-rx" type="image"></block></block>
   <block id="58fe8c2d511caf443cb23313cb89181b" category="paragraph">下图显示了 XCP 同步重命名和链接操作的结果。</block>
@@ -5859,15 +5856,11 @@
   <block id="feeff6134484088b1b404089dc5f92d9" category="paragraph"><block ref="feeff6134484088b1b404089dc5f92d9" category="inline-image-macro-rx" type="image"></block></block>
   <block id="f64c7d081568c95905b16364c19e1be1" category="paragraph">对于附加和删除操作，与较小的文件大小相比，较大的文件需要更多的时间。完成此操作所需的时间与附加和删除更改的百分比呈线性增长。</block>
   <block id="ecc8d4faf16ec3b08a8badd1d71421d3" category="section-title">将 XCP 1.6.1 与 XCP 1.5 进行比较</block>
-  <block id="3f05ed0767a903c6f5c60e7516560b4b" category="paragraph">与以前的版本相比， XCP 1.6.3 和 1.7 提高了性能。下一节显示了 XCP 1.6 之间的同步性能比较。3 和 1.7 ，用于 100 万个文件中的 8 K ， 16 K 和 1 MB 大小。</block>
-  <block id="fb4cfee047063b087abd2b8a822b8afb" category="paragraph">下图显示了 XCP 1.6.3 与 1.7 （ 8K 大小为 100 万个文件）的 XCP 同步性能结果。</block>
   <block id="ded6c17dda87ca50a7ecde2418543075" category="paragraph"><block ref="ded6c17dda87ca50a7ecde2418543075" category="inline-image-macro-rx" type="image"></block></block>
   <block id="09a0804a78587affdd9192afd0f8c80c" category="paragraph">下图显示了 XCP 1.6.1 与 1.5 （ 16K 大小为 100 万个文件）的 XCP 同步性能结果。</block>
   <block id="b2733f54373c0149b19c3b37afbcb7da" category="paragraph"><block ref="b2733f54373c0149b19c3b37afbcb7da" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="aaf69e820d26a96011361b0f5b539ffe" category="paragraph">下图显示了 XCP 1.6.1 与 1.5 （ 1 MB 大小为 100 万个文件）的 XCP 同步性能结果。</block>
   <block id="e7770abf0d9a0789407ea0a0e81cc5a6" category="paragraph"><block ref="e7770abf0d9a0789407ea0a0e81cc5a6" category="inline-image-macro-rx" type="image"></block></block>
   <block id="71c6a3c1c59fc41b371a18011d1d5c9b" category="paragraph">平均而言，对于大小为 1 MB 的文件，在执行 `XCP sync` 差异增量更新 - 重命名，附加，链接和删除操作时， XCP 1.7 的性能会在 XCP 1.6.3 上提高或类似于 XCP 1.6.3 。</block>
-  <block id="0616fd1124f4a57ef9a4ef1c7a3c2b47" category="paragraph">根据此性能验证结果， NetApp 建议使用 XCP 1 。7 在内部和云端进行数据迁移。</block>
   <block id="dd6275237d7504aabd0c206384365206" category="inline-link-macro">接下来：性能调整。</block>
   <block id="cb619c90f7b537d24a1473acda746a47" category="paragraph"><block ref="cb619c90f7b537d24a1473acda746a47" category="inline-link-macro-rx"></block></block>
   <block id="a01ed8ff3f6e9e3ac0c0068a083281f2" category="summary">本节提供使用 NetApp XCP 进行数据迁移的故障排除指导。</block>
@@ -5886,7 +5879,6 @@
   <block id="6416bf9c9c9445fbe2e15f69fa8371d2" category="paragraph">NetApp XCP 使用多线程和可自定义的功能传输数据。它专为三大用例而设计：数据移动或迁移，文件系统分析和快速目录树删除。</block>
   <block id="7817bd783e8db0557909483f54288eae" category="section-title">数据移动或迁移</block>
   <block id="a7786f240f16aadfd675c46be438f64e" category="paragraph">NetApp XCP 可将数据从任何 NAS 传输到 NetApp NAS 。此过程包括四个主要操作：扫描，复制，同步和验证。此外，还有一些有助于数据监控和传输的其他功能：</block>
-  <block id="c95678dcbc6400fa167604a009e875a7" category="list-text">* 扫描。 * 提供 NAS 数据的高级布局。</block>
   <block id="59e4194e1b171063beeb99722a68e7af" category="list-text">* 复制。 * 执行基线数据传输。</block>
   <block id="a75ddee1308f2f19e478595122434544" category="list-text">* 同步 * 执行增量数据传输。</block>
   <block id="ae4ab572ec7de44b385c01df54f00d17" category="list-text">* 验证。 * 对目标执行全面验证。</block>
@@ -5899,12 +5891,10 @@
   <block id="6ad28c778baa08cff585599e160c12c8" category="list-text">我的数据在哪里？</block>
   <block id="5eccfafcfad0fb3dcd5f4f1036fed9f9" category="list-text">我们拥有多少数据和哪些类型的文件？</block>
   <block id="b1c54971a6211d7b7e3d074bff16b4c9" category="list-text">哪些数据正在使用中，有多少数据处于休眠状态？</block>
-  <block id="4a00bd65ba0b2cd4f1fb126fbde7d377" category="paragraph">下图显示了 GUI 中的 NetApp XCP 文件分析通信。</block>
   <block id="81ff19b428c80049b09f8e1e6e55cfde" category="paragraph"><block ref="81ff19b428c80049b09f8e1e6e55cfde" category="inline-image-macro-rx" type="image"></block></block>
   <block id="f2a6c498fb90ee345d997f888fce3b18" category="section-title">删除</block>
   <block id="4125c56415a1c3b98b49ee7f8c2ebfc3" category="paragraph">存储团队和电子设计自动化（ Electronic Design Automation ， EDA ）工作负载清理大型目录可能非常困难，无论是陈旧的数据还是需要清理以恢复存储空间的测试数据。XCP 提供了快速删除功能，可以删除完整的目录树。NetApp XCP 删除功能可从给定 NAS 路径中删除文件和文件夹。您可以利用匹配筛选器删除一组特定的文件和文件夹。对于大量文件和文件夹，您可以使用强制选项，该选项不需要确认即可删除。</block>
   <block id="ecfd5328aaeaeb8ab72037598049a32c" category="section-title">支持实时源迁移</block>
-  <block id="35ad2e0838c5e3a6a45f5b445ba4cebf" category="paragraph">XCP 1.7 中提供的实时源迁移支持允许从正在使用的数据源（读写活动）进行迁移。XCP 会删除迁移作业期间正在使用的文件，例如正在运行复制和同步，跳过的文件信息会捕获到 XCP 日志中。</block>
   <block id="286a0f56c729672b0709605c558d0008" category="paragraph">此功能支持源上的更改，但不支持目标上的更改。在迁移期间，目标不应处于活动状态。只有 NFS 迁移才支持实时源迁移。</block>
   <block id="2c346a482fcf83bd03d1d51f65d58b8d" category="admonition">实时源迁移不需要特殊设置。</block>
   <block id="ba41152bc4991a294ab26fbe691d52e3" category="section-title">XCP 的前提条件</block>
@@ -5918,7 +5908,6 @@
   <block id="14324adbfb79ad4b6832f6a02a1275db" category="list-text">从下载 XCP 许可证<block ref="eab886d42d2df7a710066e6d9bf6f5f5" category="inline-link-rx"></block>。</block>
   <block id="7481213bd7173438d06de418474e428b" category="list-text">您必须在 mysupport.netapp.com 上拥有 NetApp 帐户，或者可以免费注册。</block>
   <block id="d25e9f08475ddf6a2701e7cfbd67ff06" category="list-text">下载许可证并准备好。</block>
-  <block id="17e68cc6d5408c91b6067efb25d02149" category="list-text">为每个 Azure NetApp 卷或云中的 Cloud Volume Service （高级服务级别）为 XCP 目录创建一个内部 NFS 共享。</block>
   <block id="3d19c697861d11cce0f1d78d41cfea64" category="list-text">创建 NAS 卷并为数据目标配置共享。</block>
   <block id="4f2a304b9680876edc7cb61b5c4c7134" category="list-text">对于多个 XCP 实例，您必须有一个或多个服务器或云实例才能将数据从多个源文件夹或文件传输到目标。</block>
   <block id="adc4e34febc2f5919cfa03870630c2fc" category="list-text">maxdir size （默认值为 308MB ）用于定义单个文件夹中的最大文件数（大约 100 万个）。增加 maxdir size 值以增加文件数。增加此值会影响额外的 CPU 周期。</block>
@@ -5932,8 +5921,6 @@
   <block id="914cb171c700c273306e8265b56f4973" category="paragraph">下图显示了 XCP 文件分析流。</block>
   <block id="538e51b99e800ab65e133b5d57b2dc7f" category="paragraph"><block ref="538e51b99e800ab65e133b5d57b2dc7f" category="inline-image-macro-rx" type="image"></block></block>
   <block id="9bcdbf2b32a87f7efd13f706d43954d5" category="inline-link">NetApp XCP 1.6 改进了开放式文件分析和基础架构</block>
-  <block id="f85271f8d53bdbb67001f47101c7fe2f" category="admonition">有关 XCP 文件分析的高级架构，统计信息视图等基于图形用户界面的信息板视图以及文件分发视图详细信息，请参见<block ref="924a0428223d35821b584a5368c0e3e5" category="inline-link-rx"></block> 博客</block>
-  <block id="2e87561e6e0a4282134ced9e8a1a2bf5" category="paragraph">在 XCP 1.6 中，用于自定义图形的图形用户界面有限。要创建所需的图形，您可以使用命令行界面，使用匹配的筛选器运行 `XCP scan` 命令。请参见以下示例。</block>
   <block id="168c81694a3b19988d829a9baeda23fd" category="list-text">使用 `XCP scan` 和 ` -match` 筛选器生成一年后修改的文件列表，其中包含占用的空间。</block>
   <block id="de615506a73ca5960be54d36ba7fcd5b" category="list-text">查找一年以上的文件所使用的空间。</block>
   <block id="d2d1f03d5f19a1229103a85cc9224a61" category="list-text">查找一年多前修改的数据的总大小和图形视图。</block>
@@ -5977,10 +5964,8 @@
   <block id="28712ee052ea500eba0cdbb1d847277f" category="cell">Fujitsu PRIMERGY RX2540 服务器</block>
   <block id="539c5af1c2682685cd076697aaa6c700" category="cell">每个均配备： * 48 个 CPU * Intel Xeon * 256 GB 物理内存 * 10GbE 双端口</block>
   <block id="0cc5c79089d6ca0752529568758efc4c" category="cell">10GbE</block>
-  <block id="cad93f46c02bf56f0aa5192ddacb8ab7" category="section-title">部署步骤</block>
   <block id="2879e817640f94636340918850eb6903" category="inline-link">《 NetApp XCP 用户指南》</block>
   <block id="f2dd54ec57ec5464ee3aa191a48a8a43" category="paragraph">要部署 NetApp XCP 以进行数据传输，请先在目标位置安装并激活 XCP 软件。您可以在中查看详细信息<block ref="ae77d8ba86ab9e3027c314c6b4922595" category="inline-link-rx"></block>。为此，请完成以下步骤：</block>
-  <block id="27109f45b9a84461a0e1e50282d2bc4f" category="list-text">满足（ xref ） " XCP 的前提条件 " 一节中详细介绍的前提条件。</block>
   <block id="c58c8903e33903d2e630277aa3a78795" category="inline-link">NetApp XCP （下载）页面</block>
   <block id="2d1acef34bb45f2c1878c6b576f3b400" category="list-text">从下载 XCP 软件<block ref="13844fc5dba1627d28169d2acfff11e2" category="inline-link-rx"></block>。</block>
   <block id="8319752fe43598ddb329e536217c1cb5" category="list-text">将下载的 XCP tar 文件复制到 XCP 服务器。</block>
@@ -9233,4 +9218,37 @@
   <block id="412b2ee09f2fbaf8cddb69ee6fe43a2e" category="admonition">有关 SAP 和 SAP HANA 更新的详细信息，请参阅中每个解决方案的 " 更新历史记录 " 内容 <block ref="c4ed54a973fb1aa472c2443732d93c13" category="inline-link-macro-rx"></block>。</block>
   <block id="5a2d7e3c6d0ab5aa27c06042f28c3198" category="open-title">扩展 / 突发</block>
   <block id="8553825f2c93feb7d32c670401e5f338" category="open-title">数据中心维护</block>
+  <block id="b98a6acc7ef428f1ae11e5177447df8c" category="paragraph">对于云，如果内部和云之间的连接为直接连接（ AWS ）， ExpressRoute （ Azure ）或云互连（ GCP ），则可以遵循类似的内部迁移工作流。</block>
+  <block id="76e3e2a4e56301dafc50613d96fd624e" category="section-title">部署步骤— NAS</block>
+  <block id="62e9f0426675b856daf874c75830c213" category="inline-link-macro">XCP 的前提条件。</block>
+  <block id="4f6583b152ef684b4492414bcdcdf877" category="list-text">满足一节中详细介绍的前提条件 <block ref="958d961a425946e5195ca036cea97fab" category="inline-link-macro-rx"></block></block>
+  <block id="0957326f089aaf98a5b7b9110a2675cd" category="section-title">部署步骤— HDFS/MapRFS 数据迁移</block>
+  <block id="1f43fc63f63aad0b707e06b0753182a1" category="paragraph">在本节中，我们将讨论名为 Hadoop 文件系统数据传输到 NAS 的新 XCP 功能，此功能可将数据从 HDFS/MapRFS 迁移到 NFS ，反之亦然。</block>
+  <block id="368666825ffae5710ab122fb63937cee" category="paragraph">对于 MapRFS/HDFS 功能，您必须在非 root 用户环境中执行以下操作步骤。通常，非 root 用户为 HDFS ， mapr 或有权更改 HDFS 和 MapRFS 文件系统的用户。</block>
+  <block id="9adbc05b1436b3e8962253577f1e6441" category="list-text">在命令行界面或用户的 .bashrc 文件中设置 CLASSPATH ， Hadoot_home ， NHDFS_libjvm_path ， lb_library_path 和 NHDFS_LIBHDFS_path 变量以及 `XCP` 命令。</block>
+  <block id="2a0eda7a7937e303f9e18a57a033fcb8" category="list-text">NHDFS_LIBHDFS_path 指向 libhdfs.so 文件。此文件提供了 HDFS API ，用于在 Hadoop 分发版中交互和操作 HDFS/MapRFS 文件和文件系统。</block>
+  <block id="13682a0461e750a2dfb4e86c2ddc1165" category="list-text">NHDFS_libjvm_path 指向 libjvm.so 文件。这是位于 JRE 位置的共享 Java 虚拟机库。</block>
+  <block id="60ce276a5dde3f2d2e92b1986a2eb339" category="list-text">类路径指向使用（ Hadoop classpath – glob ）值的所有 JAR 文件。</block>
+  <block id="84cbf778b2572cae5eba01d0ca330078" category="list-text">LD_library_path 指向 Hadoop 原生库文件夹位置。</block>
+  <block id="68207eb9f168add2309e88b5223d57c6" category="paragraph">请根据 Cloudera 集群查看以下示例。</block>
+  <block id="91328810a5559a740f522f4c5a1da5f1" category="paragraph">在此版本中，我们支持 XCP 扫描，复制和验证操作以及从 HDFS 到 NFS 的数据迁移。您可以从数据湖集群单个工作节点和多个工作节点传输数据。在 1.8 版中， root 用户和非 root 用户可以执行数据迁移。</block>
+  <block id="dee4c2c7e685015e9f3cc1ad197f3ab5" category="section-title">部署步骤—非 root 用户将 HDFS/MaprFS 数据迁移到 NetApp NFS</block>
+  <block id="5983f77acc016b8138698b32b0ab0405" category="list-text">按照 " 部署步骤 " 一节中的 1-9 步骤中所述的步骤进行操作。</block>
+  <block id="c2765e27844a39bfc897cb964eec8711" category="list-text">在以下示例中，用户将数据从 HDFS 迁移到 NFS 。</block>
+  <block id="e6f549e8013d1f24b8756cd11ff3083e" category="list-text">在 HDFS 中创建文件夹和文件（使用 `Hadoop FS -copyFromLocal` ）。</block>
+  <block id="2433ce85404dd68893a2e4abb99843e4" category="list-text">检查 HDFS 文件夹中的权限。</block>
+  <block id="befab6065ddb441f0b260ac75a8e84c8" category="list-text">在 NFS 中创建文件夹并检查权限。</block>
+  <block id="02341ea695e862c3a2d89461b1b8bf37" category="list-text">使用 XCP 将文件从 HDFS 复制到 NFS 并检查权限。</block>
+  <block id="46742b2c1e11cf6a3e230ec3da7e6800" category="admonition">有关 XCP 文件分析的高级架构，统计信息视图等基于图形用户界面的信息板视图以及文件分发视图详细信息，请参见博客文章<block ref="924a0428223d35821b584a5368c0e3e5" category="inline-link-rx"></block>。</block>
+  <block id="21bd6427119f8d9a06a7c5bce95d28ac" category="paragraph">XCP 1.6 中用于自定义图形的 GUI 有限。要创建所需的图形，您可以使用命令行界面使用匹配的筛选器运行 `XCP` scan 命令。请参见以下示例。</block>
+  <block id="7e9b65699b01d35aeff9dc16008da7a5" category="paragraph">XCP 复制和同步操作测试使用的测试平台与部署时使用的测试平台相同。我们创建了 100 万个文件，其中包括三组 8 K ， 16 K 和 1 MB 文件，并实时执行了更改。XCP 同步功能在文件级别执行从源到目标的差异增量更新。增量更新操作是以下四项操作中的一项或多项：重命名现有文件和文件夹，将数据附加到现有文件，删除文件和文件夹，以及添加其他硬链接，软链接和多链接。出于测试目的，我们重点关注重命名，附加，删除和链接操作。换言之，重命名，附加和删除等修改操作对 100 万个文件执行的更改率为 10% 到 90% 。</block>
+  <block id="f599c9e924e3b854abd0ab58126fed43" category="paragraph">与以前的版本相比， XCP 1.6.3 和 1.7 提高了性能。下一节显示了对于 100 万个文件的 8 K ， 16 K 和 1 MB 大小， XCP 1.6.3 和 1.7 之间的同步性能比较。</block>
+  <block id="b53776fdc2fd9fc721aaa6f03fd3d6a0" category="paragraph">下图显示了 XCP 1.6.3 与 1.7 （ 8 K 大小为 100 万个文件）的 XCP 同步性能结果。</block>
+  <block id="5b201508f1de849d630f98c0001fdc29" category="paragraph">下图显示了 XCP 1.6.1 与 1.5 的 XCP 同步性能结果，其中 1 MB 大小的文件为 100 万个。</block>
+  <block id="61b90da0c91ea6cb7c16bfaca41b4920" category="paragraph">根据此性能验证结果， NetApp 建议在内部和云端迁移数据时使用 XCP 1.7 。</block>
+  <block id="d0ecdc77c2c944d380e9fef0e01eb119" category="paragraph">这是使用 ` -fmt` 命令的自定义报告。它会扫描所有目录，并将目录的名称，路径和大小转储到 CSV 文件中。您可以从电子表格应用程序对大小列进行排序。</block>
+  <block id="1c026a57d7676d346dd0d44a2f595c1d" category="list-text">* 扫描。 * 提供 NAS 和 MapR/HDFS 数据的高级布局。</block>
+  <block id="6b2c974b2ada5fba492b8dcda598b1f9" category="paragraph">下图显示了 GUI 中的 NetApp XCP 文件分析通信。</block>
+  <block id="2d3aa3941d30870beb3abde613ce14b1" category="paragraph">XCP 1.7 中提供的实时源迁移支持允许从正在使用的数据源（读写活动）进行迁移。XCP 会删除迁移作业期间正在使用的文件，例如正在运行复制和同步，跳过的文件信息会捕获到 XCP 日志中。</block>
+  <block id="b9611b870758eac97bd0c3bcb3fc8026" category="list-text">为每个 Azure NetApp 卷或云中的 Cloud Volume Service （高级服务级别）为 XCP 目录在内部创建一个 NFS 共享。</block>
 </blocks>
