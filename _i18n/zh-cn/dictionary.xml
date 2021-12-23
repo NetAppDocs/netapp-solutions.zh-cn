@@ -8174,37 +8174,24 @@
   <block id="3c2fe55c24192bbec6d6d3aede570213" category="doc">性能测试与可扩展性</block>
   <block id="41527eb87fda84941b00d3f232f4d599" category="inline-link-macro">先前版本： Confluent Kafka 认证。</block>
   <block id="2afffcb29b9d7c0e37e29d760a386a1a" category="paragraph"><block ref="2afffcb29b9d7c0e37e29d760a386a1a" category="inline-link-macro-rx"></block></block>
-  <block id="7d86117016f3aa5d3958d017b7eb5fb3" category="paragraph">我们使用 NetApp StorageGRID 设置对生产和消费工作负载执行了三到四个节点的分层存储测试。根据我们的测试，完成时间和性能结果与 StorageGRID 节点数成正比。StorageGRID 设置至少需要三个节点。</block>
   <block id="4e6097966a711c7acf606365a2925b64" category="list-text">当存储节点数量增加时，完成生产和消费模式操作所需的时间呈线性下降趋势。</block>
   <block id="544baf869b5baa766e8839cd33697872" category="paragraph"><block ref="544baf869b5baa766e8839cd33697872" category="inline-image-macro-rx" type="image"></block></block>
   <block id="d098e780afaaad433dd6982bbc5af988" category="list-text">根据 StorageGRID 节点的数量， S3 检索操作的性能呈线性增长。StorageGRID 最多支持 200 个 StorgeGRID 节点。</block>
   <block id="2cd319a657a7fccb8f747dab6f102dcc" category="paragraph"><block ref="2cd319a657a7fccb8f747dab6f102dcc" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="075012283bda9f5909d780f5abff5ead" category="inline-link-macro">接下来： Kafka S3 连接器。</block>
-  <block id="62539cc0a3e2e4fc3a49812e053e2949" category="paragraph"><block ref="62539cc0a3e2e4fc3a49812e053e2949" category="inline-link-macro-rx"></block></block>
   <block id="55473d705d75e19b6040dbe34242319c" category="summary">本节介绍此解决方案中使用的技术。</block>
   <block id="1ac2a5604ed02bc66c4d6241b534d13b" category="inline-link-macro">上一步：解决方案。</block>
   <block id="d74648020b826dcefccd756c864ffaea" category="paragraph"><block ref="d74648020b826dcefccd756c864ffaea" category="inline-link-macro-rx"></block></block>
-  <block id="ef88ce126c93b401cdbbd346dba65b09" category="paragraph">NetApp StorageGRID 是一款高性能，经济高效的对象存储平台。它采用基于节点的分布式网格架构，提供智能的策略驱动型全局数据管理。它通过其无处不在的全局对象命名空间以及复杂的数据管理功能，简化了对数 PB 的非结构化数据和数十亿个对象的管理。单次调用对象访问可扩展到各个站点，并简化高可用性架构，同时确保无论站点或基础架构发生中断，都能持续访问对象。</block>
-  <block id="01e84e003f95bdd01e21f68eacab844f" category="paragraph">多租户支持在同一网格中安全地处理多个非结构化云和企业数据应用程序，从而提高 NetApp StorageGRID 的 ROI 并增加其用例。可以使用元数据驱动型对象生命周期策略创建多个服务级别，从而优化多个地理位置的持久性，保护，性能和位置。用户可以根据需求的变化无中断地调整策略和重新调整数据环境。</block>
-  <block id="d278a32480d32fadf4f15f58e5e638c8" category="paragraph">SmartStore 使用 StorageGRID 作为远程存储层，并允许客户部署多个分布在不同地理位置的站点，以实现强大的可用性和持久性，并将其作为一个对象命名空间呈现。这样， Splunk SmartStore 就可以利用 StorageGRID 的高性能，高密度容量，并能够使用一个 URL 跨多个物理站点扩展到数百个节点以与对象交互。通过这一 URL ，即使在一个站点之外，存储扩展，升级和修复也不会造成中断。StorageGRID 独特的数据管理策略引擎可提供经过优化的性能和持久性级别，并符合数据位置要求。</block>
-  <block id="9dcbcd222af0d7f25e6cf8786a15fa1c" category="section-title">适用于 Apache 和 Confluent Kafka 的 StorageGRID 功能。</block>
-  <block id="84a4507c63f6ce35b7187a0c6dcec5ce" category="paragraph">StorageGRID 具有多种功能，用户可以根据不断变化的环境自定义这些功能。从部署到扩展 Kafka 集群，您的环境需要快速采用来应对变化，并且不会对 Kafka 造成中断。StorageGRID 的灵活数据管理策略（ ILM ）和流量分类器（ QoS ）可让您根据环境进行规划和调整。</block>
   <block id="dc10add739549f11a9f3d6ac44bf7fcc" category="section-title">使用 Grid Manager 进行简单管理</block>
-  <block id="412b4bcc4df606955eb4df16ff1780b2" category="paragraph">网格管理器是一个基于浏览器的图形界面，可用于在一个管理平台中跨全球分布的位置配置，管理和监控 StorageGRID 系统。</block>
   <block id="a96dbd2aff4998074bc0ca48dc4817d5" category="paragraph"><block ref="a96dbd2aff4998074bc0ca48dc4817d5" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="5bc09acc78ce9da74088e3ad0dec1370" category="paragraph">您可以使用网格管理器界面执行以下任务：</block>
   <block id="57d56613e28a4b5b4e9f351d17e228f7" category="list-text">管理全局分布的 PB 级对象存储库，例如图像，视频和记录。</block>
   <block id="5865c6ada208cf4e21f121f0d367b25a" category="list-text">监控网格节点和服务以确保对象可用性。</block>
   <block id="52134209a1824af49cd06b67ca3aedc7" category="list-text">使用信息生命周期管理（ ILM ）规则管理对象数据随时间的放置。这些规则用于控制在载入对象数据后该数据会发生什么情况，如何防止其丢失，对象数据的存储位置以及数据的存储时间。</block>
   <block id="5c578eee23496659cea7dda27021c318" category="list-text">监控系统内的事务，性能和操作。</block>
   <block id="c91fcac1d7192250f9c73d72ad06e051" category="section-title">信息生命周期管理策略</block>
-  <block id="abb721cd225fe1f863c57bf192671334" category="paragraph">StorageGRID 具有灵活的数据管理策略，其中包括保留多个对象副本，并根据特定的性能和数据保护要求使用 2+1 和 4+2 （以及其他许多策略）等 EC （纠删编码）方案来存储对象。随着工作负载和要求随时间的变化， ILM 策略也往往会随时间的变化而变化。修改 ILM 策略是一项核心功能，可使 StorageGRID 客户快速轻松地适应不断变化的环境。</block>
-  <block id="e6e42816553e5476dceee40a2d5d2edf" category="paragraph">StorageGRID 可通过添加更多节点来扩展性能，这些节点可以是 VM ，裸机或专用设备，例如 SG5712 ， SG5760 ， SG6060 或 SGF6024 。在我们的测试中，我们使用 SG6024 设备配置了最小大小的三节点网格，从而超出了 Apache Kafka 的主要性能要求。随着客户通过更多代理扩展 Kafka 集群，他们可以添加更多存储节点以提高性能和容量。</block>
   <block id="3eee81ca69cbbee2bec24db63e4dea0d" category="section-title">负载平衡器和端点配置</block>
   <block id="5b42fd120a40ecd7cc8ac5cdedde8ceb" category="paragraph">StorageGRID 中的管理节点提供了网格管理器 UI （用户界面）和 REST API 端点，用于查看，配置和管理 StorageGRID 系统，并可通过审核日志来跟踪系统活动。为了为 Confluent Kafka 分层存储提供高可用性的 S3 端点，我们实施了 StorageGRID 负载平衡器，该平衡器作为一项服务在管理节点和网关节点上运行。此外，负载平衡器还管理本地流量并与 GSLB （全局服务器负载平衡）进行通信，以帮助进行灾难恢复。</block>
   <block id="ebe4bf9f44a65ad044fdede621409388" category="paragraph">为了进一步增强端点配置， StorageGRID 提供了内置于管理节点中的流量分类策略，可用于监控工作负载流量，并对工作负载应用各种服务质量（ QoS ）限制。流量分类策略会应用于网关节点和管理节点的 StorageGRID 负载平衡器服务上的端点。这些策略有助于限制和监控流量。</block>
   <block id="bb2bd99338b18762ef6953ad2cbfafc7" category="section-title">Apache Kafka</block>
-  <block id="e83634d9bcd2547b82d8b2390ce1d30b" category="paragraph">Apache Kafka 是一种使用 Java 和 Scala 编写的流处理的软件总线框架实施。它旨在提供一个统一的高吞吐量，低延迟平台来处理实时数据馈送。Kafka 可以连接到外部系统，以便通过 Kafka Connect 导出和导入数据，并提供 Kafka 流，这是一个 Java 流处理库。Kafka 使用基于 TCP 的二进制协议，该协议针对效率进行了优化，并依赖于 " 消息集 " 抽象，该抽象概念可将消息自然分组在一起，从而降低网络往返开销。这样可以实现更大的顺序磁盘操作，更大的网络数据包和连续的内存块，从而使 Kafka 能够将突发的随机消息写入流转变为线性写入。下图显示了 Apache Kafka 的基本数据流。</block>
   <block id="d1675da945892e06b2f84c42c32b7074" category="paragraph"><block ref="d1675da945892e06b2f84c42c32b7074" category="inline-image-macro-rx" type="image"></block></block>
   <block id="c50889322e9d7d913a4218be06b94d9d" category="paragraph">Kafka 存储来自任意数量的进程的关键价值消息，这些进程称为 " 生产者 " 。可以将数据分区为不同主题中的不同分区。在分区中，消息严格按其偏移量（消息在分区中的位置）排序，并编制索引并随时间戳一起存储。其他称为使用者的进程可以从分区读取消息。对于流处理， Kafka 提供了流 API ，可用于写入使用 Kafka 数据的 Java 应用程序，并将结果写入 Kafka 。Apache Kafka 还可与外部流处理系统配合使用，例如 Apache Apex ， Apache Flink ， Apache Spark ， Apache Storm 和 Apache NiFi 。</block>
   <block id="0f13dfad626acfc5a84f5c6d8127cb93" category="paragraph">Kafka 在一个或多个服务器（称为代理）组成的集群上运行，所有主题的分区分布在各个集群节点上。此外，分区会复制到多个代理。这种架构使 Kafka 能够以容错方式提供大量消息流，并使其能够取代一些传统消息传送系统，例如 Java 消息服务（ Java Message Service ， JMS ），高级消息队列协议（ Advanced Message Queuing Protocol ， AMQP ）等。自 0.11.0.0 版本以来， Kafka 提供了事务写入功能，可使用流 API 精确处理一次流。</block>
@@ -8216,13 +8203,10 @@
   <block id="32a74767220f0fd870d75199524522d5" category="list-text">* 流 API 。 * 此 API 将输入流转换为输出并生成结果。</block>
   <block id="4bb47a81bc800e1fb57bdde2d0945599" category="list-text">* 管理 API-* 用于管理 Kafka 主题，代理和其他 Kafka 对象。</block>
   <block id="610121f784783393f66b6624cf93dafb" category="paragraph">消费者和生产者 API 基于 Kafka 消息传送协议构建，并在 Java 中为 Kafka 消费者和生产者客户端提供了参考实施。底层消息传送协议是一种二进制协议，开发人员可以使用该协议以任何编程语言编写自己的使用者或生产者客户端。这样便可解除 Kafka 对 Java 虚拟机（ JVM ）生态系统的锁定。可用的非 Java 客户端列表会保存在 Apache Kafka wiki 中。</block>
-  <block id="9e999181078c902e639722db20d48f15" category="section-title">Confuent Kafka</block>
-  <block id="0c73b718722597e5d75f3221e6622d71" category="paragraph">Confuent Platform 是一个全面的数据流平台，可让您轻松地以持续的实时流的形式访问，存储和管理数据。Confluent 由 Apache Kafka 的原始创建者构建，通过企业级功能扩展了 Kafka 的优势，同时消除了 Kafka 的管理或监控负担。如今，《财富》 100 强企业中有 80% 以上的企业都采用数据流技术，其中大多数企业都采用了流畅技术。</block>
   <block id="3bcbf4072ba1e23a48434530e19a485d" category="section-title">为什么选择 Confluent ？</block>
   <block id="0fcb60f8560b74a641f556dbf96faf91" category="paragraph">通过将历史数据和实时数据集成到一个统一的中央真相来源中， Confluent 可以轻松构建一个全新的现代化事件驱动型应用程序类别，获得通用数据管道，并充分扩展性，性能和可靠性，释放出强大的新用例。</block>
   <block id="f781b7a8a0d145997db9cf8449512bb8" category="section-title">Confluent 的用途是什么？</block>
   <block id="6b41836f6be8bfff401751859b6f5561" category="paragraph">借助整合平台，您可以专注于如何从数据中获得业务价值，而不是担心底层机制，例如如何在不同系统之间传输或集成数据。具体而言， Confluent Platform 可简化将数据源连接到 Kafka 的过程，构建流式应用程序，以及保护，监控和管理 Kafka 基础架构。如今， Consfluent Platform 已广泛用于各行各业的各种用例，从金融服务，全渠道零售和自动驾驶汽车到欺诈检测， 微服务和物联网。</block>
-  <block id="269de5f63c8fa37298817ce903a70bbe" category="paragraph">下图显示了 Confluent Kafka 平台组件。</block>
   <block id="a4eaf48584aaa7df975a9275a8b4ee24" category="paragraph"><block ref="a4eaf48584aaa7df975a9275a8b4ee24" category="inline-image-macro-rx" type="image"></block></block>
   <block id="0693822e07a3206c53912f33e3d67758" category="section-title">Confluent 事件流技术概述</block>
   <block id="f6d3df755e538ab85e1dffe4e2ef9966" category="paragraph">Confluent Platform 的核心是<block ref="67718c59f00d7d04e4868dff5b37db2b" category="inline-link-rx"></block>一种最受欢迎的开源分布式流式平台。Kafka 的主要功能如下：</block>
@@ -8242,46 +8226,18 @@
   <block id="ce61411f1780c30f58dd5aed90a77ad3" category="list-text">* 流畅的 jms 客户端。 * 流畅平台包括适用于 Kafka 的与 jms 兼容的客户端。此 Kafka 客户端使用 Kafka 代理作为后端，实施了 Jms 1.1 标准 API 。如果旧版应用程序使用的是 jms ，并且您希望将现有的 jms 消息代理替换为 Kafka ，则此功能非常有用。</block>
   <block id="b38f5ff9be3975e499ba273a01035420" category="list-text">* 流畅的 MQT 代理。 * 提供了一种从 MQT 设备和网关直接向 Kafka 发布数据的方法，而无需在中间使用 MQT 代理。</block>
   <block id="ab05a802c02076dd0f0b419529e71ccd" category="list-text">* 流畅安全插件。 * 流畅安全插件用于为各种流畅平台工具和产品添加安全功能。目前，可以为 Confluent REST 代理提供一个插件，用于对传入请求进行身份验证，并将经过身份验证的主体传播到 Kafka 请求。这样， Confluent REST 代理客户端便可利用 Kafka 代理的多租户安全功能。</block>
-  <block id="d3842cf97694fef25c5621612bb0ac4c" category="inline-link-macro">接下来： Confluent Kafka 认证。</block>
-  <block id="948f0a5d77796e0b727a5518536d1197" category="paragraph"><block ref="948f0a5d77796e0b727a5518536d1197" category="inline-link-macro-rx"></block></block>
   <block id="69fc1008ccb741113af5042f04fcbc8b" category="summary">本文档介绍在 NetApp 存储控制器上使用 Kafka 的最佳实践准则。</block>
   <block id="22f51db51c9641d5358726fa5e03f67b" category="doc">TR-4912 ：《采用 NetApp 的 Confluent Kafka 分层存储最佳实践指南》</block>
-  <block id="7e04c5b9b468881851a130b909e9b614" category="paragraph">Karthikeyan Nagalingam ， Rankesh Kumar</block>
-  <block id="dc221351ef5ebc52aa12d53c2f7925f2" category="paragraph">Apache Kafka 是一个社区分布的事件流式平台，能够每天处理数万亿次的事件。Kafka 最初是一个消息队列，它基于分布式提交日志的抽象化。自从 2011 年由 LinkedIn 创建和开源以来， Kafka 已从消息队列发展为成熟的事件流式平台。Confluent 通过 Confluent 平台分发 Kafka 。Confluent 平台通过更多的社区和商业功能对 Kafka 进行了改进，这些功能旨在大规模增强生产中操作员和开发人员的流式体验。</block>
-  <block id="9d966de7caaeb92b6d0a8eaa17c69a40" category="paragraph">本文档通过提供以下内容介绍在 NetApp 存储控制器上使用 Kafka 的最佳实践准则：</block>
-  <block id="46541dff1f04ebc28b6e4a5e4d2f96e3" category="list-text">获得与 NetApp 存储控制器 StorageGRID 相结合的 Kafka 认证</block>
-  <block id="325e4712d2c482ab466b52444d78b9fc" category="list-text">Kafka 性能测试</block>
-  <block id="98b7f74194750b5999674894089582b5" category="list-text">基于 NetApp 存储系统的 Kafka 的最佳实践准则</block>
-  <block id="ff221b4a7c17defefb1a32cf9136086d" category="inline-link-macro">下一步：解决方案。</block>
-  <block id="56e8e834116de848debc97d9b2ed12f7" category="paragraph"><block ref="56e8e834116de848debc97d9b2ed12f7" category="inline-link-macro-rx"></block></block>
   <block id="663d826f2d39c93c218bb619244537b3" category="summary">我们已通过与 Kafka 的 Confluent Platform 的 NetApp StorageGRID 分层存储认证。</block>
-  <block id="2a1211326cdf7e6e5e7969985aef586c" category="doc">Confuent Kafka 认证</block>
   <block id="0a569fd987814c0464300156b2e26414" category="paragraph"><block ref="0a569fd987814c0464300156b2e26414" category="inline-link-macro-rx"></block></block>
-  <block id="be381e73454d13da58fcd32e41526410" category="paragraph">我们已通过与 Kafka 的 Confluent Platform 的 NetApp StorageGRID 分层存储认证。分层存储将数据处理和存储管理分开，有助于降低运营负担和成本，并根据计算要求扩展代理。分层存储可将热数据发送到经济高效的对象存储。NetApp 和 Confluent 团队共同参与了此认证，并运行了认证所需的测试用例。</block>
-  <block id="02af00f1173874ea2eba902375591214" category="section-title">Confuent Kafka 设置</block>
-  <block id="375fa88d4d3cd19f2c1aeb7bcbb8e3aa" category="paragraph">我们使用以下设置进行认证。</block>
-  <block id="6071c6d08d2373fbfb31053dc2fd5c22" category="paragraph">在此认证中，我们使用了三个 Zookepers ，五个代理和五个工具服务器，这些服务器具有 256 GB RAM 和 16 个 CPU 。对于 NetApp 存储，我们使用的是带有四个 SG6024 的 SG1000 负载平衡器的 StorageGRID 。存储和代理通过 100GbE 连接进行连接。</block>
-  <block id="27e1df9a295f32bf249801b32cbbba25" category="paragraph">下图显示了用于 Confluent Kafka 认证的配置的网络拓扑。</block>
   <block id="82dc8b1c8f1a6f08261f17b764e74bf4" category="paragraph"><block ref="82dc8b1c8f1a6f08261f17b764e74bf4" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="5a1e9b58afa0d1c6824951b7f203a932" category="paragraph">这些工具服务器充当将 Kafka 请求发送到 Kafka 代理的应用程序客户端。</block>
   <block id="a0b3c1e592076debe73b163734ed8e2b" category="section-title">融合的分层存储配置</block>
   <block id="81082f7982ae1144f7662efde7446f1f" category="paragraph">分层存储配置在 Kafka 中需要以下参数：</block>
-  <block id="bc2c337565cc83e69d77af35c6a4429b" category="paragraph">对于认证，我们使用的是 StorageGRID 与 HTTP 协议，但 HTTPS 也有效。访问密钥和机密密钥存储在 `confuent.tier.s3.cred.file.path` 参数中提供的文件名中。</block>
-  <block id="ee08c02879623eaf870a33d3c30f797f" category="section-title">NetApp 存储控制器— StorageGRID</block>
-  <block id="019b4ca5762181e87f7a8b756ee3c4aa" category="paragraph">我们在 StorageGRID 中配置了单站点配置以进行认证。</block>
   <block id="1ba0fc45020f864c62328d58df2351ef" category="paragraph"><block ref="1ba0fc45020f864c62328d58df2351ef" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="24948186af7511400293ced254fa202a" category="section-title">认证测试</block>
-  <block id="82bf1c27fb05e3c95a9b056e596ac9e3" category="paragraph">我们已完成以下五个认证测试案例。前两项是功能测试，其余三项是性能测试。</block>
   <block id="4c5791ce7d906a384ff35dab9f635d41" category="section-title">对象存储正确性测试</block>
-  <block id="5bbec59e9866298c54c1e5d91db17544" category="paragraph">此测试使用 API 调用对绑定存储所使用的对象存储执行基本操作，例如 GET ， PUT 和 DELETE 。</block>
   <block id="7cf5be835d50b9e5b598a4363e5a1310" category="section-title">分层功能正确性测试</block>
-  <block id="9a751e89416eb9d15dc291c56824fdbf" category="paragraph">此测试将检查对象存储的端到端功能。它会创建一个主题，为新创建的主题生成一个事件流，等待代理将这些分段归档到对象存储，使用事件流，并验证已用流与已生成流的匹配情况。我们执行此测试时，无论是否注入了对象存储故障。我们通过在 StorageGRID 中的一个节点中停止服务管理器服务并验证端到端功能是否适用于对象存储来模拟节点故障。</block>
   <block id="88960bc44aa73a667c97d6168a27332a" category="section-title">层提取基准测试</block>
   <block id="777c3235446f781652127bde532a7d6e" category="paragraph">此测试验证了分层对象存储的读取性能，并检查了基准测试生成的区块在负载过重时的范围提取读取请求。在此基准测试中， Confluent 开发了自定义客户端来处理层提取请求。</block>
-  <block id="2712a580ff4c3586c7ba3534b78aad18" category="section-title">生成并使用工作负载生成器</block>
-  <block id="d12f80f2cbbac2f7033cf1254e5b147e" category="paragraph">此测试会通过归档区块在对象存储上间接生成写入工作负载。读取工作负载（区块读取）是在使用者组提取区块时从对象存储生成的。此工作负载由 TOCC 脚本生成。此测试检查了并行线程中对象存储上的读写性能。我们采用和不采用对象存储故障注入的方式进行了测试，就像分层功能正确性测试一样。</block>
-  <block id="2a7273e52c0214e6f0b27bf1e870960e" category="section-title">保留工作负载生成器</block>
-  <block id="b8fad0d8cdc86f76f51b7d6b6ec58975" category="paragraph">此测试检查了在主题保留工作负载繁重的情况下对象存储的删除性能。保留工作负载是使用 TOCC 脚本生成的，该脚本会与测试主题并行生成大量消息。本测试主题使用主动式基于大小和基于时间的保留设置进行配置，此设置会导致从对象存储中持续清除事件流。然后，这些区块会归档。这导致代理在对象存储中删除了大量内容，并收集了对象存储删除操作的性能。</block>
   <block id="b2ce010f52b23eb40ba6b51b92837acb" category="inline-link-macro">接下来：性能测试和可扩展性。</block>
   <block id="4a94c930da0f9f0974ad6d4f2d17726b" category="paragraph"><block ref="4a94c930da0f9f0974ad6d4f2d17726b" category="inline-link-macro-rx"></block></block>
   <block id="7747c0c1913888384e25d3a99b247187" category="summary">本文档提供了将 Kafka 与 NetApp 存储结合使用的最佳实践准则，包括 Confluent Kafka 认证测试，性能结果，调整， Kafka 连接器和自重新平衡功能。</block>
@@ -8294,18 +8250,14 @@
   <block id="14bdc4a7a7b448924b5fe68d2a843973" category="inline-link"><block ref="14bdc4a7a7b448924b5fe68d2a843973" category="inline-link-rx"></block></block>
   <block id="c001bbfb62e45f662fe697182fa82240" category="paragraph"><block ref="c001bbfb62e45f662fe697182fa82240" category="inline-link-rx"></block></block>
   <block id="43f0735f931622d61f6837a0eb61f87e" category="summary">此测试基于自平衡集群功能，此功能可根据集群拓扑变化或负载不平衡自动重新平衡。</block>
-  <block id="1b121910b0ce442f60b2620acf399867" category="doc">Confuent Kafka 重新平衡</block>
   <block id="6dec1258fbcccbfaa7098758abb00055" category="inline-link-macro">先前版本： Kafka S3 连接器。</block>
   <block id="6e3bea5fe8473b6e884edafaf7fcf1d4" category="paragraph"><block ref="6e3bea5fe8473b6e884edafaf7fcf1d4" category="inline-link-macro-rx"></block></block>
-  <block id="3a1987c2d8476bb6296b144774dfb447" category="paragraph">此测试基于自平衡集群功能，此功能可根据集群拓扑变化或负载不平衡自动重新平衡。当节点故障或扩展节点需要在代理之间重新平衡数据时，整合重新平衡测试有助于测量添加新代理的时间。在典型的 Kafka 配置中，要重新平衡的数据量会随着集群的增长而增加，但在分层存储中，重新平衡仅限于少量数据。根据我们的验证，在典型的 Kafka 架构中，分层存储的重新平衡需要几秒或几分钟的时间，并且随着集群的增长而线性增长。</block>
   <block id="cc87abc70119e2ad833c42a865a33659" category="inline-link-macro">接下来：最佳实践准则。</block>
   <block id="caf8da5a9482899a1495e1e052a4b287" category="paragraph"><block ref="caf8da5a9482899a1495e1e052a4b287" category="inline-link-macro-rx"></block></block>
   <block id="139709c8a32ed1bcce233da863c5efda" category="summary">本节将介绍从此认证中获得的经验教训。</block>
   <block id="eab9ac0f00ca7c338d71f9acf8885092" category="doc">最佳实践准则</block>
   <block id="8dc1af71dd55db1f6671ef67f7a660ad" category="inline-link-macro">上一页： Confluent Kafka 重新平衡。</block>
   <block id="cd99f7a609148177d4d72ba77e774b87" category="paragraph"><block ref="cd99f7a609148177d4d72ba77e774b87" category="inline-link-macro-rx"></block></block>
-  <block id="0ce889c330108bee2128cbc0b045a10d" category="list-text">根据我们的验证， NFS 不是 Confluent Kafka 代理保留数据的合适协议。</block>
-  <block id="6abb1c46af597b864e1dc1606aa77120" category="list-text">我们可以使用 SAN （尤其是 FC ）来保留代理数据或本地磁盘，因为在 Confluent 分层存储配置中，存储在代理数据目录中的数据大小取决于数据移至对象存储时的区块大小和保留时间。</block>
   <block id="992e82f9c5ce28bbe0068e8ff7ea8a09" category="list-text">当 seg.bytes 较高时，对象存储可提供更好的性能；我们测试了 512 MB 。</block>
   <block id="f165ec9e9849281afaf2162f6396907c" category="list-text">在 Kafka 中，为主题生成的每个记录的密钥或值的长度（以字节为单位）由 `lage.key.value` 参数控制。对于 StorageGRID ， S3 对象载入和检索性能已提高到更高值。例如， 512 字节提供了 5.8 GBps 检索， 1024 字节提供了 7.5 GBps S3 检索， 2048 字节提供了接近 10 Gbps 的值。</block>
   <block id="92a9c9d4753636cd8ef8008380f5de9b" category="paragraph">下图显示了基于 `length 。 key.value` 的 S3 对象载入和检索。</block>
@@ -8313,30 +8265,22 @@
   <block id="4127d3e6d7b548701a1cf83ef1d7a922" category="paragraph"><block ref="4127d3e6d7b548701a1cf83ef1d7a922" category="inline-link-macro-rx"></block></block>
   <block id="35f99fa939062899487754f637210a25" category="summary">本节介绍用于 Confluent 认证的硬件和软件。此信息适用于使用 NetApp 存储的 Kafka 部署。</block>
   <block id="40328f8a932f8ae1964c73c1f2eca76b" category="paragraph"><block ref="40328f8a932f8ae1964c73c1f2eca76b" category="inline-link-macro-rx"></block></block>
-  <block id="71540b25bcc76e1218b21f8613181500" category="paragraph">这款 NetApp StorageGRID 和 Apache Kafka 解决方案是一款专为流设计的分布式系统，两个程序均可水平扩展和容错。它们可提供提交日志，并支持分布式数据流和流处理。NetApp 存储阵列将计算和数据存储资源分离，以便可以独立扩展。下图显示了 NetApp StorageGRID 和 Confluent Kafka 解决方案。</block>
   <block id="f4e981d58b1468737da82402b3cce7f1" category="paragraph"><block ref="f4e981d58b1468737da82402b3cce7f1" category="inline-image-macro-rx" type="image"></block></block>
   <block id="16d17bd11d09e7ab044f85f158c4ee5c" category="section-title">解决方案架构详细信息</block>
-  <block id="3a0eccac353d022d6284582174640020" category="paragraph">本节介绍用于 Confluent 认证的硬件和软件。此信息适用于使用 NetApp 存储的 Kafka 部署。下表介绍了经过测试的解决方案架构和基本组件。</block>
   <block id="cd6b218ceb186591718799f941a99fd0" category="cell">Confluent Kafka 6.2 版</block>
   <block id="8a1732b4cde6f106471a0e6dbb186bed" category="list-text">三个 Zookepers</block>
   <block id="fde5b2c6fa48108e02c6a3587ce451b4" category="list-text">五个代理服务器</block>
-  <block id="6e2b337bcc4d43ad13af134abbea9d91" category="list-text">五个工具的服务器</block>
   <block id="e9617e461b2b6597095fc0d3c26666c5" category="list-text">一个 Grafana</block>
   <block id="5d96f98a638cf23ac2f3dfe513198e9a" category="list-text">一个控制中心</block>
   <block id="a2a44121136232f1f2dcfb5e5ce5cf22" category="cell">Linux （ Ubuntu 18.04 ）</block>
   <block id="a0681d05c825936a4afc9d89f305934c" category="cell">所有服务器</block>
-  <block id="ad149543d8d2f9f3a04bfdee74c0609f" category="cell">适用于温分段的 NetApp StorageGRID</block>
-  <block id="1de0ed71dab76da5868fc3bbe8634c77" category="list-text">4 个存储网格 11.4.0.7</block>
   <block id="4ebcee22d98fbad50cf1c7e108dd9541" category="list-text">1 个 SG1000 （负载平衡器）</block>
-  <block id="12de0bce2b8f0d3e65dc1ccdaf1d06ca" category="list-text">4 个 SGD6024</block>
   <block id="83cc5cf13ad44caf6aa94887d189cd3a" category="list-text">4 个 24 x 800 SSD</block>
   <block id="7ccdc7c1d04d9b48b4b016417504685b" category="list-text">S3 协议</block>
-  <block id="2e1c9b5ce764f890af0aebf38f1a500a" category="list-text">100GbE</block>
   <block id="5ecafb7b42f662438e20bd643feb79c9" category="cell">15 台 Fujitsu PRIMERGY RX2540 服务器</block>
   <block id="cdb0680ecb0e0ed91d8293e41334b379" category="cell">每个均配备： * 2 个 CPU ，总共 16 个物理核心 * Intel Xeon * 256 GB 物理内存 * 100GbE 双端口</block>
   <block id="c88aa001e26103d0ebe4894b3c9ab9f5" category="paragraph"><block ref="c88aa001e26103d0ebe4894b3c9ab9f5" category="inline-link-macro-rx"></block></block>
   <block id="bc15ae13f16a39532174d0aec78a6432" category="summary">在此设置中，我们将向您展示如何使用 Kafka S3 接收器连接器直接从 Kafka 读取和写入对象存储中的主题。在此测试中，我们使用了独立的 Consfluent 集群，但此设置适用于分布式集群。</block>
-  <block id="5b39bea812928c8ea0a9e8b1e3e47f91" category="doc">Kafka S3 连接器</block>
   <block id="9b154eb37aabb62c75c78bd31457468f" category="inline-link-macro">上一篇：性能测试与可扩展性。</block>
   <block id="aa4f22f43748e77c4fb71f8cb5333c25" category="paragraph"><block ref="aa4f22f43748e77c4fb71f8cb5333c25" category="inline-link-macro-rx"></block></block>
   <block id="b5829317a86f448ffca89934abe420d3" category="list-text">从 Confluent 网站下载 Confluent Kafka 。</block>
@@ -8366,8 +8310,6 @@
   <block id="09fa6729fb808be555e2da157c07e47e" category="list-text">要验证内容，请运行以下命令将每个文件从 S3 复制到本地文件系统：</block>
   <block id="e8eeb400cc1af7c80b7561572c879a12" category="inline-link">Apache 归档</block>
   <block id="7d059565bbab6abb5da76e3abcfe6f90" category="list-text">要打印记录，请使用 avro-tools-1.11.0.1.jar （可在中找到<block ref="55ee52f435d2dbbc99b651e203ff837e" category="inline-link-rx"></block>）。</block>
-  <block id="f697c2c5a2cfd2db8294b21cb4749beb" category="inline-link-macro">接下来： Confluent Kafka 重新平衡。</block>
-  <block id="e2f30edfc0cf00c38eb30189384a6c49" category="paragraph"><block ref="e2f30edfc0cf00c38eb30189384a6c49" category="inline-link-macro-rx"></block></block>
   <block id="9f4b95975f14f6481a322f453e05049c" category="sidebar">适用于 VMware vSphere 的 ONTAP 工具—产品安全</block>
   <block id="7f8513139888dda0c0ecb82a93548af9" category="sidebar">Confluent Kafka 的最佳实践</block>
   <block id="a712a0e553d0302aa27009e1ebc815ce" category="summary">讨论企业混合云解决方案的一系列视频和演示</block>
@@ -9343,4 +9285,197 @@
   <block id="07004cdc228cde7054ba825a728ee189" category="list-text"><block ref="07004cdc228cde7054ba825a728ee189" category="inline-link-macro-rx"></block></block>
   <block id="74a9966b070c1e73507b6ff0780e3733" category="list-text"><block ref="74a9966b070c1e73507b6ff0780e3733" category="inline-link-macro-rx"></block></block>
   <block id="337bcf72d1e47b982df4965e1063ef67" category="list-text"><block ref="337bcf72d1e47b982df4965e1063ef67" category="inline-link-macro-rx"></block></block>
+  <block id="7d962aad50ee059cfbd23de23ab5a916" category="paragraph">我们使用 NetApp StorageGRID 设置对生产者和使用者工作负载执行了三到四个节点的分层存储测试。根据我们的测试，完成时间和性能结果与 StorageGRID 节点数成正比。StorageGRID 设置至少需要三个节点。</block>
+  <block id="2c8105fbc386e60a03fe0cf5390eb0ce" category="inline-link-macro">接下来：将 S3 连接器连接在一起。</block>
+  <block id="40acd085e3c223b35d81906b1c904f46" category="paragraph"><block ref="40acd085e3c223b35d81906b1c904f46" category="inline-link-macro-rx"></block></block>
+  <block id="d82d42ad0a2161d02e1d8ce74ffcf0ab" category="paragraph">NetApp StorageGRID 是一款高性能，经济高效的对象存储平台。通过使用分层存储，存储在代理的本地存储或 SAN 存储中的 Confluent Kafka 上的大部分数据将卸载到远程对象存储。此配置可通过减少重新平衡，扩展或缩减集群或更换故障代理所需的时间和成本，显著改善运营。对象存储在管理对象存储层上的数据方面发挥着重要作用，因此选择合适的对象存储非常重要。</block>
+  <block id="3fa5e29e13fc3b3448ca388750ef38f0" category="paragraph">StorageGRID 采用基于节点的分布式网格架构，提供智能的策略驱动型全局数据管理。它通过其无处不在的全局对象命名空间以及复杂的数据管理功能，简化了对数 PB 的非结构化数据和数十亿个对象的管理。单次调用对象访问可扩展到各个站点，并简化高可用性架构，同时确保无论站点或基础架构是否中断，都能持续访问对象。</block>
+  <block id="30f28784f61df7a2f8e7069cefea91eb" category="paragraph">多租户支持在同一网格中安全地处理多个非结构化云和企业数据应用程序，从而提高 NetApp StorageGRID 的 ROI 并增加其用例。您可以使用元数据驱动型对象生命周期策略创建多个服务级别，以优化多个地理位置的持久性，保护，性能和位置。用户可以调整数据管理策略并监控和应用流量限制，以便在不断变化的 IT 环境中需求发生变化时无中断地与数据环境重新对齐。</block>
+  <block id="494ed2651e6b5b87a49cfe7ab40d5253" category="paragraph">StorageGRID 网格管理器是一个基于浏览器的图形界面，可用于在一个管理平台中跨全球分布位置配置，管理和监控 StorageGRID 系统。</block>
+  <block id="3784ac64ff307aaceedbc4045a0d047c" category="paragraph">您可以使用 StorageGRID 网格管理器界面执行以下任务：</block>
+  <block id="a1d8b1b1990901cd5a97dd0f3dee2da9" category="inline-link-macro">ILM 策略</block>
+  <block id="37e0a993cc0a3c5aacb623e412befc5b" category="inline-link-macro">ILM 规则</block>
+  <block id="0beeefc6ac257658ea119788351ad268" category="paragraph">StorageGRID 具有灵活的数据管理策略，其中包括保留对象的副本以及使用 2+1 和 4+2 等 EC （纠删编码）方案来存储对象，具体取决于特定的性能和数据保护要求。随着工作负载和要求随时间的变化， ILM 策略也往往会随时间的变化而变化。修改 ILM 策略是一项核心功能，可使 StorageGRID 客户快速轻松地适应不断变化的环境。请检查 <block ref="b2ddd4069e5288685e27e7989fb1a613" category="inline-link-macro-rx"></block> 和 <block ref="7593bc4c70a5537fc14593339f7e6540" category="inline-link-macro-rx"></block> 在 StorageGRID 中设置。</block>
+  <block id="356760a65d5411f2c9f8647f90e50978" category="inline-link-macro">SG5712 ， SG5760 ， SG6060 或 SGF6024</block>
+  <block id="2ec930774314e7709987603c82825f4b" category="paragraph">StorageGRID 可通过添加更多存储节点来扩展性能，这些节点可以是 VM ，裸机或专门构建的设备，如 <block ref="585d6d5337b82c3c73a6c04b53fcdd23" category="inline-link-macro-rx"></block>。在我们的测试中，使用 SGF6024 设备时，使用最小大小的三节点网格，超出了 Apache Kafka 的主要性能要求。随着客户通过更多代理扩展 Kafka 集群，他们可以添加更多存储节点以提高性能和容量。</block>
+  <block id="dca5165744ce2dbf5825f022349ee941" category="section-title">StorageGRID 中的流量分类</block>
+  <block id="588db6e460515c5268204303c93a770b" category="paragraph">StorageGRID 具有内置的 QoS 功能。流量分类策略有助于监控来自客户端应用程序的不同类型的 S3 流量。然后，您可以创建并应用策略，根据传入 / 输出带宽，读 / 写并发请求数或读 / 写请求率对此流量施加限制。</block>
+  <block id="611f69baa46f691eeeb33645e83f0fcb" category="paragraph">Apache Kafka 是一种使用 Java 和 Scala 编写的流处理的软件总线框架实施。它旨在提供一个统一的高吞吐量，低延迟平台来处理实时数据馈送。Kafka 可以连接到外部系统，以便通过 Kafka Connect 导出和导入数据，并提供 Kafka 流，这是一个 Java 流处理库。Kafka 使用基于 TCP 的二进制协议，该协议针对效率进行了优化，并依赖于 " 消息集 " 抽象，该抽象概念可将消息自然分组在一起，从而降低网络往返开销。这样可以实现更大的顺序磁盘操作，更大的网络数据包和连续的内存块，从而使 Kafka 能够将突发的随机消息写入流转变为线性写入。下图显示了 Apache Kafka 的基本数据流。</block>
+  <block id="3b85a5b4b78ed5de8ac5389862ce3d3f" category="section-title">Apache Kafka 用例</block>
+  <block id="21f595a264810e4537696c1280efad57" category="paragraph">Apache Kafka 在消息传送，网站活动跟踪，指标，日志聚合，流处理， 事件源和提交日志记录。</block>
+  <block id="60f50b920903b4049f776062aa5e6cdc" category="list-text">Kafka 提高了吞吐量，内置分区，复制和容错功能，使其成为大规模消息处理应用程序的良好解决方案。</block>
+  <block id="0ae69072c472e595412163a07084932c" category="list-text">Kafka 可以在跟踪管道中重建用户的活动（页面视图，搜索），并将其作为一组实时发布订阅源。</block>
+  <block id="6d9673a2fe148c529c3b2051cfe93896" category="list-text">Kafka 经常用于运行监控数据。其中包括汇总分布式应用程序的统计信息，以生成集中式运营数据源。</block>
+  <block id="8b8951c427cfdc3f095bb9d556dce00e" category="list-text">许多人使用 Kafka 代替日志聚合解决方案。日志聚合通常从服务器中收集物理日志文件，并将其置于中央位置（例如文件服务器或 HDFS ）进行处理。Kafka 可对文件详细信息进行抽象，并将日志或事件数据更清晰地抽象为一个消息流。这样可以降低延迟处理，并更轻松地支持多个数据源和分布式数据使用。</block>
+  <block id="e9b95314420c3704f19bfa0e922f51d1" category="list-text">Kafka 的许多用户会在由多个阶段组成的处理管道中处理数据，在这些阶段中，原始输入数据会从 Kafka 主题中使用，然后进行聚合，丰富或转换为新主题，以供进一步使用或进行后续处理。例如，用于推荐新闻文章的处理管道可能会从 rss 源中搜寻文章内容并将其发布到 " 文章 " 主题。进一步处理可能会使此内容规范化或进行重复数据删除，并将经过清理的文章内容发布到新主题中，最终处理阶段可能会尝试向用户推荐此内容。此类处理管道会根据各个主题创建实时数据流图形。</block>
+  <block id="f2bf506d0e67708783f1bc5c0b518527" category="list-text">事件源化是一种应用程序设计模式，其状态更改将记录为按时间顺序排列的记录序列。Kafka 支持存储的非常大的日志数据，因此它是以这种模式构建的应用程序的理想后端。</block>
+  <block id="6a4fef92874e37e1418ff91ed4fda9cd" category="list-text">Kafka 可以用作分布式系统的一种外部提交日志。此日志有助于在节点之间复制数据，并充当故障节点恢复数据的重新同步机制。Kafka 中的日志缩减功能有助于支持此用例。</block>
+  <block id="a03d0d99a3287875dda3d19daa736d0c" category="section-title">两者结合</block>
+  <block id="ca010f92402f8d9066224231329f1128" category="paragraph">Confluent Platform 是一款企业就绪平台，为 Kafka 提供了高级功能，旨在帮助加快应用程序开发和连接速度，通过流处理实现转型，大规模简化企业运营并满足严格的架构要求。Confluent 由 Apache Kafka 的原始创建者构建，通过企业级功能扩展了 Kafka 的优势，同时消除了 Kafka 的管理或监控负担。如今，《财富》 100 强企业中有 80% 以上的企业都采用数据流技术，其中大多数企业都采用了流畅技术。</block>
+  <block id="774f9746d58ac38abf733a92e4720365" category="paragraph">下图显示了 Confluent Kafka 平台的组件。</block>
+  <block id="4f9143a5adb8a0385a1c660d201ef274" category="inline-link-macro">下一步：验证冲突。</block>
+  <block id="d566a24bfcb09090b96a073132a83173" category="paragraph"><block ref="d566a24bfcb09090b96a073132a83173" category="inline-link-macro-rx"></block></block>
+  <block id="af8b33edfe7fb61c4c6913a50306a653" category="paragraph">Karthikeyan Nagalingam ， NetApp Rankesh Kumar ， Confluent</block>
+  <block id="37281d123cc59a7c05b3ce30b5ea435e" category="paragraph">Apache Kafka 是一个社区分布的事件流式平台，能够每天处理数万亿次的事件。Kafka 最初是一个消息队列，它基于分布式提交日志的抽象化。自从 2011 年由 LinkedIn 创建和开源以来， Kafka 已从消息队列发展为成熟的事件流式平台。Confluent 将 Apache Kafka 与 Confluent Platform 一起分发。Confluent 平台为 Kafka 提供了更多的社区和商业功能，旨在增强大规模生产中操作员和开发人员的流式体验。</block>
+  <block id="e1c012d650a6912ddb72ab0ee914d169" category="paragraph">本文档通过提供以下内容介绍在 NetApp 的对象存储产品上使用 Confluent 分层存储的最佳实践准则：</block>
+  <block id="2717b4b699259a5e59279aac92d526a2" category="list-text">与 NetApp 对象存储— NetApp StorageGRID 相结合的验证</block>
+  <block id="0939eec6a072b9deba2d6aa39249110d" category="list-text">分层存储性能测试</block>
+  <block id="7607a859995debe77df0676d09d8270b" category="list-text">在 NetApp 存储系统上使用 Confluent 的最佳实践准则</block>
+  <block id="59cb8890508bcaf057fd0360eb8ff783" category="section-title">为什么选择 Confluent 分层存储？</block>
+  <block id="7a3966946c615eb57ae930f6948a1c65" category="inline-link-macro">本篇文章由 Confluent 提供</block>
+  <block id="eced8e0ff3a0cd0f66b3a8845f1e08be" category="paragraph">对于许多应用程序来说， Confuent 已成为默认的实时流式平台，尤其是对于大数据，分析和流式工作负载。通过分层存储，用户可以将计算与 Confluent 平台中的存储分开。它可以提高数据存储的成本效益，使您能够存储几乎无限数量的数据并按需扩展工作负载，并使数据和租户重新平衡等管理任务变得更加轻松。与 S3 兼容的存储系统可以利用所有这些功能在一个位置实现数据的民主化，从而无需复杂的数据工程。有关为什么应为 Kafka 使用分层存储的详细信息，请查看 <block ref="3c87b0bff8160b787f5bf29d10131d5e" category="inline-link-macro-rx"></block>。</block>
+  <block id="911086e7904dbc449b09545eba850304" category="section-title">为什么要使用 NetApp StorageGRID 进行分层存储？</block>
+  <block id="ee6c2a9cd0205695027987ec8da32dfe" category="paragraph">StorageGRID 是 NetApp 行业领先的对象存储平台。StorageGRID 是一款基于对象的软件定义存储解决方案，支持行业标准对象 API ，包括 Amazon Simple Storage Service （ S3 ） API 。StorageGRID 可大规模存储和管理非结构化数据，以提供安全，持久的对象存储。内容放置在合适的位置，合适的时间和合适的存储层上，从而优化工作流并降低全球分布式富媒体的成本。</block>
+  <block id="5e5ef53b540f19d6746e6645de37cbb4" category="paragraph">StorageGRID 最大的竞争优势是其信息生命周期管理（ ILM ）策略引擎，该引擎支持策略驱动型数据生命周期管理。策略引擎可以使用元数据管理数据在其生命周期内的存储方式，以便在数据老化时对性能进行初始优化并自动优化成本和持久性。</block>
+  <block id="a7f9d3e4bde145f56bcbec81a6dc2ef3" category="section-title">启用 Confluent 分层存储</block>
+  <block id="a5cb83c3eb7e8757a8f985f8d935e700" category="paragraph">分层存储的基本理念是，将数据存储任务与数据处理任务分开。通过这种分离，数据存储层和数据处理层独立扩展变得更加容易。</block>
+  <block id="e963c7bc15c18e21f60a9969d876e3e8" category="paragraph">适用于 Confluent 的分层存储解决方案必须与两个因素相抗衡。首先， IT 必须解决或避免常见的对象存储一致性和可用性属性，例如列表操作不一致以及偶尔出现的对象不可用性。其次， IT 必须正确处理分层存储与 Kafka 的复制和容错模型之间的交互，包括 zombie 领导者继续分层偏移范围的可能性。NetApp 对象存储可提供一致的对象可用性和 HA 模式，从而使陈旧的存储可用于分层偏移范围。NetApp 对象存储可提供一致的对象可用性和 HA 模式，使陈旧的存储可用于分层偏移范围。</block>
+  <block id="104f1daa661d4c74d5bfd4e54946a4f4" category="paragraph">借助分层存储，您可以使用高性能平台在流式数据末尾附近进行低延迟读写，还可以使用 NetApp StorageGRID 等更便宜且可扩展的对象存储来进行高吞吐量历史读取。我们还提供了适用于采用 NetApp 存储控制器的 Spark 的技术解决方案，详细信息请参见此处。下图显示了 Kafka 如何融入实时分析管道。</block>
+  <block id="c7e421673ed217d2262c482dc24d0995" category="paragraph"><block ref="c7e421673ed217d2262c482dc24d0995" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="66b784e6401c98dcf152747d22976bf7" category="paragraph">下图展示了 NetApp StorageGRID 如何成为 Confluent Kafka 的对象存储层。</block>
+  <block id="2c3dbe3ccb3831e313d1d072656fa861" category="inline-link-macro">接下来：解决方案架构详细信息。</block>
+  <block id="adcb27f49e58936cf868bc3cc2726dd7" category="paragraph"><block ref="adcb27f49e58936cf868bc3cc2726dd7" category="inline-link-macro-rx"></block></block>
+  <block id="5436c2a5438619c1dbe68551a8297494" category="doc">冲突验证</block>
+  <block id="0c112d1616223eaa5f0484a9499d587f" category="paragraph">我们使用 NetApp StorageGRID 中的 Confluent Platform 6.2 分层存储执行了验证。NetApp 和 Confluent 团队共同执行了此验证，并运行了验证所需的测试用例。</block>
+  <block id="ba5b5ff137c16b8859e6ac90b55d071c" category="section-title">Confuent Platform 设置</block>
+  <block id="d8802fa9749bdc5ddc844a1f86c9461d" category="paragraph">我们使用以下设置进行验证。</block>
+  <block id="7b5948d7f6534813c3989b6697841566" category="paragraph">为了进行验证，我们使用了三个 Zookeepers ，五个代理，五个测试脚本执行服务器，命名为 Tools 服务器，该服务器具有 256 GB RAM 和 16 个 CPU 。对于 NetApp 存储，我们使用的是带有四个 SGF6024 的 SG1000 负载平衡器的 StorageGRID 。存储和代理通过 100GbE 连接进行连接。</block>
+  <block id="e9f968cb8cc147519310d7290c28f99d" category="paragraph">下图显示了用于 Confluent 验证的配置的网络拓扑。</block>
+  <block id="b8a85abadadde0e32bd269b5667b6226" category="paragraph">工具服务器充当向 Confluent 节点发送请求的应用程序客户端。</block>
+  <block id="c78850251892556ff1c48a03b16cf1bf" category="paragraph">为了进行验证，我们将 StorageGRID 与 HTTP 协议结合使用，但 HTTPS 也有效。访问密钥和机密密钥存储在 `confuent.tier.s3.cred.file.path` 参数中提供的文件名中。</block>
+  <block id="4e19f24a6f1bb774911253be7f9d487f" category="section-title">NetApp 对象存储— StorageGRID</block>
+  <block id="2d5dff5c754356b277b47604fee26e79" category="paragraph">我们在 StorageGRID 中配置了单站点配置以进行分层。</block>
+  <block id="829026ce89cdb29d9f59599cb2244752" category="section-title">验证测试</block>
+  <block id="f97246b7185276a5fe91aba0dd7311ae" category="paragraph">我们已完成以下五个测试案例以进行验证。这些测试将在 Trogdor 框架上执行。前两项是功能测试，其余三项是性能测试。</block>
+  <block id="a0a36b11d315565a64a50eb2a0ed8c35" category="paragraph">此测试将根据分层存储的需求确定对象存储 API 上的所有基本操作（例如 GET ， PUT 或 DELETE ）是否运行良好。这是一项基本测试，每个对象存储服务都应在以下测试之前通过。这是一项自信的测试，无论通过还是失败。</block>
+  <block id="afca9446d059f239c7c73699ec215b35" category="paragraph">此测试可确定端到端分层存储功能是否运行良好，并通过或失败的自信测试。此测试将创建一个测试主题，默认情况下，此主题会配置为启用分层并大幅减小热设置大小。它会为新创建的测试主题生成一个事件流，并等待代理将这些分段归档到对象存储，然后使用事件流并验证已使用的流是否与生成的流匹配。生成给事件流的消息数量是可配置的，这样用户可以根据测试需求生成足够大的工作负载。减小的热集大小可确保活动分段之外的使用者提取仅从对象存储提供；这有助于测试对象存储的读取是否正确。我们执行此测试时，无论是否注入了对象存储故障。我们通过在 StorageGRID 中的一个节点中停止服务管理器服务并验证端到端功能是否适用于对象存储来模拟节点故障。</block>
+  <block id="07b15abc12bd3f43d57ebd95fce23917" category="section-title">生产 - 使用工作负载基准测试</block>
+  <block id="82ac7c284d524e3dba7699721633a674" category="paragraph">此测试会通过归档区块在对象存储上间接生成写入工作负载。读取工作负载（区块读取）是在使用者组提取区块时从对象存储生成的。此工作负载由测试脚本生成。此测试检查了并行线程中对象存储上的读写性能。与分层功能正确性测试一样，我们测试了是否存在对象存储故障注入。</block>
+  <block id="fc8cd6782366e38a4c0191fff79825b0" category="section-title">保留工作负载基准测试</block>
+  <block id="c51c74edfaecd19ad2258d1dd18ba5d5" category="paragraph">此测试检查了在主题保留工作负载繁重的情况下对象存储的删除性能。保留工作负载是使用测试脚本生成的，该脚本会与测试主题并行生成许多消息。本测试主题使用主动式基于大小和基于时间的保留设置进行配置，此设置会导致从对象存储中持续清除事件流。然后，这些区块会归档。这导致代理在对象存储中删除了大量内容，并收集了对象存储删除操作的性能。</block>
+  <block id="0c7a4422707cf3f11c73c66ea0d5d215" category="inline-link-macro">上一步：规模估算。</block>
+  <block id="f902aefc255b4eb6b31c283ad42816de" category="paragraph"><block ref="f902aefc255b4eb6b31c283ad42816de" category="inline-link-macro-rx"></block></block>
+  <block id="d17096a4e247d84eba8c623e8df7bb38" category="paragraph">本文档提供了将 Confluent 分层存储与 NetApp 存储结合使用的最佳实践准则，其中包括验证测试，分层存储性能结果，调整， Confluent S3 连接器以及自平衡功能。考虑到 ILM 策略，具有多个验证性能测试的流畅性能以及行业标准 S3 API ， NetApp StorageGRID 对象存储是流畅分层存储的最佳选择。</block>
+  <block id="4f6236b021284cc85e87f1145d34e74b" category="list-text">在 Confluent 平台中提供无限存储</block>
+  <block id="43a9697f317e04e185bacb99ee76b7fb" category="inline-link"><block ref="43a9697f317e04e185bacb99ee76b7fb" category="inline-link-rx"></block></block>
+  <block id="a156036c426dcb5d87fc97e5eacdc183" category="paragraph"><block ref="a156036c426dcb5d87fc97e5eacdc183" category="inline-link-rx"></block></block>
+  <block id="a53b0667612f6e25b1d426569d860cac" category="list-text">融合分层存储—最佳实践和规模估算</block>
+  <block id="a2e63818a36c6308885f4c0109e99b56" category="inline-link"><block ref="a2e63818a36c6308885f4c0109e99b56" category="inline-link-rx"></block></block>
+  <block id="0c2ea24bb29ad03d1f43efe9a08c7da0" category="paragraph"><block ref="0c2ea24bb29ad03d1f43efe9a08c7da0" category="inline-link-rx"></block></block>
+  <block id="ee764f7614a20c6500a54f1abc769567" category="list-text">适用于 Confluent Platform 的 Amazon S3 Sink Connector</block>
+  <block id="e1ca3ac3d812689b98c4cf79bf597e4b" category="inline-link"><block ref="e1ca3ac3d812689b98c4cf79bf597e4b" category="inline-link-rx"></block></block>
+  <block id="ca80d8d3004f0fce6bc195b6b43ccaeb" category="paragraph"><block ref="ca80d8d3004f0fce6bc195b6b43ccaeb" category="inline-link-rx"></block></block>
+  <block id="5cbad2383ea03d52c73feba910ccb4a9" category="list-text">Kafka 规模估算</block>
+  <block id="7a8c563c1b96991ca597759bb447eb65" category="inline-link"><block ref="7a8c563c1b96991ca597759bb447eb65" category="inline-link-rx"></block></block>
+  <block id="a2d2c0cad325abb54e33c688d54ce125" category="paragraph"><block ref="a2d2c0cad325abb54e33c688d54ce125" category="inline-link-rx"></block></block>
+  <block id="989772944133ad8cd766bbdfe91cb365" category="list-text">StorageGRID 规模估算</block>
+  <block id="a81a58c7d51f312f40511a68d8e0d40c" category="inline-link"><block ref="a81a58c7d51f312f40511a68d8e0d40c" category="inline-link-rx"></block></block>
+  <block id="1e9dcc0360cfc46d71d6e0c3effa6379" category="paragraph"><block ref="1e9dcc0360cfc46d71d6e0c3effa6379" category="inline-link-rx"></block></block>
+  <block id="5f750332aea13a67a316c81c03a35752" category="list-text">Kafka 用例</block>
+  <block id="c97a8ddb222f78361f59ac027aa08c70" category="inline-link"><block ref="c97a8ddb222f78361f59ac027aa08c70" category="inline-link-rx"></block></block>
+  <block id="58f7c8dd51e4199a8f2caf79409bada1" category="paragraph"><block ref="58f7c8dd51e4199a8f2caf79409bada1" category="inline-link-rx"></block></block>
+  <block id="f51439b4d8807e7a73cb24b6f11e16e2" category="list-text">在融合平台 6.0 中实现自我平衡的 Kafka 集群</block>
+  <block id="866d1bcab8bac705e171a01e8fe2e717" category="inline-link"><block ref="866d1bcab8bac705e171a01e8fe2e717" category="inline-link-rx"></block></block>
+  <block id="b6251e175649ca2d0108725f99fc225f" category="paragraph"><block ref="b6251e175649ca2d0108725f99fc225f" category="inline-link-rx"></block></block>
+  <block id="aa3c3c6442ddbda62fd0694691e34122" category="inline-link"><block ref="aa3c3c6442ddbda62fd0694691e34122" category="inline-link-rx"></block></block>
+  <block id="f7365ec0514100387d644210374998c1" category="paragraph"><block ref="f7365ec0514100387d644210374998c1" category="inline-link-rx"></block></block>
+  <block id="a5091aedd97daf7c5a5297fa5d73a469" category="cell">2021 年 12 月</block>
+  <block id="565b2f1bfcd6857afba2efa000b83759" category="doc">融合的自平衡集群</block>
+  <block id="d3975bd93d0a2c24b382774d34b5a963" category="paragraph">如果您以前管理过 Kafka 集群，则可能会熟悉手动将分区重新分配给不同代理所带来的挑战，以确保在集群中平衡工作负载。对于部署了大型 Kafka 的组织来说，重新配置大量数据可能会令人望而生畏，繁琐且存在风险，尤其是在集群上构建任务关键型应用程序时。但是，即使对于最小型的 Kafka 使用情形，该过程也非常耗时，并且容易出现人为错误。</block>
+  <block id="3c404a9102e2cb3ac7b75fa7ff7a2cb2" category="paragraph">在我们的实验室中，我们测试了 Confluent 自平衡集群功能，该功能可根据集群拓扑变化或负载不平衡自动重新平衡。当节点故障或扩展节点需要在代理之间重新平衡数据时， Confluent 重新平衡测试有助于测量添加新代理的时间。在典型的 Kafka 配置中，要重新平衡的数据量会随着集群的增长而增加，但在分层存储中，重新平衡仅限于少量数据。根据我们的验证，在典型的 Kafka 架构中，分层存储的重新平衡需要几秒或几分钟的时间，并且随着集群的增长而线性增长。</block>
+  <block id="c9e4cfc44588cc591252c88cad0a3a09" category="paragraph">在自平衡集群中，分区重新平衡完全自动化，可优化 Kafka 的吞吐量，加快代理扩展速度并减少运行大型集群的操作负担。在稳定状态下，自平衡集群会监控代理之间的数据偏差，并持续重新分配分区以优化集群性能。在纵向或横向扩展平台时，自平衡集群会自动识别是否存在新代理或删除旧代理，并触发后续分区重新分配。这样，您就可以轻松添加和停用代理，从而从根本上提高 Kafka 集群的弹性。这些优势不需要任何人工干预，复杂的数学运算，也不需要分区重新分配通常会带来人为错误的风险。因此，完成数据重新平衡所需的时间远远少于完成时间，您可以自由地专注于价值更高的事件流式项目，而无需持续监控集群。</block>
+  <block id="92672a7a2b909945fbfa9f44f057c7a1" category="doc">规模估算</block>
+  <block id="5ffdfbbb428796f516e072e038d107b0" category="inline-link-macro">先前版本：最佳实践准则。</block>
+  <block id="49575973ec85e64724d2a45d401f32b3" category="paragraph"><block ref="49575973ec85e64724d2a45d401f32b3" category="inline-link-macro-rx"></block></block>
+  <block id="faa5cf9412df3e7266db15b6f1a5070d" category="paragraph">Kafka 规模估算可通过四种配置模式来执行：简单，精细，反向和分区。</block>
+  <block id="1fbb1e3943c2c6c560247ac8f9289780" category="section-title">简单</block>
+  <block id="580c6adb23970405f45409b06eb3ba39" category="paragraph">简单模式适用于首次使用 Apache Kafka 的用户或早期使用情形。对于此模式，您可以提供吞吐量 MBps ，读取扇出，保留和资源利用率百分比等要求（默认为 60% ）。您还可以进入内部环境（裸机， VMware ， Kubernetes 或 OpenStack ）或云。根据这些信息， Kafka 集群的规模估算可提供代理， zookeeper ， Apache Kafka Connect 工作人员，架构注册表， REST 代理， ksqlDB 和 Confluent 控制中心所需的服务器数量。</block>
+  <block id="ae20e37661048a8d6cd37c4dbacac985" category="paragraph">对于分层存储，请考虑采用粒度配置模式来估算 Kafka 集群的规模。粒度模式适用于经验丰富的 Apache Kafka 用户或定义明确的用例。本节介绍了针对生产者，流处理器和使用者的规模估算。</block>
+  <block id="40d2d6f5a1dfde1a3b5ba2a70377fa0f" category="section-title">生产者</block>
+  <block id="05318fa579b7e76a65531afd94250ed3" category="paragraph">要描述 Apache Kafka 的生成方（例如原生客户端， REST 代理或 Kafka 连接器），请提供以下信息：</block>
+  <block id="91be21e4458c6c8f0d6f61c307faf194" category="list-text">* 名称 * Spark 。</block>
+  <block id="0ae6d6b48753e01bf1ae73bb86ee6276" category="list-text">* 生成方类型。 * 应用程序或服务，代理（ REST ， MQT ，其他）和现有数据库（ RDBMS ， NoSQL ，其他）。您也可以选择 " 我不知道 " 。</block>
+  <block id="3fd4bc385cb0a0f62ae4183f316ff707" category="list-text">* 平均吞吐量 * ，以每秒事件数（例如 1 ， 000 ， 000 ）表示。</block>
+  <block id="14ec4c2c8c9edf10c6aeefaf27f1f713" category="list-text">* 峰值吞吐量 * ，以每秒事件数（例如 4 ， 000 ， 000 ）表示。</block>
+  <block id="b4672ddde5cb9c30e0e682084a411123" category="list-text">* 平均消息大小 * ，以字节为单位，未压缩（最大 1 MB ；例如 1000 ）。</block>
+  <block id="dd6d45bc2ad71619bde2260f1776e9b2" category="list-text">* 消息格式。 * 选项包括 Avro ， JSON ，协议缓冲区，二进制文件，文本， " 我不知道 " 等。</block>
+  <block id="b26274df5f3f47d18e40ee961fa8c5b5" category="list-text">* 复制因子。 * 选项包括 1 ， 2 ， 3 （ Confluent 建议）， 4 ， 5 ， 或 6.</block>
+  <block id="6320400b940be83033b0ce5ea91a3799" category="list-text">* 保留时间 * 一天（例如）。您希望将数据存储在 Apache Kafka 中多长时间？输入 -1 并输入任意单位，持续时间不受限制。计算器假定保留时间为 10 年，以实现无限保留。</block>
+  <block id="eb46bfc819d70448200241a8f1efec72" category="list-text">选中 " 启用分层存储以减少代理数量并允许无限存储？ " 复选框</block>
+  <block id="d66063041931961a7565ee71f7a7dd67" category="list-text">启用分层存储后，保留字段将控制存储在代理本地的热数据集。归档保留字段用于控制数据在归档对象存储中的存储时间。</block>
+  <block id="13bc2bec2c4039bad2d63b4ccf9611d4" category="list-text">* 归档存储保留。 * 一年（例如）。您希望将数据存储在归档存储中多长时间？输入 -1 并输入任意单位，持续时间不受限制。计算器假定保留 10 年以实现无限保留。</block>
+  <block id="841d5d94c8cc645b8a35f0b58d3d5c6d" category="list-text">* 增长乘数 * 1 （例如）。如果此参数的值基于当前吞吐量，请将其设置为 1 。要根据其他增长调整大小，请将此参数设置为增长乘数。</block>
+  <block id="5f044353fac0e72b8b68a9608cdfea2d" category="list-text">* 生产商实例数。 * 10 （例如）。将运行多少个生产商实例？要将 CPU 负载纳入规模估算计算，需要使用此输入。如果值为空，则表示 CPU 负载未计入计算中。</block>
+  <block id="585e13820ff765aec3c094fbb66fb358" category="paragraph">根据此示例输入，规模估算对生成方具有以下影响：</block>
+  <block id="5504abde59477d70ee34b7c970af3ed2" category="list-text">未压缩字节的平均吞吐量： 1 Gbps 。未压缩字节的峰值吞吐量： 4 Gbps 。以压缩字节为单位的平均吞吐量： 400 Mbps 。以压缩字节为单位的峰值吞吐量： 1.6 GBps 。此值基于默认 60% 的压缩率（您可以更改此值）。</block>
+  <block id="fe685c6164262035f3c0407347a3d38d" category="inline-link-macro"><block ref="fe685c6164262035f3c0407347a3d38d" category="inline-link-rx"></block></block>
+  <block id="d6730cec7284a7856088b8a49563caef" category="list-text">所需的总代理热设置存储： 31 ， 104 TB ，包括复制，已压缩。所需的代理外归档存储总量： 378 ， 432 TB ，已压缩。使用 ... <block ref="e132e1b42fc350f637835189d38d8bdf" category="inline-link-macro-rx"></block> 用于 StorageGRID 规模估算。</block>
+  <block id="65541f1c1daa682e605090dda4f5581b" category="paragraph">流处理器必须描述其应用程序或服务，这些应用程序或服务会使用 Apache Kafka 中的数据并生成回 Apache Kafka 。大多数情况下，这些数据存储库内置在 ksqlDB 或 Kafka 流中。</block>
+  <block id="47bf3a39e68a8e88ad9fff34b58afc0a" category="list-text">* 名称 * 。 * Spark 流式传输器。</block>
+  <block id="23f4b8037342e7943a6f549d7868281e" category="list-text">* 处理时间。 * 此处理器处理单条消息需要多长时间？</block>
+  <block id="0d4a13e2166384d926575e139fe3c68c" category="list-text">1 毫秒（简单，无状态转换） [ 示例 ] ， 10 毫秒（有状态内存操作）。</block>
+  <block id="a1d2bac0d8ed78c0ce6bb941328bc680" category="list-text">100 毫秒（有状态网络或磁盘操作）， 1000 毫秒（第三方 REST 调用）。</block>
+  <block id="8b74c5757b588cdfea993715c0ce3b58" category="list-text">我已对该参数进行了基准测试，并确切了解它需要多长时间。</block>
+  <block id="df8cd4e4488e4a8198132e46fc2beec9" category="list-text">* 输出保留 * 1 天（示例）。流处理器会将其输出返回到 Apache Kafka 。您希望将此输出数据存储在 Apache Kafka 中多长时间？输入 -1 并输入任意单位，持续时间不受限制。</block>
+  <block id="108b072da5b6fab64d55b4f1d69690d4" category="list-text">选中 " 启用分层存储以减少代理数量并允许无限存储？ " 复选框</block>
+  <block id="c4462b25651379530a9eea9b2b478755" category="list-text">* 归档存储保留。 * 1 年（例如）。您希望将数据存储在归档存储中多长时间？输入 -1 并输入任意单位，持续时间不受限制。计算器假定保留 10 年以实现无限保留。</block>
+  <block id="6507507d73f33bc3d1077b4454d9d3dd" category="list-text">* 输出直通百分比 * 100 （例如）。流处理器会将其输出返回到 Apache Kafka 。多少百分比的入站吞吐量将输出回 Apache Kafka ？例如，如果入站吞吐量为 20Mbps ，而此值为 10 ，则输出吞吐量将为 2Mbps 。</block>
+  <block id="d1a6a4732f959b58cd8c77edcf10b31b" category="list-text">从哪些应用程序读取此数据？选择 "Spark " ，即在基于生产商类型的规模估算中使用的名称。根据上述输入，估算流处理程序实例和主题分区估计值时可能会产生以下影响：</block>
+  <block id="bbc0ea8f6decb55572d395615cd02a3b" category="list-text">此流处理器应用程序需要以下数量的实例。传入的主题可能也需要这么多分区。请联系 Confluent 以确认此参数。</block>
+  <block id="0a206846c82be8eef261c4c686599582" category="list-text">1 ， 000 表示平均吞吐量，无增长乘数</block>
+  <block id="b032c5d1deed2d1b75c4f8019b5155e3" category="list-text">4 ， 000 表示峰值吞吐量，无增长乘数</block>
+  <block id="5cbe73cfdf68ec8b04b4506b237d8af9" category="list-text">1 ， 000 表示使用增长乘数的平均吞吐量</block>
+  <block id="f51843d6cdec756114fb7f153ab79f46" category="list-text">4 ， 000 表示峰值吞吐量，并使用增长乘数</block>
+  <block id="1ebe06b1421d14bafea4a4d9a545d956" category="section-title">使用者</block>
+  <block id="4d2351cfaa069bdffc56cd73486deacb" category="paragraph">请描述您使用 Apache Kafka 中的数据而不生成回 Apache Kafka 的应用程序或服务，例如原生客户端或 Kafka 连接器。</block>
+  <block id="21af20352468dedb23eb4b6fa7362e32" category="list-text">* 名称 * 。 * Spark 使用者。</block>
+  <block id="9e3b25cc5e8806da459be0a41ecfce10" category="list-text">* 处理时间。 * 此使用者需要多长时间处理一条消息？</block>
+  <block id="39ad97382609f7463897aa49624f20d4" category="list-text">1 毫秒（例如，日志记录等简单无状态任务）</block>
+  <block id="3d74518bdd6cfa27a42a16145872cc59" category="list-text">10 毫秒（快速写入数据存储库）</block>
+  <block id="9f44c2afdbd671220f00e45494646aa6" category="list-text">100 毫秒（写入数据存储库的速度较慢）</block>
+  <block id="1284667da9611e925a39eee76e44e565" category="list-text">1000 毫秒（第三方 REST 调用）</block>
+  <block id="fff6a4b96ed9fb45c7eab95aeb8eb684" category="list-text">已知持续时间的其他一些基准流程。</block>
+  <block id="6490501e3342b6bea241de7194a60bba" category="list-text">* 使用者类型。 * 应用程序，代理或接收到现有数据存储库（ RDBMS ， NoSQL ，其他）。</block>
+  <block id="23a444b3f78a63619b03bea8301f4edb" category="list-text">从哪些应用程序读取此数据？将此参数与先前确定的生成方和流规模估算相连接。</block>
+  <block id="2feb2ea8e1991424930eda0c7cdeb393" category="paragraph">根据上述输入，您必须确定使用者实例的规模估算和主题分区估算。使用者应用程序需要以下数量的实例。</block>
+  <block id="90e1e02e655ca52c281e9b5ac01ca245" category="list-text">2 ， 000 表示平均吞吐量，无增长乘数</block>
+  <block id="228e2cc32e2eedd0cfaf646cb26ad562" category="list-text">峰值吞吐量为 8 ， 000 ，无增长乘数</block>
+  <block id="622c202fad5851b4699d8679ec9d3ce4" category="list-text">2 ， 000 表示平均吞吐量，包括增长乘数</block>
+  <block id="da18372dd9e384fd5a4fd97fa6bdb872" category="list-text">8 ， 000 表示峰值吞吐量，包括增长乘数</block>
+  <block id="5992882fb5e2f68b36cbf47d5ffc182a" category="paragraph">传入主题可能也需要此数量的分区。请联系 Confluent 进行确认。</block>
+  <block id="152f9b32fca1ce5e9a3fc34e8c9e69c0" category="paragraph">除了对生产者，流处理器和使用者的要求之外，您还必须满足以下附加要求：</block>
+  <block id="aea71dcdb94c855eb0655cb615bdcfe2" category="list-text">* 重建时间。 * 例如， 4 小时。如果 Apache Kafka 代理主机发生故障，其数据丢失，并且配置了新主机来更换发生故障的主机，则新主机必须自行重建多快？如果此值未知，请将此参数留空。</block>
+  <block id="3bc49d2594090d023892da5211f6f7a4" category="list-text">* 资源利用率目标（百分比）。 * 例如 60 。您希望主机在平均吞吐量期间的利用率如何？除非您使用的是 Confluent 自平衡集群，否则 Confuent 建议使用 60% 的利用率，在这种情况下，利用率可能会更高。</block>
+  <block id="9fa691f61c91ce32c6fb2dcc53a9d09c" category="section-title">描述您的环境</block>
+  <block id="7e431f8959ae4a79bcfc6e55728ead5a" category="list-text">* 您的集群将在什么环境中运行？ * Amazon Web Services ， Microsoft Azure ， Google 云平台，内部裸机，内部部署 VMware ， 内部使用 OpenStack 还是内部使用 Kubernates ？</block>
+  <block id="34946a533795a145eb4c6d66ee12e56b" category="list-text">* 主机详细信息。 * 核心数： 48 （例如），网卡类型（ 10GbE ， 40GbE ， 16GbE ， 1GbE 或其他类型）。</block>
+  <block id="a50ad1bade1c614aa4ceaa766944b0e1" category="list-text">* 存储卷。 * 主机： 12 （例如）。每个主机支持多少个硬盘驱动器或 SSD ？因此，建议每个主机配置 12 个硬盘驱动器。</block>
+  <block id="bf903fced4e4e598ede3fb2a9dd5427a" category="list-text">* 存储容量 / 卷（以 GB 为单位）。 * 1000 （例如）。单个卷可以存储多少 GB 的存储？这两者建议使用 1 TB 磁盘。</block>
+  <block id="85a140efdb29007799d7d5e7c16691d5" category="list-text">* 存储配置。 * 如何配置存储卷？Confuent 建议使用 RAID10 来利用所有 Confluent 功能。JBOD ， SAN ， RAID 1 ， RAID 0 ， RAID 5 ， 此外，还支持其他类型。</block>
+  <block id="237d14e07eccd0d6535cf69ee4507805" category="list-text">* 单卷吞吐量（ MBps ）。 * 125 （例如）。单个存储卷的每秒读取或写入速度（以 MB/ 秒为单位）有多快？Confuent 建议使用标准硬盘驱动器，这些驱动器的吞吐量通常为 125 MBps 。</block>
+  <block id="57499d42a69c4ed9f1e7994a0bad7e9f" category="list-text">* 内存容量（ GB ） .* 64 （例如）。</block>
+  <block id="9db0153ae987c66e360fc7027c7819c8" category="paragraph">确定环境变量后，选择调整集群大小。根据上述示例参数，我们确定了以下 Confluent Kafka 规模估算：</block>
+  <block id="fc644e6661f2118a6b0733f85424f3fa" category="list-text">* Apache Kafka.* 代理计数： 22 。您的集群受存储限制。请考虑启用分层存储以减少主机数量并允许无限存储。</block>
+  <block id="689921f4781dfd392aedc0eac4116284" category="list-text">* Apache zookeeper 。 * 计数： 5 ； Apache Kafka Connect Worker ：计数： 2 ；架构注册表：计数： 2 ； REST 代理：计数： 2 ； ksqlDB ：计数： 2 ； Confluent Control Center ：计数： 1 。</block>
+  <block id="df1673ed6a212d182bedbf3a4bdc79a7" category="paragraph">对平台团队使用反向模式，而不考虑使用情形。使用分区模式计算单个主题所需的分区数。请参见<block ref="d971ea0f6ada2eeb1a618f5145544e00" category="inline-link-rx"></block> 用于根据反向和分区模式进行规模估算。</block>
+  <block id="1bd6648fc95556a0a0fde4774f780085" category="list-text">根据我们的验证， S3 对象存储对于 Confluent 来说是保留数据的最佳选择。</block>
+  <block id="18f3dd1f96633e1c3f4b4473c8f63239" category="list-text">我们可以使用高吞吐量 SAN （尤其是 FC ）来保留代理热数据或本地磁盘，因为在 Confluent 分层存储配置中， 代理数据目录中保留的数据大小取决于数据移动到对象存储时的区块大小和保留时间。</block>
+  <block id="9432e98ec213778ab349305141050c42" category="list-text">* Kafka 调整。 * 要提高分层存储的性能，您可以增加 TierFetcherNumThreads 和 TierArchiverNumThreads 。一般情况下，您需要增加 TierFetcherNumThreads 以匹配物理 CPU 核数，并将 TierArchiverNumThreads 增加到 CPU 核数的一半。例如，在服务器属性中，如果您的计算机具有八个物理核心，请将 confuent.tier.fetcher.num.threads = 8 ，而将 confuent.tier.archiver.num.threads = 4 。</block>
+  <block id="ed3ecb8a7183dd06de652f3dc38b1037" category="list-text">* 主题删除的时间间隔。 * 删除主题后，不会立即开始删除对象存储中的日志段文件。而是在删除这些文件之前，有一个默认值为 3 小时的时间间隔。您可以修改配置 confluent.tier.topic.delete.check.interval.ms 以更改此间隔的值。如果删除某个主题或集群，也可以手动删除相应存储分段中的对象。</block>
+  <block id="3833b7b3d2c8a15e32f72248bab1add9" category="list-text">* 分层存储内部主题上的 ACL 。 * 建议内部部署的最佳实践是，在分层存储使用的内部主题上启用 ACL 授权者。设置 ACL 规则，以便仅允许代理用户访问此数据。这样可以保护内部主题的安全，并防止对分层存储数据和元数据进行未经授权的访问。</block>
+  <block id="ebcb583d4445a2a39076c7fa4627f79a" category="admonition">将用户 ` &lt;Kafka&gt;` 替换为部署中的实际代理主体。</block>
+  <block id="0ca954cd7923be900c49b3b807caf2b6" category="paragraph">例如，命令 `confuent-tier-state` 会在内部主题上为分层存储设置 ACL 。目前，只有一个内部主题与分层存储相关。此示例将创建一个 ACL ，为内部主题上的所有操作提供主体 Kafka 权限。</block>
+  <block id="c7aa1f1ea2c8ad1712056dd97321d808" category="inline-link-macro">接下来：规模估算。</block>
+  <block id="de8a38c4c90ce81d8c4b82c44500e504" category="paragraph"><block ref="de8a38c4c90ce81d8c4b82c44500e504" category="inline-link-macro-rx"></block></block>
+  <block id="096d10f0062b97cca959118975fa506a" category="paragraph">本节介绍了用于 Confluent 验证的硬件和软件。此信息适用于使用 NetApp 存储部署 Confluent Platform 。下表介绍了经过测试的解决方案架构和基本组件。</block>
+  <block id="cd2e7d4aa00a79a9a92980e984ec50d7" category="list-text">五个工具服务器</block>
+  <block id="cc3bec1f9974aef63e75985fed9c343e" category="cell">适用于分层存储的 NetApp StorageGRID</block>
+  <block id="2d4f4568ad652ff08727bc044f1373cc" category="list-text">StorageGRID 软件</block>
+  <block id="a51cb0f5fd275943954c8d687912e458" category="list-text">4 个 SGF6024</block>
+  <block id="e185a6ccd16ce2c64c7e948bbc46f45a" category="list-text">4 个 100GbE （代理和 StorageGRID 实例之间的网络连接）</block>
+  <block id="8b7e627b574df4c4813de77ed2896ad8" category="doc">融合 S3 连接器</block>
+  <block id="524b95dc71b518ce734757656cf9594c" category="paragraph">Amazon S3 Sink Connector 以 Avro ， JSON 或字节格式将数据从 Apache Kafka 主题导出到 S3 对象。Amazon S3 Sink Connector 会定期轮询 Kafka 中的数据，然后将其上传到 S3 。分区程序用于将每个 Kafka 分区的数据拆分为多个区块。每个数据区块都表示为 S3 对象。密钥名称会对主题， Kafka 分区以及此数据块的起始偏移进行编码。</block>
+  <block id="e621a272d292cd32516db52fc07b5855" category="inline-link-macro">接下来：融合自重新平衡集群。</block>
+  <block id="56b9b2115a3169192950ec86c26f6add" category="paragraph"><block ref="56b9b2115a3169192950ec86c26f6add" category="inline-link-macro-rx"></block></block>
+  <block id="497da8ae75854ffd62dc59e332c15252" category="sidebar">融合的自重新平衡集群</block>
 </blocks>

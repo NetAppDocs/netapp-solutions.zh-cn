@@ -12,15 +12,45 @@ summary: 本文档介绍在 NetApp 存储控制器上使用 Kafka 的最佳实�
 :imagesdir: ./../media/
 
 
-Karthikeyan Nagalingam ， Rankesh Kumar
+Karthikeyan Nagalingam ， NetApp Rankesh Kumar ， Confluent
 
-Apache Kafka 是一个社区分布的事件流式平台，能够每天处理数万亿次的事件。Kafka 最初是一个消息队列，它基于分布式提交日志的抽象化。自从 2011 年由 LinkedIn 创建和开源以来， Kafka 已从消息队列发展为成熟的事件流式平台。Confluent 通过 Confluent 平台分发 Kafka 。Confluent 平台通过更多的社区和商业功能对 Kafka 进行了改进，这些功能旨在大规模增强生产中操作员和开发人员的流式体验。
+Apache Kafka 是一个社区分布的事件流式平台，能够每天处理数万亿次的事件。Kafka 最初是一个消息队列，它基于分布式提交日志的抽象化。自从 2011 年由 LinkedIn 创建和开源以来， Kafka 已从消息队列发展为成熟的事件流式平台。Confluent 将 Apache Kafka 与 Confluent Platform 一起分发。Confluent 平台为 Kafka 提供了更多的社区和商业功能，旨在增强大规模生产中操作员和开发人员的流式体验。
 
-本文档通过提供以下内容介绍在 NetApp 存储控制器上使用 Kafka 的最佳实践准则：
+本文档通过提供以下内容介绍在 NetApp 的对象存储产品上使用 Confluent 分层存储的最佳实践准则：
 
-* 获得与 NetApp 存储控制器 StorageGRID 相结合的 Kafka 认证
-* Kafka 性能测试
-* 基于 NetApp 存储系统的 Kafka 的最佳实践准则
+* 与 NetApp 对象存储— NetApp StorageGRID 相结合的验证
+* 分层存储性能测试
+* 在 NetApp 存储系统上使用 Confluent 的最佳实践准则
 
 
-link:confluent-kafka-solution.html["下一步：解决方案。"]
+
+
+== 为什么选择 Confluent 分层存储？
+
+对于许多应用程序来说， Confuent 已成为默认的实时流式平台，尤其是对于大数据，分析和流式工作负载。通过分层存储，用户可以将计算与 Confluent 平台中的存储分开。它可以提高数据存储的成本效益，使您能够存储几乎无限数量的数据并按需扩展工作负载，并使数据和租户重新平衡等管理任务变得更加轻松。与 S3 兼容的存储系统可以利用所有这些功能在一个位置实现数据的民主化，从而无需复杂的数据工程。有关为什么应为 Kafka 使用分层存储的详细信息，请查看 link:https://docs.confluent.io/platform/current/kafka/tiered-storage.html#netapp-object-storage["本篇文章由 Confluent 提供"^]。
+
+
+
+== 为什么要使用 NetApp StorageGRID 进行分层存储？
+
+StorageGRID 是 NetApp 行业领先的对象存储平台。StorageGRID 是一款基于对象的软件定义存储解决方案，支持行业标准对象 API ，包括 Amazon Simple Storage Service （ S3 ） API 。StorageGRID 可大规模存储和管理非结构化数据，以提供安全，持久的对象存储。内容放置在合适的位置，合适的时间和合适的存储层上，从而优化工作流并降低全球分布式富媒体的成本。
+
+StorageGRID 最大的竞争优势是其信息生命周期管理（ ILM ）策略引擎，该引擎支持策略驱动型数据生命周期管理。策略引擎可以使用元数据管理数据在其生命周期内的存储方式，以便在数据老化时对性能进行初始优化并自动优化成本和持久性。
+
+
+
+== 启用 Confluent 分层存储
+
+分层存储的基本理念是，将数据存储任务与数据处理任务分开。通过这种分离，数据存储层和数据处理层独立扩展变得更加容易。
+
+适用于 Confluent 的分层存储解决方案必须与两个因素相抗衡。首先， IT 必须解决或避免常见的对象存储一致性和可用性属性，例如列表操作不一致以及偶尔出现的对象不可用性。其次， IT 必须正确处理分层存储与 Kafka 的复制和容错模型之间的交互，包括 zombie 领导者继续分层偏移范围的可能性。NetApp 对象存储可提供一致的对象可用性和 HA 模式，从而使陈旧的存储可用于分层偏移范围。NetApp 对象存储可提供一致的对象可用性和 HA 模式，使陈旧的存储可用于分层偏移范围。
+
+借助分层存储，您可以使用高性能平台在流式数据末尾附近进行低延迟读写，还可以使用 NetApp StorageGRID 等更便宜且可扩展的对象存储来进行高吞吐量历史读取。我们还提供了适用于采用 NetApp 存储控制器的 Spark 的技术解决方案，详细信息请参见此处。下图显示了 Kafka 如何融入实时分析管道。
+
+image:confluent-kafka-image2.png["错误：缺少图形映像"]
+
+下图展示了 NetApp StorageGRID 如何成为 Confluent Kafka 的对象存储层。
+
+image:confluent-kafka-image3.png["错误：缺少图形映像"]
+
+link:confluent-kafka-solution.html["接下来：解决方案架构详细信息。"]

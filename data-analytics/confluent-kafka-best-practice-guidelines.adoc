@@ -14,8 +14,8 @@ summary: 本节将介绍从此认证中获得的经验教训。
 
 link:confluent-kafka-confluent-kafka-rebalance.html["上一页： Confluent Kafka 重新平衡。"]
 
-* 根据我们的验证， NFS 不是 Confluent Kafka 代理保留数据的合适协议。
-* 我们可以使用 SAN （尤其是 FC ）来保留代理数据或本地磁盘，因为在 Confluent 分层存储配置中，存储在代理数据目录中的数据大小取决于数据移至对象存储时的区块大小和保留时间。
+* 根据我们的验证， S3 对象存储对于 Confluent 来说是保留数据的最佳选择。
+* 我们可以使用高吞吐量 SAN （尤其是 FC ）来保留代理热数据或本地磁盘，因为在 Confluent 分层存储配置中， 代理数据目录中保留的数据大小取决于数据移动到对象存储时的区块大小和保留时间。
 * 当 seg.bytes 较高时，对象存储可提供更好的性能；我们测试了 512 MB 。
 * 在 Kafka 中，为主题生成的每个记录的密钥或值的长度（以字节为单位）由 `lage.key.value` 参数控制。对于 StorageGRID ， S3 对象载入和检索性能已提高到更高值。例如， 512 字节提供了 5.8 GBps 检索， 1024 字节提供了 7.5 GBps S3 检索， 2048 字节提供了接近 10 Gbps 的值。
 
@@ -24,4 +24,19 @@ link:confluent-kafka-confluent-kafka-rebalance.html["上一页： Confluent Kafk
 
 image:confluent-kafka-image11.png["错误：缺少图形映像"]
 
-link:confluent-kafka-conclusion.html["接下来：总结。"]
+* * Kafka 调整。 * 要提高分层存储的性能，您可以增加 TierFetcherNumThreads 和 TierArchiverNumThreads 。一般情况下，您需要增加 TierFetcherNumThreads 以匹配物理 CPU 核数，并将 TierArchiverNumThreads 增加到 CPU 核数的一半。例如，在服务器属性中，如果您的计算机具有八个物理核心，请将 confuent.tier.fetcher.num.threads = 8 ，而将 confuent.tier.archiver.num.threads = 4 。
+* * 主题删除的时间间隔。 * 删除主题后，不会立即开始删除对象存储中的日志段文件。而是在删除这些文件之前，有一个默认值为 3 小时的时间间隔。您可以修改配置 confluent.tier.topic.delete.check.interval.ms 以更改此间隔的值。如果删除某个主题或集群，也可以手动删除相应存储分段中的对象。
+* * 分层存储内部主题上的 ACL 。 * 建议内部部署的最佳实践是，在分层存储使用的内部主题上启用 ACL 授权者。设置 ACL 规则，以便仅允许代理用户访问此数据。这样可以保护内部主题的安全，并防止对分层存储数据和元数据进行未经授权的访问。
+
+
+[listing]
+----
+kafka-acls --bootstrap-server localhost:9092 --command-config adminclient-configs.conf \
+--add --allow-principal User:<kafka> --operation All --topic "_confluent-tier-state"
+----
+
+NOTE: 将用户 ` <Kafka>` 替换为部署中的实际代理主体。
+
+例如，命令 `confuent-tier-state` 会在内部主题上为分层存储设置 ACL 。目前，只有一个内部主题与分层存储相关。此示例将创建一个 ACL ，为内部主题上的所有操作提供主体 Kafka 权限。
+
+link:confluent-kafka-sizing.html["接下来：规模估算。"]

@@ -4,7 +4,7 @@ permalink: data-analytics/confluent-kafka-solution.html
 keywords: solution, architecture, details, hardware, software 
 summary: 本节介绍用于 Confluent 认证的硬件和软件。此信息适用于使用 NetApp 存储的 Kafka 部署。 
 ---
-= 解决方案
+= 解决方案架构详细信息
 :hardbreaks:
 :nofooter: 
 :icons: font
@@ -14,15 +14,7 @@ summary: 本节介绍用于 Confluent 认证的硬件和软件。此信息适用
 
 link:confluent-kafka-introduction.html["上一页：简介。"]
 
-这款 NetApp StorageGRID 和 Apache Kafka 解决方案是一款专为流设计的分布式系统，两个程序均可水平扩展和容错。它们可提供提交日志，并支持分布式数据流和流处理。NetApp 存储阵列将计算和数据存储资源分离，以便可以独立扩展。下图显示了 NetApp StorageGRID 和 Confluent Kafka 解决方案。
-
-image:confluent-kafka-image3.png["错误：缺少图形映像"]
-
-
-
-== 解决方案架构详细信息
-
-本节介绍用于 Confluent 认证的硬件和软件。此信息适用于使用 NetApp 存储的 Kafka 部署。下表介绍了经过测试的解决方案架构和基本组件。
+本节介绍了用于 Confluent 验证的硬件和软件。此信息适用于使用 NetApp 存储部署 Confluent Platform 。下表介绍了经过测试的解决方案架构和基本组件。
 
 |===
 | 解决方案组件 | 详细信息 
@@ -31,7 +23,7 @@ image:confluent-kafka-image3.png["错误：缺少图形映像"]
 | Confluent Kafka 6.2 版  a| 
 * 三个 Zookepers
 * 五个代理服务器
-* 五个工具的服务器
+* 五个工具服务器
 * 一个 Grafana
 * 一个控制中心
 
@@ -41,13 +33,13 @@ image:confluent-kafka-image3.png["错误：缺少图形映像"]
 | Linux （ Ubuntu 18.04 ） | 所有服务器 
 
 
-| 适用于温分段的 NetApp StorageGRID  a| 
-* 4 个存储网格 11.4.0.7
+| 适用于分层存储的 NetApp StorageGRID  a| 
+* StorageGRID 软件
 * 1 个 SG1000 （负载平衡器）
-* 4 个 SGD6024
+* 4 个 SGF6024
 * 4 个 24 x 800 SSD
 * S3 协议
-* 100GbE
+* 4 个 100GbE （代理和 StorageGRID 实例之间的网络连接）
 
 
 

@@ -4,7 +4,7 @@ permalink: data-analytics/confluent-kafka-kafka-s3-connector.html
 keywords: s3, connector, setup 
 summary: 在此设置中，我们将向您展示如何使用 Kafka S3 接收器连接器直接从 Kafka 读取和写入对象存储中的主题。在此测试中，我们使用了独立的 Consfluent 集群，但此设置适用于分布式集群。 
 ---
-= Kafka S3 连接器
+= 融合 S3 连接器
 :hardbreaks:
 :nofooter: 
 :icons: font
@@ -13,6 +13,8 @@ summary: 在此设置中，我们将向您展示如何使用 Kafka S3 接收器�
 
 
 link:confluent-kafka-performance-tests-with-scalability.html["上一篇：性能测试与可扩展性。"]
+
+Amazon S3 Sink Connector 以 Avro ， JSON 或字节格式将数据从 Apache Kafka 主题导出到 S3 对象。Amazon S3 Sink Connector 会定期轮询 Kafka 中的数据，然后将其上传到 S3 。分区程序用于将每个 Kafka 分区的数据拆分为多个区块。每个数据区块都表示为 S3 对象。密钥名称会对主题， Kafka 分区以及此数据块的起始偏移进行编码。
 
 在此设置中，我们将向您展示如何使用 Kafka S3 接收器连接器直接从 Kafka 读取和写入对象存储中的主题。在此测试中，我们使用了独立的 Consfluent 集群，但此设置适用于分布式集群。
 
@@ -163,7 +165,7 @@ root@stlrx2540m1-108:~#
 . 验证存储分段是否可访问。
 +
 ....
-root@stlrx2540m4-01:~# aws s3 –endpoint-url .rtpppe.netapp.com:10444 ls kafkasgdbucket1-2
+root@stlrx2540m4-01:~# aws s3 –endpoint-url http://kafkasgd.rtpppe.netapp.com:10444 ls kafkasgdbucket1-2
 2021-10-29 21:04:18       1388 1
 2021-10-29 21:04:20       1388 2
 2021-10-29 21:04:22       1388 3
@@ -304,4 +306,4 @@ root@stlrx2540m1-108:~#
 ....
 
 
-link:confluent-kafka-confluent-kafka-rebalance.html["接下来： Confluent Kafka 重新平衡。"]
+link:confluent-kafka-confluent-kafka-rebalance.html["接下来：融合自重新平衡集群。"]
