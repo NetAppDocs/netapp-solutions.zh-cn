@@ -6162,8 +6162,6 @@
   <block id="ec6136417c258c9b7f95c39765c5ca51" category="paragraph">本节提供了一些有助于提高 XCP 操作性能的调整参数：</block>
   <block id="dd10b781bf6dd686a8631401ce0fba96" category="list-text">为了更好地扩展工作负载并将其分布在多个 XCP 实例之间，请拆分每个 XCP 实例的子文件夹以进行迁移和数据传输。</block>
   <block id="37e9b10f81fe31cb6b80609f724b34f8" category="list-text">XCP 可以使用最大的 CPU 资源— CPU 核越多，性能就越好。因此， XCP 服务器中应具有更多 CPU 。我们在实验室中测试了 128 GB RAM 和 48 个核心 CPU ，与 8 个 CPU 和 8 GB RAM 相比，性能更好。</block>
-  <block id="437d7ec5d90f0fafc57a79e213e22708" category="list-text">使用 ` 并行` 选项的 XCP 副本基于 CPU 数量。默认的并行线程数（ 7 个）足以执行大多数 XCP 数据传输和迁移操作。默认情况下，对于 XCP Windows ，并行进程数等于 CPU 数。</block>
-  <block id="3d01016b65c5e356c34758cb1e80518c" category="list-text">10GbE 是数据传输的良好开端。但是，我们使用 25GbE 和 100GbE 进行了测试，这两种配置可提供更好的数据传输，并建议用于大型文件大小的数据传输。</block>
   <block id="a174d00dcd4849e0653429de84c71cde" category="list-text">对于 Azure NetApp Files ，性能因服务级别而异。有关详细信息，请参见下表，其中显示了 Azure NetApp Files 服务级别和性能详细信息。</block>
   <block id="6d59be48f566a73e053e12167b279be5" category="cell">服务级别</block>
   <block id="eb6d8ae6f20283755b339c0dc273988b" category="cell">标准</block>
@@ -8172,15 +8170,11 @@
   <block id="dc0365ad4c92bc3f8973ff5616cd6830" category="doc">使用 Astra 控制中心在 CI/CD 管道中保护数据</block>
   <block id="7e936a7640e03dad09e0b76d68277d56" category="summary">我们使用 NetApp StorageGRID 设置对生产和消费工作负载执行了三到四个节点的分层存储测试。</block>
   <block id="3c2fe55c24192bbec6d6d3aede570213" category="doc">性能测试与可扩展性</block>
-  <block id="41527eb87fda84941b00d3f232f4d599" category="inline-link-macro">先前版本： Confluent Kafka 认证。</block>
-  <block id="2afffcb29b9d7c0e37e29d760a386a1a" category="paragraph"><block ref="2afffcb29b9d7c0e37e29d760a386a1a" category="inline-link-macro-rx"></block></block>
   <block id="4e6097966a711c7acf606365a2925b64" category="list-text">当存储节点数量增加时，完成生产和消费模式操作所需的时间呈线性下降趋势。</block>
   <block id="544baf869b5baa766e8839cd33697872" category="paragraph"><block ref="544baf869b5baa766e8839cd33697872" category="inline-image-macro-rx" type="image"></block></block>
   <block id="d098e780afaaad433dd6982bbc5af988" category="list-text">根据 StorageGRID 节点的数量， S3 检索操作的性能呈线性增长。StorageGRID 最多支持 200 个 StorgeGRID 节点。</block>
   <block id="2cd319a657a7fccb8f747dab6f102dcc" category="paragraph"><block ref="2cd319a657a7fccb8f747dab6f102dcc" category="inline-image-macro-rx" type="image"></block></block>
   <block id="55473d705d75e19b6040dbe34242319c" category="summary">本节介绍此解决方案中使用的技术。</block>
-  <block id="1ac2a5604ed02bc66c4d6241b534d13b" category="inline-link-macro">上一步：解决方案。</block>
-  <block id="d74648020b826dcefccd756c864ffaea" category="paragraph"><block ref="d74648020b826dcefccd756c864ffaea" category="inline-link-macro-rx"></block></block>
   <block id="dc10add739549f11a9f3d6ac44bf7fcc" category="section-title">使用 Grid Manager 进行简单管理</block>
   <block id="a96dbd2aff4998074bc0ca48dc4817d5" category="paragraph"><block ref="a96dbd2aff4998074bc0ca48dc4817d5" category="inline-image-macro-rx" type="image"></block></block>
   <block id="57d56613e28a4b5b4e9f351d17e228f7" category="list-text">管理全局分布的 PB 级对象存储库，例如图像，视频和记录。</block>
@@ -8256,8 +8250,6 @@
   <block id="caf8da5a9482899a1495e1e052a4b287" category="paragraph"><block ref="caf8da5a9482899a1495e1e052a4b287" category="inline-link-macro-rx"></block></block>
   <block id="139709c8a32ed1bcce233da863c5efda" category="summary">本节将介绍从此认证中获得的经验教训。</block>
   <block id="eab9ac0f00ca7c338d71f9acf8885092" category="doc">最佳实践准则</block>
-  <block id="8dc1af71dd55db1f6671ef67f7a660ad" category="inline-link-macro">上一页： Confluent Kafka 重新平衡。</block>
-  <block id="cd99f7a609148177d4d72ba77e774b87" category="paragraph"><block ref="cd99f7a609148177d4d72ba77e774b87" category="inline-link-macro-rx"></block></block>
   <block id="992e82f9c5ce28bbe0068e8ff7ea8a09" category="list-text">当 seg.bytes 较高时，对象存储可提供更好的性能；我们测试了 512 MB 。</block>
   <block id="f165ec9e9849281afaf2162f6396907c" category="list-text">在 Kafka 中，为主题生成的每个记录的密钥或值的长度（以字节为单位）由 `lage.key.value` 参数控制。对于 StorageGRID ， S3 对象载入和检索性能已提高到更高值。例如， 512 字节提供了 5.8 GBps 检索， 1024 字节提供了 7.5 GBps S3 检索， 2048 字节提供了接近 10 Gbps 的值。</block>
   <block id="92a9c9d4753636cd8ef8008380f5de9b" category="paragraph">下图显示了基于 `length 。 key.value` 的 S3 对象载入和检索。</block>
@@ -9300,7 +9292,6 @@
   <block id="774f9746d58ac38abf733a92e4720365" category="paragraph">下图显示了 Confluent Kafka 平台的组件。</block>
   <block id="4f9143a5adb8a0385a1c660d201ef274" category="inline-link-macro">下一步：验证冲突。</block>
   <block id="d566a24bfcb09090b96a073132a83173" category="paragraph"><block ref="d566a24bfcb09090b96a073132a83173" category="inline-link-macro-rx"></block></block>
-  <block id="af8b33edfe7fb61c4c6913a50306a653" category="paragraph">Karthikeyan Nagalingam ， NetApp Rankesh Kumar ， Confluent</block>
   <block id="37281d123cc59a7c05b3ce30b5ea435e" category="paragraph">Apache Kafka 是一个社区分布的事件流式平台，能够每天处理数万亿次的事件。Kafka 最初是一个消息队列，它基于分布式提交日志的抽象化。自从 2011 年由 LinkedIn 创建和开源以来， Kafka 已从消息队列发展为成熟的事件流式平台。Confluent 将 Apache Kafka 与 Confluent Platform 一起分发。Confluent 平台为 Kafka 提供了更多的社区和商业功能，旨在增强大规模生产中操作员和开发人员的流式体验。</block>
   <block id="e1c012d650a6912ddb72ab0ee914d169" category="paragraph">本文档通过提供以下内容介绍在 NetApp 的对象存储产品上使用 Confluent 分层存储的最佳实践准则：</block>
   <block id="2717b4b699259a5e59279aac92d526a2" category="list-text">与 NetApp 对象存储— NetApp StorageGRID 相结合的验证</block>
@@ -9478,4 +9469,13 @@
   <block id="5fd057c554dfaf16f0d97e4defdb81fd" category="list-text"><block ref="5fd057c554dfaf16f0d97e4defdb81fd" category="inline-link-macro-rx"></block></block>
   <block id="de049193fe94b917d3e89452cdfee78d" category="list-text"><block ref="de049193fe94b917d3e89452cdfee78d" category="inline-link-macro-rx"></block></block>
   <block id="5f68200d68deb8399b86dd57533f10a4" category="list-text"><block ref="5f68200d68deb8399b86dd57533f10a4" category="inline-link-macro-rx"></block></block>
+  <block id="a02c6dbd226d5506c1b4b07f6d383615" category="list-text">使用 ` 并行` 选项的 XCP 副本基于 CPU 数量。默认的并行线程数（七个）有时足以执行大多数 XCP 数据传输和迁移操作。默认情况下，对于 XCP Windows ，并行进程数等于 CPU 数。` 并行` 选项的最大数量应小于或等于核心数量。</block>
+  <block id="740950b0e27cdd5def3c4295d5840851" category="list-text">10GbE 是数据传输的良好开端。但是，我们使用 25GbE 和 100GbE 进行了测试，这两种配置可提供更好的数据传输，并建议用于大型文件大小的数据传输。</block>
+  <block id="ef1ee9d1f1e9874aca751251bbce31bf" category="inline-link-macro">Previous ： Confuent verification 。</block>
+  <block id="6d08115c54837de983d3ddc9dcd8f038" category="paragraph"><block ref="6d08115c54837de983d3ddc9dcd8f038" category="inline-link-macro-rx"></block></block>
+  <block id="d7023badac36eeb28bf29785a97c493c" category="inline-link-macro">先前版本：解决方案架构详细信息。</block>
+  <block id="258ee3f437d6a20985ccf4e13065a097" category="paragraph"><block ref="258ee3f437d6a20985ccf4e13065a097" category="inline-link-macro-rx"></block></block>
+  <block id="a29b982ab81cd1d74045ee43e3378135" category="paragraph">Karthikeyan Nagalingam ， Joseph Kandatilparambil ， NetApp Rankesh Kumar ， Confluent</block>
+  <block id="524a5aa4f422c84af378b5418bb1539b" category="inline-link-macro">上一步：融合自重新平衡集群。</block>
+  <block id="ae7f441436d5c9a5dc4278e4ea2b87e8" category="paragraph"><block ref="ae7f441436d5c9a5dc4278e4ea2b87e8" category="inline-link-macro-rx"></block></block>
 </blocks>
