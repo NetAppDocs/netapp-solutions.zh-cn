@@ -79,9 +79,6 @@ NOTE: SDDC 私有云和 NetApp Cloud Volumes 主机代管功能可提供最佳�
 
 Azure NetApp Files ，适用于 NetApp ONTAP 的 Amazon FSx ， Cloud Volumes ONTAP （在所有三个主要超大规模企业中均有提供）和适用于 Google Cloud 的 Cloud Volumes Service 可与子虚拟机结合使用。此混合存储架构由一个 vSAN 数据存储库组成，用于存放子操作系统和应用程序二进制数据。应用程序数据通过基于子系统的 iSCSI 启动程序或 NFS/SMB 挂载连接到 VM ，这些启动程序或挂载可分别直接与适用于 NetApp ONTAP 的 Amazon FSx ， Cloud Volume ONTAP ， Azure NetApp Files 和适用于 Google Cloud 的 Cloud Volumes Service 进行通信。此配置可让您轻松克服存储容量方面的挑战，就像使用 vSAN 一样，可用空间取决于可宽空间和所使用的存储策略。
 
-
-NOTE: NetApp 存储作为数据存储库，目前可在所有主要超大规模云中作为私有预览版使用。
-
 我们来考虑一下 AWS 上的 VMware Cloud 上的三节点 SDDC 集群：
 
 * 三节点 SDDC 的总原始容量 = 31.1TB （每个节点大约 10 TB ）。
@@ -101,6 +98,15 @@ NOTE: NetApp 存储作为数据存储库，目前可在所有主要超大规模�
 
 因此，使用 NetApp Cloud Volumes 作为子系统连接的存储有助于扩展存储和优化 TCO ，同时满足性能和数据保护要求。
 
+[NOTE]
+====
+NetApp 存储作为数据存储库，目前可在所有主要超大规模云中作为私有预览版使用。有关详细信息，请访问以下链接。
+
+link:https://blogs.vmware.com/cloud/2021/12/01/vmware-cloud-on-aws-going-big-reinvent2021/["FSX ONTAP 作为 AWS 的原生数据存储库"]
+
+
+
+====
 
 
 === 需要记住的要点
@@ -113,7 +119,7 @@ NOTE: NetApp 存储作为数据存储库，目前可在所有主要超大规模�
 
 
 
-NOTE: 此适用场景子系统连接的存储。
+NOTE: 此适用场景子系统仅连接存储。
 
 
 
@@ -140,6 +146,15 @@ NetApp 云存储具有以下优势：
 * 在编写本文档时，来宾存储是唯一可用的选项。
 
 
+[NOTE]
+====
+NetApp 存储作为数据存储库，目前可在所有主要超大规模云中作为私有预览版使用。有关详细信息，请访问以下链接。
+
+link:https://blogs.vmware.com/cloud/2021/12/01/vmware-cloud-on-aws-going-big-reinvent2021/["FSX ONTAP 作为 AWS 的原生数据存储库"]
+
+
+
+====
 
 NOTE: 请联系 NetApp 解决方案架构师和相应的超大规模云架构师来规划和估算存储以及所需数量的主机。NetApp 建议先确定存储性能要求，然后再使用 Cloud Volumes ONTAP 规模估算器以正确的吞吐量最终确定存储实例类型或相应的服务级别。
 

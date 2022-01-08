@@ -8860,7 +8860,6 @@
   <block id="c231690c8e9fabbd819ec1805becb157" category="list-text">无法提供多个性能层来满足应用程序要求，性能和成本要求。</block>
   <block id="5d4c92ddd5fe9a6044b25c17d3368207" category="list-text">很容易达到基于集群主机构建的 vSAN 的存储容量限制。使用 NetApp Cloud Volumes 扩展存储以托管活动数据集或将较冷的数据分层到永久性存储。</block>
   <block id="c1cf68955de5fa20274b29fa4a2a863f" category="paragraph">Azure NetApp Files ，适用于 NetApp ONTAP 的 Amazon FSx ， Cloud Volumes ONTAP （在所有三个主要超大规模企业中均有提供）和适用于 Google Cloud 的 Cloud Volumes Service 可与子虚拟机结合使用。此混合存储架构由一个 vSAN 数据存储库组成，用于存放子操作系统和应用程序二进制数据。应用程序数据通过基于子系统的 iSCSI 启动程序或 NFS/SMB 挂载连接到 VM ，这些启动程序或挂载可分别直接与适用于 NetApp ONTAP 的 Amazon FSx ， Cloud Volume ONTAP ， Azure NetApp Files 和适用于 Google Cloud 的 Cloud Volumes Service 进行通信。此配置可让您轻松克服存储容量方面的挑战，就像使用 vSAN 一样，可用空间取决于可宽空间和所使用的存储策略。</block>
-  <block id="b705b3f95f20899325d309e6ac57279b" category="admonition">NetApp 存储作为数据存储库，目前可在所有主要超大规模云中作为私有预览版使用。</block>
   <block id="1a5208bfffc624ccf99dfcbbf2078050" category="paragraph">我们来考虑一下 AWS 上的 VMware Cloud 上的三节点 SDDC 集群：</block>
   <block id="fab7fb31baaec1ccac4fe688e1a4c5d4" category="list-text">三节点 SDDC 的总原始容量 = 31.1TB （每个节点大约 10 TB ）。</block>
   <block id="ca189b47c3a1dfe1adbd1519688e4cc8" category="list-text">在添加其他主机之前要保留的可宽空间 = 25% = （ .25 x 31.1TB ） = 7.6 TB 。</block>
@@ -8877,7 +8876,6 @@
   <block id="d3c0fd4b510310b9bd00463208eade94" category="list-text">测试显示，从相应 SDDC 访问存储时会出现 2 到 4 毫秒的额外延迟。在映射存储时，将此额外延迟考虑到应用程序要求。</block>
   <block id="b83cf0bc9b65a0fcd5f49d4c96dceea8" category="list-text">要在测试故障转移和实际故障转移期间挂载来宾连接的存储，请确保重新配置 iSCSI 启动程序，更新 SMB 共享的 DNS 以及在 fstab 中更新 NFS 挂载点。</block>
   <block id="1b4048870ed334dbc2e7d6f09a814188" category="list-text">确保已在 VM 中正确配置来宾系统内 Microsoft 多路径 I/O （ MPIO ），防火墙和磁盘超时注册表设置。</block>
-  <block id="cb24a031418d2311ef599cfd18d09880" category="admonition">此适用场景子系统连接的存储。</block>
   <block id="00b23e82efc2ec82b134496e575a934c" category="section-title">NetApp 云存储的优势</block>
   <block id="80def6ec4d999fc4d082800c8c33f6ec" category="paragraph">NetApp 云存储具有以下优势：</block>
   <block id="2e594db552f7cd9c7f02d87507dbb471" category="list-text">通过独立于计算扩展存储，提高计算到存储的密度。</block>
@@ -9183,10 +9181,6 @@
   <block id="bb48bc786b7087ed5efe4969dda9fc85" category="section-title">在 Google Cloud 中配置 GCVE</block>
   <block id="6eb516b97eae0ab93b8d6aab35fbb764" category="section-title">适用于 GCVE 的 NetApp 存储选项</block>
   <block id="50b53922d656bce75f35201b661fc378" category="paragraph">NetApp 存储可以通过多种方式在 GCP GCVE 中用作 guess connected 或原生数据存储库。</block>
-  <block id="cb9ab2dcef988aa0eaa2da1d789cfdb4" category="section-title">解决方案用例</block>
-  <block id="dafc77805f8a0d52498735ee499d4480" category="paragraph">借助 NetApp 和 VMware 云解决方案，许多用例都可以轻松部署在 Azure AVS 中。使用情形包括：</block>
-  <block id="e67def868f3133574b28ffe738ad44c1" category="inline-link-macro">浏览适用于 Google Cloud GCVE 的 NetApp 解决方案</block>
-  <block id="5e7670e99ae7db80618f16965d677af6" category="paragraph"><block ref="5e7670e99ae7db80618f16965d677af6" category="inline-link-macro-rx"></block></block>
   <block id="e3a2a8e4a74a67a9514c2aec5e4fac69" category="doc">适用于 Azure 的 NetApp 原生数据存储库选项</block>
   <block id="99d04ce0dcd35b869d3c86120b76a443" category="summary">NetApp 企业级混合云解决方案是一组战略和技术功能，用于展示 NetApp 存储在主要公有云超大规模企业中的功能。</block>
   <block id="3cce9a9057a6d96d9ac2ddab52d477fe" category="doc">NetApp 企业混合云解决方案</block>
@@ -9197,8 +9191,6 @@
   <block id="1f0a2077c33b91b3daaaea05c7fadc07" category="section-title">在 Azure 中配置 AVS</block>
   <block id="cdac9a2e7f1dc52240712d4a191378e8" category="section-title">适用于 AVS 的 NetApp 存储选项</block>
   <block id="a69a7b9e874f9f6e0703191e7825cc4f" category="paragraph">NetApp 存储可以通过多种方式在 Azure AVS 中用作 guess connected 或原生数据存储库。</block>
-  <block id="79e4e4c7346c156a268641272a85c01e" category="inline-link-macro">浏览适用于 Azure AVS 的 NetApp 解决方案</block>
-  <block id="6626f21cba60531fb6ab33c5b686fd03" category="paragraph"><block ref="6626f21cba60531fb6ab33c5b686fd03" category="inline-link-macro-rx"></block></block>
   <block id="cf3ac5a0dae3780b356e57c121b3eab0" category="doc">在 Google Cloud Platform （ GCP ）上部署和配置虚拟化环境</block>
   <block id="8514045c5551663f28246e665ca2f189" category="list-text"><block ref="8514045c5551663f28246e665ca2f189" category="inline-link-macro-rx"></block></block>
   <block id="3cef16671ee166d12c5fd192fa419358" category="list-text"><block ref="3cef16671ee166d12c5fd192fa419358" category="inline-link-macro-rx"></block></block>
@@ -9208,9 +9200,6 @@
   <block id="8658ccb747e94ac624861f5761a34716" category="section-title">在 AWS 中配置 VMC</block>
   <block id="e9f84da32eb512bd768458a738ed8aa6" category="section-title">适用于 VMC 的 NetApp 存储选项</block>
   <block id="cd5a564d709538be5df5e7167600498d" category="paragraph">NetApp 存储可以通过多种方式在 AWS VMC 中用作 guess connected 或原生数据存储库。</block>
-  <block id="c952cd22d4e2a6bf4a86b3bc88637d92" category="paragraph">借助 NetApp 和 VMware 云解决方案，许多用例都可以轻松部署在 AWS VMC 中。使用情形包括：</block>
-  <block id="7c9a6204c3d04cd593127efe773bc82e" category="inline-link-macro">浏览适用于 AWS VMC 的 NetApp 解决方案</block>
-  <block id="e9923439d335946afaff146da3d107ff" category="paragraph"><block ref="e9923439d335946afaff146da3d107ff" category="inline-link-macro-rx"></block></block>
   <block id="bb01fec2870d3f698517f8471454637b" category="doc">在 Azure 上部署和配置虚拟化环境</block>
   <block id="c33cce5b25d7b62b8be123136ad64ae1" category="list-text"><block ref="c33cce5b25d7b62b8be123136ad64ae1" category="inline-link-macro-rx"></block></block>
   <block id="d47c67e14996fb3c08deb5311a358578" category="list-text"><block ref="d47c67e14996fb3c08deb5311a358578" category="inline-link-macro-rx"></block></block>
@@ -9478,4 +9467,26 @@
   <block id="a29b982ab81cd1d74045ee43e3378135" category="paragraph">Karthikeyan Nagalingam ， Joseph Kandatilparambil ， NetApp Rankesh Kumar ， Confluent</block>
   <block id="524a5aa4f422c84af378b5418bb1539b" category="inline-link-macro">上一步：融合自重新平衡集群。</block>
   <block id="ae7f441436d5c9a5dc4278e4ea2b87e8" category="paragraph"><block ref="ae7f441436d5c9a5dc4278e4ea2b87e8" category="inline-link-macro-rx"></block></block>
+  <block id="b583dc49832a978014ef0d14fe7ef1ce" category="paragraph">详细了解 NetApp 为每个超大规模企业提供的 VMware 环境解决方案—从迁移工作流，扩展 / 扩展到云，备份 / 还原和灾难恢复。</block>
+  <block id="2c3412ea249289d455415fc5974540d7" category="paragraph">下表定义了每个超大规模存储器和 NetApp 存储选项中的解决方案用例。单击所需单元格中的详细信息以查看解决方案详细信息。</block>
+  <block id="205549244e00d8fc3aed42cc242b6e66" category="open-title">AWS （ VMC ）</block>
+  <block id="7fb61d6790786c6584895ba13b1d7acf" category="cell">* 用例 *</block>
+  <block id="5e6a9c7508fcb882686fb57577c20564" category="cell">备份到云</block>
+  <block id="fca9cd52865f9c45b9c1c0810944323a" category="cell">灾难恢复到云</block>
+  <block id="1f7519825c9e66f611f1b8a2dfab6d98" category="cell">开发 / 测试</block>
+  <block id="03a85053364f989565c431e1f3cb14b6" category="cell">突发到云</block>
+  <block id="520a0900399ea06bc457dd365ce39b56" category="cell">迁移到云</block>
+  <block id="1d8b77813302d5fc10b4a01c9d1f71ba" category="open-title">Azure （ AVS ）</block>
+  <block id="f06436d87956805c42a72d20c6e0c6aa" category="cell">* ANF*</block>
+  <block id="a060ea40d8e1f38832adc8dab3110308" category="cell">* CVO*</block>
+  <block id="7896a48b4cb2f9b6d3c3612c0b5a8886" category="open-title">Google （ GCVE ）</block>
+  <block id="cb56c4671d6ec2da0b5f3b248999cba7" category="cell">* CVS *</block>
+  <block id="e79592580385a4ae403f3655a7200469" category="paragraph">NetApp 存储作为数据存储库，目前可在所有主要超大规模云中作为私有预览版使用。有关详细信息，请访问以下链接。</block>
+  <block id="bb747e48aa1d3d3e7f7770860486da18" category="inline-link-macro">FSX ONTAP 作为 AWS 的原生数据存储库</block>
+  <block id="0e8dc2a599bea7faae9351c694a4f162" category="inline-link-macro">Azure NetApp Files （ ANF ）作为 Azure 的原生数据存储库</block>
+  <block id="3e6b003f71badaeb92ae26f7ed351a37" category="inline-link-macro">Cloud Volumes Service （ CVS ）作为 GCP 的原生数据存储库</block>
+  <block id="5ab63999a01c682c3e901f550611531f" category="paragraph"><block ref="6b7315f1b0dd5562c105ae89b6efa525" category="inline-link-macro-rx"></block>
+<block ref="730b198f919befec53ca8dcebabd176b" category="inline-link-macro-rx"></block>
+<block ref="7fb3f61cbe4dcbff12c3d3e4fb2e9565" category="inline-link-macro-rx"></block></block>
+  <block id="bf3f0fd9ec5faf81793c3abc5e3b9127" category="admonition">此适用场景子系统仅连接存储。</block>
 </blocks>
