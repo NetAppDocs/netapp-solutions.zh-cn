@@ -3560,12 +3560,9 @@
   <block id="0416d04b345b434b120840c30ddaf0a1" category="paragraph">NetApp 已根据 NetApp 测试开发出一组 ESXi 主机多路径和 HBA 超时设置，用于正确处理 ONTAP 。可以使用适用于 VMware vSphere 的 ONTAP 工具轻松设置这些设置。在摘要信息板中，单击主机系统 portlet 中的编辑设置，或者右键单击 vCenter 中的主机，然后导航到 ONTAP tools &gt; Set recommended values 。下面是当前在 9.8 版中建议的主机设置。</block>
   <block id="dec4361376291bf7e7976c204f3a6cc8" category="cell">主机设置</block>
   <block id="024c7088f8cb994f40e5d60b87c10cbb" category="cell">NetApp 建议的价值</block>
-  <block id="cc2060f93ac4b290d547f621584371d4" category="cell">ESXi 高级配置</block>
   <block id="73663d0d00956f0632e4ae75d811d53f" category="cell">VMFS3.HardwareAcceleratedLocking</block>
   <block id="2eabcf9ece81cd6f8095d869d0ecfdb5" category="cell">保留不变（ VMware 默认值为 1 ）。</block>
   <block id="1b50110aedae4d8d2043a4eb9beb20af" category="cell">VMFS3.EnableBlockDelete</block>
-  <block id="0ad18436fcb2157ada78660d215e7796" category="cell">保留为设置值（ VMware 默认值为 0 ，但 VMFS6 不需要此设置）。有关详细信息，请参见 VMware 知识库文章。</block>
-  <block id="7925a52b4ff8642c857aab6023d76d90" category="cell">NFS 设置</block>
   <block id="c3b49a515dd0046685e06092642aa139" category="cell">Net.TcpipHeapSize</block>
   <block id="abcf68baf479cae32e490eb770477d84" category="cell">vSphere 6.0 或更高版本，设置为 32 。所有其他 NFS 配置，设置为 30 。</block>
   <block id="504e96cc79e7efe30a8271cea152d9d1" category="cell">Net.TcpipHeapMax</block>
@@ -3584,7 +3581,6 @@
   <block id="45aa5481fa55802a29a96aefd2f5dab1" category="cell">对于所有 NFS 配置，均设置为 5 。</block>
   <block id="54a08b15243d9078d3b5a47f8242da6f" category="cell">SUNRPC.MaxConnPerIP</block>
   <block id="9a9ccbecb3f315797ff8e709d85a0e18" category="cell">vSphere 7.0 或更高版本，设置为 128 。</block>
-  <block id="e19159e292541f9e19415475bfdf8f38" category="cell">FC/FCoE 设置</block>
   <block id="2e556ad678160413b32dcca55c7d1f5f" category="cell">路径选择策略</block>
   <block id="1e304108bae216d7b24d43f9bc868298" category="cell">如果使用采用 ALUA 的 FC 路径，则设置为 RR （轮循）。对于所有其他配置，设置为 FIXED 。将此值设置为 RR 有助于在所有主动 / 优化路径之间实现负载平衡。固定值适用于较旧的非 ALUA 配置，有助于防止代理 I/O换言之，它有助于防止 I/O 流向在 7- 模式下运行 Data ONTAP 的环境中高可用性（ HA ）对的另一节点。</block>
   <block id="117704664d6cada78ac3107380f63d23" category="cell">disk.qFullSampSize</block>
@@ -3594,7 +3590,6 @@
   <block id="19c08de7404551288e1274186e039ef4" category="cell">Emulex FC HBA 超时</block>
   <block id="b4dbfc2d52627e923cbb563a31ff756d" category="cell">使用默认值。</block>
   <block id="d46cddda4da7ec11f17472d11df95b68" category="cell">QLogic FC HBA 超时</block>
-  <block id="7ecffb067b82aefb73bed04aea9fa562" category="cell">iSCSI 设置</block>
   <block id="d7e64409eb99602fc3b57a9f0b9287d6" category="cell">对于所有 iSCSI 路径，设置为 RR （轮循）。将此值设置为 RR 有助于在所有主动 / 优化路径之间实现负载平衡。</block>
   <block id="fb55ee99c04280ac638757869929785d" category="paragraph">在创建 ONTAP FlexVol 卷和 LUN 时， ONTAP 工具还会指定某些默认设置：</block>
   <block id="b97847dc22c9e1f02417ab38785b34e6" category="cell">ONTAP 工具</block>
@@ -9490,4 +9485,10 @@
 <block ref="7fb3f61cbe4dcbff12c3d3e4fb2e9565" category="inline-link-macro-rx"></block></block>
   <block id="bf3f0fd9ec5faf81793c3abc5e3b9127" category="admonition">此适用场景子系统仅连接存储。</block>
   <block id="8ad188089680179dea816084001d7bf0" category="sidebar">借助 E 系列和 BeeGFS 实现 AI 和分析工作流的数据移动</block>
+  <block id="af4c57809e604bab0cdf9a5ac5766ac8" category="cell">* ESXi 高级配置 *</block>
+  <block id="0fef419d5842ff81bf9c9046c637822c" category="inline-link-macro">2007427</block>
+  <block id="f812302694bd63641124f6012aebac60" category="cell">保留为设置值（ VMware 默认值为 0 ，但 VMFS6 不需要此设置）。有关详细信息，请参见 VMware 知识库文章 <block ref="25cd71618ac903bfc347baf53ab838b7" category="inline-link-macro-rx"></block>。</block>
+  <block id="571cc1d48c6d1ff3cf7e3a54cb035753" category="cell">* NFS 设置 *</block>
+  <block id="c0b3fd5512c2093847f753f398290f30" category="cell">* FC/FCoE 设置 *</block>
+  <block id="19b5aaf3e2cb86809996ca63a2a416b0" category="cell">* iSCSI 设置 *</block>
 </blocks>
