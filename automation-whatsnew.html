@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
   <head class="at-element-marker">
-  <title>解决方案自动化中的新增功能</title>
+  <title>解决方案自动化的新增功能</title>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge,chrome=1">
   <meta http-equiv="language" content="en">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="解决方案自动化中的新增功能" />
+  <meta property="og:title" content="解决方案自动化的新增功能" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://docs.netapp.com/zh-cn/netapp-solutions/automation-whatsnew.html" />
 	<meta property="og:description" content="NetApp 解决方案中自动化功能的最新新增功能" />
@@ -286,6 +286,8 @@
                   <a href="https://docs.netapp.com/us-en/netapp-solutions/automation-whatsnew.html" class="n-menu__header-text"><span translate="no" class="notranslate">English</span></a>
                 </li><li class="n-menu__list-item n-menu__list-item--level-1">
                   <a href="https://docs.netapp.com/ja-jp/netapp-solutions/automation-whatsnew.html" class="n-menu__header-text"><span translate="no" class="notranslate">日本語</span></a>
+                </li><li class="n-menu__list-item n-menu__list-item--level-1">
+                  <a href="https://docs.netapp.com/ko-kr/netapp-solutions/automation-whatsnew.html" class="n-menu__header-text"><span translate="no" class="notranslate">한국어</span></a>
                 </li></ul>
             </li>
           </ul>
@@ -331,7 +333,7 @@
 <div class="ie-main">
   <!-- Sidebar Column -->
   
-  <div class="col-md-3" >
+  <div class="col-md-3" id="sidebar-height">
       <div class="n-pdf-header">
   <a id="toggleButtonPdf" class="n-pdf-button" type="button">
     <img src="/zh-cn/netapp-solutions/images/pdf.png" width="16" height="16"/>可用的 PDF<span>
@@ -3953,6 +3955,13 @@
         法律声明
       </a></li></ul>
 </div>
+<script>
+  window.onscroll = () => {
+    const value = -40 - (document.body.scrollHeight - (window.innerHeight + document.scrollingElement.scrollTop));
+    
+    document.getElementById("sidebar-height").style.bottom = Math.max(0,value) + "px";
+};
+</script>
 <!-- this highlights the active parent class in the navgoco sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
 <script>$("li.active").parents('li').toggleClass("active");</script>
 
@@ -3978,7 +3987,7 @@
           <a href="/zh-cn/netapp-solutions/">NetApp&nbsp;Solutions</a>
         </li>
         <li class="n-breadcrumb__list-item">
-          解决方案自动化中的新增功能
+          解决方案自动化的新增功能
         </li>
       </ul>
     </div>
@@ -4001,14 +4010,14 @@
     </div>
   </span>
 </div><div class="n-doc__component-detail-heading-wrap">
-  <h1 class="n-doc__component-detail-heading">解决方案自动化中的新增功能</h1>
+  <h1 class="n-doc__component-detail-heading">解决方案自动化的新增功能</h1>
 </div>
 
 
 <p class="page-details">
   
     
-    <time datetime="2022-01-18 22:45:22 +0000">01/18/2022</time>
+    <time datetime="2022-01-31 14:52:22 +0000">01/31/2022</time>
     
   
 
@@ -4066,7 +4075,7 @@
   <div class="page-nav-toolbar">
     <div id="version-dropdown"></div>
     <div class="page-nav-contribute"  >
-      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/issues/new?body=Page%3A%20[解决方案自动化中的新增功能](https://docs.netapp.com/zh-cn/netapp-solutions/automation-whatsnew.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
+      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/issues/new?body=Page%3A%20[解决方案自动化的新增功能](https://docs.netapp.com/zh-cn/netapp-solutions/automation-whatsnew.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
       <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/blob/main/automation-whatsnew.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a>
       <a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/netapp-solutions/images/article-sm.svg" class="github-icon" />提供者指南</a>
     </div>
