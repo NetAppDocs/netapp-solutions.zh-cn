@@ -4091,7 +4091,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-02-07 20:09:23 +0000">02/07/2022</time>
+    <time datetime="2022-02-07 22:16:29 +0000">02/07/2022</time>
     
   
 
@@ -4131,12 +4131,6 @@
 <ol class="loweralpha" type="a">
 <li>
 <p>在所有 MapR 节点上禁用 nlockmgr 服务。</p>
-</li>
-</ol>
-</div>
-</li>
-</ol>
-</div>
 <div class="literalblock">
 <div class="content">
 <pre>root@workr-138: ~$ rpcinfo -p
@@ -4166,13 +4160,9 @@ root@workr-138: ~$ rpcinfo -d 100021 3
 root@workr-138: ~$ rpcinfo -d 100021 4</pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+</li>
 <li>
 <p>从 ` /opt/mapr/conf/exports` 文件中所有 MapR 节点上的 MapR-FS 导出特定文件夹。导出子文件夹时，请勿使用不同的权限导出父文件夹。</p>
-</li>
-</ol>
-</div>
 <div class="literalblock">
 <div class="content">
 <pre>[mapr@workr-138 ~]$ cat /opt/mapr/conf/exports
@@ -4208,13 +4198,12 @@ root@workr-138: ~$ rpcinfo -d 100021 4</pre>
 [mapr@workr-138 ~]$</pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>刷新 MapR-FS NFS 服务。</p>
 </li>
 </ol>
 </div>
+</li>
+<li>
+<p>刷新 MapR-FS NFS 服务。</p>
 <div class="literalblock">
 <div class="content">
 <pre>root@workr-138: tmp$ maprcli nfsmgmt refreshexports
@@ -4226,13 +4215,9 @@ MapR credentials of user 'mapr' for cluster 'my.cluster.com' are written to '/tm
 [mapr@workr-138 ~]$ maprcli nfsmgmt refreshexports</pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+</li>
 <li>
 <p>将虚拟 IP 范围分配给 MapR 集群中的特定服务器或一组服务器。然后， MapR 集群会为特定服务器分配一个 IP 以进行 NFS 数据访问。这些 IP 可实现高可用性，这意味着，如果具有特定 IP 的服务器或网络出现故障，则可以使用 IP 范围内的下一个 IP 进行 NFS 访问。</p>
-</li>
-</ol>
-</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -4254,13 +4239,9 @@ MapR credentials of user 'mapr' for cluster 'my.cluster.com' are written to '/tm
 <div class="paragraph">
 <p><span class="image"><img src="./../media/bda-ai-image9.png" alt="错误：缺少图形映像"></span></p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+</li>
 <li>
 <p>检查在每个 MapR 节点上分配的虚拟 IP ，并使用它们进行 NFS 数据访问。</p>
-</li>
-</ol>
-</div>
 <div class="literalblock">
 <div class="content">
 <pre>root@workr-138: ~$ ip a
@@ -4311,13 +4292,9 @@ MapR credentials of user 'mapr' for cluster 'my.cluster.com' are written to '/tm
 [root@workr-140 ~]#</pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+</li>
 <li>
 <p>使用分配的虚拟 IP 挂载 NFS 导出的 MapR-FS 以检查 NFS 操作。但是，使用 NetApp XCP 进行数据传输时，不需要执行此步骤。</p>
-</li>
-</ol>
-</div>
 <div class="literalblock">
 <div class="content">
 <pre>root@workr-138: tmp$ mount -v -t nfs 10.63.150.92:/maprnfs3 /tmp/testmount/
@@ -4351,20 +4328,13 @@ localhost:/mapr         100G     0  100G   0% /mapr
 root@workr-138: tmp$</pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+</li>
 <li>
 <p>配置 NetApp XCP 以将数据从 MapR-FS NFS 网关传输到 ONTAP NFS 。</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
 <p>配置 XCP 的目录位置。</p>
-</li>
-</ol>
-</div>
-</li>
-</ol>
-</div>
 <div class="literalblock">
 <div class="content">
 <pre>[root@hdp2 linux]# cat /opt/NetApp/xFiles/xcp/xcp.ini
@@ -4374,13 +4344,9 @@ root@workr-138: tmp$</pre>
 catalog =  10.63.150.213:/nc_volume1</pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+</li>
 <li>
 <p>将此许可证文件复制到 ` /opt/netapp/xFiles/XCP/` 。</p>
-</li>
-</ol>
-</div>
 <div class="literalblock">
 <div class="content">
 <pre>root@workr-138: src$ cd /opt/NetApp/xFiles/xcp/
@@ -4395,16 +4361,12 @@ drwxr-xr-x 2 root   root     59 Dec  5 19:04 .
 root@workr-138: xcp$</pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+</li>
 <li>
 <p>使用 <code>XCP activate</code> 命令激活 XCP 。</p>
 </li>
 <li>
 <p>检查 NFS 导出的源。</p>
-</li>
-</ol>
-</div>
 <div class="literalblock">
 <div class="content">
 <pre>[root@hdp2 linux]# ./xcp show 10.63.150.92
@@ -4427,13 +4389,9 @@ drwxr-xr-x --- root root 2 2 10m51s 10.63.150.92:/maprnfs3
 [root@hdp2 linux]#</pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+</li>
 <li>
 <p>使用 XCP 从多个 MapR 节点从多个源 IP 和多个目标 IP （ ONTAP LIF ）传输数据。</p>
-</li>
-</ol>
-</div>
 <div class="literalblock">
 <div class="content">
 <pre>root@workr-138: linux$ ./xcp_yatin copy --parallel 20 10.63.150.96,10.63.150.97:/maprnfs3/tg4 10.63.150.85,10.63.150.86:/datapipeline_dataset/tg4_dest
@@ -4469,13 +4427,9 @@ xcp: mount '10.63.150.92:/maprnfs3/tg4_2': WARNING: This NFS server only support
  130 scanned, 128 giants, 67.2 GiB in (876 MiB/s), 67.2 GiB out (877 MiB/s), 1m16s</pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+</li>
 <li>
 <p>检查存储控制器上的负载分布。</p>
-</li>
-</ol>
-</div>
 <div class="literalblock">
 <div class="content">
 <pre>Hadoop-AFF8080::*&gt; statistics show-periodic -interval 2 -iterations 0 -summary true -object nic_common -counter rx_bytes|tx_bytes -node Hadoop-AFF8080-01 -instance e3b
@@ -4510,6 +4464,12 @@ Hadoop-AFF8080: nic_common.e9b: 12/6/2019 15:55:07
     905MB   4.86MB
     902MB   4.90MB</pre>
 </div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
 </div>
 <div class="paragraph">
 <p><a href="bda-ai-where-to-find-additional-information.html">"下一步：从何处查找追加信息。"</a></p>
