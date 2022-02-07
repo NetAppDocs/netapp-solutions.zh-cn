@@ -1,0 +1,89 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/bda-ai-gpfs-to-netapp-ontap-nfs.html 
+keywords: GPFS, nfs, nsd, admin node, quorum node, manager node, nsd server, protocol node 
+summary: 在此验证中，我们使用四台服务器作为网络共享磁盘（ Network Shared Disk ， NSD ）服务器来为 GPFS 提供物理磁盘。在 NSD 磁盘上创建了 GPF ，以便将其导出为 NFS 导出，以便 NFS 客户端可以访问它们，如下图所示。我们使用 XCP 将数据从 GPFS 导出的 NFS 复制到 NetApp NFS 卷。 
+---
+= 从 GPF 到 NetApp ONTAP NFS
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:bda-ai-data-mover-solution-for-ai.html["先前版本： Data Mover 解决方案 for AI 。"]
+
+在此验证中，我们使用四台服务器作为网络共享磁盘（ Network Shared Disk ， NSD ）服务器来为 GPFS 提供物理磁盘。在 NSD 磁盘上创建了 GPF ，以便将其导出为 NFS 导出，以便 NFS 客户端可以访问它们，如下图所示。我们使用 XCP 将数据从 GPFS 导出的 NFS 复制到 NetApp NFS 卷。
+
+image:bda-ai-image5.png["错误：缺少图形映像"]
+
+
+
+== GPF 要点
+
+GPFS 中使用以下节点类型：
+
+* * 管理节点。 * 指定一个可选字段，其中包含管理命令用于在节点之间进行通信的节点名称。例如，管理节点 `mastr-51.netapp.com` 可以将网络检查传递给集群中的所有其他节点。
+* * 仲裁节点。 * 确定节点是否包含在从中派生仲裁的节点池中。您至少需要一个节点作为仲裁节点。
+* * 管理器节点。 * 表示节点是否属于可从中选择文件系统管理器和令牌管理器的节点池。最好将多个节点定义为管理节点。您指定为管理器的节点数取决于工作负载和您拥有的 GPFS 服务器许可证数。如果您运行的是大型并行作业，则与支持 Web 应用程序的四节点集群相比，您可能需要更多的管理节点。
+* * NSD 服务器。 * 用于准备每个物理磁盘以用于 GPFS 的服务器。
+* * 协议节点。 * 通过任何安全 Shell （ SSH ）协议与 NFS 直接共享 GPFS 数据的节点。此节点需要 GPFS 服务器许可证。
+
+
+
+
+== GPFS ， NFS 和 XCP 的操作列表
+
+本节提供了创建 GPFS ，将 GPFS 导出为 NFS 导出以及使用 XCP 传输数据的操作列表。
+
+
+
+=== 创建 GPFS
+
+要创建 GPFS ，请完成以下步骤：
+
+. 在其中一台服务器上下载并安装 Linux 版本的频谱级数据访问。
+. 在所有节点中安装前提条件包（例如 chef ），并在所有节点中禁用安全增强型 Linux （ SELinux ）。
+. 设置安装节点并将管理节点和 GPFS 节点添加到集群定义文件中。
+. 添加管理器节点，仲裁节点， NSD 服务器和 GPFS 节点。
+. 添加 GUI ，管理和 GPFS 节点，并根据需要添加额外的 GUI 服务器。
+. 添加另一个 GPFS 节点并检查所有节点的列表。
+. 指定要在集群定义文件中的所有 GPFS 节点上设置的集群名称，配置文件，远程 shell 二进制文件，远程文件副本二进制文件和端口范围。
+. 查看 GPFS 配置设置并添加其他管理节点。
+. 禁用数据收集并将数据包上传到 IBM 支持中心。
+. 启用 NTP 并在安装之前预检查配置。
+. 配置，创建和检查 NSD 磁盘。
+. 创建 GPFS 。
+. 挂载 GPFS 。
+. 验证 GPFS 并为其提供所需的权限。
+. 运行 `dd` 命令，验证 GPFS 读写。
+
+
+
+
+=== 将 GPFS 导出到 NFS
+
+要将 GPFS 导出到 NFS ，请完成以下步骤：
+
+. 通过 ` /etc/exports` 文件将 GPFS 导出为 NFS 。
+. 安装所需的 NFS 服务器软件包。
+. 启动 NFS 服务。
+. 列出 GPFS 中的文件以验证 NFS 客户端。
+
+
+
+
+=== 配置 NFS 客户端
+
+要配置 NFS 客户端，请完成以下步骤：
+
+. 通过 ` /etc/exports` 文件将 GPFS 导出为 NFS 。
+. 启动 NFS 客户端服务。
+. 通过 NFS 协议在 NFS 客户端上挂载 GPFS 。
+. 验证 NFS 挂载文件夹中的 GPFS 文件列表。
+. 使用 XCP 将数据从 GPFS 导出的 NFS 移动到 NetApp NFS 。
+. 验证 NFS 客户端上的 GPFS 文件。
+
+
+link:bda-ai-hdfs-and-mapr-fs-to-ontap-nfs.html["接下来： HDFS 和 MapR-FS 到 ONTAP NFS 。"]

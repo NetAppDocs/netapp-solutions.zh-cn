@@ -1,0 +1,39 @@
+---
+sidebar: data-analytics/sidebar 
+permalink: bda-ai-data-mover-solution-for-ai.html 
+keywords: data mover, ai, hadoop, nipam, nfs, azure, 
+summary: 适用于 AI 的数据移动工具解决方案基于客户处理 AI 操作中的 Hadoop 数据的需求。NetApp 使用 NIPAM 将数据从 HDFS 移动到 NFS 。在一个使用情形中，客户需要将数据移动到内部的 NFS ，而另一客户则需要将数据从 Windows Azure 存储 Blob 移动到 Cloud Volumes Service ，以便处理云中 GPU 云实例中的数据。 
+---
+= 适用于 AI 的数据移动工具解决方案
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:bda-ai-data-mover-solution.html["先前版本： Data MOVERer 解决方案。"]
+
+适用于 AI 的数据移动工具解决方案基于客户处理 AI 操作中的 Hadoop 数据的需求。NetApp 使用 NIPAM 将数据从 HDFS 移动到 NFS 。在一个使用情形中，客户需要将数据移动到内部的 NFS ，而另一客户则需要将数据从 Windows Azure 存储 Blob 移动到 Cloud Volumes Service ，以便处理云中 GPU 云实例中的数据。
+
+下图显示了数据移动程序解决方案的详细信息。
+
+image:bda-ai-image4.png["错误：缺少图形映像"]
+
+要构建数据移动程序解决方案，需要执行以下步骤：
+
+. ONTAP SAN 可提供 HDFS ， NAS 可通过 NIPAM 为生产数据湖集群提供 NFS 卷。
+. 客户的数据位于 HDFS 和 NFS 中。NFS 数据可以是来自其他应用程序的生产数据，用于大数据分析和 AI 操作。
+. NetApp FlexClone 技术可创建生产 NFS 卷的克隆并将其配置到内部的 AI 集群。
+. 使用 NIPAM 和 `Hadoop distcp` 命令将来自 HDFS SAN LUN 的数据复制到 NFS 卷中。NIPAM 使用多个网络接口的带宽传输数据。此过程可缩短数据复制时间，以便传输更多数据。
+. 这两个 NFS 卷都配置到 AI 集群以执行 AI 操作。
+. 要使用云中的 GPU 处理内部 NFS 数据， NFS 卷会采用 NetApp SnapMirror 技术镜像到 NetApp 私有存储（ NPS ），并挂载到云服务提供商的 GPU 。
+. 客户希望通过云服务提供商提供的 GPU 处理 EC2/EMR ， HDInsight 或 DataProc 服务中的数据。Hadoop 数据移动工具可通过 NIPAM 和 `Hadoop distcp` 命令将数据从 Hadoop 服务移动到 Cloud Volumes 服务。
+. Cloud Volumes Service 数据通过 NFS 协议配置到 AI 。通过 AI 处理的数据除了通过 NIPAM ， SnapMirror 和 NPS 发送到 NVIDIA 集群之外，还可以发送到内部位置进行大数据分析。
+
+
+在这种情况下，客户在远程位置的 NAS 系统中有大量文件计数数据，这是在内部 NetApp 存储控制器上进行 AI 处理所需的。在这种情况下，最好使用 XCP 迁移工具以更快的速度迁移数据。
+
+混合用例客户可以使用 Cloud Sync 将内部数据从 NFS ， CIFS 和 S3 数据迁移到云，反之亦然，以便使用 NVIDIA 集群中的 GPU 进行 AI 处理。Cloud Sync 和 XCP 迁移工具均用于将 NFS 数据迁移到 NetApp ONTAP NFS 。
+
+link:bda-ai-gpfs-to-netapp-ontap-nfs.html["接下来：从 GPF 到 NetApp ONTAP NFS 。"]

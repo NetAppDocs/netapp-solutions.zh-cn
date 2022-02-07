@@ -1,0 +1,71 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/bda-ai-introduction.html 
+keywords: tr-4732, tr4732, 4732, introduction, concepts, components 
+summary: 本白皮书提供了使用 NetApp XCP 和 NIPAM 将大数据分析数据和 HPC 数据迁移到 AI 的准则。我们还讨论了将数据从大数据和 HPC 迁移到 AI 的业务优势。 
+---
+= TR-4732 ：大数据分析数据到人工智能
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+NetApp 公司 Karthikeyan Nagalingam
+
+本文档介绍如何将大数据分析数据和 HPC 数据迁移到 AI 。AI 通过 NFS 导出处理 NFS 数据，而客户通常将其 AI 数据存储在 HDFS ， Blob 或 S3 存储等大数据分析平台以及 GPFS 等 HPC 平台中。本白皮书提供了使用 NetApp XCP 和 NIPAM 将大数据分析数据和 HPC 数据迁移到 AI 的准则。我们还讨论了将数据从大数据和 HPC 迁移到 AI 的业务优势。
+
+
+
+== 概念和组件
+
+
+
+=== 大数据分析存储
+
+大数据分析是 HDFS 的主要存储提供商。客户通常使用与 Hadoop 兼容的文件系统（ HCFS ），例如 Windows Azure Blob Storage ， MapR 文件系统（ MapR-FS ）和 S3 对象存储。
+
+
+
+=== 常规并行文件系统
+
+IBM 的 GPFS 是一种企业级文件系统，可替代 HDFS 。利用 GPF ，应用程序可以灵活地确定块大小和复制布局，从而提供良好的性能和效率。
+
+
+
+=== NetApp 原位分析模块
+
+NetApp 原位分析模块（ NIPAM ）可作为 Hadoop 集群访问 NFS 数据的驱动程序。它包含四个组件：连接池， NFS InputStream ，文件句柄缓存和 NFS OutputStream 。有关详细信息，请参见 https://www.netapp.com/us/media/tr-4382.pdf["TR-4382 ： NetApp 原位分析模块。"^]
+
+
+
+=== Hadoop 分布式副本
+
+Hadoop 分布式副本（ DistCp ）是一种分布式副本工具，用于执行大型集群间和集群内应对任务。此工具使用 MapReduce 进行数据分发，错误处理和报告。它会扩展文件和目录列表，并输入这些文件和目录以映射任务，从而从源列表复制数据。下图显示了 HDFS 和非 HDFS 中的 DistCp 操作。
+
+image:bda-ai-image1.png["错误：缺少图形映像"]
+
+Hadoop DistCp 可在两个 HDFS 系统之间移动数据，而无需使用其他驱动程序。NetApp 为非 HDFS 系统提供了驱动程序。对于 NFS 目标， NIPAM 提供了用于复制数据的驱动程序， Hadoop DistCp 在复制数据时使用这些数据与 NFS 目标进行通信。
+
+
+
+== NetApp Cloud Volumes Service
+
+NetApp Cloud Volumes Service 是一种性能极高的云原生文件服务。此服务可通过快速启动和关闭资源并使用 NetApp 功能来提高工作效率并减少员工停机时间，帮助客户加快产品上市速度。Cloud Volumes Service 是灾难恢复和备份到云的理想替代方案，因为它可以减少数据中心的整体占用空间，并减少原生公有云存储的使用量。
+
+
+
+== NetApp XCP
+
+NetApp XCP 是一款客户端软件，可实现快速可靠的任意到 NetApp 和 NetApp 到 NetApp 数据迁移。此工具用于将大量非结构化 NAS 数据从任何 NAS 系统复制到 NetApp 存储控制器。XCP 迁移工具使用多核多通道 I/O 流式引擎，可以并行处理多个请求，例如数据迁移，文件或目录列表以及空间报告。这是默认的 NetApp 数据迁移工具。您可以使用 XCP 将数据从 Hadoop 集群和 HPC 复制到 NetApp NFS 存储。下图显示了使用 XCP 从 Hadoop 和 HPC 集群到 NetApp NFS 卷的数据传输。
+
+image:bda-ai-image2.png["错误：缺少图形映像"]
+
+
+
+== NetApp Cloud Sync
+
+NetApp Cloud Sync 是一种混合数据复制软件即服务，可在内部存储和云存储之间无缝，安全地传输和同步 NFS ， S3 和 CIFS 数据。此软件用于数据迁移，归档，协作，分析等。传输数据后， Cloud Sync 会在源和目标之间持续同步数据。接下来，它会传输增量数据。它还可以保护您自己网络，云或内部环境中的数据。此软件采用按需购买模式，可提供经济高效的解决方案并为数据传输提供监控和报告功能。
+
+link:bda-ai-customer-challenges.html["接下来：客户面临的挑战。"]

@@ -9545,4 +9545,240 @@
   <block id="b17e2a7e5f42c90b40de5971850339ae" category="list-text">TR-4597 ：适用于 ONTAP 的 VMware vSphere<block ref="5938ff9651f6c5e53544676ba8504afc" category="inline-link-rx"></block></block>
   <block id="c39148c472a0504dc9c52734b79f5125" category="sidebar">使用子系统连接存储的解决方案</block>
   <block id="511ff82335a683184e92371d0c9fe853" category="sidebar">采用原生数据存储库的解决方案</block>
+  <block id="ae1992b408fce873deb0f11eb017ea19" category="summary">在此验证中，我们使用四台服务器作为网络共享磁盘（ Network Shared Disk ， NSD ）服务器来为 GPFS 提供物理磁盘。在 NSD 磁盘上创建了 GPF ，以便将其导出为 NFS 导出，以便 NFS 客户端可以访问它们，如下图所示。我们使用 XCP 将数据从 GPFS 导出的 NFS 复制到 NetApp NFS 卷。</block>
+  <block id="bc64aad447f072e96947f5d02f7e8134" category="doc">从 GPF 到 NetApp ONTAP NFS</block>
+  <block id="823313a32a4a1131e0469fac26acbdac" category="inline-link-macro">先前版本： Data Mover 解决方案 for AI 。</block>
+  <block id="c4e4b7ebe157b09b7d1a0db25078dc45" category="paragraph"><block ref="c4e4b7ebe157b09b7d1a0db25078dc45" category="inline-link-macro-rx"></block></block>
+  <block id="9a1bdf4376c8448278cf38263e4da8c7" category="paragraph"><block ref="9a1bdf4376c8448278cf38263e4da8c7" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="86339fb1bc11f77d6e48efc42d910f0f" category="section-title">GPF 要点</block>
+  <block id="d859f99e3b66fbd7305cfd50ba2d4566" category="paragraph">GPFS 中使用以下节点类型：</block>
+  <block id="4ac5c1b5474a4920e2433b8f1610729f" category="list-text">* 管理节点。 * 指定一个可选字段，其中包含管理命令用于在节点之间进行通信的节点名称。例如，管理节点 `mastr-51.netapp.com` 可以将网络检查传递给集群中的所有其他节点。</block>
+  <block id="6659be8d3c5ae97ae05588383a9efb5a" category="list-text">* 仲裁节点。 * 确定节点是否包含在从中派生仲裁的节点池中。您至少需要一个节点作为仲裁节点。</block>
+  <block id="504f43a7f6382dae9e638f1c396a1779" category="list-text">* 管理器节点。 * 表示节点是否属于可从中选择文件系统管理器和令牌管理器的节点池。最好将多个节点定义为管理节点。您指定为管理器的节点数取决于工作负载和您拥有的 GPFS 服务器许可证数。如果您运行的是大型并行作业，则与支持 Web 应用程序的四节点集群相比，您可能需要更多的管理节点。</block>
+  <block id="48b637b1e31141b7e6faae1b7c6d8be2" category="list-text">* NSD 服务器。 * 用于准备每个物理磁盘以用于 GPFS 的服务器。</block>
+  <block id="8cd64755dc629d6061cef8f3bdddfe8f" category="list-text">* 协议节点。 * 通过任何安全 Shell （ SSH ）协议与 NFS 直接共享 GPFS 数据的节点。此节点需要 GPFS 服务器许可证。</block>
+  <block id="d1a65ffa2a3768b3a494baba34855023" category="section-title">GPFS ， NFS 和 XCP 的操作列表</block>
+  <block id="089009e49dc3cafdc4329d07f11c5250" category="paragraph">本节提供了创建 GPFS ，将 GPFS 导出为 NFS 导出以及使用 XCP 传输数据的操作列表。</block>
+  <block id="1d9da206467eb5273c4b522820cfddb2" category="section-title">创建 GPFS</block>
+  <block id="454f38a55393f7773c6e59f13eb6fef5" category="paragraph">要创建 GPFS ，请完成以下步骤：</block>
+  <block id="a69093440b15d387cf13aadb026e36a9" category="list-text">在其中一台服务器上下载并安装 Linux 版本的频谱级数据访问。</block>
+  <block id="8a3d13c75e4dd8c8cffdf92d8e9dd956" category="list-text">在所有节点中安装前提条件包（例如 chef ），并在所有节点中禁用安全增强型 Linux （ SELinux ）。</block>
+  <block id="9356dbe859ed4334d7e27c641d7dd594" category="list-text">设置安装节点并将管理节点和 GPFS 节点添加到集群定义文件中。</block>
+  <block id="1bdc86658a65033989c8064812818633" category="list-text">添加管理器节点，仲裁节点， NSD 服务器和 GPFS 节点。</block>
+  <block id="d55b679ec8a82b729ae03c882f27b80e" category="list-text">添加 GUI ，管理和 GPFS 节点，并根据需要添加额外的 GUI 服务器。</block>
+  <block id="f4e47c4647a3dafebf21a5f40cfa7f9c" category="list-text">添加另一个 GPFS 节点并检查所有节点的列表。</block>
+  <block id="303364b5437159140dc70a76a77e8aa8" category="list-text">指定要在集群定义文件中的所有 GPFS 节点上设置的集群名称，配置文件，远程 shell 二进制文件，远程文件副本二进制文件和端口范围。</block>
+  <block id="30d14bbe638530772662c104a30d53d3" category="list-text">查看 GPFS 配置设置并添加其他管理节点。</block>
+  <block id="d6daa755d449b0cec4c1c23153b9a0be" category="list-text">禁用数据收集并将数据包上传到 IBM 支持中心。</block>
+  <block id="765ad728fb1bb9eb3c981693321a01ef" category="list-text">启用 NTP 并在安装之前预检查配置。</block>
+  <block id="1deb66562b5d0f8ce755a102f2731d8d" category="list-text">配置，创建和检查 NSD 磁盘。</block>
+  <block id="f54668a02541c80dd54234689ef58ad4" category="list-text">创建 GPFS 。</block>
+  <block id="048c1f8a018373ca436ef1a91fe6be57" category="list-text">挂载 GPFS 。</block>
+  <block id="18a8260437fd56c8bdc1f994d860e490" category="list-text">验证 GPFS 并为其提供所需的权限。</block>
+  <block id="a150a1930bbf429fc0204993b66d46cb" category="list-text">运行 `dd` 命令，验证 GPFS 读写。</block>
+  <block id="83cd36fb568894200fe5f9cf7f7e1193" category="section-title">将 GPFS 导出到 NFS</block>
+  <block id="e2fc86fc4827b925f5cccecdcd51d6b1" category="paragraph">要将 GPFS 导出到 NFS ，请完成以下步骤：</block>
+  <block id="af125b713cb0d82420980798e0276ea7" category="list-text">通过 ` /etc/exports` 文件将 GPFS 导出为 NFS 。</block>
+  <block id="c953ca93794388b6266ed8529319d420" category="list-text">安装所需的 NFS 服务器软件包。</block>
+  <block id="c0d11d4c7c65daa849ff313e229d632c" category="list-text">启动 NFS 服务。</block>
+  <block id="873ad6aeda101f4e6c3a2cb8a46e84ad" category="list-text">列出 GPFS 中的文件以验证 NFS 客户端。</block>
+  <block id="f9b2649730ae4997f650bc4a2f8c1773" category="section-title">配置 NFS 客户端</block>
+  <block id="25be8238edbbbd8936c0385098957520" category="paragraph">要配置 NFS 客户端，请完成以下步骤：</block>
+  <block id="d11e3a3b633c68e9cc37f13adcdfd95a" category="list-text">通过 ` /etc/exports` 文件将 GPFS 导出为 NFS 。</block>
+  <block id="64aef4f16c4a9f913379e9668323ed4f" category="list-text">启动 NFS 客户端服务。</block>
+  <block id="b7eb10685995437ddaa0df5b09b22fb8" category="list-text">通过 NFS 协议在 NFS 客户端上挂载 GPFS 。</block>
+  <block id="bb8a91cbc28d52ebb4edab31956c7f58" category="list-text">验证 NFS 挂载文件夹中的 GPFS 文件列表。</block>
+  <block id="690b19ed08f992a8a2d6e3e872641b2e" category="list-text">使用 XCP 将数据从 GPFS 导出的 NFS 移动到 NetApp NFS 。</block>
+  <block id="f919d4d761d618912a13cac0895236af" category="list-text">验证 NFS 客户端上的 GPFS 文件。</block>
+  <block id="ae2b7fcf15ee142a2de2b3ba9573b414" category="inline-link-macro">接下来： HDFS 和 MapR-FS 到 ONTAP NFS 。</block>
+  <block id="545d9ad8cb56e65641eb4e8083301a39" category="paragraph"><block ref="545d9ad8cb56e65641eb4e8083301a39" category="inline-link-macro-rx"></block></block>
+  <block id="0e0fdc9fc616f1d8648561d150679a8c" category="summary">本节详细介绍了使用 NetApp XCP 配置 GPFS 并将数据移动到 NFS 所需的步骤。</block>
+  <block id="2cf43976b964350d85af88e8c7c56bfc" category="doc">从 GPF 到 NFS 详细步骤</block>
+  <block id="b523cc107fd56956277d38d32b34c938" category="inline-link-macro">上一篇：业务优势。</block>
+  <block id="c415260b3bf5ed05c37515a8e4e526f3" category="paragraph"><block ref="c415260b3bf5ed05c37515a8e4e526f3" category="inline-link-macro-rx"></block></block>
+  <block id="7f1260d8686ace0468fd1c74b243b7a1" category="section-title">配置 GPFS</block>
+  <block id="de00400b12b028274700d1385b53c26d" category="list-text">在其中一台服务器上下载并安装适用于 Linux 的 Spectrum Scale Data Access 。</block>
+  <block id="61a030f51cd790deb6f1374ae7e4d88f" category="list-text">在所有节点上安装前提条件包（包括 chef 和内核标头）。</block>
+  <block id="cea532f5e6d51ac7b08d9f6d71886efe" category="list-text">在所有节点中禁用 SELinux 。</block>
+  <block id="e116db66dcd3a8a38d53716cdd97c179" category="list-text">设置安装节点。</block>
+  <block id="6021211d885ba9ec28a1dfcdb72b0542" category="list-text">将管理节点和 GPFS 节点添加到集群定义文件中。</block>
+  <block id="8b361b52f2d7d8ddca7c364e1826015d" category="list-text">添加管理器节点和 GPFS 节点。</block>
+  <block id="d98e392ead2711bea231821e3cafe06e" category="list-text">添加仲裁节点和 GPFS 节点。</block>
+  <block id="549101fb45a9a42ca05a3b680ea6dcdc" category="list-text">添加 NSD 服务器和 GPFS 节点。</block>
+  <block id="0150b7ec1d76a294c8fce802481a2e2d" category="list-text">添加 GUI ，管理和 GPFS 节点。</block>
+  <block id="5076e582b15cea2e7319261b9eb2dc4e" category="list-text">添加另一个 GUI 服务器。</block>
+  <block id="65d8f0643532859908a7e9616439572a" category="list-text">添加另一个 GPFS 节点。</block>
+  <block id="8c6e090e52befa2e95e6d658661749dc" category="list-text">验证并列出所有节点。</block>
+  <block id="6a21679cbbcb8a64de6016e8efb6b2ea" category="list-text">在集群定义文件中指定集群名称。</block>
+  <block id="0e890aabbc215ad4497b26965a0435ad" category="list-text">指定配置文件。</block>
+  <block id="3296b6b95878e4a01015b9d97691cd23" category="list-text">指定 GPFS 要使用的远程 shell 二进制文件；使用 ` -r 参数` 。</block>
+  <block id="6b1edec7f7c05cc2bc9fb41ef76dc8c9" category="list-text">指定 GPFS 要使用的远程文件副本二进制文件；使用 ` -rc 参数` 。</block>
+  <block id="f35c3f5ce8fa5fca13e0eb96082b73fe" category="list-text">指定要在所有 GPFS 节点上设置的端口范围；使用 ` -e 参数` 。</block>
+  <block id="84807c9c164a1fd83db3680e7b5a6587" category="list-text">查看 GPFS 配置设置。</block>
+  <block id="0addd886868e88c985dddc68658e5767" category="list-text">添加管理节点。</block>
+  <block id="d2e4082ff74b3d592d15b584ec3e64a9" category="list-text">启用 NTP 。</block>
+  <block id="bc5f73d061ad4090dd4180838b34fc5a" category="list-text">安装前预检查配置。</block>
+  <block id="7f2019dce6ead5054cb5c0d5ccac9d68" category="list-text">配置 NSD 磁盘。</block>
+  <block id="bd625aeaf0eb9674912c4c51a421cdb6" category="list-text">创建 NSD 磁盘。</block>
+  <block id="bfc7a92fefcdbb8be49ae2f09a04c609" category="list-text">检查 NSD 磁盘状态。</block>
+  <block id="abe092e554a73bb99bd2fd85086ffdce" category="list-text">检查 GPFS 并为其提供所需的权限。</block>
+  <block id="737cdea6c4302200061636f408685896" category="list-text">运行 `dd` 命令检查 GPFS 读写。</block>
+  <block id="978d4e591d532e5741bf55bbe09b8672" category="paragraph">要将 GPFS 导出到 NFS ，请完成以下步骤：</block>
+  <block id="67ae9e67c637e0c39f8d92303b0a9c01" category="list-text">列出 GPFS 中的文件以验证 NFS 客户端。</block>
+  <block id="e90c8e55eda7dc2ebdbef5659a22a517" category="section-title">配置 NFS 客户端</block>
+  <block id="bc2bba568f2fe74e5616fa8f5953b1bf" category="list-text">在 NFS 客户端中安装软件包。</block>
+  <block id="7e4215ed068d7218ec28fe900e8feb16" category="list-text">验证 NFS 挂载文件夹中的 GPFS 文件列表。</block>
+  <block id="77086f36ad335fd9c2cc6a63c1d21d84" category="list-text">使用 XCP 将数据从 GPFS 导出的 NFS 移动到 NetApp NFS 。</block>
+  <block id="96a4b9abe25ad94a1d4ab8e0d2237ef6" category="inline-link-macro">接下来： MapR-FS 到 ONTAP NFS 。</block>
+  <block id="742eb558b5f30d090f7c3ae58b2a554e" category="paragraph"><block ref="742eb558b5f30d090f7c3ae58b2a554e" category="inline-link-macro-rx"></block></block>
+  <block id="e0a1057b7f63b9621d22a28a118e4a79" category="summary">本节介绍此解决方案的业务优势。</block>
+  <block id="7f0cbc7391fd4e971628295e6bff035a" category="doc">业务优势</block>
+  <block id="aaff67cd4222a3be5071cf651cab3d48" category="inline-link-macro">先前版本： HDFS 和 MapR-FS 到 ONTAP NFS 。</block>
+  <block id="4e24fd6dd4cc9fa99c4dddfa8f40ee3e" category="paragraph"><block ref="4e24fd6dd4cc9fa99c4dddfa8f40ee3e" category="inline-link-macro-rx"></block></block>
+  <block id="239f77225835899839f2d1318d1cc1c4" category="paragraph">将数据从大数据分析迁移到 AI 具有以下优势：</block>
+  <block id="c07548816e2d37db2db301172209009e" category="list-text">能够从不同的 Hadoop 文件系统和 GPFS 中提取数据到统一的 NFS 存储系统中</block>
+  <block id="17480f22ec6a36806354b84f9824ff80" category="list-text">一种与 Hadoop 集成的自动化数据传输方式</block>
+  <block id="626dfcaeea53c1bdef78276b0f594dbf" category="list-text">降低从 Hadoop 文件系统移动数据的库开发成本</block>
+  <block id="8576c8e67d6540e2f677340d38ec60e9" category="list-text">通过使用 NIPAM 从单个数据源聚合多个网络接口的吞吐量实现最高性能</block>
+  <block id="28338c61f9a9de656b504b14a75bb824" category="list-text">按计划和按需传输数据的方法</block>
+  <block id="3c70d03dd35337605475e972b74654c8" category="list-text">使用 ONTAP 数据管理软件为统一 NFS 数据提供存储效率和企业管理功能</block>
+  <block id="2b602714583b0c6daac65349c0e00e16" category="list-text">使用 Hadoop 数据传输方法实现数据移动零成本</block>
+  <block id="a3b97091403bff3b38419087acb1c19e" category="inline-link-macro">接下来：从 GPF 到 NFS 详细步骤。</block>
+  <block id="5e982872ec65785f5d685290b9c40026" category="paragraph"><block ref="5e982872ec65785f5d685290b9c40026" category="inline-link-macro-rx"></block></block>
+  <block id="600c9e3e31c7cdf2c69044801b9ea998" category="summary">本节详细介绍了使用 NetApp XCP 将 MapR-FS 数据移动到 ONTAP NFS 中所需的步骤。</block>
+  <block id="6a848946dc9169e87668bb9f057c56c2" category="doc">MapR-FS 到 ONTAP NFS</block>
+  <block id="59b0eb4059face89ab060ea59984c8a7" category="inline-link-macro">上一步：从 GPF 到 NFS —详细步骤。</block>
+  <block id="13f1dc977877024b0f36272f1af2b238" category="paragraph"><block ref="13f1dc977877024b0f36272f1af2b238" category="inline-link-macro-rx"></block></block>
+  <block id="3362be4f8dc0d043bec6bb8bf22a565b" category="list-text">为每个 MapR 节点配置三个 LUN ，并为所有 MapR 节点授予 LUN 所有权。</block>
+  <block id="a74eeec8d29cc5a609b980af2aee2fb3" category="list-text">在安装期间，为 MapR 集群磁盘选择新添加的 LUN 以用于 MapR-FS 。</block>
+  <block id="f7dc1a091cd04b392f9a99c5390b9ce2" category="inline-link">MapR 6.1 文档</block>
+  <block id="24cb5309ea8c5a7c3244adf133110ecf" category="list-text">根据安装 MapR 集群<block ref="a38d60fa0425a18b5925139ceca806ea" category="inline-link-rx"></block>。</block>
+  <block id="7549eec0595c1177d1a3b1a8c556ea8e" category="list-text">使用 `Hadoop JAR xxx` 等 MapReduce 命令检查基本 Hadoop 操作。</block>
+  <block id="455177bd981566b3ae1e0084e3381b11" category="list-text">将客户数据保留在 MapR-FS 中。例如，我们使用 Teragen 在 MapR-FS 中生成了大约 1 TB 的样本数据。</block>
+  <block id="570bd2111387f5da50ad7d54e23e5fb2" category="list-text">将 MapR-FS 配置为 NFS 导出。</block>
+  <block id="4fe9587feb0e4de26dff3d33bbaf046e" category="list-text">在所有 MapR 节点上禁用 nlockmgr 服务。</block>
+  <block id="8c5d6c82648b5d5b2a4c82d33569b1c4" category="list-text">从 ` /opt/mapr/conf/exports` 文件中所有 MapR 节点上的 MapR-FS 导出特定文件夹。导出子文件夹时，请勿使用不同的权限导出父文件夹。</block>
+  <block id="e78b84d9c1ff3b973293510503e86b95" category="list-text">刷新 MapR-FS NFS 服务。</block>
+  <block id="341009af7864703863b08f0bd1df43b5" category="list-text">将虚拟 IP 范围分配给 MapR 集群中的特定服务器或一组服务器。然后， MapR 集群会为特定服务器分配一个 IP 以进行 NFS 数据访问。这些 IP 可实现高可用性，这意味着，如果具有特定 IP 的服务器或网络出现故障，则可以使用 IP 范围内的下一个 IP 进行 NFS 访问。</block>
+  <block id="5165f49b44f610d03a79da336b53e8f2" category="admonition">如果要从所有 MapR 节点提供 NFS 访问，则可以为每个服务器分配一组虚拟 IP ，并使用每个 MapR 节点的资源进行 NFS 数据访问。</block>
+  <block id="fa6899b17d5e71a360316c355d34c8b3" category="paragraph"><block ref="fa6899b17d5e71a360316c355d34c8b3" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8cb6de965ede92bf8bb036bb8fea6eba" category="paragraph"><block ref="8cb6de965ede92bf8bb036bb8fea6eba" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="031b138609c608ed553a74b2a1c439e1" category="paragraph"><block ref="031b138609c608ed553a74b2a1c439e1" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="97532f358124e4f3087e522bb35f2cb8" category="list-text">检查在每个 MapR 节点上分配的虚拟 IP ，并使用它们进行 NFS 数据访问。</block>
+  <block id="d1ed36990409b90ebe749d4e8ddab8b7" category="list-text">使用分配的虚拟 IP 挂载 NFS 导出的 MapR-FS 以检查 NFS 操作。但是，使用 NetApp XCP 进行数据传输时，不需要执行此步骤。</block>
+  <block id="6288e9b84b4573721ff701d3bdc55fed" category="list-text">配置 NetApp XCP 以将数据从 MapR-FS NFS 网关传输到 ONTAP NFS 。</block>
+  <block id="47bcc9815ee0b47ea9de7729c9c727f7" category="list-text">配置 XCP 的目录位置。</block>
+  <block id="e125588061821db7957020ded3b976f0" category="list-text">将此许可证文件复制到 ` /opt/netapp/xFiles/XCP/` 。</block>
+  <block id="76725a579a117275c078f16fdbe1fd04" category="list-text">使用 `XCP activate` 命令激活 XCP 。</block>
+  <block id="07f3313db35fd32ada5426648ae5817d" category="list-text">检查 NFS 导出的源。</block>
+  <block id="7eefcefaba7483a2c7d6c71e934d0f28" category="list-text">使用 XCP 从多个 MapR 节点从多个源 IP 和多个目标 IP （ ONTAP LIF ）传输数据。</block>
+  <block id="c2cb3a97c34a702522aba4d19b7a1d39" category="list-text">检查存储控制器上的负载分布。</block>
+  <block id="93a2605b6bf89fdb9970a6dbc77dee03" category="paragraph"><block ref="93a2605b6bf89fdb9970a6dbc77dee03" category="inline-link-macro-rx"></block></block>
+  <block id="b446e9930ab89aa25e7b422c4c23d83f" category="inline-link-macro">先前版本： MapR-FS 到 ONTAP NFS 。</block>
+  <block id="185bcaf9470b338d9a2b58870d7bd2bd" category="paragraph"><block ref="185bcaf9470b338d9a2b58870d7bd2bd" category="inline-link-macro-rx"></block></block>
+  <block id="ca79886b03835c933143f8eb102ac932" category="list-text">NetApp 原位分析模块最佳实践</block>
+  <block id="007fcd4e7f754577cf07e39ab5c8dc1d" category="inline-link"><block ref="007fcd4e7f754577cf07e39ab5c8dc1d" category="inline-link-rx"></block></block>
+  <block id="026671d583a546d6b62291e018f78bf7" category="paragraph"><block ref="026671d583a546d6b62291e018f78bf7" category="inline-link-rx"></block></block>
+  <block id="f5ac1e3c252855373c7f660dbd89699d" category="list-text">《 NetApp FlexGroup 卷最佳实践和实施指南》</block>
+  <block id="baf8e9fa2301f45f9abf0b6e9dba3e17" category="inline-link"><block ref="baf8e9fa2301f45f9abf0b6e9dba3e17" category="inline-link-rx"></block></block>
+  <block id="f473bc55fb079f0338493530316efc6f" category="paragraph"><block ref="f473bc55fb079f0338493530316efc6f" category="inline-link-rx"></block></block>
+  <block id="c9617ae303d0bce89d13bebecca2ea1b" category="paragraph"><block ref="c9617ae303d0bce89d13bebecca2ea1b" category="inline-link-rx"></block></block>
+  <block id="46b9839969e4bc429da9cc245c756450" category="cell">版本 3.0</block>
+  <block id="b9365bb9132d1eb8770275a763fc5d69" category="cell">2022 年 1 月</block>
+  <block id="e4005842db89b4abb778385f9a8a758f" category="cell">使用 NetApp XCP 将数据从 HDFS 和 MapR-FS 直接移动到 NFS 。</block>
+  <block id="d835981d77534f5f20446d4648ad7e5b" category="cell">2020年1月</block>
+  <block id="637f51ce71f8f8cadc4b75dfda96d45c" category="cell">XCP 作为默认数据移动工具提供。将 MapR-FS 添加到 NFS ，将 GPFS 添加到 NFS 数据传输。</block>
+  <block id="a10ba827ae758dee0e50d44366fd3d6d" category="cell">2018年11月</block>
+  <block id="4b3608ccf8a7154699127b487cc49627" category="paragraph">本文档介绍如何从大数据分析和高性能计算（ HPC ）系统中移动数据，以便将其用于人工智能（ AI ）工作流。AI 通常通过 NFS 导出处理 NFS 数据。但是，您的 AI 数据可能位于大数据分析和高性能计算（ HPC ）平台中。这可以是 Hadoop 分布式文件系统（ HDFS ），二进制大型对象（ Blob ）， S3 存储或 IBM 的通用并行文件系统（ GPFS ）。在本文档中，我们将介绍如何使用 Hadoop 本机命令， NetApp 原位分析模块（ NIPAM ）和 NetApp XCP 将数据从大数据分析平台和 GPFS 移动到 NFS 。本文档还讨论了将数据从大数据和 HPC 迁移到 AI 的业务优势。</block>
+  <block id="eea7b9fa88f883b7983320cb8dd802ac" category="summary">此页面讨论了客户尝试从用于 AI 操作的大数据分析中访问数据时可能面临的挑战。</block>
+  <block id="d4612e7dc1347f1ccbfd5e470dda2295" category="doc">客户面临的挑战</block>
+  <block id="14fd125cf7cc7e6f58e0a07d30ecda87" category="paragraph"><block ref="14fd125cf7cc7e6f58e0a07d30ecda87" category="inline-link-macro-rx"></block></block>
+  <block id="b794cc731a2a9499d064b08a32552e78" category="paragraph">客户在尝试从 AI 运营的大数据分析中访问数据时可能会面临以下挑战：</block>
+  <block id="593806557377bd8506b6705484962785" category="list-text">客户数据位于数据湖存储库中。数据湖可以包含不同类型的数据，例如结构化数据，非结构化数据，半结构化数据，日志数据以及计算机到计算机数据。所有这些数据类型都必须在 AI 系统中进行处理。</block>
+  <block id="43d7d5ce8487763157eabcf01d1cf6ef" category="list-text">AI 与 Hadoop 文件系统不兼容。典型的 AI 架构无法直接访问 HDFS 和 HCFS 数据，必须将这些数据移至 AI 可理解的文件系统（ NFS ）。</block>
+  <block id="e032c722c87677b6dfba13af108c61b8" category="list-text">将数据湖数据迁移到 AI 通常需要专门的流程。数据湖中的数据量可能非常大。客户必须采用高效，高吞吐量且经济高效的方式将数据迁移到 AI 系统中。</block>
+  <block id="30bd7dc66c05e60d2ea66d09e568cb06" category="list-text">正在同步数据。如果客户希望在大数据平台和 AI 之间同步数据，有时通过 AI 处理的数据可以与大数据结合使用进行分析处理。</block>
+  <block id="02c553e123c56e4cba5728b7e83bb80b" category="inline-link-macro">下一步：数据移动工具解决方案。</block>
+  <block id="205e8a4d3382497ff57947382c577faa" category="paragraph"><block ref="205e8a4d3382497ff57947382c577faa" category="inline-link-macro-rx"></block></block>
+  <block id="2ea9ecb649c5974bc03036a15d95f5bf" category="summary">适用于 AI 的数据移动工具解决方案基于客户处理 AI 操作中的 Hadoop 数据的需求。NetApp 使用 NIPAM 将数据从 HDFS 移动到 NFS 。在一个使用情形中，客户需要将数据移动到内部的 NFS ，而另一客户则需要将数据从 Windows Azure 存储 Blob 移动到 Cloud Volumes Service ，以便处理云中 GPU 云实例中的数据。</block>
+  <block id="7f10e017358079527e7045a68782eb14" category="doc">适用于 AI 的数据移动工具解决方案</block>
+  <block id="2337521acd1f46c410245430b841caa8" category="inline-link-macro">先前版本： Data MOVERer 解决方案。</block>
+  <block id="ee202fa3d5706f12ab6d57e9cb4b4cba" category="paragraph"><block ref="ee202fa3d5706f12ab6d57e9cb4b4cba" category="inline-link-macro-rx"></block></block>
+  <block id="b6392eaf0ddf0463d633e69aaeeef3ce" category="paragraph">下图显示了数据移动程序解决方案的详细信息。</block>
+  <block id="27f83ed51cc554467134084d77b0e050" category="paragraph"><block ref="27f83ed51cc554467134084d77b0e050" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e01b73324e59213b14e79f9d912546bc" category="paragraph">要构建数据移动程序解决方案，需要执行以下步骤：</block>
+  <block id="03337d241355e58cdaa3df5a4bb980ef" category="list-text">ONTAP SAN 可提供 HDFS ， NAS 可通过 NIPAM 为生产数据湖集群提供 NFS 卷。</block>
+  <block id="0fad6dd0225bf5a5e9c668c30ea5d38a" category="list-text">客户的数据位于 HDFS 和 NFS 中。NFS 数据可以是来自其他应用程序的生产数据，用于大数据分析和 AI 操作。</block>
+  <block id="32477fa182341c04b6e8076232250f76" category="list-text">NetApp FlexClone 技术可创建生产 NFS 卷的克隆并将其配置到内部的 AI 集群。</block>
+  <block id="4e7e9a946510d25d1b28cc93a3723e69" category="list-text">使用 NIPAM 和 `Hadoop distcp` 命令将来自 HDFS SAN LUN 的数据复制到 NFS 卷中。NIPAM 使用多个网络接口的带宽传输数据。此过程可缩短数据复制时间，以便传输更多数据。</block>
+  <block id="b0dd56fceeaba1e1db258d1b06d2572d" category="list-text">这两个 NFS 卷都配置到 AI 集群以执行 AI 操作。</block>
+  <block id="344c1652d7730f66d822b6ed5d07ff77" category="list-text">要使用云中的 GPU 处理内部 NFS 数据， NFS 卷会采用 NetApp SnapMirror 技术镜像到 NetApp 私有存储（ NPS ），并挂载到云服务提供商的 GPU 。</block>
+  <block id="c590e653cde69438d43731b18edd533c" category="list-text">客户希望通过云服务提供商提供的 GPU 处理 EC2/EMR ， HDInsight 或 DataProc 服务中的数据。Hadoop 数据移动工具可通过 NIPAM 和 `Hadoop distcp` 命令将数据从 Hadoop 服务移动到 Cloud Volumes 服务。</block>
+  <block id="8cae7d7989a25f83bf9df9952b16ed2b" category="list-text">Cloud Volumes Service 数据通过 NFS 协议配置到 AI 。通过 AI 处理的数据除了通过 NIPAM ， SnapMirror 和 NPS 发送到 NVIDIA 集群之外，还可以发送到内部位置进行大数据分析。</block>
+  <block id="980894bd0921c687decdf218e89107e2" category="paragraph">在这种情况下，客户在远程位置的 NAS 系统中有大量文件计数数据，这是在内部 NetApp 存储控制器上进行 AI 处理所需的。在这种情况下，最好使用 XCP 迁移工具以更快的速度迁移数据。</block>
+  <block id="002cfe6c68deff9c2fcb4fbb3820a5ff" category="paragraph">混合用例客户可以使用 Cloud Sync 将内部数据从 NFS ， CIFS 和 S3 数据迁移到云，反之亦然，以便使用 NVIDIA 集群中的 GPU 进行 AI 处理。Cloud Sync 和 XCP 迁移工具均用于将 NFS 数据迁移到 NetApp ONTAP NFS 。</block>
+  <block id="22033f5439b399254e73f6f3588b9b9e" category="inline-link-macro">接下来：从 GPF 到 NetApp ONTAP NFS 。</block>
+  <block id="f56cb05715de107bd001dd11a41b0cf6" category="paragraph"><block ref="f56cb05715de107bd001dd11a41b0cf6" category="inline-link-macro-rx"></block></block>
+  <block id="c877e65bbe37324c3309ace4aa7745d1" category="summary">在大数据集群中，数据存储在 HDFS 或 HCFS 中，例如 MapR-FS ， Windows Azure Storage Blob ， S3 或 Google 文件系统。我们使用 HDFS ， MapR-FS 和 S3 作为源进行了测试，以便在 NIPAM 的帮助下，使用源中的 hadoop distcp 命令将数据复制到 NetApp ONTAP NFS 导出。</block>
+  <block id="6d1963202b436934d6b74acc8232dc94" category="inline-link-macro">上一篇：客户面临的挑战。</block>
+  <block id="501ee0e125dd4449de2b29015fab6f3e" category="paragraph"><block ref="501ee0e125dd4449de2b29015fab6f3e" category="inline-link-macro-rx"></block></block>
+  <block id="013c5604f73da0e909c46aa5d3a670f3" category="paragraph">在大数据集群中，数据存储在 HDFS 或 HCFS 中，例如 MapR-FS ， Windows Azure Storage Blob ， S3 或 Google 文件系统。我们使用 HDFS ， MapR-FS 和 S3 作为源执行了测试，以便在 NIPAM 的帮助下，使用源中的 `Hadoop distcp` 命令将数据复制到 NetApp ONTAP NFS 导出。</block>
+  <block id="9fabfa5fcba2e539b6d2c5eff5bb2116" category="paragraph">下图显示了从运行 HDFS 存储的 Spark 集群到 NetApp ONTAP NFS 卷的典型数据移动，以便 NVIDIA 可以处理 AI 操作。</block>
+  <block id="d824b1bb9493b5a6c5a2e74871468633" category="paragraph"><block ref="d824b1bb9493b5a6c5a2e74871468633" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="da6616575a7b32d3eb2fa505007a9a4a" category="paragraph">`hadoop distcp` 命令使用 MapReduce 程序复制数据。NIPAM 可与 MapReduce 结合使用，在复制数据时充当 Hadoop 集群的驱动程序。NIPAM 可以在多个网络接口之间分布负载，以便进行一次导出。在将数据从 HDFS 或 HCFS 复制到 NFS 时，此过程会通过在多个网络接口之间分布数据来最大程度地提高网络吞吐量。</block>
+  <block id="c2cad9f038dfeecd75697cb4bebe4c68" category="admonition">不支持 NIPAM ，也不会通过 MapR 认证。</block>
+  <block id="e68fb74f51fcafb391476c585b1e434d" category="inline-link-macro">接下来：适用于 AI 的数据移动工具解决方案。</block>
+  <block id="1f4c259e626baca3c7947e6f3db323d4" category="paragraph"><block ref="1f4c259e626baca3c7947e6f3db323d4" category="inline-link-macro-rx"></block></block>
+  <block id="5e1ee998c60aed58b6080afc9d8903a3" category="summary">本白皮书提供了使用 NetApp XCP 和 NIPAM 将大数据分析数据和 HPC 数据迁移到 AI 的准则。我们还讨论了将数据从大数据和 HPC 迁移到 AI 的业务优势。</block>
+  <block id="82a406843faa25e62de32fd044584709" category="doc">TR-4732 ：大数据分析数据到人工智能</block>
+  <block id="bdd40c24689e02e4043333640734a44e" category="paragraph">本文档介绍如何将大数据分析数据和 HPC 数据迁移到 AI 。AI 通过 NFS 导出处理 NFS 数据，而客户通常将其 AI 数据存储在 HDFS ， Blob 或 S3 存储等大数据分析平台以及 GPFS 等 HPC 平台中。本白皮书提供了使用 NetApp XCP 和 NIPAM 将大数据分析数据和 HPC 数据迁移到 AI 的准则。我们还讨论了将数据从大数据和 HPC 迁移到 AI 的业务优势。</block>
+  <block id="9895310afc8a3755fef2e679c38f32f8" category="section-title">概念和组件</block>
+  <block id="8ba5fcae463371ff85de74be48ced059" category="section-title">大数据分析存储</block>
+  <block id="b5b25f8714075ee7aa7cae37cabc6e77" category="paragraph">大数据分析是 HDFS 的主要存储提供商。客户通常使用与 Hadoop 兼容的文件系统（ HCFS ），例如 Windows Azure Blob Storage ， MapR 文件系统（ MapR-FS ）和 S3 对象存储。</block>
+  <block id="201dde15c75147909c8154fe3e727aed" category="section-title">常规并行文件系统</block>
+  <block id="432f31a1b9dc5a8ef1f048ea3f4f98c8" category="paragraph">IBM 的 GPFS 是一种企业级文件系统，可替代 HDFS 。利用 GPF ，应用程序可以灵活地确定块大小和复制布局，从而提供良好的性能和效率。</block>
+  <block id="2aff401779cc49866458a642f15c0181" category="inline-link">TR-4382 ： NetApp 原位分析模块。</block>
+  <block id="ae1165a7ed0006d2dae65ea849898810" category="paragraph">NetApp 原位分析模块（ NIPAM ）可作为 Hadoop 集群访问 NFS 数据的驱动程序。它包含四个组件：连接池， NFS InputStream ，文件句柄缓存和 NFS OutputStream 。有关详细信息，请参见<block ref="aedae5b2590b798973be1ab298f44ab7" category="inline-link-rx"></block></block>
+  <block id="0be6a753178a606f6e24a10fde5ec644" category="section-title">Hadoop 分布式副本</block>
+  <block id="3cc73009b533164939781f9f6a4a1aa0" category="paragraph">Hadoop 分布式副本（ DistCp ）是一种分布式副本工具，用于执行大型集群间和集群内应对任务。此工具使用 MapReduce 进行数据分发，错误处理和报告。它会扩展文件和目录列表，并输入这些文件和目录以映射任务，从而从源列表复制数据。下图显示了 HDFS 和非 HDFS 中的 DistCp 操作。</block>
+  <block id="1a76b3e0f1199267d461c961d30d07a5" category="paragraph"><block ref="1a76b3e0f1199267d461c961d30d07a5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a8f54af1bdcb54a020503d81bc3b2114" category="paragraph">Hadoop DistCp 可在两个 HDFS 系统之间移动数据，而无需使用其他驱动程序。NetApp 为非 HDFS 系统提供了驱动程序。对于 NFS 目标， NIPAM 提供了用于复制数据的驱动程序， Hadoop DistCp 在复制数据时使用这些数据与 NFS 目标进行通信。</block>
+  <block id="05fc55cae9e8b2a7fb40e978e4971707" category="paragraph">NetApp Cloud Volumes Service 是一种性能极高的云原生文件服务。此服务可通过快速启动和关闭资源并使用 NetApp 功能来提高工作效率并减少员工停机时间，帮助客户加快产品上市速度。Cloud Volumes Service 是灾难恢复和备份到云的理想替代方案，因为它可以减少数据中心的整体占用空间，并减少原生公有云存储的使用量。</block>
+  <block id="a12ce47d330a9ea070b4fd322ca5f890" category="paragraph">NetApp XCP 是一款客户端软件，可实现快速可靠的任意到 NetApp 和 NetApp 到 NetApp 数据迁移。此工具用于将大量非结构化 NAS 数据从任何 NAS 系统复制到 NetApp 存储控制器。XCP 迁移工具使用多核多通道 I/O 流式引擎，可以并行处理多个请求，例如数据迁移，文件或目录列表以及空间报告。这是默认的 NetApp 数据迁移工具。您可以使用 XCP 将数据从 Hadoop 集群和 HPC 复制到 NetApp NFS 存储。下图显示了使用 XCP 从 Hadoop 和 HPC 集群到 NetApp NFS 卷的数据传输。</block>
+  <block id="cd7e68aa30250a331c260fee49ff230e" category="paragraph"><block ref="cd7e68aa30250a331c260fee49ff230e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1bce96270b79327e5daf4c0745d66023" category="paragraph">NetApp Cloud Sync 是一种混合数据复制软件即服务，可在内部存储和云存储之间无缝，安全地传输和同步 NFS ， S3 和 CIFS 数据。此软件用于数据迁移，归档，协作，分析等。传输数据后， Cloud Sync 会在源和目标之间持续同步数据。接下来，它会传输增量数据。它还可以保护您自己网络，云或内部环境中的数据。此软件采用按需购买模式，可提供经济高效的解决方案并为数据传输提供监控和报告功能。</block>
+  <block id="cbba30a09e75669ecb5b3b2d83a25284" category="inline-link-macro">接下来：客户面临的挑战。</block>
+  <block id="63aa417c654afafebdbdfcaf7a13c8b6" category="paragraph"><block ref="63aa417c654afafebdbdfcaf7a13c8b6" category="inline-link-macro-rx"></block></block>
+  <block id="29fb90c4a1468e178582858240052f4c" category="summary">对于此解决方案， NetApp 验证了将数据从数据湖（ HDFS ）和 MapR 集群数据迁移到 ONTAP NFS 的过程。数据驻留在 MapR-FS 和 HDFS 中。NetApp XCP 引入了一项新功能，可将数据从分布式文件系统（例如 HDFS 和 MapR-FS ）直接迁移到 ONTAP NFS 。</block>
+  <block id="d233c10a88f93c454d0e84cd34840512" category="doc">HDFS 和 MapR-FS 到 ONTAP NFS</block>
+  <block id="9577f33e5dfe124ba394a5c90a123928" category="inline-link-macro">先前版本：从 GPF 到 NetApp ONTAP NFS 。</block>
+  <block id="a503c5d00affd8b681837e8b44490492" category="paragraph"><block ref="a503c5d00affd8b681837e8b44490492" category="inline-link-macro-rx"></block></block>
+  <block id="9c02792070008c1748647d8bdbe24432" category="paragraph">对于此解决方案， NetApp 验证了将数据从数据湖（ HDFS ）和 MapR 集群数据迁移到 ONTAP NFS 的过程。数据驻留在 MapR-FS 和 HDFS 中。NetApp XCP 引入了一项新功能，可将数据从分布式文件系统（例如 HDFS 和 MapR-FS ）直接迁移到 ONTAP NFS 。XCP 使用异步线程和 HDFS C API 调用从 MapR- FS 以及 HDFS 进行通信和传输数据。下图显示了从数据湖（ HDFS ）和 MapR-FS 到 ONTAP NFS 的数据迁移。借助此新功能，您无需将源导出为 NFS 共享。</block>
+  <block id="4581f9b32af32647aa31b2f9d57f6f1f" category="paragraph"><block ref="4581f9b32af32647aa31b2f9d57f6f1f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c11c71088d0987243547dd8fc322c2ad" category="section-title">客户为什么要从 HDFS 和 MapR-FS 迁移到 NFS ？</block>
+  <block id="b075c8e6a9009d582333c59e237e3646" category="paragraph">大多数 Hadoop 分发软件包（例如 Cloudera 和 Hortonworks ）都使用 HDFS ，而 MapR 分发软件包使用自己的文件系统 Mapr-FS 来存储数据。HDFS 和 MapR-FS 数据为数据科学家提供了宝贵的见解，可用于机器学习（ ML ）和深度学习（ DL ）。HDFS 和 MapR-FS 中的数据不会共享，这意味着它不能由其他应用程序使用。客户正在寻找共享数据，尤其是在银行领域，客户的敏感数据由多个应用程序使用。最新版本的 Hadoop （ 3.x 或更高版本）支持 NFS 数据源，无需其他第三方软件即可访问该数据源。借助新的 NetApp XCP 功能，可以将数据直接从 HDFS 和 MapR-FS 移动到 NetApp NFS ，以便访问多个应用程序</block>
+  <block id="fa2772759fe171754d3e04460b417464" category="paragraph">我们在 Amazon Web Services （ AWS ）中进行了测试，以便将数据从 MapR-FS 传输到 NFS ，以便对 12 个 MAPR 节点和 4 个 NFS 服务器进行初始性能测试。</block>
+  <block id="6f6cb72d544962fa333e2e34ce64f719" category="cell">Size</block>
+  <block id="5d56dbd20d9ee1ab8a722ff12e331953" category="cell">vCPU</block>
+  <block id="4789f23283b3a61f858b641a1bef19a3" category="cell">内存</block>
+  <block id="eec89088ee408b80387155272b113256" category="cell">网络</block>
+  <block id="e83e5674ab295a6613b60f5e12d1bfe3" category="cell">NFS 服务器</block>
+  <block id="6215b1525ff41917096b1eb923fe894f" category="cell">i3en.24xlarge</block>
+  <block id="26657d5ff9020d2abefe558796b99584" category="cell">96</block>
+  <block id="c45b008ff7fe72f83bb47cba575960c7" category="cell">488 GiB</block>
+  <block id="9f8ce2ff912e3931e4fc14876f3097f2" category="cell">8 个 7500 NVMe SSD</block>
+  <block id="f899139df5e1059396431415e770c6dd" category="cell">100</block>
+  <block id="899f7b8a7c3e28d3161a77da8f1c8e33" category="cell">MapR 节点</block>
+  <block id="6ac0fbf236c6d341a7f2c6c92933f744" category="cell">I3en.12 个大型</block>
+  <block id="642e92efb79421734881b53e1e1b18b6" category="cell">48</block>
+  <block id="1aa80378346dacbf8ce58aaadcefc35e" category="cell">384 GiB</block>
+  <block id="3ce58620106227953b9e12e2e0633095" category="cell">4 个 7500 NVMe SSD</block>
+  <block id="c0c7c76d30bd3dcaefc96f40275bdc0a" category="cell">50</block>
+  <block id="03e4c674f628169124f81fb7b98f9c92" category="paragraph">根据初始测试，我们获得了 20 Gbps 的吞吐量，并且能够每天传输 2 PB 的数据。</block>
+  <block id="fce5332d471cfbe0baf7fa83eb2d427d" category="inline-link">TR-4863 ： TR-4863 ：《 NetApp XCP 最佳实践指南—数据移动，文件迁移和分析》</block>
+  <block id="6371d61614d0beaedb75e85d2c297d8f" category="paragraph">有关在不将 HDFS 导出到 NFS 的情况下进行 HDFS 数据迁移的详细信息，请参见中的 " 部署步骤 - NAS" 一节<block ref="6a602f6a965c96a94215a45f0077e771" category="inline-link-rx"></block>。</block>
+  <block id="aa722a0d50c9e3bfe81a7128f0e649d7" category="inline-link-macro">接下来：业务优势。</block>
+  <block id="4e39bc17db35d21d84b6fb1e9786fdb5" category="paragraph"><block ref="4e39bc17db35d21d84b6fb1e9786fdb5" category="inline-link-macro-rx"></block></block>
+  <block id="4f25c5c9b33cc2f12b098bd8cc026222" category="sidebar">大数据分析数据到人工智能</block>
+  <block id="713522228cb3164cc6e71ff6d49c3b13" category="sidebar">从 GPF 到 NFS —详细步骤</block>
 </blocks>
