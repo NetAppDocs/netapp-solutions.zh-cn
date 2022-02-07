@@ -24,10 +24,7 @@ link:bda-ai-gpfs-to-nfs-detailed-steps.html["上一步：从 GPF 到 NFS —详�
 . 将 MapR-FS 配置为 NFS 导出。
 +
 .. 在所有 MapR 节点上禁用 nlockmgr 服务。
-
-
-
-
++
 ....
 root@workr-138: ~$ rpcinfo -p
    program vers proto   port  service
@@ -55,9 +52,8 @@ root@workr-138: ~$
 root@workr-138: ~$ rpcinfo -d 100021 3
 root@workr-138: ~$ rpcinfo -d 100021 4
 ....
-. 从 ` /opt/mapr/conf/exports` 文件中所有 MapR 节点上的 MapR-FS 导出特定文件夹。导出子文件夹时，请勿使用不同的权限导出父文件夹。
-
-
+.. 从 ` /opt/mapr/conf/exports` 文件中所有 MapR 节点上的 MapR-FS 导出特定文件夹。导出子文件夹时，请勿使用不同的权限导出父文件夹。
++
 ....
 [mapr@workr-138 ~]$ cat /opt/mapr/conf/exports
 # Sample Exports file
@@ -91,9 +87,10 @@ root@workr-138: ~$ rpcinfo -d 100021 4
 #only the alias will be visible/exposed to the nfs client not the mapr path, host options as before
 [mapr@workr-138 ~]$
 ....
+
+
 . 刷新 MapR-FS NFS 服务。
-
-
++
 ....
 root@workr-138: tmp$ maprcli nfsmgmt refreshexports
 ERROR (22) -  You do not have a ticket to communicate with 127.0.0.1:9998. Retry after obtaining a new ticket using maprlogin
@@ -104,20 +101,21 @@ MapR credentials of user 'mapr' for cluster 'my.cluster.com' are written to '/tm
 [mapr@workr-138 ~]$ maprcli nfsmgmt refreshexports
 ....
 . 将虚拟 IP 范围分配给 MapR 集群中的特定服务器或一组服务器。然后， MapR 集群会为特定服务器分配一个 IP 以进行 NFS 数据访问。这些 IP 可实现高可用性，这意味着，如果具有特定 IP 的服务器或网络出现故障，则可以使用 IP 范围内的下一个 IP 进行 NFS 访问。
-
-
++
 
 NOTE: 如果要从所有 MapR 节点提供 NFS 访问，则可以为每个服务器分配一组虚拟 IP ，并使用每个 MapR 节点的资源进行 NFS 数据访问。
 
++
 image:bda-ai-image7.png["错误：缺少图形映像"]
 
++
 image:bda-ai-image8.png["错误：缺少图形映像"]
 
++
 image:bda-ai-image9.png["错误：缺少图形映像"]
 
 . 检查在每个 MapR 节点上分配的虚拟 IP ，并使用它们进行 NFS 数据访问。
-
-
++
 ....
 root@workr-138: ~$ ip a
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
@@ -167,8 +165,7 @@ root@workr-138: ~$ ip a
 [root@workr-140 ~]#
 ....
 . 使用分配的虚拟 IP 挂载 NFS 导出的 MapR-FS 以检查 NFS 操作。但是，使用 NetApp XCP 进行数据传输时，不需要执行此步骤。
-
-
++
 ....
 root@workr-138: tmp$ mount -v -t nfs 10.63.150.92:/maprnfs3 /tmp/testmount/
 mount.nfs: timeout set for Thu Dec  5 15:31:32 2019
@@ -203,10 +200,7 @@ root@workr-138: tmp$
 . 配置 NetApp XCP 以将数据从 MapR-FS NFS 网关传输到 ONTAP NFS 。
 +
 .. 配置 XCP 的目录位置。
-
-
-
-
++
 ....
 [root@hdp2 linux]# cat /opt/NetApp/xFiles/xcp/xcp.ini
 # Sample xcp config
@@ -214,9 +208,8 @@ root@workr-138: tmp$
 #catalog =  10.63.150.51:/gpfs1
 catalog =  10.63.150.213:/nc_volume1
 ....
-. 将此许可证文件复制到 ` /opt/netapp/xFiles/XCP/` 。
-
-
+.. 将此许可证文件复制到 ` /opt/netapp/xFiles/XCP/` 。
++
 ....
 root@workr-138: src$ cd /opt/NetApp/xFiles/xcp/
 root@workr-138: xcp$ ls -ltrha
@@ -229,10 +222,9 @@ drwxr-xr-x 2 root   root     59 Dec  5 19:04 .
 -rw-r--r-- 1 root   root   236K Dec 17 14:12 xcp.log
 root@workr-138: xcp$
 ....
-. 使用 `XCP activate` 命令激活 XCP 。
-. 检查 NFS 导出的源。
-
-
+.. 使用 `XCP activate` 命令激活 XCP 。
+.. 检查 NFS 导出的源。
++
 ....
 [root@hdp2 linux]# ./xcp show 10.63.150.92
 XCP 1.4-17914d6; (c) 2019 NetApp, Inc.; Licensed to Karthikeyan Nagalingam [NetApp Inc] until Wed Feb  5 11:07:27 2020
@@ -253,9 +245,8 @@ drwxr-xr-x --- root root 2 2 10m51s 10.63.150.92:/maprnfs3
 1.77 KiB in (8.68 KiB/s), 3.16 KiB out (15.5 KiB/s), 0s.
 [root@hdp2 linux]#
 ....
-. 使用 XCP 从多个 MapR 节点从多个源 IP 和多个目标 IP （ ONTAP LIF ）传输数据。
-
-
+.. 使用 XCP 从多个 MapR 节点从多个源 IP 和多个目标 IP （ ONTAP LIF ）传输数据。
++
 ....
 root@workr-138: linux$ ./xcp_yatin copy --parallel 20 10.63.150.96,10.63.150.97:/maprnfs3/tg4 10.63.150.85,10.63.150.86:/datapipeline_dataset/tg4_dest
 XCP 1.6-dev; (c) 2019 NetApp, Inc.; Licensed to Karthikeyan Nagalingam [NetApp Inc] until Wed Feb  5 11:07:27 2020
@@ -289,9 +280,8 @@ xcp: mount '10.63.150.92:/maprnfs3/tg4_2': WARNING: This NFS server only support
  130 scanned, 128 giants, 62.9 GiB in (900 MiB/s), 63.0 GiB out (901 MiB/s), 1m11s
  130 scanned, 128 giants, 67.2 GiB in (876 MiB/s), 67.2 GiB out (877 MiB/s), 1m16s
 ....
-. 检查存储控制器上的负载分布。
-
-
+.. 检查存储控制器上的负载分布。
++
 ....
 Hadoop-AFF8080::*> statistics show-periodic -interval 2 -iterations 0 -summary true -object nic_common -counter rx_bytes|tx_bytes -node Hadoop-AFF8080-01 -instance e3b
 Hadoop-AFF8080: nic_common.e3b: 12/6/2019 15:55:04
@@ -325,4 +315,8 @@ Hadoop-AFF8080: nic_common.e9b: 12/6/2019 15:55:07
     905MB   4.86MB
     902MB   4.90MB
 ....
+
+
+
+
 link:bda-ai-where-to-find-additional-information.html["下一步：从何处查找追加信息。"]

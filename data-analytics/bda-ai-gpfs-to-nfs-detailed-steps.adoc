@@ -21,8 +21,7 @@ link:bda-ai-business-benefits.html["上一篇：业务优势。"]
 == 配置 GPFS
 
 . 在其中一台服务器上下载并安装适用于 Linux 的 Spectrum Scale Data Access 。
-
-
++
 ....
 [root@mastr-51 Spectrum_Scale_Data_Access-5.0.3.1-x86_64-Linux-install_folder]# ls
 Spectrum_Scale_Data_Access-5.0.3.1-x86_64-Linux-install
@@ -34,8 +33,7 @@ manifest
 …
 ....
 . 在所有节点上安装前提条件包（包括 chef 和内核标头）。
-
-
++
 ....
 [root@mastr-51 5.0.3.1]# for i in 51 53 136 138 140  ; do ssh 10.63.150.$i "hostname; rpm -ivh  /gpfs_install/chef* "; done
 mastr-51.netapp.com
@@ -104,8 +102,7 @@ kernel-headers-3.10.0-862.11.6.el7    ########################################
 [root@mastr-51 installer]#
 ....
 . 在所有节点中禁用 SELinux 。
-
-
++
 ....
 [root@mastr-51 5.0.3.1]# for i in 51 53 136 138 140  ; do ssh 10.63.150.$i "hostname; sudo setenforce 0"; done
 mastr-51.netapp.com
@@ -121,8 +118,7 @@ setenforce: SELinux is disabled
 [root@mastr-51 5.0.3.1]#
 ....
 . 设置安装节点。
-
-
++
 ....
 [root@mastr-51 installer]# ./spectrumscale setup -s 10.63.150.51
 [ INFO  ] Installing prerequisites for install node
@@ -136,8 +132,7 @@ setenforce: SELinux is disabled
 [root@mastr-51 installer]#
 ....
 . 将管理节点和 GPFS 节点添加到集群定义文件中。
-
-
++
 ....
 [root@mastr-51 installer]# ./spectrumscale node add mastr-51 -a
 [ INFO  ] Adding node mastr-51.netapp.com as a GPFS node.
@@ -147,8 +142,7 @@ setenforce: SELinux is disabled
 [root@mastr-51 installer]#
 ....
 . 添加管理器节点和 GPFS 节点。
-
-
++
 ....
 [root@mastr-51 installer]# ./spectrumscale node add mastr-53 -m
 [ INFO  ] Adding node mastr-53.netapp.com as a GPFS node.
@@ -156,8 +150,7 @@ setenforce: SELinux is disabled
 [root@mastr-51 installer]#
 ....
 . 添加仲裁节点和 GPFS 节点。
-
-
++
 ....
 [root@mastr-51 installer]# ./spectrumscale node add workr-136 -q
 [ INFO  ] Adding node workr-136.netapp.com as a GPFS node.
@@ -165,8 +158,7 @@ setenforce: SELinux is disabled
 [root@mastr-51 installer]#
 ....
 . 添加 NSD 服务器和 GPFS 节点。
-
-
++
 ....
 [root@mastr-51 installer]# ./spectrumscale node add workr-138 -n
 [ INFO  ] Adding node workr-138.netapp.com as a GPFS node.
@@ -176,8 +168,7 @@ setenforce: SELinux is disabled
 [root@mastr-51 installer]#
 ....
 . 添加 GUI ，管理和 GPFS 节点。
-
-
++
 ....
 [root@mastr-51 installer]# ./spectrumscale node add workr-136 -g
 [ INFO  ] Setting workr-136.netapp.com as a GUI server.
@@ -188,24 +179,21 @@ setenforce: SELinux is disabled
 [root@mastr-51 installer]#
 ....
 . 添加另一个 GUI 服务器。
-
-
++
 ....
 [root@mastr-51 installer]# ./spectrumscale node add mastr-53 -g
 [ INFO  ] Setting mastr-53.netapp.com as a GUI server.
 [root@mastr-51 installer]#
 ....
 . 添加另一个 GPFS 节点。
-
-
++
 ....
 [root@mastr-51 installer]# ./spectrumscale node add workr-140
 [ INFO  ] Adding node workr-140.netapp.com as a GPFS node.
 [root@mastr-51 installer]#
 ....
 . 验证并列出所有节点。
-
-
++
 ....
 [root@mastr-51 installer]# ./spectrumscale node list
 [ INFO  ] List of nodes in current configuration:
@@ -236,16 +224,14 @@ setenforce: SELinux is disabled
 [root@mastr-51 installer]#
 ....
 . 在集群定义文件中指定集群名称。
-
-
++
 ....
 [root@mastr-51 installer]# ./spectrumscale config gpfs -c mastr-51.netapp.com
 [ INFO  ] Setting GPFS cluster name to mastr-51.netapp.com
 [root@mastr-51 installer]#
 ....
 . 指定配置文件。
-
-
++
 ....
 [root@mastr-51 installer]# ./spectrumscale config gpfs -p default
 [ INFO  ] Setting GPFS profile to default
@@ -253,32 +239,28 @@ setenforce: SELinux is disabled
 Profiles options: default [gpfsProtocolDefaults], random I/O [gpfsProtocolsRandomIO], sequential I/O [gpfsProtocolDefaults], random I/O [gpfsProtocolRandomIO]
 ....
 . 指定 GPFS 要使用的远程 shell 二进制文件；使用 ` -r 参数` 。
-
-
++
 ....
 [root@mastr-51 installer]# ./spectrumscale config gpfs -r /usr/bin/ssh
 [ INFO  ] Setting Remote shell command to /usr/bin/ssh
 [root@mastr-51 installer]#
 ....
 . 指定 GPFS 要使用的远程文件副本二进制文件；使用 ` -rc 参数` 。
-
-
++
 ....
 [root@mastr-51 installer]# ./spectrumscale config gpfs -rc /usr/bin/scp
 [ INFO  ] Setting Remote file copy command to /usr/bin/scp
 [root@mastr-51 installer]#
 ....
 . 指定要在所有 GPFS 节点上设置的端口范围；使用 ` -e 参数` 。
-
-
++
 ....
 [root@mastr-51 installer]# ./spectrumscale config gpfs -e 60000-65000
 [ INFO  ] Setting GPFS Daemon communication port range to 60000-65000
 [root@mastr-51 installer]#
 ....
 . 查看 GPFS 配置设置。
-
-
++
 ....
 [root@mastr-51 installer]# ./spectrumscale config gpfs --list
 [ INFO  ] Current settings are as follows:
@@ -290,8 +272,7 @@ Profiles options: default [gpfsProtocolDefaults], random I/O [gpfsProtocolsRando
 [root@mastr-51 installer]#
 ....
 . 添加管理节点。
-
-
++
 ....
 [root@mastr-51 installer]# ./spectrumscale node add 10.63.150.53 -a
 [ INFO  ] Setting mastr-53.netapp.com as an admin node.
@@ -300,8 +281,7 @@ Profiles options: default [gpfsProtocolDefaults], random I/O [gpfsProtocolsRando
 [root@mastr-51 installer]#
 ....
 . 禁用数据收集并将数据包上传到 IBM 支持中心。
-
-
++
 ....
 [root@mastr-51 installer]# ./spectrumscale callhome disable
 [ INFO  ] Disabling the callhome.
@@ -309,8 +289,7 @@ Profiles options: default [gpfsProtocolDefaults], random I/O [gpfsProtocolsRando
 [root@mastr-51 installer]#
 ....
 . 启用 NTP 。
-
-
++
 ....
 [root@mastr-51 installer]# ./spectrumscale config ntp -e on
 [root@mastr-51 installer]# ./spectrumscale config ntp -l
@@ -353,8 +332,7 @@ Sep 10 14:20:34 mastr-51.netapp.com ntpd[2965]: 0.0.0.0 c012 02 freq_set kernel 
 [root@mastr-51 installer]#
 ....
 . 安装前预检查配置。
-
-
++
 ....
 [root@mastr-51 installer]# ./spectrumscale install -pr
 [ INFO  ] Logging to file: /usr/lpp/mmfs/5.0.3.1/installer/logs/INSTALL-PRECHECK-10-09-2019_14:51:43.log
@@ -384,8 +362,7 @@ Sep 10 14:20:34 mastr-51.netapp.com ntpd[2965]: 0.0.0.0 c012 02 freq_set kernel 
 [root@mastr-51 installer]#
 ....
 . 配置 NSD 磁盘。
-
-
++
 ....
 [root@mastr-51 cluster-test]# cat disk.1st
 %nsd: device=/dev/sdf
@@ -401,8 +378,7 @@ usage=dataAndMetadata
 failureGroup=1
 ....
 . 创建 NSD 磁盘。
-
-
++
 ....
 [root@mastr-51 cluster-test]# mmcrnsd -F disk.1st -v no
 mmcrnsd: Processing disk sdf
@@ -412,8 +388,7 @@ mmcrnsd: Propagating the cluster configuration data to all
 [root@mastr-51 cluster-test]#
 ....
 . 检查 NSD 磁盘状态。
-
-
++
 ....
 [root@mastr-51 cluster-test]# mmlsnsd
 
@@ -425,8 +400,7 @@ mmcrnsd: Propagating the cluster configuration data to all
 [root@mastr-51 cluster-test]#
 ....
 . 创建 GPFS 。
-
-
++
 ....
 [root@mastr-51 cluster-test]# mmcrfs gpfs1 -F disk.1st -B 1M -T /gpfs1
 
@@ -447,16 +421,14 @@ mmcrfs: Propagating the cluster configuration data to all
 [root@mastr-51 cluster-test]#
 ....
 . 挂载 GPFS 。
-
-
++
 ....
 [root@mastr-51 cluster-test]# mmmount all -a
 Tue Oct  8 18:05:34 UTC 2019: mmmount: Mounting file systems ...
 [root@mastr-51 cluster-test]#
 ....
 . 检查 GPFS 并为其提供所需的权限。
-
-
++
 ....
 [root@mastr-51 cluster-test]# mmlsdisk gpfs1
 disk         driver   sector     failure holds    holds                            storage
@@ -474,8 +446,7 @@ workr-138.netapp.com
 [root@mastr-51 cluster-test]#
 ....
 . 运行 `dd` 命令检查 GPFS 读写。
-
-
++
 ....
 [root@mastr-51 cluster-test]# dd if=/dev/zero of=/gpfs1/testfile bs=1024M count=5
 5+0 records in
@@ -498,21 +469,21 @@ total 5.0G
 ....
 
 
+
+
 == 将 GPFS 导出到 NFS
 
 要将 GPFS 导出到 NFS ，请完成以下步骤：
 
 . 通过 ` /etc/exports` 文件将 GPFS 导出为 NFS 。
-
-
++
 ....
 [root@mastr-51 gpfs1]# cat /etc/exports
 /gpfs1        *(rw,fsid=745)
 [root@mastr-51 gpfs1]
 ....
 . 安装所需的 NFS 服务器软件包。
-
-
++
 ....
 [root@mastr-51 ~]# yum install rpcbind
 Loaded plugins: priorities, product-id, search-disabled-repos, subscription-manager
@@ -555,8 +526,7 @@ Complete!
 [root@mastr-51 ~]#
 ....
 . 启动 NFS 服务。
-
-
++
 ....
 [root@mastr-51 ~]# service nfs status
 Redirecting to /bin/systemctl status nfs.service
@@ -587,8 +557,7 @@ Nov 06 16:34:50 mastr-51.netapp.com systemd[1]: Started NFS server and services.
 [root@mastr-51 ~]#
 ....
 . 列出 GPFS 中的文件以验证 NFS 客户端。
-
-
++
 ....
 [root@mastr-51 gpfs1]# df -Th
 Filesystem                                 Type      Size  Used Avail Use% Mounted on
@@ -625,13 +594,14 @@ drwxr-xr-x   4 root root 4.0K Nov  5 20:35 ces
 ....
 
 
+
+
 == 配置 NFS 客户端
 
 要配置 NFS 客户端，请完成以下步骤：
 
 . 在 NFS 客户端中安装软件包。
-
-
++
 ....
 [root@hdp2 ~]# yum install nfs-utils rpcbind
 Loaded plugins: product-id, search-disabled-repos, subscription-manager
@@ -716,16 +686,14 @@ Complete!
 [root@hdp2 ~]#
 ....
 . 启动 NFS 客户端服务。
-
-
++
 ....
 [root@hdp2 ~]# service rpcbind start
 Redirecting to /bin/systemctl start rpcbind.service
  [root@hdp2 ~]#
 ....
 . 通过 NFS 协议在 NFS 客户端上挂载 GPFS 。
-
-
++
 ....
 [root@hdp2 ~]# mkdir /gpfstest
 [root@hdp2 ~]# mount 10.63.150.51:/gpfs1 /gpfstest
@@ -743,8 +711,7 @@ tmpfs                                  26G     0   26G   0% /run/user/0
 [root@hdp2 ~]#
 ....
 . 验证 NFS 挂载文件夹中的 GPFS 文件列表。
-
-
++
 ....
 [root@hdp2 ~]# cd /gpfstest/
 [root@hdp2 gpfstest]# ls
@@ -758,8 +725,7 @@ drwxr-xr-x 2 root root       4096 Nov  5 15:04 ha
 [root@hdp2 gpfstest]#
 ....
 . 使用 XCP 将数据从 GPFS 导出的 NFS 移动到 NetApp NFS 。
-
-
++
 ....
 [root@hdp2 linux]# ./xcp copy -parallel 20 10.63.150.51:/gpfs1 10.63.150.213:/nc_volume2/
 XCP 1.4-17914d6; (c) 2019 NetApp, Inc.; Licensed to Karthikeyan Nagalingam [NetApp Inc] until Tue Nov  5 12:39:36 2019
@@ -785,8 +751,7 @@ Sending statistics...
 [root@hdp2 linux]#
 ....
 . 验证 NFS 客户端上的 GPFS 文件。
-
-
++
 ....
 [root@hdp2 mnt]# df -Th
 Filesystem                           Type      Size  Used Avail Use% Mounted on
@@ -838,4 +803,6 @@ drwxrwxrwx  21 root        root                4.0K Nov 11 12:14 .
 drwxrwxrwx   7 nobody      nobody              4.0K Nov 11 12:14 catalog
 [root@hdp2 mnt]#
 ....
+
+
 link:bda-ai-mapr-fs-to-ontap-nfs.html["接下来： MapR-FS 到 ONTAP NFS 。"]
