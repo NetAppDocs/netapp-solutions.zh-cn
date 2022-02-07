@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
   <head class="at-element-marker">
-  <title>在 Google Cloud Platform （ GCP ）上部署和配置虚拟化环境</title>
+  <title>适用于 Azure AVS 的 NetApp 功能</title>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge,chrome=1">
   <meta http-equiv="language" content="en">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="在 Google Cloud Platform （ GCP ）上部署和配置虚拟化环境" />
+  <meta property="og:title" content="适用于 Azure AVS 的 NetApp 功能" />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://docs.netapp.com/zh-cn/netapp-solutions/ehc/gcp-setup.html" />
+	<meta property="og:url" content="https://docs.netapp.com/zh-cn/netapp-solutions/ehc/azure/azure-avs.html" />
 	<meta property="og:description" content="" />
   <meta property="og:image" content="https://docs.netapp.com/zh-cn/netapp-solutions/images/logo-tophat-social.png" />
   <meta property="og:image:alt" content="NetApp Logo" />
@@ -19,7 +19,7 @@
   <meta http-equiv="nss-subtype" content="User Guide"/>
   
   <meta name="description" content="">
-  <meta name="keywords" content=" NetApp Solutions, google cloud, gcp, gcve, vmware managed cloud, enterprise, hybrid, cloud, config, configuration,">
+  <meta name="keywords" content=" NetApp Solutions, hyperscalers, azure, avs, enterprise, hybrid, cloud, migrate, migration, disaster recovery, dr">
   
   
 
@@ -281,13 +281,13 @@
           <ul class="n-menu__list">
             <li class="n-menu__list-column">
               <ul class="n-menu__list"><li class="n-menu__list-item n-menu__list-item--level-1">
-                  <a href="https://docs.netapp.com/zh-cn/netapp-solutions/ehc/gcp-setup.html" class="n-menu__header-text"><span translate="no" class="notranslate">简体中文</span></a>
+                  <a href="https://docs.netapp.com/zh-cn/netapp-solutions/ehc/azure/azure-avs.html" class="n-menu__header-text"><span translate="no" class="notranslate">简体中文</span></a>
                 </li><li class="n-menu__list-item n-menu__list-item--level-1">
-                  <a href="https://docs.netapp.com/us-en/netapp-solutions/ehc/gcp-setup.html" class="n-menu__header-text"><span translate="no" class="notranslate">English</span></a>
+                  <a href="https://docs.netapp.com/us-en/netapp-solutions/ehc/azure/azure-avs.html" class="n-menu__header-text"><span translate="no" class="notranslate">English</span></a>
                 </li><li class="n-menu__list-item n-menu__list-item--level-1">
-                  <a href="https://docs.netapp.com/ja-jp/netapp-solutions/ehc/gcp-setup.html" class="n-menu__header-text"><span translate="no" class="notranslate">日本語</span></a>
+                  <a href="https://docs.netapp.com/ja-jp/netapp-solutions/ehc/azure/azure-avs.html" class="n-menu__header-text"><span translate="no" class="notranslate">日本語</span></a>
                 </li><li class="n-menu__list-item n-menu__list-item--level-1">
-                  <a href="https://docs.netapp.com/ko-kr/netapp-solutions/ehc/gcp-setup.html" class="n-menu__header-text"><span translate="no" class="notranslate">한국어</span></a>
+                  <a href="https://docs.netapp.com/ko-kr/netapp-solutions/ehc/azure/azure-avs.html" class="n-menu__header-text"><span translate="no" class="notranslate">한국어</span></a>
                 </li></ul>
             </li>
           </ul>
@@ -3987,7 +3987,7 @@
           <a href="/zh-cn/netapp-solutions/">NetApp&nbsp;Solutions</a>
         </li>
         <li class="n-breadcrumb__list-item">
-          在 Google Cloud Platform （ GCP ）上部署和配置虚拟化环境
+          适用于 Azure AVS 的 NetApp 功能
         </li>
       </ul>
     </div>
@@ -4010,14 +4010,14 @@
     </div>
   </span>
 </div><div class="n-doc__component-detail-heading-wrap">
-  <h1 class="n-doc__component-detail-heading">在 Google Cloud Platform （ GCP ）上部署和配置虚拟化环境</h1>
+  <h1 class="n-doc__component-detail-heading">适用于 Azure AVS 的 NetApp 功能</h1>
 </div>
 
 
 <p class="page-details">
   
     
-    <time datetime="2022-02-03 23:51:50 +0000">02/03/2022</time>
+    <time datetime="2022-02-07 19:01:33 +0000">02/07/2022</time>
     
   
 
@@ -4031,10 +4031,34 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph lead">
-<p>与内部部署一样，规划 Google Cloud VMware Engine （ GCVE ）对于成功创建虚拟机和迁移可随时投入生产的环境至关重要。</p>
+<p>详细了解 NetApp 为 Azure VMware 解决方案（ AVS ）提供的功能—从作为子系统连接存储设备或原生数据存储库的 NetApp 到迁移工作流，扩展 / 突发到云，备份 / 还原和灾难恢复。</p>
 </div>
 <div class="paragraph">
-<p>本节介绍如何设置和管理 GCVE ，并将其与连接 NetApp 存储的可用选项结合使用。</p>
+<p>从以下选项中选择，跳至所需内容部分：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#config">"超大规模部署中的 VMware"</a></p>
+</li>
+<li>
+<p><a href="#datastore">"NetApp 存储选项"</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="在-azure-中配置-avs">在 Azure 中配置 AVS</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>与内部部署一样，规划基于云的虚拟化环境对于成功创建 VM 和迁移生产就绪环境至关重要。</p>
+</div>
+<div class="paragraph">
+<p>与内部部署一样，规划 Azure VMware 解决方案对于成功创建 VM 和迁移生产就绪环境至关重要。</p>
+</div>
+<div class="paragraph">
+<p>本节介绍如何设置和管理 Azure VMware 解决方案并将其与连接 NetApp 存储的可用选项结合使用。</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -4043,7 +4067,7 @@
 <img src="/us-en/netapp-solutions/images/note.svg" alt="注">
 </td>
 <td class="content">
-来宾存储是将 Cloud Volumes ONTAP 和云卷服务连接到 GCVE 的唯一受支持方法。
+将 Azure NetApp Files 和 Cloud Volumes ONTAP 连接到 Azure VMware 解决方案的唯一受支持方法是子系统内存储。
 </td>
 </tr>
 </table>
@@ -4054,77 +4078,60 @@
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#deploy">"部署和配置 GCVE"</a></p>
+<p><a href="azure/azure-setup.html#register">"注册资源提供商并创建私有云"</a></p>
 </li>
 <li>
-<p><a href="#enable-access">"启用对 GCVE 的私有访问"</a></p>
+<p><a href="azure/azure-setup.html#connect">"连接到新的或现有的 ExpressRoute 虚拟网络网关"</a></p>
+</li>
+<li>
+<p><a href="azure/azure-setup.html#validate">"验证网络连接并访问私有云"</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="部署和配置-gcve">部署和配置 GCVE</h2>
+<h2 id="适用于-avs-的-netapp-存储选项">适用于 AVS 的 NetApp 存储选项</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>要在 GCP 上配置 GCVE 环境，请登录到 GCP 控制台并访问 VMware 引擎门户。</p>
+<p>NetApp 存储可以通过多种方式在 Azure AVS 中用作 guess connected 或原生数据存储库。</p>
 </div>
 <div class="paragraph">
-<p>单击 " 新建私有云 " 按钮，然后输入所需的 GCVE 私有云配置。在 " 位置 " 上，确保在部署 CVS/CVO 的同一区域 / 区域部署私有云，以确保最佳性能和最低延迟。</p>
+<p>请访问 <a href="ehc-support-configs.html">"支持的 NetApp 存储选项"</a> 有关详细信息 &#8230;&#8203;</p>
 </div>
 <div class="paragraph">
-<p>前提条件：</p>
+<p>Azure 支持以下配置中的 NetApp 存储：</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>设置 VMware 引擎服务管理员 IAM 角色</p>
+<p>来宾连接存储 *</p>
 </li>
 <li>
-<p><a href="https://docs.netapp.com/us-en/occm/task_replicating_data.html">"启用 VMware 引擎 API 访问和节点配额"</a></p>
+<p><a href="azure/azure-guest.html#anf">"Azure NetApp Files （ ANF ）作为子系统连接的存储"</a></p>
 </li>
 <li>
-<p>确保 CIDR 范围不会与任何内部或云子网重叠。CIDR 范围必须为 /27 或更高。</p>
+<p><a href="azure/azure-guest.html#cvo">"Cloud Volumes ONTAP （ CVO ）作为子系统连接的存储"</a></p>
+</li>
+<li>
+<p>原生数据存储库 *</p>
+</li>
+<li>
+<p><a href="https://azure.microsoft.com/en-us/updates/azure-netapp-files-datastores-for-azure-vmware-solution-is-coming-soon/">"Azure NetApp Files （ ANF ）作为原生数据存储库<sup>1."</sup></a></p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/gcve-deploy-1.png" alt=""></span></p>
-</div>
-<div class="paragraph">
-<p>注意：创建私有云可能需要 30 分钟到 2 小时。</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="启用对-gcve-的私有访问">启用对 GCVE 的私有访问</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>配置私有云后，配置对私有云的私有访问，以实现高吞吐量和低延迟的数据路径连接。</p>
-</div>
-<div class="paragraph">
-<p>这将确保运行 Cloud Volumes ONTAP 实例的 VPC 网络能够与 GCVE 私有云进行通信。要执行此操作，请按照 <a href="https://cloud.google.com/architecture/partners/netapp-cloud-volumes/quickstart">"GCP 文档"</a>。对于云卷服务，通过在租户主机项目之间执行一次性对等操作，在 VMware 引擎和 Cloud Volumes Service 之间建立连接。有关详细步骤，请按照此步骤进行操作 。</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/gcve-access-1.png" alt=""></span></p>
-</div>
-<div class="paragraph">
-<p>使用 <a href="mailto:CloudOwner@gve.local">CloudOwner@gve.local</a> 用户登录到 vCenter 。要访问凭据，请转到 VMware 引擎门户，转到资源并选择相应的私有云。在基本信息部分中，单击 vCenter 登录信息（ vCenter Server ， HCX Manager ）或 NSX-T 登录信息（ NSX Manager ）的查看链接。</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/gcve-access-2.png" alt=""></span></p>
-</div>
-<div class="paragraph">
-<p>在 Windows 虚拟机中，打开浏览器并导航到 vCenter Web 客户端 URL (<a href="https://10.0.16.6/)" class="bare">https://10.0.16.6/)</a> 并使用 admin 用户名 <a href="mailto:CloudOwner@gve.local">CloudOwner@gve.local</a> 并粘贴复制的密码。同样，也可以使用 Web 客户端 URL 访问 NSX-T 管理器  并使用管理员用户名并粘贴复制的密码以创建新分段或修改现有分层网关。</p>
-</div>
-<div class="paragraph">
-<p>要从内部网络连接到 VMware Engine 私有云，请利用云 VPN 或 Cloud Interconnect 实现适当的连接，并确保所需端口处于打开状态。有关详细步骤，请按照此步骤进行操作 <a href="https://ubuntu.com/server/docs/service-iscsi">"链接。"</a>。</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/gcve-access-3.png" alt=""></span></p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/gcve-access-4.png" alt=""></span></p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="/us-en/netapp-solutions/images/note.svg" alt="注">
+</td>
+<td class="content">
+1 —当前处于私有预览模式
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -4138,8 +4145,8 @@
   <div class="page-nav-toolbar">
     <div id="version-dropdown"></div>
     <div class="page-nav-contribute"  >
-      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/issues/new?body=Page%3A%20[在 Google Cloud Platform （ GCP ）上部署和配置虚拟化环境](https://docs.netapp.com/zh-cn/netapp-solutions/ehc/gcp-setup.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
-      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/blob/main/ehc/gcp-setup.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a>
+      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/issues/new?body=Page%3A%20[适用于 Azure AVS 的 NetApp 功能](https://docs.netapp.com/zh-cn/netapp-solutions/ehc/azure/azure-avs.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
+      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/blob/main/ehc/azure/azure-avs.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a>
       <a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/netapp-solutions/images/article-sm.svg" class="github-icon" />提供者指南</a>
     </div>
     <div class="page-nav-container">

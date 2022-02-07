@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
   <head class="at-element-marker">
-  <title>在 AWS 上部署和配置虚拟化环境</title>
+  <title>适用于 AWS VMC 的 NetApp 功能</title>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge,chrome=1">
   <meta http-equiv="language" content="en">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="在 AWS 上部署和配置虚拟化环境" />
+  <meta property="og:title" content="适用于 AWS VMC 的 NetApp 功能" />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://docs.netapp.com/zh-cn/netapp-solutions/ehc/aws-setup.html" />
+	<meta property="og:url" content="https://docs.netapp.com/zh-cn/netapp-solutions/ehc/aws/aws-vmc.html" />
 	<meta property="og:description" content="" />
   <meta property="og:image" content="https://docs.netapp.com/zh-cn/netapp-solutions/images/logo-tophat-social.png" />
   <meta property="og:image:alt" content="NetApp Logo" />
@@ -19,7 +19,7 @@
   <meta http-equiv="nss-subtype" content="User Guide"/>
   
   <meta name="description" content="">
-  <meta name="keywords" content=" NetApp Solutions, amazon, aws, vmc, vmware managed cloud, enterprise, hybrid, cloud, config, configuration,">
+  <meta name="keywords" content=" NetApp Solutions, hyperscalers, amazon, vmc, vmware managed cloud, enterprise, hybrid, cloud, migrate, migration, disaster recovery, dr">
   
   
 
@@ -281,13 +281,13 @@
           <ul class="n-menu__list">
             <li class="n-menu__list-column">
               <ul class="n-menu__list"><li class="n-menu__list-item n-menu__list-item--level-1">
-                  <a href="https://docs.netapp.com/zh-cn/netapp-solutions/ehc/aws-setup.html" class="n-menu__header-text"><span translate="no" class="notranslate">简体中文</span></a>
+                  <a href="https://docs.netapp.com/zh-cn/netapp-solutions/ehc/aws/aws-vmc.html" class="n-menu__header-text"><span translate="no" class="notranslate">简体中文</span></a>
                 </li><li class="n-menu__list-item n-menu__list-item--level-1">
-                  <a href="https://docs.netapp.com/us-en/netapp-solutions/ehc/aws-setup.html" class="n-menu__header-text"><span translate="no" class="notranslate">English</span></a>
+                  <a href="https://docs.netapp.com/us-en/netapp-solutions/ehc/aws/aws-vmc.html" class="n-menu__header-text"><span translate="no" class="notranslate">English</span></a>
                 </li><li class="n-menu__list-item n-menu__list-item--level-1">
-                  <a href="https://docs.netapp.com/ja-jp/netapp-solutions/ehc/aws-setup.html" class="n-menu__header-text"><span translate="no" class="notranslate">日本語</span></a>
+                  <a href="https://docs.netapp.com/ja-jp/netapp-solutions/ehc/aws/aws-vmc.html" class="n-menu__header-text"><span translate="no" class="notranslate">日本語</span></a>
                 </li><li class="n-menu__list-item n-menu__list-item--level-1">
-                  <a href="https://docs.netapp.com/ko-kr/netapp-solutions/ehc/aws-setup.html" class="n-menu__header-text"><span translate="no" class="notranslate">한국어</span></a>
+                  <a href="https://docs.netapp.com/ko-kr/netapp-solutions/ehc/aws/aws-vmc.html" class="n-menu__header-text"><span translate="no" class="notranslate">한국어</span></a>
                 </li></ul>
             </li>
           </ul>
@@ -3987,7 +3987,7 @@
           <a href="/zh-cn/netapp-solutions/">NetApp&nbsp;Solutions</a>
         </li>
         <li class="n-breadcrumb__list-item">
-          在 AWS 上部署和配置虚拟化环境
+          适用于 AWS VMC 的 NetApp 功能
         </li>
       </ul>
     </div>
@@ -4010,14 +4010,14 @@
     </div>
   </span>
 </div><div class="n-doc__component-detail-heading-wrap">
-  <h1 class="n-doc__component-detail-heading">在 AWS 上部署和配置虚拟化环境</h1>
+  <h1 class="n-doc__component-detail-heading">适用于 AWS VMC 的 NetApp 功能</h1>
 </div>
 
 
 <p class="page-details">
   
     
-    <time datetime="2022-02-03 23:51:50 +0000">02/03/2022</time>
+    <time datetime="2022-02-07 19:01:33 +0000">02/07/2022</time>
     
   
 
@@ -4031,6 +4031,30 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph lead">
+<p>详细了解 NetApp 为 AWS VMware Cloud （ VMC ）提供的功能—从作为子系统连接存储设备或原生数据存储库的 NetApp 到迁移工作流，扩展 / 突发到云，备份 / 还原和灾难恢复。</p>
+</div>
+<div class="paragraph">
+<p>从以下选项中选择，跳至所需内容部分：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#config">"超大规模部署中的 VMware"</a></p>
+</li>
+<li>
+<p><a href="#datastore">"NetApp 存储选项"</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="在-aws-中配置-vmc">在 AWS 中配置 VMC</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>与内部部署一样，规划基于云的虚拟化环境对于成功创建 VM 和迁移生产就绪环境至关重要。</p>
+</div>
+<div class="paragraph">
 <p>与内部部署一样，在 AWS 上规划 VMware Cloud 对于成功打造可随时投入生产的环境以创建 VM 和迁移至关重要。</p>
 </div>
 <div class="paragraph">
@@ -4043,7 +4067,7 @@
 <img src="/us-en/netapp-solutions/images/note.svg" alt="注">
 </td>
 <td class="content">
-目前，只有来宾存储是将 FSX ONTAP 和 Cloud Volumes ONTAP 连接到 AWS VMC 的唯一受支持方法。
+只支持使用来宾存储将 FSX ONTAP 和 Cloud Volumes ONTAP 连接到 AWS VMC 。
 </td>
 </tr>
 </table>
@@ -4054,234 +4078,57 @@
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#deploy">"部署和配置适用于 AWS 的 VMware Cloud"</a></p>
+<p><a href="aws/aws-setup.html#deploy">"部署和配置适用于 AWS 的 VMware Cloud"</a></p>
 </li>
 <li>
-<p><a href="#connect">"将 VMware Cloud 连接到 FSX ONTAP"</a></p>
+<p><a href="aws/aws-setup.html#connect">"将 VMware Cloud 连接到 FSX ONTAP"</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="部署和配置适用于-aws-的-vmware-cloud">部署和配置适用于 AWS 的 VMware Cloud</h2>
+<h2 id="适用于-vmc-的-netapp-存储选项">适用于 VMC 的 NetApp 存储选项</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://www.vmware.com/products/vmc-on-aws.html">"基于 AWS 的 VMware Cloud"</a> 为 AWS 生态系统中基于 VMware 的工作负载提供 Cloud 原生体验。每个 VMware 软件定义的数据中心（ SDDC ）均在 Amazon Virtual Private Cloud （ VPC ）中运行，并提供完整的 VMware 堆栈（包括 vCenter Server ）， NSX-T 软件定义的网络连接， vSAN 软件定义的存储以及一个或多个 ESXi 主机，这些主机可为您的工作负载提供计算和存储资源。</p>
+<p>NetApp 存储可以通过多种方式在 AWS VMC 中用作 guess connected 或原生数据存储库。</p>
 </div>
 <div class="paragraph">
-<p>本节介绍如何在 AWS 上设置和管理 VMware Cloud ，并将其与适用于 NetApp ONTAP 的 Amazon FSX 和 / 或在 AWS 上使用子系统内存储的 Cloud Volumes ONTAP 结合使用。</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<img src="/us-en/netapp-solutions/images/note.svg" alt="注">
-</td>
-<td class="content">
-在将 Amazon FSX for NetApp ONTAP 和 Cloud Volumes ONTAP 连接到 AWS 上的 VMware Cloud 时，只支持使用来宾存储。
-</td>
-</tr>
-</table>
+<p>请访问 <a href="ehc-support-configs.html">"支持的 NetApp 存储选项"</a> 有关详细信息 &#8230;&#8203;</p>
 </div>
 <div class="paragraph">
-<p>设置过程可分为三部分：</p>
+<p>AWS 支持以下配置中的 NetApp 存储：</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>注册 <a href="https://aws.amazon.com/">"Amazon Web Services 帐户"</a>。</p>
-</li>
-<li>
-<p>注册 <a href="https://customerconnect.vmware.com/home">"我的 VMware"</a> 帐户。</p>
-</li>
-<li>
-<p>在 VMware Cloud 中配置 SDDC 。</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="注册-aws-帐户">注册 AWS 帐户</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>您需要一个 AWS 帐户才能开始使用，前提是尚未创建一个 AWS 帐户。无论新的还是现有的，您都需要在帐户中拥有管理权限才能执行此操作步骤中的许多步骤。请参见此内容 <a href="https://docs.aws.amazon.com/general/latest/gr/aws-security-credentials.html">"链接。"</a> 有关 AWS 凭据的详细信息。</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="注册-my-vmware-帐户">注册 My VMware 帐户</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>要访问 VMware 的云产品组合（包括基于 AWS 的 VMware Cloud ），您需要 VMware 客户帐户或 My VMware 帐户。如果尚未创建 VMware 帐户，请创建此帐户 <a href="https://customerconnect.vmware.com/account-registration">"此处"</a>。</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="在-vmware-cloud-中配置-sddc">在 VMware Cloud 中配置 SDDC</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>配置 VMware 帐户并执行适当的规模估算后，部署软件定义的数据中心显然是使用 VMware Cloud on AWS 服务的下一步。要创建 SDDC ，请选择要托管它的 AWS 区域，为 SDDC 指定一个名称，并指定希望 SDDC 包含的 ESXi 主机数。如果您还没有 AWS 帐户，则仍可以创建一个包含单个 ESXi 主机的入门级配置 SDDC 。</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>使用现有或新创建的 VMware 凭据登录到 VMware Cloud Console 。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-config-1.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>配置 AWS 区域，部署和主机类型以及 SDDC 名称：</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-config-2.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>连接到所需的 AWS 帐户并执行 AWS Cloud Formation 堆栈。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-config-3.png" alt=""></span><br>
-<span class="image"><img src="./../media/aws-config-4.png" alt=""></span><br>
-<span class="image"><img src="./../media/aws-config-5.png" alt=""></span><br>
-<span class="image"><img src="./../media/aws-config-6.png" alt=""></span></p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<img src="/us-en/netapp-solutions/images/note.svg" alt="注">
-</td>
-<td class="content">
-此验证使用单主机配置。
-</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>选择所需的 AWS VPC 以连接 VMC 环境。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-config-7.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>配置 VMC 管理子网；此子网包含 vCenter ， NSX 等 VMC 管理的服务。请勿选择与任何其他需要连接到 SDDC 环境的网络重叠的地址空间。最后，请遵循下面标注的 CIDR 大小建议。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-config-8.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>查看并确认 SDDC 配置，然后单击 Deploy the SDDC 。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-config-9.png" alt=""></span></p>
-</div>
-<div class="paragraph">
-<p>完成部署过程通常需要大约两个小时。</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-config-10.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>完成后， SDDC 即可使用。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-config-11.png" alt=""></span></p>
-</div>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>有关 SDDC 部署的分步指南，请参见 <a href="https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-operations/GUID-EF198D55-03E3-44D1-AC48-6E2ABA31FF02.html">"从 VMC 控制台部署 SDDC"</a>。</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="将-vmware-cloud-连接到-fsx-ontap">将 VMware Cloud 连接到 FSX ONTAP</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>要将 VMware Cloud 连接到 FSX ONTAP ，请完成以下步骤：</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>完成 VMware Cloud 部署并连接到 AWS VPC 后，您必须将适用于 NetApp ONTAP 的 Amazon FSx 部署到新的 VPC 中，而不是原始连接的 VPC 中（请参见下面的屏幕截图）。如果在连接的 VPC 中部署了 FSX （ NFS 和 SMB 浮动 IP ），则无法访问它。请注意， Cloud Volumes ONTAP 等 iSCSI 端点在连接的 VPC 上运行正常。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-connect-fsx-1.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>在同一地区部署一个额外的 VPC ，然后将适用于 NetApp ONTAP 的 Amazon FSx 部署到新的 VPC 中。</p>
-<div class="paragraph">
-<p>通过在 VMware Cloud 控制台中配置 SDDC 组，可以使用所需的网络配置选项连接到部署了 FSX 的新 VPC 。在第 3 步中，验证是否已选中 " 为组配置 VMware Transit Connect 将在每个附件和数据传输中产生费用 " ，然后选择创建组。完成此过程可能需要几分钟时间。</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-connect-fsx-2.png" alt=""></span><br>
-<span class="image"><img src="./../media/aws-connect-fsx-3.png" alt=""></span><br>
-<span class="image"><img src="./../media/aws-connect-fsx-4.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>将新创建的 VPC 附加到刚刚创建的 SDDC 组。选择外部 VPC 选项卡，然后按照进行操作 <a href="https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-operations/GUID-A3D03968-350E-4A34-A53E-C0097F5F26A9.html">"连接外部 VPC 的说明"</a> 组。完成此过程可能需要 10 到 15 分钟。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-connect-fsx-5.png" alt=""></span><br>
-<span class="image"><img src="./../media/aws-connect-fsx-6.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>在外部 VPC 过程中，系统会通过 AWS 控制台通过资源访问管理器提示您访问新的共享资源。共享资源为 <a href="https://aws.amazon.com/transit-gateway">"AWS 传输网关"</a> 由 VMware Transit Connect 管理。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-connect-fsx-7.png" alt=""></span><br>
-<span class="image"><img src="./../media/aws-connect-fsx-8.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>创建传输网关附件。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-connect-fsx-9.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>返回 VMC 控制台，接受 VPC 连接。完成此过程大约需要 10 分钟。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-connect-fsx-10.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>在外部 VPC 选项卡中，单击路由列中的编辑图标，然后添加以下所需的路由：</p>
 <div class="ulist">
 <ul>
 <li>
-<p>适用于 NetApp ONTAP 的 Amazon FSX 的浮动 IP 范围的路由 <a href="https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/supported-fsx-clients.html">"浮动 IP"</a>。</p>
+<p>来宾连接存储 *</p>
 </li>
 <li>
-<p>Cloud Volumes ONTAP 的浮动 IP 范围的路由（如果适用）。</p>
+<p><a href="aws/aws-guest.html#fsx-ontap">"FSX ONTAP 作为子系统连接的存储"</a></p>
 </li>
 <li>
-<p>新创建的外部 VPC 地址空间的路由。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-connect-fsx-11.png" alt=""></span></p>
-</div>
+<p><a href="aws/aws-guest.html#cvo">"Cloud Volumes ONTAP （ CVO ）作为子系统连接的存储"</a></p>
+</li>
+<li>
+<p>原生数据存储库 *</p>
+</li>
+<li>
+<p><a href="https://blogs.vmware.com/cloud/2021/12/01/vmware-cloud-on-aws-going-big-reinvent2021/">"FSX ONTAP 作为原生数据存储库<sup>1."</sup></a></p>
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p>最后，允许双向流量 <a href="https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-operations/GUID-DE330202-D63D-408A-AECF-7CDC6ADF7EAC.html">"防火墙规则"</a> 用于访问 FSX/CVO 。请按照以下说明操作  SDDC 工作负载连接的计算网关防火墙规则。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-connect-fsx-12.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>为管理和计算网关配置防火墙组后，可以按如下方式访问 vCenter ：</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-connect-fsx-13.png" alt=""></span></p>
-</div>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>下一步是验证是否已根据您的需求配置 Amazon FSX ONTAP 或 Cloud Volumes ONTAP ，以及是否已配置卷以从 vSAN 卸载存储组件以优化部署。</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="/us-en/netapp-solutions/images/note.svg" alt="注">
+</td>
+<td class="content">
+1 —当前处于私有预览模式
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -4295,8 +4142,8 @@
   <div class="page-nav-toolbar">
     <div id="version-dropdown"></div>
     <div class="page-nav-contribute"  >
-      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/issues/new?body=Page%3A%20[在 AWS 上部署和配置虚拟化环境](https://docs.netapp.com/zh-cn/netapp-solutions/ehc/aws-setup.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
-      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/blob/main/ehc/aws-setup.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a>
+      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/issues/new?body=Page%3A%20[适用于 AWS VMC 的 NetApp 功能](https://docs.netapp.com/zh-cn/netapp-solutions/ehc/aws/aws-vmc.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
+      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/blob/main/ehc/aws/aws-vmc.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a>
       <a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/netapp-solutions/images/article-sm.svg" class="github-icon" />提供者指南</a>
     </div>
     <div class="page-nav-container">

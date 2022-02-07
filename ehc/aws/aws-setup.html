@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
   <head class="at-element-marker">
-  <title>适用于 AWS 的 NetApp 子系统连接存储选项</title>
+  <title>在 AWS 上部署和配置虚拟化环境</title>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge,chrome=1">
   <meta http-equiv="language" content="en">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="适用于 AWS 的 NetApp 子系统连接存储选项" />
+  <meta property="og:title" content="在 AWS 上部署和配置虚拟化环境" />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://docs.netapp.com/zh-cn/netapp-solutions/ehc/aws-guest.html" />
+	<meta property="og:url" content="https://docs.netapp.com/zh-cn/netapp-solutions/ehc/aws/aws-setup.html" />
 	<meta property="og:description" content="" />
   <meta property="og:image" content="https://docs.netapp.com/zh-cn/netapp-solutions/images/logo-tophat-social.png" />
   <meta property="og:image:alt" content="NetApp Logo" />
@@ -19,7 +19,7 @@
   <meta http-equiv="nss-subtype" content="User Guide"/>
   
   <meta name="description" content="">
-  <meta name="keywords" content=" NetApp Solutions, amazon, vmc, aws, vmware managed cloud, enterprise, hybrid, cloud, fsx, ontap, cvo, cloud volumes ontap, guest connected">
+  <meta name="keywords" content=" NetApp Solutions, amazon, aws, vmc, vmware managed cloud, enterprise, hybrid, cloud, config, configuration,">
   
   
 
@@ -281,13 +281,13 @@
           <ul class="n-menu__list">
             <li class="n-menu__list-column">
               <ul class="n-menu__list"><li class="n-menu__list-item n-menu__list-item--level-1">
-                  <a href="https://docs.netapp.com/zh-cn/netapp-solutions/ehc/aws-guest.html" class="n-menu__header-text"><span translate="no" class="notranslate">简体中文</span></a>
+                  <a href="https://docs.netapp.com/zh-cn/netapp-solutions/ehc/aws/aws-setup.html" class="n-menu__header-text"><span translate="no" class="notranslate">简体中文</span></a>
                 </li><li class="n-menu__list-item n-menu__list-item--level-1">
-                  <a href="https://docs.netapp.com/us-en/netapp-solutions/ehc/aws-guest.html" class="n-menu__header-text"><span translate="no" class="notranslate">English</span></a>
+                  <a href="https://docs.netapp.com/us-en/netapp-solutions/ehc/aws/aws-setup.html" class="n-menu__header-text"><span translate="no" class="notranslate">English</span></a>
                 </li><li class="n-menu__list-item n-menu__list-item--level-1">
-                  <a href="https://docs.netapp.com/ja-jp/netapp-solutions/ehc/aws-guest.html" class="n-menu__header-text"><span translate="no" class="notranslate">日本語</span></a>
+                  <a href="https://docs.netapp.com/ja-jp/netapp-solutions/ehc/aws/aws-setup.html" class="n-menu__header-text"><span translate="no" class="notranslate">日本語</span></a>
                 </li><li class="n-menu__list-item n-menu__list-item--level-1">
-                  <a href="https://docs.netapp.com/ko-kr/netapp-solutions/ehc/aws-guest.html" class="n-menu__header-text"><span translate="no" class="notranslate">한국어</span></a>
+                  <a href="https://docs.netapp.com/ko-kr/netapp-solutions/ehc/aws/aws-setup.html" class="n-menu__header-text"><span translate="no" class="notranslate">한국어</span></a>
                 </li></ul>
             </li>
           </ul>
@@ -3987,7 +3987,7 @@
           <a href="/zh-cn/netapp-solutions/">NetApp&nbsp;Solutions</a>
         </li>
         <li class="n-breadcrumb__list-item">
-          适用于 AWS 的 NetApp 子系统连接存储选项
+          在 AWS 上部署和配置虚拟化环境
         </li>
       </ul>
     </div>
@@ -4010,26 +4010,18 @@
     </div>
   </span>
 </div><div class="n-doc__component-detail-heading-wrap">
-  <h1 class="n-doc__component-detail-heading">适用于 AWS 的 NetApp 子系统连接存储选项</h1>
+  <h1 class="n-doc__component-detail-heading">在 AWS 上部署和配置虚拟化环境</h1>
 </div>
 
 
 <p class="page-details">
   
     
-    <time datetime="2022-02-03 23:51:50 +0000">02/03/2022</time>
+    <time datetime="2022-02-07 19:01:33 +0000">02/07/2022</time>
     
   
 
 <span>提供者
-  <a target="_blank" href="https://github.com/kevin-hoke">
-    <img  class="avatar avatar-small"
-          alt="kevin-hoke"
-          width="20" height="20"
-          src="https://avatars.githubusercontent.com/u/55808219?v=4"
-          style="border-radius: 50%;"/>
-  </a>
-  
 </span>
 
 
@@ -4039,25 +4031,46 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph lead">
-<p>AWS 支持以下配置中的子系统连接 NetApp 存储：</p>
+<p>与内部部署一样，在 AWS 上规划 VMware Cloud 对于成功打造可随时投入生产的环境以创建 VM 和迁移至关重要。</p>
+</div>
+<div class="paragraph">
+<p>本节介绍如何在 AWS SDDC 上设置和管理 VMware Cloud ，并将其与连接 NetApp 存储的可用选项结合使用。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="/us-en/netapp-solutions/images/note.svg" alt="注">
+</td>
+<td class="content">
+目前，只有来宾存储是将 FSX ONTAP 和 Cloud Volumes ONTAP 连接到 AWS VMC 的唯一受支持方法。
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>设置过程可细分为以下步骤：</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#fsx-ontap">"FSX ONTAP 作为子系统连接的存储"</a></p>
+<p><a href="#deploy">"部署和配置适用于 AWS 的 VMware Cloud"</a></p>
 </li>
 <li>
-<p><a href="#cvo">"Cloud Volumes ONTAP （ CVO ）作为子系统连接的存储"</a></p>
+<p><a href="#connect">"将 VMware Cloud 连接到 FSX ONTAP"</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="在-aws-上为适用于-netapp-ontap-的-amazon-fsx-配置-vmware-cloud">在 AWS 上为适用于 NetApp ONTAP 的 Amazon FSX 配置 VMware Cloud</h2>
+<h2 id="部署和配置适用于-aws-的-vmware-cloud">部署和配置适用于 AWS 的 VMware Cloud</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Amazon FSX for NetApp ONTAP 文件共享和 LUN 可以从 AWS 上的 VMware Cloud 的 VMware SDDC 环境中创建的 VM 挂载。此外，还可以使用 NFS 或 SMB 协议在 Linux 客户端上挂载这些卷并将其映射到 Windows 客户端上，通过 iSCSI 挂载 LUN 时，可以在 Linux 或 Windows 客户端上以块设备的形式访问这些 LUN 。可通过以下步骤快速设置适用于 NetApp ONTAP 文件系统的 Amazon FSX 。</p>
+<p><a href="https://www.vmware.com/products/vmc-on-aws.html">"基于 AWS 的 VMware Cloud"</a> 为 AWS 生态系统中基于 VMware 的工作负载提供 Cloud 原生体验。每个 VMware 软件定义的数据中心（ SDDC ）均在 Amazon Virtual Private Cloud （ VPC ）中运行，并提供完整的 VMware 堆栈（包括 vCenter Server ）， NSX-T 软件定义的网络连接， vSAN 软件定义的存储以及一个或多个 ESXi 主机，这些主机可为您的工作负载提供计算和存储资源。</p>
+</div>
+<div class="paragraph">
+<p>本节介绍如何在 AWS 上设置和管理 VMware Cloud ，并将其与适用于 NetApp ONTAP 的 Amazon FSX 和 / 或在 AWS 上使用子系统内存储的 Cloud Volumes ONTAP 结合使用。</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -4066,393 +4079,72 @@
 <img src="/us-en/netapp-solutions/images/note.svg" alt="注">
 </td>
 <td class="content">
-适用于 NetApp ONTAP 的 Amazon FSx 和基于 AWS 的 VMware Cloud 必须位于同一可用性区域中，才能提高性能并避免在可用性区域之间传输数据。
+在将 Amazon FSX for NetApp ONTAP 和 Cloud Volumes ONTAP 连接到 AWS 上的 VMware Cloud 时，只支持使用来宾存储。
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>设置过程可分为三部分：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>注册 <a href="https://aws.amazon.com/">"Amazon Web Services 帐户"</a>。</p>
+</li>
+<li>
+<p>注册 <a href="https://customerconnect.vmware.com/home">"我的 VMware"</a> 帐户。</p>
+</li>
+<li>
+<p>在 VMware Cloud 中配置 SDDC 。</p>
+</li>
+</ol>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="创建并挂载适用于-ontap-卷的-amazon-fsx">创建并挂载适用于 ONTAP 卷的 Amazon FSX</h2>
+<h2 id="注册-aws-帐户">注册 AWS 帐户</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>要创建和挂载适用于 NetApp ONTAP 的 Amazon FSX 文件系统，请完成以下步骤：</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>打开 <a href="https://console.aws.amazon.com/fsx/">"Amazon FSX 控制台"</a> 并选择创建文件系统以启动文件系统创建向导。</p>
-</li>
-<li>
-<p>在选择文件系统类型页面上，选择适用于 NetApp ONTAP 的 Amazon FSx ，然后选择下一步。此时将显示创建文件系统页面。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-fsx-guest-1.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>在网络部分中，对于虚拟私有云（ Virtual Private Cloud ， VPC ），选择适当的 VPC 和首选子网以及路由表。在这种情况下，将从下拉列表中选择 vmcfsx2.vPC 。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-fsx-guest-2.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>对于创建方法，请选择标准创建。您也可以选择 " 快速创建 " ，但本文档使用 " 标准创建 " 选项。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-fsx-guest-3.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>在网络部分中，对于虚拟私有云（ Virtual Private Cloud ， VPC ），选择适当的 VPC 和首选子网以及路由表。在这种情况下，将从下拉列表中选择 vmcfsx2.vPC 。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-fsx-guest-4.png" alt=""></span></p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<img src="/us-en/netapp-solutions/images/note.svg" alt="注">
-</td>
-<td class="content">
-在网络部分中，对于虚拟私有云（ Virtual Private Cloud ， VPC ），选择适当的 VPC 和首选子网以及路由表。在这种情况下，将从下拉列表中选择 vmcfsx2.vPC 。
-</td>
-</tr>
-</table>
-</div>
-</li>
-<li>
-<p>在安全性和加密部分中，对于加密密钥，选择用于保护文件系统空闲数据的 AWS 密钥管理服务（ AWS KMS ）加密密钥。对于文件系统管理密码，输入 fsxadmin 用户的安全密码。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-fsx-guest-5.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>在虚拟机中，并指定与 vsadmin 结合使用的密码，以便使用 REST API 或 CLI 管理 ONTAP 。如果未指定密码，则可以使用 fsxadmin 用户来管理 SVM 。在 Active Directory 部分中，确保将 Active Directory 加入 SVM 以配置 SMB 共享。在默认 Storage Virtual Machine 配置部分中，在此验证中提供存储的名称， SMB 共享使用自管理的 Active Directory 域进行配置。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-fsx-guest-6.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>在默认卷配置部分中，指定卷名称和大小。这是一个 NFS 卷。对于存储效率，请选择启用以启用 ONTAP 存储效率功能（数据压缩，重复数据删除和数据缩减），或者选择禁用以禁用这些功能。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-fsx-guest-7.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>查看创建文件系统页面上显示的文件系统配置。</p>
-</li>
-<li>
-<p>单击创建文件系统。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-fsx-guest-8.png" alt=""></span><br>
-<span class="image"><img src="./../media/aws-fsx-guest-9.png" alt=""></span><br>
-<span class="image"><img src="./../media/aws-fsx-guest-10.png" alt=""></span></p>
-</div>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>有关更多详细信息，请参见 <a href="https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/getting-started.html">"适用于 NetApp ONTAP 的 Amazon FSX 入门"</a>。</p>
-</div>
-<div class="paragraph">
-<p>按上述方式创建文件系统后，使用所需的大小和协议创建卷。</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>打开 <a href="https://console.aws.amazon.com/fsx/">"Amazon FSX 控制台"</a>。</p>
-</li>
-<li>
-<p>在左侧导航窗格中，选择文件系统，然后选择要为其创建卷的 ONTAP 文件系统。</p>
-</li>
-<li>
-<p>选择卷选项卡。</p>
-</li>
-<li>
-<p>选择创建卷选项卡。</p>
-</li>
-<li>
-<p>此时将显示创建卷对话框。</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>出于演示目的，本节创建了一个 NFS 卷，可以轻松地挂载在 AWS 上的 VMware 云上运行的 VM 上。nfsdemovol01 创建如下：</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-fsx-guest-11.png" alt=""></span></p>
-</div>
-<div class="sect2">
-<h3 id="在-linux-客户端上挂载-fsx-ontap-卷">在 Linux 客户端上挂载 FSX ONTAP 卷</h3>
-<div class="paragraph">
-<p>挂载上一步中创建的 FSX ONTAP 卷。在 AWS SDDC 上 VMC 中的 Linux VM 中，完成以下步骤：</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>连接到指定的 Linux 实例。</p>
-</li>
-<li>
-<p>使用安全 Shell （ SSH ）在实例上打开一个终端，并使用相应的凭据登录。</p>
-</li>
-<li>
-<p>使用以下命令为卷的挂载点创建一个目录：</p>
-<div class="literalblock">
-<div class="content">
-<pre> $ sudo mkdir /fsx/nfsdemovol01
-. 将适用于 NetApp ONTAP NFS 的 Amazon FSX 卷挂载到上一步创建的目录中。</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>sudo mount -t nfs nfsvers=4.1,198.19.254.239:/nfsdemovol01 /fsx/nfsdemovol01</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-fsx-guest-20.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>执行后，运行 df 命令以验证挂载。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-fsx-guest-21.png" alt=""></span></p>
-</div>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="将-fsx-ontap-卷连接到-microsoft-windows-客户端">将 FSX ONTAP 卷连接到 Microsoft Windows 客户端</h3>
-<div class="paragraph">
-<p>要管理和映射 Amazon FSX 文件系统上的文件共享，必须使用共享文件夹图形用户界面。</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>打开 " 开始 " 菜单，然后使用以管理员身份运行来运行 fsmgmt.msc 。这样将打开共享文件夹 GUI 工具。</p>
-</li>
-<li>
-<p>单击操作 &gt; 所有任务，然后选择连接到另一台计算机。</p>
-</li>
-<li>
-<p>对于另一台计算机，输入 Storage Virtual Machine （ SVM ）的 DNS 名称。例如，在此示例中使用了 FSXSMBTESTING01.FSXTESTING.local 。</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<img src="/us-en/netapp-solutions/images/note.svg" alt="注">
-</td>
-<td class="content">
-TP 可在 Amazon FSX 控制台上找到 SVM 的 DNS 名称，选择 Storage Virtual Machine ，选择 SVM ，然后向下滚动到端点以查找 SMB DNS 名称。单击确定。Amazon FSX 文件系统将显示在共享文件夹列表中。
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-fsx-guest-22.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>在共享文件夹工具中，选择左窗格中的共享以查看 Amazon FSX 文件系统的活动共享。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-fsx-guest-23.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>现在，选择一个新共享并完成创建共享文件夹向导。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-fsx-guest-24.png" alt=""></span><br>
-<span class="image"><img src="./../media/aws-fsx-guest-25.png" alt=""></span></p>
-</div>
-<div class="paragraph">
-<p>要了解有关在 Amazon FSX 文件系统上创建和管理 SMB 共享的详细信息，请参见 <a href="https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/create-smb-shares.html">"创建 SMB 共享"</a>。</p>
-</div>
-</li>
-<li>
-<p>建立连接后，可以连接 SMB 共享并将其用于应用程序数据。为此，请复制共享路径并使用映射网络驱动器选项将卷挂载到 AWS SDDC 上在 VMware Cloud 上运行的虚拟机上。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-fsx-guest-26.png" alt=""></span></p>
-</div>
-</li>
-</ol>
-</div>
+<p>您需要一个 AWS 帐户才能开始使用，前提是尚未创建一个 AWS 帐户。无论新的还是现有的，您都需要在帐户中拥有管理权限才能执行此操作步骤中的许多步骤。请参见此内容 <a href="https://docs.aws.amazon.com/general/latest/gr/aws-security-credentials.html">"链接。"</a> 有关 AWS 凭据的详细信息。</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="使用-iscsi-将适用于-netapp-ontap-lun-的-fsx-连接到主机">使用 iSCSI 将适用于 NetApp ONTAP LUN 的 FSX 连接到主机</h2>
+<h2 id="注册-my-vmware-帐户">注册 My VMware 帐户</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>FSX 的 iSCSI 流量通过上一节提供的路由遍历 VMware Transit Connect/AWS Transit Gateway 。要在适用于 NetApp ONTAP 的 Amazon FSX 中配置 LUN ，请按照找到的文档进行操作 <a href="https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/supported-fsx-clients.html">"此处"</a>。</p>
-</div>
-<div class="paragraph">
-<p>在 Linux 客户端上，确保 iSCSI 守护进程正在运行。配置 LUN 后，请参见有关使用 Ubuntu 配置 iSCSI 的详细指南（示例） <a href="https://ubuntu.com/server/docs/service-iscsi">"此处"</a>。</p>
-</div>
-<div class="paragraph">
-<p>本文介绍了如何将 iSCSI LUN 连接到 Windows 主机：</p>
-</div>
-<div class="sect2">
-<h3 id="在适用于-netapp-ontap-的-fsx-中配置-lun">在适用于 NetApp ONTAP 的 FSX 中配置 LUN ：</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>使用 ONTAP 文件系统的 FSX 管理端口访问 NetApp ONTAP 命令行界面。</p>
-</li>
-<li>
-<p>按照规模估算输出所示，使用所需大小创建 LUN 。</p>
-<div class="literalblock">
-<div class="content">
-<pre>FsxId040eacc5d0ac31017::&gt; lun create -vserver vmcfsxval2svm -volume nimfsxscsivol -lun nimofsxlun01 -size 5gb -ostype windows -space-reserve enabled</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>在此示例中，我们创建了一个大小为 5G （ 5368709120 ）的 LUN 。</p>
-</div>
-</li>
-<li>
-<p>创建必要的 igroup 以控制哪些主机可以访问特定 LUN 。</p>
-<div class="listingblock">
-<div class="content">
-<pre>FsxId040eacc5d0ac31017::&gt; igroup create -vserver vmcfsxval2svm -igroup winIG -protocol iscsi -ostype windows -initiator iqn.1991-05.com.microsoft:vmcdc01.fsxtesting.local
-
-FsxId040eacc5d0ac31017::&gt; igroup show
-
-Vserver   Igroup       Protocol OS Type  Initiators
-
---------- ------------ -------- -------- ------------------------------------
-
-vmcfsxval2svm
-
-          ubuntu01     iscsi    linux    iqn.2021-10.com.ubuntu:01:initiator01
-
-vmcfsxval2svm
-
-          winIG        iscsi    windows  iqn.1991-05.com.microsoft:vmcdc01.fsxtesting.local</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>此时将显示两个条目。</p>
-</div>
-</li>
-<li>
-<p>使用以下命令将 LUN 映射到 igroup ：</p>
-<div class="listingblock">
-<div class="content">
-<pre>FsxId040eacc5d0ac31017::&gt; lun map -vserver vmcfsxval2svm -path /vol/nimfsxscsivol/nimofsxlun01 -igroup winIG
-
-FsxId040eacc5d0ac31017::&gt; lun show
-
-Vserver   Path                            State   Mapped   Type        Size
-
---------- ------------------------------- ------- -------- -------- --------
-
-vmcfsxval2svm
-
-          /vol/blocktest01/lun01          online  mapped   linux         5GB
-
-vmcfsxval2svm
-
-          /vol/nimfsxscsivol/nimofsxlun01 online  mapped   windows       5GB</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>此时将显示两个条目。</p>
-</div>
-</li>
-<li>
-<p>将新配置的 LUN 连接到 Windows VM ：</p>
-<div class="paragraph">
-<p>要将新 LUN 连接到 AWS SDDC 上 VMware 云上的 Windows 主机，请完成以下步骤：</p>
-</div>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>RDP 到 AWS SDDC 上 VMware Cloud 上托管的 Windows VM 。</p>
-</li>
-<li>
-<p>导航到服务器管理器 &gt; 信息板 &gt; 工具 &gt; iSCSI 启动程序以打开 iSCSI 启动程序属性对话框。</p>
-</li>
-<li>
-<p>在发现选项卡中，单击发现门户或添加门户，然后输入 iSCSI 目标端口的 IP 地址。</p>
-</li>
-<li>
-<p>从目标选项卡中，选择已发现的目标，然后单击登录或连接。</p>
-</li>
-<li>
-<p>选择启用多路径，然后选择 " 计算机启动时自动还原此连接 " 或 " 将此连接添加到收藏目标列表 " 。单击高级。</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<img src="/us-en/netapp-solutions/images/note.svg" alt="注">
-</td>
-<td class="content">
-Windows 主机必须与集群中的每个节点建立 iSCSI 连接。原生 DSM 会选择要使用的最佳路径。
-</td>
-</tr>
-</table>
-</div>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-fsx-guest-30.png" alt=""></span></p>
-</div>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Storage Virtual Machine （ SVM ）上的 LUN 在 Windows 主机中显示为磁盘。主机不会自动发现添加的任何新磁盘。通过完成以下步骤触发手动重新扫描以发现磁盘：</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>打开 Windows 计算机管理实用程序：开始 &gt; 管理工具 &gt; 计算机管理。</p>
-</li>
-<li>
-<p>在导航树中展开存储节点。</p>
-</li>
-<li>
-<p>单击磁盘管理。</p>
-</li>
-<li>
-<p>单击操作 &gt; 重新扫描磁盘。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-fsx-guest-31.png" alt=""></span></p>
-</div>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>当新 LUN 首次由 Windows 主机访问时，它没有分区或文件系统。通过完成以下步骤初始化 LUN ，并可选择使用文件系统格式化 LUN ：</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>启动 Windows 磁盘管理。</p>
-</li>
-<li>
-<p>右键单击 LUN ，然后选择所需的磁盘或分区类型。</p>
-</li>
-<li>
-<p>按照向导中的说明进行操作。在此示例中，驱动器 F ：已挂载。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-fsx-guest-32.png" alt=""></span></p>
-</div>
-</li>
-</ol>
-</div>
+<p>要访问 VMware 的云产品组合（包括基于 AWS 的 VMware Cloud ），您需要 VMware 客户帐户或 My VMware 帐户。如果尚未创建 VMware 帐户，请创建此帐户 <a href="https://customerconnect.vmware.com/account-registration">"此处"</a>。</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="在-aws-中部署新的-cloud-volumes-ontap-实例自行操作">在 AWS 中部署新的 Cloud Volumes ONTAP 实例（自行操作）</h2>
+<h2 id="在-vmware-cloud-中配置-sddc">在 VMware Cloud 中配置 SDDC</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>可以从 AWS SDDC 环境中的 VMware 云中创建的 VM 挂载 Cloud Volumes ONTAP 共享和 LUN 。这些卷还可以挂载在原生 AWS VM Linux Windows 客户端上，并且在通过 iSCSI 挂载时，可以在 Linux 或 Windows 客户端上以块设备的形式访问 LUN ，因为 Cloud Volumes ONTAP 支持 iSCSI ， SMB 和 NFS 协议。只需几个简单的步骤即可设置 Cloud Volumes ONTAP 卷。</p>
+<p>配置 VMware 帐户并执行适当的规模估算后，部署软件定义的数据中心显然是使用 VMware Cloud on AWS 服务的下一步。要创建 SDDC ，请选择要托管它的 AWS 区域，为 SDDC 指定一个名称，并指定希望 SDDC 包含的 ESXi 主机数。如果您还没有 AWS 帐户，则仍可以创建一个包含单个 ESXi 主机的入门级配置 SDDC 。</p>
 </div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>使用现有或新创建的 VMware 凭据登录到 VMware Cloud Console 。</p>
 <div class="paragraph">
-<p>要将卷从内部环境复制到云以实现灾难恢复或迁移，请使用站点到站点 VPN 或 DirectConnect 与 AWS 建立网络连接。将数据从内部复制到 Cloud Volumes ONTAP 不在本文档的讨论范围之内。要在内部系统和 Cloud Volumes ONTAP 系统之间复制数据，请参见 <a href="https://docs.netapp.com/us-en/occm/task_replicating_data.html#setting-up-data-replication-between-systems">"在系统之间设置数据复制"</a>。</p>
+<p><span class="image"><img src="./../../media/aws-config-1.png" alt=""></span></p>
+</div>
+</li>
+<li>
+<p>配置 AWS 区域，部署和主机类型以及 SDDC 名称：</p>
+<div class="paragraph">
+<p><span class="image"><img src="./../../media/aws-config-2.png" alt=""></span></p>
+</div>
+</li>
+<li>
+<p>连接到所需的 AWS 帐户并执行 AWS Cloud Formation 堆栈。</p>
+<div class="paragraph">
+<p><span class="image"><img src="./../../media/aws-config-3.png" alt=""></span><br>
+<span class="image"><img src="./../../media/aws-config-4.png" alt=""></span><br>
+<span class="image"><img src="./../../media/aws-config-5.png" alt=""></span><br>
+<span class="image"><img src="./../../media/aws-config-6.png" alt=""></span></p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -4461,271 +4153,135 @@ Windows 主机必须与集群中的每个节点建立 iSCSI 连接。原生 DSM 
 <img src="/us-en/netapp-solutions/images/note.svg" alt="注">
 </td>
 <td class="content">
-使用 <a href="https://cloud.netapp.com/cvo-sizer">"Cloud Volumes ONTAP 规模估算工具"</a> 以准确估算 Cloud Volumes ONTAP 实例的大小。此外，还可以监控内部性能，以用作 Cloud Volumes ONTAP 规模估算器中的输入。
+此验证使用单主机配置。
 </td>
 </tr>
 </table>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+</li>
 <li>
-<p>登录到 NetApp Cloud Central ；此时将显示 Fabric View 屏幕。找到 Cloud Volumes ONTAP 选项卡，然后选择转到 Cloud Manager 。登录后，将显示 " 画布 " 屏幕。</p>
+<p>选择所需的 AWS VPC 以连接 VMC 环境。</p>
 <div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-1.png" alt=""></span></p>
+<p><span class="image"><img src="./../../media/aws-config-7.png" alt=""></span></p>
 </div>
 </li>
 <li>
-<p>在 Cloud Manager 主页上，单击添加工作环境，然后选择 AWS 作为云以及系统配置的类型。</p>
+<p>配置 VMC 管理子网；此子网包含 vCenter ， NSX 等 VMC 管理的服务。请勿选择与任何其他需要连接到 SDDC 环境的网络重叠的地址空间。最后，请遵循下面标注的 CIDR 大小建议。</p>
 <div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-2.png" alt=""></span></p>
+<p><span class="image"><img src="./../../media/aws-config-8.png" alt=""></span></p>
 </div>
 </li>
 <li>
-<p>提供要创建的环境的详细信息，包括环境名称和管理员凭据。单击 Continue （继续）。</p>
+<p>查看并确认 SDDC 配置，然后单击 Deploy the SDDC 。</p>
 <div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-3.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>为 Cloud Volumes ONTAP 部署选择附加服务，包括云数据感知，云备份和 Cloud Insights 。单击 Continue （继续）。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-4.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>在 HA 部署模式页面上，选择多个可用性区域配置。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-5.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>在区域和 VPC 页面上，输入网络信息，然后单击继续。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-6.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>在“ Connectivity and SSH Authentication ”（连接和 SSH 身份验证）页上、为 HA 对和调解器选择连接方法。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-7.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>指定浮动 IP 地址，然后单击继续。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-8.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>选择适当的路由表以包含指向浮动 IP 地址的路由，然后单击继续。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-9.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>在数据加密页面上，选择 AWS 管理的加密。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-10.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>选择许可证选项：按需购买或自带许可证以使用现有许可证。在此示例中，将使用按需购买选项。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-11.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>根据要在 AWS SDDC 上的 VMware 云上运行的 VM 上部署的工作负载类型，在多个预配置的软件包之间进行选择。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-12.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>在审核和批准页面上，查看并确认所做的选择。要创建 Cloud Volumes ONTAP 实例，请单击执行。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-13.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>配置 Cloud Volumes ONTAP 后，它将在 " 画布 " 页面的工作环境中列出。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-14.png" alt=""></span></p>
-</div>
-</li>
-</ol>
-</div>
-<div class="sect2">
-<h3 id="smb-卷的其他配置">SMB 卷的其他配置</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>准备好工作环境后，请确保为 CIFS 服务器配置了适当的 DNS 和 Active Directory 配置参数。要创建 SMB 卷，必须执行此步骤。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-20.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>选择要创建卷的 CVO 实例，然后单击创建卷选项。选择适当的大小， Cloud Manager 选择包含的聚合或使用高级分配机制将其放置在特定聚合上。在此演示中，选择 SMB 作为协议。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-21.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>配置卷后，此卷将显示在卷窗格下。由于已配置 CIFS 共享，因此您应向用户或组授予对文件和文件夹的权限，并验证这些用户是否可以访问此共享并创建文件。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-22.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>创建卷后，使用 mount 命令从 AWS SDDC 主机中 VMware Cloud 上运行的虚拟机连接到共享。</p>
-</li>
-<li>
-<p>复制以下路径并使用映射网络驱动器选项将卷挂载到 AWS SDDC 中 VMware Cloud 上运行的虚拟机上。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-23.png" alt=""></span><br>
-<span class="image"><img src="./../media/aws-cvo-guest-24.png" alt=""></span></p>
-</div>
-</li>
-</ol>
-</div>
-</div>
-<div class="sect2">
-<h3 id="将-lun-连接到主机">将 LUN 连接到主机</h3>
-<div class="paragraph">
-<p>要将 Cloud Volumes ONTAP LUN 连接到主机，请完成以下步骤：</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>在 Cloud Manager 的 " 画布 " 页面上，双击 Cloud Volumes ONTAP 工作环境以创建和管理卷。</p>
-</li>
-<li>
-<p>单击添加卷 &gt; 新建卷，选择 iSCSI ，然后单击创建启动程序组。单击 Continue （继续）。</p>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-30.png" alt=""></span><br>
-<span class="image"><img src="./../media/aws-cvo-guest-31.png" alt=""></span></p>
-</div>
-</li>
-<li>
-<p>配置卷后，选择卷，然后单击目标 IQN 。要复制 iSCSI 限定名称（ IQN ），请单击复制。设置从主机到 LUN 的 iSCSI 连接。</p>
-</li>
-</ol>
+<p><span class="image"><img src="./../../media/aws-config-9.png" alt=""></span></p>
 </div>
 <div class="paragraph">
-<p>要对位于 AWS SDDC 上的 VMware Cloud 上的主机执行相同操作，请完成以下步骤：</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>RDP 到 AWS 上 VMware 云上托管的 VM 。</p>
-</li>
-<li>
-<p>打开 iSCSI 启动程序属性对话框：服务器管理器 &gt; 信息板 &gt; 工具 &gt; iSCSI 启动程序。</p>
-</li>
-<li>
-<p>在发现选项卡中，单击发现门户或添加门户，然后输入 iSCSI 目标端口的 IP 地址。</p>
-</li>
-<li>
-<p>从目标选项卡中，选择已发现的目标，然后单击登录或连接。</p>
-</li>
-<li>
-<p>选择启用多路径，然后选择计算机启动时自动还原此连接或将此连接添加到收藏目标列表。单击高级。</p>
-</li>
-</ol>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<img src="/us-en/netapp-solutions/images/note.svg" alt="注">
-</td>
-<td class="content">
-Windows 主机必须与集群中的每个节点建立 iSCSI 连接。原生 DSM 会选择要使用的最佳路径。
-</td>
-</tr>
-</table>
+<p>完成部署过程通常需要大约两个小时。</p>
 </div>
 <div class="paragraph">
-<p>+<span class="image"><img src="./../media/aws-cvo-guest-32.png" alt=""></span></p>
+<p><span class="image"><img src="./../../media/aws-config-10.png" alt=""></span></p>
 </div>
+</li>
+<li>
+<p>完成后， SDDC 即可使用。</p>
 <div class="paragraph">
-<p>SVM 中的 LUN 在 Windows 主机中显示为磁盘。主机不会自动发现添加的任何新磁盘。通过完成以下步骤触发手动重新扫描以发现磁盘：</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>打开 Windows 计算机管理实用程序：开始 &gt; 管理工具 &gt; 计算机管理。</p>
-</li>
-<li>
-<p>在导航树中展开存储节点。</p>
-</li>
-<li>
-<p>单击磁盘管理。</p>
-</li>
-<li>
-<p>单击操作 &gt; 重新扫描磁盘。</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-33.png" alt=""></span></p>
-</div>
-<div class="paragraph">
-<p>当新 LUN 首次由 Windows 主机访问时，它没有分区或文件系统。初始化 LUN ；也可以通过完成以下步骤使用文件系统格式化 LUN ：</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>启动 Windows 磁盘管理。</p>
-</li>
-<li>
-<p>右键单击 LUN ，然后选择所需的磁盘或分区类型。</p>
-</li>
-<li>
-<p>按照向导中的说明进行操作。在此示例中，驱动器 F ：已挂载。</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-34.png" alt=""></span></p>
-</div>
-<div class="paragraph">
-<p>在 Linux 客户端上，确保 iSCSI 守护进程正在运行。配置 LUN 后，请参阅有关适用于 Linux 分发版的 iSCSI 配置的详细指导。例如，可以找到 Ubuntu iSCSI 配置 <a href="https://ubuntu.com/server/docs/service-iscsi">"此处"</a>。要进行验证，请从 shell 运行 lsblk cmd 。</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="在-linux-客户端上挂载-cloud-volumes-ontap-nfs-卷">在 Linux 客户端上挂载 Cloud Volumes ONTAP NFS 卷</h3>
-<div class="paragraph">
-<p>要从 AWS SDDC 上 VMC 内的 VM 挂载 Cloud Volumes ONTAP （ DIY ）文件系统，请完成以下步骤：</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>连接到指定的 Linux 实例。</p>
-</li>
-<li>
-<p>使用安全 Shell （ SSH ）在实例上打开一个终端，并使用相应的凭据登录。</p>
-</li>
-<li>
-<p>使用以下命令为卷的挂载点创建一个目录。</p>
-<div class="literalblock">
-<div class="content">
-<pre> $ sudo mkdir /fsxcvotesting01/nfsdemovol01
-. 将适用于 NetApp ONTAP NFS 的 Amazon FSX 卷挂载到上一步创建的目录中。</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>sudo mount -t nfs nfsvers=4.1,172.16.0.2:/nfsdemovol01 /fsxcvotesting01/nfsdemovol01</pre>
-</div>
+<p><span class="image"><img src="./../../media/aws-config-11.png" alt=""></span></p>
 </div>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="./../media/aws-cvo-guest-40.png" alt=""></span><br>
-<span class="image"><img src="./../media/aws-cvo-guest-41.png" alt=""></span></p>
+<p>有关 SDDC 部署的分步指南，请参见 <a href="https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-operations/GUID-EF198D55-03E3-44D1-AC48-6E2ABA31FF02.html">"从 VMC 控制台部署 SDDC"</a>。</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="将-vmware-cloud-连接到-fsx-ontap">将 VMware Cloud 连接到 FSX ONTAP</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>要将 VMware Cloud 连接到 FSX ONTAP ，请完成以下步骤：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>完成 VMware Cloud 部署并连接到 AWS VPC 后，您必须将适用于 NetApp ONTAP 的 Amazon FSx 部署到新的 VPC 中，而不是原始连接的 VPC 中（请参见下面的屏幕截图）。如果在连接的 VPC 中部署了 FSX （ NFS 和 SMB 浮动 IP ），则无法访问它。请注意， Cloud Volumes ONTAP 等 iSCSI 端点在连接的 VPC 上运行正常。</p>
+<div class="paragraph">
+<p><span class="image"><img src="./../../media/aws-connect-fsx-1.png" alt=""></span></p>
+</div>
+</li>
+<li>
+<p>在同一地区部署一个额外的 VPC ，然后将适用于 NetApp ONTAP 的 Amazon FSx 部署到新的 VPC 中。</p>
+<div class="paragraph">
+<p>通过在 VMware Cloud 控制台中配置 SDDC 组，可以使用所需的网络配置选项连接到部署了 FSX 的新 VPC 。在第 3 步中，验证是否已选中 " 为组配置 VMware Transit Connect 将在每个附件和数据传输中产生费用 " ，然后选择创建组。完成此过程可能需要几分钟时间。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./../../media/aws-connect-fsx-2.png" alt=""></span><br>
+<span class="image"><img src="./../../media/aws-connect-fsx-3.png" alt=""></span><br>
+<span class="image"><img src="./../../media/aws-connect-fsx-4.png" alt=""></span></p>
+</div>
+</li>
+<li>
+<p>将新创建的 VPC 附加到刚刚创建的 SDDC 组。选择外部 VPC 选项卡，然后按照进行操作 <a href="https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-operations/GUID-A3D03968-350E-4A34-A53E-C0097F5F26A9.html">"连接外部 VPC 的说明"</a> 组。完成此过程可能需要 10 到 15 分钟。</p>
+<div class="paragraph">
+<p><span class="image"><img src="./../../media/aws-connect-fsx-5.png" alt=""></span><br>
+<span class="image"><img src="./../../media/aws-connect-fsx-6.png" alt=""></span></p>
+</div>
+</li>
+<li>
+<p>在外部 VPC 过程中，系统会通过 AWS 控制台通过资源访问管理器提示您访问新的共享资源。共享资源为 <a href="https://aws.amazon.com/transit-gateway">"AWS 传输网关"</a> 由 VMware Transit Connect 管理。</p>
+<div class="paragraph">
+<p><span class="image"><img src="./../../media/aws-connect-fsx-7.png" alt=""></span><br>
+<span class="image"><img src="./../../media/aws-connect-fsx-8.png" alt=""></span></p>
+</div>
+</li>
+<li>
+<p>创建传输网关附件。</p>
+<div class="paragraph">
+<p><span class="image"><img src="./../../media/aws-connect-fsx-9.png" alt=""></span></p>
+</div>
+</li>
+<li>
+<p>返回 VMC 控制台，接受 VPC 连接。完成此过程大约需要 10 分钟。</p>
+<div class="paragraph">
+<p><span class="image"><img src="./../../media/aws-connect-fsx-10.png" alt=""></span></p>
+</div>
+</li>
+<li>
+<p>在外部 VPC 选项卡中，单击路由列中的编辑图标，然后添加以下所需的路由：</p>
+<div class="ulist">
+<ul>
+<li>
+<p>适用于 NetApp ONTAP 的 Amazon FSX 的浮动 IP 范围的路由 <a href="https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/supported-fsx-clients.html">"浮动 IP"</a>。</p>
+</li>
+<li>
+<p>Cloud Volumes ONTAP 的浮动 IP 范围的路由（如果适用）。</p>
+</li>
+<li>
+<p>新创建的外部 VPC 地址空间的路由。</p>
+<div class="paragraph">
+<p><span class="image"><img src="./../../media/aws-connect-fsx-11.png" alt=""></span></p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>最后，允许双向流量 <a href="https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-operations/GUID-DE330202-D63D-408A-AECF-7CDC6ADF7EAC.html">"防火墙规则"</a> 用于访问 FSX/CVO 。请按照以下说明操作  SDDC 工作负载连接的计算网关防火墙规则。</p>
+<div class="paragraph">
+<p><span class="image"><img src="./../../media/aws-connect-fsx-12.png" alt=""></span></p>
+</div>
+</li>
+<li>
+<p>为管理和计算网关配置防火墙组后，可以按如下方式访问 vCenter ：</p>
+<div class="paragraph">
+<p><span class="image"><img src="./../../media/aws-connect-fsx-13.png" alt=""></span></p>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>下一步是验证是否已根据您的需求配置 Amazon FSX ONTAP 或 Cloud Volumes ONTAP ，以及是否已配置卷以从 vSAN 卸载存储组件以优化部署。</p>
 </div>
 </div>
 </div>
@@ -4739,8 +4295,8 @@ Windows 主机必须与集群中的每个节点建立 iSCSI 连接。原生 DSM 
   <div class="page-nav-toolbar">
     <div id="version-dropdown"></div>
     <div class="page-nav-contribute"  >
-      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/issues/new?body=Page%3A%20[适用于 AWS 的 NetApp 子系统连接存储选项](https://docs.netapp.com/zh-cn/netapp-solutions/ehc/aws-guest.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
-      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/blob/main/ehc/aws-guest.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a>
+      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/issues/new?body=Page%3A%20[在 AWS 上部署和配置虚拟化环境](https://docs.netapp.com/zh-cn/netapp-solutions/ehc/aws/aws-setup.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
+      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/blob/main/ehc/aws/aws-setup.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a>
       <a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/netapp-solutions/images/article-sm.svg" class="github-icon" />提供者指南</a>
     </div>
     <div class="page-nav-container">
