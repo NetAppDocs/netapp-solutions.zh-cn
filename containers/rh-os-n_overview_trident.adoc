@@ -20,7 +20,7 @@ image:redhat_openshift_image2.png["错误：缺少图形映像"]
 
 Astra Trident 具有快速的开发周期，就像 Kubernetes 一样，每年发布四次。
 
-最新版本的 Astra Trident 是 2021 年 7 月发布的 21.07 版。已测试的 Trident 版本的支持列表，可在该支持列表中找到 Kubernetes 分发版本 https://netapp-trident.readthedocs.io/en/stable-v21.07/support/requirements.html#supported-frontends-orchestrators["此处"]。
+最新版 Astra Trident 于 2022 年 1 月发布。已测试的 Trident 版本的支持列表，可在该支持列表中找到 Kubernetes 分发版本 https://docs.netapp.com/us-en/trident/trident-get-started/requirements.html#supported-frontends-orchestrators["此处"]。
 
 从 20.04 版开始， Trident 设置由 Trident 操作员执行。操作员可以简化大规模部署，并为在 Trident 安装过程中部署的 Pod 提供额外的支持，包括自我修复。
 
@@ -32,32 +32,32 @@ Astra Trident 具有快速的开发周期，就像 Kubernetes 一样，每年发
 
 要在已部署的用户集群上安装 Trident 并配置永久性卷，请完成以下步骤：
 
-. 将安装归档下载到管理工作站并提取内容。Trident 的当前版本为 21.07 ，可以下载 https://github.com/NetApp/trident/releases/download/v21.07.1/trident-installer-21.07.1.tar.gz["此处"]。
+. 将安装归档下载到管理工作站并提取内容。Trident 的当前版本为 22.01 ，可以下载 https://github.com/NetApp/trident/releases/download/v22.01.0/trident-installer-22.01.0.tar.gz["此处"]。
 +
 [listing]
 ----
-[netapp-user@rhel7 ~]$ wget https://github.com/NetApp/trident/releases/download/v21.07.1/trident-installer-21.07.1.tar.gz
---2021-05-06 15:17:30--  https://github.com/NetApp/trident/releases/download/v21.07.1/trident-installer-21.07.1.tar.gz
+[netapp-user@rhel7 ~]$ wget https://github.com/NetApp/trident/releases/download/v22.01.0/trident-installer-22.01.0.tar.gz
+--2021-05-06 15:17:30--  https://github.com/NetApp/trident/releases/download/v22.01.0/trident-installer-22.01.0.tar.gz
 Resolving github.com (github.com)... 140.82.114.3
 Connecting to github.com (github.com)|140.82.114.3|:443... connected.
 HTTP request sent, awaiting response... 302 Found
-Location: https://github-releases.githubusercontent.com/77179634/a4fa9f00-a9f2-11eb-9053-98e8e573d4ae?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20210506%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210506T191643Z&X-Amz-Expires=300&X-Amz-Signature=8a49a2a1e08c147d1ddd8149ce45a5714f9853fee19bb1c507989b9543eb3630&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=77179634&response-content-disposition=attachment%3B%20filename%3Dtrident-installer-21.07.1.tar.gz&response-content-type=application%2Foctet-stream [following]
---2021-05-06 15:17:30--  https://github-releases.githubusercontent.com/77179634/a4fa9f00-a9f2-11eb-9053-98e8e573d4ae?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20210506%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210506T191643Z&X-Amz-Expires=300&X-Amz-Signature=8a49a2a1e08c147d1ddd8149ce45a5714f9853fee19bb1c507989b9543eb3630&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=77179634&response-content-disposition=attachment%3B%20filename%3Dtrident-installer-21.07.1.tar.gz&response-content-type=application%2Foctet-stream
+Location: https://github-releases.githubusercontent.com/77179634/a4fa9f00-a9f2-11eb-9053-98e8e573d4ae?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20210506%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210506T191643Z&X-Amz-Expires=300&X-Amz-Signature=8a49a2a1e08c147d1ddd8149ce45a5714f9853fee19bb1c507989b9543eb3630&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=77179634&response-content-disposition=attachment%3B%20filename%3Dtrident-installer-22.01.0.tar.gz&response-content-type=application%2Foctet-stream [following]
+--2021-05-06 15:17:30--  https://github-releases.githubusercontent.com/77179634/a4fa9f00-a9f2-11eb-9053-98e8e573d4ae?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20210506%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210506T191643Z&X-Amz-Expires=300&X-Amz-Signature=8a49a2a1e08c147d1ddd8149ce45a5714f9853fee19bb1c507989b9543eb3630&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=77179634&response-content-disposition=attachment%3B%20filename%3Dtrident-installer-22.01.0.tar.gz&response-content-type=application%2Foctet-stream
 Resolving github-releases.githubusercontent.com (github-releases.githubusercontent.com)... 185.199.108.154, 185.199.109.154, 185.199.110.154, ...
 Connecting to github-releases.githubusercontent.com (github-releases.githubusercontent.com)|185.199.108.154|:443... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: 38349341 (37M) [application/octet-stream]
-Saving to: ‘trident-installer-21.07.1.tar.gz’
+Saving to: ‘trident-installer-22.01.0.tar.gz’
 
 100%[==================================================================================================================>] 38,349,341  88.5MB/s   in 0.4s
 
-2021-05-06 15:17:30 (88.5 MB/s) - ‘trident-installer-21.07.1.tar.gz’ saved [38349341/38349341]
+2021-05-06 15:17:30 (88.5 MB/s) - ‘trident-installer-22.01.0.tar.gz’ saved [38349341/38349341]
 ----
 . 从下载的软件包中提取 Trident 安装。
 +
 [listing]
 ----
-[netapp-user@rhel7 ~]$ tar -xzf trident-installer-21.07.1.tar.gz
+[netapp-user@rhel7 ~]$ tar -xzf trident-installer-22.01.0.tar.gz
 [netapp-user@rhel7 ~]$ cd trident-installer/
 [netapp-user@rhel7 trident-installer]$
 ----
@@ -77,7 +77,7 @@ Saving to: ‘trident-installer-21.07.1.tar.gz’
 +
 [listing]
 ----
-[netapp-user@rhel7 trident-installer]$ helm install trident helm/trident-operator-21.07.1.tgz --create-namespace --namespace trident
+[netapp-user@rhel7 trident-installer]$ helm install trident helm/trident-operator-22.01.0.tgz --create-namespace --namespace trident
 NAME: trident
 LAST DEPLOYED: Fri May  7 12:54:25 2021
 NAMESPACE: trident
@@ -116,7 +116,7 @@ trident-operator-7c748d957-gr2gw   1/1     Running   0          36s
 +----------------+----------------+
 | SERVER VERSION | CLIENT VERSION |
 +----------------+----------------+
-| 21.07.1          | 21.07.1          |
+| 22.01.0          | 22.01.0          |
 +----------------+----------------+
 ----
 
@@ -246,11 +246,11 @@ Status:
     Kubelet Dir:          /var/lib/kubelet
     Log Format:           text
     Silence Autosupport:  false
-    Trident Image:        netapp/trident:21.07.1
+    Trident Image:        netapp/trident:22.01.0
   Message:                Trident installed
   Namespace:              trident
   Status:                 Installed
-  Version:                v21.07.1
+  Version:                v22.01.0
 Events:
   Type    Reason      Age   From                        Message
   ----    ------      ----  ----                        -------
@@ -273,7 +273,7 @@ trident-operator-66f48895cc-lzczk   1/1     Running   0          2m39s
 +----------------+----------------+
 | SERVER VERSION | CLIENT VERSION |
 +----------------+----------------+
-| 21.07.1          | 21.07.1          |
+| 22.01.0          | 22.01.0          |
 +----------------+----------------+
 ----
 
@@ -282,19 +282,66 @@ trident-operator-66f48895cc-lzczk   1/1     Running   0          2m39s
 
 == 准备工作节点以进行存储
 
+
+
+=== NFS
+
 大多数 Kubernetes 分发软件包和实用程序都会随附用于挂载默认安装的 NFS 后端的软件包和实用程序，包括 Red Hat OpenShift 。
+
+但是，对于 NFSv3 ，客户端和服务器之间没有协商并发的机制。因此，客户端的最大 SUNRPC 插槽表条目数必须与服务器上支持的值手动同步，以确保 NFS 连接的最佳性能，而服务器不必减小连接的窗口大小。
+
+对于 ONTAP ，支持的最大 SUNRPC 插槽表条目数为 128 ，即 ONTAP 一次可以处理 128 个并发 NFS 请求。但是，默认情况下，每个连接的 Red Hat CoreOS/Red Hat Enterprise Linux 最多包含 65 ， 536 个 SUNRPC 插槽表条目。我们需要将此值设置为 128 ，可以在 OpenShift 中使用计算机配置操作员（ Machine Config Operator ， MCO ）来完成此操作。
+
+要修改 OpenShift 工作节点中的最大 SUNRPC 插槽表条目，请完成以下步骤：
+
+. 登录到 OCP Web 控制台并导航到 Compute > Machine Configs 。单击 Create Machine Config 。复制并粘贴 YAML 文件，然后单击创建。
++
+[source, cli]
+----
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  name: 98-worker-nfs-rpc-slot-tables
+  labels:
+    machineconfiguration.openshift.io/role: worker
+spec:
+  config:
+    ignition:
+      version: 3.2.0
+    storage:
+      files:
+        - contents:
+            source: data:text/plain;charset=utf-8;base64,b3B0aW9ucyBzdW5ycGMgdGNwX21heF9zbG90X3RhYmxlX2VudHJpZXM9MTI4Cg==
+          filesystem: root
+          mode: 420
+          path: /etc/modprobe.d/sunrpc.conf
+----
+. 创建 MCO 后，需要在所有工作节点上应用此配置并逐个重新启动。整个过程大约需要 20 到 30 分钟。使用 `oc get MCP` 验证是否应用了计算机配置，并确保已更新员工的计算机配置池。
++
+[listing]
+----
+[netapp-user@rhel7 openshift-deploy]$ oc get mcp
+NAME     CONFIG                                    UPDATED   UPDATING   DEGRADED
+master   rendered-master-a520ae930e1d135e0dee7168   True      False      False
+worker   rendered-worker-de321b36eeba62df41feb7bc   True      False      False
+----
+
+
+
+
+=== iSCSI
 
 要使工作节点做好准备，以便能够通过 iSCSI 协议映射块存储卷，您必须安装支持此功能所需的软件包。
 
 在 Red Hat OpenShift 中，可通过在部署集群后将 MCO （计算机配置操作员）应用于集群来实现此目的。
 
-要配置工作节点以运行存储服务，请完成以下步骤：
+要配置工作节点以运行 iSCSI 服务，请完成以下步骤：
 
 . 登录到 OCP Web 控制台并导航到 Compute > Machine Configs 。单击 Create Machine Config 。复制并粘贴 YAML 文件，然后单击创建。
-
-
++
 不使用多路径时：
 
++
 [source, cli]
 ----
 apiVersion: machineconfiguration.openshift.io/v1
@@ -314,8 +361,10 @@ spec:
           state: started
   osImageURL: ""
 ----
++
 使用多路径时：
 
++
 [source, cli]
 ----
 apiVersion: machineconfiguration.openshift.io/v1
@@ -381,10 +430,11 @@ worker   rendered-worker-de321b36eeba62df41feb7bc   True      False      False
     CGroup: /system.slice/multipathd.service
             └─918 /sbin/multipathd -d -s
 ----
-
-
++
 
 NOTE: 此外，还可以通过使用适当的标志运行 `oc debug` 命令来确认 MachineConfig 已成功应用且服务已按预期启动。
+
+
 
 
 
