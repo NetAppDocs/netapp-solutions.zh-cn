@@ -50,10 +50,10 @@
   
   <link rel="stylesheet" href="/zh-cn/netapp-solutions/css/landing-page.css" type="text/css">
   <link rel="stylesheet" href="/zh-cn/netapp-solutions/css/tabbed-blocks.css" type="text/css">
-  <link rel="stylesheet" href='/zh-cn/netapp-solutions/css/product-family.css' type="text/css">
   <link rel='stylesheet' href='/zh-cn/netapp-solutions/css/na-feature.css' type='text/css'><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-  <!-- Used to import Promise for IE. Required for SearchKit -->
+
+  <!-- Used for Product Family Page Sidebar Visibility --><!-- Used to import Promise for IE. Required for SearchKit -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js"></script><script src='/zh-cn/netapp-solutions/js/na-search.js'></script><script src='/zh-cn/netapp-solutions/js/na-pagenav.js'></script><link rel='stylesheet' href='/zh-cn/netapp-solutions/css/prism.css' type='text/css'>
   <link rel='stylesheet' href='/zh-cn/netapp-solutions/css/prism-netapp.css' type='text/css'>
 
@@ -131,7 +131,6 @@
   }
   </script>
   <script src='/zh-cn/netapp-solutions/js/version-dropdown.js'></script>
-  <script src='/zh-cn/netapp-solutions/js/product-family.js'></script>
   <script src='/zh-cn/netapp-solutions/js/FileSaver.min.js'></script>
   <script src='/zh-cn/netapp-solutions/js/jszip-utils.min.js'></script>
   <script src='/zh-cn/netapp-solutions/js/jszip.min.js'></script>
@@ -144,6 +143,25 @@
       <div class="n-off-canvas-menu__menu"><!--TODO: Add offcanvas code --></div>
       <div class="n-off-canvas-menu__content-wrap">
         <header class="site-header" id="banner">
+  
+  <!-- Start Page Toolbar -->
+  <div class="page-nav-toolbar">
+    <div id="version-dropdown"></div>
+    <div class="page-nav-contribute"  >
+      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/issues/new?body=Page%3A%20[车道检测—使用 Run ： AI 进行分布式培训](https://docs.netapp.com/zh-cn/netapp-solutions/ai/runai-ld_lane_detection_distributed_training_with_run_ai.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
+      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/blob/main/ai/runai-ld_lane_detection_distributed_training_with_run_ai.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a>
+      <a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/netapp-solutions/images/article-sm.svg" class="github-icon" />提供者指南</a>
+    </div>
+    <div class="page-nav-container">
+      <nav class="page-nav-fixed">
+        <div class="page-nav-title">在此页面上</div>
+        <div class="page-nav-links">
+          <ul class="page-nav-inner" id="page-menu"></ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+  
   <!-- Start top_hat -->
   <div class="n-top-hat">
     <div class="n-container">
@@ -4022,19 +4040,16 @@
     <div class="n-breadcrumb">
       <ul class="n-breadcrumb__list">
         <li class="n-breadcrumb__list-item">
-          <a href="https://www.netapp.com">主页</a>
+          <a href="https://docs.netapp.com">docs.netapp.com</a>
         </li>
-        <li class="n-breadcrumb__list-item">
-          <a href="https://docs.netapp.com">文档</a>
-        </li>
+        
+
         
 
         <li class="n-breadcrumb__list-item">
           <a href="/zh-cn/netapp-solutions/">NetApp&nbsp;Solutions</a>
         </li>
-        <li class="n-breadcrumb__list-item">
-          车道检测—使用 Run ： AI 进行分布式培训
-        </li>
+
       </ul>
     </div>
     <div style="clear: both"></div><!-- Main needs to have height -->
@@ -4063,7 +4078,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-03-09 02:32:34 +0000">03/09/2022</time>
+    <time datetime="2022-03-11 19:18:09 +0000">03/11/2022</time>
     
   
 
@@ -4080,7 +4095,6 @@
 
 
 </p>
-
 
 <div id="preamble">
 <div class="sectionbody">
@@ -5272,25 +5286,6 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snaps
     <!-- Page Container -->
   </div>
 
-  
-  <!-- Start Page Toolbar -->
-  <div class="page-nav-toolbar">
-    <div id="version-dropdown"></div>
-    <div class="page-nav-contribute"  >
-      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/issues/new?body=Page%3A%20[车道检测—使用 Run ： AI 进行分布式培训](https://docs.netapp.com/zh-cn/netapp-solutions/ai/runai-ld_lane_detection_distributed_training_with_run_ai.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
-      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/blob/main/ai/runai-ld_lane_detection_distributed_training_with_run_ai.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a>
-      <a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/netapp-solutions/images/article-sm.svg" class="github-icon" />提供者指南</a>
-    </div>
-    <div class="page-nav-container">
-      <nav class="page-nav-fixed">
-        <div class="page-nav-title">在此页面上</div>
-        <div class="page-nav-links">
-          <ul class="page-nav-inner" id="page-menu"></ul>
-        </div>
-      </nav>
-    </div>
-  </div>
-  
   <div style="clear: both"></div><!-- Main needs to have height --></div>
 
         </main>

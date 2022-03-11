@@ -50,10 +50,10 @@
   
   <link rel="stylesheet" href="/zh-cn/netapp-solutions/css/landing-page.css" type="text/css">
   <link rel="stylesheet" href="/zh-cn/netapp-solutions/css/tabbed-blocks.css" type="text/css">
-  <link rel="stylesheet" href='/zh-cn/netapp-solutions/css/product-family.css' type="text/css">
   <link rel='stylesheet' href='/zh-cn/netapp-solutions/css/na-feature.css' type='text/css'><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-  <!-- Used to import Promise for IE. Required for SearchKit -->
+
+  <!-- Used for Product Family Page Sidebar Visibility --><!-- Used to import Promise for IE. Required for SearchKit -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js"></script><script src='/zh-cn/netapp-solutions/js/na-search.js'></script><script src='/zh-cn/netapp-solutions/js/na-pagenav.js'></script><link rel='stylesheet' href='/zh-cn/netapp-solutions/css/prism.css' type='text/css'>
   <link rel='stylesheet' href='/zh-cn/netapp-solutions/css/prism-netapp.css' type='text/css'>
 
@@ -131,7 +131,6 @@
   }
   </script>
   <script src='/zh-cn/netapp-solutions/js/version-dropdown.js'></script>
-  <script src='/zh-cn/netapp-solutions/js/product-family.js'></script>
   <script src='/zh-cn/netapp-solutions/js/FileSaver.min.js'></script>
   <script src='/zh-cn/netapp-solutions/js/jszip-utils.min.js'></script>
   <script src='/zh-cn/netapp-solutions/js/jszip.min.js'></script>
@@ -144,6 +143,25 @@
       <div class="n-off-canvas-menu__menu"><!--TODO: Add offcanvas code --></div>
       <div class="n-off-canvas-menu__content-wrap">
         <header class="site-header" id="banner">
+  
+  <!-- Start Page Toolbar -->
+  <div class="page-nav-toolbar">
+    <div id="version-dropdown"></div>
+    <div class="page-nav-contribute"  >
+      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/issues/new?body=Page%3A%20[为要求较低的工作负载或交互式工作负载分配的 GPU 百分比](https://docs.netapp.com/zh-cn/netapp-solutions/ai/osrunai_fractional_gpu_allocation_for_less_demanding_or_interactive_workloads.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
+      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/blob/main/ai/osrunai_fractional_gpu_allocation_for_less_demanding_or_interactive_workloads.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a>
+      <a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/netapp-solutions/images/article-sm.svg" class="github-icon" />提供者指南</a>
+    </div>
+    <div class="page-nav-container">
+      <nav class="page-nav-fixed">
+        <div class="page-nav-title">在此页面上</div>
+        <div class="page-nav-links">
+          <ul class="page-nav-inner" id="page-menu"></ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+  
   <!-- Start top_hat -->
   <div class="n-top-hat">
     <div class="n-container">
@@ -4022,19 +4040,16 @@
     <div class="n-breadcrumb">
       <ul class="n-breadcrumb__list">
         <li class="n-breadcrumb__list-item">
-          <a href="https://www.netapp.com">主页</a>
+          <a href="https://docs.netapp.com">docs.netapp.com</a>
         </li>
-        <li class="n-breadcrumb__list-item">
-          <a href="https://docs.netapp.com">文档</a>
-        </li>
+        
+
         
 
         <li class="n-breadcrumb__list-item">
           <a href="/zh-cn/netapp-solutions/">NetApp&nbsp;Solutions</a>
         </li>
-        <li class="n-breadcrumb__list-item">
-          为要求较低的工作负载或交互式工作负载分配的 GPU 百分比
-        </li>
+
       </ul>
     </div>
     <div style="clear: both"></div><!-- Main needs to have height -->
@@ -4063,7 +4078,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-03-09 02:32:34 +0000">03/09/2022</time>
+    <time datetime="2022-03-11 19:18:09 +0000">03/11/2022</time>
     
   
 
@@ -4080,7 +4095,6 @@
 
 
 </p>
-
 
 <div class="paragraph">
 <p>当研究人员和开发人员在开发，超参数调整或调试阶段使用其模型时，此类工作负载通常所需的计算资源更少。因此，配置百分比 GPU 和内存的效率更高，以便可以将同一 GPU 同时分配给其他工作负载。Run ： AI 的业务流程解决方案为 Kubernetes 上的容器化工作负载提供了一个百分比 GPU 共享系统。该系统支持运行 CUDA 程序的工作负载，尤其适用于推理和模型构建等轻型 AI 任务。部分 GPU 系统可以透明地为数据科学和 AI 工程团队提供在一个 GPU 上同时运行多个工作负载的能力。这样，企业就可以在同一硬件上运行更多的工作负载，例如计算机视觉，语音识别和自然语言处理，从而降低成本。</p>
@@ -4105,25 +4119,6 @@
     <!-- Page Container -->
   </div>
 
-  
-  <!-- Start Page Toolbar -->
-  <div class="page-nav-toolbar">
-    <div id="version-dropdown"></div>
-    <div class="page-nav-contribute"  >
-      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/issues/new?body=Page%3A%20[为要求较低的工作负载或交互式工作负载分配的 GPU 百分比](https://docs.netapp.com/zh-cn/netapp-solutions/ai/osrunai_fractional_gpu_allocation_for_less_demanding_or_interactive_workloads.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
-      <a target="_blank" href="https://github.com/NetAppDocs/netapp-solutions/blob/main/ai/osrunai_fractional_gpu_allocation_for_less_demanding_or_interactive_workloads.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/netapp-solutions/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a>
-      <a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/netapp-solutions/images/article-sm.svg" class="github-icon" />提供者指南</a>
-    </div>
-    <div class="page-nav-container">
-      <nav class="page-nav-fixed">
-        <div class="page-nav-title">在此页面上</div>
-        <div class="page-nav-links">
-          <ul class="page-nav-inner" id="page-menu"></ul>
-        </div>
-      </nav>
-    </div>
-  </div>
-  
   <div style="clear: both"></div><!-- Main needs to have height --></div>
 
         </main>
