@@ -2990,6 +2990,8 @@
 
 
 
+
+
           
         </li>
       </ul>
@@ -4006,6 +4008,8 @@
         设置 AWX/Ansible 塔（适用于基于 AWX/ 塔式部署）
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/netapp-solutions/automation/authentication_tokens.html">
         收集 CVO 和连接器部署的前提条件
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/netapp-solutions/automation/cloud_volumes_terraform.html">
+        通过 Terraform 实现 Cloud Volumes Automation
       </a></li><li class=" "><a class="na-navbar-padding" href="https://github.com/NetAppDocs/netapp-solutions/issues/new?body=[Request%20Automation]%0d%0a%0d%0aSolution%20Name:%20%0d%0aRequest%20Title:%20%0d%0aDescription:%0d%0aSuggestions:&title=Request%20Automation%20-%20<request_title>">
         请求自动化
       </a></li></ul></li><li class=" "><a class="na-navbar-padding" href="https://docs.netapp.com/us-en/flexpod/">
@@ -4078,12 +4082,9 @@
 <p class="page-details">
   
     
-    <time datetime="2022-03-18 12:14:30 +0000">03/18/2022</time>
+    <time datetime="2022-04-01 19:41:29 +0000">04/01/2022</time>
     
   
-
-<span>提供者
-</span>
 
 
 </p>
@@ -4113,7 +4114,7 @@
 <h2 id="vm-冗余">VM 冗余</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>要提高冗余和高可用性， SQL Server VM 应处于同一状态 <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/availability-set-overview" target="_blank" rel="noopener">"可用性集"</a> 或其他。创建 Azure VM 时，您必须在配置可用性集与可用性区域之间进行选择； Azure VM 不能同时参与这两者。</p>
+<p>要提高冗余和高可用性， SQL Server VM 应处于同一状态 <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/availability-set-overview" target="_blank" rel="noopener">"可用性集"</a> 或其他 <a href="https://docs.microsoft.com/en-us/azure/availability-zones/az-overview" target="_blank" rel="noopener">"可用性区域"</a>。创建 Azure VM 时，您必须在配置可用性集与可用性区域之间进行选择； Azure VM 不能同时参与这两者。</p>
 </div>
 </div>
 </div>
@@ -4166,7 +4167,7 @@ SQL Server 数据库的文件共享存储应支持持续可用的属性。这样
 <p>注： *</p>
 </li>
 <li>
-<p>要提高冗余和高可用性， SQL Server VM 应处于同一状态 <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/availability-set-overview" target="_blank" rel="noopener">"可用性集"</a> 或不同的。如果需要用户定义的数据文件，请考虑文件路径要求；在这种情况下，请选择 SQL FCI over SQL AOAG 。</p>
+<p>要提高冗余和高可用性， SQL Server VM 应处于同一状态 <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/availability-set-overview" target="_blank" rel="noopener">"可用性集"</a> 或不同的 <a href="https://docs.microsoft.com/en-us/azure/availability-zones/az-overview" target="_blank" rel="noopener">"可用性区域"</a>。如果需要用户定义的数据文件，请考虑文件路径要求；在这种情况下，请选择 SQL FCI over SQL AOAG 。</p>
 </li>
 <li>
 <p>支持以下 UNC 路径： <a href="file:///\\ANFSMB-b4ca.anf.test\SQLDB%20and%20\\ANFSMB-b4ca.anf.test\SQLDB\" target="_blank" rel="noopener">"\\ANFSMB-b4ca.anf.test\SQLDB 和 \\ANFSMB-b4ca.anf.test\SQLDB\"</a>。</p>
