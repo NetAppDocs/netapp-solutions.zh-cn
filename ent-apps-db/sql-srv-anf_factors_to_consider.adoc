@@ -28,7 +28,7 @@ summary: 本节介绍在云中使用 Azure NetApp Files 和 SQL Server 时应考
 
 == VM 冗余
 
-要提高冗余和高可用性， SQL Server VM 应处于同一状态 https://docs.microsoft.com/en-us/azure/virtual-machines/availability-set-overview["可用性集"^] 或其他。创建 Azure VM 时，您必须在配置可用性集与可用性区域之间进行选择； Azure VM 不能同时参与这两者。
+要提高冗余和高可用性， SQL Server VM 应处于同一状态 https://docs.microsoft.com/en-us/azure/virtual-machines/availability-set-overview["可用性集"^] 或其他 https://docs.microsoft.com/en-us/azure/availability-zones/az-overview["可用性区域"^]。创建 Azure VM 时，您必须在配置可用性集与可用性区域之间进行选择； Azure VM 不能同时参与这两者。
 
 
 
@@ -60,7 +60,7 @@ Azure NetApp Files 可提供高性能文件存储来满足任何苛刻的工作�
 
 * 注： *
 
-* 要提高冗余和高可用性， SQL Server VM 应处于同一状态 https://docs.microsoft.com/en-us/azure/virtual-machines/availability-set-overview["可用性集"^] 或不同的。如果需要用户定义的数据文件，请考虑文件路径要求；在这种情况下，请选择 SQL FCI over SQL AOAG 。
+* 要提高冗余和高可用性， SQL Server VM 应处于同一状态 https://docs.microsoft.com/en-us/azure/virtual-machines/availability-set-overview["可用性集"^] 或不同的 https://docs.microsoft.com/en-us/azure/availability-zones/az-overview["可用性区域"^]。如果需要用户定义的数据文件，请考虑文件路径要求；在这种情况下，请选择 SQL FCI over SQL AOAG 。
 * 支持以下 UNC 路径： file:///\\ANFSMB-b4ca.anf.test\SQLDB%20and%20\\ANFSMB-b4ca.anf.test\SQLDB\["\\ANFSMB-b4ca.anf.test\SQLDB 和 \\ANFSMB-b4ca.anf.test\SQLDB\"^]。
 * 不支持环回 UNC 路径。
 * 要进行规模估算，请使用内部环境中的历史数据。对于 OLTP 工作负载，使用平均和高峰时间的工作负载以及磁盘读取 / 秒和磁盘写入 / 秒性能计数器将目标 IOPS 与性能要求进行匹配。对于数据仓库和报告工作负载，请使用工作负载在平均和峰值时间以及磁盘读取字节 / 秒和磁盘写入字节 / 秒匹配目标吞吐量平均值可与卷重新调整功能结合使用。

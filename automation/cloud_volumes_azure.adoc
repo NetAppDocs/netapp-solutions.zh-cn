@@ -1,0 +1,839 @@
+= 
+
+
+[role="tabbed-block"]
+====
+.ANF
+--
+本节包含用于在 Azure 上部署 / 配置 ANF （ Azure NetApp Files ）卷的各种 Terraform 配置文件。
+
+Terraform 文档： https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs[]
+
+要运行此模板，请执行以下操作：
+
+. 克隆存储库。
++
+[source, cli]
+----
+    git clone <repo-name>
+----
+. 导航到所需文件夹
++
+[source, cli]
+----
+    cd na_cloud_volumes_deploy
+----
+. 登录到 Azure 命令行界面（必须安装 Azure 命令行界面）。
++
+[source, cli]
+----
+    az login
+----
+. 更新 `vars/azure_anf.tfvars` 中的变量值。
++
+
+NOTE: 您可以选择使用现有的 vnet 和子网部署 ANF 卷，方法是将变量 "vnet_creation_bool" 和 "subnet_creation_bool" 值设置为 false 并提供 "subnet_id_for_anf_vol" 。您也可以将这些值设置为 true 并创建新的 vnet 和子网，在这种情况下，子网 ID 将自动从新创建的子网中获取。
+
+. 初始化 Terraform 存储库以安装所有前提条件并准备部署。
++
+[source, cli]
+----
+    terraform init
+----
+. 使用 terraform validate 命令验证 terraform 文件。
++
+[source, cli]
+----
+    terraform validate
+----
+. 运行此配置以预览部署所需的所有更改。
++
+[source, cli]
+----
+    terraform plan -target="module.anf" -var-file="vars/azure_anf.tfvars"
+----
+. 运行部署
++
+[source, cli]
+----
+    terraform apply -target="module.anf" -var-file="vars/azure_anf.tfvars"
+----
+
+
+删除部署
+
+[source, cli]
+----
+  terraform destroy
+----
+`s单节点实例`
+
+单个 NetApp ANF 卷的 Terraform 变量。
+
+|===
+
+
+| * 名称 * | * 类型 * | * 问题描述 * 
+
+
+| * AZ 位置 * | string | （必需）指定资源所在的受支持 Azure 位置。更改后，系统将强制创建新资源。 
+
+
+| * AZ 前缀 * | string | （必需）应在其中创建 NetApp 卷的资源组的名称。更改后，系统将强制创建新资源。 
+
+
+| * 空格 _vnet_address_space* | string | （必需）新创建的 Vnet 用于 ANF 卷部署的地址空间。 
+
+
+| * AZ 子网地址前缀 * | string | （必需）新创建的 Vnet 要用于 ANF 卷部署的子网地址前缀。 
+
+
+| * 。 as_volume_path* | string | （必需）卷的唯一文件路径。用于创建挂载目标。更改后，系统将强制创建新资源。 
+
+
+| * AZ 容量池大小 * | 整型 | （必需）以 TB 为单位提及的 Capacy 池大小。 
+
+
+| * 。 as_vnet_creation_bool* | 布尔值 | （必需）如果要创建新的 vnet ，请将此布尔值设置为 `true` 。将其设置为 `false` 以使用现有 vnet 。 
+
+
+| * AZ-subnet_creation_bool* | 布尔值 | （必需）将此布尔值设置为 `true` 以创建新子网。将其设置为 `false` 可使用现有子网。 
+
+
+| * AZ-subnet_id_for_anf_vol* | string | （必需）在您决定使用现有子网时，请注明子网 ID ，方法是将 `ssubnet_creation_bool` 设置为 true 。如果设置为 false ，请将其保留为默认值。 
+
+
+| * AZ-NetApp_Pool_service_level* | string | （必需）文件系统的目标性能。有效值包括 `Premium` ， `Standard` 或 `超高` 。 
+
+
+| * AZ-NetApp_vol_service_level* | string | （必需）文件系统的目标性能。有效值包括 `Premium` ， `Standard` 或 `超高` 。 
+
+
+| * AZ-NetApp_vol_protocol* | string | （可选）以列表形式表示的目标卷协议。支持的单个值包括 `CIFS` ， `NFSv3` 或 `NFSv4.1` 。如果未定义参数，则默认为 `NFSv3` 。更改后，系统将强制创建新资源并丢失数据。 
+
+
+| * AZ-NetApp_vol_security_style* | string | （可选）卷安全模式，可接受的值为 `Unix` 或 `NTFS` 。如果未提供此参数，则创建的单协议卷默认为 `Unix` （如果为 `NFSv3` 或 `NFSv4.1` volume ）；如果为 `CIFS` ，则默认为 `NTFS` 。在双协议卷中，如果未提供此参数，其值将为 `NTFS` 。 
+
+
+| * AZ-NetApp_vol_storage_quot* | string | （必需）文件系统允许的最大存储配额，以 GB 为单位。 
+|===
+--
+.ANF 数据保护
+--
+本节包含用于在 Azure 上部署 / 配置具有数据保护的 ANF （ Azure NetApp Files ）卷的各种 Terraform 配置文件。
+
+Terraform 文档： https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs[]
+
+要运行此模板，请执行以下操作：
+
+. 克隆存储库。
++
+[source, cli]
+----
+    git clone <repo-name>
+----
+. 导航到所需文件夹
++
+[source, cli]
+----
+    cd na_cloud_volumes_deploy
+----
+. 登录到 Azure 命令行界面（必须安装 Azure 命令行界面）。
++
+[source, cli]
+----
+    az login
+----
+. 更新 `vars/azure_anf_data_protection.tfvars` 中的变量值。
++
+
+NOTE: 您可以选择使用现有的 vnet 和子网部署 ANF 卷，方法是将变量 "vnet_creation_bool" 和 "subnet_creation_bool" 值设置为 false 并提供 "subnet_id_for_anf_vol" 。您也可以将这些值设置为 true 并创建新的 vnet 和子网，在这种情况下，子网 ID 将自动从新创建的子网中获取。
+
+. 初始化 Terraform 存储库以安装所有前提条件并准备部署。
++
+[source, cli]
+----
+    terraform init
+----
+. 使用 terraform validate 命令验证 terraform 文件。
++
+[source, cli]
+----
+    terraform validate
+----
+. 运行此配置以预览部署所需的所有更改。
++
+[source, cli]
+----
+    terraform plan -target="module.anf_data_protection" -var-file="vars/azure_anf_data_protection.tfvars"
+----
+. 运行部署
++
+[source, cli]
+----
+    terraform apply -target="module.anf_data_protection" -var-file="vars/azure_anf_data_protection.tfvars
+----
+
+
+删除部署
+
+[source, cli]
+----
+  terraform destroy
+----
+`ANF 数据保护`
+
+为启用了数据保护的单个 ANF 卷提供不同的 Terraform 。
+
+|===
+
+
+| * 名称 * | * 类型 * | * 问题描述 * 
+
+
+| * AZ 位置 * | string | （必需）指定资源所在的受支持 Azure 位置。更改后，系统将强制创建新资源。 
+
+
+| * AZ 备选位置 * | string | （必需）要创建二级卷的 Azure 位置 
+
+
+| * AZ 前缀 * | string | （必需）应在其中创建 NetApp 卷的资源组的名称。更改后，系统将强制创建新资源。 
+
+
+| * 空格 _vnet_primary_address_space* | string | （必需）新创建的 Vnet 用于 ANF 主卷部署的地址空间。 
+
+
+| * 空格 _vnet_secondary 地址空间 * | string | （必需）新创建的 Vnet 用于 ANF 二级卷部署的地址空间。 
+
+
+| * AZ-subnet_primary_address_prefix* | string | （必需）新创建的 Vnet 要用于 ANF 主卷部署的子网地址前缀。 
+
+
+| * AZ-subnet_secondary 地址前缀 * | string | （必需）新创建的 Vnet 要用于 ANF 二级卷部署的子网地址前缀。 
+
+
+| * AZ-volume_path_primary_* | string | （必需）主卷的唯一文件路径。用于创建挂载目标。更改后，系统将强制创建新资源。 
+
+
+| * AZ 卷路径二级 * | string | （必需）二级卷的唯一文件路径。用于创建挂载目标。更改后，系统将强制创建新资源。 
+
+
+| * AZ-Capacity_Pool_size_primary_* | 整型 | （必需）以 TB 为单位提及的 Capacy 池大小。 
+
+
+| * AZ 容量池大小二级 * | 整型 | （必需）以 TB 为单位提及的 Capacy 池大小。 
+
+
+| * 。 as_vnet_primary_creation_bool* | 布尔值 | （必需）如果要为主卷创建新的 vnet ，请将此布尔值设置为 `true` 。将其设置为 `false` 以使用现有 vnet 。 
+
+
+| * 。 as_vnet_secondary _creation_bool* | 布尔值 | （必需）如果要为二级卷创建新的 vnet ，请将此布尔值设置为 `true` 。将其设置为 `false` 以使用现有 vnet 。 
+
+
+| * AZ-subnet_primary_creation_bool* | 布尔值 | （必需）将此布尔值设置为 `true` ，为主卷创建新子网。将其设置为 `false` 可使用现有子网。 
+
+
+| * AZ-subnet_secondary _creation_bool* | 布尔值 | （必需）将此布尔值设置为 `true` ，为二级卷创建新子网。将其设置为 `false` 可使用现有子网。 
+
+
+| * AZ 主子网 ID for_anf_vol* | string | （必需）在您决定使用现有子网时，请注明子网 ID ，方法是将 `ssubnet_primary_creation_bool` 设置为 true 。如果设置为 false ，请将其保留为默认值。 
+
+
+| * AZ 二级子网 id_for_anf_vol* | string | （必需）在您决定使用现有子网时，请注明子网 ID ，方法是将 `ssubnet_secondary _creation_bool` 设置为 true 。如果设置为 false ，请将其保留为默认值。 
+
+
+| * AZ-NetApp_Pool_service_level_primary_* | string | （必需）文件系统的目标性能。有效值包括 `Premium` ， `Standard` 或 `超高` 。 
+
+
+| * AZ-NetApp_Pool_service_level_secondary * | string | （必需）文件系统的目标性能。有效值包括 `Premium` ， `Standard` 或 `超高` 。 
+
+
+| * AZ-NetApp_vol_service_level_primary_* | string | （必需）文件系统的目标性能。有效值包括 `Premium` ， `Standard` 或 `超高` 。 
+
+
+| * AZ-NetApp_vol_service_level_secondary * | string | （必需）文件系统的目标性能。有效值包括 `Premium` ， `Standard` 或 `超高` 。 
+
+
+| * AZ-NetApp_vol_protocol_primary_* | string | （可选）以列表形式表示的目标卷协议。支持的单个值包括 `CIFS` ， `NFSv3` 或 `NFSv4.1` 。如果未定义参数，则默认为 `NFSv3` 。更改后，系统将强制创建新资源并丢失数据。 
+
+
+| * AZ-NetApp_vol_protocol_secondary * | string | （可选）以列表形式表示的目标卷协议。支持的单个值包括 `CIFS` ， `NFSv3` 或 `NFSv4.1` 。如果未定义参数，则默认为 `NFSv3` 。更改后，系统将强制创建新资源并丢失数据。 
+
+
+| * AZ-NetApp_vol_storage_quota_primary_* | string | （必需）文件系统允许的最大存储配额，以 GB 为单位。 
+
+
+| * AZ-NetApp_vol_storage_quota_secondary * | string | （必需）文件系统允许的最大存储配额，以 GB 为单位。 
+
+
+| * AZ DP 复制频率 * | string | （必需）复制频率，支持的值为 `10 分钟` ， `每小时` ， `dy` ，值区分大小写。 
+|===
+--
+.ANF 双协议
+--
+本节包含各种 Terraform 配置文件，用于部署 / 配置在 Azure 上启用了双协议的 ANF （ Azure NetApp Files ）卷。
+
+Terraform 文档： https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs[]
+
+要运行此模板，请执行以下操作：
+
+. 克隆存储库。
++
+[source, cli]
+----
+    git clone <repo-name>
+----
+. 导航到所需文件夹
++
+[source, cli]
+----
+    cd na_cloud_volumes_deploy
+----
+. 登录到 Azure 命令行界面（必须安装 Azure 命令行界面）。
++
+[source, cli]
+----
+    az login
+----
+. 更新 `vars/azure_anf_dual_protocol.tfvars` 中的变量值。
++
+
+NOTE: 您可以选择使用现有的 vnet 和子网部署 ANF 卷，方法是将变量 "vnet_creation_bool" 和 "subnet_creation_bool" 值设置为 false 并提供 "subnet_id_for_anf_vol" 。您也可以将这些值设置为 true 并创建新的 vnet 和子网，在这种情况下，子网 ID 将自动从新创建的子网中获取。
+
+. 初始化 Terraform 存储库以安装所有前提条件并准备部署。
++
+[source, cli]
+----
+    terraform init
+----
+. 使用 terraform validate 命令验证 terraform 文件。
++
+[source, cli]
+----
+    terraform validate
+----
+. 运行此配置以预览部署所需的所有更改。
++
+[source, cli]
+----
+    terraform plan -target="module.anf_dual_protocol" -var-file="vars/azure_anf_dual_protocol.tfvars"
+----
+. 运行部署
++
+[source, cli]
+----
+    terraform apply -target="module.anf_dual_protocol" -var-file="vars/azure_anf_dual_protocol.tfvars"
+----
+
+
+删除部署
+
+[source, cli]
+----
+  terraform destroy
+----
+`s单节点实例`
+
+启用了双协议的单个 ANF 卷的 Terraform 变量。
+
+|===
+
+
+| * 名称 * | * 类型 * | * 问题描述 * 
+
+
+| * AZ 位置 * | string | （必需）指定资源所在的受支持 Azure 位置。更改后，系统将强制创建新资源。 
+
+
+| * AZ 前缀 * | string | （必需）应在其中创建 NetApp 卷的资源组的名称。更改后，系统将强制创建新资源。 
+
+
+| * 空格 _vnet_address_space* | string | （必需）新创建的 Vnet 用于 ANF 卷部署的地址空间。 
+
+
+| * AZ 子网地址前缀 * | string | （必需）新创建的 Vnet 要用于 ANF 卷部署的子网地址前缀。 
+
+
+| * 。 as_volume_path* | string | （必需）卷的唯一文件路径。用于创建挂载目标。更改后，系统将强制创建新资源。 
+
+
+| * AZ 容量池大小 * | 整型 | （必需）以 TB 为单位提及的 Capacy 池大小。 
+
+
+| * 。 as_vnet_creation_bool* | 布尔值 | （必需）如果要创建新的 vnet ，请将此布尔值设置为 `true` 。将其设置为 `false` 以使用现有 vnet 。 
+
+
+| * AZ-subnet_creation_bool* | 布尔值 | （必需）将此布尔值设置为 `true` 以创建新子网。将其设置为 `false` 可使用现有子网。 
+
+
+| * AZ-subnet_id_for_anf_vol* | string | （必需）在您决定使用现有子网时，请注明子网 ID ，方法是将 `ssubnet_creation_bool` 设置为 true 。如果设置为 false ，请将其保留为默认值。 
+
+
+| * AZ-NetApp_Pool_service_level* | string | （必需）文件系统的目标性能。有效值包括 `Premium` ， `Standard` 或 `超高` 。 
+
+
+| * AZ-NetApp_vol_service_level* | string | （必需）文件系统的目标性能。有效值包括 `Premium` ， `Standard` 或 `超高` 。 
+
+
+| * AZ-NetApp_vol_Protocol1* | string | （必需）以列表形式表示的目标卷协议。支持的单个值包括 `CIFS` ， `NFSv3` 或 `NFSv4.1` 。如果未定义参数，则默认为 `NFSv3` 。更改后，系统将强制创建新资源并丢失数据。 
+
+
+| * AZ-NetApp_vol_protocol2* | string | （必需）以列表形式表示的目标卷协议。支持的单个值包括 `CIFS` ， `NFSv3` 或 `NFSv4.1` 。如果未定义参数，则默认为 `NFSv3` 。更改后，系统将强制创建新资源并丢失数据。 
+
+
+| * AZ-NetApp_vol_storage_quot* | string | （必需）文件系统允许的最大存储配额，以 GB 为单位。 
+
+
+| * AZ-SMB_server_username* | string | （必需）用于创建 ActiveDirectory 对象的用户名。 
+
+
+| * AZ-SMB_server_password* | string | （必需）用于创建 ActiveDirectory 对象的用户密码。 
+
+
+| * AZ-SMB_server_name* | string | （必需）用于创建 ActiveDirectory 对象的服务器名称。 
+
+
+| * AZ-SMB_DNS_servers* | string | （必需）用于创建 ActiveDirectory 对象的 DNS 服务器 IP 。 
+|===
+--
+.来自 Snapshot 的 anf 卷
+--
+本节包含用于从 Azure 上的 Snapshot 部署 / 配置 ANF （ Azure NetApp Files ）卷的各种 Terraform 配置文件。
+
+Terraform 文档： https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs[]
+
+要运行此模板，请执行以下操作：
+
+. 克隆存储库。
++
+[source, cli]
+----
+    git clone <repo-name>
+----
+. 导航到所需文件夹
++
+[source, cli]
+----
+    cd na_cloud_volumes_deploy``
+----
+. 登录到 Azure 命令行界面（必须安装 Azure 命令行界面）。
++
+[source, cli]
+----
+    az login
+----
+. 更新 `vars/azure_anf_volume_from_snapshot.tfvars` 中的变量值。
+
+
+
+NOTE: 您可以选择使用现有的 vnet 和子网部署 ANF 卷，方法是将变量 "vnet_creation_bool" 和 "subnet_creation_bool" 值设置为 false 并提供 "subnet_id_for_anf_vol" 。您也可以将这些值设置为 true 并创建新的 vnet 和子网，在这种情况下，子网 ID 将自动从新创建的子网中获取。
+
+. 初始化 Terraform 存储库以安装所有前提条件并准备部署。
++
+[source, cli]
+----
+    terraform init
+----
+. 使用 terraform validate 命令验证 terraform 文件。
++
+[source, cli]
+----
+    terraform validate
+----
+. 运行此配置以预览部署所需的所有更改。
++
+[source, cli]
+----
+    terraform plan -target="module.anf_volume_from_snapshot" -var-file="vars/azure_anf_volume_from_snapshot.tfvars"
+----
+. 运行部署
++
+[source, cli]
+----
+    terraform apply -target="module.anf_volume_from_snapshot" -var-file="vars/azure_anf_volume_from_snapshot.tfvars"
+----
+
+
+删除部署
+
+[source, cli]
+----
+  terraform destory
+----
+`s单节点实例`
+
+使用 snapshot 的单个 ANF 卷的 Terraform 变量。
+
+|===
+
+
+| * 名称 * | * 类型 * | * 问题描述 * 
+
+
+| * AZ 位置 * | string | （必需）指定资源所在的受支持 Azure 位置。更改后，系统将强制创建新资源。 
+
+
+| * AZ 前缀 * | string | （必需）应在其中创建 NetApp 卷的资源组的名称。更改后，系统将强制创建新资源。 
+
+
+| * 空格 _vnet_address_space* | string | （必需）新创建的 Vnet 用于 ANF 卷部署的地址空间。 
+
+
+| * AZ 子网地址前缀 * | string | （必需）新创建的 Vnet 要用于 ANF 卷部署的子网地址前缀。 
+
+
+| * 。 as_volume_path* | string | （必需）卷的唯一文件路径。用于创建挂载目标。更改后，系统将强制创建新资源。 
+
+
+| * AZ 容量池大小 * | 整型 | （必需）以 TB 为单位提及的 Capacy 池大小。 
+
+
+| * 。 as_vnet_creation_bool* | 布尔值 | （必需）如果要创建新的 vnet ，请将此布尔值设置为 `true` 。将其设置为 `false` 以使用现有 vnet 。 
+
+
+| * AZ-subnet_creation_bool* | 布尔值 | （必需）将此布尔值设置为 `true` 以创建新子网。将其设置为 `false` 可使用现有子网。 
+
+
+| * AZ-subnet_id_for_anf_vol* | string | （必需）在您决定使用现有子网时，请注明子网 ID ，方法是将 `ssubnet_creation_bool` 设置为 true 。如果设置为 false ，请将其保留为默认值。 
+
+
+| * AZ-NetApp_Pool_service_level* | string | （必需）文件系统的目标性能。有效值包括 `Premium` ， `Standard` 或 `超高` 。 
+
+
+| * AZ-NetApp_vol_service_level* | string | （必需）文件系统的目标性能。有效值包括 `Premium` ， `Standard` 或 `超高` 。 
+
+
+| * AZ-NetApp_vol_protocol* | string | （可选）以列表形式表示的目标卷协议。支持的单个值包括 `CIFS` ， `NFSv3` 或 `NFSv4.1` 。如果未定义参数，则默认为 `NFSv3` 。更改后，系统将强制创建新资源并丢失数据。 
+
+
+| * AZ-NetApp_vol_storage_quot* | string | （必需）文件系统允许的最大存储配额，以 GB 为单位。 
+
+
+| * 。 as_snapshot_id* | string | （必需）用于创建新 ANF 卷的 Snapshot ID 。 
+|===
+--
+.CVO 单节点部署
+--
+本节包含用于在 Azure 上部署 / 配置单节点 CVO （ Cvoud Volumes ONTAP ）的各种 Terraform 配置文件。
+
+Terraform 文档： https://registry.terraform.io/providers/NetApp/netapp-cloudmanager/latest/docs[]
+
+要运行此模板，请执行以下操作：
+
+. 克隆存储库。
++
+[source, cli]
+----
+    git clone <repo-name>
+----
+. 导航到所需文件夹
++
+[source, cli]
+----
+    cd na_cloud_volumes_deploy
+----
+. 登录到 Azure 命令行界面（必须安装 Azure 命令行界面）。
++
+[source, cli]
+----
+    az login
+----
+. 更新 `vars\azure_CVO_single 节点 _deployment.tfvars` 中的变量。
+. 初始化 Terraform 存储库以安装所有前提条件并准备部署。
++
+[source, cli]
+----
+    terraform init
+----
+. 使用 terraform validate 命令验证 terraform 文件。
++
+[source, cli]
+----
+    terraform validate
+----
+. 运行此配置以预览部署所需的所有更改。
++
+[source, cli]
+----
+    terraform plan -target="module.az_cvo_single_node_deployment" -var-file="vars\azure_cvo_single_node_deployment.tfvars"
+----
+. 运行部署
++
+[source, cli]
+----
+    terraform apply -target="module.az_cvo_single_node_deployment" -var-file="vars\azure_cvo_single_node_deployment.tfvars"
+----
+
+
+删除部署
+
+[source, cli]
+----
+  terraform destroy
+----
+`s单节点实例`
+
+单节点 Cloud Volumes ONTAP （ CVO ）的 Terraform 变量。
+
+|===
+
+
+| * 名称 * | * 类型 * | * 问题描述 * 
+
+
+| * 刷新令牌 * | string | （必需） NetApp Cloud Manager 的刷新令牌。这可以从 NetApp Cloud Central 生成。 
+
+
+| * AZ 连接器名称 * | string | （必需） Cloud Manager Connector 的名称。 
+
+
+| * AZ 连接器位置 * | string | （必需）创建 Cloud Manager Connector 的位置。 
+
+
+| * AZ 连接器 _subscription_id* | string | （必需） Azure 订阅的 ID 。 
+
+
+| * AZ 连接器公司 * | string | （必需）用户公司的名称。 
+
+
+| * AZ 连接器 _resource_group* | 整型 | （必需） Azure 中要创建资源的资源组。 
+
+
+| * AZ 连接器 _subnet_id* | string | （必需）虚拟机的子网名称。 
+
+
+| * AZ 连接器 _vnet_id* | string | （必需）虚拟网络的名称。 
+
+
+| * AZ 连接器 _network_security_group_name* | string | （必需）实例的安全组名称。 
+
+
+| * AZ 连接器 _associate_public_ip_address* | string | （必需）指示是否将公有 IP 地址与虚拟机关联。 
+
+
+| * AZ 连接器帐户 ID * | string | （必需） Connector 要关联的 NetApp 帐户 ID 。如果未提供， Cloud Manager 将使用第一个帐户。如果不存在任何帐户， Cloud Manager 将创建一个新帐户。您可以在 Cloud Manager 的帐户选项卡中找到帐户 ID ，网址为 https://cloudmanager.netapp.com[]。 
+
+
+| * AZ-Connector_admin_password* | string | （必需） Connector 的密码。 
+
+
+| * AZ-Connector_admin_username* | string | （必需） Connector 的用户名。 
+
+
+| * AZ-CVO_NAME* | string | （必需） Cloud Volumes ONTAP 工作环境的名称。 
+
+
+| * AZ-CVO_OITE* | string | （必需）要创建工作环境的位置。 
+
+
+| * AZ-CVO_subnet_id* | string | （必需） Cloud Volumes ONTAP 系统的子网名称。 
+
+
+| * AZ-CVO_vnet_id* | string | （必需）虚拟网络的名称。 
+
+
+| * AZ-CVO_vnet_resource_group* | string | （必需） Azure 中与虚拟网络关联的资源组。 
+
+
+| * AZ-CVO_data_encryption_type* | string | （必需）工作环境要使用的加密类型： [`Azure` ， `none` ] 。默认值为 `Azure` 。 
+
+
+| * AZ-CVO_storage_type* | string | （必需）第一个数据聚合的存储类型：`Premium_LRS` ， `Standard_LRS` ， `StandardSSD_LRS` 。默认值为 `Premium_LRS` 
+
+
+| * AZ-CVO_SVM_password* | string | （必需） Cloud Volumes ONTAP 的管理员密码。 
+
+
+| * AZ-CVO_workspace ID | string | （必需）要部署 Cloud Volumes ONTAP 的 Cloud Manager 工作空间的 ID 。如果未提供， Cloud Manager 将使用第一个工作空间。您可以从上的 " 工作空间 " 选项卡中找到此 ID https://cloudmanager.netapp.com[]。 
+
+
+| * AZ-CVO_capacity_tier* | string | （必需）是否为第一个数据聚合启用数据分层：`Blob` ， `none` 。默认值为 `BLOB` 。 
+
+
+| * AZ-CVO_writing_speed_state* | string | （必需） Cloud Volumes ONTAP 的写入速度设置： [`normal` ， `high` ] 。默认值为 `normal` 。此参数与 HA 对无关。 
+
+
+| * AZ-CVO_ontap_version* | string | （必需）所需的 ONTAP 版本。如果 "use_latest_version" 设置为 true ，则忽略此参数。默认情况下使用最新版本。 
+
+
+| * AZ-CVO_instance_type* | string | （必需）要使用的实例类型，具体取决于您选择的许可证类型： Explore ： `Standard_DS3_v2` ， Standard ： `Standard_DS4_v2 ， Standard_DS13_v2 ， Standard_L8s_v2` ， Premium ： `Standard_DS5_v2` ， `S` tandard_DS4_v2 ，适用于所有实例类型： BYOL_14 。有关更多受支持的实例类型，请参见《 Cloud Volumes ONTAP 发行说明》。默认值为 `Standard_DS4_v2` 。 
+
+
+| * AZ-CVO_LICENSE_TYPE * | string | （必需）要使用的许可证类型。对于单个节点：`azure-cot-explore-paygo` ， `azure-cot-standard-paygo` ， `azure-cot-premy-paygo` ， `azure-cot-premy-BYOL` ， `capacity-paygo` 。对于 HA ：`azure-ha-cot-standard-paygo` ， `azure-ha-cot-premy-paygo` ， `azure-ha-cot-premy-BYOL` ， `ha-capacity-paygo` 。默认值为 `azure-cot-standard-paygo` 。在选择 Bring your own License type capacity-based 或 Freemium 后，请对 HA 使用 `capacity-paygo` 或 `ha-capacity-paygo` 。在选择 Bring Your Own License type Node-Based 后，请使用 `azure-cot-premy-BYOL` 或 `azure-ha-cot-premy-BYOL` for HA 。 
+
+
+| * AZ-CVO_NSS_account* | string | （必需）用于此 Cloud Volumes ONTAP 系统的 NetApp 支持站点帐户 ID 。如果许可证类型为 BYOL 且未提供 NSS 帐户，则 Cloud Manager 会尝试使用第一个现有 NSS 帐户。 
+
+
+| * AZ 租户 ID * | string | （必需）在 Azure 中注册的应用程序 / 服务主体的租户 ID 。 
+
+
+| * AZ 应用程序 ID * | string | （必需）在 Azure 中注册的应用程序 / 服务主体的应用程序 ID 。 
+
+
+| * AZ-application_key* | string | （必需）在 Azure 中注册的应用程序 / 服务主体的应用程序密钥。 
+|===
+--
+.CVO HA 部署
+--
+本节包含用于在 Azure 上部署 / 配置 CVO （ Cloud Volumes ONTAP ） HA （高可用性）的各种 Terraform 配置文件。
+
+Terraform 文档： https://registry.terraform.io/providers/NetApp/netapp-cloudmanager/latest/docs[]
+
+要运行此模板，请执行以下操作：
+
+. 克隆存储库。
++
+[source, cli]
+----
+    git clone <repo-name>
+----
+. 导航到所需文件夹
++
+[source, cli]
+----
+    cd na_cloud_volumes_deploy
+----
+. 登录到 Azure 命令行界面（必须安装 Azure 命令行界面）。
++
+[source, cli]
+----
+    az login
+----
+. 更新 `vars\azure_CVO_ha_deployment.tfvars` 中的变量。
+. 初始化 Terraform 存储库以安装所有前提条件并准备部署。
++
+[source, cli]
+----
+    terraform init
+----
+. 使用 terraform validate 命令验证 terraform 文件。
++
+[source, cli]
+----
+    terraform validate
+----
+. 运行此配置以预览部署所需的所有更改。
++
+[source, cli]
+----
+    terraform plan -target="module.az_cvo_ha_deployment" -var-file="vars\azure_cvo_ha_deployment.tfvars"
+----
+. 运行部署
++
+[source, cli]
+----
+    terraform apply -target="module.az_cvo_ha_deployment" -var-file="vars\azure_cvo_ha_deployment.tfvars"
+----
+
+
+删除部署
+
+[source, cli]
+----
+  terraform destroy
+----
+`HA 对实例`
+
+HA 对 Cloud Volumes ONTAP （ CVO ）的 Terraform 变量。
+
+|===
+
+
+| * 名称 * | * 类型 * | * 问题描述 * 
+
+
+| * 刷新令牌 * | string | （必需） NetApp Cloud Manager 的刷新令牌。这可以从 NetApp Cloud Central 生成。 
+
+
+| * AZ 连接器名称 * | string | （必需） Cloud Manager Connector 的名称。 
+
+
+| * AZ 连接器位置 * | string | （必需）创建 Cloud Manager Connector 的位置。 
+
+
+| * AZ 连接器 _subscription_id* | string | （必需） Azure 订阅的 ID 。 
+
+
+| * AZ 连接器公司 * | string | （必需）用户公司的名称。 
+
+
+| * AZ 连接器 _resource_group* | 整型 | （必需） Azure 中要创建资源的资源组。 
+
+
+| * AZ 连接器 _subnet_id* | string | （必需）虚拟机的子网名称。 
+
+
+| * AZ 连接器 _vnet_id* | string | （必需）虚拟网络的名称。 
+
+
+| * AZ 连接器 _network_security_group_name* | string | （必需）实例的安全组名称。 
+
+
+| * AZ 连接器 _associate_public_ip_address* | string | （必需）指示是否将公有 IP 地址与虚拟机关联。 
+
+
+| * AZ 连接器帐户 ID * | string | （必需） Connector 要关联的 NetApp 帐户 ID 。如果未提供， Cloud Manager 将使用第一个帐户。如果不存在任何帐户， Cloud Manager 将创建一个新帐户。您可以在 Cloud Manager 的帐户选项卡中找到帐户 ID ，网址为 https://cloudmanager.netapp.com[]。 
+
+
+| * AZ-Connector_admin_password* | string | （必需） Connector 的密码。 
+
+
+| * AZ-Connector_admin_username* | string | （必需） Connector 的用户名。 
+
+
+| * AZ-CVO_NAME* | string | （必需） Cloud Volumes ONTAP 工作环境的名称。 
+
+
+| * AZ-CVO_OITE* | string | （必需）要创建工作环境的位置。 
+
+
+| * AZ-CVO_subnet_id* | string | （必需） Cloud Volumes ONTAP 系统的子网名称。 
+
+
+| * AZ-CVO_vnet_id* | string | （必需）虚拟网络的名称。 
+
+
+| * AZ-CVO_vnet_resource_group* | string | （必需） Azure 中与虚拟网络关联的资源组。 
+
+
+| * AZ-CVO_data_encryption_type* | string | （必需）工作环境要使用的加密类型： [`Azure` ， `none` ] 。默认值为 `Azure` 。 
+
+
+| * AZ-CVO_storage_type* | string | （必需）第一个数据聚合的存储类型：`Premium_LRS` ， `Standard_LRS` ， `StandardSSD_LRS` 。默认值为 `Premium_LRS` 
+
+
+| * AZ-CVO_SVM_password* | string | （必需） Cloud Volumes ONTAP 的管理员密码。 
+
+
+| * AZ-CVO_workspace ID | string | （必需）要部署 Cloud Volumes ONTAP 的 Cloud Manager 工作空间的 ID 。如果未提供， Cloud Manager 将使用第一个工作空间。您可以从上的 " 工作空间 " 选项卡中找到此 ID https://cloudmanager.netapp.com[]。 
+
+
+| * AZ-CVO_capacity_tier* | string | （必需）是否为第一个数据聚合启用数据分层：`Blob` ， `none` 。默认值为 `BLOB` 。 
+
+
+| * AZ-CVO_writing_speed_state* | string | （必需） Cloud Volumes ONTAP 的写入速度设置： [`normal` ， `high` ] 。默认值为 `normal` 。此参数与 HA 对无关。 
+
+
+| * AZ-CVO_ontap_version* | string | （必需）所需的 ONTAP 版本。如果 "use_latest_version" 设置为 true ，则忽略此参数。默认情况下使用最新版本。 
+
+
+| * AZ-CVO_instance_type* | string | （必需）要使用的实例类型，具体取决于您选择的许可证类型： Explore ： `Standard_DS3_v2` ， Standard ： `Standard_DS4_v2 ， Standard_DS13_v2 ， Standard_L8s_v2` ， Premium ： `Standard_DS5_v2` ， `standard_DS14_v2` ， BYOL ：为 PayGo 定义的所有实例类型。有关更多受支持的实例类型，请参见《 Cloud Volumes ONTAP 发行说明》。默认值为 `Standard_DS4_v2` 。 
+
+
+| * AZ-CVO_LICENSE_TYPE * | string | （必需）要使用的许可证类型。对于单个节点：`azure-cot-explore-paygo ， azure-cot-standard-paygo ， azure-cot-premy-paygo ， azure-cot-premy-BYOL ， capacity-paygo` 。HA ：`azure-ha-cot-standard-paygo ， azure-ha-cot-premy-paygo ， azure-ha-cot-premy-BYOL ， ha-capacity-paygo` 。默认值为 `azure-cot-standard-paygo` 。在选择 Bring your own License type capacity-based 或 Freemium 后，请对 HA 使用 `capacity-paygo` 或 `ha-capacity-paygo` 。在选择 Bring Your Own License type Node-Based 后，请使用 `azure-cot-premy-BYOL` 或 `azure-ha-cot-premy-BYOL` for HA 。 
+
+
+| * AZ-CVO_NSS_account* | string | （必需）用于此 Cloud Volumes ONTAP 系统的 NetApp 支持站点帐户 ID 。如果许可证类型为 BYOL 且未提供 NSS 帐户，则 Cloud Manager 会尝试使用第一个现有 NSS 帐户。 
+
+
+| * AZ 租户 ID * | string | （必需）在 Azure 中注册的应用程序 / 服务主体的租户 ID 。 
+
+
+| * AZ 应用程序 ID * | string | （必需）在 Azure 中注册的应用程序 / 服务主体的应用程序 ID 。 
+
+
+| * AZ-application_key* | string | （必需）在 Azure 中注册的应用程序 / 服务主体的应用程序密钥。 
+|===
+--
+====

@@ -30,7 +30,7 @@ NetApp DataOps 工具包是一个 Python 库，可使开发人员，数据科学
 
 下图显示了解决方案架构。环境分为三大类：云，核心和边缘。每个类别都可能在不同的地理位置上分散。例如，云中包含的对象存储包含不同区域的存储分段中的音频文件，而核心则可能包含通过高速网络或 NetApp Cloud Sync 链接的数据中心。边缘节点表示各个人工代理的日常工作平台，在这些平台中，交互式信息板工具和麦克风可用于直观显示情绪并从与客户的对话中收集音频数据。
 
-在 GPU 加速数据中心中，企业可以使用 NVIDIA https://docs.nvidia.com/deeplearning/riva/user-guide/docs/index.html["Riva"^] 用于构建对话式 AI 应用程序的框架 使用传输 L 学习技术连接模型修剪和重新培训。这些计算应用程序和工作流由提供支持，实现 ONTAP 提供的最佳数据管理功能。通过该工具包，企业数据团队可以利用相关的结构化和非结构化数据，通过快照和克隆快速构建模型的原型，以实现可追溯性，版本控制， A/B 测试，从而提供安全性，监管， 和合规性。请参见一节 link:ai-sent-design-considerations.html#storage-design["存储设计"] 有关详细信息：
+在 GPU 加速数据中心中，企业可以使用 NVIDIA https://docs.nvidia.com/deeplearning/riva/user-guide/docs/index.html["Riva"^] 用于构建对话式 AI 应用程序的框架 https://developer.nvidia.com/tao["TAO 工具包"^] 使用传输 L 学习技术连接模型修剪和重新培训。这些计算应用程序和工作流由提供支持 https://github.com/NetApp/netapp-dataops-toolkit["NetApp DataOps 工具包"^]，实现 ONTAP 提供的最佳数据管理功能。通过该工具包，企业数据团队可以利用相关的结构化和非结构化数据，通过快照和克隆快速构建模型的原型，以实现可追溯性，版本控制， A/B 测试，从而提供安全性，监管， 和合规性。请参见一节 link:ai-sent-design-considerations.html#storage-design["存储设计"] 有关详细信息：
 
 此解决方案演示了音频文件处理， NLP 模型培训，传输学习和数据管理详细步骤。生成的端到端管道生成一个情感摘要，该摘要会实时显示在人力支持代理的信息板上。
 

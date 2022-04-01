@@ -32,7 +32,7 @@ ONTAP 支持用于虚拟化的所有主要存储协议，例如 iSCSI ，光纤�
 * 通过 * QoS 。 * QoS ，可以管理单个 LUN ，卷或文件的性能。此功能可用于限制未知或抢占资源的 VM ，或者确保重要的 VM 获得足够的性能资源。
 * * NetApp 卷加密， NetApp 聚合加密。 * NetApp 加密选项提供基于软件的简单加密，可保护空闲数据。
 * * FabricPool 。 * 此功能可在块级别自动将较冷的数据分层到单独的对象存储中，从而腾出昂贵的闪存存储。
-* * REST ， Ansible 。 * 使用 https://devnet.netapp.com/restapi["ONTAP REST API"^] 自动执行存储和数据管理，以及 用于 ONTAP 系统的配置管理。请注意，某些 ONTAP 功能不适合 vSphere 工作负载。例如， ONTAP 9.8 之前的 FlexGroup 不支持完全克隆，也未在 vSphere 中进行测试（请参见 FlexGroup 一节，了解有关将其与 vSphere 结合使用的最新信息）。FlexCache 也不是 vSphere 的最佳选择，因为它专为大多数读取工作负载而设计。如果缓存与原始数据存储库断开连接，则写入可能会出现问题，从而导致两端出现 NFS 数据存储库错误。
+* * REST ， Ansible 。 * 使用 https://devnet.netapp.com/restapi["ONTAP REST API"^] 自动执行存储和数据管理，以及 https://netapp.io/configuration-management-and-automation/["Ansible 模块"^] 用于 ONTAP 系统的配置管理。请注意，某些 ONTAP 功能不适合 vSphere 工作负载。例如， ONTAP 9.8 之前的 FlexGroup 不支持完全克隆，也未在 vSphere 中进行测试（请参见 FlexGroup 一节，了解有关将其与 vSphere 结合使用的最新信息）。FlexCache 也不是 vSphere 的最佳选择，因为它专为大多数读取工作负载而设计。如果缓存与原始数据存储库断开连接，则写入可能会出现问题，从而导致两端出现 NFS 数据存储库错误。
 
 
 
