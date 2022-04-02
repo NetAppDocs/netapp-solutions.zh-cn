@@ -91,7 +91,7 @@ NOTE: 您可以选择使用现有的 vnet 和子网部署 ANF 卷，方法是将
 | * 。 as_volume_path* | string | （必需）卷的唯一文件路径。用于创建挂载目标。更改后，系统将强制创建新资源。 
 
 
-| * AZ 容量池大小 * | 整型 | （必需）以 TB 为单位提及的 Capacy 池大小。 
+| * AZ 容量池大小 * | 整型 | （必需）以 TB 为单位提及的容量池大小。 
 
 
 | * 。 as_vnet_creation_bool* | 布尔值 | （必需）如果要创建新的 vnet ，请将此布尔值设置为 `true` 。将其设置为 `false` 以使用现有 vnet 。 
@@ -183,7 +183,7 @@ NOTE: 您可以选择使用现有的 vnet 和子网部署 ANF 卷，方法是将
 ----
 `ANF 数据保护`
 
-为启用了数据保护的单个 ANF 卷提供不同的 Terraform 。
+启用了数据保护的单个 ANF 卷的 Terraform 变量。
 
 |===
 
@@ -218,10 +218,10 @@ NOTE: 您可以选择使用现有的 vnet 和子网部署 ANF 卷，方法是将
 | * AZ 卷路径二级 * | string | （必需）二级卷的唯一文件路径。用于创建挂载目标。更改后，系统将强制创建新资源。 
 
 
-| * AZ-Capacity_Pool_size_primary_* | 整型 | （必需）以 TB 为单位提及的 Capacy 池大小。 
+| * AZ-Capacity_Pool_size_primary_* | 整型 | （必需）以 TB 为单位提及的容量池大小。 
 
 
-| * AZ 容量池大小二级 * | 整型 | （必需）以 TB 为单位提及的 Capacy 池大小。 
+| * AZ 容量池大小二级 * | 整型 | （必需）以 TB 为单位提及的容量池大小。 
 
 
 | * 。 as_vnet_primary_creation_bool* | 布尔值 | （必需）如果要为主卷创建新的 vnet ，请将此布尔值设置为 `true` 。将其设置为 `false` 以使用现有 vnet 。 
@@ -357,7 +357,7 @@ NOTE: 您可以选择使用现有的 vnet 和子网部署 ANF 卷，方法是将
 | * 。 as_volume_path* | string | （必需）卷的唯一文件路径。用于创建挂载目标。更改后，系统将强制创建新资源。 
 
 
-| * AZ 容量池大小 * | 整型 | （必需）以 TB 为单位提及的 Capacy 池大小。 
+| * AZ 容量池大小 * | 整型 | （必需）以 TB 为单位提及的容量池大小。 
 
 
 | * 。 as_vnet_creation_bool* | 布尔值 | （必需）如果要创建新的 vnet ，请将此布尔值设置为 `true` 。将其设置为 `false` 以使用现有 vnet 。 
@@ -458,7 +458,7 @@ NOTE: 您可以选择使用现有的 vnet 和子网部署 ANF 卷，方法是将
 
 [source, cli]
 ----
-  terraform destory
+  terraform destroy
 ----
 `s单节点实例`
 
@@ -485,7 +485,7 @@ NOTE: 您可以选择使用现有的 vnet 和子网部署 ANF 卷，方法是将
 | * 。 as_volume_path* | string | （必需）卷的唯一文件路径。用于创建挂载目标。更改后，系统将强制创建新资源。 
 
 
-| * AZ 容量池大小 * | 整型 | （必需）以 TB 为单位提及的 Capacy 池大小。 
+| * AZ 容量池大小 * | 整型 | （必需）以 TB 为单位提及的容量池大小。 
 
 
 | * 。 as_vnet_creation_bool* | 布尔值 | （必需）如果要创建新的 vnet ，请将此布尔值设置为 `true` 。将其设置为 `false` 以使用现有 vnet 。 
@@ -514,7 +514,7 @@ NOTE: 您可以选择使用现有的 vnet 和子网部署 ANF 卷，方法是将
 --
 .CVO 单节点部署
 --
-本节包含用于在 Azure 上部署 / 配置单节点 CVO （ Cvoud Volumes ONTAP ）的各种 Terraform 配置文件。
+本节包含用于在 Azure 上部署 / 配置单节点 CVO （ Cloud Volumes ONTAP ）的各种 Terraform 配置文件。
 
 Terraform 文档： https://registry.terraform.io/providers/NetApp/netapp-cloudmanager/latest/docs[]
 
@@ -623,7 +623,7 @@ Terraform 文档： https://registry.terraform.io/providers/NetApp/netapp-cloudm
 | * AZ-CVO_NAME* | string | （必需） Cloud Volumes ONTAP 工作环境的名称。 
 
 
-| * AZ-CVO_OITE* | string | （必需）要创建工作环境的位置。 
+| * AZ-CVO_OITE* | string | （必需）创建工作环境的位置。 
 
 
 | * AZ-CVO_subnet_id* | string | （必需） Cloud Volumes ONTAP 系统的子网名称。 
@@ -785,7 +785,7 @@ HA 对 Cloud Volumes ONTAP （ CVO ）的 Terraform 变量。
 | * AZ-CVO_NAME* | string | （必需） Cloud Volumes ONTAP 工作环境的名称。 
 
 
-| * AZ-CVO_OITE* | string | （必需）要创建工作环境的位置。 
+| * AZ-CVO_OITE* | string | （必需）创建工作环境的位置。 
 
 
 | * AZ-CVO_subnet_id* | string | （必需） Cloud Volumes ONTAP 系统的子网名称。 

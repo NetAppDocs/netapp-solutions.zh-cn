@@ -9901,7 +9901,6 @@
   <block id="f8a700002db36fadde1ab9526f2cf8c3" category="cell">* AWS 连接器 _subnet_id*</block>
   <block id="76788966b37b9b0df0b8ed78ad67eea9" category="cell">（必需）实例的子网 ID 。</block>
   <block id="fafb089eb14a5fe730cfadfd7bed4b4f" category="cell">* AWS 连接器 _security_group_id*</block>
-  <block id="3e1563f6e3cc58e193b1d6a8c7af1351" category="cell">（必需）实例的安全组 ID ，可以提供多个安全组，并以 " ， " 分隔。</block>
   <block id="52df26383575ad500acf38cc3df88e36" category="cell">* AWS 连接器 _iam_instance_profile_name*</block>
   <block id="59409115b42184ffa519bd9aa24b6816" category="cell">（必需） Connector 实例配置文件的名称。</block>
   <block id="8953ca5d18d5f2c4a85fdfe10d30a002" category="cell">* AWS 连接器帐户 ID *</block>
@@ -9977,7 +9976,6 @@
   <block id="48dbb4d925fe4a46f28c0a8466a2f628" category="cell">（必需） AWS 凭据帐户名称。</block>
   <block id="2fbb88fe90f9183c7eab541bc808795f" category="summary">此页面介绍了使用 Terraform 在云提供商（ AWS ， Azure ， GCP ）上部署 NetApp 卷的自动化方法。</block>
   <block id="8eece2f5500ed61d5d5d24d6b8cc6da5" category="doc">通过 Terraform 实现 Cloud Volumes Automation</block>
-  <block id="4e99239b58a385b2fec5a1fb4058a12c" category="paragraph">本解决方案 介绍了使用 Terraform 模块在 AWS （ CVO 单节点， CVO HA anf FSX ONTAP ）和 Azure （ CVO 单节点， CVO HA 和 ANF ）上自动部署云卷的情况。可在中找到此代码<block ref="d07ec9f91b2ccc52b0d628a1b144c1d8" category="inline-link-rx"></block></block>
   <block id="e11da9afe91d381489a365c86cc614ab" category="section-title">前提条件</block>
   <block id="95332f844502bac70e3783f2d906688c" category="list-text">Terraform &gt;= 0.13</block>
   <block id="82410a61f302c6bdce619218d5036674" category="list-text">Cloud Manager 帐户</block>
@@ -10010,7 +10008,6 @@
   <block id="c8fb8ccec1ede566cac7b410b7623186" category="cell">（必需）卷的唯一文件路径。用于创建挂载目标。更改后，系统将强制创建新资源。</block>
   <block id="5e51835c1dd28fa3cab3636a6beb8016" category="cell">* AZ 容量池大小 *</block>
   <block id="a0faef0851b4294c06f2b94bb1cb2044" category="cell">整型</block>
-  <block id="35d9ed053f40a07b6df4021b8ced2423" category="cell">（必需）以 TB 为单位提及的 Capacy 池大小。</block>
   <block id="32c4a6ca695ae0fd3f41efe5ab8d3ffc" category="cell">* 。 as_vnet_creation_bool*</block>
   <block id="27226c864bac7454a8504f8edb15d95b" category="cell">布尔值</block>
   <block id="55a1cc8d235c0ca9bd0cf384e2db1fb2" category="cell">（必需）如果要创建新的 vnet ，请将此布尔值设置为 `true` 。将其设置为 `false` 以使用现有 vnet 。</block>
@@ -10031,7 +10028,6 @@
   <block id="56978261632f1f36ad5f3f3ea6d2cb4b" category="paragraph">本节包含用于在 Azure 上部署 / 配置具有数据保护的 ANF （ Azure NetApp Files ）卷的各种 Terraform 配置文件。</block>
   <block id="9b3e184737a0a337479622611ba072b7" category="list-text">更新 `vars/azure_anf_data_protection.tfvars` 中的变量值。</block>
   <block id="bf052e3d77cd2cde5fa905542df51c46" category="paragraph">`ANF 数据保护`</block>
-  <block id="ca374bb23355afcc469fefca9eb99ced" category="paragraph">为启用了数据保护的单个 ANF 卷提供不同的 Terraform 。</block>
   <block id="17745d8782266e5f08c77485447c8727" category="cell">* AZ 备选位置 *</block>
   <block id="3bfeadf4c47a658ca94a6066aee32aaa" category="cell">（必需）要创建二级卷的 Azure 位置</block>
   <block id="2558355ccfd79f11c2c7771d473c28a9" category="cell">* 空格 _vnet_primary_address_space*</block>
@@ -10091,7 +10087,6 @@
   <block id="a753ff452c91c6e4de63b907e8253e05" category="paragraph">使用 snapshot 的单个 ANF 卷的 Terraform 变量。</block>
   <block id="57bd49c8f9a43967f48ec8f1f3ca2846" category="cell">* 。 as_snapshot_id*</block>
   <block id="ff461cb79e6adda28ae488782f0da97f" category="cell">（必需）用于创建新 ANF 卷的 Snapshot ID 。</block>
-  <block id="6af253bfaad5b16a3b1d7d2892c1d583" category="paragraph">本节包含用于在 Azure 上部署 / 配置单节点 CVO （ Cvoud Volumes ONTAP ）的各种 Terraform 配置文件。</block>
   <block id="04107ff6b0460381c55ff620a1021254" category="list-text">更新 `vars\azure_CVO_single 节点 _deployment.tfvars` 中的变量。</block>
   <block id="73b95097cc4819b49af28734c8da85f9" category="paragraph">单节点 Cloud Volumes ONTAP （ CVO ）的 Terraform 变量。</block>
   <block id="3226e634f46cb19ab313171144dd34bd" category="cell">* 刷新令牌 *</block>
@@ -10120,11 +10115,8 @@
   <block id="e0f32faffed9caaca61e86caae050f17" category="cell">（必需） Connector 的用户名。</block>
   <block id="425624e10c5de04d471a55e4a8b35e31" category="cell">* AZ-CVO_NAME*</block>
   <block id="52ebf6980a494c352ee150c2b801af6e" category="cell">* AZ-CVO_OITE*</block>
-  <block id="722769acb8681ee52ccaaf29f539866d" category="cell">（必需）要创建工作环境的位置。</block>
   <block id="8da06548b40415fd473a86a6dba80f82" category="cell">* AZ-CVO_subnet_id*</block>
-  <block id="8ad5f0c73733e0e6f16835416c9cc81a" category="cell">（必需） Cloud Volumes ONTAP 系统的子网名称。</block>
   <block id="f71ced0388b772479b4e5fba15c83077" category="cell">* AZ-CVO_vnet_id*</block>
-  <block id="0b3cb9636c3749b52c20181a74644b24" category="cell">（必需）虚拟网络的名称。</block>
   <block id="7d2219b61301dda6352db570bb7c5034" category="cell">* AZ-CVO_vnet_resource_group*</block>
   <block id="fecf56abdc6b5472c8da399cad7791b3" category="cell">（必需） Azure 中与虚拟网络关联的资源组。</block>
   <block id="c63d2e90acb0448db277b1b5b8a8d1fa" category="cell">* AZ-CVO_data_encryption_type*</block>
@@ -10152,10 +10144,17 @@
   <block id="587bfaa720a64e832c9eef635797e8d8" category="cell">（必需）在 Azure 中注册的应用程序 / 服务主体的应用程序 ID 。</block>
   <block id="67830019a9948cfd51759684b5f8a262" category="cell">* AZ-application_key*</block>
   <block id="56d6515673e3c08156696c47a943c020" category="cell">（必需）在 Azure 中注册的应用程序 / 服务主体的应用程序密钥。</block>
-  <block id="eebf102c9b4ea2f3eac16cf21640a1d5" category="paragraph">本节包含用于在 Azure 上部署 / 配置 CVO （ Cloud Volumes ONTAP ） HA （高可用性）的各种 Terraform 配置文件。</block>
   <block id="522a4529185faee9fa34a9398ab7263f" category="list-text">更新 `vars\azure_CVO_ha_deployment.tfvars` 中的变量。</block>
   <block id="e2da3e968f76091801635ce624569dcb" category="paragraph">`HA 对实例`</block>
   <block id="86ed32721429fbcc7b5e123836e3ebcd" category="paragraph">HA 对 Cloud Volumes ONTAP （ CVO ）的 Terraform 变量。</block>
   <block id="72170ff3a9ca936d7855297f0bbd1eeb" category="cell">（必需）要使用的实例类型，具体取决于您选择的许可证类型： Explore ： `Standard_DS3_v2` ， Standard ： `Standard_DS4_v2 ， Standard_DS13_v2 ， Standard_L8s_v2` ， Premium ： `Standard_DS5_v2` ， `standard_DS14_v2` ， BYOL ：为 PayGo 定义的所有实例类型。有关更多受支持的实例类型，请参见《 Cloud Volumes ONTAP 发行说明》。默认值为 `Standard_DS4_v2` 。</block>
   <block id="b515d8e49b6ef626aa91dbd970708132" category="cell">（必需）要使用的许可证类型。对于单个节点：`azure-cot-explore-paygo ， azure-cot-standard-paygo ， azure-cot-premy-paygo ， azure-cot-premy-BYOL ， capacity-paygo` 。HA ：`azure-ha-cot-standard-paygo ， azure-ha-cot-premy-paygo ， azure-ha-cot-premy-BYOL ， ha-capacity-paygo` 。默认值为 `azure-cot-standard-paygo` 。在选择 Bring your own License type capacity-based 或 Freemium 后，请对 HA 使用 `capacity-paygo` 或 `ha-capacity-paygo` 。在选择 Bring Your Own License type Node-Based 后，请使用 `azure-cot-premy-BYOL` 或 `azure-ha-cot-premy-BYOL` for HA 。</block>
+  <block id="728aafab2377ad85ce4ae3f6a4b3dd33" category="cell">（必需）实例的安全组 ID ，可以提供多个安全组，并以 " ， " 分隔。</block>
+  <block id="fbd9a83d6df239351ac0498cbaa58065" category="paragraph">本解决方案 介绍了使用 Terraform 模块在 AWS （ CVO 单节点， CVO HA 和 FSX ONTAP ）和 Azure （ CVO 单节点， CVO HA 和 ANF ）上自动部署云卷的过程。可在中找到此代码<block ref="d07ec9f91b2ccc52b0d628a1b144c1d8" category="inline-link-rx"></block></block>
+  <block id="0db20ddc31a427cc02802395aa53db7f" category="cell">（必需）以 TB 为单位提及的容量池大小。</block>
+  <block id="c47acd947f63c78f7729c5c176778d53" category="paragraph">启用了数据保护的单个 ANF 卷的 Terraform 变量。</block>
+  <block id="ca7ce11916c29a2c94b4fd33dc0b6313" category="paragraph">本节包含用于在 Azure 上部署 / 配置单节点 CVO （ Cloud Volumes ONTAP ）的各种 Terraform 配置文件。</block>
+  <block id="7bd8d7a58d3957cf7697ceb3467bffae" category="cell">（必需）创建工作环境的位置。</block>
+  <block id="a5ab436e757f5af2106d5ed5e5dd9df0" category="cell">（必需） Cloud Volumes ONTAP 系统的子网名称。</block>
+  <block id="353190ef77d18ad13aeb6b4f0f3ddd66" category="paragraph">本节包含用于在 Azure 上部署 / 配置 CVO （ Cloud Volumes ONTAP ） HA （高可用性）的各种 Terraform 配置文件。</block>
 </blocks>
