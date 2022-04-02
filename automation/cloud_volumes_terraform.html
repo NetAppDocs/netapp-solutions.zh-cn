@@ -4082,7 +4082,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-04-01 19:41:29 +0000">04/01/2022</time>
+    <time datetime="2022-04-02 13:33:09 +0000">04/02/2022</time>
     
   
 
@@ -4092,7 +4092,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph lead">
-<p>本解决方案 介绍了使用 Terraform 模块在 AWS （ CVO 单节点， CVO HA anf FSX ONTAP ）和 Azure （ CVO 单节点， CVO HA 和 ANF ）上自动部署云卷的情况。可在中找到此代码 <a href="https://github.com/NetApp-Automation/na_cloud_volumes_automation" class="bare">https://github.com/NetApp-Automation/na_cloud_volumes_automation</a></p>
+<p>本解决方案 介绍了使用 Terraform 模块在 AWS （ CVO 单节点， CVO HA 和 FSX ONTAP ）和 Azure （ CVO 单节点， CVO HA 和 ANF ）上自动部署云卷的过程。可在中找到此代码 <a href="https://github.com/NetApp-Automation/na_cloud_volumes_automation" class="bare">https://github.com/NetApp-Automation/na_cloud_volumes_automation</a></p>
 </div>
 </div>
 </div>
@@ -5091,7 +5091,7 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">* AZ 容量池大小 *</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">整型</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">（必需）以 TB 为单位提及的 Capacy 池大小。</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">（必需）以 TB 为单位提及的容量池大小。</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">* 。 as_vnet_creation_bool*</p></td>
@@ -5236,7 +5236,7 @@
 <p><code>ANF 数据保护</code></p>
 </div>
 <div class="paragraph">
-<p>为启用了数据保护的单个 ANF 卷提供不同的 Terraform 。</p>
+<p>启用了数据保护的单个 ANF 卷的 Terraform 变量。</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -5298,12 +5298,12 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">* AZ-Capacity_Pool_size_primary_*</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">整型</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">（必需）以 TB 为单位提及的 Capacy 池大小。</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">（必需）以 TB 为单位提及的容量池大小。</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">* AZ 容量池大小二级 *</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">整型</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">（必需）以 TB 为单位提及的 Capacy 池大小。</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">（必需）以 TB 为单位提及的容量池大小。</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">* 。 as_vnet_primary_creation_bool*</p></td>
@@ -5525,7 +5525,7 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">* AZ 容量池大小 *</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">整型</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">（必需）以 TB 为单位提及的 Capacy 池大小。</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">（必需）以 TB 为单位提及的容量池大小。</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">* 。 as_vnet_creation_bool*</p></td>
@@ -5687,7 +5687,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-cli" data-lang="cli">  terraform destory</code></pre>
+<pre class="highlight"><code class="language-cli" data-lang="cli">  terraform destroy</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5736,7 +5736,7 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">* AZ 容量池大小 *</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">整型</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">（必需）以 TB 为单位提及的 Capacy 池大小。</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">（必需）以 TB 为单位提及的容量池大小。</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">* 。 as_vnet_creation_bool*</p></td>
@@ -5786,7 +5786,7 @@
 <div class="title">CVO 单节点部署</div>
 <div class="content">
 <div class="paragraph">
-<p>本节包含用于在 Azure 上部署 / 配置单节点 CVO （ Cvoud Volumes ONTAP ）的各种 Terraform 配置文件。</p>
+<p>本节包含用于在 Azure 上部署 / 配置单节点 CVO （ Cloud Volumes ONTAP ）的各种 Terraform 配置文件。</p>
 </div>
 <div class="paragraph">
 <p>Terraform 文档： <a href="https://registry.terraform.io/providers/NetApp/netapp-cloudmanager/latest/docs" class="bare">https://registry.terraform.io/providers/NetApp/netapp-cloudmanager/latest/docs</a></p>
@@ -5956,7 +5956,7 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">* AZ-CVO_OITE*</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">（必需）要创建工作环境的位置。</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">（必需）创建工作环境的位置。</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">* AZ-CVO_subnet_id*</p></td>
@@ -6216,7 +6216,7 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">* AZ-CVO_OITE*</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">（必需）要创建工作环境的位置。</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">（必需）创建工作环境的位置。</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">* AZ-CVO_subnet_id*</p></td>
