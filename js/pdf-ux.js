@@ -2,7 +2,14 @@ $(document).ready(function () {
   try {
     // intialize config variables
     let zipLevel = "";
-    let baseUrlSection = "/zh-cn/netapp-solutions/pdfs/sidebar/";
+
+    let baseUrlSection = "/zh-cn/netapp-solutions/pdfs/";
+    const flavor = $("body").data("flavor");
+    if (flavor) {
+      baseUrlSection += flavor + "/";
+    }
+    baseUrlSection += "sidebar/";
+
     let zipFilename = "";
     let zipFileSize = 0;
     zipLevel = zipLevel !== ""?zipLevel:1;
