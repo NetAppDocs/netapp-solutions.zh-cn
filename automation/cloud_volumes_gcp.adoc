@@ -1,0 +1,392 @@
+= 
+
+
+[role="tabbed-block"]
+====
+.CVO 单节点部署
+--
+本节包含各种 Terraform 配置文件，用于在 GCP （ Google 云平台）上部署 / 配置单节点 NetApp CVO （ Cloud Volumes ONTAP ）。
+
+Terraform 文档： https://registry.terraform.io/providers/NetApp/netapp-cloudmanager/latest/docs[]
+
+要运行此模板，请执行以下操作：
+
+. 克隆存储库。
++
+[source, cli]
+----
+    git clone https://github.com/NetApp-Automation/na_cloud_volumes_automation.git
+----
+. 导航到所需文件夹
++
+[source, cli]
+----
+    cd na_cloud_volumes_automation/
+----
+. 将 GCP 身份验证密钥 JSON 文件保存在目录中。
+. 更新 `vars/gcp_CVO_single 节点 _deployment.tfvar` 中的变量值
++
+
+NOTE: 您可以通过将变量 "gcp_connector_deploy_bool" 值设置为 true/false 来选择部署连接器。
+
+. 初始化 Terraform 存储库以安装所有前提条件并准备部署。
++
+[source, cli]
+----
+    terraform init
+----
+. 使用 terraform validate 命令验证 terraform 文件。
++
+[source, cli]
+----
+    terraform validate
+----
+. 运行此配置以预览部署所需的所有更改。
++
+[source, cli]
+----
+    terraform plan -target="module.gco_single_node" -var-file="vars/gcp_cvo_single_node_deployment.tfvars"
+----
+. 运行部署
++
+[source, cli]
+----
+    terraform apply -target="module.gcp_single_node" -var-file="vars/gcp_cvo_single_node_deployment.tfvars"
+----
+
+
+删除部署
+
+[source, cli]
+----
+    terraform destroy
+----
+`连接器`
+
+用于 CVO 部署的 NetApp GCP 连接器实例的 Terraform 变量。
+
+|===
+
+
+| * 名称 * | * 类型 * | * 问题描述 * 
+
+
+| * gcp_connector_deploy_bool* | 池 | （必需）检查连接器部署。 
+
+
+| * GCP_connector_name* | string | （必需） Cloud Manager Connector 的名称。 
+
+
+| * GCP_connector_project_id* | string | （必需）要创建连接器的 GCP project_id 。 
+
+
+| * GCP_connector_zone* | string | （必需）要创建连接器的 GCP 分区。 
+
+
+| * GCP_connector_company_* | string | （必需）用户公司的名称。 
+
+
+| * GCP_connector_service_account_email * | string | （必需）连接器实例的 service_account 的电子邮件。此服务帐户用于允许 Connector 创建云卷 ONTAP 。 
+
+
+| * GCP_connector_service_account_path* | string | （必需） service_account JSON 文件的本地路径，用于 GCP 授权。此服务帐户用于在 GCP 中创建连接器。 
+
+
+| * gcp_connector_account_id* | string | （可选） Connector 要关联的 NetApp 帐户 ID 。如果未提供， Cloud Manager 将使用第一个帐户。如果不存在任何帐户， Cloud Manager 将创建一个新帐户。您可以在 Cloud Manager 的帐户选项卡中找到帐户 ID ，网址为 https://cloudmanager.netapp.com[]。 
+|===
+`s单节点实例`
+
+GCP 上单个 NetApp CVO 实例的 Terraform 变量。
+
+|===
+
+
+| * 名称 * | * 类型 * | * 问题描述 * 
+
+
+| * GCP_CVO_NAME* | string | （必需） Cloud Volumes ONTAP 工作环境的名称。 
+
+
+| * GCP_CVO_project_id* | string | （必需） GCP 项目的 ID 。 
+
+
+| * GCP_CVO_Zone* | string | （必需）要创建工作环境的区域的区域。 
+
+
+| * GCP_CVO_GCP_SERVICE_account* | string | （必需） GCP_SERVICE_account 电子邮件，以便将冷数据分层到 Google Cloud Storage 。 
+
+
+| * GCP_CVO_SVM_password* | string | （必需） Cloud Volumes ONTAP 的管理员密码。 
+
+
+| * GCP_CVO_workspace ID | string | （可选）要部署 Cloud Volumes ONTAP 的 Cloud Manager 工作空间的 ID 。如果未提供， Cloud Manager 将使用第一个工作空间。您可以从上的 " 工作空间 " 选项卡中找到此 ID https://cloudmanager.netapp.com[]。 
+
+
+| * GCP_CVO_LICENSE_TYPE * | string | （可选）要使用的许可证类型。对于单个节点： "capacity-payge" ， "gcp-cot-explore-payge" ， "gcp-cot-standard-payge" ， "gcp-cot-premy-payge" ， "gcp-cot-premy-BYOL" ， 对于 HA ： "ha-capacity-payge" ， "gcp-ha-cot-explore-payge" ， "gcp-ha-cot-standard-payge" ， "gcp-ha-cot-premy-payge" ， "gcp-ha-cot-premy-BYOL" 。对于单个节点，默认值为 "capacity-payGo" ，对于 HA ，默认值为 "ha-capacity-payGo" 。 
+
+
+| * GCP_CVO_capacity_package_name* | string | （可选）容量包名称： [' 基本 ' ， ' 专业 ' ， 'Freemi'] 。默认值为 " 基本 " 。 
+|===
+--
+.CVO HA 部署
+--
+本节包含各种 Terraform 配置文件，用于在 GCP （ Google 云平台）上以高可用性对部署 / 配置 NetApp CVO （ Cloud Volumes ONTAP ）。
+
+Terraform 文档： https://registry.terraform.io/providers/NetApp/netapp-cloudmanager/latest/docs[]
+
+要运行此模板，请执行以下操作：
+
+. 克隆存储库。
++
+[source, cli]
+----
+    git clone https://github.com/NetApp-Automation/na_cloud_volumes_automation.git
+----
+. 导航到所需文件夹
++
+[source, cli]
+----
+    cd na_cloud_volumes_automation/
+----
+. 将 GCP 身份验证密钥 JSON 文件保存在目录中。
+. 更新 `vars/gcp_CVO_ha_deployment.tfvars` 中的变量值。
++
+
+NOTE: 您可以通过将变量 "gcp_connector_deploy_bool" 值设置为 true/false 来选择部署连接器。
+
+. 初始化 Terraform 存储库以安装所有前提条件并准备部署。
++
+[source, cli]
+----
+      terraform init
+----
+. 使用 terraform validate 命令验证 terraform 文件。
++
+[source, cli]
+----
+    terraform validate
+----
+. 运行此配置以预览部署所需的所有更改。
++
+[source, cli]
+----
+    terraform plan -target="module.gcp_ha" -var-file="vars/gcp_cvo_ha_deployment.tfvars"
+----
+. 运行部署
++
+[source, cli]
+----
+    terraform apply -target="module.gcp_ha" -var-file="vars/gcp_cvo_ha_deployment.tfvars"
+----
+
+
+删除部署
+
+[source, cli]
+----
+    terraform destroy
+----
+`连接器`
+
+用于 CVO 部署的 NetApp GCP 连接器实例的 Terraform 变量。
+
+|===
+
+
+| * 名称 * | * 类型 * | * 问题描述 * 
+
+
+| * gcp_connector_deploy_bool* | 池 | （必需）检查连接器部署。 
+
+
+| * GCP_connector_name* | string | （必需） Cloud Manager Connector 的名称。 
+
+
+| * GCP_connector_project_id* | string | （必需）要创建连接器的 GCP project_id 。 
+
+
+| * GCP_connector_zone* | string | （必需）要创建连接器的 GCP 分区。 
+
+
+| * GCP_connector_company_* | string | （必需）用户公司的名称。 
+
+
+| * GCP_connector_service_account_email * | string | （必需）连接器实例的 service_account 的电子邮件。此服务帐户用于允许 Connector 创建云卷 ONTAP 。 
+
+
+| * GCP_connector_service_account_path* | string | （必需） service_account JSON 文件的本地路径，用于 GCP 授权。此服务帐户用于在 GCP 中创建连接器。 
+
+
+| * gcp_connector_account_id* | string | （可选） Connector 要关联的 NetApp 帐户 ID 。如果未提供， Cloud Manager 将使用第一个帐户。如果不存在任何帐户， Cloud Manager 将创建一个新帐户。您可以在 Cloud Manager 的帐户选项卡中找到帐户 ID ，网址为 https://cloudmanager.netapp.com[]。 
+|===
+`HA 对`
+
+GCP 上 HA 对中 NetApp CVO 实例的 Terraform 变量。
+
+|===
+
+
+| * 名称 * | * 类型 * | * 问题描述 * 
+
+
+| * GCP_CVO_is_ha* | 池 | （可选）指示工作环境是否为 HA 对。默认值为 false 。 
+
+
+| * GCP_CVO_NAME* | string | （必需） Cloud Volumes ONTAP 工作环境的名称。 
+
+
+| * GCP_CVO_project_id* | string | （必需） GCP 项目的 ID 。 
+
+
+| * GCP_CVO_Zone* | string | （必需）要创建工作环境的区域的区域。 
+
+
+| * GCP_CVO_Node1_Zone* | string | （可选）节点 1 的分区。 
+
+
+| * GCP_CVO_Node2_Zone* | string | （可选）节点 2 的分区。 
+
+
+| * GCP_CVO_mediate_zone* | string | （可选）用于调解器的分区。 
+
+
+| * GCP_CVO_VPC_ID* | string | （可选） VPC 的名称。 
+
+
+| * GCP_CVO_subnet_id* | string | （可选） Cloud Volumes ONTAP 的子网名称。默认值为： "default" 。 
+
+
+| * GCP_CVO_vpc0_node_and_data_connection* | string | （可选） NIC1 的 VPC 路径，节点和数据连接所需。如果使用共享 VPC ，则必须提供 netwrok_project_id 。 
+
+
+| * GCP_CVO_vpc1_cluster_connectivity* | string | （可选） NIC2 的 VPC 路径，集群连接所需。 
+
+
+| * GCP_CVO_vpc2_ha_connectivity* | string | （可选） NIC3 的 VPC 路径， HA 连接所需。 
+
+
+| * GCP_CVO_vpc3_data_replication * | string | （可选） NIC4 的 VPC 路径，数据复制所需。 
+
+
+| * GCP_CVO_subnet0_node_and_data_connection* | string | （可选） NIC 1 的子网路径，节点和数据连接需要此路径。如果使用共享 VPC ，则必须提供 netwrok_project_id 。 
+
+
+| * GCP_CVO_subnet1_cluster_connectivity* | string | （可选） NIC 2 的子网路径，集群连接所需。 
+
+
+| * GCP_CVO_subnet2_ha_connectivity* | string | （可选） NIC3 的子网路径， HA 连接所需。 
+
+
+| * GCP_CVO_subnet3_data_replication * | string | （可选） NIC4 的子网路径，数据复制所需。 
+
+
+| * GCP_CVO_GCP_SERVICE_account* | string | （必需） GCP_SERVICE_account 电子邮件，以便将冷数据分层到 Google Cloud Storage 。 
+
+
+| * GCP_CVO_SVM_password* | string | （必需） Cloud Volumes ONTAP 的管理员密码。 
+
+
+| * GCP_CVO_workspace ID | string | （可选）要部署 Cloud Volumes ONTAP 的 Cloud Manager 工作空间的 ID 。如果未提供， Cloud Manager 将使用第一个工作空间。您可以从上的 " 工作空间 " 选项卡中找到此 ID https://cloudmanager.netapp.com[]。 
+
+
+| * GCP_CVO_LICENSE_TYPE * | string | （可选）要使用的许可证类型。对于单个节点： "capacity-payge" ， "gcp-cot-explore-payge" ， "gcp-cot-standard-payge" ， "gcp-cot-premy-payge" ， "gcp-cot-premy-BYOL" ， 对于 HA ： "ha-capacity-payge" ， "gcp-ha-cot-explore-payge" ， "gcp-ha-cot-standard-payge" ， "gcp-ha-cot-premy-payge" ， "gcp-ha-cot-premy-BYOL" 。对于单个节点，默认值为 "capacity-payGo" ，对于 HA ，默认值为 "ha-capacity-payGo" 。 
+
+
+| * GCP_CVO_capacity_package_name* | string | （可选）容量包名称： [' 基本 ' ， ' 专业 ' ， 'Freemi'] 。默认值为 " 基本 " 。 
+
+
+| * GCP_CVO_GCP_volume_size* | string | （可选）第一个数据聚合的 GCP 卷大小。对于 GB ，单位可以是： 100 或 500] 。对于 TB ，此单位可以是： 1 ， 2 ， 4 ， 8 。默认值为 "1" 。 
+
+
+| * GCP_CVO_GCP_volume_size_unit* | string | （可选） ["GB" 或 "TB"] 。默认值为 "TB" 。 
+|===
+--
+.CVS 卷
+--
+本节包含用于在 GCP （ Google Cloud Platform ）上部署 / 配置 NetApp CVS （ Cloud Volumes Services ）卷的各种 Terraform 配置文件。
+
+Terraform 文档： https://registry.terraform.io/providers/NetApp/netapp-gcp/latest/docs[]
+
+要运行此模板，请执行以下操作：
+
+. 克隆存储库。
++
+[source, cli]
+----
+    git clone https://github.com/NetApp-Automation/na_cloud_volumes_automation.git
+----
+. 导航到所需文件夹
++
+[source, cli]
+----
+    cd na_cloud_volumes_automation/
+----
+. 将 GCP 身份验证密钥 JSON 文件保存在目录中。
+. 更新 `vars/gcp_cvs_volume.tfvars` 中的变量值。
+. 初始化 Terraform 存储库以安装所有前提条件并准备部署。
++
+[source, cli]
+----
+      terraform init
+----
+. 使用 terraform validate 命令验证 terraform 文件。
++
+[source, cli]
+----
+    terraform validate
+----
+. 运行此配置以预览部署所需的所有更改。
++
+[source, cli]
+----
+    terraform plan -target="module.gcp_cvs_volume" -var-file="vars/gcp_cvs_volume.tfvars"
+----
+. 运行部署
++
+[source, cli]
+----
+    terraform apply -target="module.gcp_cvs_volume" -var-file="vars/gcp_cvs_volume.tfvars"
+----
+
+
+删除部署
+
+[source, cli]
+----
+    terraform destroy
+----
+`CVS 卷`
+
+NetApp GCP CVS 卷的 Terraform 变量。
+
+|===
+
+
+| * 名称 * | * 类型 * | * 问题描述 * 
+
+
+| * GCP_CVS_NAME* | string | （必需） NetApp CVS 卷的名称。 
+
+
+| * GCP_CVS_project_id* | string | （必需）要创建 CVS 卷的 GCP project_id 。 
+
+
+| * GCP_CVS_GCP_service_account_path* | string | （必需） service_account JSON 文件的本地路径，用于 GCP 授权。此服务帐户用于在 GCP 中创建 CVS 卷。 
+
+
+| * GCP_CVS_EORG* | string | （必需）要创建 CVS 卷的 GCP 区域。 
+
+
+| * GCP_CVS_NETWORK* | string | （必需）卷的网络 VPC 。 
+
+
+| * GCP_CVS_SIZE * | 整型 | （必需）卷大小介于 1024 到 102400 之间（含 GiB ）。 
+
+
+| * GCP_CVS_volume_path* | string | （可选）卷的卷路径名称。 
+
+
+| * GCP_CVS_protocol_Types* | string | （必需）卷的 protocol_type 。对于 NFS ，请使用 "NFSv3" 或 "NFSv4" ，对于 SMB ，请使用 "CIFS" 或 "MB" 。 
+|===
+--
+====

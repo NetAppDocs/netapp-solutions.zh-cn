@@ -10157,4 +10157,92 @@
   <block id="7bd8d7a58d3957cf7697ceb3467bffae" category="cell">（必需）创建工作环境的位置。</block>
   <block id="a5ab436e757f5af2106d5ed5e5dd9df0" category="cell">（必需） Cloud Volumes ONTAP 系统的子网名称。</block>
   <block id="353190ef77d18ad13aeb6b4f0f3ddd66" category="paragraph">本节包含用于在 Azure 上部署 / 配置 CVO （ Cloud Volumes ONTAP ） HA （高可用性）的各种 Terraform 配置文件。</block>
+  <block id="3adefdd7d79d9a7c848b2dd81fd4feff" category="paragraph">本节包含各种 Terraform 配置文件，用于在 GCP （ Google 云平台）上部署 / 配置单节点 NetApp CVO （ Cloud Volumes ONTAP ）。</block>
+  <block id="b05dddcb6f00ee8dba8395d241b9d24d" category="list-text">将 GCP 身份验证密钥 JSON 文件保存在目录中。</block>
+  <block id="44b4381353a1686f5b81f73f018d336c" category="list-text">更新 `vars/gcp_CVO_single 节点 _deployment.tfvar` 中的变量值</block>
+  <block id="2ac544064187c52d64d3eec81700dd42" category="admonition">您可以通过将变量 "gcp_connector_deploy_bool" 值设置为 true/false 来选择部署连接器。</block>
+  <block id="283162995c6eba560352663fa7cafbb3" category="paragraph">用于 CVO 部署的 NetApp GCP 连接器实例的 Terraform 变量。</block>
+  <block id="c0b4a62bb4903159c66ef5fd828dbb35" category="cell">* gcp_connector_deploy_bool*</block>
+  <block id="3448a02a5105e0eeb2a6243836814f36" category="cell">* GCP_connector_name*</block>
+  <block id="982137a628765a4ede6a620653ab8bf6" category="cell">* GCP_connector_project_id*</block>
+  <block id="816194da363b92545a1114d46c4943f1" category="cell">（必需）要创建连接器的 GCP project_id 。</block>
+  <block id="49a94de7b7e8762f961e471d657496eb" category="cell">* GCP_connector_zone*</block>
+  <block id="ff9633a62f1e60af63fc951afd6966bc" category="cell">（必需）要创建连接器的 GCP 分区。</block>
+  <block id="c667eb31817317b5455e6a8883f4664a" category="cell">* GCP_connector_company_*</block>
+  <block id="9d1203849926481ebb6be1fb1d6ec3de" category="cell">* GCP_connector_service_account_email *</block>
+  <block id="d4a302e18b412231fe06e54e038aed80" category="cell">（必需）连接器实例的 service_account 的电子邮件。此服务帐户用于允许 Connector 创建云卷 ONTAP 。</block>
+  <block id="0e3852268e0e5a3a486b8fcf6e3ae1c1" category="cell">* GCP_connector_service_account_path*</block>
+  <block id="f863e677d176e63d3642e53ae6b336b5" category="cell">（必需） service_account JSON 文件的本地路径，用于 GCP 授权。此服务帐户用于在 GCP 中创建连接器。</block>
+  <block id="cfd7e4961aa34c5626712429d469ed18" category="cell">* gcp_connector_account_id*</block>
+  <block id="231d57c65fc42941f6a520976dc80ec3" category="cell">（可选） Connector 要关联的 NetApp 帐户 ID 。如果未提供， Cloud Manager 将使用第一个帐户。如果不存在任何帐户， Cloud Manager 将创建一个新帐户。您可以在 Cloud Manager 的帐户选项卡中找到帐户 ID ，网址为<block ref="ed21e31bd71ab546f26978ff562b5c5d" category="inline-link-rx"></block>。</block>
+  <block id="9ea10c86ddbbfa93db9af98d0a38e7d7" category="paragraph">GCP 上单个 NetApp CVO 实例的 Terraform 变量。</block>
+  <block id="9d8a021dcdac02b1cffc5ee14bc79241" category="cell">* GCP_CVO_NAME*</block>
+  <block id="bc023aad2be985e1a3252a959cb2c43b" category="cell">* GCP_CVO_project_id*</block>
+  <block id="c7a61709c9cf6aa90f854f8e30110412" category="cell">（必需） GCP 项目的 ID 。</block>
+  <block id="6f74a6834cfd9c72b6694ae9ecb7f332" category="cell">* GCP_CVO_Zone*</block>
+  <block id="dea2d3525e8ec98bbd9a7931a8ed9921" category="cell">（必需）要创建工作环境的区域的区域。</block>
+  <block id="2c09e34e29e9c5f65d5d8ac921fd8105" category="cell">* GCP_CVO_GCP_SERVICE_account*</block>
+  <block id="77853ddcc7178537c8d9c0301b71c991" category="cell">（必需） GCP_SERVICE_account 电子邮件，以便将冷数据分层到 Google Cloud Storage 。</block>
+  <block id="ffb5588c947a413a01016a81af9ddbc7" category="cell">* GCP_CVO_SVM_password*</block>
+  <block id="9507c3b760db1c7e6c8d1674933449e4" category="cell">* GCP_CVO_workspace ID</block>
+  <block id="4efb152d95f2b6b19ca1387a26e8f750" category="cell">（可选）要部署 Cloud Volumes ONTAP 的 Cloud Manager 工作空间的 ID 。如果未提供， Cloud Manager 将使用第一个工作空间。您可以从上的 " 工作空间 " 选项卡中找到此 ID<block ref="ed21e31bd71ab546f26978ff562b5c5d" category="inline-link-rx"></block>。</block>
+  <block id="7cbf1746ddada50a540811a75b633bfa" category="cell">* GCP_CVO_LICENSE_TYPE *</block>
+  <block id="108ccbda23ae580baf5fb86c14613837" category="cell">（可选）要使用的许可证类型。对于单个节点： "capacity-payge" ， "gcp-cot-explore-payge" ， "gcp-cot-standard-payge" ， "gcp-cot-premy-payge" ， "gcp-cot-premy-BYOL" ， 对于 HA ： "ha-capacity-payge" ， "gcp-ha-cot-explore-payge" ， "gcp-ha-cot-standard-payge" ， "gcp-ha-cot-premy-payge" ， "gcp-ha-cot-premy-BYOL" 。对于单个节点，默认值为 "capacity-payGo" ，对于 HA ，默认值为 "ha-capacity-payGo" 。</block>
+  <block id="ec6c16de8b82f3fc6c55f03f1d9a0848" category="cell">* GCP_CVO_capacity_package_name*</block>
+  <block id="564565c1364213fe3ffcef055b61947b" category="cell">（可选）容量包名称： [' 基本 ' ， ' 专业 ' ， 'Freemi'] 。默认值为 " 基本 " 。</block>
+  <block id="ac245610a2b7e434b78946f9ab069afe" category="paragraph">本节包含各种 Terraform 配置文件，用于在 GCP （ Google 云平台）上以高可用性对部署 / 配置 NetApp CVO （ Cloud Volumes ONTAP ）。</block>
+  <block id="00c7a940cc525046dc63cee112a8ef2d" category="list-text">更新 `vars/gcp_CVO_ha_deployment.tfvars` 中的变量值。</block>
+  <block id="657426021b9624d6c24fae901c9998c1" category="paragraph">GCP 上 HA 对中 NetApp CVO 实例的 Terraform 变量。</block>
+  <block id="2a20062f50c253ff821e16ab60e9bd71" category="cell">* GCP_CVO_is_ha*</block>
+  <block id="c7d1d567eb3eec5faac1c3efbf5c63d6" category="cell">* GCP_CVO_Node1_Zone*</block>
+  <block id="2cb70db8c1982b17ac705ceace5b64ae" category="cell">（可选）节点 1 的分区。</block>
+  <block id="b231cdca0a533a8afcbf95810dcdd937" category="cell">* GCP_CVO_Node2_Zone*</block>
+  <block id="2aad8f424dde09a3fb42570367a156de" category="cell">（可选）节点 2 的分区。</block>
+  <block id="7dd3bb55d8d71efcb06fc86bbb29993a" category="cell">* GCP_CVO_mediate_zone*</block>
+  <block id="767c5594dfa391fbb74bd9360557a0a8" category="cell">（可选）用于调解器的分区。</block>
+  <block id="4ecd0da4e352bb336bd4c5925e627fbb" category="cell">* GCP_CVO_VPC_ID*</block>
+  <block id="0a49d29112682612dc74e881a68deed0" category="cell">（可选） VPC 的名称。</block>
+  <block id="eedae790807f6f5998c1d5b2eccfcf91" category="cell">* GCP_CVO_subnet_id*</block>
+  <block id="dbb13624053bb884443eb3a8a891a35e" category="cell">（可选） Cloud Volumes ONTAP 的子网名称。默认值为： "default" 。</block>
+  <block id="5fbbd2383d042b5ab01878b936e467ff" category="cell">* GCP_CVO_vpc0_node_and_data_connection*</block>
+  <block id="24239aec58a00d53d32147d2e71cca4d" category="cell">（可选） NIC1 的 VPC 路径，节点和数据连接所需。如果使用共享 VPC ，则必须提供 netwrok_project_id 。</block>
+  <block id="b1dd5e2b134fc3db50406e05c7ae6c38" category="cell">* GCP_CVO_vpc1_cluster_connectivity*</block>
+  <block id="714e5d0cdfde4cbf4df83df266c672e7" category="cell">（可选） NIC2 的 VPC 路径，集群连接所需。</block>
+  <block id="f8d315b03e4b926495b923dfe4b49b23" category="cell">* GCP_CVO_vpc2_ha_connectivity*</block>
+  <block id="5c144c2c76f5d988024f4d7398060d71" category="cell">（可选） NIC3 的 VPC 路径， HA 连接所需。</block>
+  <block id="1366961106ddc181e83c467cf5559a14" category="cell">* GCP_CVO_vpc3_data_replication *</block>
+  <block id="b4be5ce15bf4e51acd3167c47e79955f" category="cell">（可选） NIC4 的 VPC 路径，数据复制所需。</block>
+  <block id="065308400ba1fac48f2ca62781d79dff" category="cell">* GCP_CVO_subnet0_node_and_data_connection*</block>
+  <block id="2a33bb449fd47fa1f379b60f3e1473ca" category="cell">（可选） NIC 1 的子网路径，节点和数据连接需要此路径。如果使用共享 VPC ，则必须提供 netwrok_project_id 。</block>
+  <block id="da8a35439720c0bc705f001b954bd61e" category="cell">* GCP_CVO_subnet1_cluster_connectivity*</block>
+  <block id="01b515c3b8d74ae94df6572b47a3f06d" category="cell">（可选） NIC 2 的子网路径，集群连接所需。</block>
+  <block id="7ea43f4ca8d2a868f20df11b9e0b39b2" category="cell">* GCP_CVO_subnet2_ha_connectivity*</block>
+  <block id="a35bd275122015b3834d13c0dc72b87f" category="cell">（可选） NIC3 的子网路径， HA 连接所需。</block>
+  <block id="16c5273854a933d221200af8f06d106a" category="cell">* GCP_CVO_subnet3_data_replication *</block>
+  <block id="b36fab455a4e11803791a090935906af" category="cell">（可选） NIC4 的子网路径，数据复制所需。</block>
+  <block id="e69179170f564daf56d8694c1c5d35fe" category="cell">* GCP_CVO_GCP_volume_size*</block>
+  <block id="eb01714b284e762b9c44adfa5575690c" category="cell">（可选）第一个数据聚合的 GCP 卷大小。对于 GB ，单位可以是： 100 或 500] 。对于 TB ，此单位可以是： 1 ， 2 ， 4 ， 8 。默认值为 "1" 。</block>
+  <block id="4c767d9b6ddddf4abeaece5590c0b101" category="cell">* GCP_CVO_GCP_volume_size_unit*</block>
+  <block id="944ce323a5a1ffb09543fd409911cc88" category="open-title">CVS 卷</block>
+  <block id="ffcc65b297748299934a184d39035ae4" category="paragraph">本节包含用于在 GCP （ Google Cloud Platform ）上部署 / 配置 NetApp CVS （ Cloud Volumes Services ）卷的各种 Terraform 配置文件。</block>
+  <block id="732c3eabba1449281a4fddb59dbddcac" category="paragraph">Terraform 文档：<block ref="35b7d5c9a11899e5d5e07079551e8cef" category="inline-link-rx"></block></block>
+  <block id="d203294ba4c28418657d90a7f8a7510d" category="list-text">更新 `vars/gcp_cvs_volume.tfvars` 中的变量值。</block>
+  <block id="40686c9084c59387baf48000dd09e6ab" category="paragraph">`CVS 卷`</block>
+  <block id="3efdf9b0e7f4af483444f271367d6361" category="paragraph">NetApp GCP CVS 卷的 Terraform 变量。</block>
+  <block id="0ffdc0b2b4889601b216ab5087650d46" category="cell">* GCP_CVS_NAME*</block>
+  <block id="8ff48dd93ed73eb9adc26090e58ed80b" category="cell">（必需） NetApp CVS 卷的名称。</block>
+  <block id="b6759cef3cfc5890deb6a790f73c8b79" category="cell">* GCP_CVS_project_id*</block>
+  <block id="b0257576709acc899b5376a171c3cd98" category="cell">（必需）要创建 CVS 卷的 GCP project_id 。</block>
+  <block id="447b0e81ae249b907128b7ea83e045c5" category="cell">* GCP_CVS_GCP_service_account_path*</block>
+  <block id="820ecb1b7a653c1e2dece0176d15eaed" category="cell">（必需） service_account JSON 文件的本地路径，用于 GCP 授权。此服务帐户用于在 GCP 中创建 CVS 卷。</block>
+  <block id="6cb8bdefdf91cd2d80f6d9849de25fb8" category="cell">* GCP_CVS_EORG*</block>
+  <block id="ec9461de174e3ad866c58b577c94034b" category="cell">（必需）要创建 CVS 卷的 GCP 区域。</block>
+  <block id="fc944aa114b94de895d84f5375000c0b" category="cell">* GCP_CVS_NETWORK*</block>
+  <block id="23a1cb77eeeabfd36bbab18e5de9f0dc" category="cell">（必需）卷的网络 VPC 。</block>
+  <block id="31681a1878caf611cea11e159a4fc1aa" category="cell">* GCP_CVS_SIZE *</block>
+  <block id="6f84d4d0c83121512056657a2dc0e808" category="cell">（必需）卷大小介于 1024 到 102400 之间（含 GiB ）。</block>
+  <block id="5c1eb3efe4738cb21efadc992aeeef81" category="cell">* GCP_CVS_volume_path*</block>
+  <block id="bacdc6093d23e2f886b0cb0609418030" category="cell">（可选）卷的卷路径名称。</block>
+  <block id="0467ee670bdb8fff57da77368d6d5385" category="cell">* GCP_CVS_protocol_Types*</block>
+  <block id="b91db1bd1a57ea4c9953036d82a63e95" category="cell">（必需）卷的 protocol_type 。对于 NFS ，请使用 "NFSv3" 或 "NFSv4" ，对于 SMB ，请使用 "CIFS" 或 "MB" 。</block>
 </blocks>
