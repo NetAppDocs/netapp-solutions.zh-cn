@@ -3492,7 +3492,6 @@
   <block id="265e673c00294cf97a90c3b0d4fcb076" category="list-text">为 ONTAP 集群中每个节点上的每个 SVM 使用一个逻辑接口（ LIF ）。不再需要以往为每个数据存储库建议的 LIF 。虽然直接访问（ LIF 和同一节点上的数据存储库）是最佳选择，但不要担心间接访问，因为通常对性能的影响极小（微秒）。</block>
   <block id="83deede0d0158f0f2469080b6208e88a" category="list-text">自 VMware Infrastructure 3 以来， VMware 一直支持 NFSv3 。vSphere 6.0 增加了对 NFSv4.1 的支持，该支持可实现 Kerberos 安全性等一些高级功能。如果 NFSv3 使用客户端锁定，则 NFSv4.1 使用服务器端锁定。虽然 ONTAP 卷可以通过这两种协议导出，但 ESXi 只能通过一种协议挂载。此单协议挂载并不会阻止其他 ESXi 主机通过不同版本挂载同一数据存储库。请务必指定挂载时要使用的协议版本，以便所有主机都使用相同的版本，从而使用相同的锁定模式。请勿在主机之间混用 NFS 版本。如果可能，请使用主机配置文件检查合规性。</block>
   <block id="ae4c5baa79e370d8f601cc7082f8123e" category="list-text">由于 NFSv3 和 NFSv4.1 之间不会自动转换数据存储库，因此请创建一个新的 NFSv4.1 数据存储库，并使用 Storage vMotion 将 VM 迁移到新数据存储库。</block>
-  <block id="a9577e779ab70bdd45392b1e0125cc77" category="list-text">在编写本报告时， NetApp 将继续与 VMware 合作，以解决 NFSv4.1 数据存储库和存储故障转移的问题。我们预计很快会解决这些问题。</block>
   <block id="04826f858f8ad9c66b9d805ca9ff88a3" category="list-text">NFS 导出策略用于控制 vSphere 主机的访问。您可以对多个卷（数据存储库）使用一个策略。对于 NFSv3 ， ESXi 使用 sys （ UNIX ）安全模式，并需要根挂载选项来执行 VM 。在 ONTAP 中，此选项称为超级用户，使用超级用户选项时，无需指定匿名用户 ID 。请注意，对于 ` -anon` 和 ` -allow-suid` ，具有不同值的导出策略规则可能会导致 ONTAP SVM 在使用发生原因工具时出现问题。下面是一个策略示例：</block>
   <block id="822366735aef72f1a9429ac86dda7338" category="list-text">访问协议： nfs3.</block>
   <block id="69abbd5c7cd9c1b3828b9aa5a894ff47" category="list-text">客户端匹配规范： 192.168.42.21</block>
@@ -10245,4 +10244,6 @@
   <block id="bacdc6093d23e2f886b0cb0609418030" category="cell">（可选）卷的卷路径名称。</block>
   <block id="0467ee670bdb8fff57da77368d6d5385" category="cell">* GCP_CVS_protocol_Types*</block>
   <block id="b91db1bd1a57ea4c9953036d82a63e95" category="cell">（必需）卷的 protocol_type 。对于 NFS ，请使用 "NFSv3" 或 "NFSv4" ，对于 SMB ，请使用 "CIFS" 或 "MB" 。</block>
+  <block id="8065bff4940ae8d7161f926b0df47ac4" category="inline-link">NetApp 互操作性表工具</block>
+  <block id="1479ddf58c038ab7d220ff734c74deaf" category="list-text">请参见中的 NFS v4.1 互操作性表注释<block ref="8813559f5b95abb5411182be29200aff" category="inline-link-rx"></block> 支持所需的特定 ESXi 修补程序级别。</block>
 </blocks>

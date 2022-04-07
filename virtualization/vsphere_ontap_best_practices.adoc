@@ -286,7 +286,7 @@ image:vsphere_ontap_image2.png["错误：缺少图形映像"]
 * 自 VMware Infrastructure 3 以来， VMware 一直支持 NFSv3 。vSphere 6.0 增加了对 NFSv4.1 的支持，该支持可实现 Kerberos 安全性等一些高级功能。如果 NFSv3 使用客户端锁定，则 NFSv4.1 使用服务器端锁定。虽然 ONTAP 卷可以通过这两种协议导出，但 ESXi 只能通过一种协议挂载。此单协议挂载并不会阻止其他 ESXi 主机通过不同版本挂载同一数据存储库。请务必指定挂载时要使用的协议版本，以便所有主机都使用相同的版本，从而使用相同的锁定模式。请勿在主机之间混用 NFS 版本。如果可能，请使用主机配置文件检查合规性。
 +
 ** 由于 NFSv3 和 NFSv4.1 之间不会自动转换数据存储库，因此请创建一个新的 NFSv4.1 数据存储库，并使用 Storage vMotion 将 VM 迁移到新数据存储库。
-** 在编写本报告时， NetApp 将继续与 VMware 合作，以解决 NFSv4.1 数据存储库和存储故障转移的问题。我们预计很快会解决这些问题。
+** 请参见中的 NFS v4.1 互操作性表注释 https://mysupport.netapp.com/matrix/["NetApp 互操作性表工具"^] 支持所需的特定 ESXi 修补程序级别。
 
 
 * NFS 导出策略用于控制 vSphere 主机的访问。您可以对多个卷（数据存储库）使用一个策略。对于 NFSv3 ， ESXi 使用 sys （ UNIX ）安全模式，并需要根挂载选项来执行 VM 。在 ONTAP 中，此选项称为超级用户，使用超级用户选项时，无需指定匿名用户 ID 。请注意，对于 ` -anon` 和 ` -allow-suid` ，具有不同值的导出策略规则可能会导致 ONTAP SVM 在使用发生原因工具时出现问题。下面是一个策略示例：
