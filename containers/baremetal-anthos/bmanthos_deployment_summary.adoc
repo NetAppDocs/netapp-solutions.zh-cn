@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar 
-permalink: containers/bmanthos_deployment_summary.html 
+permalink: containers/baremetal-anthos/bmanthos_deployment_summary.html 
 keywords: Summary, World Wide Technology, ATC, WWT, Advanced Technology Center, bmctl tool, Cisco UCS B200M3, Cisco Nexus 5548, Red Hat Enterprise Linux 8.2, CentOS 8.2, Ubuntu 20.04 LTS, or Ubuntu 18.04 LTS 
 summary: 在对此解决方案进行初始验证时， NetApp 与全球技术（ World Wide Technology ， WWT ）合作，在 WWT 的高级技术中心（ Advanced Technology Center ， ATT ）建立了一个环境。Anthos 使用 Google Cloud 提供的 bmctl 工具部署在裸机基础架构上。下一节详细介绍了用于验证的部署。 
 ---
@@ -10,7 +10,7 @@ summary: 在对此解决方案进行初始验证时， NetApp 与全球技术（
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./../media/
+:imagesdir: ./../../media/
 
 
 在对此解决方案进行初始验证时， NetApp 与全球技术（ World Wide Technology ， WWT ）合作，在 WWT 的高级技术中心（ Advanced Technology Center ， ATT ）建立了一个环境。Anthos 使用 Google Cloud 提供的 bmctl 工具部署在裸机基础架构上。下一节详细介绍了用于验证的部署。
@@ -21,7 +21,7 @@ summary: 在对此解决方案进行初始验证时， NetApp 与全球技术（
 
 工作节点为 HP ProLiant DL360 节点，每个节点均运行一个支持的 Linux 分发版，用于裸机上的 Anthos ： Red Hat Enterprise Linux 8.2 ， CentOS 8.2 ， Ubuntu 20.04 LTS 或 Ubuntu 18.04 LTS 。Red Hat Enterprise Linux 8 和 CentOS 8 节点配置了在 LACP 模式下运行的 NIC 组，并通过缆线连接到两个 Nexus 9k C93180YC-FX 交换机以实现容错。Ubuntu 服务器已配置为在 LACP 模式下进行网络绑定，并已连接到同一对 Nexus 9k 交换机以实现容错。
 
-运行 ONTAP 9.7 软件的 NetApp AFF A300 存储系统已安装并以物理方式连接到与 Anthos 工作节点相同的一对 Nexus 9k 交换机。这些网络上行链路聚合到一个接口组（ a0a ）中，并标记了相应的数据网络 VLAN ，以使工作节点能够与存储系统进行交互。创建了一个 Storage Virtual Machine （ SVM ），其中包含支持 NFS 协议并专用于 Trident 存储操作的数据 LIF ，以便为裸机集群上的 Anthos 中部署的容器提供永久性存储。这些永久性卷由 NetApp Trident 20.10 提供，该软件是完全受支持的适用于 Kubernetes 的 NetApp 开源存储编排程序的最新版本。
+运行 ONTAP 9.7 软件的 NetApp AFF A300 存储系统已安装并以物理方式连接到与 Anthos 工作节点相同的一对 Nexus 9k 交换机。这些网络上行链路聚合到一个接口组（ a0a ）中，并标记了相应的数据网络 VLAN ，以使工作节点能够与存储系统进行交互。创建了一个 Storage Virtual Machine （ SVM ），其中包含支持 NFS 协议并专用于 Trident 存储操作的数据 LIF ，以便为裸机集群上的 Anthos 中部署的容器提供永久性存储。这些永久性卷由NetApp Astra Trident 20.10提供、该软件是完全受支持的适用于Kubernetes的NetApp开源存储编排程序的最新版本。
 
 下图展示了解决方案到机架数据中心交换机顶部的物理布线图。
 

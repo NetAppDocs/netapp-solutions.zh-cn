@@ -1,0 +1,96 @@
+= 
+:allow-uri-read: 
+
+
+. 要使用Ansible攻略手册部署Astra控制中心、您必须安装装有Ansible的Ubuntu或RHEL计算机。按照所述按照操作步骤 进行操作 https://docs.netapp.com/us-en/netapp-solutions/automation/automation_ubuntu_debian_setup.html["此处"] 适用于Ubuntu和 https://docs.netapp.com/us-en/netapp-solutions/automation/automation_rhel_centos_setup.html["此处"] 对于 RHEL 。
+. 克隆托管 Ansible 内容的 GitHub 存储库。
++
+[source, cli]
+----
+git clone https://github.com/NetApp-Automation/na_astra_control_suite.git
+----
+. 登录到 NetApp 支持站点并下载最新版本的 NetApp Astra 控制中心。为此，您需要在 NetApp 帐户中附加许可证。下载完 tarball 后，将其传输到工作站。
++
+
+NOTE: 要开始获取 Astra Control 的试用许可证，请访问 https://cloud.netapp.com/astra-register["Astra 注册站点"^]。
+
+. 创建或获取对要安装 Astra 控制中心的 OpenShift 集群具有管理员访问权限的 kubeconfig 文件。
+. 将目录更改为`na_astera_control_suite`。
++
+[source, cli]
+----
+cd na_astra_control_suite
+----
+. 编辑 vars/vars.yml 文件并使用所需信息填充变量。
++
+[source, cli]
+----
+#Define whether or not to push the Astra Control Center images to your private registry [Allowed values: yes, no]
+push_images: yes
+
+#The directory hosting the Astra Control Center installer
+installer_directory: /home/admin/
+
+#Name of the Astra Control Center installer (Do not include the extension, just the name)
+astra_tar_ball_name: astra-control-center-21.12.60
+
+#The complete path to the kubeconfig file of the kubernetes/openshift cluster Astra Control Center needs to be installed to.
+hosting_ocp_kubeconfig_path: /home/admin/ocp-kubeconfig
+
+#Namespace in which Astra Control Center is to be installed
+astra_namespace: netapp-astra-cc
+
+#Astra Control Center Resources Scaler. Leave it blank if you want to accept the Default setting.
+astra_resources_scaler: Default
+
+#Storageclass to be used for Astra Control Center PVCs, it must be created before running the playbook [Leave it blank if you want the PVCs to use default storageclass]
+astra_trident_storageclass: basic
+
+#Reclaim Policy for Astra Control Center Persistent Volumes [Allowed values: Retain, Delete]
+storageclass_reclaim_policy: Retain
+
+#Private Registry Details
+astra_registry_name: "docker.io"
+
+#Whether the private registry requires credentials [Allowed values: yes, no]
+require_reg_creds: yes
+
+#If require_reg_creds is yes, then define the container image registry credentials
+#Usually, the registry namespace and usernames are same for individual users
+astra_registry_namespace: "registry-user"
+astra_registry_username: "registry-user"
+astra_registry_password: "password"
+
+#Kuberenets/OpenShift secret name for Astra Control Center
+#This name will be assigned to the K8s secret created by the playbook
+astra_registry_secret_name: "astra-registry-credentials"
+
+#Astra Control Center FQDN
+acc_fqdn_address: astra-control-center-ui.cie.netapp.com
+
+#Name of the Astra Control Center instance
+acc_account_name: ACC Account Name
+
+#Administrator details for Astra Control Center
+admin_email_address: admin@example.com
+admin_first_name: Admin
+admin_last_name: Admin
+----
+. 运行攻略手册以部署 Astra 控制中心。对于某些配置、此攻略手册需要root特权。
++
+如果运行该攻略手册的用户为root或配置了无密码sudo、请运行以下命令运行该攻略手册。
+
++
+[source, cli]
+----
+ansible-playbook playbook.yml
+----
++
+如果用户配置了基于密码的sudo访问权限、请运行以下命令以运行攻略手册、然后输入sudo密码。
+
++
+[source, cli]
+----
+ansible-playbook playbook.yml -K
+----
+

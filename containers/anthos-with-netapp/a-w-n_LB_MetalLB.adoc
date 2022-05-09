@@ -1,0 +1,115 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_LB_MetalLB.html 
+summary: 此页面详细介绍了 MetalLB 负载平衡器的安装和配置说明。 
+keywords: Red Hat OpenShift, Kubernetes, MetalLB, LoadBalancer, Astra, Astra Control Center 
+---
+= 安装 MetalLB 负载平衡器： Red Hat OpenShift 与 NetApp
+:allow-uri-read: 
+
+
+此页面列出了 MetalLB 负载平衡器的安装和配置说明。
+
+MetalLB 是一种安装在 OpenShift 集群上的自托管网络负载平衡器，可用于在未在云提供程序上运行的集群中创建类型为负载平衡器的 OpenShift 服务。MetalLB 可协同工作以支持负载平衡器服务的两个主要功能是地址分配和外部公告。
+
+
+
+== MetalLB 配置选项
+
+根据 MetalLB 如何公布分配给 OpenShift 集群以外的负载平衡器服务的 IP 地址，它可在两种模式下运行：
+
+* * 第 2 层模式。 * 在此模式下， OpenShift 集群中的一个节点将接管此服务的所有权，并对该 IP 的 ARP 请求做出响应，使其可在 OpenShift 集群之外访问。由于只有节点才公布 IP ，因此存在带宽瓶颈和较慢的故障转移限制。有关详细信息，请参见文档 link:https://metallb.universe.tf/concepts/layer2/["此处"]。
+* * BGP 模式。 * 在此模式下， OpenShift 集群中的所有节点都与路由器建立 BGP 对等会话，并公布路由以将流量转发到服务 IP 。前提条件是将 MetalLB 与该网络中的路由器集成在一起。由于 BGP 中采用哈希机制，因此在服务的 IP 到节点映射发生更改时，它具有一定的限制。有关详细信息，请参见文档 link:https://metallb.universe.tf/concepts/bgp/["此处"]。
+
+
+
+NOTE: 在本文档中，我们将在第 2 层模式下配置 MetalLB 。
+
+
+
+== 安装 MetalLB 负载平衡器
+
+. 下载 MetalLB 资源。
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ wget https://raw.githubusercontent.com/metallb/metallb/v0.10.2/manifests/namespace.yaml
+[netapp-user@rhel7 ~]$ wget https://raw.githubusercontent.com/metallb/metallb/v0.10.2/manifests/metallb.yaml
+----
+. 编辑文件 `metallb.yaml` 并从控制器部署和主讲人 DemonSet 中删除 `spec.template.spec.securityContext` 。
++
+* 要删除的行： *
+
++
+[listing]
+----
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 65534
+----
+. 创建 `metallb-system` 命名空间。
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ oc create -f namespace.yaml
+namespace/metallb-system created
+----
+. 创建 MetalLB CR 。
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ oc create -f metallb.yaml
+podsecuritypolicy.policy/controller created
+podsecuritypolicy.policy/speaker created
+serviceaccount/controller created
+serviceaccount/speaker created
+clusterrole.rbac.authorization.k8s.io/metallb-system:controller created
+clusterrole.rbac.authorization.k8s.io/metallb-system:speaker created
+role.rbac.authorization.k8s.io/config-watcher created
+role.rbac.authorization.k8s.io/pod-lister created
+role.rbac.authorization.k8s.io/controller created
+clusterrolebinding.rbac.authorization.k8s.io/metallb-system:controller created
+clusterrolebinding.rbac.authorization.k8s.io/metallb-system:speaker created
+rolebinding.rbac.authorization.k8s.io/config-watcher created
+rolebinding.rbac.authorization.k8s.io/pod-lister created
+rolebinding.rbac.authorization.k8s.io/controller created
+daemonset.apps/speaker created
+deployment.apps/controller created
+----
+. 在配置 MetalLB 扬声器之前，请授予扬声器 DemonSet 提升权限，使其能够执行使负载平衡器正常工作所需的网络配置。
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ oc adm policy add-scc-to-user privileged -n metallb-system -z speaker
+clusterrole.rbac.authorization.k8s.io/system:openshift:scc:privileged added: "speaker"
+----
+. 通过在 `metallb-system` 命名空间中创建 `ConfigMap` 来配置 MetalLB 。
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ vim metallb-config.yaml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: metallb-system
+  name: config
+data:
+  config: |
+    address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      - 10.63.17.10-10.63.17.200
+
+[netapp-user@rhel7 ~]$ oc create -f metallb-config.yaml
+configmap/config created
+----
+. 现在，在创建负载平衡器服务时， MetalLB 会为这些服务分配一个外部 IP ，并通过响应 ARP 请求来公布 IP 地址。
++
+
+NOTE: 如果要在 BGP 模式下配置 MetalLB ，请跳过上述步骤 6 并按照 MetalLB 文档中的操作步骤进行操作 link:https://metallb.universe.tf/concepts/bgp/["此处"]。
+
+
+
+link:rh-os-n_use_cases.html["接下来：解决方案验证 / 使用情形：采用 NetApp 的 Red Hat OpenShift 。"]

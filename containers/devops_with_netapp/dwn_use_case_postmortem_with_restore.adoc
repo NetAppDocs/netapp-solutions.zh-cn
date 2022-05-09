@@ -1,0 +1,93 @@
+---
+sidebar: sidebar 
+permalink: containers/devops_with_netapp/dwn_use_case_postmortem_with_restore.html 
+keywords: NetApp Astra Control, Astra Control Center, Application, Trident, Astra Trident, Helm, Operator, ONTAP, OpenShift, Kubernetes, Red Hat OpenShift, DevOps, Data Protection, CI/CD, Clone, App Restore, Post-mortem Analysis 
+summary: NetApp Astra 控制中心为有状态 Kubernetes 工作负载提供了一组丰富的存储和应用程序感知型数据管理服务，这些服务部署在内部环境中，并采用 NetApp 值得信赖的数据保护技术。 
+---
+= 使用Astra Control便于进行数据剖析和恢复应用程序
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+
+
+== 概述
+
+在中 link:dwn_use_case_integrated_data_protection.html["首次使用案例"]、我们演示了如何使用NetApp Astra控制中心来保护Kubernetes中的应用程序。本节介绍如何使用NetApp Astra工具包中的Python SDK通过Astra Control将应用程序备份直接集成到您的开发工作流中。这种方法可以在持续集成和持续部署(CI/CD)过程中自动执行按需备份、从而保护开发和生产环境。在CI/CD管道和生产应用程序中增加了这一额外的应用程序一致的数据保护层、因此、如果开发过程中出现问题、开发流程就会很安全、从而促进良好的业务连续性实践。
+
+在传统工作流中、在将应用程序升级到新版本时遇到故障后、开发团队会尝试根据客户提供的错误报告实时对问题描述 进行故障排除。或者、在出现第一次故障时、团队可以尝试将应用程序重新部署到并行调试环境、以使该过程脱机。他们可以将旧代码库从先前版本重新部署到生产环境中、从而将应用程序恢复到正常运行状态。
+
+image::dwn_image9.jpg[传统工作流]
+
+尽管此方法有效、但团队必须确保已损坏的生产应用程序的状态与出现问题时在生产中看到的版本的状态一致。他们还必须花时间从存储库中提取代码并重新部署计算机映像、以便将应用程序还原到正常运行状态、从而将已知良好的构建提升到生产环境。此外、在这种情况下、我们不考虑生产数据库本身是否因错误代码而损坏。理想情况下、数据库数据有单独的备份过程、但我们是否必须假定这些备份过程与应用程序发布时的状态一致？在这种情况下、使用Astra Control进行有状态和应用程序一致的备份、还原和克隆的优势真正体现了它们的价值。
+
+首先、我们可以使用Astra Control对应用程序的状态进行事后分析。为此、我们会以应用程序一致的方式将Buggy生产版本克隆到并行测试环境中。将此环境置于错误状态、可以帮助我们实时解决问题。
+
+此外、Astra Control还支持原位还原功能、使我们可以将生产应用程序还原到最后可接受的备份(在受影响的代码版本之前)。还原的版本采用应用程序一致且有状态的方式、包括先前分配的传入IP、并采用先前的错误生产应用程序的位置。因此、访问前端的客户可能不会意识到向备份版本的过渡。
+
+image::dwn_image10.jpg[事后工作流]
+
+
+
+== 使用情形验证前提条件
+
+部署和配置了以下工具或平台作为前提条件：
+
+* Red Hat OpenShift容器平台。
+* NetApp Astra Trident安装在OpenShift上、后端配置为NetApp ONTAP 系统。
+* 已配置一个指向NetApp ONTAP 后端的默认存储器。
+* NetApp Astra Control Center安装在OpenShift集群上。
+* OpenShift集群作为受管集群添加到Astra控制中心。
+* Jenkins安装在OpenShift集群上。
+* 在生产环境中安装了Magento应用程序。此用例中的生产环境是Red Hat OpenShift集群中名为"mageno-prod"的命名空间。
+* 由Astra控制中心管理的生产应用程序。
+* 使用Astra Control捕获的生产应用程序的已知良好备份。
+
+
+
+
+== 克隆和还原管道
+
+考虑到该应用程序已升级到新版本、生产环境(`mageno-prod`)中的应用程序在升级后无法按预期运行。假设前端查询返回的数据与请求不匹配、或者数据库实际上已损坏。要克隆和还原管道、请完成以下步骤：
+
+image::dwn_image12.jpg[应用程序失败]
+
+. 登录到Jenkins并通过依次单击"新项目"和"管道"创建管道。
+. 从Jenkinsfile复制管道 https://github.com/NetApp/netapp-astra-toolkits/blob/main/ci_cd_examples/jenkins_pipelines/clone_for_postmortem_and_restore/Jenkinsfile["此处"^]。
+. 将管道粘贴到Jenkins管道部分、然后单击保存。
+. 使用相应的详细信息填充Jenkins管道的参数、例如生产环境中的当前Magento应用程序版本、Astra控制中心FQDN、API令牌、生产和调试环境的实例ID和应用程序名称或命名空间以及源和目标集群名称。在本用例中、生产环境是一个名为"mageno-prod"的命名空间、而调试环境是一个名为"mageno-debug"的命名空间、该命名空间是在Red Hat OpenShift集群上配置的。
++
+[listing]
+----
+MAGENTO_VERSION = '2.4.1-debian-10-r14'
+ASTRA_TOOLKIT_VERSION = '2.0.2'
+ASTRA_API_TOKEN = 'xxxxx'
+ASTRA_INSTANCE_ID = 'xxx-xxx-xxx-xxx-xxx'
+ASTRA_FQDN = 'netapp-astra-control-center.org.example.com'
+PROD_APP_NAME = 'magento-prod'
+DEBUG_APP_NAME = 'magento-debug'
+DEBUG_NAMESPACE = 'magento-debug'
+PROD_KUBERNETES_CLUSTER = 'ocp-vmw'
+DEBUG_KUBERNETES_CLUSTER = 'ocp-vmw'
+----
+. 单击Build now。管道将开始执行并逐步完成各个步骤。应用程序将首先在当前状态克隆到调试环境、然后还原到已知正常运行的备份。
++
+image::dwn_image15.jpg[生前管道]
+
+. 验证克隆的应用程序是否为包含错误的版本。
++
+image::dwn_image13.jpg[克隆的应用程序失败]
+
+. 验证生产环境是否已还原到工作备份、生产环境中的应用程序是否按预期工作。
++
+image::dwn_image14.jpg[已还原的生产应用程序]
+
+
+
+这两项操作结合在一起、可以加快恢复正常业务运营的速度。要查看此用例的实际操作、请观看视频 link:dwn_videos_clone_for_postmortem_and_restore.html["此处"^]。
+
+link:dwn_videos_and_demos.html["接下来：视频和演示—NetApp Astra的DevOps。"]

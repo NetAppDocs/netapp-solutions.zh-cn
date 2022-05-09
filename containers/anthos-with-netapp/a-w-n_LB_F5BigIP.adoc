@@ -1,0 +1,192 @@
+---
+sidebar: sidebar 
+permalink: containers/anthos-with-netapp/a-w-n_LB_F5BigIP.html 
+summary:  
+keywords: Anthos, GKE, Kubernetes, F5, BigIP, LoadBalancer 
+---
+= 安装F5 BIG-IP负载平衡器：采用NetApp的Anthos
+:allow-uri-read: 
+
+
+F5 BIG-IP是一款应用程序交付控制器(Application Delivery Controller、AD)、可提供一系列高级的生产级流量管理和安全服务、例如L4-L7负载平衡、SSL/TLS卸载、DNS、防火墙等。这些服务可显著提高应用程序的可用性、安全性和性能。
+
+F5 BIG-IP可以通过多种方式进行部署和使用、包括在专用硬件上、在云中或作为内部虚拟设备。请参见此处的文档，了解如何根据需要部署 F5 BIG-IP 。
+
+F5 BIG-IP是第一款随Anthos On-Prem提供的捆绑式负载平衡器解决方案、并在许多采用NetApp解决方案 的Anthos Ready合作伙伴早期验证中使用。
+
+
+NOTE: F5 BIG-IP 可以在独立模式或集群模式下部署。出于此验证的目的， F5 BIG-IP 部署在独立模式下，但出于生产目的，最好使用由大型 IP 组成的集群来避免单点故障。
+
+
+NOTE: F5 BIG-IP 系统可以部署在专用硬件上，云中或内部部署的虚拟设备中，其版本高于 12.x ，以便与 F5 CIS 集成。在本文档中，我们已将 F5 BIG-IP 系统验证为虚拟设备，例如使用 BIG-IP VE 版本。
+
+
+
+== 经过验证的版本
+
+此解决方案 可利用VMware vSphere中部署的虚拟设备。F5 BIG-IP 虚拟设备的网络连接可以根据您的网络环境配置为双武装或三武装配置。本文档中的部署基于双武装配置。有关配置用于Anthos的虚拟设备的更多详细信息、请参见 https://cloud.google.com/solutions/partners/installing-f5-big-ip-adc-for-gke-on-prem["此处"]。
+
+NetApp的解决方案工程团队已在我们的实验室中验证下表中的版本、以使用Anthos on-Prem的部署：
+
+|===
+
+
+| 创建 | Type | version 
+
+
+| F5 | BIG-IP VE | 15.0.1-0.0.11 
+
+
+| F5 | BIG-IP VE | 16.1.0-0.0.19 
+|===
+
+
+== 安装
+
+要安装F5 BIG-IP、请完成以下步骤：
+
+. 从 F5 下载虚拟应用程序 Open Virtual Appliance （ OVA ）文件 https://downloads.f5.com/esd/serveDownload.jsp?path=/big-ip/big-ip_v15.x/15.0.1/english/virtual-edition/&sw=BIG-IP&pro=big-ip_v15.x&ver=15.0.1&container=Virtual-Edition&file=BIGIP-15.0.1-0.0.11.ALL-vmware.ova["此处"]。
++
+
+NOTE: 要下载此设备，用户必须向 F5 注册。他们为 Big IP Virtual Edition 负载平衡器提供 30 天的演示许可证。NetApp 建议为设备的生产部署提供永久 10 Gbps 许可证。
+
+. 右键单击基础架构资源池、然后选择Deploy OVF Template。此时将启动一个向导，用于选择您刚刚在步骤 1 中下载的 OVA 文件。单击下一步。
++
+image::deploy-big_ip_1.PNG[部署大 IP 设备]
+
+. 单击下一步继续执行每个步骤，并接受显示的每个屏幕的默认值，直到显示存储选择屏幕为止。选择先前创建的 VM_Datastore ，然后单击下一步。
+. 通过向导显示的下一个屏幕，您可以自定义要在环境中使用的虚拟网络。选择 VM_Network 作为外部字段，然后选择 Management_Network 作为管理字段。内部和 HA 用于 F5 BIG-IP 设备的高级配置，但未进行配置。这些参数可以单独使用，也可以配置为连接到非基础架构的分布式端口组。单击下一步。
++
+image::deploy-big_ip_2.PNG[部署Big IP设备]
+
+. 查看设备的摘要屏幕，如果所有信息都正确，请单击完成开始部署。
+. 部署虚拟设备后，右键单击该设备并将其启动。它应在管理网络上收到 DHCP 地址。此设备基于Linux、并且已部署VMware Tools、因此您可以在vSphere客户端中查看它接收的DHCP地址。
++
+image::deploy-big_ip_3.PNG[部署大 IP 设备]
+
+. 打开 Web 浏览器，然后使用上一步中的 IP 地址连接到设备。默认登录名称为 admin/admin ，首次登录后，设备会立即提示您更改管理员密码。然后，它将返回一个屏幕，您必须使用新凭据登录到该屏幕。
++
+image::big-IP_config_1.PNG[Big-IP 配置]
+
+. 第一个屏幕将提示用户完成设置实用程序。单击下一步启动实用程序。
++
+image::big-IP_config_2.PNG[Big-IP 配置]
+
+. 下一屏幕将提示您激活设备的许可证。单击激活开始。在下一页出现提示时，粘贴注册下载时收到的 30 天评估许可证密钥或购买设备时获得的永久许可证。单击下一步。
++
+image::big-IP_config_3.PNG[Big-IP 配置]
+
++
+
+NOTE: 要使设备执行激活，在管理界面上定义的网络必须能够访问 Internet 。
+
+. 在下一屏幕中，将显示最终用户许可协议（ EULA ）。如果许可证中的条款可接受，请单击 Accept 。
+. 下一个屏幕将计算经过的时间，以验证迄今为止所做的配置更改。单击 Continue 以恢复初始配置。
++
+image::big-IP_config_4.PNG[Big-IP 配置]
+
+. 此时将关闭配置更改窗口，设置实用程序将显示资源配置菜单。此窗口列出了当前已获得许可的功能以及虚拟设备和每个正在运行的服务的当前资源分配。
++
+image::big-IP_config_5.png[Big-IP 配置]
+
+. 单击左侧的平台菜单选项可对平台进行其他修改。修改包括设置使用 DHCP 配置的管理 IP 地址，设置主机名和设备安装所在的时区以及保护设备免受 SSH 访问。
++
+image::big-IP_config_6.PNG[Big-IP 配置]
+
+. 接下来，单击网络菜单，在此可以配置标准网络功能。单击下一步开始标准网络配置向导。
++
+image::big-IP_config_7.PNG[Big-IP 配置]
+
+. 向导的第一页配置冗余；保留默认值，然后单击下一步。在下一页中，您可以在负载平衡器上配置内部接口。接口 1.1 映射到 OVF 部署向导中标记为 Internal 的 vmnic 。
++
+image::big-IP_config_8.png[Big-IP 配置]
+
++
+
+NOTE: 此页面中的"Self IP Address"、"Networkmask"和"浮动IP地址"空格可以使用不可路由的IP作为占位符。如果要部署三种配置，也可以为其填充一个内部网络，该网络已配置为虚拟子系统的分布式端口组。要继续使用向导，必须完成这些操作。
+
+. 在下一页中，您可以配置一个外部网络，用于将服务映射到 Kubernetes 中部署的 Pod 。从 VM_Network 范围中选择一个静态 IP ，相应的子网掩码以及同一范围中的浮动 IP 。接口 1.2 映射到 OVF 部署向导中标记为外部的 vmnic 。
++
+image::big-IP_config_9.png[Big-IP 配置]
+
+. 在下一页中，如果要在环境中部署多个虚拟设备，则可以配置内部 HA 网络。要继续操作，您必须填写 Self-IP Address 和 Netmask 字段，并且必须选择 interface 1.3 作为 VLAN 接口，此接口将映射到 OVF 模板向导定义的 HA 网络。
++
+image::big-IP_config_10.png[Big-IP 配置]
+
+. 下一页用于配置 NTP 服务器。然后单击下一步继续进行 DNS 设置。DHCP 服务器应已填充 DNS 服务器和域搜索列表。单击下一步接受默认值并继续。
+. 在向导的其余部分中，单击 " 下一步 " 继续进行高级对等设置，本文档不会介绍此设置的配置。然后单击完成退出向导。
+. 为环境中部署的 Anthos 管理集群和每个用户集群创建单独的分区。单击左侧菜单中的 System ，导航到 Users ，然后单击分区列表。
++
+image::big-IP_config_11.PNG[Big-IP 配置]
+
+. 显示的屏幕仅显示当前通用分区。单击右侧的Create创建以创建第一个附加分区、并将其命名为`GKE-Admin`。然后、单击Repeat并将分区命名为`User-Cluster-1`、然后再次单击Repeat按钮将下一个分区命名为`User-Cluster-2`。最后，单击 " 完成 " 以完成向导。此时将返回分区列表屏幕，其中列出了所有分区。
++
+image::big-IP_config_12.PNG[Big-IP 配置]
+
+
+
+
+
+== 与Anthos集成
+
+每个配置文件中分别有一个部分用于管理集群和您选择部署的每个用户集群、用于配置负载平衡器、以便由Prem上的Anthos管理。
+
+下面是GKE-Admin集群分区配置示例、需要取消注释和修改的值将以粗体文本显示：
+
+[listing, subs="+quotes,+verbatim"]
+----
+# (Required) Load balancer configuration
+*loadBalancer:*
+  # (Required) The VIPs to use for load balancing
+  *vips:*
+    # Used to connect to the Kubernetes API
+    *controlPlaneVIP: "10.61.181.230"*
+    # # (Optional) Used for admin cluster addons (needed for multi cluster features). Must
+    # # be the same across clusters
+    # # addonsVIP: ""
+  # (Required) Which load balancer to use "F5BigIP" "Seesaw" or "ManualLB". Uncomment
+  # the corresponding field below to provide the detailed spec
+  *kind: F5BigIP*
+  # # (Required when using "ManualLB" kind) Specify pre-defined nodeports
+  # manualLB:
+  #   # NodePort for ingress service's http (only needed for user cluster)
+  #   ingressHTTPNodePort: 0
+  #   # NodePort for ingress service's https (only needed for user cluster)
+  #   ingressHTTPSNodePort: 0
+  #   # NodePort for control plane service
+  #   controlPlaneNodePort: 30968
+  #   # NodePort for addon service (only needed for admin cluster)
+  #   addonsNodePort: 31405
+  # # (Required when using "F5BigIP" kind) Specify the already-existing partition and
+  # # credentials
+  *f5BigIP:*
+    *address: "172.21.224.21"*
+    *credentials:*
+      *username: "admin"*
+      *password: "admin-password"*
+    *partition: "GKE-Admin"*
+  #   # # (Optional) Specify a pool name if using SNAT
+  #   # snatPoolName: ""
+  # (Required when using "Seesaw" kind) Specify the Seesaw configs
+  # seesaw:
+    # (Required) The absolute or relative path to the yaml file to use for IP allocation
+    # for LB VMs. Must contain one or two IPs.
+    #  ipBlockFilePath: ""
+    # (Required) The Virtual Router IDentifier of VRRP for the Seesaw group. Must
+    # be between 1-255 and unique in a VLAN.
+    #  vrid: 0
+    # (Required) The IP announced by the master of Seesaw group
+    #  masterIP: ""
+    # (Required) The number CPUs per machine
+    #  cpus: 4
+    # (Required) Memory size in MB per machine
+    #   memoryMB: 8192
+    # (Optional) Network that the LB interface of Seesaw runs in (default: cluster
+    # network)
+    #   vCenter:
+      # vSphere network name
+      #     networkName: VM_Network
+    # (Optional) Run two LB VMs to achieve high availability (default: false)
+    #   enableHA: false
+----
+link:a-w-n_use_cases.html["接下来：解决方案 验证/使用案例：采用NetApp的Anthos。"]
