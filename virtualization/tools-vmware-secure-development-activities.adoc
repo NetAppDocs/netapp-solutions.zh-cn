@@ -65,34 +65,34 @@ permitted by applicable law.
 
 
 |===
-| TCP v4/v6 端口号 | 功能 
+| TCP v4/v6 端口号 | 方向 | 功能 
 
 
-| 8143 个入站 | 用于 REST API 的 HTTPS 连接 
+| 8143 | 入站 | 用于 REST API 的 HTTPS 连接 
 
 
-| 8043 入站 | HTTPS 连接 
+| 8043 | 入站 | HTTPS 连接 
 
 
-| 9060 入站 | 用于基于 https 的 SOAP 连接的 HTTPS 连接必须打开此端口，以允许客户端连接到 ONTAP 工具 API 服务器。 
+| 9060 | 入站 | 用于基于 https 的 SOAP 连接的 HTTPS 连接必须打开此端口，以允许客户端连接到 ONTAP 工具 API 服务器。 
 
 
-| 22 个入站 | SSH （默认为禁用） 
+| 22. | 入站 | SSH （默认为禁用） 
 
 
-| 9080 入站 | HTTPS 连接— VP 和 SRA —仅从环回进行内部连接 
+| 9080 | 入站 | HTTPS 连接— VP 和 SRA —仅从环回进行内部连接 
 
 
-| 9083 入站 | HTTPS 连接— VP 和 SRA ，用于基于 https 的 SOAP 连接 
+| 9083. | 入站 | HTTPS 连接— VP 和 SRA ，用于基于 https 的 SOAP 连接 
 
 
-| 1162 个入站 | VP SNMP 陷阱数据包 
+| 1162. | 入站 | VP SNMP 陷阱数据包 
 
 
-| 1527 仅限内部 | Derby 数据库端口，仅在此计算机与自身之间，不接受外部连接—仅限内部连接 
+| 1527 | 仅限内部 | Derby 数据库端口，仅在此计算机与自身之间，不接受外部连接—仅限内部连接 
 
 
-| 443 双向 | 用于连接到 ONTAP 集群 
+| 443. | 双向 | 用于连接到 ONTAP 集群 
 |===
 * * 支持证书颁发机构（ CA ）签名证书。 * 适用于 VMware vSphere 的 ONTAP 工具支持 CA 签名证书。请参见此内容 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/VSC_and_VASA_Provider/Virtual_Storage_Console%3A_Implementing_CA_signed_certificates["知识库文章"^] 有关详细信息 ...
 * * 审核日志记录。 * 支持包可以下载，并且非常详细。ONTAP 工具会将所有用户登录和注销活动记录在一个单独的日志文件中。VASA API 调用会记录在专用的 VASA 审核日志（本地 CXF.log ）中。
