@@ -1,0 +1,36 @@
+---
+sidebar: sidebar 
+permalink: ehc/ncvs/ncvs-gc-architecture_overview.html 
+keywords: architecture overview, control plane, data plane 
+summary: 信任云解决方案 的一部分是了解架构及其安全保护方式。本节将介绍Google中Cloud Volumes Service 架构的不同方面、以帮助缓解对数据安全保护的潜在担忧、并指出可能需要执行其他配置步骤才能实现最安全的部署。 
+---
+= 概述
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+link:ncvs-gc-security-considerations-and-attack-surfaces.html["上一篇：安全注意事项和攻击面。"]
+
+信任云解决方案 的一部分是了解架构及其安全保护方式。本节将介绍Google中Cloud Volumes Service 架构的不同方面、以帮助缓解对数据安全保护的潜在担忧、并指出可能需要执行其他配置步骤才能实现最安全的部署。
+
+Cloud Volumes Service 的通用架构可细分为两个主要组件：控制平面和数据平面。
+
+
+
+== 控制面板
+
+Cloud Volumes Service 中的控制平台是由Cloud Volumes Service 管理员和NetApp原生 自动化软件管理的后端基础架构。此平台对最终用户完全透明、并包括网络、存储硬件、软件更新等、可帮助为Cloud Volumes Service 等驻留在云中的解决方案 提供价值。
+
+
+
+== 数据平面
+
+Cloud Volumes Service 中的数据平面包括实际数据卷和整体Cloud Volumes Service 配置(例如访问控制、Kerberos身份验证等)。数据平面完全由Cloud Volumes Service 平台的最终用户和使用者控制。
+
+每个平面的安全保护和管理方式各不相同。以下各节将从Cloud Volumes Service 架构概述开始介绍这些差异。
+
+link:ncvs-gc-cloud-volumes-service-architecture.html["接下来：Cloud Volumes Service 架构。"]

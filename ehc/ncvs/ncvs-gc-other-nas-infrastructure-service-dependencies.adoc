@@ -1,0 +1,338 @@
+---
+sidebar: sidebar 
+permalink: ehc/ncvs/ncvs-gc-other-nas-infrastructure-service-dependencies.html 
+keywords: kerberos keytab rotation, ldap, network ports, bind, asymmetric name mapping, antivirus 
+summary: 在对NAS共享使用Cloud Volumes Service 时、可能需要外部依赖关系才能正常运行。这些依赖关系在特定情况下起作用。 
+---
+= 其他NAS基础架构服务依赖关系(KDC、LDAP和DNS)
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+link:ncvs-gc-considerations--creating-active-directory-connections.htm["先前版本：创建Active Directory连接的注意事项。"]
+
+在对NAS共享使用Cloud Volumes Service 时、可能需要外部依赖关系才能正常运行。这些依赖关系在特定情况下起作用。下表显示了各种配置选项以及需要哪些依赖关系(如果有)。
+
+|===
+| Configuration | 需要依赖关系 
+
+
+| 仅限NFSv3 | 无 
+
+
+| 仅限NFSv3 Kerberos | Windows Active Directory：* KDC * DNS * LDAP 
+
+
+| 仅限NFSv4.1 | 客户端ID映射配置(/etc/idmap.conf) 
+
+
+| 仅限NFSv4.1 Kerberos  a| 
+* 客户端ID映射配置(/etc/idmap.conf)
+* Windows Active Directory：KDC DNS LDAP
+
+
+
+
+| 仅SMB | Active Directory：* KDC * DNS 
+
+
+| 多协议NAS (NFS和SMB)  a| 
+* 客户端ID映射配置(仅限NFSv4.1；/etc/idmap.conf)
+* Windows Active Directory：KDC DNS LDAP
+
+
+|===
+
+
+== 计算机帐户对象的Kerberos keytab轮换/密码重置
+
+对于SMB计算机帐户、Cloud Volumes Service 会为SMB计算机帐户计划定期密码重置。这些密码重置会使用Kerberos加密进行、并按每第四个星期日的计划在晚上11点到凌晨1点之间随机运行。这些密码重置会更改Kerberos密钥版本、轮换存储在Cloud Volumes Service 系统上的密钥选项卡、并帮助保持在Cloud Volumes Service 中运行的SMB服务器的更高级别安全性。计算机帐户密码是随机设置的、管理员不知道这些密码。
+
+对于NFS Kerberos计算机帐户、只有在与KDC创建/交换新的keytab时、才会发生密码重置。目前、在Cloud Volumes Service 中无法执行此操作。
+
+
+
+== 用于LDAP和Kerberos的网络端口
+
+使用LDAP和Kerberos时、您应确定这些服务正在使用的网络端口。您可以在中找到Cloud Volumes Service 正在使用的端口的完整列表 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/security-considerations?hl=en_US["有关安全注意事项的Cloud Volumes Service 文档"^]。
+
+
+
+== LDAP
+
+Cloud Volumes Service 充当LDAP客户端、并使用标准LDAP搜索查询来查找用户和组的UNIX身份。如果要使用Cloud Volumes Service 提供的标准默认用户之外的用户和组、则需要使用LDAP。如果您计划将NFS Kerberos与用户主体(如user1@domain.com)结合使用、也需要LDAP。目前、仅支持使用Microsoft Active Directory的LDAP。
+
+要使用Active Directory作为UNIX LDAP服务器、您必须在要用于UNIX身份的用户和组上填充必要的UNIX属性。Cloud Volumes Service 使用默认LDAP模式模板、根据查询属性 https://tools.ietf.org/id/draft-howard-rfc2307bis-01.txt["RFC-2307-bis"^]。因此、下表显示了为用户和组填充所需的最小Active Directory属性以及每个属性的用途。
+
+有关在Active Directory中设置LDAP属性的详细信息、请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/managing-dual-protocol-access["管理双协议访问。"^]
+
+|===
+| 属性 | 功能 
+
+
+| UID* | 指定UNIX用户名 
+
+
+| uidNumber* | 指定UNIX用户的数字ID 
+
+
+| gidNumber* | 指定UNIX用户的主组数字ID 
+
+
+| objectclass* | 指定正在使用的对象类型；Cloud Volumes Service 要求在对象类列表中包含"用户"(默认情况下、大多数Active Directory部署都包含此用户)。 
+
+
+| name | 有关帐户的常规信息(真实姓名、电话号码等、也称为gecos) 
+
+
+| unixUserPassword | 无需设置此参数；不会在用于NAS身份验证的UNIX身份查找中使用。如果设置此选项、则会将配置的unixUserPassword值设置为纯文本。 
+
+
+| unixHomeDirectory | 定义用户从Linux客户端根据LDAP进行身份验证时UNIX主目录的路径。如果要使用LDAP for UNIX主目录功能、请设置此选项。 
+
+
+| loginShell | 定义用户根据LDAP进行身份验证时Linux客户端的bash/配置文件Shell的路径。 
+|===
+*表示要在Cloud Volumes Service 中正常运行、必须具有属性。其余属性仅供客户端使用。
+
+|===
+| 属性 | 功能 
+
+
+| CN* | 指定UNIX组名称。使用Active Directory进行LDAP时、会在首次创建对象时设置此值、但可以稍后更改。此名称不能与其他对象相同。例如、如果名为user1的UNIX用户属于Linux客户端上名为user1的组、则Windows不允许两个具有相同CN属性的对象。要解决此问题、请将Windows用户重命名为唯一名称(例如user1-unix)；Cloud Volumes Service 中的LDAP将使用UID属性作为UNIX用户名。 
+
+
+| gidNumber* | 指定UNIX组数字ID。 
+
+
+| objectclass* | 指定正在使用的对象类型；Cloud Volumes Service 要求组包含在对象类列表中(默认情况下、此属性包含在大多数Active Directory部署中)。 
+
+
+| memberUID | 指定哪些UNIX用户是UNIX组的成员。对于Cloud Volumes Service 中的Active Directory LDAP、不需要此字段。Cloud Volumes Service LDAP模式使用成员字段作为组成员资格。 
+
+
+| 成员* | 组成员资格/二级UNIX组必需。此字段通过向Windows组添加Windows用户来填充。但是、如果Windows组未填充UNIX属性、则这些属性不会包含在UNIX用户的组成员资格列表中。任何需要在NFS中可用的组都必须填充此表中列出的所需UNIX组属性。 
+|===
+*表示要在Cloud Volumes Service 中正常运行、必须具有属性。其余属性仅供客户端使用。
+
+
+
+=== LDAP绑定信息
+
+要在LDAP中查询用户、Cloud Volumes Service 必须绑定(登录)到LDAP服务。此登录具有只读权限、用于查询LDAP UNIX属性以查找目录。目前、LDAP绑定只能使用SMB计算机帐户。
+
+您只能为`CVS-Performance`实例启用LDAP、并将其用于NFSv3、NFSv4.1或双协议卷。要成功部署已启用LDAP的卷、必须在与Cloud Volumes Service 卷相同的区域建立Active Directory连接。
+
+启用LDAP后、在特定情况下会发生以下情况。
+
+* 如果Cloud Volumes Service 项目仅使用NFSv3或NFSv4.1、则会在Active Directory域控制器中创建一个新的计算机帐户、并且Cloud Volumes Service 中的LDAP客户端会使用计算机帐户凭据绑定到Active Directory。不会为NFS卷和默认隐藏管理共享创建SMB共享(请参见一节 link:ncvs-gc-smb.html#default-hidden-shares[""默认隐藏共享""])已删除共享ACL。
+* 如果Cloud Volumes Service 项目使用双协议卷、则只会使用为SMB访问创建的单个计算机帐户将Cloud Volumes Service 中的LDAP客户端绑定到Active Directory。不会创建其他计算机帐户。
+* 如果专用SMB卷是单独创建的(在启用具有LDAP的NFS卷之前或之后)、则用于LDAP绑定的计算机帐户将与SMB计算机帐户共享。
+* 如果还启用了NFS Kerberos、则会创建两个计算机帐户—一个用于SMB共享和/或LDAP绑定、一个用于NFS Kerberos身份验证。
+
+
+
+
+=== LDAP查询
+
+尽管LDAP绑定已加密、但LDAP查询仍会使用通用LDAP端口389以纯文本形式通过网线进行传递。目前无法在Cloud Volumes Service 中更改此众所周知的端口。因此、有权在网络中嗅探数据包的用户可以查看用户和组名称、数字ID以及组成员资格。
+
+但是、Google Cloud VM无法嗅探其他VM的单播流量。只有主动参与LDAP流量(即能够绑定)的VM才能看到LDAP服务器的流量。有关在Cloud Volumes Service 中嗅探数据包的详细信息、请参见一节 link:ncvs-gc-cloud-volumes-service-architecture.html#packet-sniffing/trace-considerations["《数据包嗅探/跟踪注意事项》。"]
+
+
+
+=== LDAP客户端配置默认值
+
+在Cloud Volumes Service 实例中启用LDAP后、默认情况下会创建一个LDAP客户端配置、其中包含特定的配置详细信息。在某些情况下、选项不适用于Cloud Volumes Service (不受支持)或不可配置。
+
+|===
+| LDAP客户端选项 | 功能 | 默认值 | 是否可以更改？ 
+
+
+| LDAP服务器列表 | 设置要用于查询的LDAP服务器名称或IP地址。这不适用于Cloud Volumes Service。而是使用Active Directory域定义LDAP服务器。 | 未设置 | 否 
+
+
+| Active Directory域 | 设置用于LDAP查询的Active Directory域。Cloud Volumes Service 利用DNS中LDAP的SRV记录在域中查找LDAP服务器。 | 设置为在Active Directory连接中指定的Active Directory域。 | 否 
+
+
+| 首选Active Directory服务器 | 设置用于LDAP的首选Active Directory服务器。Cloud Volumes Service 不支持。而是使用Active Directory站点控制LDAP服务器选择。 | 未设置。 | 否 
+
+
+| 使用SMB服务器凭据绑定 | 使用SMB计算机帐户绑定到LDAP。目前、Cloud Volumes Service 中唯一支持的LDAP绑定方法。 | true | 否 
+
+
+| 模式模板 | 用于LDAP查询的模式模板。 | MS-AD-BIS | 否 
+
+
+| LDAP服务器端口 | 用于LDAP查询的端口号。Cloud Volumes Service 当前仅使用标准LDAP端口389。目前不支持LDAPS/端口636。 | 389. | 否 
+
+
+| 是否已启用LDAPS | 控制是否对查询和绑定使用基于安全套接字层的LDAP (SSL)。Cloud Volumes Service 目前不支持。 | false | 否 
+
+
+| 查询超时(秒) | 查询超时。如果查询所用时间超过指定值、则查询将失败。 | 3. | 否 
+
+
+| 最低绑定身份验证级别 | 支持的最低绑定级别。由于Cloud Volumes Service 使用计算机帐户进行LDAP绑定、并且默认情况下Active Directory不支持匿名绑定、因此出于安全考虑、此选项不起作用。 | 匿名 | 否 
+
+
+| 绑定 DN | 使用简单绑定时用于绑定的用户/可分辨名称(DN)。Cloud Volumes Service 使用计算机帐户进行LDAP绑定、目前不支持简单绑定身份验证。 | 未设置 | 否 
+
+
+| 基础DN | 用于LDAP搜索的基础DN。 | 用于Active Directory连接的Windows域、采用DN格式(即DC=domain、DC=local)。 | 否 
+
+
+| 基本搜索范围 | 基础DN搜索的搜索范围。值可以包括base、onelevel或subtree。Cloud Volumes Service 仅支持子树搜索。 | 子树 | 否 
+
+
+| 用户DN | 定义LDAP查询的用户搜索开始位置的DN。目前Cloud Volumes Service 不支持、因此所有用户搜索均从基础DN开始。 | 未设置 | 否 
+
+
+| 用户搜索范围 | 用户DN搜索的搜索范围。值可以包括base、onelevel或subtree。Cloud Volumes Service 不支持设置用户搜索范围。 | 子树 | 否 
+
+
+| 组DN | 定义为LDAP查询开始组搜索的DN。目前Cloud Volumes Service 不支持、因此所有组搜索均从基础DN开始。 | 未设置 | 否 
+
+
+| 组搜索范围 | 组DN搜索的搜索范围。值可以包括base、onelevel或subtree。Cloud Volumes Service 不支持设置组搜索范围。 | 子树 | 否 
+
+
+| 网络组DN | 定义为LDAP查询启动网络组搜索的DN。目前Cloud Volumes Service 不支持、因此所有网络组搜索均从基础DN开始。 | 未设置 | 否 
+
+
+| 网络组搜索范围 | 网络组DN搜索的搜索范围。值可以包括base、onelevel或subtree。Cloud Volumes Service 不支持设置网络组搜索范围。 | 子树 | 否 
+
+
+| 使用基于LDAP的start_tls | 利用Start TLS通过端口389建立基于证书的LDAP连接。Cloud Volumes Service 目前不支持。 | false | 否 
+
+
+| 启用netgroup-by-host查找 | 启用按主机名查找网络组、而不是扩展网络组以列出所有成员。Cloud Volumes Service 目前不支持。 | false | 否 
+
+
+| 按主机的网络组DN | 定义在LDAP查询中按主机搜索网络组的起始DN。Cloud Volumes Service 当前不支持按主机进行网络组。 | 未设置 | 否 
+
+
+| netgroup-by-host搜索范围 | netgroup-by-host DN搜索的搜索范围。值可以包括base、onelevel或subtree。Cloud Volumes Service 当前不支持按主机进行网络组。 | 子树 | 否 
+
+
+| 客户端会话安全性 | 定义LDAP使用的会话安全级别(签名、签章或无)。Cloud Volumes Service 支持LDAP签名、但当前不支持密封。 | 无 | 否 
+
+
+| LDAP转介跟踪 | 使用多个LDAP服务器时、如果在第一个服务器中找不到条目、则转介跟踪功能允许客户端引用列表中的其他LDAP服务器。Cloud Volumes Service 目前不支持此功能。 | false | 否 
+
+
+| 组成员资格筛选器 | 提供了一个自定义LDAP搜索筛选器、用于从LDAP服务器查找组成员资格。Cloud Volumes Service 当前不支持。 | 未设置 | 否 
+|===
+
+
+=== 使用LDAP进行非对称名称映射
+
+默认情况下、Cloud Volumes Service 会双向映射用户名相同的Windows用户和UNIX用户、而无需特殊配置。只要Cloud Volumes Service 可以找到有效的UNIX用户(使用LDAP)、就会进行1：1名称映射。例如、如果使用了Windows用户`johnsmith`、则如果Cloud Volumes Service 在LDAP中找到名为`johnsmith`的UNIX用户、则该用户的名称映射将成功、则由`johnsmith`创建的所有文件/文件夹将显示正确的用户所有权、 而且、无论使用何种NAS协议、影响`johnsmith`的所有ACL都将得到遵守。这称为对称名称映射。
+
+非对称名称映射是指Windows用户和UNIX用户身份不匹配的情况。例如、如果Windows用户`johnsmith`的UNIX身份为`jsmith`、则Cloud Volumes Service 需要了解此变体。由于Cloud Volumes Service 当前不支持创建静态名称映射规则、因此必须使用LDAP查找用户的身份以获取Windows和UNIX身份、以确保文件和文件夹的所有权以及所需权限正确无误。
+
+默认情况下、Cloud Volumes Service 在名称映射数据库的实例的ns-switch中包含`ldap`、因此、要通过对非对称名称使用LDAP来提供名称映射功能、您只需修改某些用户/组属性以反映Cloud Volumes Service 的查找内容即可。
+
+下表显示了为实现非对称名称映射功能、必须在LDAP中填充哪些属性。在大多数情况下、Active Directory已配置为执行此操作。
+
+|===
+| Cloud Volumes Service 属性 | 功能 | Cloud Volumes Service 用于名称映射的值 
+
+
+| Windows到UNIX对象类 | 指定要使用的对象类型。(即用户、组、posixAccount等) | 必须包括用户(如果需要、可以包含多个其他值。) 
+
+
+| Windows到UNIX属性 | 用于在创建时定义Windows用户名。Cloud Volumes Service 将此功能用于Windows到UNIX查找。 | 此处无需更改；sAMAccountName与Windows登录名相同。 
+
+
+| UID | 定义UNIX用户名。 | 所需的UNIX用户名。 
+|===
+Cloud Volumes Service 当前不会在LDAP查找中使用域前缀、因此多域LDAP环境无法在LDAP命名映射查找中正常运行。
+
+以下示例显示了一个名为`unymmetric`、UNIX名为`unix-user`的用户、以及从SMB和NFS写入文件时的行为。
+
+下图显示了LDAP属性在Windows服务器中的外观。
+
+image:ncvs-gc-image20.png["错误：缺少图形映像"]
+
+在NFS客户端中、您可以查询UNIX名称、但不能查询Windows名称：
+
+....
+# id unix-user
+uid=1207(unix-user) gid=1220(sharedgroup) groups=1220(sharedgroup)
+# id asymmetric
+id: asymmetric: no such user
+....
+从NFS写入文件时、如果为`unix-user`、则NFS客户端会生成以下结果：
+
+....
+sh-4.2$ pwd
+/mnt/home/ntfssh-4.2$ touch unix-user-file
+sh-4.2$ ls -la | grep unix-user
+-rwx------  1 unix-user sharedgroup     0 Feb 28 12:37 unix-user-nfs
+sh-4.2$ id
+uid=1207(unix-user) gid=1220(sharedgroup) groups=1220(sharedgroup)
+....
+在Windows客户端中、您可以看到文件所有者已设置为正确的Windows用户：
+
+....
+PS C:\ > Get-Acl \\demo\home\ntfs\unix-user-nfs | select Owner
+Owner
+-----
+NTAP\asymmetric
+....
+相反、Windows用户`非对称`从SMB客户端创建的文件将显示正确的UNIX所有者、如以下文本所示。
+
+SMB：
+
+....
+PS Z:\ntfs> echo TEXT > asymmetric-user-smb.txt
+....
+NFS ：
+
+....
+sh-4.2$ ls -la | grep asymmetric-user-smb.txt
+-rwx------  1 unix-user         sharedgroup   14 Feb 28 12:43 asymmetric-user-smb.txt
+sh-4.2$ cat asymmetric-user-smb.txt
+TEXT
+....
+
+
+=== LDAP通道绑定
+
+由于Windows Active Directory域控制器存在一个漏洞、 https://msrc.microsoft.com/update-guide/vulnerability/ADV190023["Microsoft安全建议ADV190023"^] 更改DC允许LDAP绑定的方式。
+
+对Cloud Volumes Service 的影响与对任何LDAP客户端的影响相同。Cloud Volumes Service 当前不支持通道绑定。由于Cloud Volumes Service 默认通过协商支持LDAP签名、因此LDAP通道绑定不应是问题描述。如果在启用了通道绑定的情况下绑定到LDAP时确实存在问题、请按照ADV190023中的修复步骤操作、以允许从Cloud Volumes Service 进行LDAP绑定。
+
+
+
+== DNS
+
+Active Directory和Kerberos都依赖于DNS来进行主机名到IP/IP到主机名解析。DNS要求端口53处于打开状态。Cloud Volumes Service 不会对DNS记录进行任何修改、目前也不支持使用 https://support.google.com/domains/answer/6147083?hl=en["动态DNS"^] 在网络接口上。
+
+您可以配置Active Directory DNS以限制哪些服务器可以更新DNS记录。有关详细信息，请参见 https://docs.microsoft.com/en-us/learn/modules/secure-windows-server-domain-name-system/["保护Windows DNS的安全"^]。
+
+请注意、Google项目中的资源默认使用Google Cloud DNS、而Google Cloud DNS未连接到Active Directory DNS。使用云DNS的客户端无法解析Cloud Volumes Service 返回的UNC路径。加入Active Directory域的Windows客户端已配置为使用Active Directory DNS、并且可以解析此类UNC路径。
+
+要将客户端加入Active Directory、必须将其DNS配置为使用Active Directory DNS。或者、您也可以配置云DNS以将请求转发到Active Directory DNS。请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/faqs-netapp["为什么我的客户端无法解析SMB NetBIOS名称？"^]有关详细信息 ...
+
+
+NOTE: Cloud Volumes Service 当前不支持DNSSEC、DNS查询以纯文本形式执行。
+
+
+
+== 文件访问审核
+
+目前不支持Cloud Volumes Service。
+
+
+
+== 防病毒保护
+
+您必须在客户端的Cloud Volumes Service 中对NAS共享执行防病毒扫描。目前未将原生 防病毒与Cloud Volumes Service 集成。
+
+link:ncvs-gc-service-operation.html["下一步：服务操作。"]
