@@ -1,0 +1,299 @@
+---
+sidebar: sidebar 
+permalink: databases/awx_automation.html 
+keywords: Linux, RHEL Oracle19c, NFS, ONTAP 
+summary: 此页面介绍了在 NetApp ONTAP 存储上部署 Oracle19c 的自动化方法。 
+---
+= 分步部署操作步骤
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== AWX/Tower 部署 Oracle 19c 数据库
+
+
+
+=== 1. 为您的环境创建清单，组，主机和凭据
+
+本节介绍如何在 AWX/Ansible 塔中设置清单，组，主机和访问凭据，以便为使用 NetApp 自动化解决方案的环境做好准备。
+
+. 配置清单。
++
+.. 导航到资源→清单→添加，然后单击添加清单。
+.. 提供名称和组织详细信息，然后单击保存。
+.. 在清单页面上，单击已创建的清单。
+.. 如果存在任何清单变量，请将其粘贴到变量字段中。
+.. 导航到组子菜单，然后单击添加。
+.. 提供 ONTAP 的组名称，粘贴组变量（如果有），然后单击保存。
+.. 对 Oracle 的另一个组重复此过程。
+.. 选择已创建的 ONTAP 组，转到主机子菜单，然后单击添加新主机。
+.. 提供 ONTAP 集群管理 IP 的 IP 地址，粘贴主机变量（如果有），然后单击保存。
+.. 必须对 Oracle 组和 Oracle 主机管理 IP/ 主机名重复此过程。
+
+
+. 创建凭据类型。对于涉及 ONTAP 的解决方案，您必须配置凭据类型以匹配用户名和密码条目。
++
+.. 导航到管理→凭据类型，然后单击添加。
+.. 提供名称和问题描述。
+.. 将以下内容粘贴到输入配置中：
++
+[source, cli]
+----
+fields:
+  - id: username
+    type: string
+    label: Username
+  - id: password
+    type: string
+    label: Password
+    secret: true
+  - id: vsadmin_password
+    type: string
+    label: vsadmin_password
+    secret: true
+----
+.. 将以下内容粘贴到注射器配置中：
++
+[source, cli]
+----
+extra_vars:
+  password: '{{ password }}'
+  username: '{{ username }}'
+  vsadmin_password: '{{ vsadmin_password }}'
+----
+
+
+. 配置凭据。
++
+.. 导航到资源→凭据，然后单击添加。
+.. 输入 ONTAP 的名称和组织详细信息。
+.. 选择为 ONTAP 创建的自定义凭据类型。
+.. 在 Type Details 下，输入用户名，密码和 vsadmin_password 。
+.. 单击 Back to Credential ，然后单击 Add 。
+.. 输入 Oracle 的名称和组织详细信息。
+.. 选择计算机凭据类型。
+.. 在 Type Details 下，输入 Oracle 主机的 Username 和 Password 。
+.. 选择正确的权限升级方法，然后输入用户名和密码。
+
+
+
+
+
+
+=== 2. 创建项目
+
+. 转至 "Resources" → "projects" ，然后单击 "Add" 。
++
+.. 输入名称和组织详细信息。
+.. 在源控制凭据类型字段中选择 Git 。
+.. 输入 ... <https://github.com/NetApp-Automation/na_oracle19c_deploy.git>[] 作为源控制 URL 。
+.. 单击保存。
+.. 当源代码发生更改时，项目可能偶尔需要同步。
+
+
+
+
+
+
+=== 3. 配置 Oracle host_vars
+
+本节中定义的变量将应用于每个 Oracle 服务器和数据库。
+
+. 以以下嵌入式 Oracle hosts 变量或 host_vars 形式输入环境特定的参数。
+
+
+
+NOTE: 必须根据您的环境更改蓝色项。
+
+
+
+=== 主机 VARS 配置
+
+
+. 填写蓝色字段中的所有变量。
+. 完成变量输入后，单击表单上的复制按钮以复制要传输到 AWX 或塔式的所有变量。
+. 导航回 AWX 或塔式，然后转到资源→主机，选择并打开 Oracle 服务器配置页面。
+. 在详细信息选项卡下，单击编辑并将从步骤 1 复制的变量粘贴到 YAML 选项卡下的变量字段。
+. 单击保存。
+. 对系统中的任何其他 Oracle 服务器重复此过程。
+
+
+
+
+=== 4. 配置全局变量
+
+本节中定义的变量适用于所有 Oracle 主机，数据库和 ONTAP 集群。
+
+. 在以下嵌入式全局变量或变量表单中输入环境特定的参数。
++
+
+NOTE: 必须根据您的环境更改蓝色项。
+
+
+
+
+
+=== VAR
+
+
+. 在蓝色字段中填写所有变量。
+. 完成变量输入后，单击表单上的复制按钮，将要传输到 AWX 或塔式的所有变量复制到以下作业模板中。
+
+
+
+
+=== 5. 配置并启动作业模板。
+
+. 创建作业模板。
++
+.. 导航到资源→模板→添加，然后单击添加作业模板。
+.. 输入名称和问题描述
+.. 选择作业类型；运行将根据攻略手册配置系统，而检查将在不实际配置系统的情况下执行攻略手册的试运行。
+.. 为攻略手册选择相应的清单，项目，攻略手册和凭据。
+.. 选择 all_playbook.yml 作为要执行的默认攻略手册。
+.. 将从步骤 4 复制的全局变量粘贴到 YAML 选项卡下的模板变量字段中。
+.. 选中作业标记字段中的启动时提示框。
+.. 单击保存。
+
+
+. 启动作业模板。
++
+.. 导航到资源→模板。
+.. 单击所需模板，然后单击启动。
+.. 在启动作业标记时系统提示时，键入 requirements_config 。您可能需要单击 requirements_config 下方的 Create Job Tag 行以输入作业标记。
++
+
+NOTE: requirements_config 可确保您有正确的库来运行其他角色。
+
+.. 单击下一步，然后单击启动以启动作业。
+.. 单击查看→作业以监控作业输出和进度。
+.. 在启动作业标记时，系统提示您键入 ontap_config 。您可能需要单击 ontap_config 下方的 Create "Job Tag （创建作业标记） " 行以输入作业标记。
+.. 单击下一步，然后单击启动以启动作业。
+.. 单击查看→作业以监控作业输出和进度
+.. 完成 ontap_config 角色后，对 linux_config 再次运行此过程。
+.. 导航到资源→模板。
+.. 选择所需模板，然后单击启动。
+.. 在 Linux_config 中启动作业标记类型时，系统提示您选择 Linux_config 下方的创建 " 作业标记 " 行以输入作业标记。
+.. 单击下一步，然后单击启动以启动作业。
+.. 选择 View → Jobs 以监控作业输出和进度。
+.. 完成 Linux_config 角色后，对 ORACLE_CONFIG 再次运行此过程。
+.. 转至资源→模板。
+.. 选择所需模板，然后单击启动。
+.. 在启动作业标记时，系统提示您键入 ORACLE_CONFIG 。您可能需要选择 ORACLE_CONFIG 下方的 "Create Job Tag （创建作业标记） " 行以输入作业标记。
+.. 单击下一步，然后单击启动以启动作业。
+.. 选择 View → Jobs 以监控作业输出和进度。
+
+
+
+
+
+
+=== 6. 在同一 Oracle 主机上部署其他数据库
+
+此攻略手册的 Oracle 部分会每次在 Oracle 服务器上创建一个 Oracle 容器数据库。要在同一服务器上创建其他容器数据库，请完成以下步骤。
+
+. 修改 host_vars 变量。
++
+.. 返回到步骤 2 —配置 Oracle host_vars 。
+.. 将 Oracle SID 更改为其他命名字符串。
+.. 将侦听器端口更改为其他编号。
+.. 如果要安装 EM Express ，请将 EM Express 端口更改为其他编号。
+.. 将修订后的主机变量复制并粘贴到主机配置详细信息选项卡中的 Oracle 主机变量字段中。
+
+
+. 启动仅包含 ORACLE_CONFIG 标记的部署作业模板。
+
+
+
+
+=== 验证 Oracle 安装
+
+
+[source, cli]
+----
+ps -ef | grep ora
+----
+
+NOTE: 如果安装按预期完成且 Oracle 数据库已启动，则此列表将列出 Oracle 进程
+
+
+[source, cli]
+----
+sqlplus / as sysdba
+----
+[Oracle@localhost ~ ]$ sqlplus / 作为 sysdba
+
+SQL* Plus ：版本 19.0.0.0.0 —在 5 月 6 日星期四 12 ： 52 ： 51 2021 年版本 19.8.0.0.0 上生产
+
+版权所有（ c ） 1982-2019 ， Oracle 。保留所有权利。
+
+已连接到： Oracle Database 19c Enterprise Edition 版本 19.0.0.0.0 - 生产版本 19.8.0.0.0
+
+SQL/
+
+[source, cli]
+----
+select name, log_mode from v$database;
+----
+sql > 从 v$database 中选择名称 log_mode ；名称 log_mode --- ------- CDB2 归档日志
+
+[source, cli]
+----
+show pdbs;
+----
+sql > 显示 PDF
+
+....
+    CON_ID CON_NAME                       OPEN MODE  RESTRICTED
+---------- ------------------------------ ---------- ----------
+         2 PDB$SEED                       READ ONLY  NO
+         3 CDB2_PDB1                      READ WRITE NO
+         4 CDB2_PDB2                      READ WRITE NO
+         5 CDB2_PDB3                      READ WRITE NO
+....
+[source, cli]
+----
+col svrname form a30
+col dirname form a30
+select svrname, dirname, nfsversion from v$dnfs_servers;
+----
+sql > col svrname form A30 sql > col dirname form A30 sql > 从 v$dnfs_servers 中选择 svrname ， dirname ， nfsversion ；
+
+SVRname 名称 NFSVERSION ----------- ----------------- --------- 172.21.126.200 /rhelora03_u02 NFSv3.0 172.21.126.200 /rhelora03_u03 NFSv3.0 172.21.126.200 /rhelora03_u01 NFSv3.0
+
+[listing]
+----
+This confirms that dNFS is working properly.
+----
+
+[source, cli]
+----
+sqlplus system@//localhost:1523/cdb2_pdb1.cie.netapp.com
+----
+[Oracle@localhost ~ ]$ sqlplus 系统@ //localhost ： 1523/ cdb2_pdb1.cie.netapp.com
+
+SQL* Plus ：版本 19.0.0.0.0 — 5 月 6 日星期四 13 ： 19 ： 57 2021 年版本 19.8.0.0.0
+
+版权所有（ c ） 1982-2019 ， Oracle 。保留所有权利。
+
+输入密码：上次成功登录时间： Wed ， 2021 年 5 月 5 日 17 ： 11 ： 11 -04 ： 00
+
+已连接到： Oracle Database 19c Enterprise Edition 版本 19.0.0.0.0 - 生产版本 19.8.0.0.0
+
+sql > show user user is "system" sql > show con_name con_name CDB2_PDB1
+
+[listing]
+----
+This confirms that Oracle listener is working properly.
+----
+
+
+=== 如何获取帮助？
+
+如果您需要有关该工具包的帮助，请加入 link:https://netapppub.slack.com/archives/C021R4WC0LC["NetApp 解决方案自动化社区支持 Slack 通道"] 并寻找解决方案自动化渠道来发布您的问题或询问。

@@ -27,6 +27,7 @@ NOTE: 要查看特定超大规模提供商的功能，请单击该超大规模�
 
 * link:#config["超大规模部署中的 VMware"]
 * link:#datastore["NetApp 存储选项"]
+* link:#solutions["NetApp/VMware云解决方案"]
 
 
 
@@ -35,10 +36,10 @@ NOTE: 要查看特定超大规模提供商的功能，请单击该超大规模�
 
 与内部部署一样，规划基于云的虚拟化环境对于成功创建 VM 和迁移生产就绪环境至关重要。
 
-
-
-=== AWS 和 VMC
-
+[role="tabbed-block"]
+====
+.AWS/VMC
+--
 本节介绍如何在 AWS SDDC 上设置和管理 VMware Cloud ，并将其与连接 NetApp 存储的可用选项结合使用。
 
 
@@ -46,14 +47,15 @@ NOTE: 只支持使用来宾存储将 FSX ONTAP 和 Cloud Volumes ONTAP 连接到
 
 设置过程可细分为以下步骤：
 
-* link:aws/aws-setup.html#deploy["部署和配置适用于 AWS 的 VMware Cloud"]
-* link:aws/aws-setup.html#connect["将 VMware Cloud 连接到 FSX ONTAP"]
+* 部署和配置适用于AWS的VMware Cloud
+* 将 VMware Cloud 连接到 FSX ONTAP
 
 
+查看详细信息 link:aws/aws-setup.html["VMC的配置步骤"]。
 
-
-=== Azure 和 AVS
-
+--
+.Azure / AVS
+--
 本节介绍如何设置和管理 Azure VMware 解决方案并将其与连接 NetApp 存储的可用选项结合使用。
 
 
@@ -61,15 +63,16 @@ NOTE: 将 Azure NetApp Files 和 Cloud Volumes ONTAP 连接到 Azure VMware 解�
 
 设置过程可细分为以下步骤：
 
-* link:azure/azure-setup.html#register["注册资源提供商并创建私有云"]
-* link:azure/azure-setup.html#connect["连接到新的或现有的 ExpressRoute 虚拟网络网关"]
-* link:azure/azure-setup.html#validate["验证网络连接并访问私有云"]
+* 注册资源提供商并创建私有云
+* 连接到新的或现有的 ExpressRoute 虚拟网络网关
+* 验证网络连接并访问私有云
 
 
+查看详细信息 link:azure/azure-setup.html["AVS的配置步骤"]。
 
-
-=== GCP 和 GCVE
-
+--
+.GCP / GCVE
+--
 本节介绍如何设置和管理 GCVE ，并将其与连接 NetApp 存储的可用选项结合使用。
 
 
@@ -77,10 +80,14 @@ NOTE: 来宾存储是将 Cloud Volumes ONTAP 和云卷服务连接到 GCVE 的�
 
 设置过程可细分为以下步骤：
 
-* link:gcp/gcp-setup.html#deploy["部署和配置 GCVE"]
-* link:gcp/gcp-setup.html#enable-access["启用对 GCVE 的私有访问"]
+* 部署和配置 GCVE
+* 启用对 GCVE 的私有访问
 
 
+查看详细信息 link:gcp/gcp-setup.html["GCVE的配置步骤"]。
+
+--
+====
 
 
 == NetApp 存储选项
@@ -89,62 +96,86 @@ NetApp 存储可以通过多种方式在 3 个主要超大规模主机中的每�
 
 请访问 link:ehc-support-configs.html["支持的 NetApp 存储选项"] 有关详细信息 ...
 
-
-
-=== AWS 和 VMC
-
+[role="tabbed-block"]
+====
+.AWS/VMC
+--
 AWS 支持以下配置中的 NetApp 存储：
 
-* 来宾连接存储 *
+* FSX ONTAP 作为子系统连接的存储
+* Cloud Volumes ONTAP （ CVO ）作为子系统连接的存储
+* FSX ONTAP 作为原生 数据存储库^1^
 
-* link:aws/aws-guest.html#fsx-ontap["FSX ONTAP 作为子系统连接的存储"]
-* link:aws/aws-guest.html#cvo["Cloud Volumes ONTAP （ CVO ）作为子系统连接的存储"]
 
+查看详细信息 link:aws/aws-guest.html["VMC的子系统连接存储选项"]。
 
-* 原生数据存储库 *
-
-* link:https://blogs.vmware.com/cloud/2021/12/01/vmware-cloud-on-aws-going-big-reinvent2021/["FSX ONTAP 作为原生数据存储库^1."^]
-
+了解更多信息 link:https://blogs.vmware.com/cloud/2021/12/01/vmware-cloud-on-aws-going-big-reinvent2021/["FSX ONTAP 作为原生数据存储库^1."^]。
 
 
 NOTE: 1 —当前处于私有预览模式
 
-
-
-=== Azure 和 AVS
-
+--
+.Azure / AVS
+--
 Azure 支持以下配置中的 NetApp 存储：
 
-* 来宾连接存储 *
+* Azure NetApp Files （ ANF ）作为子系统连接的存储
+* Cloud Volumes ONTAP （ CVO ）作为子系统连接的存储
+* Azure NetApp Files (ANF)作为原生 数据存储库^1^
 
-* link:azure/azure-guest.html#anf["Azure NetApp Files （ ANF ）作为子系统连接的存储"]
-* link:azure/azure-guest.html#cvo["Cloud Volumes ONTAP （ CVO ）作为子系统连接的存储"]
 
+查看详细信息 link:azure/azure-guest.html["AVS的子系统连接存储选项"]。
 
-* 原生数据存储库 *
-
-* link:https://azure.microsoft.com/en-us/updates/azure-netapp-files-datastores-for-azure-vmware-solution-is-coming-soon/["Azure NetApp Files （ ANF ）作为原生数据存储库^1."^]
-
+了解更多信息 link:https://azure.microsoft.com/en-us/updates/azure-netapp-files-datastores-for-azure-vmware-solution-is-coming-soon/["Azure NetApp Files （ ANF ）作为原生数据存储库^1."^]。
 
 
 NOTE: 1 —当前处于私有预览模式
 
-
-
-=== GCO 和 CVE
-
+--
+.GCP / GCVE
+--
 Google Cloud 支持以下配置中的 NetApp 存储：
 
-* 来宾连接存储 *
+* Cloud Volumes ONTAP （ CVO ）作为子系统连接的存储
+* Cloud Volumes Service （ CVS ）作为子系统连接的存储
+* Cloud Volumes Service (CVS)作为原生 数据存储库^1^
 
-* link:gcp/gcp-guest.html#cvo["Cloud Volumes ONTAP （ CVO ）作为子系统连接的存储"]
-* link:gcp/gcp-guest.html#cvs["Cloud Volumes Service （ CVS ）作为子系统连接的存储"]
 
+查看详细信息 link:gcp/gcp-guest.html["GCVE的子系统连接存储选项"]。
 
-* 原生数据存储库 *
-
-* link:https://www.netapp.com/google-cloud/google-cloud-vmware-engine-registration/["Cloud Volumes Service （ CVS ）作为原生数据存储库^1."^]
-
+了解更多信息 link:https://www.netapp.com/google-cloud/google-cloud-vmware-engine-registration/["Cloud Volumes Service （ CVS ）作为原生数据存储库^1."^]。
 
 
 NOTE: 1 —当前处于私有预览模式
+
+--
+====
+
+
+== NetApp/VMware云解决方案
+
+借助NetApp和VMware云解决方案、许多用例都可以轻松部署到您选择的超大规模云提供商中。VMware将主要云工作负载用例定义为：
+
+* 保护(包括灾难恢复和备份/还原)
+* 迁移
+* 扩展
+
+
+[role="tabbed-block"]
+====
+.AWS/VMC
+--
+link:aws/aws-solutions.html["浏览适用于AWS/VMC的NetApp解决方案"]
+
+--
+.Azure / AVS
+--
+link:azure/azure-solutions.html["浏览适用于Azure/AVS的NetApp解决方案"]
+
+--
+.GCP / GCVE
+--
+link:gcp/gcp-solutions.html["浏览适用于Google Cloud Platform (GCP)/GCVE的NetApp解决方案"]
+
+--
+====

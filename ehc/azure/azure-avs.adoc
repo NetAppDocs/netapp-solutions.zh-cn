@@ -20,6 +20,7 @@ summary:
 
 * link:#config["在 Azure 中配置 AVS"]
 * link:#datastore["适用于 AVS 的 NetApp 存储选项"]
+* link:#solutions["NetApp/VMware云解决方案"]
 
 
 
@@ -35,10 +36,12 @@ NOTE: 将 Azure NetApp Files 和 Cloud Volumes ONTAP 连接到 Azure VMware 解�
 
 设置过程可细分为以下步骤：
 
-* link:azure-setup.html#register["注册资源提供商并创建私有云"]
-* link:azure-setup.html#connect["连接到新的或现有的 ExpressRoute 虚拟网络网关"]
-* link:azure-setup.html#validate["验证网络连接并访问私有云"]
+* 注册资源提供商并创建私有云
+* 连接到新的或现有的 ExpressRoute 虚拟网络网关
+* 验证网络连接并访问私有云
 
+
+查看详细信息 link:azure-setup.html["AVS的配置步骤"]。
 
 
 
@@ -50,16 +53,27 @@ NetApp 存储可以通过多种方式在 Azure AVS 中用作 guess connected 或
 
 Azure 支持以下配置中的 NetApp 存储：
 
-* 来宾连接存储 *
+* Azure NetApp Files （ ANF ）作为子系统连接的存储
+* Cloud Volumes ONTAP （ CVO ）作为子系统连接的存储
+* Azure NetApp Files (ANF)作为原生 数据存储库^1^
 
-* link:azure-guest.html#anf["Azure NetApp Files （ ANF ）作为子系统连接的存储"]
-* link:azure-guest.html#cvo["Cloud Volumes ONTAP （ CVO ）作为子系统连接的存储"]
 
+查看详细信息 link:azure-guest.html["AVS的子系统连接存储选项"]。
 
-* 原生数据存储库 *
-
-* link:https://azure.microsoft.com/en-us/updates/azure-netapp-files-datastores-for-azure-vmware-solution-is-coming-soon/["Azure NetApp Files （ ANF ）作为原生数据存储库^1."^]
-
+了解更多信息 link:https://azure.microsoft.com/en-us/updates/azure-netapp-files-datastores-for-azure-vmware-solution-is-coming-soon/["Azure NetApp Files （ ANF ）作为原生数据存储库^1."^]。
 
 
 NOTE: 1 —当前处于私有预览模式
+
+
+
+== 解决方案用例
+
+借助 NetApp 和 VMware 云解决方案，许多用例都可以轻松部署在 Azure AVS 中。为VMware定义的每个云区域定义了SE案例：
+
+* 保护(包括灾难恢复和备份/还原)
+* 扩展
+* 迁移
+
+
+link:azure-solutions.html["浏览适用于 Azure AVS 的 NetApp 解决方案"]

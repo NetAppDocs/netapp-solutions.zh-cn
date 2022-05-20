@@ -1,6 +1,6 @@
 ---
 section: ehc
-title: 企业级混合云
+title: 采用VMware的NetApp混合多云
 url: "/ehc/index.html"
 entries:
 - title: 适用于公有云的 VMware
@@ -13,64 +13,83 @@ entries:
     url: "/ehc/ehc-support-configs.html"
   - title: 超大规模部署中的 VMware
     url: "/ehc/ehc-config-vmware-intro.html"
+    entries:
+    - title: 为AWS配置VMC
+      url: "/ehc/aws/aws-setup.html"
+    - title: 配置适用于Azure的AVS
+      url: "/ehc/azure/azure-setup.html"
+    - title: 为GCP配置GCVE
+      url: "/ehc/gcp/gcp-setup.html"
   - title: 超大规模云中的 NetApp 存储
     url: "/ehc/ehc-datastore-intro.html"
+    entries:
+    - title: 用于VMC的子系统连接存储
+      url: "/ehc/aws/aws-guest.html"
+    - title: 用于AVS的子系统连接存储
+      url: "/ehc/azure/azure-guest.html"
+    - title: GCVE的子系统连接存储
+      url: "/ehc/gcp/gcp-guest.html"
   - title: 总结和结论
     url: "/ehc/ehc-summary.html"
 - title: VMware Hybrid Cloud 用例
   entries:
   - title: 用例概述
     url: "/ehc/ehc-use-cases.html"
-- title: NetApp 在超大规模云中的应用
+  - title: 适用于AWS/VMC的解决方案
+    url: "/ehc/aws/aws-solutions.html"
+  - title: 适用于Azure/AVS的解决方案
+    url: "/ehc/azure/azure-solutions.html"
+  - title: 适用于GCP / GCVE的解决方案
+    url: "/ehc/gcp/gcp-solutions.html"
+- title: 适用于AWS/VMC的NetApp
+  url: "/ehc/aws/index.html"
+- title: 适用于Azure / AVS的NetApp
+  url: "/ehc/azure/index.html"
+- title: 适用于GCP / GCVE的NetApp
+  url: "/ehc/gcp/index.html"
   entries:
-  - title: 适用于 AWS 上的 VMC 的 NetApp
-    url: "/ehc/aws/aws-vmc.html"
-  - title: 适用于 Azure 上 AVS 的 NetApp
-    url: "/ehc/azure/azure-avs.html"
-  - title: 适用于 Google Cloud 上的 GCVE 的 NetApp
-    url: "/ehc/gcp/gcp-gcve.html"
-- title: 安全概述—Google Cloud中的NetApp Cloud Volumes Service
-  type: solutions
-  entries:
-  - title: 概述
-    url: "/ehc/ncvs/ncvs-gc-overview.html"
-  - title: Google Cloud中的Cloud Volumes Service 如何保护您的数据安全
-    url: "/ehc/ncvs/ncvs-gc-how-cloud-volumes-service-in-google-cloud-secures-your-data.html"
-  - title: 安全注意事项和攻击面
-    url: "/ehc/ncvs/ncvs-gc-security-considerations-and-attack-surfaces.html"
-  - title: 架构
+  - title: 安全概述—Google Cloud中的NetApp Cloud Volumes Service (CVS)
+    type: solutions
     entries:
-    - title: 架构概述
-      url: "/ehc/ncvs/ncvs-gc-architecture_overview.html"
-    - title: Cloud Volumes Service 架构
-      url: "/ehc/ncvs/ncvs-gc-cloud-volumes-service-architecture.html"
-    - title: 控制平面架构
-      url: "/ehc/ncvs/ncvs-gc-control-plane-architecture.html"
-    - title: 数据平台架构
-      url: "/ehc/ncvs/ncvs-gc-data-plane-architecture.html"
-    - title: 传输中的数据加密
-      url: "/ehc/ncvs/ncvs-gc-data-encryption-in-transit.html"
-    - title: 空闲数据加密
-      url: "/ehc/ncvs/ncvs-gc-data-encryption-at-rest.html"
-    - title: 防火墙：
-      url: "/ehc/ncvs/ncvs-gc-firewall.html"
-  - title: NAS协议
-    entries:
-    - title: NAS协议概述
-      url: "/ehc/ncvs/ncvs-gc-nas-protocols_overview.html"
-    - title: NAS协议基础知识
-      url: "/ehc/ncvs/ncvs-gc-basics-of-nas-protocols.html"
-    - title: NFS
-      url: "/ehc/ncvs/ncvs-gc-nfs.html"
-    - title: SMB
-      url: "/ehc/ncvs/ncvs-gc-smb.html"
-    - title: 双协议/多协议
-      url: "/ehc/ncvs/ncvs-gc-dual-protocol-multiprotocol.html"
-    - title: 创建Active Directory连接的注意事项
-      url: "/ehc/ncvs/ncvs-gc-considerations-creating-active-directory-connections.html"
-    - title: 其他NAS基础架构服务依赖关系(KDC、LDAP、DNS)
-      url: "/ehc/ncvs/ncvs-gc-other-nas-infrastructure-service-dependencies.html"
-  - title: 服务操作
-    url: "/ehc/ncvs/ncvs-gc-service-operation.html"
-  - title: 追加信息
-    url: "/ehc/ncvs/ncvs-gc-additional-information.html"
+    - title: 概述
+      url: "/ehc/ncvs/ncvs-gc-overview.html"
+    - title: Google Cloud中的Cloud Volumes Service 如何保护您的数据安全
+      url: "/ehc/ncvs/ncvs-gc-how-cloud-volumes-service-in-google-cloud-secures-your-data.html"
+    - title: 安全注意事项和攻击面
+      url: "/ehc/ncvs/ncvs-gc-security-considerations-and-attack-surfaces.html"
+    - title: 架构
+      entries:
+      - title: 架构概述
+        url: "/ehc/ncvs/ncvs-gc-architecture_overview.html"
+      - title: Cloud Volumes Service 架构
+        url: "/ehc/ncvs/ncvs-gc-cloud-volumes-service-architecture.html"
+      - title: 控制平面架构
+        url: "/ehc/ncvs/ncvs-gc-control-plane-architecture.html"
+      - title: 数据平台架构
+        url: "/ehc/ncvs/ncvs-gc-data-plane-architecture.html"
+      - title: 传输中的数据加密
+        url: "/ehc/ncvs/ncvs-gc-data-encryption-in-transit.html"
+      - title: 空闲数据加密
+        url: "/ehc/ncvs/ncvs-gc-data-encryption-at-rest.html"
+      - title: 防火墙：
+        url: "/ehc/ncvs/ncvs-gc-firewall.html"
+    - title: NAS协议
+      entries:
+      - title: NAS协议概述
+        url: "/ehc/ncvs/ncvs-gc-nas-protocols_overview.html"
+      - title: NAS协议基础知识
+        url: "/ehc/ncvs/ncvs-gc-basics-of-nas-protocols.html"
+      - title: NFS
+        url: "/ehc/ncvs/ncvs-gc-nfs.html"
+      - title: SMB
+        url: "/ehc/ncvs/ncvs-gc-smb.html"
+      - title: 双协议/多协议
+        url: "/ehc/ncvs/ncvs-gc-dual-protocol-multiprotocol.html"
+      - title: 创建Active Directory连接的注意事项
+        url: "/ehc/ncvs/ncvs-gc-considerations-creating-active-directory-connections.html"
+      - title: 其他NAS基础架构服务依赖关系(KDC、LDAP、DNS)
+        url: "/ehc/ncvs/ncvs-gc-other-nas-infrastructure-service-dependencies.html"
+    - title: 服务操作
+      url: "/ehc/ncvs/ncvs-gc-service-operation.html"
+    - title: 追加信息
+      url: "/ehc/ncvs/ncvs-gc-additional-information.html"

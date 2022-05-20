@@ -23,14 +23,8 @@ NOTE: 目前，只有来宾存储是将 FSX ONTAP 和 Cloud Volumes ONTAP 连接
 
 设置过程可细分为以下步骤：
 
-* link:#deploy["部署和配置适用于 AWS 的 VMware Cloud"]
-* link:#connect["将 VMware Cloud 连接到 FSX ONTAP"]
-
-
-
-
-== 部署和配置适用于 AWS 的 VMware Cloud
-
+.部署和配置适用于 AWS 的 VMware Cloud
+====
 link:https://www.vmware.com/products/vmc-on-aws.html["基于 AWS 的 VMware Cloud"] 为 AWS 生态系统中基于 VMware 的工作负载提供 Cloud 原生体验。每个 VMware 软件定义的数据中心（ SDDC ）均在 Amazon Virtual Private Cloud （ VPC ）中运行，并提供完整的 VMware 堆栈（包括 vCenter Server ）， NSX-T 软件定义的网络连接， vSAN 软件定义的存储以及一个或多个 ESXi 主机，这些主机可为您的工作负载提供计算和存储资源。
 
 本节介绍如何在 AWS 上设置和管理 VMware Cloud ，并将其与适用于 NetApp ONTAP 的 Amazon FSX 和 / 或在 AWS 上使用子系统内存储的 Cloud Volumes ONTAP 结合使用。
@@ -40,27 +34,27 @@ NOTE: 在将 Amazon FSX for NetApp ONTAP 和 Cloud Volumes ONTAP 连接到 AWS �
 
 设置过程可分为三部分：
 
-. 注册 link:https://aws.amazon.com/["Amazon Web Services 帐户"]。
-. 注册 link:https://customerconnect.vmware.com/home["我的 VMware"] 帐户。
-. 在 VMware Cloud 中配置 SDDC 。
-
-
-
-
-== 注册 AWS 帐户
+=====
+.注册AWS帐户
+======
+注册 link:https://aws.amazon.com/["Amazon Web Services 帐户"]。
 
 您需要一个 AWS 帐户才能开始使用，前提是尚未创建一个 AWS 帐户。无论新的还是现有的，您都需要在帐户中拥有管理权限才能执行此操作步骤中的许多步骤。请参见此内容 link:https://docs.aws.amazon.com/general/latest/gr/aws-security-credentials.html["链接。"] 有关 AWS 凭据的详细信息。
 
-
-
-== 注册 My VMware 帐户
+======
+=====
+=====
+.注册"我的VMware帐户"
+======
+注册 link:https://customerconnect.vmware.com/home["我的 VMware"] 帐户。
 
 要访问 VMware 的云产品组合（包括基于 AWS 的 VMware Cloud ），您需要 VMware 客户帐户或 My VMware 帐户。如果尚未创建 VMware 帐户，请创建此帐户 link:https://customerconnect.vmware.com/account-registration["此处"]。
 
-
-
-== 在 VMware Cloud 中配置 SDDC
-
+======
+=====
+=====
+.在 VMware Cloud 中配置 SDDC
+======
 配置 VMware 帐户并执行适当的规模估算后，部署软件定义的数据中心显然是使用 VMware Cloud on AWS 服务的下一步。要创建 SDDC ，请选择要托管它的 AWS 区域，为 SDDC 指定一个名称，并指定希望 SDDC 包含的 ESXi 主机数。如果您还没有 AWS 帐户，则仍可以创建一个包含单个 ESXi 主机的入门级配置 SDDC 。
 
 . 使用现有或新创建的 VMware 凭据登录到 VMware Cloud Console 。
@@ -108,10 +102,11 @@ image:aws-config-11.png[""]
 
 有关 SDDC 部署的分步指南，请参见 link:https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-operations/GUID-EF198D55-03E3-44D1-AC48-6E2ABA31FF02.html["从 VMC 控制台部署 SDDC"]。
 
-
-
-== 将 VMware Cloud 连接到 FSX ONTAP
-
+======
+=====
+====
+.将 VMware Cloud 连接到 FSX ONTAP
+====
 要将 VMware Cloud 连接到 FSX ONTAP ，请完成以下步骤：
 
 . 完成 VMware Cloud 部署并连接到 AWS VPC 后，您必须将适用于 NetApp ONTAP 的 Amazon FSx 部署到新的 VPC 中，而不是原始连接的 VPC 中（请参见下面的屏幕截图）。如果在连接的 VPC 中部署了 FSX （ NFS 和 SMB 浮动 IP ），则无法访问它。请注意， Cloud Volumes ONTAP 等 iSCSI 端点在连接的 VPC 上运行正常。
@@ -166,3 +161,5 @@ image:aws-connect-fsx-13.png[""]
 
 
 下一步是验证是否已根据您的需求配置 Amazon FSX ONTAP 或 Cloud Volumes ONTAP ，以及是否已配置卷以从 vSAN 卸载存储组件以优化部署。
+
+====

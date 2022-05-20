@@ -1,0 +1,30 @@
+---
+sidebar: sidebar 
+permalink: databases/sql-srv-anf_overview.html 
+keywords: use case, rehosting, enterprise resource planning, RDBMS, cloud migration 
+summary: 本文档介绍如何利用 Azure 虚拟机在 Azure NetApp Files 上实时部署 SQL Server 始终可用性组（ AOAG ）。 
+---
+= TR-4897 ： Azure NetApp Files 上的 SQL Server — Real Deployment 视图
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+NetApp 公司 Niyaz Mohamed
+
+IT 组织面临着不断变化的问题。据 Gartner 报告，到 2022 年，所有数据库中有近 75% 的数据库将需要基于云的存储。作为领先的关系数据库管理系统（ Relational Database Management System ， RDBMS ）， Microsoft SQL Server 是 Windows 平台设计的应用程序和组织的首选，这些应用程序和组织依靠 SQL Server 来实现从企业资源规划（ Enterprise Resource Planning ， ERP ）到分析再到内容管理的所有功能。SQL Server 帮助企业彻底改变了管理海量数据集的方式，并为其应用程序提供支持，以满足架构和查询性能需求。
+
+大多数 IT 组织都采用云优先的方法。处于转型阶段的客户会评估其当前的 IT 环境，然后根据评估和发现练习将其数据库工作负载迁移到云。促使客户迁移到云的一些因素包括弹性 / 突发，数据中心退出，数据中心整合，寿命终结情形，合并， 采集等。迁移的原因可能因组织及其各自的业务优先级而异。迁移到云时，要充分发挥 SQL Server 数据库云部署的潜能，选择合适的云存储非常重要。
+
+
+
+== 用例
+
+将 SQL Server 资产迁移到 Azure ，并将 SQL Server 与 Azure Data Factory ， Azure IoT Hub 和 Azure Machine Learning 等 Azure 的大量平台即服务（ Platform-as-a-Service ， PaaS ）功能相集成，为支持数字化转型创造了巨大的业务价值。与依赖资本支出模式或传统私有云模式相比，采用云还可以使相应的业务部门专注于工作效率并更快地交付新功能和增强功能（ DevTest 用例）。本文档介绍如何利用 Azure 虚拟机在 Azure NetApp Files 上实时部署 SQL Server 始终可用性组（ AOAG ）。
+
+Azure NetApp Files 提供具有持续可用文件共享的企业级存储。SMB 文件共享上的 SQL Server 生产数据库需要持续可用的共享，以确保节点始终能够访问数据库存储，包括在控制器升级或故障等中断情形下。持续可用的文件共享不再需要在存储节点之间复制数据。Azure NetApp Files 使用 SMB 3.0 横向扩展，持久句柄和透明故障转移来支持在发生计划内和计划外停机事件（包括许多管理任务）时执行无中断操作（ NDO ）。
+
+在规划云迁移时，您应始终评估最佳使用方法。应用程序迁移最常见且最简单的方法是重新托管（也称为提升和移动）。本文档中提供的示例方案使用重新托管方法。使用采用 Azure NetApp Files 的 Azure 虚拟机上的 SQL Server ，您可以在云中使用完整版本的 SQL Server ，而无需管理内部硬件。SQL Server 虚拟机（ VM ）还可以在按需购买的情况下简化许可成本，并为开发，测试和资产更新情形提供弹性和突发功能。

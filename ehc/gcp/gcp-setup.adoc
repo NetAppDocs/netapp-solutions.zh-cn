@@ -23,14 +23,8 @@ NOTE: 来宾存储是将 Cloud Volumes ONTAP 和云卷服务连接到 GCVE 的�
 
 设置过程可细分为以下步骤：
 
-* link:#deploy["部署和配置 GCVE"]
-* link:#enable-access["启用对 GCVE 的私有访问"]
-
-
-
-
-== 部署和配置 GCVE
-
+.部署和配置 GCVE
+====
 要在 GCP 上配置 GCVE 环境，请登录到 GCP 控制台并访问 VMware 引擎门户。
 
 单击 " 新建私有云 " 按钮，然后输入所需的 GCVE 私有云配置。在 " 位置 " 上，确保在部署 CVS/CVO 的同一区域 / 区域部署私有云，以确保最佳性能和最低延迟。
@@ -46,10 +40,9 @@ image:gcve-deploy-1.png[""]
 
 注意：创建私有云可能需要 30 分钟到 2 小时。
 
-
-
-== 启用对 GCVE 的私有访问
-
+====
+.启用对 GCVE 的私有访问
+====
 配置私有云后，配置对私有云的私有访问，以实现高吞吐量和低延迟的数据路径连接。
 
 这将确保运行 Cloud Volumes ONTAP 实例的 VPC 网络能够与 GCVE 私有云进行通信。要执行此操作，请按照 link:https://cloud.google.com/architecture/partners/netapp-cloud-volumes/quickstart["GCP 文档"]。对于云卷服务，通过在租户主机项目之间执行一次性对等操作，在 VMware 引擎和 Cloud Volumes Service 之间建立连接。有关详细步骤，请按照此步骤进行操作 link:https://cloud.google.com/vmware-engine/docs/vmware-ecosystem/howto-cloud-volumes-service["链接。"]。
@@ -67,3 +60,5 @@ image:gcve-access-2.png[""]
 image:gcve-access-3.png[""]
 
 image:gcve-access-4.png[""]
+
+====

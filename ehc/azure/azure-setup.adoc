@@ -22,15 +22,8 @@ NOTE: 将 Azure NetApp Files 和 Cloud Volumes ONTAP 连接到 Azure VMware 解�
 
 设置过程可细分为以下步骤：
 
-* link:#register["注册资源提供商并创建私有云"]
-* link:#connect["连接到新的或现有的 ExpressRoute 虚拟网络网关"]
-* link:#validate["验证网络连接并访问私有云"]
-
-
-
-
-== 注册资源提供商并创建私有云
-
+.注册资源提供商并创建私有云
+====
 要使用 Azure VMware 解决方案，请先在标识的订阅中注册资源提供程序：
 
 . 登录到 Azure 门户。
@@ -68,10 +61,9 @@ Azure VMware 解决方案私有云需要 Azure 虚拟网络。由于 Azure VMwar
 
 image:avs-register-create-pc-4.png[""]
 
-
-
-== 连接到新的或现有的 ExpressRoute 虚拟网络网关
-
+====
+.连接到新的或现有的 ExpressRoute 虚拟网络网关
+====
 要创建新的 Azure 虚拟网络（ vNet ），请选择 Azure vNet Connect 选项卡。或者，您也可以使用创建虚拟网络向导从 Azure 门户手动创建一个：
 
 . 转到 Azure VMware 解决方案私有云，然后在管理选项下访问连接。
@@ -96,10 +88,9 @@ image:azure-connect-gateway-2.png[""]
 
 NOTE: 如果您手动创建 vNet ，请创建一个虚拟网络网关，并将相应的 SKU 和 ExpressRoute 作为网关类型。部署完成后，使用授权密钥将 ExpressRoute 连接到包含 Azure VMware 解决方案私有云的虚拟网络网关。有关详细信息，请参见 link:https://docs.microsoft.com/en-us/azure/azure-vmware/tutorial-configure-networking#create-a-vnet-manually["在 Azure 中为 VMware 私有云配置网络连接"]。
 
-
-
-== 验证连接到 Azure VMware 解决方案私有云的网络和访问权限
-
+====
+.验证连接到 Azure VMware 解决方案私有云的网络和访问权限
+====
 Azure VMware 解决方案不允许您使用内部 VMware vCenter 管理私有云。而是需要跳转主机才能连接到 Azure VMware 解决方案 vCenter 实例。在指定资源组中创建一个跳转主机，然后登录到 Azure VMware 解决方案 vCenter 。此跳转主机应是为连接而创建的同一虚拟网络上的 Windows VM ，并应提供对 vCenter 和 NSX Manager 的访问权限。
 
 image:azure-validate-network-1.png[""]
@@ -122,3 +113,5 @@ image:azure-validate-network-4.png[""]
 image:azure-validate-network-5.png[""]
 
 现在， Azure VMware 解决方案 SDDC 已部署和配置。利用 ExpressRoute Global Reach 将内部环境连接到 Azure VMware 解决方案私有云。有关详细信息，请参见 link:https://docs.microsoft.com/en-us/azure/azure-vmware/tutorial-expressroute-global-reach-private-cloud["将内部环境与 Azure VMware 解决方案建立对等关系"]。
+
+====

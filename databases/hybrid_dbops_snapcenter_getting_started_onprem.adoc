@@ -1,0 +1,557 @@
+---
+sidebar: sidebar 
+permalink: databases/hybrid_dbops_snapcenter_getting_started_onprem.html 
+summary: NetApp SnapCenter 工具使用基于角色的访问控制（ Role-Based Access Control ， RBAC ）来管理用户资源访问和权限授予，而 SnapCenter 安装会创建预先填充的角色。您还可以根据需要或应用程序创建自定义角色。 
+keywords: workflow, on premises, rbac, roles, permissions 
+---
+= 内部部署入门
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:table-stripes: odd
+:imagesdir: ./../media/
+
+
+link:hybrid_dbops_snapcenter_getting_started.html["上一步：入门概述。"]
+
+
+
+== 内部部署
+
+
+
+=== 1. 在 SnapCenter 中设置数据库管理员用户
+
+NetApp SnapCenter 工具使用基于角色的访问控制（ Role-Based Access Control ， RBAC ）来管理用户资源访问和权限授予，而 SnapCenter 安装会创建预先填充的角色。您还可以根据需要或应用程序创建自定义角色。SnapCenter 支持的每个数据库平台都有一个专用的管理员用户 ID ，用于数据库备份，还原和 / 或灾难恢复，这一点很有意义。您也可以使用一个 ID 来管理所有数据库。在测试用例和演示中，我们分别为 Oracle 和 SQL Server 创建了一个专用管理员用户。
+
+某些 SnapCenter 资源只能使用 SnapCenterAdmin 角色进行配置。然后，可以将资源分配给其他用户 ID 以进行访问。
+
+在预安装和配置的内部 SnapCenter 环境中，以下任务可能已完成。如果不是，以下步骤将创建一个数据库管理员用户：
+
+. 将管理员用户添加到 Windows Active Directory 。
+. 使用 SnapCenterAdmin 角色授予的 ID 登录到 SnapCenter 。
+. 导航到设置和用户下的访问选项卡，然后单击添加以添加新用户。新用户 ID 将链接到步骤 1 中在 Windows Active Directory 中创建的管理员用户。。根据需要为用户分配适当的角色。根据需要向管理员用户分配资源。
+
+
+image:snapctr_admin_users.PNG["错误：缺少图形映像"]
+
+
+
+=== 2. SnapCenter 插件安装前提条件
+
+SnapCenter 使用数据库主机上运行的插件代理执行备份，还原，克隆和其他功能。它会通过在设置和凭据选项卡下配置的凭据连接到数据库主机和数据库，以便安装插件和执行其他管理功能。根据目标主机类型（如 Linux 或 Windows ）以及数据库类型，有特定的权限要求。
+
+在安装 SnapCenter 插件之前，必须配置数据库主机凭据。通常，您希望使用数据库主机上的管理员用户帐户作为插件安装的主机连接凭据。您还可以使用基于操作系统的身份验证为数据库访问授予相同的用户 ID 。另一方面，您还可以使用不同数据库用户 ID 进行数据库身份验证，以进行数据库管理访问。如果您决定使用基于操作系统的身份验证，则必须为操作系统管理员用户 ID 授予数据库访问权限。对于基于 Windows 域的 SQL Server 安装，可以使用域管理员帐户管理域中的所有 SQL Server 。
+
+适用于 SQL Server 的 Windows 主机：
+
+. 如果使用 Windows 凭据进行身份验证，则必须在安装插件之前设置凭据。
+. 如果使用 SQL Server 实例进行身份验证，则必须在安装插件后添加凭据。
+. 如果在设置凭据时启用了 SQL 身份验证，则发现的实例或数据库将显示一个红色锁定图标。如果显示锁定图标，则必须指定实例或数据库凭据才能成功将实例或数据库添加到资源组。
+. 满足以下条件时，必须将凭据分配给不具有 sysadmin 访问权限的 RBAC 用户：
++
+** 此凭据将分配给 SQL 实例。
+** SQL 实例或主机已分配给 RBAC 用户。
+** RBAC DB 管理员用户必须同时具有资源组和备份权限。
+
+
+
+
+适用于 Oracle 的 UNIX 主机：
+
+. 您必须已通过编辑 sshd.conf 并重新启动 sshd 服务为 root 或非 root 用户启用基于密码的 SSH 连接。默认情况下， AWS 实例上基于密码的 SSH 身份验证处于关闭状态。
+. 为非 root 用户配置 sudo 权限以安装和启动插件过程。安装插件后，这些进程将以有效 root 用户身份运行。
+. 使用 Linux 身份验证模式为安装用户创建凭据。
+. 必须在 Linux 主机上安装 Java 1.8.x （ 64 位）。
+. 安装 Oracle 数据库插件还会安装适用于 Unix 的 SnapCenter 插件。
+
+
+
+
+=== 3. SnapCenter 主机插件安装
+
+
+NOTE: 在尝试在云数据库服务器实例上安装 SnapCenter 插件之前，请确保已完成计算实例部署的相关云部分中列出的所有配置步骤。
+
+以下步骤说明了在主机上安装 SnapCenter 插件时如何将数据库主机添加到 SnapCenter 中。操作步骤适用场景同时添加内部主机和云主机。以下演示将添加驻留在 AWS 中的 Windows 或 Linux 主机。
+
+
+
+==== 配置 SnapCenter VMware 全局设置
+
+导航到设置 > 全局设置。在 Hypervisor Settings 下选择 "VM have iSCSI direct attached disks or NFS for all the hosts" ，然后单击 Update 。
+
+image:snapctr_vmware_global.PNG["错误：缺少图形映像"]
+
+
+
+==== 添加 Windows 主机并在主机上安装插件
+
+. 使用具有 SnapCenterAdmin 权限的用户 ID 登录到 SnapCenter 。
+. 单击左侧菜单中的主机选项卡，然后单击添加以打开添加主机工作流。
+. 选择 Windows 作为主机类型；主机名可以是主机名或 IP 地址。主机名必须从 SnapCenter 主机解析为正确的主机 IP 地址。选择在步骤 2 中创建的主机凭据。选择 Microsoft Windows 和 Microsoft SQL Server 作为要安装的插件软件包。
++
+image:snapctr_add_windows_host_01.PNG["错误：缺少图形映像"]
+
+. 在 Windows 主机上安装此插件后，其整体状态将显示为 "Configure log directory" 。
++
+image:snapctr_add_windows_host_02.PNG["错误：缺少图形映像"]
+
+. 单击主机名以打开 SQL Server 日志目录配置。
++
+image:snapctr_add_windows_host_03.PNG["错误：缺少图形映像"]
+
+. 单击 " 配置日志目录 " 以打开 " 为 SQL Server 配置插件 " 。
++
+image:snapctr_add_windows_host_04.PNG["错误：缺少图形映像"]
+
+. 单击浏览以发现 NetApp 存储，以便可以设置日志目录； SnapCenter 使用此日志目录来汇总 SQL Server 事务日志文件。然后单击保存。
++
+image:snapctr_add_windows_host_05.PNG["错误：缺少图形映像"]
+
++
+
+NOTE: 要发现配置到数据库主机的 NetApp 存储，必须将存储（内部或 CVO ）添加到 SnapCenter 中，如 CVO 的步骤 6 中所示。
+
+. 配置日志目录后， Windows 主机插件的整体状态将更改为正在运行。
++
+image:snapctr_add_windows_host_06.PNG["错误：缺少图形映像"]
+
+. 要将主机分配给数据库管理用户 ID ，请导航到 " 设置和用户 " 下的 " 访问 " 选项卡，单击数据库管理用户 ID （在我们的情况下，是指需要将主机分配到的 sqldba ），然后单击 " 保存 " 完成主机资源分配。
++
+image:snapctr_add_windows_host_07.PNG["错误：缺少图形映像"]
+
++
+image:snapctr_add_windows_host_08.PNG["错误：缺少图形映像"]
+
+
+
+
+
+==== 添加 Unix 主机并在主机上安装插件
+
+. 使用具有 SnapCenterAdmin 权限的用户 ID 登录到 SnapCenter 。
+. 单击左侧菜单中的主机选项卡，然后单击添加以打开添加主机工作流。
+. 选择 Linux 作为主机类型。主机名可以是主机名或 IP 地址。但是，必须解析主机名，以更正 SnapCenter 主机的主机 IP 地址。选择在步骤 2 中创建的主机凭据。主机凭据需要 sudo 权限。选中 Oracle Database 作为要安装的插件，该插件将同时安装 Oracle 和 Linux 主机插件。
++
+image:snapctr_add_linux_host_01.PNG["错误：缺少图形映像"]
+
+. 单击更多选项并选择 " 跳过预安装检查 " 。 系统会提示您确认是否跳过预安装检查。单击是，然后单击保存。
++
+image:snapctr_add_linux_host_02.PNG["错误：缺少图形映像"]
+
+. 单击提交以开始安装插件。系统将提示您确认指纹，如下所示。
++
+image:snapctr_add_linux_host_03.PNG["错误：缺少图形映像"]
+
+. SnapCenter 将执行主机验证和注册，然后该插件将安装在 Linux 主机上。状态将从 " 正在安装插件 " 更改为 " 正在运行 " 。
++
+image:snapctr_add_linux_host_04.PNG["错误：缺少图形映像"]
+
+. 将新添加的主机分配给正确的数据库管理用户 ID （在我们的案例中为 oradba ）。
++
+image:snapctr_add_linux_host_05.PNG["错误：缺少图形映像"]
+
++
+image:snapctr_add_linux_host_06.PNG["错误：缺少图形映像"]
+
+
+
+
+
+=== 4. 数据库资源发现
+
+成功安装插件后，可以立即发现主机上的数据库资源。单击左侧菜单中的 "Resources" 选项卡。根据数据库平台的类型，可以使用多种视图，例如数据库，资源组等。如果未发现和显示主机上的资源，则可能需要单击刷新资源选项卡。
+
+image:snapctr_resources_ora.PNG["错误：缺少图形映像"]
+
+首次发现数据库时，整体状态显示为 " 不受保护 " 。 上一屏幕截图显示了一个尚未受备份策略保护的 Oracle 数据库。
+
+设置备份配置或策略并执行备份后，数据库的整体状态会将备份状态显示为 " 备份成功 " ，并显示上次备份的时间戳。以下屏幕截图显示了 SQL Server 用户数据库的备份状态。
+
+image:snapctr_resources_sql.PNG["错误：缺少图形映像"]
+
+如果未正确设置数据库访问凭据，则红色锁定按钮表示数据库不可访问。例如，如果 Windows 凭据不具有对数据库实例的 sysadmin 访问权限，则必须重新配置数据库凭据以解除红色锁定。
+
+image:snapctr_add_windows_host_09.PNG["错误：缺少图形映像"]
+
+image:snapctr_add_windows_host_10.PNG["错误：缺少图形映像"]
+
+在 Windows 级别或数据库级别配置相应的凭据后，红色锁定将消失，并收集和查看 SQL Server 类型信息。
+
+image:snapctr_add_windows_host_11.PNG["错误：缺少图形映像"]
+
+
+
+=== 5. 设置存储集群对等和数据库卷复制
+
+为了使用公有云作为目标目标目标来保护内部数据库数据，使用 NetApp SnapMirror 技术将内部 ONTAP 集群数据库卷复制到云 CVO 。然后，可以克隆复制的目标卷以进行开发 / 运营或灾难恢复。通过以下高级步骤，您可以设置集群对等和数据库卷复制。
+
+. 在内部集群和 CVO 集群实例上配置集群间 LIF 以建立集群对等关系。此步骤可使用 ONTAP 系统管理器执行。默认 CVO 部署会自动配置集群间 LIF 。
++
+内部集群：
+
++
+image:snapctr_cluster_replication_01.PNG["错误：缺少图形映像"]
+
++
+目标 CVO 集群：
+
++
+image:snapctr_cluster_replication_02.PNG["错误：缺少图形映像"]
+
+. 配置集群间 LIF 后，可以使用 NetApp Cloud Manager 中的拖放功能设置集群对等和卷复制。请参见 link:hybrid_dbops_snapcenter_getting_started_aws.html#aws-public-cloud["入门— AWS 公有云"] 了解详细信息。
++
+或者，也可以使用 ONTAP 系统管理器执行集群对等和数据库卷复制，如下所示：
+
+. 登录到 ONTAP 系统管理器。导航到集群 > 设置，然后单击对等集群，以便与云中的 CVO 实例建立集群对等关系。
++
+image:snapctr_vol_snapmirror_00.PNG["错误：缺少图形映像"]
+
+. 转到卷选项卡。选择要复制的数据库卷，然后单击保护。
++
+image:snapctr_vol_snapmirror_01.PNG["错误：缺少图形映像"]
+
+. 将保护策略设置为异步。选择目标集群和 Storage SVM 。
++
+image:snapctr_vol_snapmirror_02.PNG["错误：缺少图形映像"]
+
+. 验证卷是否已在源和目标之间同步，以及复制关系是否运行正常。
++
+image:snapctr_vol_snapmirror_03.PNG["错误：缺少图形映像"]
+
+
+
+
+
+=== 6. 将 CVO 数据库存储 SVM 添加到 SnapCenter
+
+. 使用具有 SnapCenterAdmin 权限的用户 ID 登录到 SnapCenter 。
+. 从菜单中单击存储系统选项卡，然后单击新建将托管复制的目标数据库卷的 CVO 存储 SVM 添加到 SnapCenter 。在存储系统字段中输入集群管理 IP ，然后输入相应的用户名和密码。
++
+image:snapctr_add_cvo_svm_01.PNG["错误：缺少图形映像"]
+
+. 单击更多选项以打开其他存储配置选项。在平台字段中，选择 Cloud Volumes ONTAP ，选中二级，然后单击保存。
++
+image:snapctr_add_cvo_svm_02.PNG["错误：缺少图形映像"]
+
+. 将存储系统分配给 SnapCenter 数据库管理用户 ID ，如所示 <<3. SnapCenter host plugin installation>>。
++
+image:snapctr_add_cvo_svm_03.PNG["错误：缺少图形映像"]
+
+
+
+
+
+=== 7. 在 SnapCenter 中设置数据库备份策略
+
+以下过程演示了如何创建完整的数据库或日志文件备份策略。然后，可以实施此策略来保护数据库资源。恢复点目标（ RPO ）或恢复时间目标（ RTO ）决定了数据库和 / 或日志备份的频率。
+
+
+
+==== 为 Oracle 创建完整的数据库备份策略
+
+. 以数据库管理用户 ID 身份登录到 SnapCenter ，单击设置，然后单击策略。
++
+image:snapctr_ora_policy_data_01.PNG["错误：缺少图形映像"]
+
+. 单击 " 新建 " 启动新的备份策略创建工作流或选择要修改的现有策略。
++
+image:snapctr_ora_policy_data_02.PNG["错误：缺少图形映像"]
+
+. 选择备份类型和计划频率。
++
+image:snapctr_ora_policy_data_03.PNG["错误：缺少图形映像"]
+
+. 设置备份保留设置。此选项用于定义要保留的完整数据库备份副本数。
++
+image:snapctr_ora_policy_data_04.PNG["错误：缺少图形映像"]
+
+. 选择二级复制选项以将要复制到云中二级位置的本地主快照备份推送到云中。
++
+image:snapctr_ora_policy_data_05.PNG["错误：缺少图形映像"]
+
+. 指定在备份运行前后运行的任何可选脚本。
++
+image:snapctr_ora_policy_data_06.PNG["错误：缺少图形映像"]
+
+. 根据需要运行备份验证。
++
+image:snapctr_ora_policy_data_07.PNG["错误：缺少图形映像"]
+
+. 摘要
++
+image:snapctr_ora_policy_data_08.PNG["错误：缺少图形映像"]
+
+
+
+
+
+==== 为 Oracle 创建数据库日志备份策略
+
+. 使用数据库管理用户 ID 登录到 SnapCenter ，单击设置，然后单击策略。
+. 单击 " 新建 " 启动新的备份策略创建工作流，或者选择现有策略进行修改。
++
+image:snapctr_ora_policy_log_01.PNG["错误：缺少图形映像"]
+
+. 选择备份类型和计划频率。
++
+image:snapctr_ora_policy_log_02.PNG["错误：缺少图形映像"]
+
+. 设置日志保留期限。
++
+image:snapctr_ora_policy_log_03.PNG["错误：缺少图形映像"]
+
+. 启用复制到公有云中的二级位置。
++
+image:snapctr_ora_policy_log_04.PNG["错误：缺少图形映像"]
+
+. 指定在日志备份前后运行的任何可选脚本。
++
+image:snapctr_ora_policy_log_05.PNG["错误：缺少图形映像"]
+
+. 指定任何备份验证脚本。
++
+image:snapctr_ora_policy_log_06.PNG["错误：缺少图形映像"]
+
+. 摘要
++
+image:snapctr_ora_policy_log_07.PNG["错误：缺少图形映像"]
+
+
+
+
+
+==== 为 SQL 创建完整的数据库备份策略
+
+. 使用数据库管理用户 ID 登录到 SnapCenter ，单击设置，然后单击策略。
++
+image:snapctr_sql_policy_data_01.PNG["错误：缺少图形映像"]
+
+. 单击 " 新建 " 启动新的备份策略创建工作流，或者选择现有策略进行修改。
++
+image:snapctr_sql_policy_data_02.PNG["错误：缺少图形映像"]
+
+. 定义备份选项和计划频率。对于配置了可用性组的 SQL Server ，可以设置首选备份副本。
++
+image:snapctr_sql_policy_data_03.PNG["错误：缺少图形映像"]
+
+. 设置备份保留期限。
++
+image:snapctr_sql_policy_data_04.PNG["错误：缺少图形映像"]
+
+. 启用备份副本复制到云中的二级位置。
++
+image:snapctr_sql_policy_data_05.PNG["错误：缺少图形映像"]
+
+. 指定在备份作业之前或之后运行的任何可选脚本。
++
+image:snapctr_sql_policy_data_06.PNG["错误：缺少图形映像"]
+
+. 指定用于运行备份验证的选项。
++
+image:snapctr_sql_policy_data_07.PNG["错误：缺少图形映像"]
+
+. 摘要
++
+image:snapctr_sql_policy_data_08.PNG["错误：缺少图形映像"]
+
+
+
+
+
+==== 为 SQL 创建数据库日志备份策略。
+
+. 使用数据库管理用户 ID 登录到 SnapCenter ，单击 " 设置 ">" 策略 " ，然后单击 " 新建 " 以启动新的策略创建工作流。
++
+image:snapctr_sql_policy_log_01.PNG["错误：缺少图形映像"]
+
+. 定义日志备份选项和计划频率。对于配置了可用性组的 SQL Server ，可以设置首选备份副本。
++
+image:snapctr_sql_policy_log_02.PNG["错误：缺少图形映像"]
+
+. SQL Server 数据备份策略定义日志备份保留；接受此处的默认值。
++
+image:snapctr_sql_policy_log_03.PNG["错误：缺少图形映像"]
+
+. 启用日志备份复制到云中的二级卷。
++
+image:snapctr_sql_policy_log_04.PNG["错误：缺少图形映像"]
+
+. 指定在备份作业之前或之后运行的任何可选脚本。
++
+image:snapctr_sql_policy_log_05.PNG["错误：缺少图形映像"]
+
+. 摘要
++
+image:snapctr_sql_policy_log_06.PNG["错误：缺少图形映像"]
+
+
+
+
+
+=== 8. 实施备份策略以保护数据库
+
+SnapCenter 使用资源组以数据库资源的逻辑分组形式备份数据库，例如，服务器上托管的多个数据库，共享相同存储卷的数据库，支持业务应用程序的多个数据库等。保护单个数据库会创建自己的资源组。以下过程演示如何实施第 7 节中创建的备份策略来保护 Oracle 和 SQL Server 数据库。
+
+
+
+==== 创建一个资源组以对 Oracle 进行完整备份
+
+. 使用数据库管理用户 ID 登录到 SnapCenter ，然后导航到资源选项卡。在视图下拉列表中，选择数据库或资源组以启动资源组创建工作流。
++
+image:snapctr_ora_rgroup_full_01.PNG["错误：缺少图形映像"]
+
+. 提供资源组的名称和标记。您可以为 Snapshot 副本定义命名格式，并绕过冗余归档日志目标（如果已配置）。
++
+image:snapctr_ora_rgroup_full_02.PNG["错误：缺少图形映像"]
+
+. 将数据库资源添加到资源组。
++
+image:snapctr_ora_rgroup_full_03.PNG["错误：缺少图形映像"]
+
+. 从下拉列表中选择在第 7 节中创建的完整备份策略。
++
+image:snapctr_ora_rgroup_full_04.PNG["错误：缺少图形映像"]
+
+. 单击（ + ）号可配置所需的备份计划。
++
+image:snapctr_ora_rgroup_full_05.PNG["错误：缺少图形映像"]
+
+. 单击 Load Locators 以加载源卷和目标卷。
++
+image:snapctr_ora_rgroup_full_06.PNG["错误：缺少图形映像"]
+
+. 如果需要，配置 SMTP 服务器以发送电子邮件通知。
++
+image:snapctr_ora_rgroup_full_07.PNG["错误：缺少图形映像"]
+
+. 摘要
++
+image:snapctr_ora_rgroup_full_08.PNG["错误：缺少图形映像"]
+
+
+
+
+
+==== 为 Oracle 的日志备份创建一个资源组
+
+. 使用数据库管理用户 ID 登录到 SnapCenter ，然后导航到资源选项卡。在视图下拉列表中，选择数据库或资源组以启动资源组创建工作流。
++
+image:snapctr_ora_rgroup_log_01.PNG["错误：缺少图形映像"]
+
+. 提供资源组的名称和标记。您可以为 Snapshot 副本定义命名格式，并绕过冗余归档日志目标（如果已配置）。
++
+image:snapctr_ora_rgroup_log_02.PNG["错误：缺少图形映像"]
+
+. 将数据库资源添加到资源组。
++
+image:snapctr_ora_rgroup_log_03.PNG["错误：缺少图形映像"]
+
+. 从下拉列表中选择在第 7 节中创建的日志备份策略。
++
+image:snapctr_ora_rgroup_log_04.PNG["错误：缺少图形映像"]
+
+. 单击（ + ）号可配置所需的备份计划。
++
+image:snapctr_ora_rgroup_log_05.PNG["错误：缺少图形映像"]
+
+. 如果配置了备份验证，则会显示在此处。
++
+image:snapctr_ora_rgroup_log_06.PNG["错误：缺少图形映像"]
+
+. 如果需要，配置用于电子邮件通知的 SMTP 服务器。
++
+image:snapctr_ora_rgroup_log_07.PNG["错误：缺少图形映像"]
+
+. 摘要
++
+image:snapctr_ora_rgroup_log_08.PNG["错误：缺少图形映像"]
+
+
+
+
+
+==== 创建用于 SQL Server 完整备份的资源组
+
+. 使用数据库管理用户 ID 登录到 SnapCenter ，然后导航到资源选项卡。在视图下拉列表中，选择数据库或资源组以启动资源组创建工作流。提供资源组的名称和标记。您可以为 Snapshot 副本定义命名格式。
++
+image:snapctr_sql_rgroup_full_01.PNG["错误：缺少图形映像"]
+
+. 选择要备份的数据库资源。
++
+image:snapctr_sql_rgroup_full_02.PNG["错误：缺少图形映像"]
+
+. 选择在第 7 节中创建的完整 SQL 备份策略。
++
+image:snapctr_sql_rgroup_full_03.PNG["错误：缺少图形映像"]
+
+. 添加准确的备份时间以及频率。
++
+image:snapctr_sql_rgroup_full_04.PNG["错误：缺少图形映像"]
+
+. 如果要执行备份验证，请在二级系统上为备份选择验证服务器。单击加载定位器以填充二级存储位置。
++
+image:snapctr_sql_rgroup_full_05.PNG["错误：缺少图形映像"]
+
+. 如果需要，配置 SMTP 服务器以发送电子邮件通知。
++
+image:snapctr_sql_rgroup_full_06.PNG["错误：缺少图形映像"]
+
+. 摘要
++
+image:snapctr_sql_rgroup_full_07.PNG["错误：缺少图形映像"]
+
+
+
+
+
+==== 为 SQL Server 的日志备份创建一个资源组
+
+. 使用数据库管理用户 ID 登录到 SnapCenter ，然后导航到资源选项卡。在视图下拉列表中，选择数据库或资源组以启动资源组创建工作流。提供资源组的名称和标记。您可以为 Snapshot 副本定义命名格式。
++
+image:snapctr_sql_rgroup_log_01.PNG["错误：缺少图形映像"]
+
+. 选择要备份的数据库资源。
++
+image:snapctr_sql_rgroup_log_02.PNG["错误：缺少图形映像"]
+
+. 选择在第 7 节中创建的 SQL 日志备份策略。
++
+image:snapctr_sql_rgroup_log_03.PNG["错误：缺少图形映像"]
+
+. 添加准确的备份时间以及频率。
++
+image:snapctr_sql_rgroup_log_04.PNG["错误：缺少图形映像"]
+
+. 如果要执行备份验证，请在二级系统上为备份选择验证服务器。单击负载定位器以填充二级存储位置。
++
+image:snapctr_sql_rgroup_log_05.PNG["错误：缺少图形映像"]
+
+. 如果需要，配置 SMTP 服务器以发送电子邮件通知。
++
+image:snapctr_sql_rgroup_log_06.PNG["错误：缺少图形映像"]
+
+. 摘要
++
+image:snapctr_sql_rgroup_log_07.PNG["错误：缺少图形映像"]
+
+
+
+
+
+=== 9. 验证备份
+
+创建数据库备份资源组以保护数据库资源后，备份作业将根据预定义的计划运行。在监控选项卡下检查作业执行状态。
+
+image:snapctr_job_status_sql.PNG["错误：缺少图形映像"]
+
+转到资源选项卡，单击数据库名称以查看数据库备份的详细信息，然后在本地副本和镜像副本之间切换，以验证 Snapshot 备份是否已复制到公有云中的二级位置。
+
+image:snapctr_job_status_ora.PNG["错误：缺少图形映像"]
+
+此时，云中的数据库备份副本已做好克隆准备，可以运行开发 / 测试流程，或者在发生主故障时进行灾难恢复。
+
+link:hybrid_dbops_snapcenter_getting_started_aws.html["接下来： AWS 公有云入门。"]

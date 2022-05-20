@@ -1,0 +1,332 @@
+---
+sidebar: sidebar 
+permalink: databases/hybrid_dbops_snapcenter_getting_started_aws.html 
+summary: 本节介绍在 AWS 中部署 Cloud Manager 和 Cloud Volumes ONTAP 的过程。 
+keywords: AWS, cloud volumes ontap, cloud manager, deploy 
+---
+= AWS 公有云入门
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:table-stripes: odd
+:imagesdir: ./../media/
+
+
+link:hybrid_dbops_snapcenter_getting_started_onprem.html["先前版本：内部部署入门。"]
+
+
+
+== AWS 公有云
+
+
+NOTE: 为了便于操作，我们根据 AWS 中的部署创建了本文档。但是， Azure 和 GCP 的过程非常相似。
+
+
+
+=== 1 ，飞行前检查
+
+在部署之前，请确保基础架构已准备就绪，以便在下一阶段进行部署。其中包括：
+
+* AWS 帐户
+* 您选择的地区的 VPC
+* 可访问公有 Internet 的子网
+* 向 AWS 帐户添加 IAM 角色的权限
+* AWS 用户的机密密钥和访问密钥
+
+
+
+
+=== 在 AWS 中部署 Cloud Manager 和 Cloud Volumes ONTAP 的步骤
+
+
+NOTE: 部署 Cloud Manager 和 Cloud Volumes ONTAP 的方法有多种；此方法最简单，但需要的权限最多。如果此方法不适用于您的 AWS 环境，请参考 https://docs.netapp.com/us-en/occm/task_creating_connectors_aws.html["NetApp Cloud 文档"^]。
+
+
+
+==== 部署 Cloud Manager 连接器
+
+. 导航到 https://cloud.netapp.com/cloud-manager["NetApp Cloud Central"^] 并登录或注册。
++
+image:cloud_central_login_page.PNG["错误：缺少图形映像"]
+
+. 登录后，您应转到 " 画布 " 。
++
+image:cloud_central_canvas_page.PNG["错误：缺少图形映像"]
+
+. 单击 " 添加工作环境 " ，然后在 AWS 中选择 Cloud Volumes ONTAP 。您还可以在此处选择是要部署单节点系统还是高可用性对。我已选择部署高可用性对。
++
+image:cloud_central_add_we.PNG["错误：缺少图形映像"]
+
+. 如果尚未创建连接器，则会显示一个弹出窗口，要求您创建连接器。
++
+image:cloud_central_add_conn_1.PNG["错误：缺少图形映像"]
+
+. 单击 " 让我们开始 " ，然后选择 "AWS" 。
++
+image:cloud_central_add_conn_3.PNG["错误：缺少图形映像"]
+
+. 输入您的机密密钥和访问密钥。确保您的用户具有上所述的正确权限 https://mysupport.netapp.com/site/info/cloud-manager-policies["NetApp 策略页面"^]。
++
+image:cloud_central_add_conn_4.PNG["错误：缺少图形映像"]
+
+. 为连接器指定一个名称，并使用上所述的预定义角色 https://mysupport.netapp.com/site/info/cloud-manager-policies["NetApp 策略页面"^] 或者要求 Cloud Manager 为您创建角色。
++
+image:cloud_central_add_conn_5.PNG["错误：缺少图形映像"]
+
+. 提供部署连接器所需的网络信息。验证是否已通过以下方式启用出站 Internet 访问：
++
+.. 为连接器提供公有 IP 地址
+.. 为连接器提供一个代理以供其使用
+.. 为连接器提供通过 Internet 网关到公有 Internet 的路由
++
+image:cloud_central_add_conn_6.PNG["错误：缺少图形映像"]
+
+
+
+. 通过提供安全组或创建新的安全组，通过 SSH ， HTTP 和 HTTPS 提供与连接器的通信。我已启用仅从 IP 地址访问此连接器的功能。
++
+image:cloud_central_add_conn_7.PNG["错误：缺少图形映像"]
+
+. 查看摘要页面上的信息，然后单击添加以部署连接器。
++
+image:cloud_central_add_conn_8.PNG["错误：缺少图形映像"]
+
+. 现在，此连接器将使用云形成堆栈进行部署。您可以从 Cloud Manager 或通过 AWS 监控其进度。
++
+image:cloud_central_add_conn_9.PNG["错误：缺少图形映像"]
+
+. 部署完成后，将显示一个成功页面。
++
+image:cloud_central_add_conn_10.PNG["错误：缺少图形映像"]
+
+
+
+
+
+==== 部署 Cloud Volumes ONTAP
+
+. 根据您的要求选择 AWS 和部署类型。
++
+image:cloud_central_add_we_1.PNG["错误：缺少图形映像"]
+
+. 如果尚未分配任何订阅，而您希望使用 PAYGO 购买，请选择编辑凭据。
++
+image:cloud_central_add_we_2.PNG["错误：缺少图形映像"]
+
+. 选择添加订阅。
++
+image:cloud_central_add_we_3.PNG["错误：缺少图形映像"]
+
+. 选择要订阅的合同类型。我选择了按需购买。
++
+image:cloud_central_add_we_4.PNG["错误：缺少图形映像"]
+
+. 系统会将您重定向到 AWS ；选择 Continue to Subscribe 。
++
+image:cloud_central_add_we_5.PNG["错误：缺少图形映像"]
+
+. 订阅后，您将重定向回 NetApp Cloud Central 。如果您已订阅，但未被重定向，请选择 " 单击此处 " 链接。
++
+image:cloud_central_add_we_6.PNG["错误：缺少图形映像"]
+
+. 系统会将您重定向到 Cloud Central ，您必须在其中为订阅命名并将其分配给 Cloud Central 帐户。
++
+image:cloud_central_add_we_7.PNG["错误：缺少图形映像"]
+
+. 成功后，将显示一个复选标记页面。导航回 Cloud Manager 选项卡。
++
+image:cloud_central_add_we_8.PNG["错误：缺少图形映像"]
+
+. 现在，此订阅将显示在 Cloud Central 中。单击应用以继续。
++
+image:cloud_central_add_we_9.PNG["错误：缺少图形映像"]
+
+. 输入工作环境详细信息，例如：
++
+.. Cluster name
+.. Cluster password
+.. AWS 标记（可选）
++
+image:cloud_central_add_we_10.PNG["错误：缺少图形映像"]
+
+
+
+. 选择要部署的其他服务。要了解有关这些服务的更多信息，请访问 https://cloud.netapp.com["NetApp Cloud 主页"^]。
++
+image:cloud_central_add_we_11.PNG["错误：缺少图形映像"]
+
+. 选择是部署在多个可用性区域中（即三个子网，每个子网位于不同的 AZ 中），还是部署一个可用性区域。我选择了多个 AZs 。
++
+image:cloud_central_add_we_12.PNG["错误：缺少图形映像"]
+
+. 选择要部署到的集群的区域， VPC 和安全组。在本节中，您还可以为每个节点（和调解器）分配可用性分区以及它们所占用的子网。
++
+image:cloud_central_add_we_13.PNG["错误：缺少图形映像"]
+
+. 选择节点和调解器的连接方法。
++
+image:cloud_central_add_we_14.PNG["错误：缺少图形映像"]
+
+
+
+
+TIP: 调解器需要与 AWS API 进行通信。只要在部署调解器 EC2 实例后可以访问公有，就不需要 API IP 地址。
+
+. 浮动 IP 地址用于访问 Cloud Volumes ONTAP 使用的各种 IP 地址，包括集群管理和数据提供 IP 。这些地址必须是您的网络中尚未可路由的地址，并且已添加到 AWS 环境中的路由表中。要在故障转移期间为 HA 对启用一致的 IP 地址，需要使用这些地址。有关浮动 IP 地址的详细信息，请参见 https://docs.netapp.com/us-en/occm/reference_networking_aws.html#requirements-for-ha-pairs-in-multiple-azs["NetApp Cloud 文档"^]。
++
+image:cloud_central_add_we_15.PNG["错误：缺少图形映像"]
+
+. 选择将浮动 IP 地址添加到的路由表。客户端使用这些路由表与 Cloud Volumes ONTAP 进行通信。
++
+image:cloud_central_add_we_16.PNG["错误：缺少图形映像"]
+
+. 选择是启用 AWS 托管加密还是启用 AWS KMS 对 ONTAP 根磁盘，启动磁盘和数据磁盘进行加密。
++
+image:cloud_central_add_we_17.PNG["错误：缺少图形映像"]
+
+. 选择您的许可模式。如果您不知道选择哪种，请联系您的 NetApp 代表。
++
+image:cloud_central_add_we_18.PNG["错误：缺少图形映像"]
+
+. 选择最适合您的用例的配置。这与 " 前提条件 " 页面中所述的规模估算注意事项相关。
++
+image:cloud_central_add_we_19.PNG["错误：缺少图形映像"]
+
+. 也可以创建卷。这不是必需的，因为后续步骤使用 SnapMirror ，这将为我们创建卷。
++
+image:cloud_central_add_we_20.PNG["错误：缺少图形映像"]
+
+. 查看所做的选择并勾选相应的复选框，确认您了解 Cloud Manager 是否已将资源部署到 AWS 环境中。准备好后，单击 "Go" 。
++
+image:cloud_central_add_we_21.PNG["错误：缺少图形映像"]
+
+. Cloud Volumes ONTAP 现在开始其部署过程。Cloud Manager 使用 AWS API 和云构成堆栈来部署 Cloud Volumes ONTAP 。然后，它会根据您的规格对系统进行配置，为您提供一个可立即使用的即用系统。此过程的时间安排因所做的选择而异。
++
+image:cloud_central_add_we_22.PNG["错误：缺少图形映像"]
+
+. 您可以通过导航到时间线来监控进度。
++
+image:cloud_central_add_we_23.PNG["错误：缺少图形映像"]
+
+. 时间线可作为对 Cloud Manager 中执行的所有操作的审核。您可以查看 Cloud Manager 在设置到 AWS 和 ONTAP 集群期间发出的所有 API 调用。此外，还可以有效地使用此功能对您遇到的任何问题进行故障排除。
++
+image:cloud_central_add_we_24.PNG["错误：缺少图形映像"]
+
+. 部署完成后， CVO 集群将显示在当前容量所在的 Canvas 上。处于当前状态的 ONTAP 集群已完全配置，可以实现真正的即装即用体验。
++
+image:cloud_central_add_we_25.PNG["错误：缺少图形映像"]
+
+
+
+
+
+==== 从内部部署到云配置 SnapMirror
+
+现在，您已部署源 ONTAP 系统和目标 ONTAP 系统，您可以将包含数据库数据的卷复制到云中。
+
+有关适用于 SnapMirror 的兼容 ONTAP 版本的指南，请参见 https://docs.netapp.com/ontap-9/index.jsp?topic=%2Fcom.netapp.doc.pow-dap%2FGUID-0810D764-4CEA-4683-8280-032433B1886B.html["SnapMirror 兼容性表"^]。
+
+. 单击源 ONTAP 系统（内部），然后将其拖放到目标，选择复制 > 启用或选择复制 > 菜单 > 复制。
++
+image:cloud_central_replication_1.png["错误：缺少图形映像"]
+
++
+选择启用。
+
++
+image:cloud_central_replication_2.png["错误：缺少图形映像"]
+
++
+或选项。
+
++
+image:cloud_central_replication_3.png["错误：缺少图形映像"]
+
++
+复制。
+
++
+image:cloud_central_replication_4.png["错误：缺少图形映像"]
+
+. 如果未拖放，请选择要复制到的目标集群。
++
+image:cloud_central_replication_5.png["错误：缺少图形映像"]
+
+. 选择要复制的卷。我们复制了数据和所有日志卷。
++
+image:cloud_central_replication_6.png["错误：缺少图形映像"]
+
+. 选择目标磁盘类型和分层策略。对于灾难恢复，我们建议使用 SSD 作为磁盘类型，并保持数据分层。数据分层可将镜像数据分层为低成本的对象存储，并节省使用本地磁盘的成本。中断关系或克隆卷时，数据将使用快速的本地存储。
++
+image:cloud_central_replication_7.png["错误：缺少图形映像"]
+
+. 选择目标卷名称： we chose ` [source_volume_name]_dr` 。
++
+image:cloud_central_replication_8.png["错误：缺少图形映像"]
+
+. 选择复制的最大传输速率。这样，如果您与云的连接带宽较低，例如 VPN ，则可以节省带宽。
++
+image:cloud_central_replication_9.png["错误：缺少图形映像"]
+
+. 定义复制策略。我们选择了镜像，它会获取最新的数据集并将其复制到目标卷。您也可以根据自己的要求选择其他策略。
++
+image:cloud_central_replication_10.png["错误：缺少图形映像"]
+
+. 选择触发复制的计划。NetApp 建议为数据卷设置 " 每日 " 计划，并为日志卷设置 " 每小时 " 计划，但可以根据要求进行更改。
++
+image:cloud_central_replication_11.png["错误：缺少图形映像"]
+
+. 查看输入的信息，单击 Go 以触发集群对等方和 SVM 对等方（如果这是您首次在两个集群之间复制），然后实施并初始化 SnapMirror 关系。
++
+image:cloud_central_replication_12.png["错误：缺少图形映像"]
+
+. 继续对数据卷和日志卷执行此过程。
+. 要检查所有关系，请导航到 Cloud Manager 中的复制选项卡。您可以在此处管理您的关系并检查其状态。
++
+image:cloud_central_replication_13.png["错误：缺少图形映像"]
+
+. 复制完所有卷后，您将处于稳定状态，并准备好继续执行灾难恢复和开发 / 测试工作流。
+
+
+
+
+=== 3. 为数据库工作负载部署 EC2 计算实例
+
+AWS 已为各种工作负载预配置 EC2 计算实例。选择实例类型可确定 CPU 核数，内存容量，存储类型和容量以及网络性能。在使用情形中，除了操作系统分区之外，用于运行数据库工作负载的主存储是从 CVO 或 FSX ONTAP 存储引擎分配的。因此，需要考虑的主要因素是 CPU 核心，内存和网络性能级别的选择。可在此处找到典型的 AWS EC2 实例类型： https://us-east-2.console.aws.amazon.com/ec2/v2/home?region=us-east-2#InstanceTypes:["EC2 实例类型"]。
+
+
+
+==== 调整计算实例大小
+
+. 根据所需的工作负载选择正确的实例类型。需要考虑的因素包括要支持的业务事务数，并发用户数，数据集规模估算等。
+. 可以通过 EC2 信息板启动 EC2 实例部署。确切的部署过程不在此解决方案的范围内。请参见 https://aws.amazon.com/pm/ec2/?trk=ps_a134p000004f2ZGAAY&trkCampaign=acq_paid_search_brand&sc_channel=PS&sc_campaign=acquisition_US&sc_publisher=Google&sc_category=Cloud%20Computing&sc_country=US&sc_geo=NAMER&sc_outcome=acq&sc_detail=%2Bec2%20%2Bcloud&sc_content=EC2%20Cloud%20Compute_bmm&sc_matchtype=b&sc_segment=536455698896&sc_medium=ACQ-P|PS-GO|Brand|Desktop|SU|Cloud%20Computing|EC2|US|EN|Text&s_kwcid=AL!4422!3!536455698896!b!!g!!%2Bec2%20%2Bcloud&ef_id=EAIaIQobChMIua378M-p8wIVToFQBh0wfQhsEAMYASAAEgKTzvD_BwE:G:s&s_kwcid=AL!4422!3!536455698896!b!!g!!%2Bec2%20%2Bcloud["Amazon EC2"] 了解详细信息。
+
+
+
+
+==== Oracle 工作负载的 Linux 实例配置
+
+本节介绍部署 EC2 Linux 实例后的其他配置步骤。
+
+. 将 Oracle 备用实例添加到 DNS 服务器，以便在 SnapCenter 管理域中进行名称解析。
+. 添加一个 Linux 管理用户 ID 作为 SnapCenter OS 凭据，并具有 sudo 权限，而不需要密码。在 EC2 实例上启用 ID 和 SSH 密码身份验证。（默认情况下，在 EC2 实例上， SSH 密码身份验证和无密码 sudo 处于关闭状态。）
+. 将 Oracle 安装配置为与内部 Oracle 安装相匹配，例如操作系统修补程序， Oracle 版本和修补程序等。
+. 可以利用 NetApp Ansible DB 自动化角色为数据库开发 / 测试和灾难恢复用例配置 EC2 实例。可以从 NetApp 公有 GitHub 站点下载自动化代码： https://github.com/NetApp-Automation/na_oracle19c_deploy["Oracle 19c 自动化部署"^]。目标是在 EC2 实例上安装和配置数据库软件堆栈，以匹配内部操作系统和数据库配置。
+
+
+
+
+==== SQL Server 工作负载的 Windows 实例配置
+
+本节列出了最初部署 EC2 Windows 实例后的其他配置步骤。
+
+. 检索 Windows 管理员密码以通过 RDP 登录到实例。
+. 禁用 Windows 防火墙，将主机加入 Windows SnapCenter 域，然后将实例添加到 DNS 服务器以进行名称解析。
+. 配置 SnapCenter 日志卷以存储 SQL Server 日志文件。
+. 在 Windows 主机上配置 iSCSI 以挂载卷并格式化磁盘驱动器。
+. 同样，以前的许多任务都可以通过适用于 SQL Server 的 NetApp 自动化解决方案实现自动化。有关新发布的角色和解决方案，请访问 NetApp Automation 公有 GitHub 站点： https://github.com/NetApp-Automation["NetApp 自动化"^]。
+
+
+link:hybrid_dbops_snapcenter_devtest.html["接下来：开发 / 测试向云突发的工作流。"]
