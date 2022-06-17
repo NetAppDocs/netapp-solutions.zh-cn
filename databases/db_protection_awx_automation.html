@@ -5079,7 +5079,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-06-08 17:16:01 +0000">06/08/2022</time>
+    <time datetime="2022-06-17 02:33:46 +0000">06/17/2022</time>
     
   
 
@@ -5668,7 +5668,74 @@
 <div class="title">复制日志卷</div>
 <div class="content">
 <div class="paragraph">
-<p>在&lt;stdin&gt;中未解析的指令-包括：../_iinclude/db_protection_log_replication .adoc]]</p>
+<p>计划日志复制攻略手册</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>配置并启动作业模板。</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>复制先前创建的作业模板。</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>导航到资源→模板。</p>
+</li>
+<li>
+<p>找到 ontap/CVO 设置模板，然后在最右侧单击复制模板</p>
+</li>
+<li>
+<p>单击复制的模板上的 Edit Template ，然后将名称更改为 Log Replication 攻略手册。</p>
+</li>
+<li>
+<p>保留该模板的相同清单，项目和凭据。</p>
+</li>
+<li>
+<p>选择 ora_replication logs.yml 作为要执行的攻略手册。</p>
+</li>
+<li>
+<p>这些变量将保持不变，但需要在变量 dst_cluster_ip 中设置 CVO 集群 IP 。</p>
+</li>
+<li>
+<p>单击保存。</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>计划作业模板。</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>导航到资源→模板。</p>
+</li>
+<li>
+<p>单击日志复制攻略手册模板，然后单击顶部选项集的计划。</p>
+</li>
+<li>
+<p>单击添加，为日志复制添加名称计划，选择开始日期 / 时间，选择本地时区和运行频率。运行频率通常会更新 SnapMirror 复制。</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="/us-en/netapp-solutions/images/note.svg" alt="注">
+</td>
+<td class="content">
+建议将日志计划设置为每小时更新一次，以确保恢复到上一个每小时更新。
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
 </div>
 </div>
 </div>
