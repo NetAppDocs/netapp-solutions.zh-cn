@@ -1,0 +1,28 @@
+---
+sidebar: sidebar 
+permalink: containers/tanzu_with_netapp/vtwn_overview_tkg.html 
+keywords: VMware Tanzu, Tanzu, Tanzu Kubernetes Grid, DevOps, Netapp, Astra Trident, Astra Control, Astra 
+summary:  
+---
+= VMware Tanzu Kubernetes Grid (TKG)概述
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+VMware Tanzu Kubernetes Grid也称为TKG、可用于在混合云或公有 云环境中部署Tanzu Kubernetes集群。TKG作为管理集群进行安装、该集群本身就是Kubernetes集群、用于部署和操作Tanzu Kubernetes集群。这些Tanzu Kubernetes集群是部署了实际工作负载的工作负载Kubernetes集群。
+
+Tanzu Kubernetes Grid基于一些前景广阔的上游社区项目构建、并提供由VMware开发、营销和支持的Kubernetes平台。除了Kubernetes分发版之外、Tanzu Kubernetes Grid还提供了其他附加组件、这些附加组件是重要的生产级服务、例如注册表、负载平衡、身份验证等。具有管理集群的VMware TKG在vSphere 6.7环境中广泛使用、尽管它受支持、但不建议在vSphere 7环境中部署、因为TKGS具有与vSphere 7的原生 集成功能。
+
+image::vtwn_image02.png[具有管理集群的VMware Tanzu Kubernetes Grid]
+
+有关Tanzu Kubernetes Grid的详细信息、请参见文档 link:https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-release-notes.html["此处"^]。
+
+根据Tanzu Kubernetes网格是安装在vSphere集群内部还是云环境中、请按照安装指南准备并部署Tanzu Kubernetes网格 link:https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-mgmt-clusters-prepare-deployment.html["此处"^]。
+
+安装完Tanzu Kubernetes Grid的管理集群后、请根据需要按照文档部署用户集群或工作负载集群 link:https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.5/vmware-tanzu-kubernetes-grid-15/GUID-tanzu-k8s-clusters-index.html["此处"^]。VMware TKG管理集群要求为Tanzu Kubernetes集群的安装和操作提供SSH密钥。此密钥可用于使用`capv`用户登录到集群节点。
+
+link:vtwn_overview_netapp.html["接下来：NetApp存储系统概述。"]
