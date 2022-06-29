@@ -1,0 +1,107 @@
+---
+sidebar: sidebar 
+permalink: databases/aws_ora_fsx_ec2_benchmark.html 
+summary: 本节详细介绍了Swingbench模拟OLTP工作负载的性能验证和基准测试结果。 
+keywords: HA, DR, database, Oracle, RDS, AWS, SnapCenter 
+---
+= 性能验证和基准测试结果
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:table-stripes: odd
+:imagesdir: ./../media/
+
+
+link:aws_ora_fsx_ec2_mgmt.html["先前版本：Oracle数据库管理。"]
+
+此性能验证的目标不是设置任何标记。相反、如果您按照本文档中所述的部署过程和最佳实践进行操作、则在公有 云中部署Oracle数据库时、性能指标可能会类似。
+
+我们使用Swingbench销售订单条目(Sales Order Entry、SOE)模块模拟OLTP类型的工作负载、并对部署到NFS协议上具有FSX存储卷的M5 EC2实例的Oracle数据库应用此工作负载。默认Swingbench SOE I/O配置文件接近80/20读/写拆分、接近实际OLTP Oracle工作负载配置文件。
+
+增加客户端上执行销售订单输入、浏览、清单查询等操作的并发用户数、从而增加工作负载。测试的数字分别为8、16、32、64和128个并发用户。Swingbench使用的算法在服务器端很重、用于推送合理的事务卷并测试Oracle服务器限制。我们观察到、在128个并发用户时、EC2实例CPU利用率大约达到了80-90%的容量。
+
+以下各节详细介绍了设置和测试结果。
+
+
+
+== 测试环境设置
+
+
+
+=== 计算
+
+我们部署了一个EC2 M5实例、该实例具有8个vCPU、32 G RAM和10 Gps网络带宽。
+
+image:aws_ora_fsx_ec2_inst_10.PNG["错误：缺少图形映像"]
+
+
+
+=== FSX存储
+
+我们创建了三个数据库卷、并在EC2实例上使用NFS挂载了这些卷、如下所示：
+
+* /u01—Oracle二进制文件
+* /u02—Oracle数据文件、控制文件
+* /u03—Oracle日志文件、控制文件
+
+
+我们为一个关键控制文件保留了两个副本、以实现冗余。
+
+image:aws_ora_fsx_ec2_stor_15.PNG["错误：缺少图形映像"]
+
+FSX文件系统配置了80、000 IOPS容量和2 GiBps I/O吞吐量。
+
+
+
+=== Oracle配置
+
+我们安装了Oracle版本19c以及RU修补程序19.8。已在服务器上启用DNFS。
+
+该数据库部署为一个包含三个PDB的容器化数据库。我们使用一个PDB实例进行性能测试。下图显示了NFS挂载点上的Oracle存储大小调整。
+
+image:aws_ora_fsx_ec2_inst_11.PNG["错误：缺少图形映像"]
+
+
+
+=== Swingbench配置
+
+我们在具有8个vCPU和32 G RAM的Windows主机上部署了Swingbench 2.6 (最新版本)。我们使用SOE PLSQL测试模块版本2作为基准。默认负载配置文件提供80/20读/写比率、用于模拟实际OLTP事务工作负载。
+
+我们使用的架构扩展因子为50、提供了160 G的初始数据负载大小和30 G的临时空间分配。在这种规模因素下、SOE模式为模拟在线订单处理提供了1000个仓库和5000万客户。
+
+以下屏幕截图显示了Swingbench Windows UI中的工作负载配置文件和典型事务运行指标。
+
+image:aws_ora_fsx_ec2_swin_01.PNG["错误：缺少图形映像"]
+
+如此图所示、在整个测试运行期间、事务级别始终保持在同一级别。
+
+
+
+== 测试结果分析
+
+我们捕获了每次测试运行的Swingbench结果、并获得了相应的Oracle AWR报告以进行性能分析。
+
+从最终用户角度来看、我们查看了关键指标、例如事务量和用户响应时间。这两个指标都显示了在登录到销售订单输入系统的并发用户数量以及用户在输入订单后完成事务并收到响应的速度下、用户可以从销售订单输入系统执行多少事务。
+
+从Oracle服务器端、我们解析了Oracle AWR报告、以确定可能会减慢用户事务处理速度的前几个等待事件。排名前10位的Oracle等待事件表明、在Swingbench模拟事务测试运行期间、Oracle服务器的I/O大多受限于`db文件顺序读取`上的数据库时间高达50%-60%。`log file sync`也是一个影响因素、因为事务会使发生原因 通过Oracle日志记录过程将日志I/O从缓冲区缓存转储到磁盘上的日志文件、尽管这在数据库时间百分比级别上是一个较小的因素。
+
+我们根据事务运行期间的并发用户数量绘制了用户事务卷、用户响应时间和Oracle前几个等待事件的图表。结果如下所示：
+
+image:aws_ora_fsx_ec2_swin_02.PNG["错误：缺少图形映像"]
+
+这些结果表明、我们可以通过增加并发用户数量来稳定地增加用户事务卷、同时保持稳定的低I/O延迟和用户响应时间、这对于Oracle应用程序来说是合适的性能。
+
+当我们达到128个并发用户时、I/O延迟和用户响应时间开始有所增加。这是预期的、因为EC2实例接近全满服务器容量、如下图所示：
+
+image:aws_ora_fsx_ec2_swin_03.PNG["错误：缺少图形映像"]
+
+同样、下图显示了当时执行用户事务卷时相应的FSX IOPS和吞吐量。
+
+image:aws_ora_fsx_ec2_swin_04.PNG["错误：缺少图形映像"]
+image:aws_ora_fsx_ec2_swin_05.PNG["错误：缺少图形映像"]
+
+当Oracle服务器EC2实例成为限制因素时、以IOPS或吞吐量表示、我们未达到配置的FSX存储容量。因此、您必须根据用户应用程序级别的事务卷正确估算计算和存储的大小、如一节所示 link:aws_ora_fsx_ec2_factors.html["部署Oracle数据库时需要考虑的因素。"]
+
+link:aws_ora_fsx_ec2_migration.html["下一步：数据库迁移。"]

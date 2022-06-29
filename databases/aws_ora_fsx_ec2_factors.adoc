@@ -1,0 +1,95 @@
+---
+sidebar: sidebar 
+permalink: databases/aws_ora_fsx_ec2_factors.html 
+summary: 本节详细介绍了在AWS EC2实例和FSX存储上部署Oracle数据库时需要考虑的因素。 
+keywords: HA, DR, database, Oracle, RDS, AWS, SnapCenter 
+---
+= 部署Oracle数据库时需要考虑的因素
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:table-stripes: odd
+:imagesdir: ./../media/
+
+
+link:aws_ora_fsx_ec2_architecture.html["先前版本：解决方案 架构。"]
+
+公有 云为计算和存储提供了多种选择、使用正确类型的计算实例和存储引擎是开始部署数据库的好地方。您还应选择针对Oracle数据库进行优化的计算和存储配置。
+
+以下各节介绍了在使用FSX存储的EC2实例上的AWS公有 云中部署Oracle数据库时的主要注意事项。
+
+
+
+== 虚拟机性能
+
+选择合适的 VM 大小对于公有云中关系数据库的最佳性能非常重要。为了提高性能、NetApp建议在Oracle部署中使用EC2 M5系列实例、该实例针对数据库工作负载进行了优化。AWS还会使用相同的实例类型为Oracle的RDS实例提供支持。
+
+* 根据工作负载特征选择正确的vCPU和RAM组合。
+* 向VM添加交换空间。默认的EC2实例部署不会创建交换空间、而交换空间对于数据库来说并不是最佳选择。
+
+
+
+
+== 存储布局和设置
+
+NetApp建议采用以下存储布局：
+
+* 对于NFS存储、建议的卷布局为三个卷：一个用于Oracle二进制文件；一个用于Oracle数据和一个重复的控制文件；一个用于Oracle活动日志、归档日志和控制文件。
++
+image:aws_ora_fsx_ec2_stor_12.PNG["错误：缺少图形映像"]
+
+* 对于iSCSI存储、建议的卷布局为三个卷：一个用于Oracle二进制文件；一个用于Oracle数据和一个重复的控制文件；一个用于Oracle活动日志、归档日志和控制文件。但是、理想情况下、每个数据卷和日志卷都应包含四个LUN。在HA集群节点上、LUN的平衡性最佳。
++
+image:aws_ora_fsx_ec2_stor_13.PNG["错误：缺少图形映像"]
+
+* 对于存储IOPS和吞吐量、您可以为FSX存储集群的已配置IOPS和吞吐量选择阈值、并且可以随时在工作负载发生变化时动态调整这些参数。
++
+** 自动IOPS设置是、在已分配存储容量或用户定义的存储中、每个GiB三个IOPS、最多80、000个。
+** 吞吐量级别将按以下方式递增：128、256、512、1024、2045 Mbps。
+
+
+
+
+查看 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/performance.html["适用于NetApp ONTAP 性能的Amazon FSX"^] 估算吞吐量和IOPS规模时的文档。
+
+
+
+== NFS 配置
+
+最常见的操作系统Linux具有原生 NFS功能。Oracle提供的Direct NFS (DNFS)客户端本机集成到Oracle中。Oracle支持NFSv3的时间已超过20年、而Oracle 12.1.0.2及更高版本支持NFSv4。使用NetApp自动化工具包自动部署Oracle会自动在NFSv3上配置DNFS。
+
+需要考虑的其他因素：
+
+* TCP插槽表是主机总线适配器(host-bus-adapter、HBA)队列深度的NFS等效项。这些表可控制任何时候都可以处理的NFS操作的数量。默认值通常为16、该值太低、无法实现最佳性能。在较新的Linux内核上会出现相反的问题、这会自动将TCP插槽表限制增加到使NFS服务器充满请求的级别。
++
+为了获得最佳性能并防止出现性能问题、请将控制TCP插槽表的内核参数调整为128。
+
++
+[source, cli]
+----
+sysctl -a | grep tcp.*.slot_table
+----
+* 下表提供了适用于Linux NFSv3 -单个实例的建议NFS挂载选项。
++
+image:aws_ora_fsx_ec2_nfs_01.PNG["错误：缺少图形映像"]
+
+
+
+
+NOTE: 在使用DNFS之前、请验证是否已安装Oracle文档1495104.1中所述的修补程序。从Oracle 12c开始、DNFS支持NFSv3、NFSv4和NFSv4.1。NetApp支持策略涵盖所有客户端的v3和v4、但在编写时、不支持将NFSv4.1与Oracle DNFS结合使用。
+
+
+
+== 高可用性
+
+如解决方案 架构所示、HA基于存储级别复制构建。因此、Oracle的启动和可用性取决于计算和存储的启动和恢复速度。请参见以下主要因素：
+
+* 准备好备用计算实例、并通过向两个主机进行Ansible并行更新与主实例同步。
+* 从主系统复制二进制卷以供备用、这样您就不需要在最后一分钟安装Oracle并确定需要安装和修补的内容。
+* 复制频率决定了恢复Oracle数据库以提供服务的速度。复制频率与存储消耗之间存在一定的权衡。
+* 利用自动化功能快速恢复并切换到备用模式、不会出现人为错误。为此、NetApp提供了一个自动化工具包。
+
+
+link:aws_ora_fsx_ec2_procedures.html["下一步：部署过程。"]

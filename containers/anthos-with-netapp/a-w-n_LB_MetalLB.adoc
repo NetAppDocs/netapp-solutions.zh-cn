@@ -1,115 +1,80 @@
 ---
 sidebar: sidebar 
-permalink: containers/rh-os-n_LB_MetalLB.html 
+permalink: containers/anthos-with-netapp/a-w-n_LB_MetalLB.html 
 summary: 此页面详细介绍了 MetalLB 负载平衡器的安装和配置说明。 
-keywords: Red Hat OpenShift, Kubernetes, MetalLB, LoadBalancer, Astra, Astra Control Center 
+keywords: Anthos, Kubernetes, MetalLB, LoadBalancer, Astra, Astra Control Center 
 ---
-= 安装 MetalLB 负载平衡器： Red Hat OpenShift 与 NetApp
+= 安装MetalLB负载平衡器
 :allow-uri-read: 
 
 
-此页面列出了 MetalLB 负载平衡器的安装和配置说明。
-
-MetalLB 是一种安装在 OpenShift 集群上的自托管网络负载平衡器，可用于在未在云提供程序上运行的集群中创建类型为负载平衡器的 OpenShift 服务。MetalLB 可协同工作以支持负载平衡器服务的两个主要功能是地址分配和外部公告。
-
-
-
-== MetalLB 配置选项
-
-根据 MetalLB 如何公布分配给 OpenShift 集群以外的负载平衡器服务的 IP 地址，它可在两种模式下运行：
-
-* * 第 2 层模式。 * 在此模式下， OpenShift 集群中的一个节点将接管此服务的所有权，并对该 IP 的 ARP 请求做出响应，使其可在 OpenShift 集群之外访问。由于只有节点才公布 IP ，因此存在带宽瓶颈和较慢的故障转移限制。有关详细信息，请参见文档 link:https://metallb.universe.tf/concepts/layer2/["此处"]。
-* * BGP 模式。 * 在此模式下， OpenShift 集群中的所有节点都与路由器建立 BGP 对等会话，并公布路由以将流量转发到服务 IP 。前提条件是将 MetalLB 与该网络中的路由器集成在一起。由于 BGP 中采用哈希机制，因此在服务的 IP 到节点映射发生更改时，它具有一定的限制。有关详细信息，请参见文档 link:https://metallb.universe.tf/concepts/bgp/["此处"]。
-
-
-
-NOTE: 在本文档中，我们将在第 2 层模式下配置 MetalLB 。
+此页面列出了MetalLB受管负载平衡器的安装和配置说明。
 
 
 
 == 安装 MetalLB 负载平衡器
 
-. 下载 MetalLB 资源。
-+
-[listing]
-----
-[netapp-user@rhel7 ~]$ wget https://raw.githubusercontent.com/metallb/metallb/v0.10.2/manifests/namespace.yaml
-[netapp-user@rhel7 ~]$ wget https://raw.githubusercontent.com/metallb/metallb/v0.10.2/manifests/metallb.yaml
-----
-. 编辑文件 `metallb.yaml` 并从控制器部署和主讲人 DemonSet 中删除 `spec.template.spec.securityContext` 。
-+
-* 要删除的行： *
+MetalLB负载平衡器与VMware上的Anthos集群完全集成在一起、并从1.11版开始在管理和用户集群设置中执行自动部署。在相应的`cluster.YAML`配置文件中存在文本块、您必须修改这些块才能提供负载平衡器信息。它可以在您的Anthos集群上自行托管、而无需像其他受支持的负载平衡器解决方案那样部署外部资源。此外、您还可以创建一个IP池、通过在未在云提供商上运行的集群中创建类型为负载平衡器的Kubernetes服务来自动分配地址。
 
-+
-[listing]
-----
-securityContext:
-  runAsNonRoot: true
-  runAsUser: 65534
-----
-. 创建 `metallb-system` 命名空间。
-+
-[listing]
-----
-[netapp-user@rhel7 ~]$ oc create -f namespace.yaml
-namespace/metallb-system created
-----
-. 创建 MetalLB CR 。
-+
-[listing]
-----
-[netapp-user@rhel7 ~]$ oc create -f metallb.yaml
-podsecuritypolicy.policy/controller created
-podsecuritypolicy.policy/speaker created
-serviceaccount/controller created
-serviceaccount/speaker created
-clusterrole.rbac.authorization.k8s.io/metallb-system:controller created
-clusterrole.rbac.authorization.k8s.io/metallb-system:speaker created
-role.rbac.authorization.k8s.io/config-watcher created
-role.rbac.authorization.k8s.io/pod-lister created
-role.rbac.authorization.k8s.io/controller created
-clusterrolebinding.rbac.authorization.k8s.io/metallb-system:controller created
-clusterrolebinding.rbac.authorization.k8s.io/metallb-system:speaker created
-rolebinding.rbac.authorization.k8s.io/config-watcher created
-rolebinding.rbac.authorization.k8s.io/pod-lister created
-rolebinding.rbac.authorization.k8s.io/controller created
-daemonset.apps/speaker created
-deployment.apps/controller created
-----
-. 在配置 MetalLB 扬声器之前，请授予扬声器 DemonSet 提升权限，使其能够执行使负载平衡器正常工作所需的网络配置。
-+
-[listing]
-----
-[netapp-user@rhel7 ~]$ oc adm policy add-scc-to-user privileged -n metallb-system -z speaker
-clusterrole.rbac.authorization.k8s.io/system:openshift:scc:privileged added: "speaker"
-----
-. 通过在 `metallb-system` 命名空间中创建 `ConfigMap` 来配置 MetalLB 。
-+
-[listing]
-----
-[netapp-user@rhel7 ~]$ vim metallb-config.yaml
 
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  namespace: metallb-system
-  name: config
-data:
-  config: |
-    address-pools:
-    - name: default
-      protocol: layer2
+
+== 与Anthos集成
+
+为Anthos admin启用MetalLB负载平衡器时、您必须修改`admin-cluster.YAML`文件中`loadbalancer：`部分中的几行。您只能修改`controlPlaneVIP：` address、然后将`kind：`设置为MetalLB。有关示例、请参见以下代码片段：
+
+[listing]
+----
+# (Required) Load balancer configuration
+loadBalancer:
+  # (Required) The VIPs to use for load balancing
+  vips:
+    # Used to connect to the Kubernetes API
+    controlPlaneVIP: "10.61.181.230"
+    # # (Optional) Used for admin cluster addons (needed for multi cluster features). Must
+    # # be the same across clusters
+    # addonsVIP: ""
+  # (Required) Which load balancer to use "F5BigIP" "Seesaw" "ManualLB" or "MetalLB".
+  # Uncomment the corresponding field below to provide the detailed spec
+  kind: MetalLB
+----
+为Anthos用户集群启用MetalLB负载平衡器时、每个`user-cluster.YAML`文件中有两个区域必须更新。首先、您必须以类似于`admin-cluster.yaml`文件的方式在`loadbalancer：`部分中修改`controlPlaneVIP：`、`ingressVIP：`和`kind：`值。有关示例、请参见以下代码片段：
+
+[listing]
+----
+loadBalancer:
+  # (Required) The VIPs to use for load balancing
+  vips:
+    # Used to connect to the Kubernetes API
+    controlPlaneVIP: "10.61.181.240"
+    # Shared by all services for ingress traffic
+    ingressVIP: "10.61.181.244"
+  # (Required) Which load balancer to use "F5BigIP" "Seesaw" "ManualLB" or "MetalLB".
+  # Uncomment the corresponding field below to provide the detailed spec
+  kind: MetalLB
+----
+
+NOTE: 此ingresVIP IP地址必须位于稍后在配置中分配给MetalLB负载平衡器的IP地址池中。
+
+然后、您需要导航到`metalLB：`子部分、并通过在`- name：`变量中命名池来修改`addressPools：`部分。此外、还必须创建一个IP地址池、MetalLB可以通过为`addresses：`变量提供一个范围来将该IP地址池分配给loadbalancer类型的服务。
+
+[listing]
+----
+# # (Required when using "MetalLB" kind in user clusters) Specify the MetalLB config
+ metalLB:
+ #   # (Required) A list of non-overlapping IP pools used by load balancer typed services.
+ #   # Must include ingressVIP of the cluster.
+    addressPools:
+ #   # (Required) Name of the address pool
+    - name: "default"
+ #     # (Required) The addresses that are part of this pool. Each address must be either
+ #     # in the CIDR form (1.2.3.0/24) or range form (1.2.3.1-1.2.3.5).
       addresses:
-      - 10.63.17.10-10.63.17.200
-
-[netapp-user@rhel7 ~]$ oc create -f metallb-config.yaml
-configmap/config created
+      - "10.61.181.244-10.61.181.249"
 ----
-. 现在，在创建负载平衡器服务时， MetalLB 会为这些服务分配一个外部 IP ，并通过响应 ARP 请求来公布 IP 地址。
-+
 
-NOTE: 如果要在 BGP 模式下配置 MetalLB ，请跳过上述步骤 6 并按照 MetalLB 文档中的操作步骤进行操作 link:https://metallb.universe.tf/concepts/bgp/["此处"]。
+NOTE: 可以像示例一样提供地址池范围、将其限制为特定子网中的多个地址、也可以在整个子网可用时提供CIDR表示法。
+
+. 创建类型为loadbalancer的Kubernetes服务时、MetalLB会自动为这些服务分配外部IP、并通过响应ARP请求来公布IP地址。
 
 
-
-link:rh-os-n_use_cases.html["接下来：解决方案验证 / 使用情形：采用 NetApp 的 Red Hat OpenShift 。"]
+link:awn_use_cases.html["接下来：解决方案验证 / 使用情形。"]

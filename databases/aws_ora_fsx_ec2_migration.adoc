@@ -1,0 +1,73 @@
+---
+sidebar: sidebar 
+permalink: databases/aws_ora_fsx_ec2_migration.html 
+summary: 本节详细介绍了将Oracle数据库从内部迁移到AWS EC2实例和FSX存储时需要考虑的因素。 
+keywords: HA, DR, database, Oracle, RDS, AWS, SnapCenter 
+---
+= 将数据库从内部迁移到公有 云
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:table-stripes: odd
+:imagesdir: ./../media/
+
+
+link:aws_ora_fsx_ec2_mgmt.html["先前版本：数据库管理。"]
+
+数据库迁移无论如何都是一项极具挑战性的工作。将Oracle数据库从内部迁移到云也不例外。
+
+以下各节提供了在使用AWS EC2计算和FSX存储平台将Oracle数据库迁移到AWS公有 云时需要考虑的关键因素。
+
+
+
+== ONTAP 存储可在内部使用
+
+如果内部Oracle数据库位于ONTAP 存储阵列上、则使用NetApp SnapCenter UI工具更容易设置复制以进行数据库迁移。
+
+. 构建与内部实例匹配的目标计算EC2实例。
+. 从FSX控制台配置大小相等的匹配数据库卷。
+. 将FSX数据库卷挂载到EC2实例。
+. 在内部数据库卷与目标FSX数据库卷之间设置SnapMirror复制。初始同步可能需要一段时间才能移动主源数据、但后续的任何增量更新都要快得多。
+. 切换时、关闭主应用程序以停止所有事务。在SnapCenter 中、运行日志备份以将其余事务刷新到目标。
+. 拆分镜像卷、在目标上运行Oracle恢复、并启动数据库以进行服务。
+. 将应用程序指向云中的Oracle数据库。
+
+
+
+
+== ONTAP 存储在内部不可用
+
+如果内部Oracle数据库托管在ONTAP 以外的第三方存储上、则数据库迁移基于还原Oracle数据库备份副本。切换前、必须播放归档日志以使其保持最新。
+
+AWS S3可用作数据库移动和迁移的暂存存储区域。有关此方法、请参见以下高级步骤：
+
+. 配置一个与内部实例相当的新的匹配EC2实例。
+. 从FSX存储配置等效的数据库卷、并将这些卷挂载到EC2实例。
+. 创建磁盘级Oracle备份副本。
+. 将备份副本移动到AWS S3存储。
+. 重新创建Oracle控制文件、并通过从S3存储中提取数据和归档日志来还原和恢复数据库。
+. 将目标Oracle数据库与内部源数据库同步。
+. 切换时、关闭应用程序和源Oracle数据库。复制最后几个归档日志并将其应用于目标Oracle数据库以使其保持最新。
+. 启动目标数据库以供用户访问。
+. 将应用程序重定向到目标数据库以完成切换。
+
+
+
+
+== 使用Oracle多租户CDB/PDB架构整合AWS中的Oracle数据库
+
+. 在AWS公有 云中创建CDB。
+. 如果内部数据库也部署在CDB/PDB多租户中、请拔下要迁移的PDB。
+. 将元数据以及带下划线的Oracle数据文件传输到目标CDB实例。
+. 验证与Oracle验证过程的兼容性。
+. 如果兼容性验证通过、请将已拔出的PDB插入目标CDB容器。
+. 根据需要更新数据词典。
+. 备份并打开已迁移的PDB以进行访问。
+
+
+
+NOTE: PDB拔出和插件要求应用程序停机、在迁移规划期间应考虑到这一点。
+
+同样、NetApp自动化团队还提供了一个迁移工具包、该工具包可以帮助Oracle数据库从内部迁移到AWS云。有关最新的数据库迁移工具、请访问NetApp公有 GitHub站点。

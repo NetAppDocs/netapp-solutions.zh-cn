@@ -1,0 +1,278 @@
+---
+sidebar: sidebar 
+permalink: databases/aws_ora_fsx_ec2_mgmt.html 
+summary: 本节详细介绍了如何通过SnapCenter UI管理适用于Oracle数据库的AWS RDS自定义、作为AWS RDS控制台UI的补充。 
+keywords: HA, DR, database, Oracle, RDS, AWS, SnapCenter 
+---
+= EC2/FSX Oracle数据库管理
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:table-stripes: odd
+:imagesdir: ./../media/
+
+
+link:aws_ora_fsx_ec2_procedures.html["先前：部署过程。"]
+
+除了AWS EC2和FSX管理控制台之外、此Oracle环境还部署了Ansible控制节点和SnapCenter UI工具来进行数据库管理。
+
+Ansible控制节点可用于管理Oracle环境配置、并可通过并行更新来保持主实例和备用实例同步、以便进行内核或修补程序更新。故障转移、重新同步和故障恢复可通过NetApp自动化工具包自动进行、以便通过Ansible实现快速应用程序恢复和可用性归档。可以使用攻略手册执行一些可重复的数据库管理任务、以减少人为错误。
+
+SnapCenter UI工具可以使用适用于Oracle数据库的SnapCenter 插件执行数据库快照备份、时间点恢复、数据库克隆等操作。有关Oracle插件功能的详细信息、请参见 link:https://docs.netapp.com/ocsc-43/index.jsp?topic=%2Fcom.netapp.doc.ocsc-con%2FGUID-CF6B23A3-2B2B-426F-826B-490706880EE8.html["适用于Oracle数据库的SnapCenter 插件概述"^]。
+
+以下各节详细介绍了如何使用SnapCenter UI实现Oracle数据库管理的关键功能：
+
+* 数据库快照备份
+* 数据库时间点还原
+* 创建数据库克隆
+
+
+数据库克隆会在单独的EC2主机上创建主数据库的副本、以便在发生逻辑数据错误或损坏时进行数据恢复、克隆也可用于应用程序测试、调试、修补程序验证等。
+
+
+
+== 正在创建快照
+
+EC2/FSX Oracle数据库会按用户配置的间隔定期备份。用户也可以随时执行一次性快照备份。此适用场景 既可执行完整数据库快照备份、也可执行仅归档日志的快照备份。
+
+
+
+=== 创建完整的数据库快照
+
+完整的数据库快照包括所有Oracle文件、包括数据文件、控制文件和归档日志文件。
+
+. 登录到SnapCenter UI、然后单击左侧菜单中的"Resources"。从视图下拉列表中、更改为资源组视图。
++
+image:aws_rds_custom_deploy_snp_10.PNG["错误：缺少图形映像"]
+
+. 单击完整备份资源名称、然后单击立即备份图标以启动附加临时备份。
++
+image:aws_rds_custom_deploy_snp_11.PNG["错误：缺少图形映像"]
+
+. 单击备份、然后确认备份以启动完整数据库备份。
++
+image:aws_rds_custom_deploy_snp_12.PNG["错误：缺少图形映像"]
+
++
+从数据库的资源视图中、打开数据库托管备份副本页面、验证一次性备份是否已成功完成。完整数据库备份会创建两个快照：一个用于数据卷、一个用于日志卷。
+
++
+image:aws_rds_custom_deploy_snp_13.PNG["错误：缺少图形映像"]
+
+
+
+
+
+=== 创建归档日志快照
+
+只会为Oracle归档日志卷创建归档日志快照。
+
+. 登录到SnapCenter UI、然后单击左侧菜单栏中的"Resources"选项卡。从视图下拉列表中、更改为资源组视图。
++
+image:aws_rds_custom_deploy_snp_10.PNG["错误：缺少图形映像"]
+
+. 单击日志备份资源名称、然后单击立即备份图标为归档日志启动附加临时备份。
++
+image:aws_rds_custom_deploy_snp_14.PNG["错误：缺少图形映像"]
+
+. 单击备份、然后确认备份以启动归档日志备份。
++
+image:aws_rds_custom_deploy_snp_15.PNG["错误：缺少图形映像"]
+
++
+从数据库的资源视图中、打开数据库托管备份副本页面、验证一次性归档日志备份是否已成功完成。归档日志备份会为日志卷创建一个快照。
+
++
+image:aws_rds_custom_deploy_snp_16.PNG["错误：缺少图形映像"]
+
+
+
+
+
+== 还原到某个时间点
+
+在同一个EC2实例主机上执行基于SnapCenter的时间点还原。完成以下步骤以执行还原：
+
+. 在SnapCenter 资源选项卡>数据库视图中、单击数据库名称以打开数据库备份。
++
+image:aws_rds_custom_deploy_snp_17.PNG["错误：缺少图形映像"]
+
+. 选择数据库备份副本以及要还原的所需时间点。同时、记下时间点对应的SCN编号。可以使用时间或SCN执行时间点还原。
++
+image:aws_rds_custom_deploy_snp_18.PNG["错误：缺少图形映像"]
+
+. 突出显示日志卷快照、然后单击挂载按钮挂载此卷。
++
+image:aws_rds_custom_deploy_snp_19.PNG["错误：缺少图形映像"]
+
+. 选择要挂载日志卷的主EC2实例。
++
+image:aws_rds_custom_deploy_snp_20.PNG["错误：缺少图形映像"]
+
+. 验证挂载作业是否已成功完成。另外、请检查EC2实例主机以查看该日志卷已挂载以及挂载点路径。
++
+image:aws_rds_custom_deploy_snp_21_1.PNG["错误：缺少图形映像"]
+image:aws_rds_custom_deploy_snp_21_2.PNG["错误：缺少图形映像"]
+
+. 将归档日志从挂载的日志卷复制到当前归档日志目录。
++
+[listing]
+----
+[ec2-user@ip-10-0-0-151 ~]$ cp /var/opt/snapcenter/sco/backup_mount/ip-10-0-0-151_03-25-2022_11.15.01.1503_1/ORCL/1/db/ORCL_A/arch/*.arc /ora_nfs_log/db/ORCL_A/arch/
+----
+. 返回到SnapCenter 资源选项卡>数据库备份页面、突出显示数据快照副本、然后单击还原按钮以启动数据库还原工作流。
++
+image:aws_rds_custom_deploy_snp_22.PNG["错误：缺少图形映像"]
+
+. 选中"所有数据文件"和"根据还原和恢复需要更改数据库状态"、然后单击下一步。
++
+image:aws_rds_custom_deploy_snp_23.PNG["错误：缺少图形映像"]
+
+. 使用SCN或时间选择所需的恢复范围。挂载的归档日志路径可以在"指定外部归档日志文件位置"中列出以供恢复、而不是像第6步所示将挂载的归档日志复制到当前日志目录。
++
+image:aws_rds_custom_deploy_snp_24_1.PNG["错误：缺少图形映像"]
+
+. 如有必要、指定要运行的可选预处理程序。
++
+image:aws_rds_custom_deploy_snp_25.PNG["错误：缺少图形映像"]
+
+. 指定一个可选的后处理脚本、以便在必要时运行。恢复后检查打开的数据库。
++
+image:aws_rds_custom_deploy_snp_26.PNG["错误：缺少图形映像"]
+
+. 如果需要作业通知、请提供SMTP服务器和电子邮件地址。
++
+image:aws_rds_custom_deploy_snp_27.PNG["错误：缺少图形映像"]
+
+. 还原作业摘要。单击完成以启动还原作业。
++
+image:aws_rds_custom_deploy_snp_28.PNG["错误：缺少图形映像"]
+
+. 验证是否已从SnapCenter 还原。
++
+image:aws_rds_custom_deploy_snp_29_1.PNG["错误：缺少图形映像"]
+
+. 验证从EC2实例主机还原的情况。
++
+image:aws_rds_custom_deploy_snp_29_2.PNG["错误：缺少图形映像"]
+
+. 要卸载还原日志卷、请反转步骤4中的步骤。
+
+
+
+
+== 创建数据库克隆
+
+下一节将演示如何使用SnapCenter 克隆工作流创建从主数据库到备用EC2实例的数据库克隆。
+
+. 使用完整备份资源组从SnapCenter 为主数据库创建完整快照备份。
++
+image:aws_rds_custom_deploy_replica_02.PNG["错误：缺少图形映像"]
+
+. 从SnapCenter 资源选项卡>数据库视图中、打开要从中创建副本的主数据库的数据库备份管理页面。
++
+image:aws_rds_custom_deploy_replica_04.PNG["错误：缺少图形映像"]
+
+. 将步骤4中创建的日志卷快照挂载到备用EC2实例主机。
++
+image:aws_rds_custom_deploy_replica_13.PNG["错误：缺少图形映像"]
+image:aws_rds_custom_deploy_replica_14.PNG["错误：缺少图形映像"]
+
+. 突出显示要为副本克隆的Snapshot副本、然后单击克隆按钮启动克隆操作步骤。
++
+image:aws_rds_custom_deploy_replica_05.PNG["错误：缺少图形映像"]
+
+. 更改副本副本名称、使其与主数据库名称不同。单击下一步。
++
+image:aws_rds_custom_deploy_replica_06.PNG["错误：缺少图形映像"]
+
+. 将克隆主机更改为备用EC2主机、接受默认命名、然后单击下一步。
++
+image:aws_rds_custom_deploy_replica_07.PNG["错误：缺少图形映像"]
+
+. 更改Oracle主设置以与为目标Oracle服务器主机配置的设置相匹配、然后单击下一步。
++
+image:aws_rds_custom_deploy_replica_08.PNG["错误：缺少图形映像"]
+
+. 使用时间或SCN和挂载的归档日志路径指定恢复点。
++
+image:aws_rds_custom_deploy_replica_15.PNG["错误：缺少图形映像"]
+
+. 根据需要发送SMTP电子邮件设置。
++
+image:aws_rds_custom_deploy_replica_11.PNG["错误：缺少图形映像"]
+
+. 克隆作业摘要、然后单击完成以启动克隆作业。
++
+image:aws_rds_custom_deploy_replica_12.PNG["错误：缺少图形映像"]
+
+. 通过查看克隆作业日志来验证副本克隆。
++
+image:aws_rds_custom_deploy_replica_17.PNG["错误：缺少图形映像"]
+
++
+克隆的数据库会立即在SnapCenter 中注册。
+
++
+image:aws_rds_custom_deploy_replica_18.PNG["错误：缺少图形映像"]
+
+. 关闭Oracle归档日志模式。以Oracle用户身份登录到EC2实例并执行以下命令：
++
+[source, cli]
+----
+sqlplus / as sysdba
+----
++
+[source, cli]
+----
+shutdown immediate;
+----
++
+[source, cli]
+----
+startup mount;
+----
++
+[source, cli]
+----
+alter database noarchivelog;
+----
++
+[source, cli]
+----
+alter database open;
+----
+
+
+
+NOTE: 与主Oracle备份副本不同、也可以使用相同的过程从目标FSX集群上复制的二级备份副本创建克隆。
+
+
+
+== HA故障转移到备用并重新同步
+
+备用Oracle HA集群可在主站点发生故障时提供高可用性、无论是在计算层还是存储层。解决方案 的一个重要优势是、用户可以随时或以任何频率测试和验证基础架构。故障转移可以由用户模拟、也可以由实际故障触发。故障转移过程完全相同、可以自动执行、以便快速恢复应用程序。
+
+请参见以下故障转移过程列表：
+
+. 对于模拟故障转移、请运行日志快照备份、将最新事务刷新到备用站点、如一节所示 <<Taking an archive log snapshot>>。对于因实际故障而触发的故障转移、最后一个可恢复的数据将通过上次成功计划的日志卷备份复制到备用站点。
+. 中断主FSX集群和备用FSX集群之间的SnapMirror。
+. 在备用EC2实例主机上挂载复制的备用数据库卷。
+. 如果复制的Oracle二进制文件用于Oracle恢复、请重新链接Oracle二进制文件。
+. 将备用Oracle数据库恢复到最后一个可用的归档日志。
+. 打开备用Oracle数据库以供应用程序和用户访问。
+. 对于实际主站点故障、备用Oracle数据库现在充当新的主站点、数据库卷可用于使用反向SnapMirror方法将故障主站点重建为新的备用站点。
+. 对于用于测试或验证的模拟主站点故障、请在完成测试练习后关闭备用Oracle数据库。然后、从备用EC2实例主机卸载备用数据库卷、并将复制从主站点重新同步到备用站点。
+
+
+可以使用NetApp自动化工具包执行这些过程、该工具包可从公有 NetApp GitHub站点下载。
+
+[source, cli]
+----
+git clone https://github.com/NetApp-Automation/na_ora_hadr_failover_resync.git
+----
+在尝试进行设置和故障转移测试之前、请仔细阅读自述文件说明。
+
+link:aws_ora_fsx_ec2_migration.html["下一步：数据库迁移。"]

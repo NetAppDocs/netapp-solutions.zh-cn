@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: containers/anthos-with-netapp/a-w-n_anthos_BM.html 
 keywords: Anthos, bare metal, linux 
-summary:  
+summary: 在裸机上使用Anthos与硬件无关的功能、让您可以选择一个针对您的个性化使用情形进行优化的计算平台、同时还可以获得许多其他优势。 
 ---
-= Anthos on裸机：采用NetApp技术的Anthos
+= 裸机上的 Anthos
 :allow-uri-read: 
 
 
@@ -17,9 +17,9 @@ summary:
 示例包括：
 
 * *自带服务器。*您可以使用与现有基础架构匹配的服务器来降低资本支出和管理成本。
-* *自带Linux操作系统。*通过选择要在裸机环境中部署Anthos的Linux操作系统、您可以确保Anthos环境完全适合您的现有基础架构和管理方案。
-* *提高性能并降低成本。*如果不需要虚拟机管理程序、裸机集群上的Anthos就需要直接访问服务器硬件资源、包括GPU等经过性能优化的硬件设备。
-* *提高了网络性能并降低了延迟。*由于裸机服务器节点上的Anthos无需虚拟化抽象层即可直接连接到您的网络、因此可以针对低延迟和低性能进行优化。
+* *自带Linux操作系统。*通过选择要将裸机环境部署到的Linux操作系统、您可以确保Anthos环境与现有基础架构和管理方案完美结合。
+* *提高性能并降低成本。*如果不需要虚拟机管理程序、则裸机集群中的Anthos-on-bare要求直接访问服务器硬件资源、包括GPU等性能优化的硬件设备。
+* *提高了网络性能并降低了延迟。*由于裸机Anthos-on-bare服务器节点直接连接到您的网络、而无需虚拟化抽象层、因此可以对其进行优化、以实现低延迟和低性能。
 
 
 
@@ -49,7 +49,7 @@ Google Cloud会定期通过其Anthos Ready平台合作伙伴计划请求更新�
 
 === 操作系统
 
-裸机节点上的Anthos可以根据客户的选择配置多个不同的Linux分发版、以匹配其当前的数据中心基础架构。
+在裸机上使用Anthos-on-bare节点时、可以根据客户的选择配置多个不同的Linux分发版、以匹配其当前的数据中心基础架构。
 
 下表列出了NetApp和我们的合作伙伴用来验证解决方案 的Linux操作系统。
 
@@ -57,16 +57,16 @@ Google Cloud会定期通过其Anthos Ready平台合作伙伴计划请求更新�
 | 操作系统 | 版本。 | Anthos版本 
 
 
-| CentOS | 8/4. | 1.10 
+| CentOS | 8/4. | 1.11 
 
 
-| Red Hat Enterprise Linux | 8/4. | 1.10 
+| Red Hat Enterprise Linux | 8/4. | 1.11 
 
 
-| Ubuntu | 18.04 LTS | 1.10 
+| Ubuntu | 18.04 LTS | 1.11 
 
 
-| Ubuntu | 20.04 LTS | 1.10 
+| Ubuntu | 20.04 LTS | 1.11 
 |===
 
 
@@ -83,7 +83,7 @@ Google Cloud会定期通过其Anthos Ready平台合作伙伴计划请求更新�
 | Cisco | Nexus | C9336C-x2 
 
 
-| NetApp | AFF | A250 
+| NetApp | AFF | A250、A220 
 |===
 
 
@@ -98,17 +98,17 @@ Google Cloud会定期通过其Anthos Ready平台合作伙伴计划请求更新�
 | Cisco | NXOS | 9.3 （ 5 ） 
 
 
-| NetApp | ONTAP | 9.9.1 
+| NetApp | ONTAP | 9.9.1、9.10.1 
 
 
-| NetApp | Astra Trident | 22.01 
+| NetApp | Astra Trident | 22.04 
 |===
 在NetApp和我们在全球技术(World Wide Technology、WWT)的合作伙伴团队执行Anthos Ready平台验证期间、我们根据下图构建了实验室环境、该环境允许我们测试每种服务器类型、操作系统、网络设备、 和部署在解决方案 中的存储系统。
 
 image:a-w-n_anthos_baremetal_validation.png["错误：缺少图形映像"]
 
 
-NOTE: 此多操作系统环境显示了与裸机解决方案 上的Anthos支持的操作系统版本的互操作性。我们预计、客户将在自己的部署中对一个或一小部分操作系统进行标准化。
+NOTE: 此多操作系统环境显示了与受支持的操作系统版本的裸机解决方案 互操作性。我们预计、客户将在部署时对一个或一小部分操作系统进行标准化。
 
 
 
@@ -116,9 +116,12 @@ NOTE: 此多操作系统环境显示了与裸机解决方案 上的Anthos支持�
 
 在裸机上部署Anthos之前、应具备以下基础架构：
 
-* 至少一个 DNS 服务器，该服务器可提供可从带内管理网络和 VM 网络访问的完整主机名解析。
-* 至少可从带内管理网络和 VM 网络访问一个 NTP 服务器。
-* （可选）带内管理网络和 VM 网络的出站 Internet 连接。
+* 至少一个DNS服务器、可提供可从管理网络访问的完整主机名解析。
+* 至少一个可从管理网络访问的NTP服务器。
+* (可选)两个带内管理网络的出站Internet连接。
 
 
-link:a-w-n_overview_netapp.html["接下来：NetApp存储概述：采用NetApp的Anthos。"]
+
+NOTE: 本文档的"视频和演示"一节提供了有关裸机部署的Anthos的演示视频。
+
+link:a-w-n_overview_netapp.html["接下来：NetApp存储系统概述。"]

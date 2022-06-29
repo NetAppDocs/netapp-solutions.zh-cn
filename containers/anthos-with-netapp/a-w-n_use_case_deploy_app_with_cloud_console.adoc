@@ -1,0 +1,136 @@
+---
+sidebar: sidebar 
+permalink: containers/anthos-with-netapp/a-w-n_use_case_deploy_app_with_cloud_console.html 
+keywords: Anthos, Astra Trident, NetApp ONTAP, ONTAP, Trident 
+summary: 如何使用Google Cloud Console将应用程序部署到内部的Anthos GKEE集群。 
+---
+= 从Google Cloud Console Marketplace部署应用程序
+:allow-uri-read: 
+
+
+
+
+== 前提条件
+
+* 一个部署在内部并注册到Google Cloud Console的Anthos集群
+* 在Anthos集群中配置的MetalLB负载平衡器
+* 有权将应用程序部署到集群的帐户
+* 如果您选择具有相关成本的应用程序、则为Google Cloud的计费帐户(可选)
+
+
+
+
+== 部署应用程序
+
+在此使用情形中、我们使用Google Cloud Console将一个简单的WordPress应用程序部署到一个Anthos集群中。此部署使用NetApp ONTAP 在预定义的存储库中提供的永久性存储。然后、我们将演示两种不同的方法来修改应用程序默认服务、以便MetalLB负载平衡器为其提供IP地址并将其公开给世界。
+
+要以这种方式部署应用程序、请完成以下步骤：
+
+. 确认要部署到的集群可在Google Cloud Console中访问。
++
+image:a-w-n_use_case_deploy_app-10.png["已注册集群"]
+
+. 从左侧菜单中选择应用程序、选择顶部的三点选项菜单、然后选择从Marketplace部署、此时将显示一个新窗口、您可以从Google Cloud Marketplace中选择应用程序。
++
+image:a-w-n_use_case_deploy_app-09.png["应用程序市场"]
+
+. 搜索要安装的应用程序、此处为WordPress。
++
+image:a-w-n_use_case_deploy_app-08.png["搜索WordPress"]
+
+. 选择WordPress应用程序后、将显示一个概述屏幕。单击配置按钮。
++
+image:a-w-n_use_case_deploy_app-07.png["WordPress概述屏幕"]
+
+. 在下一页的案例演示集群中、您必须选择要部署到的集群。选择或创建新的命名空间和应用程序实例名称、然后选择WordPress应用程序及其后备MariaDB数据库所需的存储类和永久性卷大小。在这两种情况下、我们都选择了ontap-nas-csi存储类。
++
+image:a-w-n_use_case_deploy_app-06.png["WordPress配置"]
+
++
+
+NOTE: 请勿选择启用公有 IP访问。这样会创建一个类型为NodePort的服务、此服务无法从内部部署的Anthos部署访问。
+
+. 单击Deploy按钮后、您将看到一个页面、其中提供了应用程序详细信息。您可以刷新此页面或使用命令行界面登录到集群以检查部署状态。
++
+image:a-w-n_use_case_deploy_app-05.png["应用程序详细信息"]
+
+. 在部署应用程序时、可以使用命令行界面在应用程序命名空间中运行命令以提取Pod信息：`kubectl get pods -n anthos-wp`来检查应用程序的状态。
++
+image:a-w-n_use_case_deploy_app-04.png["Kubectl GET POD"]
+
++
+
+NOTE: 请注意、此屏幕截图显示一个部署程序POD处于错误状态。这是正常的。此Pod是Google Cloud Console使用的一个帮助程序Pod、用于部署在其他Pod开始初始化过程后自终止的应用程序。
+
+. 请稍后确认您的应用程序正在运行。
++
+image:a-w-n_use_case_deploy_app-03.png["应用程序正在运行"]
+
+
+
+
+
+== 公开应用程序
+
+部署应用程序后、您可以通过两种方法为其分配可访问全球的IP。
+
+
+
+=== 使用Google Cloud Console
+
+您可以通过使用Google Cloud Console并在浏览器中编辑服务的YAML输出来设置可公开访问的IP来公开应用程序。要执行此操作、请执行以下步骤：
+
+. 在Google Cloud Console中、单击左侧菜单中的服务和入口。
++
+image:a-w-n_use_case_deploy_app-11.png["服务和传入"]
+
+. 单击`WordPress-WordPress-Svc`服务。此时将打开服务详细信息屏幕。单击顶部的编辑按钮。
++
+image:a-w-n_use_case_deploy_app-12.png["编辑服务详细信息"]
+
+. 此时将打开编辑服务详细信息页面、其中包含此服务的YAML信息。向下滚动、直到看到`sPec：`部分和`type：`值、该值设置为`ClusterIP`。将此值更改为`loadbalancer`、然后单击保存按钮。
++
+image:a-w-n_use_case_deploy_app-13.png["键入ClusterIP值"]
+
++
+image:a-w-n_use_case_deploy_app-14.png["键入loadbalancer值"]
+
+. 返回到服务详细信息页面后、`Type：` NOW会列出`loadbalancer`、而`External Endpoints：`字段会列出从MetalLB池分配的IP地址以及可访问应用程序的端口。
++
+image:a-w-n_use_case_deploy_app-15.png["服务详细信息最终确定"]
+
+
+
+
+
+=== 使用Kubectl修补服务
+
+您可以使用CLI和`kubectl patch`命令来修改部署并设置可公开访问的IP来公开应用程序。为此，请完成以下步骤：
+
+. 使用`kubectl get services -n anthos-wp`命令列出与命名空间中Pod关联的服务。
++
+image:a-w-n_use_case_deploy_app-02.png["列出服务"]
+
+. 使用以下命令将服务类型从`ClusterIP`修改为类型`LoadBaler`：
++
+[listing]
+----
+kubectl patch svc wordpress-wordpress-svc -p '{"spec": {"type": "LoadBalancer"}}' -n anthos-wp'.
+----
++
+系统会自动从MetalLB池为这种新服务类型分配一个可用的IP地址。
+
++
+image:a-w-n_use_case_deploy_app-01.png["修补服务到类型负载平衡器"]
+
+
+
+
+
+== 访问公开的外部IP上的应用程序
+
+现在、您已使用可公开访问的IP地址公开应用程序、您可以使用浏览器访问WordPress实例。
+
+image:a-w-n_use_case_deploy_app-00.png["浏览器中的WordPress"]
+
+link:a-w-n_videos_and_demos.html["接下来：视频和演示。"]

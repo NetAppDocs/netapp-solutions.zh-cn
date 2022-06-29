@@ -4,19 +4,19 @@ permalink: containers/anthos-with-netapp/a-w-n_LB_SeeSaw.html
 summary: 此页面详细介绍了seesaw负载平衡器的安装和配置说明。 
 keywords: Anthos, GKE, Kubernetes, SeeSaw, LoadBalancer 
 ---
-= 安装seesaw负载平衡器：采用NetApp的Anthos
+= 安装seesaw负载平衡器
 :allow-uri-read: 
 
 
 此页面列出了seesaw受管负载平衡器的安装和配置说明。
 
-seesaw是VMware环境中Anthos集群中安装的默认托管网络负载平衡器。
+seesaw是VMware环境中安装在Anthos Clusters 1.6到1.10版的默认受管网络负载平衡器。
 
 
 
-== 安装Seesaw负载平衡器
+== 安装seesaw负载平衡器
 
-seesaw负载平衡器与VMware上的Anthos集群完全集成、并在管理和用户集群设置中自动执行部署。`cluster.YAML`配置文件中存在文本块、必须修改这些块以提供负载平衡器信息、然后在部署集群之前、还需要执行一个额外步骤、使用内置的"gkectl"工具部署负载平衡器。
+seesaw负载平衡器与VMware上的Anthos集群完全集成、并在管理和用户集群设置中自动执行部署。`cluster.YAML`配置文件中存在文本块、必须进行修改才能提供负载平衡器信息、然后在部署集群之前、还需要执行一个额外步骤、使用内置的`gkectl`工具部署负载平衡器。
 
 
 NOTE: 可以在HA或非HA模式下部署seesaw负载平衡器。为了进行此验证、seesaw负载平衡器部署在非HA模式下、这是默认设置。出于生产目的、NetApp建议在HA配置中部署seesaw、以实现容错和可靠性。
@@ -25,7 +25,7 @@ NOTE: 可以在HA或非HA模式下部署seesaw负载平衡器。为了进行此�
 
 == 与Anthos集成
 
-每个配置文件中分别有一个部分用于管理集群和您选择部署的每个用户集群、用于配置负载平衡器、以便由Anthos on-Prem管理。
+每个配置文件中分别为管理集群和您选择部署的每个用户集群提供了一个部分、用于配置负载平衡器、以便由Anthos on-Prem管理。
 
 以下文本是GKE-Admin集群分区配置的示例。需要取消注释和修改的值以粗体文本显示在下方：
 
@@ -84,9 +84,9 @@ NOTE: 可以在HA或非HA模式下部署seesaw负载平衡器。为了进行此�
   #   (Optional) Run two LB VMs to achieve high availability (default: false)
     *enableHA: false*
 ----
-seesaw负载平衡器还具有一个单独的静态"esaw-block.yaml"文件、必须为每个集群部署提供此文件。此文件必须位于与cluster.yaml部署文件相关的同一目录中、或者必须在上述部分中指定完整路径。
+seesaw负载平衡器还具有一个单独的静态`seesaw-block.yaml`文件、您必须为每个集群部署提供该文件。此文件必须位于与`cluster.yaml`部署文件相关的同一目录中、或者必须在上述部分中指定完整路径。
 
-admin-seesaw-block.yaml文件的示例如下所示：
+`admin-seesaw-block.yaml`文件的示例类似于以下脚本：
 
 [listing, subs="+quotes,+verbatim"]
 ----
@@ -100,4 +100,4 @@ blocks:
 
 NOTE: 此文件提供负载平衡器为底层集群提供的网络的网关和网络掩码、以及为运行负载平衡器而部署的虚拟机的管理IP和主机名。
 
-link:a-w-n_use_cases.html["接下来：解决方案 验证/使用案例：采用NetApp的Anthos。"]
+link:a-w-n_use_cases.html["接下来：解决方案验证 / 使用情形。"]

@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: containers/anthos-with-netapp/a-w-n_trident_ontap_iscsi.html 
-summary:  
+summary: 要启用 Trident 与 NetApp ONTAP 存储系统的集成，您必须创建一个后端，以便与存储系统进行通信。 
 keywords: Trident, Astra Trident, ONTAP, AFF, FAS, iSCSI 
 ---
-= NetApp ONTAP iSCSI配置：采用NetApp的Anthos
+= NetApp ONTAP iSCSI 配置
 :allow-uri-read: 
 
 
@@ -14,8 +14,8 @@ keywords: Trident, Astra Trident, ONTAP, AFF, FAS, iSCSI
 +
 [listing]
 ----
-[ubuntu@gke-admin-ws-2021-07-15 trident-installer]$ cp sample-input/backends-samples/ontap-san/backend-ontap-san.json ./
-[ubuntu@gke-admin-ws-2021-07-15 trident-installer]$ vi backend-ontap-san.json
+[ubuntu@gke-admin-ws-2022-05-03 trident-installer]$ cp sample-input/backends-samples/ontap-san/backend-ontap-san.json ./
+[ubuntu@gke-admin-ws-2022-05-03 trident-installer]$ vi backend-ontap-san.json
 ----
 . 编辑此文件中的 managementLIF ， dataLIF ， SVM ，用户名和密码值。
 +
@@ -35,7 +35,7 @@ keywords: Trident, Astra Trident, ONTAP, AFF, FAS, iSCSI
 +
 [listing]
 ----
-[ubuntu@gke-admin-ws-2021-07-15 trident-installer]$ ./tridentctl -n trident create backend -f backend-ontap-san.json
+[ubuntu@gke-admin-ws-2022-05-03 trident-installer]$ ./tridentctl -n trident create backend -f backend-ontap-san.json
 +------------------------+----------------+--------------------------------------+--------+---------+
 |          NAME          | STORAGE DRIVER |                 UUID                 | STATE  | VOLUMES |
 +------------------------+----------------+--------------------------------------+--------+---------+
@@ -46,8 +46,8 @@ keywords: Trident, Astra Trident, ONTAP, AFF, FAS, iSCSI
 +
 [listing]
 ----
-[ubuntu@gke-admin-ws-2021-07-15 trident-installer]$ cp sample-input/storage-class-samples/storage-class-csi.yaml.templ ./storage-class-basic.yaml
-[ubuntu@gke-admin-ws-2021-07-15 trident-installer]$ vi storage-class-basic.yaml
+[ubuntu@gke-admin-ws-2022-05-03 trident-installer]$ cp sample-input/storage-class-samples/storage-class-csi.yaml.templ ./storage-class-basic.yaml
+[ubuntu@gke-admin-ws-2022-05-03 trident-installer]$ vi storage-class-basic.yaml
 ----
 . 必须对此文件进行的唯一编辑是，为新创建的后端存储驱动程序的名称定义 `backendType` 值。另请注意 name-field 值，稍后必须引用该值。
 +
@@ -63,21 +63,21 @@ parameters:
 ----
 +
 
-NOTE: 此文件中定义了一个名为 `FSType` 的可选字段。在iSCSI后端、可以将此值设置为特定的Linux文件系统类型(XFS、ext4等)、也可以删除此值、以便OpenShift决定要使用的文件系统。
+NOTE: 此文件中定义了一个名为 `FSType` 的可选字段。在iSCSI后端、可以将此值设置为特定的Linux文件系统类型(XFS、ext4等)、也可以将其删除以允许OpenShift决定要使用的文件系统。
 
 . 运行 `kubectl` 命令以创建存储类。
 +
 [listing]
 ----
-[ubuntu@gke-admin-ws-2021-07-15 trident-installer]$ kubectl create -f storage-class-basic.yaml
+[ubuntu@gke-admin-ws-2022-05-03 trident-installer]$ kubectl create -f storage-class-basic.yaml
 storageclass.storage.k8s.io/basic-csi created
 ----
 . 创建存储类后，您必须创建第一个永久性卷请求（ PVC ）。此外，还可以在 sample-inputs 中使用一个示例 `pva-basic 。 yaml` file 来执行此操作。
 +
 [listing]
 ----
-[ubuntu@gke-admin-ws-2021-07-15 trident-installer]$ cp sample-input/pvc-samples/pvc-basic.yaml ./
-[ubuntu@gke-admin-ws-2021-07-15 trident-installer]$ vi pvc-basic.yaml
+[ubuntu@gke-admin-ws-2022-05-03 trident-installer]$ cp sample-input/pvc-samples/pvc-basic.yaml ./
+[ubuntu@gke-admin-ws-2022-05-03 trident-installer]$ vi pvc-basic.yaml
 ----
 . 必须对此文件进行的唯一编辑是，确保 `storageClassName` 字段与刚刚创建的字段匹配。可以根据要配置的工作负载的需要进一步自定义 PVC 定义。
 +
@@ -99,13 +99,13 @@ spec:
 +
 [listing]
 ----
-[ubuntu@gke-admin-ws-2021-07-15 trident-installer]$ kubectl create -f pvc-basic.yaml
+[ubuntu@gke-admin-ws-2022-05-03 trident-installer]$ kubectl create -f pvc-basic.yaml
 persistentvolumeclaim/basic created
 
-[ubuntu@gke-admin-ws-2021-07-15 trident-installer]$ kubectl get pvc
+[ubuntu@gke-admin-ws-2022-05-03 trident-installer]$ kubectl get pvc
 NAME    STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
 basic   Bound    pvc-7ceac1ba-0189-43c7-8f98-094719f7956c   1Gi        RWO            basic-csi      3s
 ----
 
 
-link:a-w-n_overview_advanced.html["接下来：高级配置选项：采用NetApp的Anthos。"]
+link:a-w-n_overview_advanced.html["下一步：高级配置选项。"]
