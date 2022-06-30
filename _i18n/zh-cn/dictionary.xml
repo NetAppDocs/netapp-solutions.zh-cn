@@ -10132,7 +10132,6 @@
   <block id="fff9995f30a825c5d3e5709e7b78117a" category="admonition">要下载此设备，用户必须向 F5 注册。他们为 Big IP Virtual Edition 负载平衡器提供 30 天的演示许可证。NetApp 建议为设备的生产部署提供永久 10 Gbps 许可证。</block>
   <block id="1a104d04970b6b80d8cf31f554404f4d" category="list-text">右键单击基础架构资源池、然后选择Deploy OVF Template。此时将启动一个向导，用于选择您刚刚在步骤 1 中下载的 OVA 文件。单击下一步。</block>
   <block id="fdf7304b13d736c791bc745a330e7309" category="image-alt">部署大 IP 设备</block>
-  <block id="b0c5dd13efd4858e2056c5d88267c2fa" category="list-text">单击下一步继续执行每个步骤，并接受显示的每个屏幕的默认值，直到显示存储选择屏幕为止。选择先前创建的 VM_Datastore ，然后单击下一步。</block>
   <block id="fbd07b7802c1a124a9359b27b9f46968" category="list-text">通过向导显示的下一个屏幕，您可以自定义要在环境中使用的虚拟网络。选择 VM_Network 作为外部字段，然后选择 Management_Network 作为管理字段。内部和 HA 用于 F5 BIG-IP 设备的高级配置，但未进行配置。这些参数可以单独使用，也可以配置为连接到非基础架构的分布式端口组。单击下一步。</block>
   <block id="93353313944577e80d34c3d9491db6ce" category="list-text">查看设备的摘要屏幕，如果所有信息都正确，请单击完成开始部署。</block>
   <block id="68b984a73f20c874fb80feeaa4621109" category="list-text">部署虚拟设备后，右键单击该设备并将其启动。它应在管理网络上收到 DHCP 地址。此设备基于Linux、并且已部署VMware Tools、因此您可以在vSphere客户端中查看它接收的DHCP地址。</block>
@@ -12836,7 +12835,6 @@
   <block id="93e0638cb95146eb8773223a90aa6d86" category="list-text">在下一页中，您可以配置一个外部网络，用于将服务映射到 Kubernetes 中部署的 Pod 。从 VM_Network 范围中选择一个静态 IP ，相应的子网掩码以及同一范围中的浮动 IP 。接口1.2映射到OVF部署向导中标记为外部的vmnic。</block>
   <block id="803c8b846cb5b5c6c8d5a2b0b07f4dba" category="inline-image-macro">BIG-IP 配置，第 9 部分</block>
   <block id="9cd42351da162e75b1a0178bdd0ded20" category="inline-image-macro">BIG-IP 配置，第 10 部分</block>
-  <block id="ca2835359be5e4e2e79ed5b6fd777515" category="paragraph"><block ref="ca2835359be5e4e2e79ed5b6fd777515" category="inline-image-macro-rx" type="image"></block></block>
   <block id="ad99125325ea694a08a4db92eabb18a1" category="inline-image-macro">BIG-IP 配置，第 11 部分</block>
   <block id="d71ac8787685cb0f3b8f800520d684b1" category="paragraph"><block ref="d71ac8787685cb0f3b8f800520d684b1" category="inline-image-macro-rx" type="image"></block></block>
   <block id="99a0344c261b0475e6caf01bb585530f" category="list-text">显示的屏幕仅显示当前通用分区。单击右侧的Create创建以创建第一个附加分区、并将其命名为`GKE-Admin`。然后单击重复、将分区命名为`User-Cluster-1`。再次单击重复按钮可将下一个分区命名为`User-Cluster-2`。最后，单击 " 完成 " 以完成向导。此时将返回分区列表屏幕，其中列出了所有分区。</block>
@@ -12971,7 +12969,6 @@
   <block id="54132be89475e52a0550d90f4b162e74" category="paragraph"><block ref="54132be89475e52a0550d90f4b162e74" category="inline-image-macro-rx" type="image"></block></block>
   <block id="a7f329dfec2100f6b17e76aecd655cac" category="paragraph"><block ref="a7f329dfec2100f6b17e76aecd655cac" category="inline-image-macro-rx" type="image"></block></block>
   <block id="ec1ad0944f93fe082ef02313cd33db47" category="paragraph"><block ref="ec1ad0944f93fe082ef02313cd33db47" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="a4bcee5bad76b31cc176f808d63ca8af" category="admonition">此文件中定义了一个名为 `FSType` 的可选字段。在iSCSI后端、可以将此值设置为特定的Linux文件系统类型(XFS、ext4等)、也可以将其删除以允许OpenShift决定要使用的文件系统。</block>
   <block id="28eb5fe5f641c3ffa32f2488fa166a36" category="paragraph">本参考文档将对部署在多个数据中心环境中的Anthos与NetApp解决方案 进行部署验证。此外、还详细介绍了如何使用Astra Trident存储编排程序管理永久性存储、从而与NetApp存储系统实现存储集成。最后、我们将探讨并记录许多解决方案 验证和实际使用情形。</block>
   <block id="0d3aabd1c9ad032e07b543d0aff99cb1" category="list-text">使用在裸机上提供的`bmctl`工具或在VMware vSphere上使用`gkectl`工具部署的Anthos环境、易于部署和管理。</block>
   <block id="ee1ef628edbfb6bb102163064fbd3d8e" category="paragraph">采用NetApp解决方案 的Anthos认识到这些挑战、并提供了一个解决方案 、通过在客户选择的数据中心环境中在内部实施完全自动化的Anthos部署、帮助解决每个问题。</block>
@@ -13034,4 +13031,7 @@
   <block id="d0ee5cd6f53ec708670800837b7502b7" category="inline-link-macro">接下来：NetApp ONTAP iSCSI。</block>
   <block id="884a92818052da7764b1c5b7589bd458" category="paragraph"><block ref="884a92818052da7764b1c5b7589bd458" category="inline-link-macro-rx"></block></block>
   <block id="eec34a14279b64231b91793978a204da" category="paragraph"><block ref="eec34a14279b64231b91793978a204da" category="inline-link-macro-rx"></block></block>
+  <block id="f6762efea56447c717fea204b2676851" category="list-text">单击下一步继续执行每个步骤，并接受显示的每个屏幕的默认值，直到显示存储选择屏幕为止。选择要将虚拟机部署到的VM_Datastore、然后单击下一步。</block>
+  <block id="9c071149626a964576dd6f6dfc3b6ac6" category="paragraph"><block ref="9c071149626a964576dd6f6dfc3b6ac6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="da0289d58f35e36d18325d6e8038b226" category="admonition">此文件中定义了一个名为 `FSType` 的可选字段。在iSCSI后端、可以将此值设置为特定的Linux文件系统类型(XFS、ext4等)、也可以将其删除、以允许工作节点操作系统确定要使用的文件系统。</block>
 </blocks>
