@@ -258,11 +258,13 @@
           <div id="react-search" 
           data-search-html="/zh-cn/netapp-solutions/search.html"
           data-type="widget" 
-          data-placeholder="搜索文档" 
-          data-no-results-found="未找到与 {query} 匹配的结果。" 
-          data-did-you-mean="搜索 {suggestion}。" 
-          data-no-results-found-did-you-mean="未找到与 {query} 匹配的结果。您是否要搜索 {suggestion}?" 
-          data-results-found="找到 {hitCount} 个结果"  
+          data-placeholder="搜索文档"
+          data-no-results-found="未找到与 {query} 匹配的结果。"
+          data-did-you-mean="搜索 {suggestion}。"
+          data-no-results-found-did-you-mean="未找到与 {query} 匹配的结果。您是否要搜索 {suggestion}?"
+          data-results-found="找到 {hitCount} 个结果"
+          data-error-message="We're sorry, an issue occurred when fetching your results. Please try again."
+          data-error-reset="Reset Search"
           data-sk-es-pf-indexes=""
           data-flavor=""></div>
           <button class="n-property-bar__search-toggle-button" type="button">
@@ -5111,7 +5113,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-04-18 06:42:09 +0000">04/18/2022</time>
+    <time datetime="2022-07-15 19:04:08 +0000">07/15/2022</time>
     
   
 
@@ -5137,8 +5139,9 @@
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="前提条件">前提条件</h3>
+<div class="sect1">
+<h2 id="前提条件">前提条件</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>在执行本节所述的部署练习之前，我们假定您已执行以下任务：</p>
 </div>
@@ -5153,20 +5156,26 @@
 </ol>
 </div>
 </div>
-<div class="sect2">
-<h3 id="安装-helm">安装 Helm</h3>
+</div>
+<div class="sect1">
+<h2 id="安装-helm">安装 Helm</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Airflow 可使用 Kubernetes 常用的软件包管理器 Helm 进行部署。在部署气流之前，必须在部署跳转主机上安装 Helm 。要在部署跳转主机上安装 Helm ，请按照 <a href="https://helm.sh/docs/intro/install/" target="_blank" rel="noopener">"安装说明"</a> 在官方 Helm 文档中。</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="设置默认-kubernetes-storageclass">设置默认 Kubernetes StorageClass</h3>
+</div>
+<div class="sect1">
+<h2 id="设置默认-kubernetes-storageclass">设置默认 Kubernetes StorageClass</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>在部署 Airflow 之前，您必须在 Kubernetes 集群中指定一个默认 StorageClass 。气流部署过程会尝试使用默认 StorageClass 配置新的永久性卷。如果未将任何 StorageClass 指定为默认 StorageClass ，则部署将失败。要在集群中指定默认 StorageClass ，请按照一节中所述的说明进行操作 <a href="aicp_kubeflow_deployment_overview.html">"Kubeflow 部署"</a>。如果已在集群中指定默认 StorageClass ，则可以跳过此步骤。</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="使用-helm-部署气流">使用 Helm 部署气流</h3>
+</div>
+<div class="sect1">
+<h2 id="使用-helm-部署气流">使用 Helm 部署气流</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>要使用 Helm 在 Kubernetes 集群中部署气流，请从部署跳转主机执行以下任务：</p>
 </div>
@@ -5280,6 +5289,7 @@ $ echo http://$NODE_IP:$NODE_PORT/</pre>
 </div>
 <div class="paragraph">
 <p><a href="aicp_example_apache_airflow_workflows_overview.html">"接下来： Apache 气流工作流示例"</a></p>
+</div>
 </div>
 </div>
 
