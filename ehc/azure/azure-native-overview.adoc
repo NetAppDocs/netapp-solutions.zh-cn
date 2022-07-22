@@ -1,0 +1,92 @@
+---
+sidebar: sidebar 
+permalink: ehc/azure/azure-native-overview.html 
+keywords:  
+summary:  
+---
+= ANF数据存储库解决方案概述
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+[role="lead"]
+每个成功的组织都在转型和现代化的道路上。在此过程中、企业通常会利用现有的VMware投资、同时利用云优势、并探索如何尽可能无缝地迁移、突发、扩展和灾难恢复过程。迁移到云的客户必须评估弹性和突发、数据中心退出、数据中心整合、寿命终结情形、合并、收购等问题。每个组织采用的方法可能因其各自的业务优先级而异。在选择基于云的操作时、选择一个具有适当性能且最大程度减少障碍的低成本模式是一个关键目标。除了选择合适的平台之外、存储和工作流编排对于充分发挥云部署和弹性的潜能尤其重要。
+
+
+
+== 用例
+
+虽然Azure VMware解决方案 为客户提供了独特的混合功能、但有限的原生 存储选项限制了它对存储负载繁重的组织的有用性。由于存储与主机直接相关、因此扩展存储的唯一方法是添加更多主机、这样对于存储密集型工作负载、成本可能会增加35-40%或更多。这些工作负载需要额外的存储、而不是额外的功率、但这意味着需要为额外的主机付费。
+
+我们来考虑以下情形：客户需要六台主机来提供功率(vCPU/vMem)、但他们也需要大量存储。根据他们的评估、他们需要12台主机来满足存储要求。这样可以提高总体TCO、因为他们必须购买所有这些额外的动力、而他们真正需要的只是更多的存储。这适用于任何使用情形、包括迁移、灾难恢复、突发、开发/测试、 等等。
+
+Azure VMware解决方案 的另一个常见使用情形是灾难恢复(DR)。大多数企业都没有防虚灾难恢复策略、或者可能难以为灾难恢复运行虚影数据中心。管理员可以使用轻型试点集群或按需集群探索零占用空间灾难恢复选项。然后、他们可以在不添加额外主机的情况下扩展存储、这可能是一个极具吸引力的选择。
+
+因此、概括地说、使用情形可以分为两种分类方式：
+
+* 使用ANF数据存储库扩展存储容量
+* 在软件定义的数据中心(SDDC)之间、将ANF数据存储库用作从内部或Azure区域进行成本优化的恢复工作流的灾难恢复目标。本指南深入介绍如何使用Azure NetApp Files 为数据存储库提供优化的存储(当前处于公有 预览模式) 除了Azure VMware解决方案 中同类最佳的数据保护和灾难恢复功能之外、您还可以通过此功能从vSAN存储中卸载存储容量。
+
+
+
+NOTE: Azure NetApp Files 数据存储库功能当前处于公有 预览状态。请联系您所在地区的NetApp或Microsoft解决方案 架构师获取追加信息。
+
+
+
+== Azure中的VMware Cloud选项
+
+
+
+=== Azure VMware 解决方案
+
+Azure VMware解决方案 (AVS)是一种混合云服务、可在Microsoft Azure公有 云中提供功能完备的VMware SDDC。AVS是由Microsoft全面管理和支持并经过VMware验证的第一方解决方案 、它使用Azure基础架构。因此、客户可以获得用于计算虚拟化的VMware ESXi、用于超融合存储的vSAN以及用于网络连接和安全的NSX、同时充分利用Microsoft Azure的全球影响力、一流的数据中心设施以及与丰富的原生 Azure服务和解决方案生态系统的邻近性。Azure VMware解决方案 SDDC与Azure NetApp Files 相结合、可提供最佳性能、同时将网络延迟降至最低。
+
+无论使用何种云、在部署VMware SDDC时、初始集群都包括以下组件：
+
+* 用于计算虚拟化的VMware ESXi主机、以及用于管理的vCenter Server设备。
+* VMware vSAN超融合存储、整合了每个ESXi主机的物理存储资产。
+* VMware NSX用于虚拟网络连接和安全性、并使用NSX Manager集群进行管理。
+
+
+
+
+== 结论
+
+无论您是以全云还是混合云为目标、Azure NetApp Files 都可以提供出色的选项来部署和管理应用程序工作负载以及文件服务、同时通过将数据需求无缝地迁移到应用程序层来降低TCO。无论使用何种情形、都可以选择Azure VMware解决方案 和Azure NetApp Files 、以快速实现云优势、跨内部和多个云实现一致的基础架构和运营、并实现工作负载双向可移植性以及企业级容量和性能。这是用于连接存储的熟悉过程。请记住、随新名称一起更改的只是数据的位置；工具和流程都保持不变、Azure NetApp Files 有助于优化整体部署。
+
+
+
+== 要点总结
+
+本文档的要点包括：
+
+* 现在、您可以在AVS SDDC上使用Azure NetApp Files 作为数据存储库。
+* 加快应用程序响应速度并提高可用性、以便在需要时随时随地访问工作负载数据。
+* 通过简单的即时调整大小功能简化vSAN存储的整体复杂性。
+* 利用动态重塑功能为任务关键型工作负载提供有保障的性能。
+* 如果Azure VMware解决方案 Cloud是目标、则Azure NetApp Files 是最适合优化部署的存储解决方案。
+
+
+
+
+== 从何处查找追加信息
+
+要了解有关本文档中所述信息的更多信息，请访问以下网站链接：
+
+* Azure VMware解决方案 文档
++
+https://docs.microsoft.com/en-us/azure/azure-vmware/["https://docs.microsoft.com/en-us/azure/azure-vmware/"^]
+
+* Azure NetApp Files 文档
++
+https://docs.microsoft.com/en-us/azure/azure-netapp-files/["https://docs.microsoft.com/en-us/azure/azure-netapp-files/"^]
+
+* 将Azure NetApp Files 与Azure VMware解决方案 集成
++
+https://docs.microsoft.com/en-us/azure/azure-vmware/netapp-files-with-azure-vmware-solution["https://docs.microsoft.com/en-us/azure/azure-vmware/netapp-files-with-azure-vmware-solution"^]
+
+
