@@ -93,6 +93,16 @@ VMware Tanzu Kubernetes Grid Integrated (TKGI)
 * 可以使用vSphere CSI以及NetApp Astra Trident等第三方CSI (某些条件适用)。
 
 
+采用Tanzu的vSphere (vSphere Pod)
+
+* vSphere原生 Pod在基于光子的精简层中运行、并使用规定的虚拟硬件进行完全隔离。
+* 需要NSX-T、但这样可以支持更多功能、例如、存储映像注册表。
+* 使用TKGS等虚拟Supervisor集群在vSphere 7.0U1中部署和管理、并直接在ESXi节点上运行Pod。
+* 完全集成vSphere、由vSphere管理员提供最高的可见性和控制能力。
+* 基于CRX的隔离POD、可实现最高的安全性。
+* 仅支持将vSphere CSI用于永久性存储/不支持第三方存储编排程序。
+
+
 
 
 === NetApp 存储系统
@@ -132,7 +142,7 @@ Astra Trident是一款开源且完全受支持的存储编排程序、适用于�
 | NetApp Astra Trident | 存储编排 | 22.04.0 
 
 
-| VMware Tanzu Kubernetes网格 | 容器编排 | 1.3.1 
+| VMware Tanzu Kubernetes网格 | 容器编排 | 1.4及更高版本 
 
 
 .2+| VMware Tanzu Kubernetes网格服务 .2+| 容器编排 | 0.0.15个vSphere命名空间 

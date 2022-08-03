@@ -1,0 +1,50 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/stgr-splunkss-solution-overview.html 
+keywords: storagegrid, splunk enterprise, smartstore, object storage, machine data 
+summary: 此页面介绍了用于完成此解决方案 的组件、包括NetApp StorageGRID 、Splunk Enterprise和Splunk SmartStore。 
+---
+= 解决方案概述
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:stgr-splunkss-intelligent-tiering-and-cost-savings.html["上一篇：智能分层和成本节省。"]
+
+
+
+== NetApp StorageGRID
+
+NetApp StorageGRID 是一款高性能且经济高效的对象存储平台。它采用基于节点的分布式网格架构，提供智能的策略驱动型全局数据管理。它通过其无处不在的全局对象命名空间以及复杂的数据管理功能，简化了对数 PB 的非结构化数据和数十亿个对象的管理。单次调用对象访问可扩展到各个站点，并简化高可用性架构，同时确保无论站点或基础架构发生中断，都能持续访问对象。
+
+多租户支持在同一网格中安全地处理多个云和企业非结构化数据应用程序、从而提高StorageGRID 的ROI并增加其用例。可以使用元数据驱动型对象生命周期策略创建多个服务级别，从而优化多个地理位置的持久性，保护，性能和位置。用户可以根据需求的变化无中断地调整策略和重新调整数据环境。
+
+SmartStore利用StorageGRID 作为远程存储层、并允许客户部署多个分布在不同地理位置的站点、以实现强大的可用性和持久性、并将其作为一个对象命名空间呈现。这样、Splunk SmartStore就可以利用StorageGRID 的高性能、高密度容量、并能够使用一个URL跨多个物理站点扩展到数百个节点以与对象交互。通过这一 URL ，即使在一个站点之外，存储扩展，升级和修复也不会造成中断。StorageGRID 独特的数据管理策略引擎可提供经过优化的性能和持久性级别、并可满足数据位置要求。
+
+
+
+== Splunk Enterprise
+
+Splunk是机器生成数据收集和分析领域的领导者、通过其运营分析功能帮助简化IT并实现现代化。它还扩展到业务分析、安全性和物联网用例。存储是成功部署Splunk软件的关键推动因素。
+
+计算机生成的数据是增长最快的大数据类型。格式不可预测、并且来自许多不同的来源、通常采用高速率且数量巨大的格式。这些工作负载特征通常称为数字排气。Splunk SmartStore有助于理解这些数据、并提供智能数据分层、以便在最经济高效的存储层上优化热数据和热数据的放置。
+
+
+
+== Splunk SmartStore
+
+Splunk SmartStore是一种索引器功能、它使用StorageGRID 等对象存储(也称为远程存储或远程存储层)来使用S3协议存储热数据。
+
+随着部署数据量的增加、对存储的需求通常会超过对计算机资源的需求。通过SmartStore、您可以通过单独扩展计算和存储来经济高效地管理索引器存储和计算资源。
+
+SmartStore引入了一个使用S3协议的远程存储层和一个缓存管理器。这些功能允许数据驻留在本地索引器或远程存储上。位于索引器上的缓存管理器可管理索引器与远程存储层之间的数据移动。数据与存储分段元数据一起存储在存储分段(热和热)中。
+
+借助SmartStore、您可以将索引器的存储占用空间降至最低、并选择I/O优化的计算资源、因为大多数数据都驻留在远程存储层上。索引器会维护一个本地缓存、表示返回请求和预测的结果所需的最少数据量。本地缓存包含热分段、参与活动或近期搜索的热分段副本以及分段元数据。
+
+借助采用StorageGRID 的Splunk SmartStore、客户可以利用高性能和经济高效的远程存储逐步扩展环境、同时为整个解决方案 提供高度的弹性。这样、无论客户是否需要更多索引器、更改数据保留、还是在不中断的情况下提高载入速率、客户都可以在任意给定时间添加任意给定数量的任何组件(热存储和/或热S3存储)。
+
+link:stgr-splunkss-flexible-storagegrid-features-for-splunk-smartstore.html["接下来：适用于Splunk SmartStore的灵活StorageGRID 功能。"]

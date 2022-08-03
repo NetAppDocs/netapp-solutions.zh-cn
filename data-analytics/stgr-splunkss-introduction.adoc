@@ -1,0 +1,73 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/stgr-splunkss-introduction.html 
+keywords: introduction, executive summary, tr4869, 4869, storagegrid, smartstore, splunk, 
+summary: 本技术报告概述了NetApp为Splunk SmartStore解决方案 提供的优势、同时演示了在您的环境中设计和调整Splunk SmartStore大小的框架。因此、解决方案 简单、可扩展且具有故障恢复能力、可提供极具吸引力的TCO。 
+---
+= TR-4869：NetApp StorageGRID 与Splunk SmartStore
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+Karthikeyan Nagalingam、Bobby Oommen、Joseph Kdatilparambil
+
+Splunk Enterprise是市场领先的安全信息和事件管理(Security Information and Event Management、解决方案)、可推动安全、IT和开发运营团队取得成果。数据量继续呈指数级增长、为能够利用这一庞大资源的企业创造了巨大的机会。Splunk Enterprise继续在更广泛的使用情形中得到采用。随着使用情形的增加、Splunk Enterprise所载入和处理的数据量也会增加。Splunk Enterprise的传统架构采用分布式横向扩展设计、可提供出色的数据访问和可用性。但是、使用此架构的企业面临着与扩展以满足快速增长的数据量相关的成本不断增长的问题。
+
+采用NetApp StorageGRID 的Splunk SmartStore提供了一种分离计算和存储的新部署模式、从而解决了这一挑战。此解决方案 还可以为Splunk企业环境提供无与伦比的扩展能力和弹性、支持客户跨单个和多个站点进行扩展、同时通过允许计算和存储独立扩展并为基于云的S3对象存储添加智能分层来降低成本。
+
+解决方案 可优化本地存储中的数据量、同时保持搜索性能、从而可以根据需要扩展计算和存储。SmartStore会自动评估数据访问模式、以确定哪些数据需要访问以进行实时分析、哪些数据应驻留在成本较低的S3对象存储中。
+
+本技术报告概述了NetApp为Splunk SmartStore解决方案 提供的优势、同时演示了在您的环境中设计和调整Splunk SmartStore大小的框架。因此、解决方案 简单、可扩展且具有故障恢复能力、可提供极具吸引力的TCO。StorageGRID 可提供基于S3协议/API的可扩展且经济高效的对象存储(也称为远程存储)、使企业能够以更低的成本扩展Splunk解决方案 、同时提高弹性。
+
+
+NOTE: Splunk SmartStore将对象存储称为远程存储或远程存储层。
+
+
+
+== 关于NetApp StorageGRID
+
+NetApp StorageGRID 是一款软件定义的对象存储解决方案 、适用于大型归档、媒体存储库和Web数据存储。借助StorageGRID 、NetApp利用20年的丰富经验提供行业领先的创新和数据管理解决方案、同时帮助企业管理内部以及公有 、私有云或混合云部署中的信息并最大限度地发挥其价值。
+
+StorageGRID 可为大规模非结构化数据提供安全，持久的存储。元数据驱动的集成生命周期管理策略可优化数据在整个生命周期中的位置。将内容放置在合适的位置，合适的时间和合适的存储层上，以降低成本。无论StorageGRID 存储的地理位置如何、单个命名空间都允许通过单个调用访问数据。客户可以在数据中心之间以及云基础架构中部署和管理多个StorageGRID 实例。
+
+StorageGRID 系统由全球分布的冗余异构节点组成、这些节点可与现有客户端应用程序和下一代客户端应用程序集成。
+
+image:stgr-splunkss-image1.png["错误：缺少图形映像"]
+
+IDC MarketScape最近在最新报告《IDC MarketScape：2019年全球基于对象的存储供应商评估》中将NetApp评为领导者。StorageGRID 在要求最严苛的行业中部署了近20年的生产环境、是公认的非结构化数据领导者。
+
+借助StorageGRID 、您可以实现以下目标：
+
+* 部署多个StorageGRID 实例、以便通过一个可轻松扩展到数百PB的命名空间从数据中心和云之间的任何位置访问数据。
+* 灵活地跨基础架构进行部署和集中管理。
+* 利用分层擦除编码(EC)提供无与伦比的持久性和十五个九的持久性。
+* 通过与Amazon S3 Glacier和Azure Blob的经验证集成、实现更多混合多云功能。
+* 无需专有API或受制于供应商、即可通过防篡改数据保留来履行法规义务并促进合规。
+
+
+有关StorageGRID 如何帮助您解决最复杂的非结构化数据管理问题的详细信息、请参见 https://www.netapp.com/data-storage/storagegrid/["NetApp StorageGRID 主页"^]。
+
+
+
+== 关于Splunk Enterprise
+
+Splunk Enterprise是一个将数据转化为业务的平台。日志文件、网站、设备、传感器和应用程序等各种源生成的数据会发送到Splunk索引器并由其进行解析、从而使您能够从这些数据中获得丰富的洞察力。它可能会发现数据泄露、指出客户和产品趋势、发现优化基础架构的机会、或者针对各种使用情形提供可操作的洞察力。
+
+
+
+== 关于Splunk SmartStore
+
+Splunk SmartStore扩展了Splunk架构的优势、同时简化了其经济高效地扩展的能力。计算资源和存储资源的分离会导致索引器节点针对I/O进行优化、并显著降低存储需求、因为它们只会将一部分数据存储为缓存。如果只需要其中一种资源、则无需添加额外的计算或存储、这样可以显著节省成本。您可以使用经济高效且易于扩展的基于S3的对象存储、从而进一步简化环境、降低成本、并维护更大规模的数据集。
+
+Splunk SmartStore为企业带来了巨大的价值、其中包括：
+
+* 通过将热数据迁移到经过成本优化的S3对象存储来降低存储成本
+* 通过分离存储和计算实现无缝扩展
+* 利用弹性云原生存储简化业务连续性
+
+
+link:stgr-splunkss-benefits-of-this-solution.html["接下来：此解决方案 的优势。"]

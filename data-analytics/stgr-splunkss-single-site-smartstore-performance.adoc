@@ -1,0 +1,191 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/stgr-splunkss-single-site-smartstore-performance.html 
+keywords: configuration, warm data, cold data, cache storage, indexer, eventgen, event generator, search head 
+summary: 此页面介绍了NetApp StorageGRID 控制器上的Splunk SmartStore性能。Splunk SmartStore可将热数据移动到远程存储、而远程存储是性能验证中的StorageGRID 对象存储。 
+---
+= 单站点SmartStore性能
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:stgr-splunkss-splunk-architecture.html["先前版本：Splunk架构。"]
+
+本节介绍NetApp StorageGRID 控制器上的Splunk SmartStore性能。Splunk SmartStore可将热数据移动到远程存储、在这种情况下、是性能验证中的StorageGRID 对象存储。
+
+image:stgr-splunkss-image10.png["错误：缺少图形映像"]
+
+我们将EF600用于热/缓存存储、而StorageGRID 6060用于远程存储。我们使用以下架构进行性能验证。我们使用了两个搜索头、四个重磅转发器将数据转发到索引器、使用七个Splunk事件生成器(Eventgens)生成实时数据、使用18个索引器存储数据。
+
+image:stgr-splunkss-image11.png["错误：缺少图形映像"]
+
+
+
+== Configuration
+
+下表列出了用于SmartStorage性能验证的硬件。
+
+|===
+| Splunk组件 | 任务 | 数量 | 核心 | 内存 | os 
+
+
+| 重型转发器 | 负责载入数据并将数据转发给索引器 | 4. | 16个核心 | 32 GB RAM | SLED 15 SP2 
+
+
+| 索引器 | 管理用户数据 | 18 | 16个核心 | 32 GB RAM | SLED 15 SP2 
+
+
+| 搜索头 | 用户前端在索引器中搜索数据 | 2. | 16个核心 | 32 GB RAM | SLED 15 SP2 
+
+
+| 搜索头部署程序 | 处理搜索头集群的更新 | 1. | 16个核心 | 32 GB RAM | SLED 15 SP2 
+
+
+| 集群主节点 | 管理Splunk安装和索引器 | 1. | 16个核心 | 32 GB RAM | SLED 15 SP2 
+
+
+| 监控控制台和许可证主节点 | 对整个Splunk部署执行集中监控、并管理Splunk许可证 | 1. | 16个核心 | 32 GB RAM | SLED 15 SP2 
+|===
+
+
+== SmartStore远程存储性能验证
+
+在此性能验证中、我们在所有索引器上的本地存储中配置了SmartStore缓存、用于存储10天的数据。我们在Splunk集群管理器中启用了`maxDataSize=auto`(750 MB存储分段大小)、并将更改推送到所有索引器。为了衡量上传性能、我们在10天内每天载入10 TB、并同时将所有热分段置于热状态、并从SmartStore监控控制台信息板中捕获每个实例和整个部署的峰值和平均吞吐量。
+
+此图显示了一天内载入的数据。
+
+image:stgr-splunkss-image12.png["错误：缺少图形映像"]
+
+我们从集群主节点运行以下命令(索引名称为`eventgen-test`)。然后、我们会通过SmartStore监控控制台信息板捕获每个实例和整个部署范围的峰值和平均上传吞吐量。
+
+....
+for i in rtp-idx0001 rtp-idx0002 rtp-idx0003 rtp-idx0004 rtp-idx0005 rtp-idx0006 rtp-idx0007 rtp-idx0008 rtp-idx0009 rtp-idx0010 rtp-idx0011 rtp-idx0012 rtp-idx0013011 rtdx0014 rtp-idx0015 rtp-idx0016 rtp-idx0017 rtp-idx0018 ; do  ssh $i "hostname;  date; /opt/splunk/bin/splunk _internal call /data/indexes/eventgen-test/roll-hot-buckets -auth admin:12345678; sleep 1  "; done
+....
+
+NOTE: 集群主节点可对所有索引器进行无密码身份验证(RTP-idx0001…RTP-idx0018)。
+
+为了衡量下载性能、我们使用以下命令运行两次逐出命令行界面、从而将所有数据逐出缓存。
+
+
+NOTE: 我们从集群主节点运行以下命令、并在StorageGRID 远程存储的10天数据之上从搜索头运行搜索。然后、我们会通过SmartStore监控控制台信息板捕获每个实例和整个部署范围的峰值和平均上传吞吐量。
+
+....
+for i in rtp-idx0001 rtp-idx0002 rtp-idx0003 rtp-idx0004 rtp-idx0005 rtp-idx0006 rtp-idx0007 rtp-idx0008 rtp-idx0009 rtp-idx0010 rtp-idx0011 rtp-idx0012 rtp-idx0013 rtp-idx0014 rtp-idx0015 rtp-idx0016 rtp-idx0017 rtp-idx0018 ; do  ssh $i " hostname;  date; /opt/splunk/bin/splunk _internal call /services/admin/cacheman/_evict -post:mb 1000000000 -post:path /mnt/EF600 -method POST  -auth admin:12345678;   “; done
+....
+索引器配置已从SmartStore集群主节点推送。集群主节点对索引器具有以下配置。
+
+....
+Rtp-cm01:~ # cat /opt/splunk/etc/master-apps/_cluster/local/indexes.conf
+[default]
+maxDataSize = auto
+#defaultDatabase = eventgen-basic
+defaultDatabase = eventgen-test
+hotlist_recency_secs = 864000
+repFactor = auto
+[volume:remote_store]
+storageType = remote
+path = s3://smartstore2
+remote.s3.access_key = U64TUHONBNC98GQGL60R
+remote.s3.secret_key = UBoXNE0jmECie05Z7iCYVzbSB6WJFckiYLcdm2yg
+remote.s3.endpoint = 3.sddc.netapp.com:10443
+remote.s3.signature_version = v2
+remote.s3.clientCert =
+[eventgen-basic]
+homePath = $SPLUNK_DB/eventgen-basic/db
+coldPath = $SPLUNK_DB/eventgen-basic/colddb
+thawedPath = $SPLUNK_DB/eventgen-basic/thawed
+[eventgen-migration]
+homePath = $SPLUNK_DB/eventgen-scale/db
+coldPath = $SPLUNK_DB/eventgen-scale/colddb
+thawedPath = $SPLUNK_DB/eventgen-scale/thaweddb
+[main]
+homePath = $SPLUNK_DB/$_index_name/db
+coldPath = $SPLUNK_DB/$_index_name/colddb
+thawedPath = $SPLUNK_DB/$_index_name/thaweddb
+[history]
+homePath = $SPLUNK_DB/$_index_name/db
+coldPath = $SPLUNK_DB/$_index_name/colddb
+thawedPath = $SPLUNK_DB/$_index_name/thaweddb
+[summary]
+homePath = $SPLUNK_DB/$_index_name/db
+coldPath = $SPLUNK_DB/$_index_name/colddb
+thawedPath = $SPLUNK_DB/$_index_name/thaweddb
+[remote-test]
+homePath = $SPLUNK_DB/$_index_name/db
+coldPath = $SPLUNK_DB/$_index_name/colddb
+#for storagegrid config
+remotePath = volume:remote_store/$_index_name
+thawedPath = $SPLUNK_DB/$_index_name/thaweddb
+[eventgen-test]
+homePath = $SPLUNK_DB/$_index_name/db
+maxDataSize=auto
+maxHotBuckets=1
+maxWarmDBCount=2
+coldPath = $SPLUNK_DB/$_index_name/colddb
+#for storagegrid config
+remotePath = volume:remote_store/$_index_name
+thawedPath = $SPLUNK_DB/$_index_name/thaweddb
+[eventgen-evict-test]
+homePath = $SPLUNK_DB/$_index_name/db
+coldPath = $SPLUNK_DB/$_index_name/colddb
+#for storagegrid config
+remotePath = volume:remote_store/$_index_name
+thawedPath = $SPLUNK_DB/$_index_name/thaweddb
+maxDataSize = auto_high_volume
+maxWarmDBCount = 5000
+rtp-cm01:~ #
+....
+我们在搜索头上运行以下搜索查询以收集性能列表。
+
+image:stgr-splunkss-image13.png["错误：缺少图形映像"]
+
+我们从集群主节点收集性能信息。峰值性能为61.34 GBps。
+
+image:stgr-splunkss-image14.png["错误：缺少图形映像"]
+
+平均性能约为29 GBps。
+
+image:stgr-splunkss-image15.png["错误：缺少图形映像"]
+
+
+
+== StorageGRID 性能
+
+SmartStore性能基于从大量数据中搜索特定模式和字符串。在此验证中、事件是使用生成的 https://github.com/splunk/eventgen["Eventgen"^] 通过搜索头访问特定Splunk索引(eventgen-test)、对于大多数查询、此请求将转至StorageGRID。下图显示了查询数据的命中和未命中情况。命中数据来自本地磁盘、未命中数据来自StorageGRID 控制器。
+
+
+NOTE: 绿色显示命中数据、橙色显示未命中数据。
+
+image:stgr-splunkss-image16.png["错误：缺少图形映像"]
+
+在StorageGRID 上运行查询以搜索时、下图显示了从StorageGRID 检索S3速率的时间。
+
+image:stgr-splunkss-image17.png["错误：缺少图形映像"]
+
+
+
+== StorageGRID 硬件使用情况
+
+StorageGRID 实例具有一个负载平衡器和三个StorageGRID 控制器。所有这三个控制器的CPU利用率从75%到100%不等。
+
+image:stgr-splunkss-image18.png["错误：缺少图形映像"]
+
+
+
+== 采用NetApp存储控制器的SmartStore—为客户带来优势
+
+* *分离计算和存储。* Splunk SmartStore分离计算和存储、有助于您独立扩展。
+* *按需提供数据。* SmartStore可使数据接近按需计算、并提供计算和存储弹性以及成本效益、从而实现更长的大规模数据保留时间。
+* *符合AWS S3 API。* SmartStore使用AWS S3 API与还原存储进行通信、还原存储是一种符合AWS S3和S3 API的对象存储、例如StorageGRID。
+* *降低了存储需求和成本。* SmartStore降低了旧数据(热/冷)的存储需求。它只需要一个数据副本、因为NetApp存储可提供数据保护、并可处理故障和高可用性。
+* *硬件故障。* SmartStore部署中的节点故障不会使数据无法访问、并且可以更快地从硬件故障或数据不平衡中恢复索引器。
+* 应用程序和数据感知缓存。
+* 按需添加-删除索引器和设置-卸载集群。
+* 存储层不再与硬件绑定。
+
+
+link:stgr-splunkss-conclusion.html["接下来：总结。"]
