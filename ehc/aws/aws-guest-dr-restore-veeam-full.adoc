@@ -1,0 +1,105 @@
+---
+sidebar: sidebar 
+permalink: ehc/aws/aws-guest-dr-restore-veeam-full.html 
+keywords: backup repo, s3, object store, restore, application VM, VMware Cloud 
+summary: 本节介绍如何创建备份存储库、从S3对象存储导入备份以及如何使用Veeam完全还原功能将应用程序VM还原到VMware Cloud。 
+---
+= 使用Veeam完全还原还原应用程序VM
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+link:aws-guest-dr-failover.html["先前：故障转移。"]
+
+
+
+== 创建备份存储库并从S3导入备份
+
+从二级Veeam服务器导入S3存储的备份、并将SQL Server和Oracle VM还原到VMware Cloud集群。
+
+要从内部横向扩展备份存储库中的S3对象导入备份、请完成以下步骤：
+
+. 转到备份存储库、然后单击顶部菜单中的添加存储库以启动添加备份存储库向导。在向导的第一页上、选择对象存储作为备份存储库类型。
++
+image:dr-vmc-aws-image53.png["错误：缺少图形映像"]
+
+. 选择Amazon S3作为对象存储类型。
++
+image:dr-vmc-aws-image54.png["错误：缺少图形映像"]
+
+. 从Amazon Cloud Storage Services列表中、选择Amazon S3。
++
+image:dr-vmc-aws-image55.png["错误：缺少图形映像"]
+
+. 从下拉列表中选择预先输入的凭据、或者添加用于访问云存储资源的新凭据。单击下一步继续。
++
+image:dr-vmc-aws-image56.png["错误：缺少图形映像"]
+
+. 在存储分段页面上、输入数据中心、存储分段、文件夹以及任何所需选项。单击应用。
++
+image:dr-vmc-aws-image57.png["错误：缺少图形映像"]
+
+. 最后、选择完成以完成此过程并添加存储库。
+
+
+
+
+== 从S3对象存储导入备份
+
+要从上一节中添加的S3存储库导入备份、请完成以下步骤。
+
+. 在S3备份存储库中、选择导入备份以启动导入备份向导。
++
+image:dr-vmc-aws-image58.png["错误：缺少图形映像"]
+
+. 为导入创建数据库记录后、在摘要屏幕上选择下一步、然后选择完成以启动导入过程。
++
+image:dr-vmc-aws-image59.png["错误：缺少图形映像"]
+
+. 导入完成后、您可以将虚拟机还原到VMware Cloud集群中。
++
+image:dr-vmc-aws-image60.png["错误：缺少图形映像"]
+
+
+
+
+
+== 通过Veeam完全还原到VMware Cloud来还原应用程序VM
+
+要将SQL和Oracle虚拟机还原到AWS工作负载域/集群上的VMware Cloud、请完成以下步骤。
+
+. 从Veeam主页页面中、选择包含导入备份的对象存储、选择要还原的VM、然后右键单击并选择还原整个VM。
++
+image:dr-vmc-aws-image61.png["错误：缺少图形映像"]
+
+. 在完整虚拟机还原向导的第一页上、根据需要修改要备份的虚拟机、然后选择下一步。
++
+image:dr-vmc-aws-image62.png["错误：缺少图形映像"]
+
+. 在还原模式页面上、选择还原到新位置或使用不同设置。
++
+image:dr-vmc-aws-image63.png["错误：缺少图形映像"]
+
+. 在主机页面上、选择要将虚拟机还原到的目标ESXi主机或集群。
++
+image:dr-vmc-aws-image64.png["错误：缺少图形映像"]
+
+. 在Datastores页面上、为配置文件和硬盘选择目标数据存储库位置。
++
+image:dr-vmc-aws-image65.png["错误：缺少图形映像"]
+
+. 在网络页面上、将虚拟机上的原始网络映射到新目标位置中的网络。
++
+image:dr-vmc-aws-image66.png["错误：缺少图形映像"]
+
++
+image:dr-vmc-aws-image67.png["错误：缺少图形映像"]
+
+. 选择是否扫描已还原的虚拟机中的恶意软件、查看摘要页面、然后单击完成以开始还原。
+
+
+link:aws-guest-dr-restore-sql-data.html["接下来：还原SQL Server应用程序数据。"]

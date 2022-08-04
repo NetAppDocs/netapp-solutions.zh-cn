@@ -1,0 +1,62 @@
+---
+sidebar: sidebar 
+permalink: ehc/aws/aws-guest-dr-cloud-backup-tools.html 
+keywords: deployment, backup tools, snapcenter server, Veeam server, 
+summary: 要将我们的应用程序VM和数据库卷故障转移到AWS中运行的VMware云卷服务、必须安装和配置正在运行的SnapCenter 服务器和Veeam备份和复制服务器实例。故障转移完成后、还必须将这些工具配置为恢复正常备份操作、直到计划并执行到内部数据中心的故障恢复为止。 
+---
+= Cloud Backup Tools
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+link:aws-guest-dr-compute.html["上一步：计算。"]
+
+要将我们的应用程序VM和数据库卷故障转移到AWS中运行的VMware云卷服务、必须安装和配置正在运行的SnapCenter 服务器和Veeam备份和复制服务器实例。故障转移完成后、还必须将这些工具配置为恢复正常备份操作、直到计划并执行到内部数据中心的故障恢复为止。
+
+
+
+== 部署备份工具
+
+SnapCenter 服务器和Veeam备份和复制服务器可以安装在VMware云SDDC中、也可以安装在VPC中的EC2实例上、并通过网络连接到VMware云环境。
+
+
+
+=== SnapCenter 服务器
+
+SnapCenter 软件可从NetApp支持站点获得、并可安装在位于域或工作组中的Microsoft Windows系统上。有关详细的规划指南和安装说明、请参见 link:https://docs.netapp.com/us-en/snapcenter/install/install_workflow.html["NetApp文档中心"^]。
+
+SnapCenter 软件位于 https://mysupport.netapp.com["此链接。"^]。
+
+
+
+=== Veeam Backup & Replication服务器
+
+您可以在AWS上的VMware Cloud中的Windows服务器或EC2实例上安装Veeam Backup & Replication服务器。有关详细的实施指导、请参见 https://www.veeam.com/documentation-guides-datasheets.html["Veeam帮助中心技术文档"^]。
+
+
+
+== 备份工具和配置
+
+安装后、必须对SnapCenter 和Veeam Backup & Replication进行配置、以执行必要的任务、将数据还原到AWS上的VMware Cloud。
+
+
+
+=== SnapCenter 配置
+
+要还原已镜像到FSX ONTAP 的应用程序数据、必须先对内部SnapCenter 数据库执行完全还原。此过程完成后、将重新建立与VM的通信、现在可以使用FSX ONTAP 作为主存储来恢复应用程序备份。
+
+有关驻留在AWS中的SnapCenter 服务器上要完成的步骤列表、请参见一节 link:aws-guest-dr-cloud-backup-config.html#deploy-secondary-windows-snapcenter-server["部署二级Windows SnapCenter 服务器"]。
+
+
+
+=== Veeam Backup & Replication配置
+
+要还原已备份到Amazon S3存储的虚拟机、Veeam服务器必须安装在Windows服务器上、并配置为与VMware Cloud、FSX ONTAP 和包含原始备份存储库的S3存储分段进行通信。此外、还必须在FSX ONTAP 上配置一个新的备份存储库、以便在虚拟机还原后对其执行新备份。
+
+有关完成应用程序VM故障转移所需步骤的完整列表、请参见一节 link:aws-guest-dr-cloud-backup-config.html#deploy-secondary-veeam-backup-&-replication-server["部署二级Veeam Backup & amp；复制服务器"]。
+
+link:aws-guest-dr-snapcenter-overview.html["接下来：概述—灾难恢复。"]

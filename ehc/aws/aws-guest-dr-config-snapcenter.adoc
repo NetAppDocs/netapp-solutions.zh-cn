@@ -1,0 +1,120 @@
+---
+sidebar: sidebar 
+permalink: ehc/aws/aws-guest-dr-config-snapcenter.html 
+keywords: Windows SnapCenter Server, storage controllers, hosts, policies, resource groups, 
+summary: 此解决方案 使用NetApp SnapCenter 为SQL Server和Oracle数据库创建应用程序一致的备份。与用于备份虚拟机VMDK的Veeam备份和复制相结合、可为内部和基于云的数据中心提供全面的灾难恢复解决方案。 
+---
+= 在内部部署和配置Windows SnapCenter 服务器
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+link:aws-guest-dr-config-snapmirror.html["先前：配置SnapMirror关系和保留计划。"]
+
+
+
+== 在内部部署Windows SnapCenter 服务器
+
+此解决方案 使用NetApp SnapCenter 为SQL Server和Oracle数据库创建应用程序一致的备份。与用于备份虚拟机VMDK的Veeam备份和复制相结合、可为内部和基于云的数据中心提供全面的灾难恢复解决方案。
+
+SnapCenter 软件可从NetApp支持站点获得、并可安装在位于域或工作组中的Microsoft Windows系统上。有关详细的规划指南和安装说明、请参见 https://docs.netapp.com/us-en/snapcenter/install/install_workflow.html["NetApp文档中心"^]。
+
+SnapCenter 软件可从获取 https://mysupport.netapp.com["此链接。"^]。
+
+安装后、您可以使用｛\https://Virtual_Cluster_IP_or_FQDN:8146_｝从Web浏览器访问SnapCenter 控制台。
+
+登录到控制台后、必须为备份SQL Server和Oracle数据库配置SnapCenter。为此、请完成以下高级步骤：
+
+. 添加包含托管应用程序数据的卷的存储控制器。
+. 添加要使用SnapCenter 备份的主机系统。
+. 配置用于指定备份参数和计划的策略。
+. 配置包含要备份的资源以及用于备份的策略的资源组。
+
+
+
+
+== 将存储控制器添加到SnapCenter
+
+要将存储控制器添加到SnapCenter 、请完成以下步骤：
+
+. 从左侧菜单中、选择存储系统、然后单击新建开始将存储控制器添加到SnapCenter 的过程。
++
+image:dr-vmc-aws-image18.png["错误：缺少图形映像"]
+
+. 在添加存储系统对话框中、添加本地内部ONTAP 集群的管理IP地址以及用户名和密码。然后单击提交开始发现存储系统。
++
+image:dr-vmc-aws-image19.png["错误：缺少图形映像"]
+
+. 重复此过程将FSX ONTAP 系统添加到SnapCenter。在这种情况下、请选择添加存储系统窗口底部的更多选项、然后单击二级复选框、将FSX系统指定为使用SnapMirror副本或主备份快照更新的二级存储系统。
++
+image:dr-vmc-aws-image20.png["错误：缺少图形映像"]
+
+
+
+有关向SnapCenter 添加存储系统的详细信息、请参见中的文档 https://docs.netapp.com/us-en/snapcenter/install/task_add_storage_systems.html["此链接。"^]。
+
+
+
+== 将主机添加到SnapCenter
+
+下一步是将主机应用程序服务器添加到SnapCenter。SQL Server和Oracle的过程都类似。
+
+. 从左侧菜单中、选择主机、然后单击添加开始向SnapCenter 添加存储控制器的过程。
+. 在添加主机窗口中、添加主机类型、主机名和主机系统凭据。选择插件类型。对于SQL Server、选择Microsoft Windows和Microsoft SQL Server插件。
++
+image:dr-vmc-aws-image21.png["错误：缺少图形映像"]
+
+. 对于Oracle、请在添加主机对话框中填写必填字段、然后选中Oracle数据库插件对应的复选框。然后、单击提交开始发现过程、并将主机添加到SnapCenter。
++
+image:dr-vmc-aws-image22.png["错误：缺少图形映像"]
+
+
+
+
+
+== 创建SnapCenter 策略
+
+策略用于建立备份作业要遵循的特定规则。它们包括但不限于备份计划、复制类型以及SnapCenter 如何处理备份和截断事务日志。
+
+您可以在SnapCenter Web客户端的"设置"部分访问策略。
+
+image:dr-vmc-aws-image23.png["错误：缺少图形映像"]
+
+有关为SQL Server备份创建策略的完整信息、请参见 https://docs.netapp.com/us-en/snapcenter/protect-scsql/task_create_backup_policies_for_sql_server_databases.html["SnapCenter 文档"^]。
+
+有关为Oracle备份创建策略的完整信息、请参见 https://docs.netapp.com/us-en/snapcenter/protect-sco/task_create_backup_policies_for_oracle_database.html["SnapCenter 文档"^]。
+
+* 注： *
+
+* 在执行策略创建向导期间、请特别注意"复制"部分。在本节中、您将指定要在备份过程中创建的二级SnapMirror副本的类型。
+* "创建本地Snapshot副本后更新SnapMirror"设置是指在同一集群中的两个Storage Virtual Machine之间存在SnapMirror关系时更新此关系。
+* "创建本地快照副本后更新Snapmirror "设置用于更新两个独立集群之间以及内部ONTAP 系统与Cloud Volumes ONTAP 或FSxN之间的SnapVault 关系。
+
+
+下图显示了上述选项及其在备份策略向导中的显示方式。
+
+image:dr-vmc-aws-image24.png["错误：缺少图形映像"]
+
+
+
+== 创建SnapCenter 资源组
+
+通过资源组、您可以选择要包含在备份中的数据库资源以及这些资源所遵循的策略。
+
+. 转到左侧菜单中的"Resources"部分。
+. 在窗口顶部、选择要使用的资源类型(此处为Microsoft SQL Server)、然后单击新建资源组。
+
+
+image:dr-vmc-aws-image25.png["错误：缺少图形映像"]
+
+SnapCenter 文档介绍了为SQL Server和Oracle数据库创建资源组的分步详细信息。
+
+要备份SQL资源、请按照 https://docs.netapp.com/us-en/snapcenter/protect-scsql/task_back_up_sql_resources.html["此链接。"^]。
+
+要备份Oracle资源、请按照 https://docs.netapp.com/us-en/snapcenter/protect-sco/task_back_up_oracle_resources.html["此链接。"^]。
+
+link:aws-guest-dr-config-veeam.html["接下来：部署和配置Veeam Backup Server。"]

@@ -1,0 +1,122 @@
+---
+sidebar: sidebar 
+permalink: ehc/aws/aws-guest-dr-snapcenter-db-backup.html 
+keywords: SnapCenter backup, restore process, Swagger, authorization token, NFS, CIFS, file share, XCOPY utility 
+summary: SnapCenter 允许备份和恢复其底层MySQL数据库和配置数据、以便在发生灾难时恢复SnapCenter 服务器。对于解决方案 、我们在VPC中的AWS EC2实例上恢复了SnapCenter 数据库和配置。 
+---
+= 用于灾难恢复的SnapCenter 数据库备份
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+link:aws-guest-dr-cloud-backup-config.html["先前版本：云备份工具和配置。"]
+
+SnapCenter 允许备份和恢复其底层MySQL数据库和配置数据、以便在发生灾难时恢复SnapCenter 服务器。对于解决方案 、我们在VPC中的AWS EC2实例上恢复了SnapCenter 数据库和配置。有关此步骤的详细信息、请参见 https://docs.netapp.com/us-en/snapcenter/sc-automation/rest_api_workflows_disaster_recovery_of_snapcenter_server.html["此链接。"^]。
+
+
+
+== SnapCenter 备份前提条件
+
+SnapCenter 备份需要满足以下前提条件：
+
+* 在内部ONTAP 系统上创建的卷和SMB共享、用于查找备份的数据库和配置文件。
+* 内部ONTAP 系统与AWS帐户中的FSX或CVO之间的SnapMirror关系。此关系用于传输包含备份的SnapCenter 数据库和配置文件的快照。
+* Windows Server安装在云帐户中、可以安装在EC2实例上、也可以安装在VMware Cloud SDDC中的VM上。
+* SnapCenter 安装在VMware Cloud中的Windows EC2实例或VM上。
+
+
+
+
+== SnapCenter 备份和还原过程摘要
+
+* 在内部ONTAP 系统上创建一个卷、用于托管备份数据库和配置文件。
+* 在内部部署和FSX/CVO之间设置SnapMirror关系。
+* 挂载SMB共享。
+* 检索用于执行API任务的Swagger授权令牌。
+* 启动数据库还原过程。
+* 使用xcopy实用程序将数据库和配置文件本地目录复制到SMB共享。
+* 在FSX上、创建ONTAP 卷的克隆(通过SnapMirror从内部复制)。
+* 将SMB共享从FSX挂载到EC2/VMware Cloud。
+* 将还原目录从SMB共享复制到本地目录。
+* 从Swagger运行SQL Server还原过程。
+
+
+
+
+== 备份SnapCenter 数据库和配置
+
+SnapCenter 提供了一个Web客户端界面、用于执行REST API命令。有关通过Swagger访问REST API的信息、请参见SnapCenter 文档、网址为 https://docs.netapp.com/us-en/snapcenter/sc-automation/overview_rest_apis.html["此链接。"^]。
+
+
+
+=== 登录到Swagger并获取授权令牌
+
+导航到Swagger页面后、您必须检索授权令牌以启动数据库还原过程。
+
+. 访问SnapCenter Swagger API网页、网址为：//https://<SnapCenter Server IP>：8146/swagger /_。
++
+image:dr-vmc-aws-image40.png["错误：缺少图形映像"]
+
+. 展开"Auth"部分、然后单击Try it out。
++
+image:dr-vmc-aws-image41.png["错误：缺少图形映像"]
+
+. 在用户操作文本区域中、填写SnapCenter 凭据和角色、然后单击执行。
++
+image:dr-vmc-aws-image42.png["错误：缺少图形映像"]
+
+. 在下面的响应正文中、您可以看到令牌。执行备份过程时、复制令牌文本以进行身份验证。
++
+image:dr-vmc-aws-image43.png["错误：缺少图形映像"]
+
+
+
+
+
+=== 执行SnapCenter 数据库备份
+
+接下来、转到Swagger页面上的灾难恢复区域、开始SnapCenter 备份过程。
+
+. 单击"Disaster Recovery"区域、将其展开。
++
+image:dr-vmc-aws-image44.png["错误：缺少图形映像"]
+
+. 展开`/4.6/disasterrecovery/server/backup`部分、然后单击Try it out。
++
+image:dr-vmc-aws-image45.png["错误：缺少图形映像"]
+
+. 在SmDRBackupRequest部分中、添加正确的本地目标路径并选择执行以启动SnapCenter 数据库和配置的备份。
++
+
+NOTE: 备份过程不允许直接备份到NFS或CIFS文件共享。
+
++
+image:dr-vmc-aws-image46.png["错误：缺少图形映像"]
+
+
+
+
+
+=== 从SnapCenter 监控备份作业
+
+在启动数据库还原过程时、登录到SnapCenter 以查看日志文件。在"Monitor"部分下、您可以查看SnapCenter 服务器灾难恢复备份的详细信息。
+
+image:dr-vmc-aws-image47.png["错误：缺少图形映像"]
+
+
+
+=== 使用XCOPY实用程序将数据库备份文件复制到SMB共享
+
+接下来、您必须将备份从SnapCenter 服务器上的本地驱动器移动到用于SnapMirror将数据复制到AWS中FSX实例上的二级位置的CIFS共享。使用带有保留文件权限的特定选项的xcopy。
+
+以管理员身份打开命令提示符。在命令提示符处、输入以下命令：
+
+....
+xcopy  <Source_Path>  \\<Destination_Server_IP>\<Folder_Path> /O /X /E /H /K
+xcopy c:\SC_Backups\SnapCenter_DR \\10.61.181.185\snapcenter_dr /O /X /E /H /K
+....
+link:aws-guest-dr-failover.html["下一步：故障转移。"]

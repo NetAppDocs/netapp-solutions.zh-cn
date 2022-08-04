@@ -1,0 +1,83 @@
+---
+sidebar: sidebar 
+permalink: ehc/aws/aws-guest-dr-failover.html 
+keywords: Disaster, primary site, SnapCenter, database, restore process, 
+summary: 对于主内部数据中心发生的灾难、我们的方案包括使用VMware Cloud on AWS故障转移到位于Amazon Web Services基础架构上的二级站点。我们假定虚拟机和内部ONTAP 集群不再可访问。此外、SnapCenter 和Veeam虚拟机将无法再访问、必须在我们的二级站点上进行重建。 
+---
+= 故障转移
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+link:aws-guest-dr-snapcenter-db-backup.html["先前版本：用于灾难恢复的SnapCenter 数据库备份。"]
+
+
+
+== 主站点发生灾难
+
+对于主内部数据中心发生的灾难、我们的方案包括使用VMware Cloud on AWS故障转移到位于Amazon Web Services基础架构上的二级站点。我们假定虚拟机和内部ONTAP 集群不再可访问。此外、SnapCenter 和Veeam虚拟机将无法再访问、必须在我们的二级站点上进行重建。
+
+本节将介绍基础架构故障转移到云的问题、我们将介绍以下主题：
+
+* SnapCenter 数据库还原。建立新的SnapCenter 服务器后、请还原MySQL数据库和配置文件、并将数据库切换到灾难恢复模式、以使二级FSX存储成为主存储设备。
+* 使用Veeam Backup & Replication还原应用程序虚拟机。连接包含VM备份的S3存储、导入备份并将其还原到AWS上的VMware Cloud。
+* 使用SnapCenter 还原SQL Server应用程序数据。
+* 使用SnapCenter 还原Oracle应用程序数据。
+
+
+
+
+== SnapCenter 数据库还原过程
+
+SnapCenter 允许备份和还原其MySQL数据库和配置文件、从而支持灾难恢复场景。这样、管理员便可以在内部数据中心对SnapCenter 数据库进行定期备份、然后将该数据库还原到二级SnapCenter 数据库。
+
+要访问远程SnapCenter 服务器上的SnapCenter 备份文件、请完成以下步骤：
+
+. 从FSX集群中断SnapMirror关系、从而使卷变为读/写卷。
+. 创建CIFS服务器(如有必要)并创建指向克隆卷的接合路径的CIFS共享。
+. 使用xcopy将备份文件复制到二级SnapCenter 系统上的本地目录。
+. 安装SnapCenter v4.6。
+. 确保SnapCenter 服务器与原始服务器具有相同的FQDN。要成功还原数据库、必须执行此操作。
+
+
+要启动还原过程、请完成以下步骤：
+
+. 导航到二级SnapCenter 服务器的Swagger API网页、然后按照前面的说明获取授权令牌。
+. 导航到Swagger页面的Disaster Recovery部分、选择`/4.6/disasterrecovery/server/restore`、然后单击Try it out。
++
+image:dr-vmc-aws-image48.png["错误：缺少图形映像"]
+
+. 粘贴您的授权令牌、然后在"SmDRResterRequest"部分中、将备份名称和二级SnapCenter 服务器上的本地目录粘贴。
++
+image:dr-vmc-aws-image49.png["错误：缺少图形映像"]
+
+. 选择执行按钮以启动还原过程。
+. 在SnapCenter 中、导航到Monitor部分以查看还原作业的进度。
++
+image:dr-vmc-aws-image50.png["错误：缺少图形映像"]
+
++
+image:dr-vmc-aws-image51.png["错误：缺少图形映像"]
+
+. 要从二级存储启用SQL Server还原、必须将SnapCenter 数据库切换为灾难恢复模式。此操作将作为单独的操作执行、并在Swagger API网页上启动。
++
+.. 导航到Disaster Recovery部分、然后单击`/4.6/disasterrecovery/storage`。
+.. 粘贴用户授权令牌。
+.. 在SmSetDisasterRecoverySettingsRequest部分中、将`EnableDisasterRecover`更改为`true`。
+.. 单击执行为SQL Server启用灾难恢复模式。
++
+image:dr-vmc-aws-image52.png["错误：缺少图形映像"]
+
++
+
+NOTE: 请参见有关其他过程的注释。
+
+
+
+
+
+link:aws-guest-dr-restore-veeam-full.html["接下来：使用Veeam完全还原还原应用程序VM。"]

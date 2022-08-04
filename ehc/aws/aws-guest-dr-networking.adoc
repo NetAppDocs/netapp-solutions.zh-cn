@@ -1,0 +1,136 @@
+---
+sidebar: sidebar 
+permalink: ehc/aws/aws-guest-dr-networking.html 
+keywords: on premises, client networks, Storage networks, Cloud connectivity, VPN, direct connect, Transit gateway, security groups 
+summary: 要执行NetApp SyncMirror 操作、此解决方案 需要从内部ONTAP 集群成功与AWS FSX for NetApp ONTAP 互连集群网络地址进行通信。此外、Veeam备份服务器必须能够访问AWS S3存储分段。现有VPN或Direct Connect链路可用作连接S3存储分段的专用链路、而不是使用Internet传输。 
+---
+= 网络
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+link:aws-guest-dr-requirements.html["先前版本：要求。"]
+
+要执行NetApp SyncMirror 操作、此解决方案 需要从内部ONTAP 集群成功与AWS FSX for NetApp ONTAP 互连集群网络地址进行通信。此外、Veeam备份服务器必须能够访问AWS S3存储分段。现有VPN或Direct Connect链路可用作连接S3存储分段的专用链路、而不是使用Internet传输。
+
+
+
+== 内部部署
+
+ONTAP 支持用于虚拟化的所有主要存储协议、包括适用于SAN环境的iSCSI、光纤通道(FC)、以太网光纤通道(FCoE)或非易失性光纤通道快速内存(NVMe/FC)。ONTAP 还支持NFS (v3和v4.1)以及SMB或S3进行子系统连接。您可以自由选择最适合您的环境的协议、并且可以根据需要在一个系统上组合协议。例如、您可以通过一些iSCSI LUN或子系统共享来扩大NFS数据存储库的一般使用范围。
+
+此解决方案 可将NFS数据存储库用于子系统VMDK的内部数据存储库、并将iSCSI和NFS用于子系统应用程序数据。
+
+
+
+=== 客户端网络
+
+通过VMkernel网络端口和软件定义的网络连接、ESXi主机可以与VMware环境以外的元素进行通信。连接性取决于所使用的VMkernel接口类型。
+
+对于此解决方案 、已配置以下VMkernel接口：
+
+* 管理
+* VMotion
+* NFS
+* iSCSI
+
+
+
+
+=== 已配置存储网络
+
+LIF （逻辑接口）表示集群中某个节点的网络访问点。这样可以与存储客户端访问的数据的Storage Virtual Machine进行通信。您可以在集群通过网络发送和接收通信的端口上配置 LIF 。
+
+对于此解决方案 、将为以下存储协议配置LIF：
+
+* NFS
+* iSCSI
+
+
+
+
+== 云连接选项
+
+在将内部环境连接到云资源时、客户有许多选择、包括部署VPN或Direct Connect拓扑。
+
+
+
+=== 虚拟专用网络(VPN)
+
+VPN (虚拟专用网络)通常用于使用基于Internet或专用MPLS网络创建安全的IPsec通道。VPN易于设置、但缺乏可靠性(如果基于Internet)和速度。端点可以在AWS VPC或VMware Cloud SDDC上终止。对于此灾难恢复解决方案 、我们创建了从内部网络到AWS FSx for NetApp ONTAP 的连接。因此、它可以在连接了FSX for NetApp ONTAP 的AWS VPC (虚拟专用网关或传输网关)上终止。
+
+VPN设置可以基于路由、也可以基于策略。使用基于路由的设置时、端点会自动交换路由、而设置会学习路由到新创建的子网。在基于策略的设置中、您必须定义本地和远程子网、并且在添加新子网并允许在IPsec通道中进行通信时、您必须更新路由。
+
+
+NOTE: 如果未在默认网关上创建IPsec VPN通道、则必须通过本地VPN通道端点在路由表中定义远程网络路由。
+
+下图显示了典型的VPN连接选项。
+
+image:dr-vmc-aws-image3.png["错误：缺少图形映像"]
+
+
+
+=== 直接连接
+
+Direct Connect提供指向AWS网络的专用链接。专用连接会使用1 Gbps、10 Gbps或100 Gbps以太网端口创建指向AWS的链路。AWS Direct Connect合作伙伴可使用自己与AWS之间预先建立的网络链路提供托管连接、并且可用速率介于50 Mbps到10 Gbps之间。默认情况下、流量未加密。但是、可以使用一些选项来保护MAC或IPsec的流量安全。MACsec提供第2层加密、而IPsec提供第3层加密。MAC可通过隐藏正在通信的设备来提供更好的安全性。
+
+客户必须将其路由器设备放置在AWS Direct Connect位置。要进行设置、您可以使用AWS合作伙伴网络(APN)。该路由器与AWS路由器之间建立了物理连接。要在VPC上访问适用于NetApp ONTAP 的FSX、您必须具有专用虚拟接口或从Direct Connect到VPC的传输虚拟接口。使用专用虚拟接口时、直接连接到VPC连接的可扩展性会受到限制。
+
+下图显示了Direct Connect接口选项。
+
+image:dr-vmc-aws-image4.png["错误：缺少图形映像"]
+
+
+
+=== 传输网关
+
+传输网关是一种区域级别的构造、可提高区域内直接连接到VPC连接的可扩展性。如果需要跨区域连接、则必须为传输网关建立对等关系。有关详细信息、请查看 https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html["AWS Direct Connect文档"^]。
+
+
+
+== 云网络注意事项
+
+在云中、底层网络基础架构由云服务提供商管理、而客户必须在AWS中管理VPC网络、子网、路由表等。他们还必须管理计算边缘的NSX网段。SDDC对外部VPC和Transit Connect的路由进行分组。
+
+在连接到VMware Cloud的VPC上部署具有多AZ可用性的FSX for NetApp ONTAP 时、iSCSI流量会收到必要的路由表更新以启用通信。默认情况下、从VMware Cloud到所连接的VPC for Multi-AZ部署上的FSX ONTAP NFS/SMB子网的路由不可用。为了定义该路由、我们使用VMware Cloud SDDC组、该组是一个由VMware管理的传输网关、用于在同一区域的VMware Cloud SDDC之间以及外部VPC和其他传输网关之间进行通信。
+
+
+NOTE: 使用传输网关会产生数据传输成本。有关特定于某个区域的成本详细信息、请参见 https://aws.amazon.com/transit-gateway/pricing/["此链接。"^]。
+
+VMware Cloud SDDC可以部署在一个可用性区域中、就像拥有一个数据中心一样。此外、还提供了延伸型集群选项、这与NetApp MetroCluster 解决方案 类似、可在可用性区域发生故障时提供更高的可用性并减少停机时间。
+
+为了最大限度地降低数据传输成本、请将VMware Cloud SDDC和AWS实例或服务保留在同一可用性区域中。最好使用可用性区域ID而不是名称进行匹配、因为AWS会提供特定于帐户的AZ订单列表、以便在可用性区域之间分摊负载。例如、一个帐户(US-East-1a)可能指向AZ ID 1、而另一个帐户(US-East-1c)可能指向AZ ID 1。可以通过多种方式检索可用性区域ID。在以下示例中、我们从VPC子网检索到AZ ID。
+
+image:dr-vmc-aws-image5.png["错误：缺少图形映像"]
+
+在VMware Cloud SDDC中、网络连接通过NSX进行管理、处理北-南流量上行链路端口的边缘网关(第0层路由器)连接到AWS VPC。计算网关和管理网关(第1层路由器)用于处理东西向流量。如果边缘的上行链路端口使用率较高、则可以创建流量组以与特定主机IP或子网关联。创建流量组会创建额外的边缘节点来分隔流量。检查 https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-networking-security/GUID-306D3EDC-F94E-4216-B306-413905A4A784.html["VMware 文档"^] 使用多边缘设置所需的最小vSphere主机数。
+
+
+
+=== 客户端网络
+
+在配置VMware Cloud SDDC时、VMKernel端口已配置完毕并可供使用。VMware负责管理这些端口、无需进行任何更新。
+
+下图显示了主机VMKernel信息示例。
+
+image:dr-vmc-aws-image6.png["错误：缺少图形映像"]
+
+
+
+=== 配置的存储网络(iSCSI、NFS)
+
+对于VM子系统存储网络、我们通常会创建端口组。通过NSX、我们可以创建在vCenter上用作端口组的分段。由于存储网络位于可路由的子网中、因此即使不创建单独的网段、您也可以使用默认NIC访问LUN或挂载NFS导出。要分隔存储流量、您可以创建其他分段、定义规则并控制这些分段上的MTU大小。为了提供容错功能、最好至少为存储网络配置两个专用区块。如前所述、如果上行链路带宽变为问题描述 、您可以创建流量组并分配IP前缀和网关以执行基于源的路由。
+
+我们建议将灾难恢复SDDC中的网段与源环境进行匹配、以防止在故障转移期间猜测是否映射网络网段。
+
+
+
+=== 安全组
+
+许多安全选项均可在AWS VPC和VMware Cloud SDDC网络上提供安全通信。在VMware Cloud SDDC网络中、您可以使用NSX跟踪流来标识路径、包括使用的规则。然后、您可以使用VPC网络上的网络分析器确定此流期间使用的路径、包括路由表、安全组和网络访问控制列表。
+
+link:aws-guest-dr-storage.html["下一步：存储。"]

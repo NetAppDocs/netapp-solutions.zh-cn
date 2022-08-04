@@ -1,0 +1,94 @@
+---
+sidebar: sidebar 
+permalink: ehc/aws/aws-guest-dr-storage.html 
+keywords: on premises, on prem, cloud storage, Amazon FSx, Network interface, vm datastore 
+summary: NetApp AFF A系列系统可提供高性能存储基础架构、并提供灵活的数据管理选项、这些选项支持云技术、可满足各种企业场景的需求。在此解决方案 中、我们使用ONTAP AFF A300作为主要内部存储系统。 
+---
+= 存储
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+link:aws-guest-dr-networking.html["上一页：网络连接。"]
+
+NetApp AFF A系列系统可提供高性能存储基础架构、并提供灵活的数据管理选项、这些选项支持云技术、可满足各种企业场景的需求。在此解决方案 中、我们使用ONTAP AFF A300作为主要内部存储系统。
+
+解决方案 中使用了NetApp ONTAP 以及适用于VMware和SnapCenter 的ONTAP 工具来提供与VMware vSphere紧密集成的全面管理和应用程序备份功能。
+
+
+
+== 内部部署
+
+我们将ONTAP 存储用于托管虚拟机及其VMDK文件的VMware数据存储库。VMware支持对已连接的数据存储库使用多种存储协议、在此解决方案 中、我们对ESXi主机上的数据存储库使用NFS卷。但是、ONTAP 存储系统支持VMware支持的所有协议。
+
+下图显示了VMware存储选项。
+
+image:dr-vmc-aws-image7.png["错误：缺少图形映像"]
+
+ONTAP 卷用于应用程序VM的iSCSI和NFS子系统连接存储。我们对应用程序数据使用了以下存储协议：
+
+* 用于子系统连接的Oracle数据库文件的NFS卷。
+* 用于子系统连接的Microsoft SQL Server数据库和事务日志的iSCSI LUN。
+
+
+|===
+| 操作系统 | 数据库类型 | 存储协议 | 卷问题描述 
+
+
+| Windows Server 2019 | SQL Server 2019 | iSCSI | 数据库文件 
+
+
+|  |  | iSCSI | 日志文件 
+
+
+| Oracle Linux 8.5 | Oracle 19c | NFS | Oracle二进制文件 
+
+
+|  |  | NFS | Oracle数据 
+
+
+|  |  | NFS | Oracle恢复文件 
+|===
+我们还将ONTAP 存储用于主要Veeam备份存储库、并将其用于SnapCenter 数据库备份的备份目标。
+
+* Veeam备份存储库的SMB共享。
+* SMB共享作为SnapCenter 数据库备份的目标。
+
+
+
+
+== 云存储
+
+此解决方案 包括AWS上的VMware Cloud、用于托管在故障转移过程中还原的虚拟机。截至本文撰写时、VMware支持为托管VM和VMDK的数据存储库使用vSAN存储。
+
+FSX for ONTAP 用作使用SnapCenter 和SyncMirror 镜像的应用程序数据的二级存储。在故障转移过程中、适用于ONTAP 集群的FSX将转换为主存储、数据库应用程序可以恢复在FSX存储集群上运行的正常功能。
+
+
+
+=== 适用于NetApp ONTAP 的Amazon FSX设置
+
+要使用Cloud Manager部署适用于NetApp ONTAP 的AWS FSX、请按照中的说明进行操作 https://docs.netapp.com/us-en/cloud-manager-fsx-ontap/start/task-getting-started-fsx.html["此链接。"^]。
+
+部署FSX ONTAP 后、将内部ONTAP 实例拖放到FSX ONTAP 中以启动卷的复制设置。
+
+下图展示了我们的FSX ONTAP 环境。
+
+image:dr-vmc-aws-image8.png["错误：缺少图形映像"]
+
+
+
+=== 已创建网络接口
+
+适用于NetApp ONTAP 的FSX已预先配置网络接口、可用于iSCSI、NFS、SMB和集群间网络。
+
+
+
+=== VM数据存储库存储
+
+VMware Cloud SDDC随附两个VSAN数据存储库、分别名为`vsandatastore`和`workloaddatastore`。我们使用`vsandatastore`托管管理VM、其访问权限仅限于cloudadmin凭据。对于工作负载、我们使用了`workloaddatastore`。
+
+link:aws-guest-dr-compute.html["下一步：计算。"]
