@@ -18,83 +18,86 @@ NetApp 已根据 NetApp 测试开发出一组 ESXi 主机多路径和 HBA 超时
 |===
 
 
-| 主机设置 | NetApp 建议的价值 
+| *主机设置* | * NetApp建议值* | *需要重新启动* 
 
 
-| * ESXi 高级配置 * |  
+3+| * ESXi高级配置* 
 
 
-| VMFS3.HardwareAcceleratedLocking | 保留不变（ VMware 默认值为 1 ）。 
+| VMFS3.HardwareAcceleratedLocking | 保持设置不变(VMware默认值为1) | 否 
 
 
-| VMFS3.EnableBlockDelete | 保留为设置值（ VMware 默认值为 0 ，但 VMFS6 不需要此设置）。有关详细信息，请参见 VMware 知识库文章 link:https://kb.vmware.com/selfservice/microsites/search.do?language=en_US&cmd=displayKC&externalId=2007427["2007427"^]。 
+| VMFS3.EnableBlockDelete | 保留为设置值（ VMware 默认值为 0 ，但 VMFS6 不需要此设置）。有关详细信息，请参见 link:https://kb.vmware.com/selfservice/microsites/search.do?language=en_US&cmd=displayKC&externalId=2007427["VMware知识库2007427"] | 否 
 
 
-| * NFS 设置 * |  
+3+| * NFS 设置 * 
 
 
-| Net.TcpipHeapSize | vSphere 6.0 或更高版本，设置为 32 。所有其他 NFS 配置，设置为 30 。 
+| Net.TcpipHeapSize | vSphere 6.0 或更高版本，设置为 32 。所有其他NFS配置、设置为30 | 是的。 
 
 
-| Net.TcpipHeapMax | 对于大多数vSphere 6.X版本、设置为512 MB。对于6.5U3、6.7U3和7.0或更高版本、设置为1024 MB。 
+| Net.TcpipHeapMax | 对于大多数vSphere 6.X版本、设置为512 MB。对于6.5U3、6.7U3和7.0或更高版本、设置为1024 MB。 | 是的。 
 
 
-| NFS.MaxVolumes | vSphere 6.0 或更高版本，设置为 256 。所有其他 NFS 配置，设置为 64 。 
+| NFS.MaxVolumes | vSphere 6.0或更高版本、设置为256所有其他NFS配置、设置为64。 | 否 
 
 
-| NFS41.MaxVolumes | vSphere 6.0 或更高版本，设置为 256 。 
+| NFS41.MaxVolumes | vSphere 6.0 或更高版本，设置为 256 。 | 否 
 
 
-| NFS.MaxQueueDepth | vSphere 6.0 或更高版本，设置为 128 。 
+| NFS.MaxQueueDepth^1^ | vSphere 6.0或更高版本、设置为128 | 否 
 
 
-| nfs.HeartbeatMaxFailures | 对于所有 NFS 配置，均设置为 10 。 
+| nfs.HeartbeatMaxFailures | 对于所有NFS配置、均设置为10 | 否 
 
 
-| nfs.Heartbeat频率 | 对于所有 NFS 配置，均设置为 12 。 
+| nfs.Heartbeat频率 | 对于所有NFS配置、均设置为12 | 否 
 
 
-| nfs.HeartbeatTimeout | 对于所有 NFS 配置，均设置为 5 。 
+| nfs.HeartbeatTimeout | 对于所有 NFS 配置，均设置为 5 。 | 否 
 
 
-| SUNRPC.MaxConnPerIP | vSphere 7.0 或更高版本，设置为 128 。 
+| SUNRPC.MaxConnPerIP | vSphere 7.0 或更高版本，设置为 128 。 | 否 
 
 
-| * FC/FCoE 设置 * |  
+3+| * FC/FCoE 设置 * 
 
 
-| 路径选择策略 | 如果使用采用 ALUA 的 FC 路径，则设置为 RR （轮循）。对于所有其他配置，设置为 FIXED 。将此值设置为 RR 有助于在所有主动 / 优化路径之间实现负载平衡。固定值适用于较旧的非 ALUA 配置，有助于防止代理 I/O换言之，它有助于防止 I/O 流向在 7- 模式下运行 Data ONTAP 的环境中高可用性（ HA ）对的另一节点。 
+| 路径选择策略 | 如果使用采用 ALUA 的 FC 路径，则设置为 RR （轮循）。对于所有其他配置，设置为 FIXED 。将此值设置为 RR 有助于在所有主动 / 优化路径之间实现负载平衡。固定值适用于较旧的非 ALUA 配置，有助于防止代理 I/O换言之、它有助于防止I/O流向在7-模式下运行Data ONTAP 的环境中高可用性(HA)对的另一节点 | 否 
 
 
-| disk.qFullSampSize | 对于所有配置，均设置为 32 。设置此值有助于防止出现 I/O 错误。 
+| disk.qFullSampSize | 对于所有配置，均设置为 32 。设置此值有助于防止出现 I/O 错误。 | 否 
 
 
-| disk.qFullThreshold | 对于所有配置，均设置为 8 。设置此值有助于防止出现 I/O 错误。 
+| disk.qFullThreshold | 对于所有配置，均设置为 8 。设置此值有助于防止出现 I/O 错误。 | 否 
 
 
-| Emulex FC HBA 超时 | 使用默认值。 
+| Emulex FC HBA 超时 | 使用默认值。 | 否 
 
 
-| QLogic FC HBA 超时 | 使用默认值。 
+| QLogic FC HBA 超时 | 使用默认值。 | 否 
 
 
-| * iSCSI 设置 * |  
+3+| * iSCSI 设置 * 
 
 
-| 路径选择策略 | 对于所有 iSCSI 路径，设置为 RR （轮循）。将此值设置为 RR 有助于在所有主动 / 优化路径之间实现负载平衡。 
+| 路径选择策略 | 对于所有 iSCSI 路径，设置为 RR （轮循）。将此值设置为 RR 有助于在所有主动 / 优化路径之间实现负载平衡。 | 否 
 
 
-| disk.qFullSampSize | 对于所有配置，均设置为 32 。设置此值有助于防止出现 I/O 错误。 
+| disk.qFullSampSize | 对于所有配置，均设置为 32 。设置此值有助于防止出现I/O错误 | 否 
 
 
-| disk.qFullThreshold | 对于所有配置，均设置为 8 。设置此值有助于防止出现 I/O 错误。 
+| disk.qFullThreshold | 对于所有配置，均设置为 8 。设置此值有助于防止出现 I/O 错误。 | 否 
 |===
+
+NOTE: 1—使用VMware vSphere ESXi 7.0.1和VMware vSphere ESXi 7.0.2时、NFS高级配置选项MaxQueueDepth可能无法按预期工作。请参考 link:https://kb.vmware.com/s/article/86331?lang=en_US["VMware知识库86331"] 有关详细信息 ...
+
 在创建 ONTAP FlexVol 卷和 LUN 时， ONTAP 工具还会指定某些默认设置：
 
 |===
 
 
-| ONTAP 工具 | 默认设置 
+| * ONTAP Tool* | *默认设置* 
 
 
 | Snapshot 预留（ -percent-snapshot-space ） | 0 

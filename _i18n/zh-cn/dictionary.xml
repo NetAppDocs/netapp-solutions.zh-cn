@@ -3486,41 +3486,26 @@
   <block id="65bbb718266195d68e8d1accfc443e28" category="admonition">有关 ONTAP 存储效率的详细信息，请参见<block ref="f358a7faf94e9f579d11f8fc4efdbdec" category="inline-link-rx"></block> 在 ONTAP 9 文档中心。</block>
   <block id="6104c8ef7be4222a76596ab6a22bb422" category="doc">建议的 ESXi 主机和其他 ONTAP 设置</block>
   <block id="0416d04b345b434b120840c30ddaf0a1" category="paragraph">NetApp 已根据 NetApp 测试开发出一组 ESXi 主机多路径和 HBA 超时设置，用于正确处理 ONTAP 。可以使用适用于 VMware vSphere 的 ONTAP 工具轻松设置这些设置。在摘要信息板中，单击主机系统 portlet 中的编辑设置，或者右键单击 vCenter 中的主机，然后导航到 ONTAP tools &gt; Set recommended values 。下面是当前在 9.8 版中建议的主机设置。</block>
-  <block id="dec4361376291bf7e7976c204f3a6cc8" category="cell">主机设置</block>
-  <block id="024c7088f8cb994f40e5d60b87c10cbb" category="cell">NetApp 建议的价值</block>
   <block id="73663d0d00956f0632e4ae75d811d53f" category="cell">VMFS3.HardwareAcceleratedLocking</block>
-  <block id="2eabcf9ece81cd6f8095d869d0ecfdb5" category="cell">保留不变（ VMware 默认值为 1 ）。</block>
   <block id="1b50110aedae4d8d2043a4eb9beb20af" category="cell">VMFS3.EnableBlockDelete</block>
   <block id="c3b49a515dd0046685e06092642aa139" category="cell">Net.TcpipHeapSize</block>
-  <block id="abcf68baf479cae32e490eb770477d84" category="cell">vSphere 6.0 或更高版本，设置为 32 。所有其他 NFS 配置，设置为 30 。</block>
   <block id="504e96cc79e7efe30a8271cea152d9d1" category="cell">Net.TcpipHeapMax</block>
   <block id="5f1e7b6431061565550e292d05c73588" category="cell">NFS.MaxVolumes</block>
-  <block id="d75533d93e425c0e677c7115b33e8152" category="cell">vSphere 6.0 或更高版本，设置为 256 。所有其他 NFS 配置，设置为 64 。</block>
   <block id="3058676a1cf088aa4a73312ac36f2a58" category="cell">NFS41.MaxVolumes</block>
   <block id="62c07f94c64184ee5d530e4c0917093f" category="cell">vSphere 6.0 或更高版本，设置为 256 。</block>
-  <block id="6f4edfb9f3990d73482442c70e5fc2a0" category="cell">NFS.MaxQueueDepth</block>
-  <block id="0e61218c55cae3476207bca2c2f35ca7" category="cell">vSphere 6.0 或更高版本，设置为 128 。</block>
   <block id="18e1fb6924459470760771b20ab0c379" category="cell">nfs.HeartbeatMaxFailures</block>
-  <block id="8a14ec18b6563675357f1050563de774" category="cell">对于所有 NFS 配置，均设置为 10 。</block>
   <block id="1aa26eb281359ba3b9a9a4b83a09ed46" category="cell">nfs.Heartbeat频率</block>
-  <block id="072f9680861841ae9a13008a99667a75" category="cell">对于所有 NFS 配置，均设置为 12 。</block>
   <block id="eb4182715f8cde98563dc59ea36461d3" category="cell">nfs.HeartbeatTimeout</block>
   <block id="45aa5481fa55802a29a96aefd2f5dab1" category="cell">对于所有 NFS 配置，均设置为 5 。</block>
   <block id="54a08b15243d9078d3b5a47f8242da6f" category="cell">SUNRPC.MaxConnPerIP</block>
   <block id="9a9ccbecb3f315797ff8e709d85a0e18" category="cell">vSphere 7.0 或更高版本，设置为 128 。</block>
   <block id="2e556ad678160413b32dcca55c7d1f5f" category="cell">路径选择策略</block>
-  <block id="1e304108bae216d7b24d43f9bc868298" category="cell">如果使用采用 ALUA 的 FC 路径，则设置为 RR （轮循）。对于所有其他配置，设置为 FIXED 。将此值设置为 RR 有助于在所有主动 / 优化路径之间实现负载平衡。固定值适用于较旧的非 ALUA 配置，有助于防止代理 I/O换言之，它有助于防止 I/O 流向在 7- 模式下运行 Data ONTAP 的环境中高可用性（ HA ）对的另一节点。</block>
   <block id="117704664d6cada78ac3107380f63d23" category="cell">disk.qFullSampSize</block>
-  <block id="acaf935911b20ef844daea256f8181b1" category="cell">对于所有配置，均设置为 32 。设置此值有助于防止出现 I/O 错误。</block>
   <block id="f66a3c183f0e736240b77f8b755c880e" category="cell">disk.qFullThreshold</block>
-  <block id="ab1224ed1cd7c63073af652a3bd92a35" category="cell">对于所有配置，均设置为 8 。设置此值有助于防止出现 I/O 错误。</block>
   <block id="19c08de7404551288e1274186e039ef4" category="cell">Emulex FC HBA 超时</block>
   <block id="b4dbfc2d52627e923cbb563a31ff756d" category="cell">使用默认值。</block>
   <block id="d46cddda4da7ec11f17472d11df95b68" category="cell">QLogic FC HBA 超时</block>
-  <block id="d7e64409eb99602fc3b57a9f0b9287d6" category="cell">对于所有 iSCSI 路径，设置为 RR （轮循）。将此值设置为 RR 有助于在所有主动 / 优化路径之间实现负载平衡。</block>
   <block id="fb55ee99c04280ac638757869929785d" category="paragraph">在创建 ONTAP FlexVol 卷和 LUN 时， ONTAP 工具还会指定某些默认设置：</block>
-  <block id="b97847dc22c9e1f02417ab38785b34e6" category="cell">ONTAP 工具</block>
-  <block id="c003231c67265f34100a284092c0cf1f" category="cell">默认设置</block>
   <block id="5938fe448c8661febcef3f4e779e3adb" category="cell">Snapshot 预留（ -percent-snapshot-space ）</block>
   <block id="cfcd208495d565ef66e7dff9f98764da" category="cell">0</block>
   <block id="7218aec62575561a6de1cae8d5658390" category="cell">预留百分比（ -fractional-reserve ）</block>
@@ -8466,11 +8451,9 @@
   <block id="a7714bc43e9a27f2c98a38e6b6d7f3d8" category="doc">适用于公有云提供商的 NetApp 存储选项</block>
   <block id="8db50e5729f7a5d770aaceef947a2982" category="paragraph">了解 NetApp 在三大超大规模提供商中作为存储的各种选项。</block>
   <block id="60ce80493de8468bdfd597af1c219a9f" category="paragraph">AWS 支持以下配置中的 NetApp 存储：</block>
-  <block id="94f644afad50386ab13d527e1056ce71" category="paragraph">* 原生数据存储库 *</block>
   <block id="5f18b04dd7d7089a2177c4c930d8d57f" category="paragraph">Azure 支持以下配置中的 NetApp 存储：</block>
   <block id="74eb4c6138d4b8cd8399b01966c5af28" category="section-title">适用于 GCP 的 NetApp 存储选项</block>
   <block id="8f08ff97ca555f50f0d05fdf950a0568" category="paragraph">Google Cloud 支持以下配置中的 NetApp 存储：</block>
-  <block id="1234d67e696757e4666b0611f60b80d8" category="inline-link-macro">Cloud Volumes Service （ CVS ）作为原生数据存储库^1.</block>
   <block id="5c2d9a62bb25b00981f59e22e27bfd17" category="doc">验证连接到 Azure VMware 解决方案私有云的网络和访问权限</block>
   <block id="40228f700f5965975e4aff8c6c2ff4b3" category="paragraph">Azure VMware 解决方案不允许您使用内部 VMware vCenter 管理私有云。而是需要跳转主机才能连接到 Azure VMware 解决方案 vCenter 实例。在指定资源组中创建一个跳转主机，然后登录到 Azure VMware 解决方案 vCenter 。此跳转主机应是为连接而创建的同一虚拟网络上的 Windows VM ，并应提供对 vCenter 和 NSX Manager 的访问权限。</block>
   <block id="d88c36b93ae5dcb2646d56c57f27bf0e" category="paragraph"><block ref="d88c36b93ae5dcb2646d56c57f27bf0e" category="inline-image-macro-rx" type="image"></block></block>
@@ -8645,7 +8628,6 @@
   <block id="33d7d6c631c2d2cb3608445ef761fe16" category="paragraph"><block ref="33d7d6c631c2d2cb3608445ef761fe16" category="inline-image-macro-rx" type="image"></block></block>
   <block id="65bdc0673006b33d0c876e18a9a98787" category="paragraph">注意：创建私有云可能需要 30 分钟到 2 小时。</block>
   <block id="44f55a60cc8f70d1e10efc62b75eeddc" category="doc">适用于超大规模云提供商的 VMware 的 NetApp 解决方案</block>
-  <block id="ee5c3b650204d422e3d3e7bd725ec032" category="paragraph">详细了解 NetApp 为三（ 3 ）个主要超大规模提供商提供的功能—从作为子系统连接存储设备或原生数据存储库的 NetApp 到迁移工作流，扩展 / 突发云，备份 / 还原和灾难恢复。</block>
   <block id="f21c97f5b239021bb3f13d148516abb4" category="paragraph">选择您的云，让 NetApp 完成其余工作！</block>
   <block id="c1304f98c6be845a236d7a27951ece4f" category="paragraph"><block ref="c1304f98c6be845a236d7a27951ece4f" category="inline-image-macro-rx" type="image"></block></block>
   <block id="ca4ac823f3f130f3c78d6ac26ba9f46b" category="admonition">要查看特定超大规模提供商的功能，请单击该超大规模提供商的相应选项卡。</block>
@@ -8655,7 +8637,6 @@
   <block id="c774c23e9a97e08bfa096f1cbf18cc17" category="inline-link-macro">NetApp 存储选项</block>
   <block id="d3fc27ff58dc3a0d839a16af858e7999" category="list-text"><block ref="d3fc27ff58dc3a0d839a16af858e7999" category="inline-link-macro-rx"></block></block>
   <block id="833413440fbbe13837d8b58256cfba65" category="paragraph">与内部部署一样，规划基于云的虚拟化环境对于成功创建 VM 和迁移生产就绪环境至关重要。</block>
-  <block id="ff264305bf70750f504c04f48ab02038" category="paragraph">NetApp 存储可以通过多种方式在 3 个主要超大规模主机中的每一个上进行利用—要么作为推测连接的数据存储库，要么作为原生数据存储库。</block>
   <block id="94772ee4b241fe0706c3aaef6e3a4505" category="inline-link-macro">支持的 NetApp 存储选项</block>
   <block id="67b586cdf9703ba67abe711415768cc0" category="paragraph">请访问 <block ref="01a9bd21bfc714c8dec8aabc5b88eda7" category="inline-link-macro-rx"></block> 有关详细信息 ...</block>
   <block id="8a69f1bae52e494c6960f92a27390dcf" category="paragraph">要将 VMware Cloud 连接到 FSX ONTAP ，请完成以下步骤：</block>
@@ -8715,11 +8696,8 @@
   <block id="20b1c73b5938d2d878aa1d96fee7f1b2" category="list-text">VMware 站点扩展，</block>
   <block id="5fe13b2b805496310dbaa281d7325877" category="list-text">快速迁移到云，</block>
   <block id="b278a6d011d590bb350b9cb81c21a732" category="list-text">开发 / 测试，和</block>
-  <block id="2116d89ca4be9d5a23f758068a2225b2" category="list-text">利用 Cloud 原生技术实现应用程序现代化。</block>
   <block id="bc262005b263505cc0464e05c4324687" category="section-title">IT 发展历程中的一个过程</block>
   <block id="cfdb9aabb4aedf8cad2e330ba5a516a3" category="paragraph">大多数企业都在经历转型和现代化之旅。在这一过程中，各家公司正在尝试利用现有的 VMware 投资，同时利用云优势并探索尽可能无缝地迁移过程的方法。这种方法将使他们的现代化工作变得非常简单，因为数据已经在云中。</block>
-  <block id="ca0a16f344ac7703cf785163a8f07f5d" category="section-title">了解原生存储选项的重要性</block>
-  <block id="46da638bac867fb225c11e1d8504da00" category="paragraph">尽管 VMware 在任何云中都能为每个客户提供独特的混合功能，但有限的原生存储选项限制了它对存储繁重的工作负载企业的有用性。由于存储与主机直接相关，因此扩展存储的唯一方法是添加更多主机，这样对于存储密集型工作负载，成本可能会增加 35% – 40% 或更多。这些工作负载只需要额外的存储，而不是额外的功率。但这意味着需要为额外的主机付费。</block>
   <block id="0362604333fcf179ebf8b873f8f8c0ec" category="paragraph">我们来考虑一下这种情况：</block>
   <block id="b401aa039e47ba98bfaca10532e40d08" category="paragraph">客户只需要五台主机来满足 CPU 和内存需求，但需要大量存储需求，并需要 12 台主机来满足存储需求。这一要求最终确实会让财务规模大得多，因为他们只需要增加存储即可购买额外的动力。</block>
   <block id="7c25e9d8a9748905f5d456e20a93b413" category="paragraph">在规划云采用和迁移时，始终需要评估最佳方法并采取最简单的方法来减少总投资。对于任何应用程序迁移，最常见且最简单的方法是重新托管（也称为提升和移动），在这种情况下不会进行虚拟机（ VM ）或数据转换。在将 NetApp Cloud Volumes 与 VMware 软件定义的数据中心（ SDDC ）结合使用的同时，还可以作为 vSAN 的补充，从而提供一个轻松的升降和移动选项。</block>
@@ -8881,24 +8859,17 @@
   <block id="07b0eade4402d209b5dbe587a8ad3f6f" category="doc">在 AWS 上部署和配置虚拟化环境</block>
   <block id="35dcee3fd9faac08f48b3df2e8e0e63c" category="admonition">目前，只有来宾存储是将 FSX ONTAP 和 Cloud Volumes ONTAP 连接到 AWS VMC 的唯一受支持方法。</block>
   <block id="a724b4fc4c5f79672a5c572466d5e001" category="doc">适用于 Azure 的 NetApp 子系统连接存储选项</block>
-  <block id="9eaed1d83e18be57bbead8a1f4bf4abe" category="doc">适用于 GCP 的 NetApp 原生数据存储库选项</block>
   <block id="ae295ef15cb155f8a1af7d255e34298d" category="doc">适用于 AWS 的 NetApp 子系统连接存储选项</block>
   <block id="ade1814101b0113034e0f446307b3db3" category="doc">适用于 Google Cloud Platform GCVE 的 NetApp 功能</block>
   <block id="6eb516b97eae0ab93b8d6aab35fbb764" category="section-title">适用于 GCVE 的 NetApp 存储选项</block>
-  <block id="50b53922d656bce75f35201b661fc378" category="paragraph">NetApp 存储可以通过多种方式在 GCP GCVE 中用作 guess connected 或原生数据存储库。</block>
   <block id="1d8249c60cae81d82fc5bfb80167babc" category="list-text">只能使用一个 vSAN 环境。因此，所有存储流量都将直接与生产工作负载竞争。</block>
   <block id="63b9fbe67e7dd9b9f7623683244cb7f8" category="doc">适用于 Azure AVS 的 NetApp 功能</block>
-  <block id="ea7f7b3af23a2abea8816902269875f9" category="paragraph">详细了解 NetApp 为 Azure VMware 解决方案（ AVS ）提供的功能—从作为子系统连接存储设备或原生数据存储库的 NetApp 到迁移工作流，扩展 / 突发到云，备份 / 还原和灾难恢复。</block>
   <block id="1f0a2077c33b91b3daaaea05c7fadc07" category="section-title">在 Azure 中配置 AVS</block>
   <block id="cdac9a2e7f1dc52240712d4a191378e8" category="section-title">适用于 AVS 的 NetApp 存储选项</block>
-  <block id="a69a7b9e874f9f6e0703191e7825cc4f" category="paragraph">NetApp 存储可以通过多种方式在 Azure AVS 中用作 guess connected 或原生数据存储库。</block>
   <block id="cf3ac5a0dae3780b356e57c121b3eab0" category="doc">在 Google Cloud Platform （ GCP ）上部署和配置虚拟化环境</block>
-  <block id="b23824e61fecb77e1ae6d9f739a9fb83" category="doc">适用于 AWS 的 NetApp 原生数据存储库选项</block>
   <block id="ba756c1a2b93ad97a639914aae828a16" category="doc">适用于 AWS VMC 的 NetApp 功能</block>
-  <block id="c31fafd8fe5f702d3722404547cc8cb5" category="paragraph">详细了解 NetApp 为 AWS VMware Cloud （ VMC ）提供的功能—从作为子系统连接存储设备或原生数据存储库的 NetApp 到迁移工作流，扩展 / 突发到云，备份 / 还原和灾难恢复。</block>
   <block id="8658ccb747e94ac624861f5761a34716" category="section-title">在 AWS 中配置 VMC</block>
   <block id="e9f84da32eb512bd768458a738ed8aa6" category="section-title">适用于 VMC 的 NetApp 存储选项</block>
-  <block id="cd5a564d709538be5df5e7167600498d" category="paragraph">NetApp 存储可以通过多种方式在 AWS VMC 中用作 guess connected 或原生数据存储库。</block>
   <block id="bb01fec2870d3f698517f8471454637b" category="doc">在 Azure 上部署和配置虚拟化环境</block>
   <block id="c9b6ad26821d78c27282a65584d5f485" category="summary">NetApp 为内部和云端的强大虚拟化环境提供了许多最佳实践和解决方案。</block>
   <block id="ba64ee63cc4950b57bfb868fabec0db3" category="doc">NetApp 虚拟化解决方案</block>
@@ -8918,7 +8889,6 @@
   <block id="624e816c7f229d54827ad7bc018eb8da" category="sidebar">支持的存储选项</block>
   <block id="40d267fad784266cb59c36d76573e7c6" category="sidebar">基于 AWS 的 NetApp （ VMC ）</block>
   <block id="e7060d0555f178d672a4197df38e1d39" category="sidebar">配置虚拟化环境</block>
-  <block id="96e706be9b4668c0923788c6a8905fef" category="sidebar">原生数据存储库选项</block>
   <block id="2408eed8aca98d53134097e8990c8225" category="sidebar">子系统连接的存储选项</block>
   <block id="a64cd881ec955d17faa5e396a891e1e6" category="sidebar">基于 Azure 的 NetApp （ AVS ）</block>
   <block id="d1b0ccc0fc426266cf228929d5424ce4" category="sidebar">基于 Google Cloud Platform 的 NetApp （ GCVE ）</block>
@@ -9135,13 +9105,8 @@
   <block id="524a5aa4f422c84af378b5418bb1539b" category="inline-link-macro">上一步：融合自重新平衡集群。</block>
   <block id="ae7f441436d5c9a5dc4278e4ea2b87e8" category="paragraph"><block ref="ae7f441436d5c9a5dc4278e4ea2b87e8" category="inline-link-macro-rx"></block></block>
   <block id="b583dc49832a978014ef0d14fe7ef1ce" category="paragraph">详细了解 NetApp 为每个超大规模企业提供的 VMware 环境解决方案—从迁移工作流，扩展 / 扩展到云，备份 / 还原和灾难恢复。</block>
-  <block id="0e8dc2a599bea7faae9351c694a4f162" category="inline-link-macro">Azure NetApp Files （ ANF ）作为 Azure 的原生数据存储库</block>
-  <block id="3e6b003f71badaeb92ae26f7ed351a37" category="inline-link-macro">Cloud Volumes Service （ CVS ）作为 GCP 的原生数据存储库</block>
   <block id="bf3f0fd9ec5faf81793c3abc5e3b9127" category="admonition">此适用场景子系统仅连接存储。</block>
   <block id="8ad188089680179dea816084001d7bf0" category="sidebar">借助 E 系列和 BeeGFS 实现 AI 和分析工作流的数据移动</block>
-  <block id="af4c57809e604bab0cdf9a5ac5766ac8" category="cell">* ESXi 高级配置 *</block>
-  <block id="0fef419d5842ff81bf9c9046c637822c" category="inline-link-macro">2007427</block>
-  <block id="f812302694bd63641124f6012aebac60" category="cell">保留为设置值（ VMware 默认值为 0 ，但 VMFS6 不需要此设置）。有关详细信息，请参见 VMware 知识库文章 <block ref="25cd71618ac903bfc347baf53ab838b7" category="inline-link-macro-rx"></block>。</block>
   <block id="571cc1d48c6d1ff3cf7e3a54cb035753" category="cell">* NFS 设置 *</block>
   <block id="c0b3fd5512c2093847f753f398290f30" category="cell">* FC/FCoE 设置 *</block>
   <block id="19b5aaf3e2cb86809996ca63a2a416b0" category="cell">* iSCSI 设置 *</block>
@@ -11569,16 +11534,12 @@
   <block id="7e7790ea083a371632d0764a881695f6" category="open-title">GCP / GCVE</block>
   <block id="e44b11e9adb07a14c72f48599f700cd4" category="inline-link-macro">GCVE的配置步骤</block>
   <block id="0969e77be69a346b123e1b2c625e25b0" category="paragraph">查看详细信息 <block ref="7ffa56a4f5c5cf9fb86200a4dd2e1a5d" category="inline-link-macro-rx"></block>。</block>
-  <block id="3996fc456f7fb8e9643bad43ea62cd11" category="list-text">FSX ONTAP 作为原生 数据存储库^1^</block>
   <block id="52be4c6acc8cca3a598e3a651421de3d" category="inline-link-macro">VMC的子系统连接存储选项</block>
   <block id="37f223a23d46bf8585529dd8d08bbcf7" category="paragraph">查看详细信息 <block ref="faae832115390401ac20af18b263017a" category="inline-link-macro-rx"></block>。</block>
-  <block id="44ce1d8d9c5bbcf0eedde196ae5d5e31" category="list-text">Azure NetApp Files (ANF)作为原生 数据存储库^1^</block>
   <block id="a8e9a5787febc7740af29cd0bebf2e95" category="inline-link-macro">AVS的子系统连接存储选项</block>
   <block id="ead358b28ecc307f6e89deb846b9a227" category="paragraph">查看详细信息 <block ref="b477b575563628f6202758f8f4d6ef57" category="inline-link-macro-rx"></block>。</block>
-  <block id="464b588a9c3ed4df78ea220f48faf1bb" category="list-text">Cloud Volumes Service (CVS)作为原生 数据存储库^1^</block>
   <block id="2da991b20a7647acbdd67154515723cf" category="inline-link-macro">GCVE的子系统连接存储选项</block>
   <block id="5d49b0ee57ad4b529c897b49789aa965" category="paragraph">查看详细信息 <block ref="39710aaf95ad3f60e444c45fa2d1a561" category="inline-link-macro-rx"></block>。</block>
-  <block id="9a1c3a40aef4ef7a29c07ec6176752dc" category="paragraph">了解更多信息 <block ref="a508a86f372584a11bee8d3d41e3afca" category="inline-link-macro-rx"></block>。</block>
   <block id="685435b4b2388bd8f370b8fbb6ef6cc7" category="cell">*已连接子系统*</block>
   <block id="8299249ba5f910704b6288ee7e271747" category="cell">* AWS *</block>
   <block id="eb35b03ceb49f5f06a4570454e08c34c" category="cell">CVO FSX ONTAP<block ref="999b20d9470091fda2e66b2dde5b0af7" category="inline-link-macro-rx"></block></block>
@@ -11614,7 +11575,6 @@
   <block id="6626f21cba60531fb6ab33c5b686fd03" category="paragraph"><block ref="6626f21cba60531fb6ab33c5b686fd03" category="inline-link-macro-rx"></block></block>
   <block id="ef3abc0e33a9bba2f6844fc8bc6416c6" category="section-title">适用于VMware环境的NetApp解决方案</block>
   <block id="7c56979dc4b16fa4dd69a289608a432d" category="paragraph">无论您是采用混合云模式还是采用"云优先"模式、NetApp都可以提供多种解决方案来解决在云或混合云模式下管理工作负载的最常见使用情形。</block>
-  <block id="d3ef2bae3f82fd055da3c71b59653d9e" category="paragraph">此外、NetApp还为配置为来宾(来宾连接)存储或每个超大规模存储器中的原生 数据存储库的存储提供了解决方案。所有解决方案均与VMware对云工作负载的分类一致。这些分类包括：</block>
   <block id="14b428df74ec47d859b4b41c2a528f79" category="paragraph">有关为每个超大规模提供商提供的解决方案的更多详细信息、请访问：</block>
   <block id="d7d90ddf3d849c680942374007293390" category="inline-link-macro">适用于AWS/VMC的解决方案</block>
   <block id="3efe4c396a8490c63650f3271e66c5ab" category="list-text"><block ref="3efe4c396a8490c63650f3271e66c5ab" category="inline-link-macro-rx"></block></block>
@@ -11648,7 +11608,6 @@
   <block id="711a160cd3b8c4ec32edd7ba5dfd5eca" category="open-title">适用于CVO的HCX</block>
   <block id="4956cdf8fd57c365bb7636be6c086ca5" category="paragraph">&lt;此处将介绍适用于CVO的HCX解决方案的内容&gt;</block>
   <block id="7c0dae765c7854235808e7e373346d06" category="paragraph">详细了解NetApp为GCP提供的解决方案。</block>
-  <block id="962dbad648dc58421e7347adf727a05a" category="paragraph">详细了解NetApp为Google Cloud Platform (GCP) Google Cloud Virtualization Engine (GCVE)提供的功能—从作为子系统连接存储设备或原生 数据存储库的NetApp到迁移工作流、扩展/突发云、备份/还原和灾难恢复。</block>
   <block id="370e7d693bc429e40244684cac20b0cf" category="list-text"><block ref="370e7d693bc429e40244684cac20b0cf" category="inline-link-macro-rx"></block></block>
   <block id="80d79003a84a32474624e54935709e67" category="paragraph">查看详细信息 <block ref="996ade122099ed78c4d5fea15d95f62c" category="inline-link-macro-rx"></block>。</block>
   <block id="80b43a415019d937ea5c38446043549a" category="paragraph">查看详细信息 <block ref="8e20eef09273fc2519292ca4ed666573" category="inline-link-macro-rx"></block>。</block>
@@ -11714,7 +11673,6 @@
   <block id="9840e6cb0c2ab37a0e662398a6b3ffef" category="list-text"><block ref="9840e6cb0c2ab37a0e662398a6b3ffef" category="inline-link-macro-rx"></block></block>
   <block id="55418abe87135e6107123ca2c087964c" category="sidebar">适用于超大规模云中的VMware的NetApp解决方案</block>
   <block id="195b49c0610d30d327f5440759b7b642" category="sidebar">支持的解决方案</block>
-  <block id="77abe5490624dabbaf53c9f3b9267e97" category="sidebar">原生 数据存储库—私有预览</block>
   <block id="3ffbc70cc0bdd47bd7c4ed3cfa35be8a" category="sidebar">FSX ONTAP 作为子系统连接存储</block>
   <block id="06e1970c26d133efed67d51224ceff1c" category="sidebar">安全概述—Google Cloud中的NetApp Cloud Volumes Service (CVS)</block>
   <block id="860ab177fe05389a6d0ec0842bd1e818" category="sidebar">即将推出...</block>
@@ -11997,9 +11955,6 @@
   <block id="82f98bf67698e189fc9d846325345bbd" category="cell">亚太地区(雅加达)</block>
   <block id="1b15cf1d695d130132edd42a701b41a1" category="cell">亚太地区(香港)</block>
   <block id="69d00fef4f252c9c61d1eb67822e4739" category="paragraph">注意：目前、NetApp存储作为数据存储库可作为AWS/VMC和Azure/AVS的公有 预览版和GCP/GSVE的私有预览版提供。有关详细信息，请访问以下链接。</block>
-  <block id="945d681ba5697605547912e83e6eae6f" category="paragraph">AWS新闻发布将FSX ONTAP 作为原生 数据存储库、即将推出！</block>
-  <block id="07535da6f60738e67762673b24566f6d" category="paragraph"><block ref="11492821d8f3e04dd83f75af4417e9ff" category="inline-link-macro-rx"></block>
-<block ref="7fb3f61cbe4dcbff12c3d3e4fb2e9565" category="inline-link-macro-rx"></block></block>
   <block id="b5406986e96922718431fbc820878678" category="doc">区域可用性—适用于ANF的NFS数据存储库</block>
   <block id="6167e2ab0cfead32a7f67ecd3956d0af" category="paragraph">了解有关Azure、AVS和ANF的全球地区支持的更多信息。</block>
   <block id="9cd0e5d5083359436f8e8a366b9d6e07" category="admonition">NFS数据存储库将在同时提供这两种服务(AVS和ANF)的地区可用。</block>
@@ -12987,9 +12942,7 @@
   <block id="f6762efea56447c717fea204b2676851" category="list-text">单击下一步继续执行每个步骤，并接受显示的每个屏幕的默认值，直到显示存储选择屏幕为止。选择要将虚拟机部署到的VM_Datastore、然后单击下一步。</block>
   <block id="da0289d58f35e36d18325d6e8038b226" category="admonition">此文件中定义了一个名为 `FSType` 的可选字段。在iSCSI后端、可以将此值设置为特定的Linux文件系统类型(XFS、ext4等)、也可以将其删除、以允许工作节点操作系统确定要使用的文件系统。</block>
   <block id="ca2835359be5e4e2e79ed5b6fd777515" category="paragraph"><block ref="ca2835359be5e4e2e79ed5b6fd777515" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="447797b692cf448a7c7d97a3cb4a0b3e" category="cell">对于大多数vSphere 6.X版本、设置为512 MB。对于6.5U3、6.7U3和7.0或更高版本、设置为1024 MB。</block>
   <block id="98a209af6bc652363afa031bd7d07cf1" category="admonition">1—VMC的FSxN当前处于IA状态(初始可用性)。有关详细信息、请联系您的NetApp销售代表。</block>
-  <block id="14e9535e6f965278f245a3dff2ef2cb3" category="admonition">1—作为AVS的原生 数据存储库的ANF当前处于公有 预览模式。了解更多信息<block ref="5b3a31b4442bd8ea3aebfc18fe8411e5" category="inline-link-rx"></block>。</block>
   <block id="43f154001e329eb4cb13b7745ba16dac" category="doc">支持采用VMware的NetApp混合多云配置</block>
   <block id="e7b07b53a772f4842ba8d6291d7092bc" category="cell">FSX ONTAP 信息即将发布！^1^</block>
   <block id="9b5e2f812e05038b9b432b2e47e60e83" category="cell">ANF<block ref="982de57bbd4b4909ca13b7582da5a7cb" category="inline-link-macro-rx"></block></block>
@@ -13004,10 +12957,6 @@
   <block id="68c6fcf9f9393805f0529c36994a9266" category="paragraph">当GCP进入公有 可用性状态时、将发布GCP区域可用性。</block>
   <block id="b632c27ff82cfe142baffd346253a21b" category="doc">采用VMware的NetApp混合多云的用例</block>
   <block id="0257f1ddf73d49021a7feba150b7ea8b" category="paragraph">在这种情况下，最简单的问题解答是每个超大规模提供商中的 VMware 产品。与 NetApp ® Cloud Volumes 一样， VMware 提供了一种将内部 VMware 环境迁移或扩展到任何云的方法，使您可以在云中本机运行工作负载的同时保留现有内部资产，技能和工具。这样可以降低风险，因为不会发生服务中断或需要更改 IP ，并使 IT 团队能够使用现有技能和工具在内部执行操作。这样可以加快云迁移速度、并更平稳地过渡到混合多云架构。</block>
-  <block id="03600a63dc7f2e298d8612aef1fdf46c" category="inline-link-macro">使用ANF和Jetstream (原生 数据存储库)进行灾难恢复</block>
-  <block id="bfc6a5fbfaab611e46293767acf3c458" category="list-text"><block ref="bfc6a5fbfaab611e46293767acf3c458" category="inline-link-macro-rx"></block></block>
-  <block id="eb6c2b16f0098f0bc3c0f880f42e0f70" category="inline-link-macro">使用ANF和Jetstream (子系统连接存储)进行灾难恢复</block>
-  <block id="704578940b42b49730b76820cc879b1a" category="list-text"><block ref="704578940b42b49730b76820cc879b1a" category="inline-link-macro-rx"></block></block>
   <block id="33a1a24f2edf4ad9358baef7fb3c9cdf" category="doc">使用ANF和Jetstream进行灾难恢复</block>
   <block id="14f4fb472fe43e084476c5d8329b15f8" category="paragraph">将灾难恢复到云是一种弹性且经济高效的方式、可保护工作负载免受站点中断和数据损坏事件(例如勒索软件)的影响。使用VMware VAIO框架、可以将内部VMware工作负载复制到Azure Blob存储并进行恢复、从而最大限度地减少或接近无数据丢失、并实现近乎零的RTO。</block>
   <block id="b614fc13a076bceeca03cda9c4b1fdce" category="paragraph">可以使用Jetstream DR无缝恢复从内部复制到AVS、特别是复制到Azure NetApp Files 的工作负载。它通过在灾难恢复站点使用最少的资源和经济高效的云存储来实现经济高效的灾难恢复。Jetstream DR可通过Azure Blob Storage自动恢复到ANF数据存储库。Jetstream灾难恢复可根据网络映射将独立的VM或相关VM组恢复到恢复站点基础架构中、并提供时间点恢复以实现勒索软件保护。</block>
@@ -13111,7 +13060,6 @@
   <block id="414dfaa4bcffbd76b7f5ed891cdf1535" category="paragraph">Jetstream DR for AVS与Azure NetApp Files 数据存储库可通过允许组织从可用时间点恢复来解决这些问题、以便在需要时将工作负载恢复到正常运行的隔离网络。通过恢复、应用程序可以相互运行并进行通信、同时不会使它们暴露在北-南流量中、从而为安全团队提供一个安全的地方来执行取证和其他必要的修复。</block>
   <block id="a20215628470de7f6faa691cc18c4971" category="paragraph"><block ref="a20215628470de7f6faa691cc18c4971" category="inline-image-macro-rx" type="image"></block></block>
   <block id="8f95900d5509fa4de2d1c7e9489f4dc6" category="summary">将灾难恢复到云是一种具有弹性且经济高效的方式、可保护工作负载免受站点中断和勒索软件等数据损坏事件的影响。借助NetApp SnapMirror、可以将使用来宾连接存储的内部VMware工作负载复制到在Azure中运行的NetApp Cloud Volumes ONTAP。</block>
-  <block id="ecd3e45c724d0f1fe7838d14c01b0f98" category="doc">使用CVO和Jetstream for AVS (来宾连接存储)进行灾难恢复</block>
   <block id="48b47eaa686f297ed741f5cb81de709d" category="paragraph">作者：NetApp公司Ravi BCB和Niyaz Mohamed</block>
   <block id="be93173f941fd10be0e9fddb606bd940" category="paragraph">将灾难恢复到云是一种具有弹性且经济高效的方式、可保护工作负载免受站点中断和勒索软件等数据损坏事件的影响。借助NetApp SnapMirror、可以将使用来宾连接存储的内部VMware工作负载复制到在Azure中运行的NetApp Cloud Volumes ONTAP。其中包括应用程序数据；但是、实际VM本身又如何。灾难恢复应涵盖所有相关组件、包括虚拟机、VMDK、应用程序数据等。为此、可以使用SnapMirror以及Jetstream无缝恢复从内部复制到Cloud Volumes ONTAP 的工作负载、同时对VM VMDK使用vSAN存储。</block>
   <block id="b25b60af8de6f7256f832e93e5651972" category="paragraph">本文档提供了使用NetApp SnapMirror、Jetstream和Azure VMware解决方案 (AVS)设置和执行灾难恢复的分步方法。</block>
@@ -13306,7 +13254,6 @@
   <block id="973a8d8f52abe676185faad3e1273042" category="list-text">将Azure NetApp Files 与Azure VMware解决方案 集成</block>
   <block id="5921bbfb65432acfa6b5c79e0d9087a5" category="inline-link"><block ref="5921bbfb65432acfa6b5c79e0d9087a5" category="inline-link-rx"></block></block>
   <block id="58d361413adbffbc6e6237546e3c4118" category="paragraph"><block ref="58d361413adbffbc6e6237546e3c4118" category="inline-link-rx"></block></block>
-  <block id="c9b304a75d091c3c7fd00a12963d8b52" category="doc">Azure中的原生 NFS数据存储库选项</block>
   <block id="8d60f49fa5ec93fd2bea5e083359bdc1" category="paragraph">在内部部署中、ESXi版本3引入了NFS数据存储库支持功能、极大地扩展了vSphere的存储功能。</block>
   <block id="1aaea72f240547a6a057b9a88a27144b" category="paragraph">在NFS上运行vSphere是内部虚拟化部署的一个广泛采用的选项、因为它可以提供强大的性能和稳定性。如果您在内部数据中心中拥有大量网络连接存储(NAS)、则应考虑在Azure中部署一个采用Azure NetApp文件数据存储库的Azure VMware解决方案 SDDC、以克服容量和性能挑战。</block>
   <block id="19fb9916968211db983d13bffe0cc6af" category="inline-link">99.99%</block>
@@ -13317,9 +13264,7 @@
   <block id="4d7a269595fa13e9d4bb48449c996a41" category="list-text">只能使用一个 vSAN 环境。因此、所有存储流量都直接与生产工作负载竞争。</block>
   <block id="99407e1fc016dc5a4f17896a330e66b0" category="list-text">无法提供多个性能层来满足应用程序要求、性能和成本要求。</block>
   <block id="f5188d9f655a6ac9c3d0dccb20d81997" category="list-text">轻松达到基于集群主机的vSAN的存储容量限制。通过将Azure—原生 平台即服务(Platform-as-a-Service、PaaS)产品(例如Azure NetApp Files)集成为数据存储库、 客户可以选择单独扩展其存储、并仅根据需要向SDDC集群添加计算节点。此功能可克服上述挑战。</block>
-  <block id="0e3ed020480eaa03d85ccab093939832" category="paragraph">此外、您还可以通过Azure NetApp Files 部署多个数据存储库、通过将虚拟机放置在适当的数据存储库中并分配所需的服务级别来满足工作负载性能要求、这有助于模拟内部部署模式。凭借多协议支持的独特功能、子系统存储是SQL和Oracle等数据库工作负载的一个附加选项、同时还可以使用原生 NFS数据存储库功能来容纳其余VMDK。除此之外、您还可以通过原生 快照功能执行快速备份和粒度恢复。</block>
   <block id="cf1c082028930ec1827badc0e64627c6" category="admonition">请联系Azure和NetApp解决方案 架构师、以规划和调整存储规模、并确定所需的主机数量。NetApp建议在最终确定用于测试、POC和生产部署的数据存储库布局之前确定存储性能要求。</block>
-  <block id="4dbb477112f9a64eac4cca3a61697319" category="paragraph">从高层面来看、此架构介绍了如何跨内部环境和Azure实现混合云连接和应用程序可移植性。此外、还介绍了如何使用Azure NetApp Files 作为原生 NFS数据存储库以及Azure VMware解决方案 上托管的子虚拟机的子系统内存储选项。</block>
   <block id="1622404dda50f5803c9577efc058ec11" category="paragraph"><block ref="1622404dda50f5803c9577efc058ec11" category="inline-image-macro-rx" type="image"></block></block>
   <block id="b3488e5e13ca2586de3bcc01700bd61b" category="paragraph">迁移或灾难恢复中最重要的方面是确定目标环境的正确大小。了解需要多少个节点才能从内部迁移到Azure VMware解决方案 、这一点非常重要。</block>
   <block id="b39d58eedf7db669f2a65fd75198d49e" category="paragraph">对于规模估算、请使用RVTools (首选)或Live Optics或Azure Migrate等其他工具从内部环境中获取的历史数据。RVTools是捕获vCPU、vMem、vDisk以及所有所需信息(包括已打开或关闭的VM)以确定目标环境特征的理想工具。</block>
@@ -13429,22 +13374,15 @@
   <block id="045ec2e9b9dff589c32c257549300273" category="sidebar">CVO作为来宾连接存储</block>
   <block id="ff106355f094608231dc8d7116a273e1" category="sidebar">适用于VMC的混合多云解决方案</block>
   <block id="0ab50f8c17f87a8eecee4603b22f16c8" category="sidebar">适用于AVS的NetApp混合多云与VMware</block>
-  <block id="c9657265669087dd28072f1b2ec9f781" category="sidebar">ANF as a原生 Datastore：概述</block>
   <block id="5ab938ef85bdfd3c94e8c4c5f1cfa448" category="sidebar">ANF作为来宾连接存储</block>
   <block id="5ab22899d20e83b71d3c1cbbedea208e" category="sidebar">适用于AVS的混合多云解决方案</block>
   <block id="9fe80f9f1edda788e503795e34b7eb80" category="sidebar">适用于GCVE的NetApp混合多云与VMware</block>
   <block id="f0476be9310e3a4606daded5c91d346f" category="sidebar">CVS作为来宾连接存储</block>
   <block id="e809dfa83f36389270c46ad868461471" category="sidebar">适用于GCVE的混合多云解决方案</block>
   <block id="d4cc78732ab0fdcd767ab42a015d34e0" category="sidebar">安全概述—Google Cloud中的NetApp CVS</block>
-  <block id="b09117fe6d53441cff9cb2acd579690c" category="sidebar">原生 数据存储库概述</block>
-  <block id="dfebc4faa06edbacaea5e509fc2537ae" category="sidebar">原生 NFS数据存储库选项</block>
   <block id="b2299b17275cb6ba71114e61d9bbae4e" category="sidebar">即将推出...</block>
-  <block id="1c8437c7b3bb8efbbf09a2ef80992b65" category="sidebar">原生 数据存储库—公有 预览版(Microsoft)</block>
   <block id="538d26f438b9f54f2e02fe3eff3093f8" category="sidebar">采用VMware的NetApp混合多云</block>
-  <block id="c060e8edf543838031150fc8f1a63b72" category="sidebar">适用于AVS的原生 数据存储库</block>
   <block id="b8aef6e50d3ed85ad8f7568c45050629" category="sidebar">保护工作负载</block>
-  <block id="c90d3565dac770d258e528bf1d0f0354" category="sidebar">使用Jetstream (原生 数据存储库)进行灾难恢复</block>
-  <block id="497820483e8c674ccb7cd2e35d2d61b3" category="sidebar">使用CVO和Jetstream (子系统连接存储)进行灾难恢复</block>
   <block id="a3e69dd4d9f892aab0dcbf0a5dd246e2" category="cell">1.4及更高版本</block>
   <block id="f78d920d9d248820ddf7a3acdd9a34c0" category="doc">采用Tanzu的VMware vSphere概述</block>
   <block id="bac31e763c1b2955be0a10de0a4d8012" category="image-alt">采用Kubernetes的VMware vSphere</block>
@@ -14588,4 +14526,73 @@
   <block id="8d69f930e73398b81d052ad873efa8ab" category="sidebar">AWS子系统连接存储灾难恢复</block>
   <block id="645a84975202e30700b572b49a5ee29d" category="sidebar">灾难恢复</block>
   <block id="c99ec32d06b1f19699d82b1b34a80ca0" category="paragraph"><block ref="c99ec32d06b1f19699d82b1b34a80ca0" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a64bd0f4353943cf0431a27a532b499c" category="list-text">FSX ONTAP 作为补充NFS数据存储库^1^</block>
+  <block id="119d7589ae9a38050e960d08d321b275" category="list-text">Azure NetApp Files (ANF)作为补充NFS数据存储库^1^</block>
+  <block id="0f9904cf8a560b1c4309e4cf7750b7b9" category="admonition">1—ANF作为AVS的补充NFS数据存储库当前处于公有 预览模式。了解更多信息<block ref="5b3a31b4442bd8ea3aebfc18fe8411e5" category="inline-link-rx"></block>。</block>
+  <block id="efe20646a1138596f4f7b7f387cae230" category="list-text">Cloud Volumes Service (CVS)作为补充NFS数据存储库^1^</block>
+  <block id="e7e05ca1857ad4b0e930d0672e7657c4" category="inline-link-macro">Cloud Volumes Service (CVS)作为补充NFS数据存储库^1.</block>
+  <block id="8bde1a7decedb03d4e5ae4c5b6c9f5d3" category="paragraph">了解更多信息 <block ref="d54e964e36cd6cf7ab87b4b420d12109" category="inline-link-macro-rx"></block>。</block>
+  <block id="58098d451cf2728b0542acd542f9000b" category="cell">*补充NFS数据存储库*</block>
+  <block id="51b0e38e5ec7edbe37b6672987ce5f2e" category="paragraph">详细了解NetApp为三(3)个主要超大规模提供商提供的功能—从NetApp作为子系统连接存储设备或补充NFS数据存储库、到迁移工作流、扩展/突发云、备份/还原和灾难恢复。</block>
+  <block id="ccb4d111a650d51ca9a8feb2542610be" category="paragraph">NetApp存储可以通过多种方式在3个主要超大规模主机中的每一个上作为guess connected或作为补充NFS数据存储库加以利用。</block>
+  <block id="01afbab420d0d768779dcb574cd1ba34" category="doc">适用于AWS的NetApp补充NFS数据存储库选项</block>
+  <block id="d22e98327d29984cdf19ebfeeb53bd99" category="paragraph">详细了解NetApp为AWS VMware Cloud (VMC)提供的功能—从作为子系统连接存储设备或补充NFS数据存储库的NetApp到迁移工作流、扩展/突发到云、备份/还原和灾难恢复。</block>
+  <block id="e3dea11e8144be98f637687e2a2cf316" category="paragraph">NetApp存储可以通过多种方式在AWS VMC中用作guess connected或作为补充NFS数据存储库。</block>
+  <block id="206616b83a19162051802c3823da0f7c" category="paragraph">此外、NetApp还为配置为来宾(来宾连接)存储或每个超大规模存储器中的补充NFS数据存储库的存储提供了解决方案。所有解决方案均与VMware对云工作负载的分类一致。这些分类包括：</block>
+  <block id="04e248dee456b1f3910d53450d745125" category="list-text">利用云补充技术实现应用程序现代化。</block>
+  <block id="77d50dd2ce4e2531e14f13434a560e7d" category="section-title">了解补充NFS存储选项的重要性</block>
+  <block id="de8529127f85189767876e4d9a97427c" category="paragraph">尽管VMware在任何云中都能为每个客户提供独特的混合功能、但有限的补充NFS存储选项限制了它对存储负载繁重的组织的有用性。由于存储与主机直接相关，因此扩展存储的唯一方法是添加更多主机，这样对于存储密集型工作负载，成本可能会增加 35% – 40% 或更多。这些工作负载只需要额外的存储，而不是额外的功率。但这意味着需要为额外的主机付费。</block>
+  <block id="af68f7a1e7ca322318bf949baba2129e" category="inline-link-macro">使用ANF和Jetstream (补充NFS数据存储库)进行灾难恢复</block>
+  <block id="73c807da78ef06fdb99e2307b5d8cb57" category="list-text"><block ref="73c807da78ef06fdb99e2307b5d8cb57" category="inline-link-macro-rx"></block></block>
+  <block id="f93c390413608eaad8cc43b29f8073d0" category="inline-link-macro">使用ANF和CVO (子系统连接存储)进行灾难恢复</block>
+  <block id="233b8f979ad627e56656fbdd647fdc2b" category="list-text"><block ref="233b8f979ad627e56656fbdd647fdc2b" category="inline-link-macro-rx"></block></block>
+  <block id="5f2df3110b7088a1c8d1659ffb728f46" category="doc">使用CVO和AVS进行灾难恢复(来宾连接存储)</block>
+  <block id="9a130cd816dc8be85c4f198310f16e4c" category="paragraph">详细了解NetApp为Azure VMware解决方案 (AVS)提供的功能—从作为子系统连接存储设备或补充NFS数据存储库的NetApp到迁移工作流、扩展/突发到云、备份/还原和灾难恢复。</block>
+  <block id="465fe02ad52f12cc5844200de029e385" category="paragraph">NetApp存储可以通过多种方式在Azure AVS中用作guess connected或作为补充NFS数据存储库。</block>
+  <block id="827f15aa97cbfccd71eb2ba3ac7d4eac" category="doc">Azure中的补充NFS数据存储库选项</block>
+  <block id="d6e093aa5c1e7500fe79b8732c410c91" category="paragraph">此外、您还可以通过Azure NetApp Files 部署多个数据存储库、通过将虚拟机放置在适当的数据存储库中并分配所需的服务级别来满足工作负载性能要求、这有助于模拟内部部署模式。凭借多协议支持的独特功能、子系统存储是SQL和Oracle等数据库工作负载的一个附加选项、同时还可以使用补充NFS数据存储库功能来容纳其余VMDK。除此之外、您还可以通过原生 快照功能执行快速备份和粒度恢复。</block>
+  <block id="402936a0724fed1eeed39a4791eae422" category="paragraph">从高层面来看、此架构介绍了如何跨内部环境和Azure实现混合云连接和应用程序可移植性。此外、还介绍了如何使用Azure NetApp Files 作为补充NFS数据存储库以及Azure VMware解决方案 上托管的子虚拟机的子系统内存储选项。</block>
+  <block id="66433e0e715221ebed495642af8005b7" category="doc">适用于GCP的NetApp补充NFS数据存储库选项</block>
+  <block id="ce2d3ab910808452912b4cae1adc8bd7" category="paragraph">详细了解NetApp为Google Cloud Platform (GCP) Google Cloud Virtualization Engine (GCVE)提供的功能—从NetApp作为子系统连接存储设备或补充NFS数据存储库、到迁移工作流、扩展/突发到云、备份/还原和灾难恢复。</block>
+  <block id="275ed895f3f409270670131f7369b1ac" category="paragraph">NetApp存储可以通过多种方式在GCP GCVE中用作guess connected或作为补充NFS数据存储库。</block>
+  <block id="dc8880c1e35edd32ee0e3a62b82cc69f" category="paragraph">AWS新闻发布将FSX ONTAP 作为补充NFS数据存储库、即将推出！</block>
+  <block id="344a1d4b76a1f2aebec92972d8809fb9" category="inline-link-macro">Azure NetApp Files (ANF)作为Azure的补充NFS数据存储库</block>
+  <block id="e7bc10db9b0b44db3d43b19ef5f93f3e" category="inline-link-macro">Cloud Volumes Service (CVS)作为GCP的补充NFS数据存储库</block>
+  <block id="f90222afbf457daf7b0ccad3451907ef" category="paragraph"><block ref="258e319c15b416a52aa3c811d7635489" category="inline-link-macro-rx"></block>
+<block ref="dbea9878fd4f6cf74860bb456637c3e2" category="inline-link-macro-rx"></block></block>
+  <block id="50b333c4d09239bffeb68b079c85994d" category="inline-link-macro">Azure NetApp Files (ANF)作为Azure的补充NFS数据存储库</block>
+  <block id="b645884517c84cef76c33fd1223a77b8" category="inline-link-macro">Cloud Volumes Service (CVS)作为GCP的补充NFS数据存储库</block>
+  <block id="ce0992cb9d73e6a183b2b79e1cf57442" category="paragraph"><block ref="a15e077225e1c63b1977f56a70fae69c" category="inline-link-macro-rx"></block>
+<block ref="f4a57bacfd4fb9ea09ece261926e87de" category="inline-link-macro-rx"></block></block>
+  <block id="55b61b011b735ba396a8dbd7e3f95f20" category="cell">2022年5月8日</block>
+  <block id="f521ff62d61b22e5b86c9e3801eca511" category="cell">添加了"为建议的ESXi和ONTAP 设置重新启动所需信息"</block>
+  <block id="678582eb0cbbe0e063e618d230b63223" category="cell">*主机设置*</block>
+  <block id="dfe49b73bd7e747701b49f9ed21ea2d6" category="cell">* NetApp建议值*</block>
+  <block id="edceae57d92287f4f6200f94d3259cd0" category="cell">*需要重新启动*</block>
+  <block id="dc3a6955a23583876d020db0f6b80d4d" category="cell">* ESXi高级配置*</block>
+  <block id="5fffea5cb752d304de420a5efa158e13" category="cell">保持设置不变(VMware默认值为1)</block>
+  <block id="5d1b81f1885499e392018ebd7124ad37" category="inline-link-macro">VMware知识库2007427</block>
+  <block id="36478566e3585eb8ea863e941dcb967a" category="cell">保留为设置值（ VMware 默认值为 0 ，但 VMFS6 不需要此设置）。有关详细信息，请参见 <block ref="68c2cf0ecb6a1c6abaf6e56c035d5866" category="inline-link-macro-rx"></block></block>
+  <block id="875f6b98e20edfecb56f9013d00987f6" category="cell">vSphere 6.0 或更高版本，设置为 32 。所有其他NFS配置、设置为30</block>
+  <block id="a8af33a99dd728969fd947da27a2f69f" category="cell">对于大多数vSphere 6.X版本、设置为512 MB。对于6.5U3、6.7U3和7.0或更高版本、设置为1024 MB。</block>
+  <block id="e787d5b0d643685421632a1af3914963" category="cell">vSphere 6.0或更高版本、设置为256所有其他NFS配置、设置为64。</block>
+  <block id="e18600af98c17fae10fdba0dc89979ed" category="cell">NFS.MaxQueueDepth^1^</block>
+  <block id="be7707fa525d0124489c9fe3072f78de" category="cell">vSphere 6.0或更高版本、设置为128</block>
+  <block id="138989cbe5dd3a4997662e0f65c17878" category="cell">对于所有NFS配置、均设置为10</block>
+  <block id="7ea6e8664542e3beb1aea10425efb4db" category="cell">对于所有NFS配置、均设置为12</block>
+  <block id="fb62337a3ef32f4701b639339a4ceb33" category="cell">如果使用采用 ALUA 的 FC 路径，则设置为 RR （轮循）。对于所有其他配置，设置为 FIXED 。将此值设置为 RR 有助于在所有主动 / 优化路径之间实现负载平衡。固定值适用于较旧的非 ALUA 配置，有助于防止代理 I/O换言之、它有助于防止I/O流向在7-模式下运行Data ONTAP 的环境中高可用性(HA)对的另一节点</block>
+  <block id="0e82e1f81de2159b0e9bee0b7be00dc9" category="cell">对于所有配置，均设置为 32 。设置此值有助于防止出现 I/O 错误。</block>
+  <block id="bdd8c1d08eabb5e1923ed8f0c4b10ba4" category="cell">对于所有配置，均设置为 8 。设置此值有助于防止出现 I/O 错误。</block>
+  <block id="2aa077454308383f1e82025427cd7362" category="cell">对于所有 iSCSI 路径，设置为 RR （轮循）。将此值设置为 RR 有助于在所有主动 / 优化路径之间实现负载平衡。</block>
+  <block id="0340eb1bcbfc6cd3c62b8a878d8d643b" category="cell">对于所有配置，均设置为 32 。设置此值有助于防止出现I/O错误</block>
+  <block id="891c10448731ad57490b9a932dabfff8" category="inline-link-macro">VMware知识库86331</block>
+  <block id="2c572e3c397fe100b075a09359c9cc23" category="admonition">1—使用VMware vSphere ESXi 7.0.1和VMware vSphere ESXi 7.0.2时、NFS高级配置选项MaxQueueDepth可能无法按预期工作。请参考 <block ref="861055760f3cd527823fd34a49459992" category="inline-link-macro-rx"></block> 有关详细信息 ...</block>
+  <block id="3f7502a5f109d7a73706aba1c0741a4b" category="cell">* ONTAP Tool*</block>
+  <block id="485577e97e8efcd504fc8e8b13e613f1" category="cell">*默认设置*</block>
+  <block id="f639f9fbf0a0ec97e697dc20f2dec14f" category="sidebar">补充NFS数据存储库选项</block>
+  <block id="015a03470e91621621a76f7a4e3dc56e" category="sidebar">ANF as a Supplemental NFS Datastore：概述</block>
+  <block id="8be166a6a918ed4074f79487db89b538" category="sidebar">补充NFS数据存储库—私有预览</block>
+  <block id="5a9500ea180d9aa487f8a027550c1888" category="sidebar">补充NFS数据存储库概述</block>
+  <block id="5cc354638211ca59bc561a960afa71f9" category="sidebar">补充NFS数据存储库—公有 预览版(Microsoft)</block>
+  <block id="95fd29d87d2c7d3100a5198bc7067e95" category="sidebar">AVS的补充NFS数据存储库</block>
 </blocks>
