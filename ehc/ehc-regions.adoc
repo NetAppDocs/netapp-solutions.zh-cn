@@ -4,7 +4,7 @@ permalink: ehc/ehc-regions.html
 keywords: NetApp Solutions, hybrid, multi cloud, region, support 
 summary:  
 ---
-= AWS / VMC、Azure / AVS和GCP / GCVE上NFS数据存储库的区域可用性
+= AWS、Azure和GCP上的补充NFS数据存储库的区域可用性
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,11 +14,20 @@ summary:
 
 
 [role="lead"]
-详细了解全球地区对AWS、Azure和Google Cloud Platform (GCP)上NFS数据存储库的支持。
+详细了解全球地区对AWS、Azure和Google Cloud Platform (GCP)上的补充NFS数据存储库的支持。
 
 
 
 == AWS区域可用性
+
+AWS/VMC上的补充NFS数据存储库的可用性由Amazon定义。首先、您需要确定VMC和FSxN是否在指定区域中可用。接下来、您需要确定该区域是否支持FSxN补充NFS数据存储库。
+
+* 检查VMC的可用性 link:https:docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws.getting-started/GUID-19FB6A08-B1DA-4A6F-88A3-50ED445CFFCF.html["此处"]。
+* Amazon的定价指南提供了有关FSxN (FSX ONTAP)的可用位置的信息。您可以找到这些信息 link:https:aws.amazon.com/fsx/netapp-ontap/pricing/["此处"]。
+* VMC的FSxN补充NFS数据存储库即将推出。
+
+
+虽然信息仍在发布中、但下图将当前对VMC、FSxN和FSxN的支持标识为一个补充NFS数据存储库。
 
 [role="tabbed-block"]
 ====
@@ -120,156 +129,12 @@ summary:
 
 == Azure区域可用性
 
-[role="tabbed-block"]
-====
-.美洲
---
-|===
+Azure / AVS上的补充NFS数据存储库的可用性由Microsoft定义。首先、您需要确定AVS和ANF是否在特定区域可用。接下来、您需要确定该区域是否支持ANF补充NFS数据存储库。
 
+* 检查AVS和ANF的可用性 link:https://azure.microsoft.com/en-us/global-infrastructure/services/?products=netapp,azure-vmware&regions=all["此处"]。
+* 检查ANF补充NFS数据存储库的可用性 link:https://docs.microsoft.com/en-us/azure/azure-vmware/attach-azure-netapp-files-to-azure-vmware-solution-hosts?tabs=azure-portal#supported-regions["此处"]。
 
-| * Azure地区* | * AVS可用性* | * ANF可用性* | * NFS数据存储库可用性* 
 
-
-| 位于美国中部 | 是的。 | 是的。 | 是的。 
-
-
-| 美国东部 | 是的。 | 是的。 | 是的。 
-
-
-| 美国东部 2. | 否 | 是的。 | 否 
-
-
-| 位于美国中部北部 | 是的。 | 是的。 | 是的。 
-
-
-| 位于美国中部南部 | 是的。 | 是的。 | 是的。 
-
-
-| 位于美国西部 | 否 | 否 | 否 
-
-
-| 美国西部 | 是的。 | 是的。 | 是的。 
-
-
-| 西部US2. | 否 | 是的。 | 否 
-
-
-| 西部US3. | GA：H1-2023 | 是的。 | 是的。 
-
-
-| 加拿大中部 | 是的。 | 是的。 | 是的。 
-
-
-| 加拿大东部 | 是的。 | 是的。 | 是的。 
-
-
-| 巴西南部 | 是的。 | 是的。 | 是的。 
-
-
-| 巴西东南部 | 否 | GA：2022年第2季度 | 否 
-|===
-最后更新日期：2022年6月7日。
-
---
-.欧洲、中东和非洲
---
-|===
-
-
-| * Azure地区* | * AVS可用性* | * ANF可用性* | * NFS数据存储库可用性* 
-
-
-| 北欧 | 是的。 | 是的。 | 是的。 
-
-
-| 西欧 | 否 | 是的。 | 否 
-
-
-| 法国中部 | 是的。 | 是的。 | 是的。 
-
-
-| 法国南部 | 否 | GA：H2-2022 | 否 
-
-
-| 德国北部 | 否 | 是的。 | 否 
-
-
-| 德国中西部 | 是的。 | 是的。 | 是的。 
-
-
-| 挪威东部 | 否 | 是的。 | 否 
-
-
-| 挪威西部 | 否 | 是的。 | 否 
-
-
-| 瑞典中部 | GA：2022年第2季度 | GA：2022年第2季度 | 否 
-
-
-| 瑞典南部 | 否 | 否 | 否 
-
-
-| 瑞士北部 | 否 | 是的。 | 否 
-
-
-| 瑞士西部 | 否 | 是的。 | 否 
-
-
-| 阿联酋中部 | 否 | 是的。 | 否 
-
-
-| 阿联酋北部 | 否 | 是的。 | 否 
-
-
-| 英国南部 | 是的。 | 是的。 | 是的。 
-
-
-| 英国西部 | 是的。 | 是的。 | 是的。 
-|===
-最后更新日期：2022年6月7日。
-
---
-.亚太地区
---
-|===
-
-
-| * Azure地区* | * AVS可用性* | * ANF可用性* | * NFS数据存储库可用性* 
-
-
-| 澳大利亚东部 | 是的。 | 是的。 | 是的。 
-
-
-| 澳大利亚东南部 | 是的。 | 是的。 | 是的。 
-
-
-| Australia Central | 否 | 是的。 | 否 
-
-
-| 日本东部 | 是的。 | 是的。 | 否 
-
-
-| 日本西部 | 是的。 | 是的。 | 是的。 
-
-
-| 东亚 | 否 | 是的。 | 否 
-
-
-| 东南亚 | 是的。 | 是的。 | 是的。 
-
-
-| 印度中部 | 否 | 是的。 | 否 
-
-
-| 南印度 | 否 | 是的。 | 否 
-
-
-| 韩国中部 | 否 | 是的。 | 否 
-|===
-最后更新日期：2022年6月20日。
-
---
-====
 
 
 == GCP地区可用性
