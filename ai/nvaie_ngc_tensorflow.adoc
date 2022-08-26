@@ -1,0 +1,77 @@
+---
+sidebar: sidebar 
+permalink: ai/nvaie_ngc_tensorflow.html 
+keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, NVIDIA AI Enterprise, NVAIE, VMware, NGC 
+summary: 采用NetApp和VMware的NVIDIA AI Enterprise—使用NVIDIA NGC软件—示例用例—TensorFlow培训作业 
+---
+= 示例用例—TensorFlow培训作业
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:nvaie_ngc_setup.html["上一步：设置。"]
+
+本节介绍在NVIDIA AI Enterprise环境中执行TensorFlow培训作业所需执行的任务。
+
+
+
+== 前提条件
+
+在执行本节所述的步骤之前、我们假定您已按照中所述的说明创建了子虚拟机模板 link:nvaie_ngc_setup.html["设置"] 页面。
+
+
+
+== 使用模板创建子虚拟机
+
+首先、您必须使用上一节中创建的模板创建新的子虚拟机。要使用模板创建新的子虚拟机、请登录到VMware vSphere、然后右键单击模板名称、选择"从此模板新建虚拟机..."、然后按照向导进行操作。
+
+image:nvaie_image4.png["错误：缺少图形映像"]
+
+
+
+== 创建和挂载数据卷
+
+接下来、您必须创建一个新的数据卷、用于存储培训数据集。您可以使用NetApp DataOps工具包快速创建新的数据卷。以下命令示例显示了如何创建容量为2 TB的名为"imagenet"的卷。
+
+....
+$ netapp_dataops_cli.py create vol -n imagenet -s 2TB
+....
+在为数据卷填充数据之前、必须先将其挂载到子虚拟机中。您可以使用NetApp DataOps工具包快速挂载数据卷。下面的示例命令显示了上一步创建的卷的布线。
+
+....
+$ sudo -E netapp_dataops_cli.py mount vol -n imagenet -m ~/imagenet
+....
+
+
+== 填充数据卷
+
+配置并挂载新卷后、可以从源位置检索培训数据集并将其放置在新卷上。这通常涉及从S3或Hadoop数据湖中提取数据、有时还需要数据工程师的帮助。
+
+
+
+== 执行TensorFlow培训作业
+
+现在、您已准备好执行TensorFlow培训作业。要执行TensorFlow培训作业、请执行以下任务。
+
+. 提取NVIDIA NGC企业TensorFlow容器映像。
++
+....
+$ sudo docker pull nvcr.io/nvaie/tensorflow-2-1:22.05-tf1-nvaie-2.1-py3
+....
+. 启动NVIDIA NGC企业版TensorFlow容器的实例。使用"-v"选项将数据卷连接到容器。
++
+....
+$ sudo docker run --gpus all -v ~/imagenet:/imagenet -it --rm nvcr.io/nvaie/tensorflow-2-1:22.05-tf1-nvaie-2.1-py3
+....
+. 在容器中执行TensorFlow培训计划。下面的示例命令显示了容器映像中包含的示例RESNET-50培训计划的执行情况。
++
+....
+$ python ./nvidia-examples/cnn/resnet.py --layers 50 -b 64 -i 200 -u batch --precision fp16 --data_dir /imagenet/data
+....
+
+
+link:nvaie_additional_information.html["下一步：从何处查找追加信息。"]
