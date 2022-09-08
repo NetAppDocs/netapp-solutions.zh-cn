@@ -32,9 +32,8 @@ Cloud Volumes ONTAP 是行业领先的云数据管理解决方案 、基于NetAp
 
 === Cloud Volumes ONTAP （ CVO ）作为子系统连接的存储
 
-====
 .在 Google Cloud 中部署 Cloud Volumes ONTAP （自行部署）
-=====
+====
 可以从在 GCVE 私有云环境中创建的 VM 挂载 Cloud Volumes ONTAP 共享和 LUN 。这些卷还可以挂载到 Linux 客户端和 Windows 客户端上，并且在通过 iSCSI 挂载时，可以在 Linux 或 Windows 客户端上以块设备的形式访问 LUN ，因为 Cloud Volumes ONTAP 支持 iSCSI ， SMB 和 NFS 协议。只需几个简单的步骤即可设置 Cloud Volumes ONTAP 卷。
 
 要将卷从内部环境复制到云以实现灾难恢复或迁移，请使用站点到站点 VPN 或云互连建立与 Google Cloud 的网络连接。将数据从内部复制到 Cloud Volumes ONTAP 不在本文档的讨论范围之内。要在内部系统和 Cloud Volumes ONTAP 系统之间复制数据，请参见 link:mailto:CloudOwner@gve.local#setting-up-data-replication-between-systems["在系统之间设置数据复制"]。
@@ -86,11 +85,9 @@ image:gcve-cvo-guest-9.png[""]
 
 
 
-=====
-====
 ====
 .SMB 卷的其他配置
-=====
+====
 . 准备好工作环境后，请确保为 CIFS 服务器配置了适当的 DNS 和 Active Directory 配置参数。要创建 SMB 卷，必须执行此步骤。
 +
 提示：单击菜单图标（ º ），选择高级以显示更多选项，然后选择 CIFS 设置。
@@ -125,11 +122,9 @@ image:gcve-cvo-guest-15.png[""]
 
 
 
-=====
-====
 ====
 .将 Cloud Volumes ONTAP 上的 LUN 连接到主机
-=====
+====
 要将 Cloud Volumes ONTAP LUN 连接到主机，请完成以下步骤：
 
 . 在 " 画布 " 页面上，双击 Cloud Volumes ONTAP 工作环境以创建和管理卷。
@@ -183,11 +178,9 @@ image:gcve-cvo-guest-20.png[""]
 image:gcve-cvo-guest-21.png[""]
 image:gcve-cvo-guest-22.png[""]
 
-=====
-====
 ====
 .在 Linux 客户端上挂载 Cloud Volumes ONTAP NFS 卷
-=====
+====
 要从 Google Cloud VMware 引擎中的 VM 挂载 Cloud Volumes ONTAP （ DIY ）文件系统，请执行以下步骤：
 
 按照以下步骤配置卷
@@ -219,7 +212,6 @@ image:gcve-cvo-guest-27.png[""]
 
 
 
-=====
 ====
 
 
@@ -233,20 +225,17 @@ Cloud Volumes Services (CVS)是一套完整的数据服务产品组合、可提�
 
 === Cloud Volumes Service （ CVS ）作为子系统连接的存储
 
-====
 .使用 VMware 引擎配置 Cloud Volumes Service
-=====
+====
 可以从 VMware 引擎环境中创建的 VM 挂载 Cloud Volumes Service 共享。由于 Cloud Volumes Service 支持 SMB 和 NFS 协议，因此这些卷也可以挂载到 Linux 客户端并映射到 Windows 客户端。可以通过简单的步骤设置 Cloud Volumes Service 卷。
 
 Cloud Volume Service 和 Google Cloud VMware Engine 私有云必须位于同一区域。
 
 要从 Google 云市场购买，启用和配置适用于 Google Cloud 的 NetApp Cloud Volumes Service ，请按照以下详细信息进行操作 link:https://cloud.google.com/vmware-engine/docs/quickstart-prerequisites["指南"]。
 
-=====
-====
 ====
 .创建一个 CVS NFS 卷到 GCVE 私有云
-=====
+====
 要创建和挂载 NFS 卷，请完成以下步骤：
 
 . 从 Google 云控制台中的合作伙伴解决方案访问 Cloud Volumes 。
@@ -297,11 +286,9 @@ image:gcve-cvs-guest-10.png[""]
 
 
 
-=====
-====
 ====
 .将 NFS 导出挂载到在 VMware 引擎上运行的 VM
-=====
+====
 在准备挂载 NFS 卷之前，请确保专用连接的对等状态列为 "Active" 。状态为 "Active" 后，请使用 mount 命令。
 
 要挂载 NFS 卷，请执行以下操作：
@@ -340,11 +327,9 @@ image:gcve-cvs-guest-22.png[""]
 
 
 
-=====
-====
 ====
 .创建 SMB 共享并将其挂载到在 VMware 引擎上运行的 VM
-=====
+====
 对于 SMB 卷，请确保在创建 SMB 卷之前已配置 Active Directory 连接。
 
 image:gcve-cvs-guest-30.png[""]
@@ -413,5 +398,4 @@ image:gcve-cvs-guest-39.png[""]
 
 
 
-=====
 ====
