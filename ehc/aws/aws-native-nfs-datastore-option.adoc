@@ -1,0 +1,262 @@
+---
+sidebar: sidebar 
+permalink: ehc/aws/aws-native-nfs-datastore-option.html 
+keywords:  
+summary:  
+---
+= AWS中的补充NFS数据存储库选项
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+准备好VMware Cloud并连接到AWS VPC后、您必须将适用于NetApp ONTAP 的Amazon FSx部署到新指定的VPC中、而不是部署原始已连接或现有默认VPC。
+
+首先、在SDDC所在的区域和可用性区域部署一个额外的VPC、然后将适用于NetApp ONTAP 的Amazon FSX部署到新的VPC中。 https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-operations/GUID-6B20CA3B-ABCD-4939-9176-BCEA44473C2B.html["在VMware Cloud中配置SDDC组"^] 控制台可提供连接到新指定的VPC所需的网络配置选项、在此VPC中将部署FSX for ONTAP。
+
+
+NOTE: 在与AWS SDDC上的VMware Cloud相同的可用区域中部署适用于ONTAP 的FSX。
+
+
+NOTE: 您不能在已连接的VPC中部署适用于ONTAP 的FSX。而是必须将其部署在新的指定VPC中、然后通过SDDC组将VPC连接到VMware托管传输网关(vTGW)。
+
+.第1步：在指定的VPC中创建适用于ONTAP 的Amazon FSx
+====
+要创建和挂载适用于NetApp ONTAP 的Amazon FSX文件系统、请完成以下步骤：
+
+. 打开位于`https://console.aws.amazon.com/fsx/`的Amazon FSX控制台、然后选择*创建文件系统*以启动*文件系统创建*向导。
+. 在选择文件系统类型页面上、选择*适用于NetApp ONTAP 的Amazon FSx *、然后单击*下一步*。此时将显示*创建文件系统*页面。
++
+image:fsx-nfs-image2.png["错误：缺少图形映像"]
+
+. 对于创建方法、请选择*标准创建*。
++
+image:fsx-nfs-image3.png["错误：缺少图形映像"]
+
++
+image:fsx-nfs-image4.png["错误：缺少图形映像"]
+
+. 在虚拟私有云(Virtual Private Cloud、VPC)的*网络*部分中、选择适当的VPC和首选子网以及路由表。在这种情况下、会从下拉菜单中选择Demo—FSxforontap-vPC。
++
+
+NOTE: 确保此VPC为新指定的VPC、而不是已连接的VPC。
+
++
+
+NOTE: 默认情况下、ONTAP 的FSX使用`198.19.0.0/16`作为文件系统的默认端点IP地址范围。确保端点IP地址范围不会与AWS基础架构上的VMC冲突。如果不确定、请使用非重叠范围、而不存在冲突。
+
++
+image:fsx-nfs-image5.png["错误：缺少图形映像"]
+
+. 在加密密钥的*安全性和加密*部分中、选择用于保护文件系统空闲数据的AWS密钥管理服务(AWS KMS)加密密钥。对于*文件系统管理密码*、输入fsxadmin用户的安全密码。
++
+image:fsx-nfs-image6.png["错误：缺少图形映像"]
+
+. 在*默认Storage Virtual Machine配置*部分中、指定SVM的名称。
++
+
+NOTE: 自GA起、支持四个NFS数据存储库。
+
++
+image:fsx-nfs-image7.png["错误：缺少图形映像"]
+
+. 在*默认卷配置*部分中、指定数据存储库所需的卷名称和大小、然后单击*下一步*。此卷应为NFSv3卷。对于*存储效率*、选择*已启用*以启用ONTAP 存储效率功能(数据压缩、重复数据删除和数据缩减)。创建后、使用shell按如下所示修改卷参数：
++
+|===
+| 正在设置 ... | Configuration 
+
+
+| 卷保证 | 无(精简配置)；默认设置为无 
+
+
+| fractional_reserve | 0% 
+
+
+| snap_reserve | 0% 
+
+
+| 自动调整大小 | 开启 
+
+
+| 存储效率 | enabled 
+
+
+| 自动删除 | 卷/ OLDEST_first 
+
+
+| 卷分层策略 | 仅Snapshot 
+
+
+| try_first | 自动增长 
+
+
+| 快照策略 | 无 
+|===
++
+image:fsx-nfs-image8.png["错误：缺少图形映像"]
+
++
+image:fsx-nfs-image9.png["错误：缺少图形映像"]
+
+. 查看*创建文件系统*页面上显示的文件系统配置。
+. 单击*创建文件系统*。
++
+image:fsx-nfs-image10.png["错误：缺少图形映像"]
+
++
+image:fsx-nfs-image11.png["错误：缺少图形映像"]
+
++
+
+NOTE: 重复上述步骤、根据容量和性能要求创建更多文件系统和数据存储库卷。
+
+
+
+要了解适用于ONTAP 性能的Amazon FSX、请参见 https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/performance.html["适用于NetApp ONTAP 性能的Amazon FSX"^]。
+
+====
+.第2步：创建SDDC组
+====
+创建文件系统和SVM后、请使用VMware控制台创建SDDC组并配置VMware Transit Connect。要执行此操作、请完成以下步骤、并记住您必须在VMware Cloud Console和AWS Console之间导航。
+
+. 登录到VMC控制台、网址为`https://vmc.vmware.com`。
+. 在*清单*页面上、单击* SDDC组*。
+. 在* SDDC组*选项卡上、单击*操作*并选择*创建SDDC组*。出于演示目的、SDDC组称为`FSxONTAPDatastoreGrp`。
+. 在成员网格中、选择要包括为组成员的SDDC。
++
+image:fsx-nfs-image12.png["错误：缺少图形映像"]
+
+. 验证是否已选中"为您的组配置VMware Transit Connect将对每个附件和数据传输产生费用"、然后选择*创建组*。完成此过程可能需要几分钟时间。
++
+image:fsx-nfs-image13.png["错误：缺少图形映像"]
+
+
+
+====
+.第3步：配置VMware传输连接
+====
+. 将新创建的指定VPC附加到SDDC组。选择*外部VPC*选项卡、然后按照进行操作 https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-operations/GUID-A3D03968-350E-4A34-A53E-C0097F5F26A9.html["将外部VPC连接到组的说明"^]。此过程可能需要10到15分钟才能完成。
++
+image:fsx-nfs-image14.png["错误：缺少图形映像"]
+
+. 单击*添加帐户*。
++
+.. 提供用于为ONTAP 文件系统配置FSX的AWS帐户。
+.. 单击 * 添加 * 。
+
+
+. 返回AWS控制台、登录到同一个AWS帐户并导航到*资源访问管理器*服务页面。您可以通过一个按钮来接受资源共享。
++
+image:fsx-nfs-image15.png["错误：缺少图形映像"]
+
++
+
+NOTE: 在外部VPC过程中、系统会通过AWS控制台通过资源访问管理器提示您访问新的共享资源。共享资源是由VMware Transit Connect管理的AWS Transit Gateway。
+
+. 单击*接受资源共享*。
++
+image:fsx-nfs-image16.png["错误：缺少图形映像"]
+
+. 回到VMC控制台、您现在可以看到外部VPC处于关联状态。此操作可能需要几分钟时间才能显示出来。
+
+
+====
+.第4步：创建传输网关连接
+====
+. 在AWS控制台中、转至VPC服务页面并导航到用于配置FSX文件系统的VPC。在此、您可以单击右侧导航窗格上的*传输网关附件*来创建传输网关附件。
+. 在* VPC附件*下、确保已选中DNS支持、并选择部署了FSX for ONTAP 的VPC。
++
+image:fsx-nfs-image17.png["错误：缺少图形映像"]
+
+. 单击*创建**传输网关附件*。
++
+image:fsx-nfs-image18.png["错误：缺少图形映像"]
+
+. 返回VMware Cloud Console、导航回SDDC组>外部VPC选项卡。选择用于FSX的AWS帐户ID、然后单击VPC并单击*接受*。
++
+image:fsx-nfs-image19.png["错误：缺少图形映像"]
+
++
+image:fsx-nfs-image20.png["错误：缺少图形映像"]
+
++
+
+NOTE: 此选项可能需要几分钟才能显示。
+
+. 然后、在*路由*列的*外部VPC*选项卡中、单击*添加路由*选项并添加所需的路由：
++
+** 适用于NetApp ONTAP 浮动IP的Amazon FSX浮动IP范围的路由。
+** 新创建的外部 VPC 地址空间的路由。
++
+image:fsx-nfs-image21.png["错误：缺少图形映像"]
+
++
+image:fsx-nfs-image22.png["错误：缺少图形映像"]
+
+
+
+
+
+====
+.第5步：配置路由(AWS VPC和SDDC)和安全组
+====
+. 在AWS控制台中、通过在VPC服务页面中找到VPC并选择VPC的*主*路由表来创建返回SDDC的路由。
+. 浏览到下部面板中的路由表、然后单击*编辑路由*。
++
+image:fsx-nfs-image23.png["错误：缺少图形映像"]
+
+. 在*编辑路由*面板中、单击*添加路由*、然后通过选择*传输网关*以及关联的TGWID输入SDDC基础架构的CIDR。单击 * 保存更改 * 。
++
+image:fsx-nfs-image24.png["错误：缺少图形映像"]
+
+. 验证关联VPC中的安全组是否已更新为SDDC组CIDR的正确入站规则。
++
+image:fsx-nfs-image25.png["错误：缺少图形映像"]
+
++
+
+NOTE: 使用SDDC基础架构的CIDR块更新入站规则。
+
++
+
+NOTE: 验证是否已更新适用于ONTAP 的FSX所在的VPC路由表、以避免出现连接问题。
+
++
+
+NOTE: 更新安全组以接受NFS流量。
+
+
+
+这是准备连接到相应SDDC的最后一步。配置文件系统、添加路由以及更新安全组后、便应挂载数据存储库了。
+
+====
+.第6步：将NFS卷作为数据存储库连接到SDDC集群
+====
+配置文件系统并建立连接后、访问VMware Cloud Console以挂载NFS数据存储库。
+
+. 在VMC控制台中、打开SDDC的*存储*选项卡。
++
+image:fsx-nfs-image27.png["错误：缺少图形映像"]
+
+. 单击*附加数据存储库*并填写所需的值。
++
+
+NOTE: NFS服务器地址是NFS IP地址、可在AWS控制台中的FSX > Storage Virtual Machine选项卡>端点下找到。
+
++
+image:fsx-nfs-image28.png["错误：缺少图形映像"]
+
+. 单击*连接数据存储库*将数据存储库连接到集群。
++
+image:fsx-nfs-image29.png["错误：缺少图形映像"]
+
+. 通过访问vCenter验证NFS数据存储库、如下所示：
++
+image:fsx-nfs-image30.png["错误：缺少图形映像"]
+
+
+
+====

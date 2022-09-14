@@ -108,11 +108,11 @@ Cloud Volumes Service 在Active Directory中显示为普通计算机帐户对象
 * CIFS/SMB和NFS Kerberos会创建单独的计算机帐户对象。
 * 启用了LDAP的NFS会在Active Directory中为Kerberos LDAP绑定创建一个计算机帐户。
 * 使用LDAP的双协议卷共享LDAP和SMB的CIFS/SMB计算机帐户。
-* CIFS/SMB计算机帐户的命名约定为name-1234 (随机四位ID、并在< 10个字符名称后附加连字符)。您可以通过Active Directory连接上的NetBIOS名称设置来定义名称(请参见一节<<Active Directory connection details>>")。
+* CIFS/SMB计算机帐户的命名约定为name-1234 (随机四位ID、并在< 10个字符名称后附加连字符)。您可以通过Active Directory连接上的NetBIOS名称设置来定义名称(请参见一节 Directory connection details")。
 * NFS Kerberos使用nfs-name-1234作为命名约定(最多15个字符)。如果使用的字符数超过15个、则名称为nfs-truncated-name-1234。
 * 启用了LDAP的仅NFS CVS-Performance实例创建一个SMB计算机帐户、以便使用与CIFS/SMB实例相同的命名约定绑定到LDAP服务器。
 * 创建SMB计算机帐户时、默认隐藏的管理共享(请参见一节 link:ncvs-gc-smb.html#default-hidden-shares[""默认隐藏共享""])也会创建(c$、admin$、ipc$)、但这些共享没有分配ACL、因此无法访问。
-* 默认情况下、计算机帐户对象放置在CN=Computers中、但您可以在必要时指定其他OU。请参见第节"<<Permissions needed to create SMB machine accounts>>有关为Cloud Volumes Service 添加/删除计算机帐户对象所需的访问权限的信息。
+* 默认情况下、计算机帐户对象放置在CN=Computers中、但您可以在必要时指定其他OU。请参见第节" needed to create SMB machine accounts有关为Cloud Volumes Service 添加/删除计算机帐户对象所需的访问权限的信息。
 
 
 当Cloud Volumes Service 将SMB计算机帐户添加到Active Directory时、将填充以下字段：

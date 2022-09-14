@@ -47,7 +47,7 @@ Cloud Volumes Service 包含多个用于各种基本功能的默认UNIX用户和
 
 |===
 
-NOTE: 使用NFSv4.1时、root用户在NFS客户端上运行目录列出命令时可能会显示为nobody。这是因为客户端的ID域映射配置。请参见名为的部分 <<NFSv4.1 and the nobody user/group>> 有关此问题描述 以及如何解决此问题的详细信息、请参见。
+NOTE: 使用NFSv4.1时、root用户在NFS客户端上运行目录列出命令时可能会显示为nobody。这是因为客户端的ID域映射配置。请参见名为的部分  and the nobody user/group 有关此问题描述 以及如何解决此问题的详细信息、请参见。
 
 
 
@@ -55,7 +55,7 @@ NOTE: 使用NFSv4.1时、root用户在NFS客户端上运行目录列出命令时
 
 在Linux中、root帐户可以访问基于Linux的文件系统中的所有命令、文件和文件夹。由于此帐户的强大功能、安全最佳实践通常要求以某种方式禁用或限制root用户。在NFS导出中、可以通过导出策略和规则以及称为根强制转换的概念在Cloud Volumes Service 中控制root用户对文件和文件夹的能力。
 
-根强制转换可确保访问NFS挂载的root用户被强制转换为匿名数字用户65534 (请参见第节<<The anonymous user>>")、并且当前仅在使用CVS-Performance时可用、方法是在创建导出策略规则期间选择off作为root访问权限。如果root用户被强制转换为匿名用户、则它将无法再运行chown或 https://en.wikipedia.org/wiki/Setuid["setuid/setgid命令(粘滞位)"^] 对于NFS挂载中的文件或文件夹、以及root用户创建的文件或文件夹、将anon UID显示为所有者/组。此外、root用户无法修改NFSv4 ACL。但是、root用户仍可访问其没有显式权限的chmod和已删除的文件。如果要限制对root用户的文件和文件夹权限的访问、请考虑使用具有NTFS ACL的卷、创建名为`root`的Windows用户并将所需权限应用于文件或文件夹。
+根强制转换可确保访问NFS挂载的root用户被强制转换为匿名数字用户65534 (请参见第节 anonymous user")、并且当前仅在使用CVS-Performance时可用、方法是在创建导出策略规则期间选择off作为root访问权限。如果root用户被强制转换为匿名用户、则它将无法再运行chown或 https://en.wikipedia.org/wiki/Setuid["setuid/setgid命令(粘滞位)"^] 对于NFS挂载中的文件或文件夹、以及root用户创建的文件或文件夹、将anon UID显示为所有者/组。此外、root用户无法修改NFSv4 ACL。但是、root用户仍可访问其没有显式权限的chmod和已删除的文件。如果要限制对root用户的文件和文件夹权限的访问、请考虑使用具有NTFS ACL的卷、创建名为`root`的Windows用户并将所需权限应用于文件或文件夹。
 
 
 
@@ -63,9 +63,9 @@ NOTE: 使用NFSv4.1时、root用户在NFS客户端上运行目录列出命令时
 
 匿名(anon)用户ID指定映射到未使用有效NFS凭据的客户端请求的UNIX用户ID或用户名。使用root用户强制转换时、这可能包括root用户。Cloud Volumes Service 中的anon用户为65534。
 
-在Linux环境中、此UID通常与用户名`nobody`或`nfsnobody`关联。Cloud Volumes Service 还使用65534作为本地UNIX用户` pcuser`(请参见第节<<Default local UNIX users and groups>>")、当在LDAP中找不到有效匹配的UNIX用户时、它也是Windows到UNIX名称映射的默认回退用户。
+在Linux环境中、此UID通常与用户名`nobody`或`nfsnobody`关联。Cloud Volumes Service 还使用65534作为本地UNIX用户` pcuser`(请参见第节 local UNIX users and groups")、当在LDAP中找不到有效匹配的UNIX用户时、它也是Windows到UNIX名称映射的默认回退用户。
 
-由于Linux和Cloud Volumes Service 中UID 65534的用户名不同、因此使用NFSv4.1时映射到65534的用户的名称字符串可能不匹配。因此、在某些文件和文件夹上、您可能会看到`nobody`作为用户。请参见第节"<<NFSv4.1 and the nobody user/group>>有关此问题描述 以及如何解决此问题的信息、请参见。
+由于Linux和Cloud Volumes Service 中UID 65534的用户名不同、因此使用NFSv4.1时映射到65534的用户的名称字符串可能不匹配。因此、在某些文件和文件夹上、您可能会看到`nobody`作为用户。请参见第节" and the nobody user/group有关此问题描述 以及如何解决此问题的信息、请参见。
 
 
 
@@ -79,7 +79,7 @@ NFS挂载的初始导出/共享访问通过导出策略中包含的基于主机�
 * * RO/RW访问规则。*选择读/写或只读以控制对导出的访问级别。cvs-Performance提供了以下选项：
 * *客户端匹配。* IP地址列表以逗号分隔、主机名、子网、网络组和域名列表以逗号分隔。
 * * RO或RW访问规则。*选择读/写或只读以控制导出的访问级别。
-* *根访问(开/关)。*配置根强制转换(请参见一节<<The root user>>"了解详细信息)。
+* *根访问(开/关)。*配置根强制转换(请参见一节 root user"了解详细信息)。
 * *协议类型。*此操作会将对NFS挂载的访问限制为特定协议版本。为卷同时指定NFSv3和NFSv4.1时、请将这两个字段留空或同时选中这两个框。
 * * Kerberos安全级别(选择启用Kerberos时)。*提供了krb5、krb5i和/或krb5p选项、用于只读或读写访问。
 
@@ -88,7 +88,7 @@ NFS挂载的初始导出/共享访问通过导出策略中包含的基于主机�
 
 == 更改所有权(chown)和更改组(chgrp)
 
-Cloud Volumes Service 上的NFS仅允许root用户对文件和文件夹运行chown/chgrp。其他用户会看到`Operation not permitted`错误、即使是在其拥有的文件上也是如此。如果使用root squash (如第节中所述)<<The root user>>")、根卷将被强制转换为非root用户、并且不允许访问chown和chgrp。目前、Cloud Volumes Service 中没有允许非root用户使用chown和chgrp的解决方法。如果需要更改所有权、请考虑使用双协议卷并将安全模式设置为NTFS、以便从Windows端控制权限。
+Cloud Volumes Service 上的NFS仅允许root用户对文件和文件夹运行chown/chgrp。其他用户会看到`Operation not permitted`错误、即使是在其拥有的文件上也是如此。如果使用root squash (如第节中所述) root user")、根卷将被强制转换为非root用户、并且不允许访问chown和chgrp。目前、Cloud Volumes Service 中没有允许非root用户使用chown和chgrp的解决方法。如果需要更改所有权、请考虑使用双协议卷并将安全模式设置为NTFS、以便从Windows端控制权限。
 
 
 
@@ -155,7 +155,7 @@ NFSv3用户和组ID以数字ID而非名称的形式通过网线传输。Cloud Vo
 * 实施适用于NFS的Kerberos会强制用户使用用户名和密码或keytab文件进行身份验证、以获取Kerberos票证以允许访问挂载。Kerberos可用于CVS-Performance实例、仅适用于NFSv4.1。
 * 限制导出策略规则中的主机列表会限制哪些NFSv3客户端可以访问Cloud Volumes Service 卷。
 * 使用双协议卷并对卷应用NTFS ACL会强制NFSv3客户端将数字ID解析为有效的UNIX用户名、以便正确进行身份验证以访问挂载。这需要启用LDAP并配置UNIX用户和组身份。
-* 将root用户强制转换会限制root用户对NFS挂载可能造成的损害、但不会完全消除风险。有关详细信息、请参见"<<The root user>>。 "
+* 将root用户强制转换会限制root用户对NFS挂载可能造成的损害、但不会完全消除风险。有关详细信息、请参见" root user。 "
 
 
 最终、NFS安全性仅限于您所使用的协议版本。虽然NFSv3的总体性能优于NFSv4.1、但提供的安全性级别不同。
@@ -345,7 +345,7 @@ drwxrwxrwx 7 root   root         4096 Feb  3 12:06 ..
 -rw-r--r-- 1 apache apache-group    0 Feb  3 12:07 ldap-user-file
 -rw-r--r-- 1 root   root            0 Feb  3 12:06 root-user-file
 ....
-有关此问题描述 以及如何解决此问题的详细信息、请参见"<<NFSv4.1 and the nobody user/group>>。 "
+有关此问题描述 以及如何解决此问题的详细信息、请参见" and the nobody user/group。 "
 
 
 

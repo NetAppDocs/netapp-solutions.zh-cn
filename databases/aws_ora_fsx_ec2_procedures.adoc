@@ -204,7 +204,7 @@ NetApp自动化团队提供了一个自动化套件、用于根据最佳实践�
 
 === 准备Ansible控制器以运行自动化
 
-请按照"<<Creating and connecting to an EC2 instance for hosting Oracle database>>"以配置一个小型EC2 Linux实例以运行Ansible控制器。与使用RedHat相比、使用2vCPU和8G RAM的Amazon Linux T2.large应该足以满足要求。
+请按照" and connecting to an EC2 instance for hosting Oracle database"以配置一个小型EC2 Linux实例以运行Ansible控制器。与使用RedHat相比、使用2vCPU和8G RAM的Amazon Linux T2.large应该足以满足要求。
 
 
 
@@ -226,7 +226,7 @@ git clone https://github.com/NetApp-Automation/na_rds_fsx_oranfs_config.git
 
 请参见以下详细说明 link:https://docs.netapp.com/us-en/netapp-solutions/databases/cli_automation.html["CLI 部署 Oracle 19c 数据库"^] 使用CLI自动化部署Oracle 19c。执行攻略手册时的命令语法略有变化、因为您使用的是SSH密钥对、而不是主机访问身份验证的密码。以下列表概括介绍了相关内容：
 
-. 默认情况下、EC2实例使用SSH密钥对进行访问身份验证。从Ansible控制器自动化根目录`/home/EC2-user/na_oracle19c_deploy`和`/home/EC2-user/na_RDS_FSx_oranfs_config`中、为在步骤中部署的Oracle主机创建SSH密钥`accesstkey.pem`的副本"<<Creating and connecting to an EC2 instance for hosting Oracle database>>。 "
+. 默认情况下、EC2实例使用SSH密钥对进行访问身份验证。从Ansible控制器自动化根目录`/home/EC2-user/na_oracle19c_deploy`和`/home/EC2-user/na_RDS_FSx_oranfs_config`中、为在步骤中部署的Oracle主机创建SSH密钥`accesstkey.pem`的副本" and connecting to an EC2 instance for hosting Oracle database。 "
 . 以EC2-user身份登录到EC2实例数据库主机、然后安装python3库。
 +
 [source, cli]
@@ -492,7 +492,7 @@ NOTE: 您可以在备份策略中启用Oracle归档日志修剪、以控制日�
 
 SnapCenter 中的数据库备份可由用户配置、可以单独设置、也可以作为资源组中的组进行设置。备份间隔取决于RTO和RPO目标。NetApp建议您每隔几小时运行一次完整的数据库备份、并以10到15分钟等较高的频率对日志备份进行归档、以实现快速恢复。
 
-请参阅的Oracle部分 link:https://docs.netapp.com/us-en/netapp-solutions/databases/hybrid_dbops_snapcenter_getting_started_onprem.html#8-implement-backup-policy-to-protect-database["实施备份策略以保护数据库"^] 有关实施一节中创建的备份策略的详细分步过程 <<Configure backup policy for Oracle database>> 和用于备份作业计划。
+请参阅的Oracle部分 link:https://docs.netapp.com/us-en/netapp-solutions/databases/hybrid_dbops_snapcenter_getting_started_onprem.html#8-implement-backup-policy-to-protect-database["实施备份策略以保护数据库"^] 有关实施一节中创建的备份策略的详细分步过程  backup policy for Oracle database 和用于备份作业计划。
 
 下图举例说明了为备份Oracle数据库而设置的资源组。
 
