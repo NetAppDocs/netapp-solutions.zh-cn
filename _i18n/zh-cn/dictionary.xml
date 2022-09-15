@@ -14699,8 +14699,6 @@
   <block id="b96e49fe229de5c473c616c913f822c8" category="inline-link">在VMware Cloud中配置SDDC组</block>
   <block id="ff5a4226923e95cf43bd31559660d1c8" category="paragraph">首先、在SDDC所在的区域和可用性区域部署一个额外的VPC、然后将适用于NetApp ONTAP 的Amazon FSX部署到新的VPC中。<block ref="5be76f2b0a93cb7fee056cbead96da1a" category="inline-link-rx"></block> 控制台可提供连接到新指定的VPC所需的网络配置选项、在此VPC中将部署FSX for ONTAP。</block>
   <block id="61a4d8e132eda51933073e665a4eac93" category="admonition">在与AWS SDDC上的VMware Cloud相同的可用区域中部署适用于ONTAP 的FSX。</block>
-  <block id="c4ec48c1576835cbdfbc85bf48c37458" category="admonition">您不能在已连接的VPC中部署适用于ONTAP 的FSX。而是必须将其部署在新的指定VPC中、然后通过SDDC组将VPC连接到VMware托管传输网关(vTGW)。</block>
-  <block id="8b2b6a2b0c6347c7cf4881fa94ff328c" category="example-title">第1步：在指定的VPC中创建适用于ONTAP 的Amazon FSx</block>
   <block id="55304a7521acfdd7143fb9cdb66a6344" category="paragraph">要创建和挂载适用于NetApp ONTAP 的Amazon FSX文件系统、请完成以下步骤：</block>
   <block id="1a8a81e4c4d14a95fc47e07b614950b5" category="list-text">打开位于`https://console.aws.amazon.com/fsx/`的Amazon FSX控制台、然后选择*创建文件系统*以启动*文件系统创建*向导。</block>
   <block id="ffd72149dd51740fcd4d150cabc5561f" category="list-text">在选择文件系统类型页面上、选择*适用于NetApp ONTAP 的Amazon FSx *、然后单击*下一步*。此时将显示*创建文件系统*页面。</block>
@@ -14709,26 +14707,17 @@
   <block id="35eb19b4c782b6a9c50e35b42f8c1f8c" category="paragraph"><block ref="35eb19b4c782b6a9c50e35b42f8c1f8c" category="inline-image-macro-rx" type="image"></block></block>
   <block id="5f47a2dd0d360703b1b45075c63cff1b" category="paragraph"><block ref="5f47a2dd0d360703b1b45075c63cff1b" category="inline-image-macro-rx" type="image"></block></block>
   <block id="11dd82404551d7373785e4fcbc9b1005" category="list-text">在虚拟私有云(Virtual Private Cloud、VPC)的*网络*部分中、选择适当的VPC和首选子网以及路由表。在这种情况下、会从下拉菜单中选择Demo—FSxforontap-vPC。</block>
-  <block id="3a91ef6d341f7feb589ffa2f150f80ba" category="admonition">确保此VPC为新指定的VPC、而不是已连接的VPC。</block>
-  <block id="911dafc9e7d3c507d3dbb17c21a386f0" category="admonition">默认情况下、ONTAP 的FSX使用`198.19.0.0/16`作为文件系统的默认端点IP地址范围。确保端点IP地址范围不会与AWS基础架构上的VMC冲突。如果不确定、请使用非重叠范围、而不存在冲突。</block>
   <block id="a9bc1797cfb722fb8dbfec3b16f44cb9" category="paragraph"><block ref="a9bc1797cfb722fb8dbfec3b16f44cb9" category="inline-image-macro-rx" type="image"></block></block>
   <block id="6a560e434862aec182aa626e0de6ca3a" category="list-text">在加密密钥的*安全性和加密*部分中、选择用于保护文件系统空闲数据的AWS密钥管理服务(AWS KMS)加密密钥。对于*文件系统管理密码*、输入fsxadmin用户的安全密码。</block>
   <block id="9626f8b41e6908a3873b72869026a9da" category="paragraph"><block ref="9626f8b41e6908a3873b72869026a9da" category="inline-image-macro-rx" type="image"></block></block>
   <block id="75f7834ca5cbd9bf6c7a2b2e5073b427" category="list-text">在*默认Storage Virtual Machine配置*部分中、指定SVM的名称。</block>
   <block id="7c32cf52ace07fb1672e72defde4ac61" category="admonition">自GA起、支持四个NFS数据存储库。</block>
   <block id="5c732cc058a6b6d4676b55223bf85f5f" category="paragraph"><block ref="5c732cc058a6b6d4676b55223bf85f5f" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="44c5201fadfc030efe3fd16ed3022c92" category="list-text">在*默认卷配置*部分中、指定数据存储库所需的卷名称和大小、然后单击*下一步*。此卷应为NFSv3卷。对于*存储效率*、选择*已启用*以启用ONTAP 存储效率功能(数据压缩、重复数据删除和数据缩减)。创建后、使用shell按如下所示修改卷参数：</block>
   <block id="51ac4bf63a0c6a9cefa7ba69b4154ef1" category="cell">正在设置 ...</block>
-  <block id="fa7884ef15fbc3cc79b1e91df5e1e92b" category="cell">无(精简配置)；默认设置为无</block>
-  <block id="f1e0735081bab920eff76b08a4600c76" category="cell">fractional_reserve</block>
   <block id="9f1ef07877f9d85a82bd500f408b4814" category="cell">0%</block>
-  <block id="99c0f62171e34b4ab6a79265f038e3af" category="cell">snap_reserve</block>
-  <block id="7c68df7d17c446f99304ee1dc1498bfc" category="cell">自动调整大小</block>
-  <block id="521c36a31c2762741cf0f8890cbe05e3" category="cell">开启</block>
   <block id="a85c04491cb5bbcb534dc50b65b97530" category="cell">自动删除</block>
   <block id="4ec86a7059e3d1002a06c51cbec9ad47" category="cell">卷/ OLDEST_first</block>
   <block id="5987147997d274c5292cab0b0006bef1" category="cell">卷分层策略</block>
-  <block id="6d576caa9862f6db0177dfaff7abb095" category="cell">仅Snapshot</block>
   <block id="902c737cbaa1a86889c41fec210c805f" category="cell">try_first</block>
   <block id="f4c25546f220bb5d07f94244c9303967" category="cell">自动增长</block>
   <block id="4c0abf2d4c54820b8d33061abaf30759" category="cell">快照策略</block>
@@ -14738,7 +14727,6 @@
   <block id="a7f848b3fa508f3850a768505d8de438" category="list-text">单击*创建文件系统*。</block>
   <block id="8c63e014bdbc571ce93e6b93d628d4e2" category="paragraph"><block ref="8c63e014bdbc571ce93e6b93d628d4e2" category="inline-image-macro-rx" type="image"></block></block>
   <block id="ef936ea5a977520b22368e3dbad83818" category="paragraph"><block ref="ef936ea5a977520b22368e3dbad83818" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="dff4e0db2baaf9b532639c87e6f21358" category="admonition">重复上述步骤、根据容量和性能要求创建更多文件系统和数据存储库卷。</block>
   <block id="f36688b56a320d6a48574b6092329e26" category="paragraph">要了解适用于ONTAP 性能的Amazon FSX、请参见<block ref="45a884cbefaf34ae6fd7defa1c6be8c3" category="inline-link-rx"></block>。</block>
   <block id="6d3e0252631c98651b062c2fc85ad936" category="example-title">第2步：创建SDDC组</block>
   <block id="82fd9df68bd32ff1e24a66dc98b1e237" category="paragraph">创建文件系统和SVM后、请使用VMware控制台创建SDDC组并配置VMware Transit Connect。要执行此操作、请完成以下步骤、并记住您必须在VMware Cloud Console和AWS Console之间导航。</block>
@@ -14782,12 +14770,10 @@
   <block id="85f3b67e1c98b7869b12f779e5f02b51" category="paragraph"><block ref="85f3b67e1c98b7869b12f779e5f02b51" category="inline-image-macro-rx" type="image"></block></block>
   <block id="fb26d090b870823ae62ed28050e3aa89" category="list-text">在*编辑路由*面板中、单击*添加路由*、然后通过选择*传输网关*以及关联的TGWID输入SDDC基础架构的CIDR。单击 * 保存更改 * 。</block>
   <block id="99388849296a3bbf649a9a953c7ce7d5" category="paragraph"><block ref="99388849296a3bbf649a9a953c7ce7d5" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="d433188774adddf995ce33d10ee0ca94" category="list-text">验证关联VPC中的安全组是否已更新为SDDC组CIDR的正确入站规则。</block>
   <block id="74b3770eecc791f1748634fe7f30e559" category="paragraph"><block ref="74b3770eecc791f1748634fe7f30e559" category="inline-image-macro-rx" type="image"></block></block>
   <block id="358c085fce4b273ef954f6147feeb2c8" category="admonition">使用SDDC基础架构的CIDR块更新入站规则。</block>
   <block id="268ce11e03f9defefab0c436b3818aab" category="admonition">验证是否已更新适用于ONTAP 的FSX所在的VPC路由表、以避免出现连接问题。</block>
   <block id="a3debdddc4080cea8851b37aee79d278" category="admonition">更新安全组以接受NFS流量。</block>
-  <block id="35dbeeba79faa529971ba0172049af1e" category="paragraph">这是准备连接到相应SDDC的最后一步。配置文件系统、添加路由以及更新安全组后、便应挂载数据存储库了。</block>
   <block id="492fa7be92a68b15ae3479a6542a7774" category="example-title">第6步：将NFS卷作为数据存储库连接到SDDC集群</block>
   <block id="e91ba866f25c52426b4d551f9fa981ef" category="paragraph">配置文件系统并建立连接后、访问VMware Cloud Console以挂载NFS数据存储库。</block>
   <block id="3c4c5dd0c54ac8e289c4fb955dfe019e" category="list-text">在VMC控制台中、打开SDDC的*存储*选项卡。</block>
@@ -14801,14 +14787,10 @@
   <block id="30880d4531deb5f77cf22e65ed7f3bc8" category="paragraph"><block ref="30880d4531deb5f77cf22e65ed7f3bc8" category="inline-image-macro-rx" type="image"></block></block>
   <block id="ff56eef7a458cc9250ee84cb0b8b3752" category="cell">FSX ONTAP<block ref="b9210f6aa16b7e370d59e02bd5b54f88" category="inline-link-macro-rx"></block></block>
   <block id="b2859c129ed9d2683658aaef48d31759" category="doc">&lt;解决方案 名称&gt;</block>
-  <block id="f20955932fa33c04e4cd89de38d4934c" category="paragraph">此解决方案 介绍了如何&lt;do something&gt;才能&lt;get some desired result&gt;。</block>
   <block id="4845fee41e2c9edce3bd46094fdb57a2" category="paragraph">作者：&lt;name&gt;、&lt;title&gt;、&lt;company&gt;</block>
-  <block id="011e0817f776887982954afc5afe573c" category="paragraph">此解决方案 可用于：*&lt;用例1&gt;*&lt;用例2 &gt;。。。*&lt;用例n&gt;</block>
   <block id="ef1e6887c579ba81dcedc3f4e3793cd2" category="section-title">audience</block>
   <block id="46c04e63acdf5955295f68d8a963bfbd" category="paragraph">此解决方案 面向对&lt;goe&gt;感兴趣的&lt;role&gt;。</block>
   <block id="1d00e7dce692e8dc3f6877f035e3a616" category="paragraph">或</block>
-  <block id="c1fd32112cf2ad32478da608c869839a" category="list-text">对于对&lt;goame&gt;感兴趣的&lt;role&gt;、</block>
-  <block id="64badcba180675bbde26ff68bdfa2480" category="list-text">对于&lt;role&gt;、谁对&lt;goame&gt;感兴趣。</block>
   <block id="b98cf6de800fd94a50eaa1fff8bfd974" category="section-title">解决方案 测试/验证环境</block>
   <block id="aca7234abb238eb8646973440eb294d3" category="paragraph">此解决方案 的测试/验证是在可能与最终部署环境匹配或可能不匹配的实验室中执行的。有关详细信息、请参见以下各节。</block>
   <block id="bb46e30937334302b789ae4644fdc412" category="image-alt">解决方案 架构图</block>
@@ -14850,4 +14832,33 @@
   <block id="4856ec39dcc21fb53484ef230701e66b" category="sidebar">适用于ONTAP + VMC模拟器的FSX</block>
   <block id="67c988a2e4a11132f6866cf0aff95568" category="sidebar">ANF + AVS TCO计算器</block>
   <block id="faeff2a13624e3552e026ffcba1c35dc" category="sidebar">ANF + AVS模拟器</block>
+  <block id="714163a53d8c9c62964e7d6931c1c9ec" category="admonition">您不能在已连接的VPC中部署适用于ONTAP 的FSX。而是必须将其部署在新的指定VPC中、然后通过SDDC组将VPC连接到VMware托管传输网关(vTGW）。</block>
+  <block id="d7641cecb55db2651063f3be07278b31" category="example-title">第1步：在新的指定VPC中创建适用于ONTAP 的Amazon FSX</block>
+  <block id="4e0c93d8fb3b7cedc4f8d92d8d692e85" category="admonition">数据存储库大小因客户而异。虽然每个NFS数据存储库建议的虚拟机数量是主观的、但许多因素决定了可以放置在每个数据存储库上的最佳VM数量。虽然大多数管理员仅考虑容量、但发送到VMDK的并发I/O量是影响整体性能的最重要因素之一。使用内部环境中的性能统计信息相应地调整数据存储库卷的大小。</block>
+  <block id="2f0865bd1a50874390d074524829bfc4" category="admonition">确保此VPC为新的指定VPC、而不是已连接的VPC。</block>
+  <block id="55431364d6f307d0c1adb83c07425d6c" category="admonition">默认情况下、ONTAP 的FSX使用198.19.0.0/16作为文件系统的默认端点IP地址范围。确保端点IP地址范围不会与AWS SDDC上的VMC、关联的VPC子网和内部基础架构相冲突。如果不确定、请使用不存在冲突的非重叠范围。</block>
+  <block id="505582b625e19e5637e0557ad61b581e" category="list-text">在*默认卷配置*部分中、指定数据存储库所需的卷名称和大小、然后单击*下一步*。此卷应为NFSv3卷。对于*存储效率*、选择*已启用*以启用ONTAP 存储效率功能(数据压缩、重复数据删除和数据缩减)。创建后、使用Shell使用*卷modify_*修改卷参数、如下所示：</block>
+  <block id="9fdea1f4f5c62c2485312ab231c865ee" category="cell">卷保证(空间保证模式)</block>
+  <block id="bd03fce695997bf49af026bcb349a578" category="cell">无(精简配置)—默认设置</block>
+  <block id="9399f3b9e96901f84ac3bd68deec8850" category="cell">fractional_reserve (百分比预留)</block>
+  <block id="6b3edd41659df403c04fb39ee40b0b0a" category="cell">0%—默认设置</block>
+  <block id="dfa2ec9e60d8028b01d021f862fb77da" category="cell">snap_reserve (percent-snapshot-space)</block>
+  <block id="80c2511d74ccaf27c63f1b6c3aafb2dc" category="cell">自动调整大小(autosize-mode)</block>
+  <block id="535a7e7f6a8dd82fa6603e44982e0525" category="cell">Enabled—默认设置</block>
+  <block id="df370ff95c6787552e774c17a2878b11" category="cell">Snapshot only—默认设置</block>
+  <block id="f072855ce664b2c9dd19371c8f451e72" category="paragraph">使用以下SSH命令创建和修改卷：</block>
+  <block id="82bf57f964fd07a578454495c4ae3a34" category="paragraph">*使用shell：*创建新数据存储库卷的命令</block>
+  <block id="3fe80d288dea7b9265abdfe33f302a9a" category="paragraph">*注意：*通过shell创建的卷需要几分钟才能显示在AWS控制台中。</block>
+  <block id="34b5a79399461f15942cc2bbb68ddb58" category="paragraph">*用于修改未默认设置的卷参数的命令：*</block>
+  <block id="8f2384de60fd85d0b57b92b82a7b1835" category="admonition">在初始迁移场景中、默认快照策略可能会出现发生原因 数据存储库容量已满问题。要克服此问题、请根据需要修改快照策略。</block>
+  <block id="a19c957e90534613b36e90008ac1736c" category="admonition">重复上述步骤、根据容量和性能要求创建更多的Storage Virtual Machine或文件系统以及数据存储库卷。</block>
+  <block id="5659fbd7d9a7a1963d1f57717f874bcb" category="list-text">下一步是验证关联VPC中的安全组是否已使用正确的SDDC组CIDR入站规则进行更新。</block>
+  <block id="381318b231b70d3c81a3bb05e8912be3" category="paragraph">这是准备连接到相应SDDC的最后一步。配置文件系统、添加路由以及更新安全组后、应挂载数据存储库。</block>
+  <block id="e60de72a8067fd05498b03b24d9f93e7" category="paragraph">此解决方案 可解决以下使用情形：</block>
+  <block id="50f68cc3bee11411ba8ee639a7ed59d7" category="list-text">&lt;用例1&gt;</block>
+  <block id="ceb4b740f63ab18a13c415efd220844c" category="list-text">&lt;用例2 &gt;。。。</block>
+  <block id="bfbe592724efe7b70f86b50a78741381" category="list-text">&lt;用例n&gt;</block>
+  <block id="732f94f3061dc1751b3c7e3ea8566239" category="paragraph">此解决方案 适用于：</block>
+  <block id="dab739113e8cfebbcfcfaea1515c0bcf" category="list-text">&lt;role&gt;、谁对&lt;goame&gt;感兴趣、</block>
+  <block id="7367185552beb127edfea2f14982e67f" category="list-text">&lt;role&gt;、谁对&lt;goame&gt;感兴趣。</block>
 </blocks>

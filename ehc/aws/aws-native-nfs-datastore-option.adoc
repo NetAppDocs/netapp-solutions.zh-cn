@@ -21,9 +21,9 @@ summary:
 NOTE: 在与AWS SDDC上的VMware Cloud相同的可用区域中部署适用于ONTAP 的FSX。
 
 
-NOTE: 您不能在已连接的VPC中部署适用于ONTAP 的FSX。而是必须将其部署在新的指定VPC中、然后通过SDDC组将VPC连接到VMware托管传输网关(vTGW)。
+NOTE: 您不能在已连接的VPC中部署适用于ONTAP 的FSX。而是必须将其部署在新的指定VPC中、然后通过SDDC组将VPC连接到VMware托管传输网关(vTGW）。
 
-.第1步：在指定的VPC中创建适用于ONTAP 的Amazon FSx
+.第1步：在新的指定VPC中创建适用于ONTAP 的Amazon FSX
 ====
 要创建和挂载适用于NetApp ONTAP 的Amazon FSX文件系统、请完成以下步骤：
 
@@ -39,14 +39,18 @@ image:fsx-nfs-image3.png["错误：缺少图形映像"]
 +
 image:fsx-nfs-image4.png["错误：缺少图形映像"]
 
++
+
+NOTE: 数据存储库大小因客户而异。虽然每个NFS数据存储库建议的虚拟机数量是主观的、但许多因素决定了可以放置在每个数据存储库上的最佳VM数量。虽然大多数管理员仅考虑容量、但发送到VMDK的并发I/O量是影响整体性能的最重要因素之一。使用内部环境中的性能统计信息相应地调整数据存储库卷的大小。
+
 . 在虚拟私有云(Virtual Private Cloud、VPC)的*网络*部分中、选择适当的VPC和首选子网以及路由表。在这种情况下、会从下拉菜单中选择Demo—FSxforontap-vPC。
 +
 
-NOTE: 确保此VPC为新指定的VPC、而不是已连接的VPC。
+NOTE: 确保此VPC为新的指定VPC、而不是已连接的VPC。
 
 +
 
-NOTE: 默认情况下、ONTAP 的FSX使用`198.19.0.0/16`作为文件系统的默认端点IP地址范围。确保端点IP地址范围不会与AWS基础架构上的VMC冲突。如果不确定、请使用非重叠范围、而不存在冲突。
+NOTE: 默认情况下、ONTAP 的FSX使用198.19.0.0/16作为文件系统的默认端点IP地址范围。确保端点IP地址范围不会与AWS SDDC上的VMC、关联的VPC子网和内部基础架构相冲突。如果不确定、请使用不存在冲突的非重叠范围。
 
 +
 image:fsx-nfs-image5.png["错误：缺少图形映像"]
@@ -63,31 +67,31 @@ NOTE: 自GA起、支持四个NFS数据存储库。
 +
 image:fsx-nfs-image7.png["错误：缺少图形映像"]
 
-. 在*默认卷配置*部分中、指定数据存储库所需的卷名称和大小、然后单击*下一步*。此卷应为NFSv3卷。对于*存储效率*、选择*已启用*以启用ONTAP 存储效率功能(数据压缩、重复数据删除和数据缩减)。创建后、使用shell按如下所示修改卷参数：
+. 在*默认卷配置*部分中、指定数据存储库所需的卷名称和大小、然后单击*下一步*。此卷应为NFSv3卷。对于*存储效率*、选择*已启用*以启用ONTAP 存储效率功能(数据压缩、重复数据删除和数据缩减)。创建后、使用Shell使用*卷modify_*修改卷参数、如下所示：
 +
 |===
 | 正在设置 ... | Configuration 
 
 
-| 卷保证 | 无(精简配置)；默认设置为无 
+| 卷保证(空间保证模式) | 无(精简配置)—默认设置 
 
 
-| fractional_reserve | 0% 
+| fractional_reserve (百分比预留) | 0%—默认设置 
 
 
-| snap_reserve | 0% 
+| snap_reserve (percent-snapshot-space) | 0% 
 
 
-| 自动调整大小 | 开启 
+| 自动调整大小(autosize-mode) | grow_shrink 
 
 
-| 存储效率 | enabled 
+| 存储效率 | Enabled—默认设置 
 
 
 | 自动删除 | 卷/ OLDEST_first 
 
 
-| 卷分层策略 | 仅Snapshot 
+| 卷分层策略 | Snapshot only—默认设置 
 
 
 | try_first | 自动增长 
@@ -96,10 +100,34 @@ image:fsx-nfs-image7.png["错误：缺少图形映像"]
 | 快照策略 | 无 
 |===
 +
+使用以下SSH命令创建和修改卷：
+
++
+*使用shell：*创建新数据存储库卷的命令
+
++
+ volume create -vserver FSxONTAPDatastoreSVM -volume DemoDS002 -aggregate aggr1 -size 1024GB -state online -tiering-policy snapshot-only -percent-snapshot-space 0 -autosize-mode grow -snapshot-policy none -junction-path /DemoDS002
++
+*注意：*通过shell创建的卷需要几分钟才能显示在AWS控制台中。
+
++
+*用于修改未默认设置的卷参数的命令：*
+
++
+....
+volume modify -vserver FSxONTAPDatastoreSVM -volume DemoDS002 -fractional-reserve 0
+volume modify -vserver FSxONTAPDatastoreSVM -volume DemoDS002 -space-mgmt-try-first vol_grow
+volume modify -vserver FSxONTAPDatastoreSVM -volume DemoDS002 -autosize-mode grow
+....
++
 image:fsx-nfs-image8.png["错误：缺少图形映像"]
 
 +
 image:fsx-nfs-image9.png["错误：缺少图形映像"]
+
++
+
+NOTE: 在初始迁移场景中、默认快照策略可能会出现发生原因 数据存储库容量已满问题。要克服此问题、请根据需要修改快照策略。
 
 . 查看*创建文件系统*页面上显示的文件系统配置。
 . 单击*创建文件系统*。
@@ -111,7 +139,7 @@ image:fsx-nfs-image11.png["错误：缺少图形映像"]
 
 +
 
-NOTE: 重复上述步骤、根据容量和性能要求创建更多文件系统和数据存储库卷。
+NOTE: 重复上述步骤、根据容量和性能要求创建更多的Storage Virtual Machine或文件系统以及数据存储库卷。
 
 
 
@@ -212,13 +240,10 @@ image:fsx-nfs-image23.png["错误：缺少图形映像"]
 +
 image:fsx-nfs-image24.png["错误：缺少图形映像"]
 
-. 验证关联VPC中的安全组是否已更新为SDDC组CIDR的正确入站规则。
+. 下一步是验证关联VPC中的安全组是否已使用正确的SDDC组CIDR入站规则进行更新。
+. 使用SDDC基础架构的CIDR块更新入站规则。
 +
 image:fsx-nfs-image25.png["错误：缺少图形映像"]
-
-+
-
-NOTE: 使用SDDC基础架构的CIDR块更新入站规则。
 
 +
 
@@ -230,7 +255,7 @@ NOTE: 更新安全组以接受NFS流量。
 
 
 
-这是准备连接到相应SDDC的最后一步。配置文件系统、添加路由以及更新安全组后、便应挂载数据存储库了。
+这是准备连接到相应SDDC的最后一步。配置文件系统、添加路由以及更新安全组后、应挂载数据存储库。
 
 ====
 .第6步：将NFS卷作为数据存储库连接到SDDC集群
