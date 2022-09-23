@@ -1,0 +1,144 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/apache-spark-solution-overview.html 
+keywords: introduction, overview, 4570, tr4570, customer challenges, justification 
+summary: 本文档重点介绍与大数据分析和人工智能相关的Apache Spark架构、客户用例和NetApp存储产品组合。此外、它还会根据典型的Hadoop系统使用行业标准AI、机器学习和深度学习工具显示各种测试结果、以便您可以选择合适的Spark解决方案。 
+---
+= TR-4570：《适用于Apache Spark的NetApp存储解决方案：架构、用例和性能结果》
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+NetApp公司Rick Huang、Karthikeyan Nagalingam
+
+本文档重点介绍与大数据分析和人工智能(AI)相关的Apache Spark架构、客户用例和NetApp存储产品组合。此外、它还会根据典型的Hadoop系统使用行业标准AI、机器学习(ML)和深度学习(DL)工具显示各种测试结果、以便您可以选择适当的Spark解决方案。首先、您需要一个Spark架构、适当的组件以及两种部署模式(集群和客户端)。
+
+本文档还提供了客户用于解决配置问题的用例、并概述了与大数据分析以及采用Spark的AI、ML和DL相关的NetApp存储产品组合。然后、我们将根据Spark专用用例和NetApp Spark解决方案 产品组合得出测试结果。
+
+
+
+== 客户面临的挑战
+
+本节重点介绍客户在零售、数字营销、银行、离散式制造、流程制造等数据增长行业面临的大数据分析和AI/ML/DL挑战。 政府和专业服务。
+
+
+
+=== 性能不可预测
+
+传统Hadoop部署通常使用商用硬件。要提高性能、您必须调整网络、操作系统、Hadoop集群、Spark等生态系统组件和硬件。即使您对每一层进行了调整、也很难达到所需的性能级别、因为Hadoop运行在并非为环境中的高性能而设计的商用硬件上。
+
+
+
+=== 介质和节点故障
+
+即使在正常情况下、商用硬件也容易发生故障。如果数据节点上的一个磁盘发生故障、则默认情况下、Hadoop主节点会将该节点视为运行状况不正常。然后、它会通过网络将特定数据从该节点从副本复制到运行正常的节点。此过程会减慢任何Hadoop作业的网络数据包速度。然后、当运行状况不正常的节点恢复正常时、集群必须重新复制数据并删除过度复制的数据。
+
+
+
+=== Hadoop供应商锁定
+
+Hadoop分销商拥有自己的Hadoop分发软件包、并拥有自己的版本控制、这会使客户锁定到这些分发软件包中。但是、许多客户需要支持内存分析、而不会将客户与特定Hadoop分发版联系起来。他们需要自由地更改分发版本、同时仍能利用分析功能。
+
+
+
+=== 不支持多种语言
+
+客户通常除了需要MapReduce Java程序支持多种语言之外、还需要支持多种语言才能运行其作业。SQL和脚本等选项可以更灵活地获取答案、提供更多的数据组织和检索选项、以及更快地将数据移动到分析框架中。
+
+
+
+=== 难以使用
+
+一段时间以来、人们一直抱怨Hadoop难以使用。尽管Hadoop在每个新版本中变得更加简单、功能更强大、但这一评论仍然存在。Hadoop要求您了解Java和MapReduce编程模式、这是数据库管理员和具有传统脚本编写技能的人员面临的一项挑战。
+
+
+
+=== 复杂的框架和工具
+
+企业AI团队面临多种挑战。即使具备专业的数据科学知识、适用于不同部署生态系统和应用程序的工具和框架也可能不会简单地从一个转变为另一个。数据科学平台应与基于Spark构建的相应大数据平台无缝集成、可轻松移动数据、实现可重复使用的模型、即装即用的代码以及支持原型制作、验证、版本控制、共享、重复使用的最佳实践的工具。 并将模型快速部署到生产环境中。
+
+
+
+== 为什么选择NetApp？
+
+NetApp可以通过以下方式改善您的Spark体验：
+
+* 通过NetApp NFS直接访问(如下图所示)、客户无需移动或复制数据、即可对现有或新的NFSv3或NFSv4数据运行大数据分析作业。它可以防止多个数据副本，并且无需将数据与源进行同步。
+* 存储效率更高、服务器复制更少。例如、NetApp E系列Hadoop解决方案 需要两个而非三个数据副本、而FAS Hadoop解决方案 则需要一个数据源、但不需要复制或复制数据。NetApp存储解决方案还可以减少服务器到服务器的流量。
+* 在驱动器和节点发生故障期间、Hadoop作业和集群行为会更好。
+* 提高数据载入性能。
+
+
+image:apache-spark-image1.png["其他Apache Spark配置。"]
+
+例如、在金融和医疗保健领域、数据从一个位置移动到另一个位置必须履行法律义务、这不是一项容易的任务。在此情景中、NetApp NFS直接访问功能会分析其原始位置的财务和医疗保健数据。另一个主要优势是、使用NetApp NFS直接访问可通过原生 Hadoop命令简化对Hadoop数据的保护、并通过NetApp丰富的数据管理产品组合启用数据保护工作流。
+
+NetApp NFS直接访问为Hadoop/Spark集群提供了两种部署选项：
+
+* 默认情况下、Hadoop或Spark集群使用Hadoop分布式文件系统(HDFS)进行数据存储和默认文件系统。NetApp NFS直接访问可以将默认HDFS替换为NFS存储作为默认文件系统、从而可以对NFS数据进行直接分析。
+* 在另一种部署选项中、NetApp NFS直接访问支持在单个Hadoop或Spark集群中将NFS与HDFS配置为额外存储。在这种情况下，客户可以通过 NFS 导出共享数据，并从同一集群访问数据以及 HDFS 数据。
+
+
+使用NetApp NFS直接访问的主要优势包括：
+
+* 从当前位置分析数据、这样可以防止将分析数据移动到HDFS等Hadoop基础架构这一既耗时又耗性能的任务。
+* 将副本数量从三个减少为一个。
+* 使用户能够分离计算和存储以独立扩展。
+* 利用ONTAP 丰富的数据管理功能提供企业数据保护。
+* Hortonworks数据平台认证。
+* 支持混合数据分析部署。
+* 利用动态多线程功能缩短备份时间。
+
+
+请参见 https://docs.netapp.com/us-en/netapp-solutions/data-analytics/hdcs-sh-solution-overview.html["TR-4657 ： NetApp 混合云数据解决方案—基于客户用例的 Spark 和 Hadoop"^] 用于将Hadoop数据备份、备份和灾难恢复从云备份到内部环境、对现有Hadoop数据启用DevTest、实现数据保护和多云连接、并加快分析工作负载的速度。
+
+以下各节介绍了对Spark客户非常重要的存储功能。
+
+
+
+=== 存储分层
+
+使用Hadoop存储分层、您可以根据存储策略存储具有不同存储类型的文件。存储类型包括`Hot`、`Cold`、`Warm`、`All_SSD`、`One_SSD`、 和`lazy_persist`。
+
+我们对使用不同存储策略的SSD和SAS驱动器的NetApp AFF 存储控制器和E系列存储控制器上的Hadoop存储分层进行了验证。采用AF-A800的Spark集群具有四个计算辅助节点、而采用E系列的集群则具有八个。
+
+下图显示了适用于Hadoop SSD的NetApp解决方案的性能。
+
+image:apache-spark-image2.png["对1 TB数据进行排序的时间。"]
+
+* 基线NL-SAS配置使用8个计算节点和96个NL-SAS驱动器。此配置在4分38秒内生成1 TB的数据。请参见 https://www.netapp.com/media/16420-tr-3969.pdf["TR-3969适用于Hadoop的NetApp E系列解决方案"^] 有关集群和存储配置的详细信息。
+* 使用TeraGen、SSD配置生成的数据速度比NL-SAS配置快15.66倍。此外、SSD配置使用的计算节点数为计算节点数的一半、磁盘驱动器数的一半(总共24个SSD驱动器)。根据作业完成时间、该速度几乎是NL-SAS配置的两倍。
+* 使用TeraSort、SSD配置的1 TB数据排序速度比NL-SAS配置快1138.36倍。此外、SSD配置使用的计算节点数为计算节点数的一半、磁盘驱动器数的一半(总共24个SSD驱动器)。因此、每个驱动器的速度大约是NL-SAS配置的三倍。
+
+
+
+
+=== 性能扩展—横向扩展
+
+如果您需要AFF 解决方案 中Hadoop集群的更多计算能力、则可以添加具有适当数量存储控制器的数据节点。NetApp建议从每个存储控制器阵列四个数据节点开始、并根据工作负载特征将每个存储控制器的数据节点数增加到八个。
+
+AFF 和FAS 非常适合原位分析。根据计算要求、您可以添加节点管理器、而无中断操作允许您按需添加存储控制器、而无需停机。我们通过AFF 和FAS 提供丰富的功能、例如NVMe介质支持、有保障的效率、数据精简、QoS、预测性分析、 云分层、复制、云部署和安全性。为了帮助客户满足其需求、NetApp提供了文件系统分析、配额和机载负载平衡等功能、无需额外的许可证成本。与竞争对手相比、NetApp在并发作业数量方面的性能更好、延迟更短、操作更简单、每秒吞吐量也更高。此外、NetApp Cloud Volumes ONTAP 还可在所有三个主要云提供商上运行。
+
+
+
+=== 性能扩展—纵向扩展
+
+通过纵向扩展功能、您可以在需要更多存储容量时向AFF 、FAS 和E系列系统添加磁盘驱动器。借助Cloud Volumes ONTAP 、将存储扩展到PB级别是两个因素的组合：将不常用的数据从块存储分层到对象存储、以及在不进行额外计算的情况下堆栈Cloud Volumes ONTAP 许可证。
+
+
+
+=== 多个协议
+
+NetApp系统支持适用于Hadoop部署的大多数协议、包括SAS、iSCSI、FCP、InfiniBand、 和NFS。
+
+
+
+=== 运行和支持的解决方案
+
+NetApp支持本文档中所述的Hadoop解决方案。这些解决方案还通过了主要Hadoop分销商的认证。有关信息、请参见 https://www.mapr.com/partners/partner/netapp["MapR"^] 站点、 http://hortonworks.com/partner/netapp/["Hortonworks"^] 站点和Cloudera http://www.cloudera.com/partners/partners-listing.html?q=netapp["认证"^] 和 http://www.cloudera.com/partners/solutions/netapp.html["合作伙伴"^] 站点。
+
+link:apache-spark-target-audience.html["接下来：目标受众。"]

@@ -1,0 +1,47 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/apache-spark-netapp-spark-solutions-overview.html 
+keywords: fas, aff, e-series, cloud volumes ontap, nfs, direct access, snapmirror, paas, 
+summary: 'NetApp拥有三种存储产品组合：FAS/AFF、E系列和Cloud Volumes ONTAP。我们已通过Apache Spark验证了适用于Hadoop解决方案的AFF 和采用ONTAP 的E系列存储系统。由NetApp提供支持的Data Fabric集成了数据管理服务和应用程序(组件)、可实现数据访问、控制、保护和安全性。' 
+---
+= NetApp Spark解决方案概述
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:apache-spark-solution-technology.html["先前版本：解决方案 技术。"]
+
+NetApp拥有三种存储产品组合：FAS/AFF、E系列和Cloud Volumes ONTAP。我们已通过Apache Spark验证了适用于Hadoop解决方案的AFF 和采用ONTAP 的E系列存储系统。由 NetApp 提供支持的 Data Fabric 集成了数据管理服务和应用程序（组件），用于实现数据访问，控制，保护和安全性，如下图所示。
+
+image:apache-spark-image4.png["Data Fabric提供数据管理服务和应用程序。"]
+
+上图中的组件包括：
+
+* * NetApp NFS 直接访问。 * 为最新的 Hadoop 和 Spark 集群提供对 NetApp NFS 卷的直接访问，而无需额外的软件或驱动程序要求。
+* * NetApp Cloud Volumes ONTAP 和云卷服务。 * 基于在 Microsoft Azure 云服务的 Amazon Web Services （ AWS ）或 Azure NetApp Files （ ANF ）中运行的 ONTAP 的软件定义的连接存储。
+* * NetApp SnapMirror技术。*可在内部部署和ONTAP 云或NPS实例之间提供数据保护功能。
+* * 云服务提供商。 * 这些提供商包括 AWS ， Microsoft Azure ， Google Cloud 和 IBM Cloud 。
+* * PaaaS 。 * 基于云的分析服务，例如 AWS 中的 Amazon Elastic MapReduce （ EMR ）和 Databricks 以及 Microsoft Azure HDInsight 和 Azure Databricks 。
+
+
+下图展示了采用NetApp存储的Spark解决方案。
+
+image:apache-spark-image5.png["利用NetApp存储激发解决方案。"]
+
+ONTAP Spark解决方案 使用NetApp NFS直接访问协议进行原位分析、并通过访问现有生产数据来访问AI、ML和DL工作流。可供Hadoop节点使用的生产数据会导出、以执行原位分析和AI、ML和DL作业。您可以通过NetApp NFS直接访问或不使用它访问要在Hadoop节点中处理的数据。在具有独立或`yarn`集群管理器的Spark中、您可以使用`配置NFS卷<file:///<target_volume>`[]。我们验证了使用不同数据集的三个用例。有关这些验证的详细信息、请参见"测试结果"一节。 (Xref)
+
+下图展示了NetApp Apache Spark或Hadoop存储定位。
+
+image:apache-spark-image7.png["NetApp Apache Spark或Hadoop存储定位。"]
+
+我们确定了E系列Spark解决方案 、AFF/FAS ONTAP Spark解决方案 和StorageGRID Spark解决方案 的独特功能、并执行了详细的验证和测试。根据我们的观察结果、NetApp建议将E系列解决方案 用于全新安装和全新可扩展部署、并将AFF/FAS解决方案 用于使用现有NFS数据的原位分析、AI、ML和DL工作负载、并在需要对象存储时将StorageGRID 用于AI、ML和DL和现代数据分析。
+
+image:apache-spark-image9.png["为Spark推荐的NetApp解决方案。"]
+
+数据湖是原生 形式的大型数据集的存储库、可用于分析、AI、ML和DL作业。我们为E系列、AFF/FAS和StorageGRID SG6060 Spark解决方案构建了数据湖存储库。E系列系统提供对Hadoop Spark集群的HDFS访问、而现有生产数据则通过NFS直接访问协议访问Hadoop集群。对于驻留在对象存储中的数据集、NetApp StorageGRID 可提供S3和S3a安全访问。
+
+link:apache-spark-use-cases-summary.html["下一步：使用案例摘要。"]
