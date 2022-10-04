@@ -1,0 +1,36 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/kafka-sc-performance-tests-with-produce-consume-workload-generator.html 
+keywords: data graphs, kafka throughput, s3 tiering traffic, aff a900, resource utilization 
+summary: 在使用一个AFF A900 HA对NetApp存储控制器的生产用工作负载期间、我们使用五个或八个代理节点执行分层存储测试。根据我们的测试结果、完成时间和性能结果会随着代理节点的数量进行扩展、直到AFF A900资源利用率达到百分之一百为止。ONTAP 存储控制器设置至少需要一个HA对。 
+---
+= 使用生产用工作负载生成器进行性能测试
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:kafka-sc-confluent-performance-validation.html["先前版本：Confuent Performance validation。"]
+
+在使用一个AFF A900 HA对NetApp存储控制器的生产用工作负载期间、我们使用五个或八个代理节点执行分层存储测试。根据我们的测试结果、完成时间和性能结果会随着代理节点的数量进行扩展、直到AFF A900资源利用率达到百分之一百为止。ONTAP 存储控制器设置至少需要一个HA对。
+
+根据Confluent代理节点的数量、S3检索操作的性能呈线性增长。ONTAP 存储控制器在一个部署中最多支持12个HA对。
+
+下图显示了具有五个或八个代理节点的S3分层流量组合。我们最大限度地提高了AFF A900单HA对的性能。
+
+image:kafka-sc-image9.png["此数据图显示了具有五个或八个代理节点的S3分层流量组合。"]
+
+下图显示了Kafka吞吐量约为31.74 GBps。
+
+image:kafka-sc-image10.png["此数据图显示了Kafka吞吐量约为31.74 GBps。"]
+
+我们还在ONTAP 存储控制器`perfstat`报告中观察到类似的吞吐量。
+
+....
+object_store_server:wle-mendocino-07-08:get_data:34080805907b/ s
+object_store_server:wle-mendocino-07-08:put_data:484236974b/ s
+....
+link:kafka-sc-performance-best-practice-guidelines.html["接下来：性能最佳实践准则。"]

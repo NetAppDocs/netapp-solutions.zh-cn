@@ -15630,4 +15630,156 @@
   <block id="f1afd91555fd6fb162a6343cf91fdc05" category="list-text"><block ref="f1afd91555fd6fb162a6343cf91fdc05" category="inline-link-macro-rx"></block></block>
   <block id="70fc473134508f4cbdb235049ab72bc6" category="inline-link-macro">NetApp与Red Hat OpenShift视频</block>
   <block id="f86f2e66a68f28ad563c787ff0145ba4" category="list-text"><block ref="f86f2e66a68f28ad563c787ff0145ba4" category="inline-link-macro-rx"></block></block>
+  <block id="c9fee86e220b694a9ca26cb5d3943276" category="summary">本文档概述了使用分层存储基准测试套件的NetApp ONTAP 上的Confluent平台的性能基准测试。</block>
+  <block id="5514e652e396365ccb56f1b2b5371569" category="doc">TR-4941：与NetApp ONTAP 存储控制器相结合</block>
+  <block id="1e0e02def11263577d232ee8ce69c727" category="paragraph">Karthikeyan Nagalingam、Joe Scott、NetApp Rankesh Kumar、Confluent</block>
+  <block id="f79dab50e0f9664c4b4d604319a8cbbe" category="paragraph">要使Confluent平台更具可扩展性和弹性、IT必须能够快速扩展和平衡工作负载。分层存储可减轻这种操作负担、从而使在Confluent中存储海量数据变得易于管理。基本理念是将数据存储与数据处理分离、这样可以更轻松地独立扩展每个存储。</block>
+  <block id="44f523cee834fac14fc6966d940c5e92" category="paragraph">NetApp ONTAP 数据管理软件集行业领先的创新技术于一身、无论数据位于何处、均可为Confluent提供诸多优势。</block>
+  <block id="ff221b4a7c17defefb1a32cf9136086d" category="inline-link-macro">下一步：解决方案。</block>
+  <block id="700a1e72f5247529520dfae6b0d991e3" category="paragraph"><block ref="700a1e72f5247529520dfae6b0d991e3" category="inline-link-macro-rx"></block></block>
+  <block id="b7d338a537a3a1d0186080c4c4ba47eb" category="summary">此页面介绍了此解决方案 中使用的技术。</block>
+  <block id="1ac2a5604ed02bc66c4d6241b534d13b" category="inline-link-macro">上一步：解决方案。</block>
+  <block id="9ec2e79862a05fa25e8c20aa973e0d4b" category="paragraph"><block ref="9ec2e79862a05fa25e8c20aa973e0d4b" category="inline-link-macro-rx"></block></block>
+  <block id="7f1512274139985d5f21a72e13808522" category="section-title">NetApp ONTAP 存储控制器</block>
+  <block id="b691cb82ce5ecb3d94f82b73ef3c2219" category="paragraph">NetApp ONTAP 是一款高性能企业级存储操作系统。</block>
+  <block id="f8b80927eb906c831742041c4c139be1" category="paragraph">NetApp ONTAP 9.8引入了对Amazon Simple Storage Service (S3) API的支持。ONTAP 支持部分Amazon Web Services (AWS) S3 API操作、并允许在云提供商(AWS、Azure和GCP)和内部环境中将数据表示为基于ONTAP的系统中的对象。</block>
+  <block id="9496ba5a97ab04d734dc449f86646ffe" category="paragraph">NetApp StorageGRID 软件是用于对象存储的旗舰级NetApp解决方案。ONTAP 通过在边缘提供载入和预处理点、扩展由NetApp提供支持的对象数据数据数据网络结构以及提高NetApp产品组合的价值、对StorageGRID 进行了补充。</block>
+  <block id="d6e8f345bdd21d285f35171c2da8cd3a" category="paragraph">可以通过授权的用户和客户端应用程序访问S3存储分段。下图显示了访问S3存储分段的应用程序。</block>
+  <block id="a38dfb3b286ff4854c6f5d67ebc15e13" category="inline-image-macro">此图显示了访问S3存储分段的应用程序。</block>
+  <block id="6090835a60a6e1de5e0c995ca8c5e5f8" category="paragraph"><block ref="6090835a60a6e1de5e0c995ca8c5e5f8" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d5088428c842a8d5e45f2e6597af4138" category="section-title">主要用例</block>
+  <block id="5c2f4a513e63ae351e5dc0b7412a43c2" category="paragraph">支持S3 API的主要目的是在ONTAP 上提供对象访问。ONTAP 统一存储架构现在支持文件(NFS和SMB)、块(FC和iSCSI)和对象(S3)。</block>
+  <block id="1af2e65957e458000d1181bb9eba2517" category="section-title">原生 S3应用程序</block>
+  <block id="c0889d6b193afe7d0069e3d99bc5f310" category="paragraph">越来越多的应用程序能够使用S3利用ONTAP 支持对象访问。虽然非常适合高容量归档工作负载、但原生 S3应用程序对高性能的需求正在快速增长、其中包括：</block>
+  <block id="a768caa988605a2846599cf7e2d0c26a" category="list-text">分析</block>
+  <block id="9d0996a44c6d51cf223e833dceecb286" category="list-text">人工智能</block>
+  <block id="1669cbc398e4228e7e05d6b2e030cbe7" category="list-text">边缘到核心载入</block>
+  <block id="bd1a4166acf45c62946d7592a64ad52d" category="paragraph">现在、客户可以使用熟悉的易管理性工具(如ONTAP System Manager)快速配置高性能对象存储、以便在ONTAP 中进行开发和操作、同时充分利用ONTAP 的存储效率和安全性。</block>
+  <block id="50472ac5cace1b7798b3f92db5c3049e" category="section-title">FabricPool 端点</block>
+  <block id="5050f2389b47df5462550d8e11451e9d" category="paragraph">从ONTAP 9.8开始、FabricPool 支持在ONTAP 中分层到分段、从而可以进行ONTAP到ONTAP分层。对于希望将现有FAS 基础架构重新用作对象存储端点的客户来说、这是一个绝佳的选择。</block>
+  <block id="10beb552e5ed01d5c890a260a1d6af16" category="paragraph">FabricPool 支持通过两种方式分层到ONTAP ：</block>
+  <block id="1e53159984d41f5ea848cdf412430a06" category="list-text">*本地集群分层。*使用集群LIF将非活动数据分层到位于本地集群上的存储分段。</block>
+  <block id="08be0ca0511f2294cbbaf9d92327996b" category="list-text">*远程集群分层。*非活动数据将采用与传统FabricPool 云层类似的方式分层到远程集群上的存储分层、方法是在FabricPool 客户端上使用IC LIF和在ONTAP 对象存储上使用数据LIF。</block>
+  <block id="bda29d8d2c5de29e5ec15858a0f72c79" category="paragraph">如果您需要在现有集群上使用 S3 功能，而无需额外的硬件和管理，则 ONTAP S3 是合适的。对于300 TB以上的部署、NetApp StorageGRID 软件仍然是NetApp对象存储的旗舰级解决方案。使用ONTAP 或StorageGRID 作为云层时、不需要FabricPool 许可证。</block>
+  <block id="5a7adb78ef640711a870d82123f00775" category="section-title">适用于Confluent分层存储的NetApp ONTAP</block>
+  <block id="9a5bc88300f877a695de175398887e0e" category="paragraph">每个数据中心都需要保持业务关键型应用程序持续运行、并确保重要数据的可用性和安全性。全新的NetApp AFF A900系统采用ONTAP 企业版软件和高弹性设计。我们全新的快如闪电的NVMe存储系统可消除任务关键型运营中断、最大限度地降低性能调整、并保护您的数据免受勒索软件攻击。</block>
+  <block id="42dfa85904e1fd1b7fb41d4278c38047" category="paragraph">从初始部署到扩展Confluent集群、您的环境需要快速适应不会对业务关键型应用程序造成中断的变化。ONTAP 企业级数据管理、服务质量(Quality of Service、QoS)和性能支持您规划和适应您的环境。</block>
+  <block id="36509bd95b243830a012c72c8a2d5844" category="paragraph">将NetApp ONTAP 和Confluent分层存储结合使用、可将ONTAP 用作横向扩展存储目标、从而简化Apache Kafka集群的管理、并可为Confluent独立扩展计算和存储资源。</block>
+  <block id="e09818a7d7d98185cdb0309cf3aca8f5" category="paragraph">ONTAP S3服务器基于ONTAP 成熟的横向扩展存储功能构建。通过扩展S3存储分段、将新添加的节点添加到ONTAP 集群、可以无缝扩展ONTAP 集群。</block>
+  <block id="1ccfe00aee80492f09968d6b208801d5" category="section-title">使用ONTAP System Manager进行简单管理</block>
+  <block id="4fdad8328864e9de2db5338bb25291fc" category="paragraph">ONTAP System Manager是一个基于浏览器的图形界面、可用于在一个管理平台中跨全球分布位置配置、管理和监控ONTAP 存储控制器。</block>
+  <block id="c99eb67a4e6cbe9ba119a72c95161fab" category="inline-image-macro">此图显示了ONTAP System Manager工作空间。</block>
+  <block id="45e8e67e3e5407c5dc518dd00eb8249b" category="paragraph"><block ref="45e8e67e3e5407c5dc518dd00eb8249b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="783157c9c38b4e88d7eefffe21cd97d3" category="paragraph">您可以使用System Manager和ONTAP 命令行界面配置和管理ONTAP S3。当您启用S3并使用System Manager创建存储分段时、ONTAP 会为简化的配置提供最佳实践默认值。如果您从CLI配置S3服务器和存储分段、则仍可根据需要使用System Manager对其进行管理、反之亦然。</block>
+  <block id="d1623a9fec2de2642847391236e62e9b" category="paragraph">使用 System Manager 创建 S3 存储分段时， ONTAP 会配置系统上可用性最高的默认性能服务级别。例如、在AFF 系统上、默认设置为"Extreme"。性能服务级别是预定义的自适应QoS策略组。您可以指定自定义 QoS 策略组，也可以不指定策略组，而不指定默认服务级别之一。</block>
+  <block id="bbcb9e2700fba39c3b7b7fd438155100" category="paragraph">预定义的自适应QoS策略组包括以下内容：</block>
+  <block id="f1ec0b0c482a42bad395f01e7f2b6c1d" category="list-text">*至尊*。*用于需要最低延迟和最高性能的应用程序。</block>
+  <block id="06e90efc82fff7e3090ba9ff1a3bd2a3" category="list-text">*性能。*用于性能需求和延迟适中的应用程序。</block>
+  <block id="7aa0f5702784b1be0a3c5ed9e6f3df8e" category="list-text">*值*。用于吞吐量和容量比延迟更重要的应用程序。</block>
+  <block id="113d20f8cc4d864cdfea1b0f611cbb0a" category="list-text">*自定义。*指定自定义QoS策略或不指定QoS策略。</block>
+  <block id="42cc32e2c7857ba980019c70438e92ed" category="paragraph">如果选择 * 用于分层 * ，则不会选择任何性能服务级别，系统会尝试为分层数据选择具有最佳性能的低成本介质。</block>
+  <block id="5cc287af927b81043d030fc6a1ece879" category="paragraph">ONTAP 会尝试在磁盘最合适的本地层上配置此存储分段，以满足所选的服务级别。但是，如果需要指定要包含在存储分段中的磁盘，请考虑通过指定本地层（聚合）从 CLI 配置 S3 对象存储。如果您通过 CLI 配置 S3 服务器，则仍可根据需要使用 System Manager 对其进行管理。</block>
+  <block id="74869eb3dfe4756dab5491da2a3de2ad" category="paragraph">如果您希望能够指定用于存储分段的聚合，则只能使用命令行界面来执行此操作。</block>
+  <block id="0c0e3a803cf68a8772ebf58a68b20124" category="paragraph">Confuent Platform 是一个全面的数据流平台，可让您轻松地以持续的实时流的形式访问，存储和管理数据。Confluent 由 Apache Kafka 的原始创建者构建，通过企业级功能扩展了 Kafka 的优势，同时消除了 Kafka 的管理或监控负担。如今、《财富》100强企业中有80%以上的企业采用数据流技术、大多数企业都使用Confluent。</block>
+  <block id="d3c11d67f567698de4c90210b84c554d" category="paragraph">借助整合平台，您可以专注于如何从数据中获得业务价值，而不是担心底层机制，例如如何在不同系统之间传输或集成数据。具体而言， Confluent Platform 可简化将数据源连接到 Kafka 的过程，构建流式应用程序，以及保护，监控和管理 Kafka 基础架构。如今、Consfluent Platform已广泛用于各行各业的各种用例、从金融服务、全渠道零售和自动驾驶汽车到欺诈检测、微服务和物联网。</block>
+  <block id="870b2318ccfd123ac0f7e9ef1396d49d" category="paragraph">下图显示了Confluent Platform的组件。</block>
+  <block id="9d880468cb22c04bd894fc612814dbab" category="inline-image-macro">此图显示了Confluent Platform的组件。</block>
+  <block id="f64c3e5205853c0df35b5f05dcb208a1" category="paragraph"><block ref="f64c3e5205853c0df35b5f05dcb208a1" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="05fafb4336e843d4634bd9ac122177c8" category="section-title">Confluent事件流技术概述</block>
+  <block id="51be25b0145a0beca811de24a62b5cb4" category="inline-link">Kafka</block>
+  <block id="0139d991fe55319f2e19e039da969fcf" category="paragraph">Confluent Platform 的核心是<block ref="66a1a9ec54e6ef0a1c109ad94b972ac9" category="inline-link-rx"></block>最受欢迎的开源分布式流式平台。Kafka的主要功能包括：</block>
+  <block id="82ff0b3d0476bb8ca2283ff06c017658" category="section-title">Confluent平台企业功能概述</block>
+  <block id="ed2c640e88db15d474de830703c8783b" category="list-text">*流畅控制中心*。一种基于UI的系统、用于管理和监控Kafka。您可以通过它轻松管理 Kafka Connect ，以及创建，编辑和管理与其他系统的连接。</block>
+  <block id="d63f46631d40c1c76b1a1a46445584aa" category="list-text">*卡夫卡连接连接器。*连接器使用Kafka Connect API将Kafka连接到数据库、密钥值存储、搜索索引和文件系统等其他系统。Confluent Hub 提供可下载的连接器，用于最常用的数据源和数据池，包括这些连接器经过全面测试且受支持的版本以及 Confluent 平台。有关更多详细信息，请参见<block ref="2f0cdf69523bef6b3b17324f38f83353" category="inline-link-rx"></block>。</block>
+  <block id="9103a2961d6b4c593517d3d641763e5c" category="list-text">* 自平衡集群。 * 提供自动化负载平衡，故障检测和自我修复功能。它还支持根据需要添加或停用代理、而无需手动调整。</block>
+  <block id="c1712fa040f6accce664a82ba6d58b94" category="list-text">*流畅自动数据平衡器。*监控集群中的代理数量、分区大小、分区数量和导数。它允许您在集群中移动数据以创建均匀的工作负载，同时限制重新平衡流量，以便在重新平衡的同时最大限度地减少对生产工作负载的影响。</block>
+  <block id="0265b0b07689b6439fc600eec3164763" category="inline-link-macro">接下来："融合性能"验证。</block>
+  <block id="7d58203770f3360011c58049bd5dc048" category="paragraph"><block ref="7d58203770f3360011c58049bd5dc048" category="inline-link-macro-rx"></block></block>
+  <block id="dbb940c31f0b7d7563745993661f70d4" category="summary">在使用一个AFF A900 HA对NetApp存储控制器的生产用工作负载期间、我们使用五个或八个代理节点执行分层存储测试。根据我们的测试结果、完成时间和性能结果会随着代理节点的数量进行扩展、直到AFF A900资源利用率达到百分之一百为止。ONTAP 存储控制器设置至少需要一个HA对。</block>
+  <block id="91e1cb9730965860cb465802520e6a45" category="doc">使用生产用工作负载生成器进行性能测试</block>
+  <block id="3daa014912cbb3dddcdeae426aea8652" category="inline-link-macro">先前版本：Confuent Performance validation。</block>
+  <block id="262b5107278b398d0de9b7ef6b52e5d0" category="paragraph"><block ref="262b5107278b398d0de9b7ef6b52e5d0" category="inline-link-macro-rx"></block></block>
+  <block id="b15c40872cdd0b1e0a152907f2194e69" category="paragraph">根据Confluent代理节点的数量、S3检索操作的性能呈线性增长。ONTAP 存储控制器在一个部署中最多支持12个HA对。</block>
+  <block id="ec043d5e2714e1035038cbeb1aa3cba8" category="paragraph">下图显示了具有五个或八个代理节点的S3分层流量组合。我们最大限度地提高了AFF A900单HA对的性能。</block>
+  <block id="ffff2891cfdd07445c4e1e5261739c68" category="inline-image-macro">此数据图显示了具有五个或八个代理节点的S3分层流量组合。</block>
+  <block id="388c51cbcac77b72c2e68dc334f9cf73" category="paragraph"><block ref="388c51cbcac77b72c2e68dc334f9cf73" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1efe906cedfd00618bda4d39b41a52fd" category="paragraph">下图显示了Kafka吞吐量约为31.74 GBps。</block>
+  <block id="e7aff80741661a5eb60f57649077f9c5" category="inline-image-macro">此数据图显示了Kafka吞吐量约为31.74 GBps。</block>
+  <block id="1dc39288e0903ff9947d26bba4d46cef" category="paragraph"><block ref="1dc39288e0903ff9947d26bba4d46cef" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="bc6821411dfc3b7f483da21b37082dfc" category="paragraph">我们还在ONTAP 存储控制器`perfstat`报告中观察到类似的吞吐量。</block>
+  <block id="12521f8f565efeb65b076c8966841804" category="inline-link-macro">接下来：性能最佳实践准则。</block>
+  <block id="4d8306a1e68c76874ac5d8c93a819977" category="paragraph"><block ref="4d8306a1e68c76874ac5d8c93a819977" category="inline-link-macro-rx"></block></block>
+  <block id="4ea8220421596c898f8150bfebdf4ccb" category="summary">此验证测试在使用NetApp ONTAP 存储控制器的Confluent上达到了31.74 GBps的分层吞吐量。</block>
+  <block id="f86bb9f7d3cb6d2f8473494c8bd135ec" category="inline-link-macro">先前版本：性能最佳实践准则。</block>
+  <block id="65b905a56baa366aa274945ca5b7cad4" category="paragraph"><block ref="65b905a56baa366aa274945ca5b7cad4" category="inline-link-macro-rx"></block></block>
+  <block id="93a10982e8e304323ad8af9a9387d775" category="paragraph">此验证测试在使用NetApp ONTAP 存储控制器的Confluent上达到了31.74 GBps的分层吞吐量。</block>
+  <block id="0f2f674cce6910ae97ee7ecc7bd9de18" category="list-text">什么是Confluent？</block>
+  <block id="e6deab0ab2821160c056af4c7766624c" category="inline-link"><block ref="e6deab0ab2821160c056af4c7766624c" category="inline-link-rx"></block></block>
+  <block id="ce3026317a00b57c81627bd64a1b3311" category="paragraph"><block ref="ce3026317a00b57c81627bd64a1b3311" category="inline-link-rx"></block></block>
+  <block id="58a229be829dc9196abdaff6a4a26864" category="list-text">ONTAP 最佳实践中的S3</block>
+  <block id="f47b79954bb4ad3165d7f99db02fe933" category="inline-link"><block ref="f47b79954bb4ad3165d7f99db02fe933" category="inline-link-rx"></block></block>
+  <block id="e98b34b649783312d3b317c7441a20a5" category="paragraph"><block ref="e98b34b649783312d3b317c7441a20a5" category="inline-link-rx"></block></block>
+  <block id="3075344c29b864c90ae1411c1db26e87" category="list-text">S3对象存储管理</block>
+  <block id="cdc54c0262b6c0a6146ee416a9ca2113" category="inline-link"><block ref="cdc54c0262b6c0a6146ee416a9ca2113" category="inline-link-rx"></block></block>
+  <block id="8a93310a8dd4b405a8711f82adeb3c23" category="paragraph"><block ref="8a93310a8dd4b405a8711f82adeb3c23" category="inline-link-rx"></block></block>
+  <block id="1b70ac0a972fddf1e1a33e6ed9df49c7" category="cell">2022年9月</block>
+  <block id="331c0d2ba7a09b3ae7f6fac4652625da" category="summary">此页面介绍了在此解决方案 中提高性能的最佳实践。</block>
+  <block id="69cefd131c612b28f058caddd20f5cac" category="doc">性能最佳实践准则</block>
+  <block id="25075404ed18180817b5ff523b98b3ea" category="inline-link-macro">先前：使用生产-使用工作负载生成器进行性能测试。</block>
+  <block id="78f6cc0a5eeea34ea4a6b6d750751008" category="paragraph"><block ref="78f6cc0a5eeea34ea4a6b6d750751008" category="inline-link-macro-rx"></block></block>
+  <block id="21414169b395738292b2ac2fd8ca50a9" category="list-text">对于ONTAP 、如果可能、请使用GET大小&gt;=1MB。</block>
+  <block id="ce2e9b8aaceb2d2993c90188d874af95" category="list-text">通过在代理节点上的`server.properties`中增加`num.network.threads`和`num.io.threads`、您可以将更多的分层活动推送到S3层。这些结果会在`num.network.threads`和`num.io.threads`设置为32的情况下显示。</block>
+  <block id="1a48e01d01924d18e32943982eb6d924" category="list-text">S3存储分段应针对每个成员聚合的八个成分卷。</block>
+  <block id="b5a9dc3c7ec54467d103e00eaa0efb21" category="list-text">驱动S3流量的以太网链路应尽可能在存储和客户端上使用9k的MTU。</block>
+  <block id="9a2dcec18734a6b09898eef44edd5f9a" category="paragraph"><block ref="9a2dcec18734a6b09898eef44edd5f9a" category="inline-link-macro-rx"></block></block>
+  <block id="614eb548d72efbb3690b5c131745db1b" category="summary">此页面介绍了在该解决方案 的参数范围内验证Confluent的性能。</block>
+  <block id="28052d386826afbb88768d0629570b19" category="doc">融合性能验证</block>
+  <block id="e0c5d30e7d8ab807973bb9e8800f9f30" category="paragraph"><block ref="e0c5d30e7d8ab807973bb9e8800f9f30" category="inline-link-macro-rx"></block></block>
+  <block id="3ec7b1ca1aaf25c9bbca707f1ca8e466" category="paragraph">我们已使用Confluent Platform对NetApp ONTAP 上的分层存储执行了验证。NetApp和Confluent团队共同执行了此验证、并运行了所需的测试用例。</block>
+  <block id="1f567e45477749710cbc14cf6b10afc4" category="section-title">设置冲突</block>
+  <block id="99b45ae42dbbf816c910ba27197525dc" category="paragraph">在设置中、我们使用了三个Zookepers、五个代理和五个测试服务器、这些服务器具有256 GB RAM和16个CPU。对于NetApp存储、我们将ONTAP 与AFF A900 HA对结合使用。存储和代理通过100GbE连接进行连接。</block>
+  <block id="77727c2ca2ac5beb0de2853929b43367" category="paragraph">下图显示了用于分层存储验证的配置的网络拓扑。</block>
+  <block id="57e8d3257fec5774d2e8d38588771a69" category="inline-image-macro">此图显示了用于分层存储验证的配置的网络拓扑。</block>
+  <block id="e1265b0a6795e57b3d1df5094ecde2bb" category="paragraph"><block ref="e1265b0a6795e57b3d1df5094ecde2bb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1d9b75f4efe285b9777255f14c81323b" category="paragraph">工具服务器充当向Confluent节点发送或从Confluent节点接收事件的应用程序客户端。</block>
+  <block id="1068af448bd05a968329fd2341036bfb" category="paragraph">我们使用了以下测试参数：</block>
+  <block id="3bfb3f2755d25ed45d39dad8b3ed3008" category="paragraph">为了进行验证、我们将ONTAP 与HTTP协议结合使用、但HTTPS也可以正常工作。访问密钥和机密密钥存储在 `confuent.tier.s3.cred.file.path` 参数中提供的文件名中。</block>
+  <block id="86d7ae5e1e87e4958b4fafcbca603956" category="section-title">NetApp存储控制器—ONTAP</block>
+  <block id="b915ce35d395a0d68a794b87705f95fa" category="paragraph">我们在ONTAP 中配置了一个HA对配置以进行验证。</block>
+  <block id="b9d2b35b3cfffa153fd4ed3401cb9dd9" category="inline-image-macro">此图展示了如何将环境配置为一个HA对以进行验证。</block>
+  <block id="0ccd17060e15591b9c8588dc7d974ecd" category="paragraph"><block ref="0ccd17060e15591b9c8588dc7d974ecd" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7069b530e46a91698a16159b7d083019" category="section-title">验证结果</block>
+  <block id="3af1efc909fae49a716fe2d22ba24290" category="paragraph">我们已完成以下五个测试案例以进行验证。前两项是功能测试，其余三项是性能测试。</block>
+  <block id="09da8339466c8b6111e4f310f1b78cb5" category="paragraph">此测试使用API调用对用于分层存储的对象存储执行基本操作、例如GET、PUT和DELETE。</block>
+  <block id="622ce818e2b8228cee071a827a43e1b2" category="paragraph">此测试将检查对象存储的端到端功能。它会创建一个主题，为新创建的主题生成一个事件流，等待代理将这些分段归档到对象存储，使用事件流，并验证已用流与已生成流的匹配情况。我们执行此测试时，无论是否注入了对象存储故障。我们通过在ONTAP 中的一个节点中停止服务管理器服务并验证端到端功能是否适用于对象存储来模拟节点故障。</block>
+  <block id="2712a580ff4c3586c7ba3534b78aad18" category="section-title">生成并使用工作负载生成器</block>
+  <block id="0c22172129c2d0d58a5685fa1094fca0" category="paragraph">此测试会通过归档区块间接在对象存储上生成写入工作负载。读取工作负载（区块读取）是在使用者组提取区块时从对象存储生成的。此工作负载由TOCC脚本生成。此测试检查了并行线程中对象存储上的读写性能。与分层功能正确性测试一样，我们测试了是否存在对象存储故障注入。</block>
+  <block id="2a7273e52c0214e6f0b27bf1e870960e" category="section-title">保留工作负载生成器</block>
+  <block id="48771387cb6a84889bc1db951598f78c" category="paragraph">此测试检查了在主题保留工作负载繁重的情况下对象存储的删除性能。保留工作负载是使用TOCC脚本生成的、该脚本会与测试主题并行生成许多消息。本测试主题使用主动式基于大小和基于时间的保留设置进行配置，此设置会导致从对象存储中持续清除事件流。然后，这些区块会归档。这导致代理在对象存储中删除了许多内容、并收集了对象存储删除操作的性能。</block>
+  <block id="047fb529cf71ef63efe04d4185302684" category="paragraph">有关验证详细信息、请参见<block ref="86830f666762f920df1dddf1c71e6509" category="inline-link-rx"></block> 网站。</block>
+  <block id="0e20876ceb73ae36999db9f6c412bdc5" category="inline-link-macro">接下来：使用生产消耗工作负载生成器进行性能测试。</block>
+  <block id="ab82cfabb720bf1d31365b6ce33825f9" category="paragraph"><block ref="ab82cfabb720bf1d31365b6ce33825f9" category="inline-link-macro-rx"></block></block>
+  <block id="b0c400a1c1ac5de2cbdc877645b349a0" category="summary">本节介绍在使用NetApp ONTAP 进行分层存储的Confluent Platform部署中用于性能验证的硬件和软件。下表介绍了解决方案 架构和基本组件。</block>
+  <block id="8bfa311863541e343a5f46427c473c16" category="paragraph"><block ref="8bfa311863541e343a5f46427c473c16" category="inline-link-macro-rx"></block></block>
+  <block id="5197b1c9433e86b5ed33786625f77786" category="paragraph">由ONTAP 提供支持的Confuent和NetApp AFF A900存储控制器是专为数据流设计的分布式系统。两者均可水平扩展、容错、并在负载下提供出色的性能。它们通过数据精简技术在分布式数据流和流处理方面相辅相成、并可降低存储成本、从而最大限度地减少数据占用空间。AFF A900存储控制器可提供出色的性能、同时允许分离计算和数据存储资源。这样可以简化系统管理并独立扩展资源。</block>
+  <block id="8ebef54f33ae0fdc7c4dcb83539b6eac" category="inline-image-macro">解决方案 概述图。</block>
+  <block id="52dff9f6353660d69eddc1e9fdee4a83" category="paragraph"><block ref="52dff9f6353660d69eddc1e9fdee4a83" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7a785978a6b38bb45ae8786c30a1781e" category="cell">平台组件</block>
+  <block id="c704d8c873b1a8d5d0243075656aa1f5" category="cell">环境配置</block>
+  <block id="f75094292f4afb812bc29237348d9948" category="cell">Confuent Platform 6.2版</block>
+  <block id="5cc4fd015c7740c575d319eefacbce83" category="list-text">3个Zookepers</block>
+  <block id="8f6a506566bd03a47cafb69561bafe0f" category="list-text">8个代理服务器</block>
+  <block id="aa76981d988c82fc8b387682968887e6" category="list-text">5个工具服务器</block>
+  <block id="b56d58a9a181bae1fa65f36407ea002c" category="list-text">1个Grafana</block>
+  <block id="4af3adf9207f6f8d2d6d9edda08f0638" category="list-text">1个控制中心</block>
+  <block id="29c331c65dbb1c85faa29881b295fbfc" category="cell">所有节点上的操作系统</block>
+  <block id="de4d788671df5cf79fda01236d8fc9a6" category="cell">适用于温分段的NetApp ONTAP</block>
+  <block id="37e0c77638b1388d83b997c8dffdb6d3" category="list-text">1个AFF A900高可用性(HA)对</block>
+  <block id="2e1c9b5ce764f890af0aebf38f1a500a" category="list-text">100GbE</block>
+  <block id="983e16c42b860c2511053f17d60918c8" category="list-text">2个CPU；总共16个物理核心</block>
+  <block id="ce4750dd79017960eed95bd3b2677eb4" category="list-text">Intel Xeon</block>
+  <block id="01dcc4e221fc9ff7472c5102b082eaf4" category="list-text">256 GB物理内存</block>
+  <block id="433304c312dd41f05955324749c0a47f" category="list-text">100GbE双端口</block>
+  <block id="39bc57d27d632df4261bc60caf39a90c" category="paragraph"><block ref="39bc57d27d632df4261bc60caf39a90c" category="inline-link-macro-rx"></block></block>
+  <block id="b98ea9630b58bea0f022799ecefe4062" category="sidebar">Kafka与NetApp ONTAP 存储控制器相结合</block>
 </blocks>
