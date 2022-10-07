@@ -3665,7 +3665,6 @@
   <block id="d490382851fbc5bd6720046bf9bc0c03" category="paragraph">从数据存储库中删除 VM 时，可以回收空间以用于其他用途。使用 NFS 数据存储库时，删除虚拟机时会立即回收空间（当然，只有在卷已进行精简配置时，即卷保证设置为 none ），此方法才有意义。但是，在 VM 子操作系统中删除文件时，不会使用 NFS 数据存储库自动回收空间。对于基于 LUN 的 VMFS 数据存储库， ESXi 以及子操作系统可以将 VAAI UNMAP 原语问题描述到存储（同样适用于使用精简配置时）以回收空间。根据版本的不同，此支持可以是手动支持，也可以是自动支持。</block>
   <block id="6a2bff0a8d10ca0fc6c782e7978f696a" category="inline-link">2057513</block>
   <block id="8927aab76c49d1deb0b407fd261d5aa6" category="inline-link">存储空间回收</block>
-  <block id="0c5a70f66ff77925d7dd7192191ec8f2" category="paragraph">在 vSphere 5.5 及更高版本中， `vmkfstools – y` 命令将替换为 `esxcli storage vmfs unmap` 命令，该命令可指定可用块的数量（请参见 VMware 知识库<block ref="1d61bd4e8925f7d5aac61e083b728439" category="inline-link-rx"></block> 了解更多信息）。在 vSphere 6.5 及更高版本中，如果使用 VMFS 6 ，则应异步自动回收空间（请参见<block ref="a9ae15a1c91a14939aefb313015202e6" category="inline-link-rx"></block> 在 vSphere 文档中），但也可以根据需要手动运行。ONTAP 支持这种自动 UNMAP ，适用于 VMware vSphere 的 ONTAP 工具会将其设置为低优先级。</block>
   <block id="99a66df20e19a8e18fae37a7f714750a" category="section-title">虚拟机和数据存储库克隆</block>
   <block id="d355cf5d1a16095124a54902f7cf49db" category="paragraph">通过克隆存储对象，您可以快速创建副本以供将来使用，例如配置其他 VM ，备份 / 恢复操作等。在 vSphere 中，您可以克隆虚拟机，虚拟磁盘， VVol 或数据存储库。克隆后，通常可以通过自动化过程进一步自定义对象。vSphere 既支持完整副本克隆，也支持链接克隆，在这些克隆中，它可以独立于原始对象跟踪更改。</block>
   <block id="78f8f8d69825dfe8e6085151fa565f28" category="paragraph">链接克隆非常有助于节省空间，但它们会增加 vSphere 为虚拟机处理的 I/O 量，从而影响该虚拟机的性能，甚至整个主机的性能。这就是 NetApp 客户经常使用基于存储系统的克隆来充分利用这两种环境的原因：高效利用存储和提高性能。</block>
@@ -15783,4 +15782,6 @@
   <block id="b98ea9630b58bea0f022799ecefe4062" category="sidebar">Kafka与NetApp ONTAP 存储控制器相结合</block>
   <block id="875353af43abce06e81496931b9482ef" category="paragraph"><block ref="875353af43abce06e81496931b9482ef" category="inline-link-macro-rx"></block></block>
   <block id="93d153de96abb104b1cf0b56dddc7dfc" category="sidebar">使用VMware HCX将工作负载迁移到ANF数据存储库</block>
+  <block id="9e925e9341b490bfd3b4c4ca3b0c1ef2" category="inline-link">这</block>
+  <block id="953fa9bc59561d97ed62ce854465ba35" category="paragraph">在 vSphere 5.5 及更高版本中， `vmkfstools – y` 命令将替换为 `esxcli storage vmfs unmap` 命令，该命令可指定可用块的数量（请参见 VMware 知识库<block ref="1d61bd4e8925f7d5aac61e083b728439" category="inline-link-rx"></block> 了解更多信息）。在 vSphere 6.5 及更高版本中，如果使用 VMFS 6 ，则应异步自动回收空间（请参见<block ref="a9ae15a1c91a14939aefb313015202e6" category="inline-link-rx"></block> 在 vSphere 文档中），但也可以根据需要手动运行。ONTAP 支持这种自动 UNMAP ，适用于 VMware vSphere 的 ONTAP 工具会将其设置为低优先级。请注意、在配置LUN以用作VMFS数据存储库时、必须手动在LUN上启用空间分配选项。在使用适用于VMware vSphere的ONTAP 工具时、LUN会自动配置为支持空间回收、无需执行其他操作。请参见<block ref="fca823934ad533ca13947daa01d8e441" category="inline-link-rx"></block> 有关更多详细信息、请参见知识库文章。</block>
 </blocks>

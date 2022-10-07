@@ -37,7 +37,7 @@ image:vsphere_ontap_image4.png["错误：缺少图形映像"]
 
 从数据存储库中删除 VM 时，可以回收空间以用于其他用途。使用 NFS 数据存储库时，删除虚拟机时会立即回收空间（当然，只有在卷已进行精简配置时，即卷保证设置为 none ），此方法才有意义。但是，在 VM 子操作系统中删除文件时，不会使用 NFS 数据存储库自动回收空间。对于基于 LUN 的 VMFS 数据存储库， ESXi 以及子操作系统可以将 VAAI UNMAP 原语问题描述到存储（同样适用于使用精简配置时）以回收空间。根据版本的不同，此支持可以是手动支持，也可以是自动支持。
 
-在 vSphere 5.5 及更高版本中， `vmkfstools – y` 命令将替换为 `esxcli storage vmfs unmap` 命令，该命令可指定可用块的数量（请参见 VMware 知识库 https://kb.vmware.com/s/article/2057513["2057513"^] 了解更多信息）。在 vSphere 6.5 及更高版本中，如果使用 VMFS 6 ，则应异步自动回收空间（请参见 https://docs.vmware.com/en/VMware-vSphere/6.5/com.vmware.vsphere.storage.doc/GUID-B40D1420-26FD-4318-8A72-FA29C9A395C2.html["存储空间回收"^] 在 vSphere 文档中），但也可以根据需要手动运行。ONTAP 支持这种自动 UNMAP ，适用于 VMware vSphere 的 ONTAP 工具会将其设置为低优先级。
+在 vSphere 5.5 及更高版本中， `vmkfstools – y` 命令将替换为 `esxcli storage vmfs unmap` 命令，该命令可指定可用块的数量（请参见 VMware 知识库 https://kb.vmware.com/s/article/2057513["2057513"^] 了解更多信息）。在 vSphere 6.5 及更高版本中，如果使用 VMFS 6 ，则应异步自动回收空间（请参见 https://docs.vmware.com/en/VMware-vSphere/6.5/com.vmware.vsphere.storage.doc/GUID-B40D1420-26FD-4318-8A72-FA29C9A395C2.html["存储空间回收"^] 在 vSphere 文档中），但也可以根据需要手动运行。ONTAP 支持这种自动 UNMAP ，适用于 VMware vSphere 的 ONTAP 工具会将其设置为低优先级。请注意、在配置LUN以用作VMFS数据存储库时、必须手动在LUN上启用空间分配选项。在使用适用于VMware vSphere的ONTAP 工具时、LUN会自动配置为支持空间回收、无需执行其他操作。请参见 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/VSC_and_VASA_Provider/Devices_backing_volume_do_not_support_UNMAP["这"^] 有关更多详细信息、请参见知识库文章。
 
 
 
