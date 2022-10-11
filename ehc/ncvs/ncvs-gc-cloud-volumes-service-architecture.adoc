@@ -55,7 +55,7 @@ Cloud Volumes Service 数据平面不会连接到外部Internet、而是连接�
 
 数据包捕获对于解决网络问题或其他问题(例如NAS权限、LDAP连接等)非常有用、但也可以恶意使用数据包捕获来获取有关网络IP地址、MAC地址、用户和组名称以及端点上使用的安全级别的信息。由于配置Google Cloud网络、VPC和防火墙规则的方式、如果没有用户登录凭据或、则很难获取对网络数据包的不必要访问 link:<ncvs-gc-control-plane-architecture.html#jwt-tokens["JWT令牌"] 迁移到云实例。只有端点(如虚拟机(VM))才可以捕获数据包、只有VPC内部的端点才可以捕获数据包、除非使用共享VPC和/或外部网络通道/IP转发明确允许外部流量传输到端点。无法嗅探客户端外部的流量。
 
-使用共享VPC时、使用NFS Kerberos和/或进行动态加密 link:ncvs-gc-data-encryption-in-transit.html#smb-encryption["SMB加密"] 可以屏蔽从跟踪中获取的大部分信息。但是、某些流量仍以纯文本形式发送、例如 link:ncvs-gc-other-nas-infrastructure-service-dependencies.html#dns["DNS"] 和 link:cvs-gc-other-nas-infrastructure-service-dependencies.html#ldap-queries["LDAP查询"]。下图显示了从Cloud Volumes Service 发起的纯文本LDAP查询中捕获的数据包以及公开的潜在标识信息。Cloud Volumes Service 中的LDAP查询当前不支持加密或基于SSL的LDAP。CVS-SW和CVS-Performance都支持LDAP签名。
+使用共享VPC时、使用NFS Kerberos和/或进行动态加密 link:ncvs-gc-data-encryption-in-transit.html#smb-encryption["SMB加密"] 可以屏蔽从跟踪中获取的大部分信息。但是、某些流量仍以纯文本形式发送、例如 link:ncvs-gc-other-nas-infrastructure-service-dependencies.html#dns["DNS"] 和 link:cvs-gc-other-nas-infrastructure-service-dependencies.html#ldap-queries["LDAP查询"]。下图显示了从Cloud Volumes Service 发起的纯文本LDAP查询中捕获的数据包以及公开的潜在标识信息。Cloud Volumes Service 中的LDAP查询当前不支持加密或基于SSL的LDAP。如果Active Directory请求、CVS-Performance支持LDAP签名。CVS-SW不支持LDAP签名。
 
 image:ncvs-gc-image2.png["错误：缺少图形映像"]
 
