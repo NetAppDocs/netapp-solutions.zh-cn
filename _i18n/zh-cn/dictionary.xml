@@ -15347,7 +15347,6 @@
   <block id="e1be03b35dc8e9fb114970b06dcd6c18" category="list-text">确保满足所需<block ref="69c9d7a74dad51c1c47ea8141c218514" category="inline-link-rx"></block> 允许内部vCenter Server与SDDC vCenter之间的vMotion流量。在私有云上、默认情况下会在vMotion网络上配置路由。</block>
   <block id="444617dcfe0d17ad386105e865d21113" category="list-text">Azure NetApp Files NFS卷应挂载为Azure VMware解决方案 中的数据存储库。请按照本节中详细介绍的步骤进行操作<block ref="1b959b45bbb3571141089802677ad765" category="inline-link-rx"></block> 将Azure NetApp Files 数据存储库连接到Azure VMware解决方案主机。</block>
   <block id="2f660e9fff52e5ac1b7818a029d3b447" category="example-title">高级架构</block>
-  <block id="69b7dff83090c9a5eb5c6939b05acd80" category="paragraph">出于测试目的、用于此验证的内部实验室环境通过站点到站点VPN连接到Azure虚拟WAN中心、从而可以在内部连接到Azure VMware解决方案。</block>
   <block id="0048e42e38e4c6f587f210afe26fcb4a" category="inline-image-macro">此图显示了此解决方案 中使用的高级架构。</block>
   <block id="39fc1d64ec4b3a4ff5306e55bdaf2c0f" category="paragraph"><block ref="39fc1d64ec4b3a4ff5306e55bdaf2c0f" category="inline-image-macro-rx" type="image"></block></block>
   <block id="d84f7e9d42c2c0ee4f87ddeaa2e09bb2" category="paragraph">按照一系列步骤完成此解决方案 的部署：</block>
@@ -15474,7 +15473,6 @@
   <block id="ab19b6733f7a9500ff9d392433071ef2" category="paragraph"><block ref="ab19b6733f7a9500ff9d392433071ef2" category="inline-link-rx"></block></block>
   <block id="7c5ba33b986ba469d277c4ca9f906e55" category="inline-link-macro">使用VMware HCX将工作负载迁移到FSxN数据存储库</block>
   <block id="c037991d132128e15cdbfefe3ac8e997" category="list-text"><block ref="c037991d132128e15cdbfefe3ac8e997" category="inline-link-macro-rx"></block></block>
-  <block id="205406ae98b10b31699eb910e29a7241" category="doc">TR 4942：使用VMware HCX将工作负载迁移到FSX ONTAP (FSxN)数据存储库</block>
   <block id="086d898e7d4a481c2147d4eb71dff1f6" category="section-title">概述：迁移具有VMware HCX、FSX ONTAP 补充数据存储库和VMware Cloud的虚拟机</block>
   <block id="82778188ea3c0ca7871389afec5bfd03" category="paragraph">迁移VMware工作负载是Amazon Web Services (AWS)上的VMware Cloud (VMC)及其在Amazon FSx for NetApp ONTAP 上的补充NFS数据存储库的一个常见使用情形。VMware HCX是首选选项、它提供了多种迁移方法、用于将在任何VMware支持的数据存储库上运行的内部虚拟机(VM)及其数据移动到VMC数据存储库、其中包括适用于ONTAP 的FSX上的补充NFS数据存储库。</block>
   <block id="2fbfc2601ddccd56b7728df6f0a658e1" category="paragraph">VMware HCX主要是一个移动平台、旨在简化工作负载迁移、工作负载重新平衡以及跨云的业务连续性。它作为VMware Cloud on AWS的一部分提供、可通过多种方式迁移工作负载、并可用于灾难恢复(DR)操作。</block>
@@ -15609,7 +15607,6 @@
   <block id="05c89cf5b898c5c58986dac08f22a2a1" category="paragraph"><block ref="05c89cf5b898c5c58986dac08f22a2a1" category="inline-link-rx"></block></block>
   <block id="33efddb311b6c85bba97e5349040815f" category="sidebar">工作负载迁移解决方案</block>
   <block id="e946411f5b47d53428345ae0e0e5f5fd" category="sidebar">迁移工作负载</block>
-  <block id="22945ba986f07dffbdafb6711d87ec03" category="sidebar">使用VMware HCX将工作负载迁移到Azure NetApp Files 数据存储库</block>
   <block id="747616909dea0c52e547cd52a7d5a12c" category="example-title">人工智能(AI)和现代数据分析</block>
   <block id="b0d7b47f43a6efe75ff49bfd5e21f6fd" category="list-text"><block ref="b0d7b47f43a6efe75ff49bfd5e21f6fd" category="inline-link-macro-rx"></block></block>
   <block id="90e97692c42b1eb0ec22c639049d78a1" category="list-text"><block ref="90e97692c42b1eb0ec22c639049d78a1" category="inline-link-macro-rx"></block></block>
@@ -15784,4 +15781,7 @@
   <block id="953fa9bc59561d97ed62ce854465ba35" category="paragraph">在 vSphere 5.5 及更高版本中， `vmkfstools – y` 命令将替换为 `esxcli storage vmfs unmap` 命令，该命令可指定可用块的数量（请参见 VMware 知识库<block ref="1d61bd4e8925f7d5aac61e083b728439" category="inline-link-rx"></block> 了解更多信息）。在 vSphere 6.5 及更高版本中，如果使用 VMFS 6 ，则应异步自动回收空间（请参见<block ref="a9ae15a1c91a14939aefb313015202e6" category="inline-link-rx"></block> 在 vSphere 文档中），但也可以根据需要手动运行。ONTAP 支持这种自动 UNMAP ，适用于 VMware vSphere 的 ONTAP 工具会将其设置为低优先级。请注意、在配置LUN以用作VMFS数据存储库时、必须手动在LUN上启用空间分配选项。在使用适用于VMware vSphere的ONTAP 工具时、LUN会自动配置为支持空间回收、无需执行其他操作。请参见<block ref="fca823934ad533ca13947daa01d8e441" category="inline-link-rx"></block> 有关更多详细信息、请参见知识库文章。</block>
   <block id="a436da0007911ed6531e093688e82535" category="paragraph">使用共享VPC时、使用NFS Kerberos和/或进行动态加密 <block ref="639817e82862065dd236f0597e0b07ea" category="inline-link-macro-rx"></block> 可以屏蔽从跟踪中获取的大部分信息。但是、某些流量仍以纯文本形式发送、例如 <block ref="c2e2f225386e22bd13a8b4b174f478da" category="inline-link-macro-rx"></block> 和 <block ref="86c1c13023c15e9d9a6317a0b69e7ce3" category="inline-link-macro-rx"></block>。下图显示了从Cloud Volumes Service 发起的纯文本LDAP查询中捕获的数据包以及公开的潜在标识信息。Cloud Volumes Service 中的LDAP查询当前不支持加密或基于SSL的LDAP。如果Active Directory请求、CVS-Performance支持LDAP签名。CVS-SW不支持LDAP签名。</block>
   <block id="b95b607ac94c4a8cb830243ecb537f59" category="cell">定义LDAP使用的会话安全级别(签名、签章或无)。如果Active Directory请求、CVS-Performance支持LDAP签名。CVS-SW不支持LDAP签名。对于这两种服务类型、目前不支持密封。</block>
+  <block id="ce32836b59e052d959dee4d2358e5a21" category="paragraph">出于测试目的、用于此验证的内部实验室环境通过站点到站点VPN进行连接、从而可以在内部连接到Azure VMware解决方案。</block>
+  <block id="0bcfdba2f090838df9da44d825fedc49" category="doc">TR 4942：使用VMware HCX将工作负载迁移到FSX ONTAP 数据存储库</block>
+  <block id="dd5244d49dea74bb9effd68426155ca2" category="sidebar">使用VMware HCX将工作负载迁移到适用于ONTAP 数据存储库的FSX</block>
 </blocks>
