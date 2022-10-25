@@ -7658,7 +7658,6 @@
   <block id="e5fcadecc4515efec9267b8ad57b28a5" category="inline-link-macro">下一步：用例</block>
   <block id="93b7bce28e36a4eebec23c8fd4be315d" category="paragraph"><block ref="93b7bce28e36a4eebec23c8fd4be315d" category="inline-link-macro-rx"></block></block>
   <block id="ea490901c403ce2b2a89f80227d0fb90" category="paragraph">计划二进制文件和数据库复制攻略手册</block>
-  <block id="931ea399c80122517d9eeb617f1594a0" category="list-text">配置并启动作业模板。</block>
   <block id="2c777d857235f251004d6d8d70c9751d" category="list-text">复制先前创建的作业模板。</block>
   <block id="1eb977b1f69b531db931e9c62c1a0de9" category="list-text">找到 ontap/CVO 设置模板，然后在最右侧单击复制模板</block>
   <block id="3c96e57d33780bedfb652def025f39de" category="list-text">单击复制的模板上的编辑模板，然后将名称更改为二进制和数据库复制攻略手册。</block>
@@ -7768,8 +7767,6 @@
   <block id="0d28c8cc8415971cf2cd02507176bf94" category="list-text">在 Type Details 下，输入 Username （ EC2-user ，或者如果您已对其进行了默认更改，请输入该用户名）和 SSH 私钥</block>
   <block id="cb8f433dfb62a17f7a02f4d7a8839b1c" category="list-text">选择正确的权限升级方法（ sudo ），然后根据需要输入用户名和密码。</block>
   <block id="791ef966f9be349751448b9066bdd8fa" category="list-text">输入 ... <block ref="1881636a0f344e587cc2202e2db4c5ac" category="inline-link-rx"></block> 作为源控制 URL 。</block>
-  <block id="07ecfe1ec895f624e5c5d082fb961d1c" category="section-title">3. 配置全局变量</block>
-  <block id="dad1349ef99312028aeda3703d53efdb" category="section-title">4. 自动化攻略手册</block>
   <block id="285a3bb8fb6f692046facadb3c0984cf" category="paragraph">需要运行四本单独的攻略手册。</block>
   <block id="37472723bc7712fedddee6d02e29228d" category="list-text">用于设置环境的攻略手册，内部部署或 CVO 。</block>
   <block id="5138c89250c5086accf2d1a5961c9b17" category="list-text">用于按计划复制 Oracle 二进制文件和数据库的攻略手册</block>
@@ -7784,7 +7781,6 @@
   <block id="1c03188c731004905466903c2eb763c4" category="list-text">单击添加，为日志复制添加名称计划，选择开始日期 / 时间，选择本地时区和运行频率。运行频率通常会更新 SnapMirror 复制。</block>
   <block id="d23bfe090a9fd09613c7a6573f619c02" category="admonition">建议将日志计划设置为每小时更新一次，以确保恢复到上一个每小时更新。</block>
   <block id="f76dbca531ab83300165aacf97e1b7ff" category="open-title">还原和恢复数据库</block>
-  <block id="8cc6746c11a65da30c7d875819acecfe" category="section-title">5. 恢复 Oracle 数据库</block>
   <block id="b8a177e5fd059f33473cad4d1d073d38" category="list-text">内部生产 Oracle 数据库数据卷通过 NetApp SnapMirror 复制到二级数据中心的冗余 ONTAP 集群或公有云中的 Cloud Volume ONTAP 进行保护。在完全配置的灾难恢复环境中，二级数据中心或公有云中的恢复计算实例处于备用状态，可以在发生灾难时恢复生产数据库。备用计算实例通过在操作系统内核修补程序上运行准面更新或在一个锁定步骤中进行升级，与内部实例保持同步。</block>
   <block id="57d8ad774cb4fef3d53ee8836bfee761" category="list-text">在此解决方案演示中， Oracle 二进制卷会复制到目标并挂载到目标实例，以启动 Oracle 软件堆栈。与灾难发生时的最后一分钟全新安装 Oracle 相比，这种恢复 Oracle 的方法更有优势。它可以保证 Oracle 安装与当前内部生产软件安装和修补程序级别等完全同步。但是，根据 Oracle 软件许可的结构，这可能会对恢复站点上复制的 Oracle 二进制卷产生额外的软件许可影响，也可能不会产生额外的软件许可影响。建议用户在决定使用相同方法之前，先咨询其软件许可人员，以评估潜在的 Oracle 许可要求。</block>
   <block id="74eaa493ffed695592003e0844d93c46" category="list-text">目标位置的备用 Oracle 主机已配置 Oracle 前提条件配置。</block>
@@ -8248,7 +8244,6 @@
   <block id="4dab2f9796b0af6304d00e21e2b9dfb4" category="inline-link-macro">基于 AWS 的 VMware Cloud</block>
   <block id="02b412692a538ee9dc2534f0f9c73dc1" category="paragraph"><block ref="560d5b2cd40977bd7b77b31d7088f657" category="inline-link-macro-rx"></block> 为 AWS 生态系统中基于 VMware 的工作负载提供 Cloud 原生体验。每个 VMware 软件定义的数据中心（ SDDC ）均在 Amazon Virtual Private Cloud （ VPC ）中运行，并提供完整的 VMware 堆栈（包括 vCenter Server ）， NSX-T 软件定义的网络连接， vSAN 软件定义的存储以及一个或多个 ESXi 主机，这些主机可为您的工作负载提供计算和存储资源。</block>
   <block id="dc77b78f59a0c38a9a2e8927dc05e916" category="paragraph">本节介绍如何在 AWS 上设置和管理 VMware Cloud ，并将其与适用于 NetApp ONTAP 的 Amazon FSX 和 / 或在 AWS 上使用子系统内存储的 Cloud Volumes ONTAP 结合使用。</block>
-  <block id="1687622e662f209ef64e3a88de409466" category="admonition">在将 Amazon FSX for NetApp ONTAP 和 Cloud Volumes ONTAP 连接到 AWS 上的 VMware Cloud 时，只支持使用来宾存储。</block>
   <block id="3712f34e1b7039d6d9bfb255ecc54445" category="paragraph">设置过程可分为三部分：</block>
   <block id="f54d8dbbc1cb20fd37a59a4563644ef8" category="inline-link-macro">Amazon Web Services 帐户</block>
   <block id="4ca1486cd3276884e41ad4b36080c10b" category="list-text">注册 <block ref="ab3390028f6599a1b73b747febbf672d" category="inline-link-macro-rx"></block>。</block>
@@ -14475,8 +14470,6 @@
   <block id="727eadb1fcad984cfa778a04f2181408" category="paragraph">要配置GCVE SDDC、请参见<block ref="06e1fa19855b73b0e800850663f265a2" category="inline-link-rx"></block>。前提条件是、在建立连接后、验证位于GCVE主机上的子虚拟机是否能够使用Cloud Volumes ONTAP 中的数据。</block>
   <block id="fb75a211e033fa96e7f692258221c1da" category="paragraph">正确配置Cloud Volumes ONTAP 和GCVE后、请使用Veeam复制功能并利用SnapMirror将应用程序卷副本复制到Cloud Volumes ONTAP 、开始配置Veeam、以便自动将内部工作负载恢复到GCVE (具有应用程序VMDK的VM和具有来宾存储的VM)。</block>
   <block id="87e3cc18e14b0d78c8c46e3ed343fca7" category="example-title">安装Veeam组件</block>
-  <block id="d3e88eae8ca9184db5c410eb9e65e305" category="inline-link">有关安装操作步骤 的信息、请参见Veeam文档</block>
-  <block id="72cbd2d687e8a182563fd621f7f40933" category="paragraph">根据部署场景、需要部署的Veeam备份服务器、备份存储库和备份代理。在此使用情形下、无需为Veeam部署对象存储、也不需要横向扩展存储库。<block ref="eef747fc43e330e288cf8f23e85fb9af" category="inline-link-rx"></block></block>
   <block id="60fec867397af265e1e757d06135859e" category="example-title">使用Veeam设置VM复制</block>
   <block id="d81c3dfdfda7fb8581660b5d218c6a3a" category="inline-link">设置vSphere VM复制作业</block>
   <block id="6a67b79523a52a3a2b4e485485456565" category="paragraph">内部vCenter和GCVE vCenter都需要向Veeam注册。<block ref="9af60ccd7c779b77ba6ce43ae96a95f6" category="inline-link-rx"></block> 在向导的子系统处理步骤中、选择禁用应用程序处理、因为我们将利用SnapCenter 进行应用程序感知型备份和恢复。</block>
@@ -15789,13 +15782,11 @@
   <block id="c252a357a127635943f82514442e62b3" category="section-title">标题级别</block>
   <block id="8000c50cdc8b68dd9ea0d326040cbd63" category="paragraph">【蓝色下划线】*源AsciDoc：*</block>
   <block id="3c2f44ba0863f4f0fcb5023aa4ee6ca2" category="paragraph">【蓝色下划线】*生成的HTML：*</block>
-  <block id="cc0b18a3e7ca3718f584272598e4a21c" category="section-title">标题级别0 (文档标题)</block>
   <block id="efea650a2edf10e173ba726fa4e90c5f" category="section-title">标题级别1 (章节标题)</block>
   <block id="2b70e22920b3d78a96efdd65b4b37c1f" category="section-title">标题级别2 (章节标题)</block>
   <block id="3742ded2a390654e38f763a70bd4e35a" category="section-title">标题级别3 (章节标题)</block>
   <block id="4d1ebef97112908dabe0c9c786eaa7ba" category="section-title">标题级别4 (章节标题)</block>
   <block id="44e6fd3a1839882d90b6020944c4aeb1" category="section-title">标题级别5 (章节标题)</block>
-  <block id="6b96822e050681394160e60c027fb0d0" category="admonition">每个文档只能有一个文档标题(级别0)、并且不能跳过部分标题(小节子标题必须为该部分下的下一个标题级别)。</block>
   <block id="691d1860ec58dd973e803e209697d065" category="section-title">列表</block>
   <block id="d3263947659da25e39643e07688fb919" category="paragraph">无序列表：</block>
   <block id="6e991c331de28266251c487c42df1f10" category="list-text">这是一个无序列表</block>
@@ -15988,4 +15979,20 @@
   <block id="8e1e8679efe4694874eb9820dff26af8" category="paragraph">本白皮书介绍了NetApp的现代数据分析解决方案 战略。其中包括有关业务成果、客户挑战、技术趋势、竞争传统架构、现代工作流、用例、行业、云、技术合作伙伴、数据移动者、NetApp Active IQ 、NetApp DataOps工具包、Hadoop to Spark、采用NetApp Astra Control的软件定义存储、容器、企业数据管理、归档和分层、以实现AI和分析的目标、以及NetApp和客户如何携手打造现代化的数据架构。</block>
   <block id="ef159076e3a244c9e0bc48cdde7742a7" category="inline-link-macro"><block ref="ef159076e3a244c9e0bc48cdde7742a7" category="inline-link-rx"></block></block>
   <block id="bff0b3c76158c2ffdc1105de3c094296" category="paragraph"><block ref="bff0b3c76158c2ffdc1105de3c094296" category="inline-link-macro-rx"></block></block>
+  <block id="4eb5c705ea54813c084d88a3d5a668f0" category="admonition">每个文档只能有一个文档标题(级别0)、并且不能跳过部分标题(小节子标题必须为该部分下的下一个标题级别)。因此、为了消除处理期间的构建错误、该示例不会显示在输出中。</block>
+  <block id="9b6f25534617a536120885c9ce2bf30b" category="inline-link">有关安装操作步骤 的信息、请参见Veeam文档</block>
+  <block id="934282d2b6cc731f63bcc3cdfbba32a1" category="paragraph">根据部署场景、需要部署的Veeam备份服务器、备份存储库和备份代理。在此使用情形下、无需为Veeam部署对象存储、也不需要横向扩展存储库。<block ref="3798d8f6f1f14581181abe3a5ef34dc1" category="inline-link-rx"></block></block>
+  <block id="51c7ff4d9c3185f2df469eed762010d5" category="inline-link-macro">VMware云技术区</block>
+  <block id="baab3b6c6024ccda908423e27d1a7d5b" category="admonition">VMware也提供了此解决方案。请访问 <block ref="e4f8fde8ba3579a04642cf870e6e362f" category="inline-link-macro-rx"></block> 有关详细信息 ...</block>
+  <block id="dc32da64b7845bbbf4827a1513cd8daa" category="inline-link-macro">使用VMware HCX在AWS SDDC上使用适用于NetApp ONTAP 的FSX和VMware Cloud配置混合云</block>
+  <block id="e51f186f2c7dd10d7f4c1196ab269d7c" category="list-text"><block ref="e51f186f2c7dd10d7f4c1196ab269d7c" category="inline-link-macro-rx"></block></block>
+  <block id="3cf6cddd26350e6a84e8bef869102647" category="cell">2022年10月25日</block>
+  <block id="80d05b7bca341d02b41c7f6cb32ad23b" category="cell">添加了有关将FSX ONTAP 作为NFS数据存储库的VMware文档的链接</block>
+  <block id="2937ec3775c4b0354bf359a5892c53f7" category="cell">添加了有关使用VMware HCX在AWS SDDC上使用FSX ONTAP 和VMC配置混合云的博客参考</block>
+  <block id="0676783b7d49061bfb23deb83b2d2f82" category="paragraph">*配置并启动作业模板。*</block>
+  <block id="544348a8f04b16faced725115db5b6f3" category="section-title">为您的环境创建清单、组、主机和凭据</block>
+  <block id="be86ca474df5e14056bc0f20d2cdb767" category="section-title">创建项目</block>
+  <block id="d02a79fb6f05358e16f9d9cf02288ac3" category="section-title">配置全局变量</block>
+  <block id="3506caa5fe966a4676faac2993bc1431" category="section-title">自动化攻略手册</block>
+  <block id="ba985cf3c812e3ba064fedc7353bbb77" category="section-title">恢复Oracle数据库</block>
 </blocks>
