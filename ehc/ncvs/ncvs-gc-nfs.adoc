@@ -76,11 +76,7 @@ NFS挂载的初始导出/共享访问通过导出策略中包含的基于主机�
 对于CVS-SW、导出策略配置可使用以下选项：
 
 * *客户端匹配。* IP地址列表以逗号分隔、主机名、子网、网络组和域名列表以逗号分隔。
-* * RO或RW访问规则。*选择读/写或只读以控制导出的访问级别。
-
-
-CVS-Performance提供了以下选项：
-
+* * RO/RW访问规则。*选择读/写或只读以控制对导出的访问级别。cvs-Performance提供了以下选项：
 * *客户端匹配。* IP地址列表以逗号分隔、主机名、子网、网络组和域名列表以逗号分隔。
 * * RO或RW访问规则。*选择读/写或只读以控制导出的访问级别。
 * *根访问(开/关)。*配置根强制转换(请参见一节 root user"了解详细信息)。
@@ -142,7 +138,7 @@ Cloud Volumes Service 同时支持模式位(例如rwx的6444、777等)和NFSv4.1
 |===
 最后、根据RPC数据包限制、对于AUTH_SYS、NFS组成员资格(在NFSv3和NFSv4.x中)限制为默认最大16个。NFS Kerberos最多可提供32个组、NFSv4 ACL可通过粒度用户和组ACL (每个ACE最多1024个条目)来消除此限制。
 
-此外、Cloud Volumes Service 还提供了扩展的组支持、可将支持的最大组数扩展到32个。这需要通过LDAP连接到包含有效UNIX用户和组身份的LDAP服务器。有关配置此的详细信息、请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/creating-nfs-volumes["创建和管理NFS卷"^] 在Google文档中。
+此外、Cloud Volumes Service 还提供了扩展的组支持、可将支持的最大组数扩展到32个。这需要通过LDAP连接到包含有效UNIX用户和组身份的LDAP服务器。有关配置此的详细信息、请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/creating-nfs-volumes?hl=en_US["创建和管理NFS卷"^] 在Google文档中。
 
 
 

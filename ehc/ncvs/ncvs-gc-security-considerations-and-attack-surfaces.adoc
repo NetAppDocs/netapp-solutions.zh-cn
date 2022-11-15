@@ -72,7 +72,7 @@ CVS-Performance服务类型提供跨区域复制选项、以便在发生区域�
 
 自2021年11月起、CVS-Performance提供了客户管理的预览加密(CMEK)功能。通过此功能、您可以使用Google密钥管理服务(KMS)中托管的每个项目、每个区域的主密钥对每个卷的密钥进行加密。您可以通过Kms连接外部密钥管理器。
 
-有关如何为KMS配置CVS-Performance的详细信息、 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/customer-managed-keys["请参见Cloud Volumes Service 文档"^]。
+有关如何为KMS配置CVS-Performance的详细信息、 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/customer-managed-keys?hl=en_US["请参见Cloud Volumes Service 文档"^]。
 
 有关架构的详细信息、请参见一节 link:ncvs-gc-cloud-volumes-service-architecture.html["Cloud Volumes Service 架构。"]
 
@@ -137,8 +137,8 @@ Cloud Volumes Service 本机提供不可变的只读Snapshot副本、这些副�
 
 Cloud Volumes Service 提供标准NAS客户端备份功能(例如通过NFS或SMB进行备份)。
 
-* CVS-Performance可跨区域卷复制到其他CVS-Performance卷。有关详细信息，请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/volume-replication["卷复制"^] 在Cloud Volumes Service 文档中。
-* CVS-SW提供服务本机卷备份/还原功能。有关详细信息，请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/back-up["云备份"^] 在Cloud Volumes Service 文档中。
+* CVS-Performance可跨区域卷复制到其他CVS-Performance卷。有关详细信息，请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/volume-replication?hl=en_US["卷复制"^] 在Cloud Volumes Service 文档中。
+* CVS-SW提供服务本机卷备份/还原功能。有关详细信息，请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/back-up?hl=en_US["云备份"^] 在Cloud Volumes Service 文档中。
 
 
 卷复制可提供源卷的精确副本、以便在发生灾难(包括勒索软件事件)时快速进行故障转移。
@@ -155,7 +155,7 @@ Cloud Volumes Service 提供标准NAS客户端备份功能(例如通过NFS或SMB
 
 卷副本为只读副本、可为异地数据提供不可变的副本、以便在病毒已感染数据或勒索软件已对主数据集进行加密的情况下快速恢复数据。只读数据不会加密、但如果主卷受到影响并发生复制、则受感染的块也会进行复制。您可以使用不受影响的旧Snapshot副本进行恢复、但SLA可能会超出承诺的RTO /RRPO范围、具体取决于检测到攻击的速度。
 
-此外、您还可以通过在Google Cloud中进行跨区域复制(CRR)管理来防止恶意管理操作、例如卷删除、Snapshot删除或Snapshot计划更改。这是通过创建自定义角色来实现的、这些角色会将卷管理员分隔开、这些管理员可以删除源卷、但不会中断镜像、因此无法从无法执行任何卷操作的CRR管理员中删除目标卷。请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/security-considerations["安全注意事项"^] 在Cloud Volumes Service 文档中、了解每个管理员组允许的权限。
+此外、您还可以通过在Google Cloud中进行跨区域复制(CRR)管理来防止恶意管理操作、例如卷删除、Snapshot删除或Snapshot计划更改。这是通过创建自定义角色来实现的、这些角色会将卷管理员分隔开、这些管理员可以删除源卷、但不会中断镜像、因此无法从无法执行任何卷操作的CRR管理员中删除目标卷。请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/security-considerations?hl=en_US["安全注意事项"^] 在Cloud Volumes Service 文档中、了解每个管理员组允许的权限。
 
 
 
@@ -163,18 +163,18 @@ Cloud Volumes Service 提供标准NAS客户端备份功能(例如通过NFS或SMB
 
 虽然Cloud Volumes Service 可提供较高的数据持久性、但外部事件可能会导致发生原因 数据丢失。在发生病毒或勒索软件等安全事件时、备份和恢复对于及时恢复数据访问至关重要。管理员可能会意外删除Cloud Volumes Service 卷。或者、用户只希望将数据的备份版本保留数月、而在卷中保留额外的Snapshot副本空间将成为一项成本难题。虽然Snapshot副本应该是在过去几周内保留备份版本以恢复其丢失的数据的首选方式、但它们位于卷中、如果卷消失、它们将丢失。
 
-出于所有这些原因、NetApp Cloud Volumes Service 均通过提供备份服务 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/back-up["Cloud Volumes Service 备份"^]。
+出于所有这些原因、NetApp Cloud Volumes Service 均通过提供备份服务 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/back-up?hl=en_US["Cloud Volumes Service 备份"^]。
 
 Cloud Volumes Service 备份会在Google云存储(GCS)上生成卷的副本。它只会备份存储在卷中的实际数据、而不会备份可用空间。它始终以增量形式运行、也就是说、它会一次性传输卷内容、并在上继续备份更改的数据。与具有多个完整备份的传统备份概念相比、它可以节省大量备份存储、从而降低成本。由于与卷相比、备份空间的每月价格更低、因此、它是延长备份版本的理想之选。
 
 用户可以使用Cloud Volumes Service 备份将任何备份版本还原到同一区域内的相同或不同卷。如果删除了源卷、则备份数据会保留下来、需要单独管理(例如删除)。
 
-Cloud Volumes Service 备份内置在Cloud Volumes Service 中作为选项。用户可以通过激活每个卷的Cloud Volumes Service 备份来确定要保护的卷。请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/back-up["Cloud Volumes Service 备份文档"^] 有关备份的信息、请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/resource-limits-quotas["支持的最大备份版本数"^]、计划和 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/costs["定价"^]。
+Cloud Volumes Service 备份内置在Cloud Volumes Service 中作为选项。用户可以通过激活每个卷的Cloud Volumes Service 备份来确定要保护的卷。请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/back-up?hl=en_US["Cloud Volumes Service 备份文档"^] 有关备份的信息、请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/resource-limits-quotas?hl=en_US["支持的最大备份版本数"^]、计划和 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/costs?hl=en_US["定价"^]。
 
 项目的所有备份数据都存储在GCS存储分段中、此存储分段由服务管理、用户无法看到。每个项目使用不同的存储分段。目前、存储分段与Cloud Volumes Service 卷位于同一区域、但正在讨论更多选项。有关最新状态、请参见文档。
 
 从Cloud Volumes Service 存储分段到GCS的数据传输使用具有HTTPS和TLS1.2的服务内部Google网络。数据会使用Google管理的密钥在空闲时进行加密。
 
-要管理Cloud Volumes Service 备份(创建、删除和还原备份)、用户必须具有 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/security-considerations["角色/netappcloudvolumes.admin"^] 角色。
+要管理Cloud Volumes Service 备份(创建、删除和还原备份)、用户必须具有 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/security-considerations?hl=en_US["角色/netappcloudvolumes.admin"^] 角色。
 
 link:ncvs-gc-architecture_overview.html["接下来：架构概述。"]
