@@ -27,7 +27,7 @@ link:ncvs-gc-cloud-volumes-service-architecture.html["先前版本：Cloud Volum
 
 === 授权/权限概述
 
-IAM为Cloud Volumes Service 提供内置的粒度权限。您可以找到 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/security-considerations?hl=en_US["在此填写粒度权限列表"^]。
+IAM为Cloud Volumes Service 提供内置的粒度权限。您可以找到 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/security-considerations["在此填写粒度权限列表"^]。
 
 IAM还提供了两个预定义角色、称为`netappcloudvolumes.admin`和`netappcloudvolumes.viewer`。可以将这些角色分配给特定用户或服务帐户。
 
@@ -50,13 +50,13 @@ IAM还提供了两个预定义角色、称为`netappcloudvolumes.admin`和`netap
 * 使用 ... https://cloud.google.com/iam/docs/impersonating-service-accounts["服务帐户模拟"^] 使用`Roles/iam.serviceAccountTokenCreator`。代码(脚本、Terraform等)运行 https://google.aip.dev/auth/4110["应用程序默认凭据"^] 并模拟服务帐户以获取其权限。此方法反映了Google的安全最佳实践。
 
 
-请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/api?hl=en_US["正在创建服务帐户和私钥"^] 有关详细信息、请参见Google云文档。
+请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/api["正在创建服务帐户和私钥"^] 有关详细信息、请参见Google云文档。
 
 
 
 == Cloud Volumes Service API
 
-Cloud Volumes Service API使用基于REST的API、并使用HTTPS (TLSv1.2)作为底层网络传输。您可以找到最新的API定义 https://cloudvolumesgcp-api.netapp.com/swagger.json["此处"^] 以及有关如何使用API的信息、请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/api?hl=en_US["Google云文档中的Cloud Volumes API"^]。
+Cloud Volumes Service API使用基于REST的API、并使用HTTPS (TLSv1.2)作为底层网络传输。您可以找到最新的API定义 https://cloudvolumesgcp-api.netapp.com/swagger.json["此处"^] 以及有关如何使用API的信息、请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/api["Google云文档中的Cloud Volumes API"^]。
 
 API端点由NetApp使用标准HTTPS (TLSv1.2)功能进行操作和保护。
 

@@ -17,14 +17,14 @@ link:ncvs-gc-data-encryption-at-rest.html["先前版本：空闲数据加密。"
 
 Cloud Volumes Service 公开多个TCP端口以提供NFS和SMB共享：
 
-* https://cloud.google.com/architecture/partners/netapp-cloud-volumes/security-considerations?hl=en_US["NFS访问所需的端口"^]
-* https://cloud.google.com/architecture/partners/netapp-cloud-volumes/security-considerations?hl=en_US["SMB访问所需的端口"^]
+* https://cloud.google.com/architecture/partners/netapp-cloud-volumes/security-considerations["NFS访问所需的端口"^]
+* https://cloud.google.com/architecture/partners/netapp-cloud-volumes/security-considerations["SMB访问所需的端口"^]
 
 
-此外、SMB、包含Kerberos的LDAP NFS以及双协议配置都需要访问Windows Active Directory域。Active Directory连接必须为 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/creating-smb-volumes?hl=en_US["已配置"^] 按区域计算。Active Directory域控制器(DC)通过使用进行标识 https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-adts/7fcdce70-5205-44d6-9c3a-260e616a2f04["基于DNS的DC发现"^] 使用指定的DNS服务器。将使用返回的任何DC。可以通过指定Active Directory站点来限制符合条件的域控制器列表。
+此外、SMB、包含Kerberos的LDAP NFS以及双协议配置都需要访问Windows Active Directory域。Active Directory连接必须为 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/creating-smb-volumes["已配置"^] 按区域计算。Active Directory域控制器(DC)通过使用进行标识 https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-adts/7fcdce70-5205-44d6-9c3a-260e616a2f04["基于DNS的DC发现"^] 使用指定的DNS服务器。将使用返回的任何DC。可以通过指定Active Directory站点来限制符合条件的域控制器列表。
 
-Cloud Volumes Service 会通过使用`gcloud compute address`命令分配的CIDR范围内的IP地址进行联系 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/setting-up-private-services-access?hl=en_US["加入Cloud Volumes Service"^]。您可以使用此CIDR作为源地址来为Active Directory域控制器配置入站防火墙。
+Cloud Volumes Service 会通过分配给的CIDR范围内的IP地址进行访问 `gcloud compute address` 命令 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/setting-up-private-services-access["加入Cloud Volumes Service"^]。您可以使用此CIDR作为源地址来为Active Directory域控制器配置入站防火墙。
 
-Active Directory域控制器必须 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/security-considerations?hl=en_US["将端口公开到此处所述的Cloud Volumes Service CIDR中"^]。
+Active Directory域控制器必须 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/security-considerations["将端口公开到此处所述的Cloud Volumes Service CIDR中"^]。
 
 link:ncvs-gc-nas-protocols_overview.html["接下来：NAS协议概述。"]

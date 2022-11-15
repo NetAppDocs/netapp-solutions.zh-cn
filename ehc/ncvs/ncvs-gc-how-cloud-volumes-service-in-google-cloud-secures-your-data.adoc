@@ -21,7 +21,7 @@ Google Cloud中的Cloud Volumes Service 提供了多种本机保护数据安全�
 
 == 安全架构和租户模式
 
-Cloud Volumes Service 通过在不同端点之间分段服务管理(控制平面)和数据访问(数据平面)、在Google Cloud中提供一个安全的架构、这样两者都不会影响另一端(请参见一节) link:ncvs-gc-cloud-volumes-service-architecture.html["Cloud Volumes Service 架构"]）。它使用Google https://cloud.google.com/vpc/docs/private-services-access?hl=en_US["私有服务访问"^] (PSA)提供服务的框架。此框架区分由NetApp提供和运营的服务生产者和客户项目中托管要访问Cloud Volumes Service 文件共享的客户端的虚拟私有云(Virtual Private Cloud、VPC)服务使用者。
+Cloud Volumes Service 通过在不同端点之间分段服务管理(控制平面)和数据访问(数据平面)、在Google Cloud中提供一个安全的架构、这样两者都不会影响另一端(请参见一节) link:ncvs-gc-cloud-volumes-service-architecture.html["Cloud Volumes Service 架构"]）。它使用Google https://cloud.google.com/vpc/docs/private-services-access["私有服务访问"^] (PSA)提供服务的框架。此框架区分由NetApp提供和运营的服务生产者和客户项目中托管要访问Cloud Volumes Service 文件共享的客户端的虚拟私有云(Virtual Private Cloud、VPC)服务使用者。
 
 在此架构中、租户(请参见第节 link:ncvs-gc-cloud-volumes-service-architecture.html#tenancy-model[""租户模式""])定义为除非用户明确连接、否则彼此完全隔离的Google Cloud项目。通过租户、可以使用Cloud Volumes Service 卷平台将数据卷、外部名称服务以及解决方案 的其他基本部分与其他租户完全隔离。由于Cloud Volumes Service 平台是通过VPC对等连接的、因此这种隔离也会对其进行适用场景。您可以使用共享VPC在多个项目之间共享Cloud Volumes Service 卷(请参见一节) link:ncvs-gc-cloud-volumes-service-architecture.html#tenancy-model#shared-vpcs[""共享VPC""]）。您可以对SMB共享和NFS导出应用访问控制、以限制可以查看或修改数据集的用户或对象。
 
