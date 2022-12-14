@@ -92,6 +92,7 @@ NOTE: 此功能当前处于公有 预览模式。
 要将Azure NetApp文件卷作为Azure VMware解决方案 私有云的VMware数据存储库附加、请确保满足以下前提条件。
 
 .前提条件
+[%collapsible]
 ====
 . 使用AZ登录并验证订阅是否已注册到Microsoft .AVS命名空间中的CloudSanExpertion功能。
 
@@ -148,6 +149,7 @@ az extension add --name vmware
 ....
 ====
 .创建并挂载 Azure NetApp Files 卷
+[%collapsible]
 ====
 . 登录到Azure门户并访问Azure NetApp Files。使用`az provider register``-namespace Microsoft.NetApp–wait`命令验证对Azure NetApp Files 服务的访问并注册Azure NetApp Files 资源提供程序。注册后、创建一个NetApp帐户。请参见此部分 https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-create-netapp-account["链接。"^] 了解详细步骤。
 
@@ -179,6 +181,7 @@ image:vmware-dr-image4.png["错误：缺少图形映像"]
 
 ====
 .将Azure NetApp Files 数据存储库添加到私有云
+[%collapsible]
 ====
 要将Azure NetApp Files 数据存储库添加到私有云、请完成以下步骤：
 
@@ -303,11 +306,13 @@ image:vmware-dr-image6.png["错误：缺少图形映像"]
 == 工作负载
 
 .migration
+[%collapsible]
 ====
 迁移是最常见的使用情形之一。使用VMware HCX或vMotion移动内部VM。或者、您也可以使用Riverbadow.将VM迁移到Azure NetApp Files 数据存储库。
 
 ====
 .数据保护
+[%collapsible]
 ====
 备份VM并快速恢复VM是ANF数据存储库的主要优势之一。使用Snapshot副本在不影响性能的情况下快速创建虚拟机或数据存储库的副本、然后将其发送到Azure存储以实现长期数据保护、或者使用跨区域复制将其发送到二级区域以实现灾难恢复。这种方法只存储更改后的信息，从而最大限度地减少存储空间和网络带宽。
 
@@ -317,6 +322,7 @@ image:vmware-dr-image6.png["错误：缺少图形映像"]
 NOTE: 对于ANF数据存储库、可以使用还原到新卷选项克隆整个数据存储库卷、还原的卷可以作为另一个数据存储库挂载到AVS SDDC中的主机。挂载数据存储库后、可以注册、重新配置和自定义数据存储库中的VM、就像它们是单独克隆的VM一样。
 
 .适用于虚拟机的Cloud Backup
+[%collapsible]
 =====
 适用于虚拟机的Cloud Backup可在vCenter上提供vSphere Web客户端GUI、以通过备份策略保护Azure VMware解决方案 虚拟机和Azure NetApp Files 数据存储库。这些策略可以定义计划、保留和其他功能。可以使用Run命令部署Cloud Backup for Virtual Machine功能。
 
@@ -336,6 +342,7 @@ image:vmware-dr-image7.png["错误：缺少图形映像"]
 
 =====
 .使用Azure NetApp Files 、Jetstream DR和Azure VMware解决方案 进行灾难恢复
+[%collapsible]
 =====
 将灾难恢复到云是一种弹性且经济高效的方式、可保护工作负载免受站点中断和数据损坏事件(例如勒索软件)的影响。使用VMware VAIO框架、可以将内部VMware工作负载复制到Azure Blob存储并进行恢复、从而最大限度地减少或接近无数据丢失、并实现近乎零的RTO。可以使用Jetstream DR无缝恢复从内部复制到AVS、特别是复制到Azure NetApp Files 的工作负载。它通过在灾难恢复站点使用最少的资源和经济高效的云存储来实现经济高效的灾难恢复。Jetstream DR可通过Azure Blob Storage自动恢复到ANF数据存储库。Jetstream灾难恢复可根据网络映射将独立的VM或相关VM组恢复到恢复站点基础架构中、并提供时间点恢复以实现勒索软件保护。
 

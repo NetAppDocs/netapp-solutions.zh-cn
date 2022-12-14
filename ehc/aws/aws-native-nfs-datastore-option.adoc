@@ -24,6 +24,7 @@ NOTE: 在与AWS SDDC上的VMware Cloud相同的可用区域中部署适用于ONT
 NOTE: 您不能在已连接的VPC中部署适用于ONTAP 的FSX。而是必须将其部署在新的指定VPC中、然后通过SDDC组将VPC连接到VMware托管传输网关(vTGW）。
 
 .第1步：在新的指定VPC中创建适用于ONTAP 的Amazon FSX
+[%collapsible]
 ====
 要创建和挂载适用于NetApp ONTAP 的Amazon FSX文件系统、请完成以下步骤：
 
@@ -147,6 +148,7 @@ NOTE: 重复上述步骤、根据容量和性能要求创建更多的Storage Vir
 
 ====
 .第2步：创建SDDC组
+[%collapsible]
 ====
 创建文件系统和SVM后、请使用VMware控制台创建SDDC组并配置VMware Transit Connect。要执行此操作、请完成以下步骤、并记住您必须在VMware Cloud Console和AWS Console之间导航。
 
@@ -165,6 +167,7 @@ image:fsx-nfs-image13.png["错误：缺少图形映像"]
 
 ====
 .第3步：配置VMware传输连接
+[%collapsible]
 ====
 . 将新创建的指定VPC附加到SDDC组。选择*外部VPC*选项卡、然后按照进行操作 https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-operations/GUID-A3D03968-350E-4A34-A53E-C0097F5F26A9.html["将外部VPC连接到组的说明"^]。此过程可能需要10到15分钟才能完成。
 +
@@ -193,6 +196,7 @@ image:fsx-nfs-image16.png["错误：缺少图形映像"]
 
 ====
 .第4步：创建传输网关连接
+[%collapsible]
 ====
 . 在AWS控制台中、转至VPC服务页面并导航到用于配置FSX文件系统的VPC。在此、您可以单击右侧导航窗格上的*传输网关附件*来创建传输网关附件。
 . 在* VPC附件*下、确保已选中DNS支持、并选择部署了FSX for ONTAP 的VPC。
@@ -230,6 +234,7 @@ image:fsx-nfs-image22.png["错误：缺少图形映像"]
 
 ====
 .第5步：配置路由(AWS VPC和SDDC)和安全组
+[%collapsible]
 ====
 . 在AWS控制台中、通过在VPC服务页面中找到VPC并选择VPC的*主*路由表来创建返回SDDC的路由。
 . 浏览到下部面板中的路由表、然后单击*编辑路由*。
@@ -259,6 +264,7 @@ NOTE: 更新安全组以接受NFS流量。
 
 ====
 .第6步：将NFS卷作为数据存储库连接到SDDC集群
+[%collapsible]
 ====
 配置文件系统并建立连接后、访问VMware Cloud Console以挂载NFS数据存储库。
 

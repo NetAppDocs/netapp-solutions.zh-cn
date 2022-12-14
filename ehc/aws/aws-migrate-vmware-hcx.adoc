@@ -29,6 +29,7 @@ VMware HCX主要是一个移动平台、旨在简化工作负载迁移、工作�
 有关详细信息，请参见 https://docs.vmware.com/en/VMware-HCX/4.4/hcx-getting-started/GUID-DE0AD0AE-A6A6-4769-96ED-4D200F739A68.html["HCX部署简介"^] 和 https://docs.vmware.com/en/VMware-HCX/4.4/hcx-getting-started/GUID-70F9C40C-804C-4FC8-9FBD-77F9B2FA77CA.html["安装检查清单B—在AWS SDDC目标环境中使用VMware Cloud的HCX"^]。
 
 .高级步骤
+[%collapsible]
 ====
 此列表概括介绍了安装和配置VMware HCX的步骤：
 
@@ -44,6 +45,7 @@ VMware HCX主要是一个移动平台、旨在简化工作负载迁移、工作�
 
 ====
 .前提条件
+[%collapsible]
 ====
 开始之前、请确保满足以下前提条件。有关详细信息，请参见 https://docs.vmware.com/en/VMware-HCX/4.4/hcx-user-guide/GUID-A631101E-8564-4173-8442-1D294B731CEB.html["准备安装HCX"^]。具备连接等前提条件后、可从VMC的VMware HCX控制台生成许可证密钥来配置和激活HCX。激活HCX后、将部署vCenter插件、并可使用vCenter控制台进行访问以进行管理。
 
@@ -57,6 +59,7 @@ VMware HCX主要是一个移动平台、旨在简化工作负载迁移、工作�
 
 ====
 .高级架构
+[%collapsible]
 ====
 出于测试目的、用于此验证的内部实验室环境通过站点到站点VPN连接到AWS VPC、从而可以通过外部传输网关在内部连接到AWS和VMware云SDDC。内部部署和VMware云目标SDDC之间的HCX迁移和网络扩展流量通过Internet传输。可以修改此架构以使用Direct Connect专用虚拟接口。
 
@@ -72,6 +75,7 @@ image:fsx-hcx-image1.png["错误：缺少图形映像"]
 按照一系列步骤完成此解决方案 的部署：
 
 .第1步：使用Add-ons选项通过VMC SDDC激活HCX
+[%collapsible]
 ====
 要执行安装、请完成以下步骤：
 
@@ -91,6 +95,7 @@ image:fsx-hcx-image2.png["错误：缺少图形映像"]
 
 ====
 .第2步：在内部vCenter Server中部署安装程序OVA
+[%collapsible]
 ====
 要使内部连接器能够与VMC中的HCX Manager进行通信、请确保在内部环境中打开相应的防火墙端口。
 
@@ -105,6 +110,7 @@ image:fsx-hcx-image5.png["错误：缺少图形映像"]
 
 ====
 .第3步：使用许可证密钥激活HCX Connector
+[%collapsible]
 ====
 在内部部署VMware HCX Connector OVA并启动设备后、请完成以下步骤以激活HCX Connector。从VMC上的VMware HCX控制台生成许可证密钥、并在设置VMware HCX Connector期间输入许可证。
 
@@ -152,6 +158,7 @@ image:fsx-hcx-image8.png["错误：缺少图形映像"]
 
 ====
 .第4步：将内部VMware HCX Connector与VMC HCX Cloud Manager配对
+[%collapsible]
 ====
 . 要在内部vCenter Server和VMC SDDC之间创建站点对、请登录到内部vCenter Server并访问HCX vSphere Web Client插件。
 +
@@ -181,6 +188,7 @@ NOTE: VMware HCX Connector必须能够通过端口443与HCX Cloud Manager IP进�
 
 ====
 .第5步：配置网络配置文件、计算配置文件和服务网格
+[%collapsible]
 ====
 VMware HCX互连(HCX-IX)设备可通过Internet提供安全通道功能、并可通过专用连接到目标站点、从而实现复制和基于vMotion的功能。互连可提供加密、流量工程和SD-WAN。要创建HCI-IX互连设备、请完成以下步骤：
 
@@ -242,6 +250,7 @@ image:fsx-hcx-image18.png["错误：缺少图形映像"]
 
 ====
 .第6步：迁移工作负载
+[%collapsible]
 ====
 HCX可在内部环境和VMC SDDC等两个或更多不同环境之间提供双向迁移服务。可以使用各种迁移技术将应用程序工作负载迁移到HCX激活的站点或从这些站点迁移到这些站点、例如HCX批量迁移、HCX vMotion、HCX冷迁移、HCX复制辅助vMotion (适用于HCX Enterprise版本)以及HCX操作系统辅助迁移(适用于HCX Enterprise版本)。
 
@@ -255,6 +264,7 @@ NOTE: HCX-IX设备会将移动代理服务添加为vCenter Server中的主机对
 image:fsx-hcx-image19.png["错误：缺少图形映像"]
 
 .VMware HCX vMotion
+[%collapsible]
 =====
 本节介绍HCX vMotion机制。此迁移技术使用VMware vMotion协议将VM迁移到VMC SDDC。vMotion迁移选项用于一次迁移单个VM的VM状态。此迁移方法期间不会发生服务中断。
 
@@ -286,6 +296,7 @@ image:fsx-hcx-image23.png["错误：缺少图形映像"]
 
 =====
 .VMware复制辅助vMotion
+[%collapsible]
 =====
 正如您从VMware文档中可能注意到的那样、VMware HCX Replication Assised vMotion (RAV)结合了批量迁移和vMotion的优势。批量迁移使用vSphere Replication并行迁移多个VM—VM会在切换期间重新启动。HCX vMotion无需停机即可迁移、但它会在一个复制组中按顺序逐个虚拟机执行。RAV会并行复制虚拟机、并使其保持同步、直到切换窗口为止。在切换过程中、它一次迁移一个虚拟机、而不会造成虚拟机停机。
 

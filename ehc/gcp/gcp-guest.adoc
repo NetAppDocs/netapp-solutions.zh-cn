@@ -33,6 +33,7 @@ Cloud Volumes ONTAP 是行业领先的云数据管理解决方案 、基于NetAp
 === Cloud Volumes ONTAP （ CVO ）作为子系统连接的存储
 
 .在 Google Cloud 中部署 Cloud Volumes ONTAP （自行部署）
+[%collapsible]
 ====
 可以从在 GCVE 私有云环境中创建的 VM 挂载 Cloud Volumes ONTAP 共享和 LUN 。这些卷还可以挂载到 Linux 客户端和 Windows 客户端上，并且在通过 iSCSI 挂载时，可以在 Linux 或 Windows 客户端上以块设备的形式访问 LUN ，因为 Cloud Volumes ONTAP 支持 iSCSI ， SMB 和 NFS 协议。只需几个简单的步骤即可设置 Cloud Volumes ONTAP 卷。
 
@@ -87,6 +88,7 @@ image:gcve-cvo-guest-9.png[""]
 
 ====
 .SMB 卷的其他配置
+[%collapsible]
 ====
 . 准备好工作环境后，请确保为 CIFS 服务器配置了适当的 DNS 和 Active Directory 配置参数。要创建 SMB 卷，必须执行此步骤。
 +
@@ -124,6 +126,7 @@ image:gcve-cvo-guest-15.png[""]
 
 ====
 .将 Cloud Volumes ONTAP 上的 LUN 连接到主机
+[%collapsible]
 ====
 要将 Cloud Volumes ONTAP LUN 连接到主机，请完成以下步骤：
 
@@ -180,6 +183,7 @@ image:gcve-cvo-guest-22.png[""]
 
 ====
 .在 Linux 客户端上挂载 Cloud Volumes ONTAP NFS 卷
+[%collapsible]
 ====
 要从 Google Cloud VMware 引擎中的 VM 挂载 Cloud Volumes ONTAP （ DIY ）文件系统，请执行以下步骤：
 
@@ -226,6 +230,7 @@ Cloud Volumes Services (CVS)是一套完整的数据服务产品组合、可提�
 === Cloud Volumes Service （ CVS ）作为子系统连接的存储
 
 .使用 VMware 引擎配置 Cloud Volumes Service
+[%collapsible]
 ====
 可以从 VMware 引擎环境中创建的 VM 挂载 Cloud Volumes Service 共享。由于 Cloud Volumes Service 支持 SMB 和 NFS 协议，因此这些卷也可以挂载到 Linux 客户端并映射到 Windows 客户端。可以通过简单的步骤设置 Cloud Volumes Service 卷。
 
@@ -235,6 +240,7 @@ Cloud Volume Service 和 Google Cloud VMware Engine 私有云必须位于同一�
 
 ====
 .创建一个 CVS NFS 卷到 GCVE 私有云
+[%collapsible]
 ====
 要创建和挂载 NFS 卷，请完成以下步骤：
 
@@ -288,6 +294,7 @@ image:gcve-cvs-guest-10.png[""]
 
 ====
 .将 NFS 导出挂载到在 VMware 引擎上运行的 VM
+[%collapsible]
 ====
 在准备挂载 NFS 卷之前，请确保专用连接的对等状态列为 "Active" 。状态为 "Active" 后，请使用 mount 命令。
 
@@ -329,6 +336,7 @@ image:gcve-cvs-guest-22.png[""]
 
 ====
 .创建 SMB 共享并将其挂载到在 VMware 引擎上运行的 VM
+[%collapsible]
 ====
 对于 SMB 卷，请确保在创建 SMB 卷之前已配置 Active Directory 连接。
 

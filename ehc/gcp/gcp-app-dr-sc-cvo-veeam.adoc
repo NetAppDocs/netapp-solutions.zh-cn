@@ -69,6 +69,7 @@ NOTE: 将内部数据中心连接到Google Cloud有多种方式、这使我们�
 === 部署详细信息
 
 .在Google Cloud上配置CVO并将卷复制到CVO
+[%collapsible]
 ====
 第一步是在Google Cloud上配置Cloud Volumes ONTAP (https://docs.netapp.com/us-en/netapp-solutions/ehc/gcp/gcp-guest.html["CVO"^])并使用所需的频率和快照保留将所需的卷复制到Cloud Volumes ONTAP。
 
@@ -79,6 +80,7 @@ image:dr-cvo-gcve-image2.png["错误：缺少图形映像"]
 video::dr-cvo-gcve-video2.mp4[Review of SQL VM protection with SnapCenter]
 ====
 .配置GCVE主机和CVO数据访问
+[%collapsible]
 ====
 部署SDDC时需要考虑的两个重要因素是GCVE解决方案 中SDDC集群的大小以及SDDC的持续运行时间。对于灾难恢复解决方案 、这两个主要注意事项有助于降低整体运营成本。SDDC可以小至三台主机、在整个规模的部署中一直到多主机集群。
 
@@ -90,19 +92,20 @@ video::dr-cvo-gcve-video2.mp4[Review of SQL VM protection with SnapCenter]
 
 ====
 .安装Veeam组件
+[%collapsible]
 ====
-根据部署场景、需要部署的Veeam备份服务器、备份存储库和备份代理。在此使用情形下、无需为Veeam部署对象存储、也不需要横向扩展存储库。
-
-https://helpcenter.veeam.com/docs/backup/qsg_vsphere/deployment_scenarios.html["有关安装操作步骤 的信息、请参见Veeam文档"]
+根据部署场景、需要部署的Veeam备份服务器、备份存储库和备份代理。在此使用情形下、无需为Veeam部署对象存储、也不需要横向扩展存储库。https://helpcenter.veeam.com/docs/backup/qsg_vsphere/deployment_scenarios.html["有关安装操作步骤 的信息、请参见Veeam文档"]
 
 ====
 .使用Veeam设置VM复制
+[%collapsible]
 ====
 内部vCenter和GCVE vCenter都需要向Veeam注册。 https://helpcenter.veeam.com/docs/backup/qsg_vsphere/replication_job.html["设置vSphere VM复制作业"] 在向导的子系统处理步骤中、选择禁用应用程序处理、因为我们将利用SnapCenter 进行应用程序感知型备份和恢复。
 
 video::dr-cvo-gcve-video1.mp4[Veeam Replication Job of SQL VM]
 ====
 .Microsoft SQL Server VM故障转移
+[%collapsible]
 ====
 video::dr-cvo-gcve-video3.mp4[Failover of SQL VM]
 ====
