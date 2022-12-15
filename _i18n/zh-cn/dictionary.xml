@@ -16021,4 +16021,259 @@
   <block id="1e95e8962dbf55d78e03e8da38f9f408" category="paragraph-title">用于在GCP上部署NetApp CVO (HA对)的Terraform配置文件</block>
   <block id="f39b5c8ffff4c5fccbc9ca01bf3bacf8" category="paragraph-title">用于在GCP上部署NetApp CVS卷的Terraform配置文件</block>
   <block id="934282d2b6cc731f63bcc3cdfbba32a1" category="paragraph">根据部署场景、需要部署的Veeam备份服务器、备份存储库和备份代理。在此使用情形下、无需为Veeam部署对象存储、也不需要横向扩展存储库。<block ref="3798d8f6f1f14581181abe3a5ef34dc1" category="inline-link-rx"></block></block>
+  <block id="a94f1b9cbc89a005a38096b1750f907f" category="cell">2022年12月15日</block>
+  <block id="754451201969a73231c286ef8f4b2fd6" category="cell">添加了TR-4923：《使用适用于NetApp ONTAP 的Amazon FSX在AWS EC2上运行SQL Server》</block>
+  <block id="f53cfd73e0994740413d578c9dd6b36e" category="doc">TR-4923：使用适用于NetApp ONTAP 的Amazon FSX在AWS EC2上运行SQL Server</block>
+  <block id="9aeea85747c176482897f26600d172d0" category="paragraph">作者：NetApp公司Pat Sithusan和Niyaz Mohamed</block>
+  <block id="8bd093418d226733e085e856bd9165c8" category="paragraph">许多希望将应用程序从内部迁移到云的公司发现、内部存储系统和云存储服务提供的功能差异阻碍了这项工作。这一差距使迁移Microsoft SQL Server等企业级应用程序的问题变得更加严重。特别是、运行企业级应用程序所需的服务存在差距、例如强大的快照、存储效率功能、高可用性、可靠性和一致的性能、迫使客户在设计上做出取舍或放弃应用程序迁移。借助适用于NetApp ONTAP 的FSX、客户不再需要做出让步。适用于NetApp ONTAP 的FSX是由AWS销售、支持、计费和全面管理的本机(第一方) AWS服务。它利用NetApp ONTAP 的强大功能提供与NetApp 30年来在AWS中作为托管服务在内部提供的企业级存储和数据管理功能相同的功能。</block>
+  <block id="f3eec26de1c09022af7c97255f0dfee6" category="inline-link">AWS FSX ONTAP</block>
+  <block id="a2f7f68476a76b6aa359589e4d201707" category="paragraph">使用EC2实例上的SQL Server、数据库管理员可以访问和自定义其数据库环境和底层操作系统。EC2实例上的SQL Server与结合使用<block ref="3f737fd84a60fb425fdcdb5cf9a593da" category="inline-link-rx"></block> 要存储数据库文件、可以使用块级复制实现高性能、数据管理以及简单易用的迁移路径。因此、您可以在AWS VPC上运行复杂的数据库、只需简单的迁移方法、减少单击次数、无需转换架构即可。</block>
+  <block id="cf79d59896c29cc7579cf75220c25c95" category="section-title">将适用于NetApp ONTAP 的Amazon FSx与SQL Server结合使用的优势</block>
+  <block id="8908df00453997edbfc759829ecdf0d8" category="paragraph">适用于NetApp ONTAP 的Amazon FSX是AWS中SQL Server部署的理想文件存储。优势包括：</block>
+  <block id="7b699f0e1a60e419ed7d9173339aa3f5" category="list-text">稳定一致的高性能和吞吐量以及低延迟</block>
+  <block id="8a34b0f2109dd0aad0c0c9976717cdd3" category="list-text">采用NVMe缓存的智能缓存可提高性能</block>
+  <block id="b10e27f9d68e001b8aa9369c8d308a8c" category="list-text">灵活的规模估算、可以随时增加或缩减容量、吞吐量和IOPS</block>
+  <block id="169fee7c17564fc51aa8d2e77bcc1ce0" category="list-text">高效的内部到AWS块复制</block>
+  <block id="fd140f04c5bc5f51aff3ea5e1619abaf" category="list-text">使用iSCSI、这是数据库环境中众所周知的协议</block>
+  <block id="e2c00a563e0219fd93fa6f24606dee33" category="list-text">精简配置和零占用空间克隆等存储效率功能</block>
+  <block id="4ac0316f1ba409d5cd9684222f9f8ada" category="list-text">备份时间从数小时缩短到数分钟、从而减少RTO</block>
+  <block id="e3168d8a4383357a37460afad2f8878d" category="list-text">使用直观的NetApp SnapCenter UI对SQL数据库进行粒度备份和恢复</block>
+  <block id="935da11069e36e124602b7e23a73ee06" category="list-text">能够在实际迁移之前执行多个测试迁移</block>
+  <block id="15173984ed0ff615a3f0d55c8cd12291" category="list-text">通过文件级或I/O级副本缩短迁移期间的停机时间并克服迁移挑战</block>
+  <block id="0de5f8d5cf18757efac074c02f16a0bb" category="list-text">在主要版本或修补程序更新后查找根发生原因 以减少MTTR</block>
+  <block id="1a8e2e4ef765d6c61c4652659fb151ac" category="paragraph">在使用iSCSI协议的FSX ONTAP 上部署SQL Server数据库(通常在内部使用)可提供一个理想的数据库存储环境、该环境具有卓越的性能、存储效率和数据管理功能。如果使用多个iSCSI会话(假设工作集大小为5%)、则适合Flash Cache的FSX ONTAP 服务可提供超过100、000个IOPS。此配置可全面控制要求最苛刻的应用程序的性能。在连接到FSX for ONTAP 的较小EC2实例上运行的SQL Server可以与在较大的EC2实例上运行的SQL Server执行相同的操作、因为对于ONTAP 、只会应用网络带宽限制。减小实例大小还可以降低计算成本、从而实现TCO优化部署。SQL与iSCSI、SMB3.0以及FSX for ONTAP 上的多通道持续可用性共享相结合、为SQL工作负载提供了巨大的优势。</block>
+  <block id="135b308ed83c53f1516b7c754566d1c4" category="section-title">开始之前</block>
+  <block id="365a329d23604298414064b1bd2dba2f" category="paragraph">通过将适用于NetApp ONTAP 的Amazon FSx与EC2实例上的SQL Server相结合、可以创建企业级数据库存储设计、以满足当今最苛刻的应用程序要求。要优化这两种技术、了解SQL Server I/O模式和特征至关重要。SQL Server数据库的存储布局设计合理、可支持SQL Server的性能以及SQL Server基础架构的管理。良好的存储布局还可以使初始部署取得成功、并随着业务的增长使环境能够随时间平稳增长。</block>
+  <block id="800d285a5a8ca10451f7ace50ac40de5" category="paragraph">在完成本文档中的步骤之前、您应具备以下前提条件：</block>
+  <block id="69a7abd5a400936f0e1a89910dfa0ba1" category="list-text">AWS帐户</block>
+  <block id="bfa061c0e7fe048c571ab15bc8d211a4" category="list-text">为ONTAP 配置EC2和FSX的相应IAM角色</block>
+  <block id="a76b04166db341ceee35b584673698e9" category="list-text">EC2上的Windows Active Directory域</block>
+  <block id="3084927119ae63d45676d527dfb4a882" category="list-text">所有SQL Server节点都必须能够彼此通信</block>
+  <block id="b1ada0ca0559fff335d482de393b4c70" category="list-text">确保DNS解析有效且主机名可以解析。如果不是、请使用主机文件条目。</block>
+  <block id="8413178222467ef68eb68a0644f11c42" category="list-text">SQL Server安装的一般知识</block>
+  <block id="9c69c1668eca3541f0576cdc7fc730f0" category="paragraph">此外、要确保存储配置最佳、请参见NetApp针对SQL Server环境的最佳实践。</block>
+  <block id="49c805233b94175c188c58ebf681a2b9" category="example-title">为EC2上的SQL Server环境配置最佳实践</block>
+  <block id="d1d9da06ca1cde6106fef737b522df6e" category="paragraph">使用FSX ONTAP 、采购存储是最简单的任务、可通过更新文件系统来执行。这种简单的过程可以根据需要动态优化成本和性能、有助于平衡SQL工作负载、同时也是精简配置的有力推动因素。FSX ONTAP 精简配置旨在为运行SQL Server的EC2实例提供比文件系统中配置的更多逻辑存储。写入数据时、存储空间会动态分配给每个卷或LUN、而不是预先分配空间。在大多数配置中、当卷或LUN中的数据被删除(并且未被任何Snapshot副本保留)时、可用空间也会释放回。下表提供了用于动态分配存储的配置设置。</block>
+  <block id="db1bfba30dab4f1ed4a13cc586837f1b" category="cell">无(默认设置)</block>
+  <block id="f6445fd89b0b2c67f0304765c4c9a760" category="cell">LUN预留</block>
+  <block id="f1e0735081bab920eff76b08a4600c76" category="cell">fractional_reserve</block>
+  <block id="856ee920f3261cadbc1c3fc52171d071" category="cell">0%(默认设置)</block>
+  <block id="99c0f62171e34b4ab6a79265f038e3af" category="cell">snap_reserve</block>
+  <block id="7c68df7d17c446f99304ee1dc1498bfc" category="cell">自动调整大小</block>
+  <block id="521c36a31c2762741cf0f8890cbe05e3" category="cell">开启</block>
+  <block id="43c4c1dbc452be91829f25ee32c2a956" category="cell">卷分层策略</block>
+  <block id="6d576caa9862f6db0177dfaff7abb095" category="cell">仅Snapshot</block>
+  <block id="e08a486f204620eff1a08fc926316c68" category="paragraph">使用此配置时、卷的总大小可以大于文件系统中的实际可用存储。如果LUN或Snapshot副本所需的空间超过卷中的可用空间、则卷会自动增长、从而从包含的文件系统中占用更多空间。通过自动增长、FSX ONTAP 可以自动将卷大小增加到您预先确定的最大大小。包含的文件系统中必须有可用空间、才能支持卷的自动增长。因此、在启用自动增长的情况下、您应监控包含文件系统的可用空间、并在需要时更新文件系统。</block>
+  <block id="82373a2016779f9c20fdc0d8b48101a7" category="inline-link">空间分配</block>
+  <block id="0126eb1acda2ac795726d8bc5fe76a98" category="paragraph">同时、设置<block ref="9d6ca3a9a42127525354c85d54adc465" category="inline-link-rx"></block> 选项on lun to enabled、以便在卷空间用尽且卷中的LUN无法接受写入时、FSX ONTAP 向EC2主机发出通知。此外、通过此选项、当EC2主机上的SQL Server删除数据时、适用于ONTAP 的FSX可以自动回收空间。默认情况下、space-allocation选项设置为disabled。</block>
+  <block id="afa7be61df3527a5c4b5b7369729dfbc" category="admonition">如果在无保证的卷中创建了空间预留LUN、则该LUN的行为与非空间预留LUN相同。这是因为无保证的卷没有可分配给LUN的空间；由于无保证、卷本身只能在写入时分配空间。</block>
+  <block id="cf18df2432b44bda18f67ef6fc93e36f" category="paragraph">使用此配置时、FSX ONTAP 管理员通常可以对卷进行大小调整、以便他们必须管理和监控主机端和文件系统上LUN中的已用空间。</block>
+  <block id="3e5fc395bc0727ee4a5d50bf7852e11e" category="admonition">NetApp建议对SQL Server工作负载使用单独的文件系统。如果文件系统用于多个应用程序、请监控文件系统和文件系统中卷的空间使用情况、以确保卷不会争用可用空间。</block>
+  <block id="9bc03cfd47c7deb1375b7e700fba9c1a" category="admonition">自动删除选项不会删除用于创建FlexClone卷的Snapshot副本。</block>
+  <block id="20292bb9591bce95b16e6ee1415023d3" category="admonition">对于任务关键型应用程序(例如SQL Server)、必须仔细考虑和管理过量使用存储的情况、即使发生极少的中断也无法容忍。在这种情况下、最好监控存储消耗趋势、以确定可以接受的过量使用量(如果有)。</block>
+  <block id="d846da4dd06c448920cac63b79adc614" category="list-text">为了获得最佳存储性能、请将文件系统容量配置为数据库总使用量的1.5倍。</block>
+  <block id="e2ec94309dce197f199c6e60cd3070eb" category="list-text">使用精简配置时、需要进行适当的监控并制定有效的操作计划、以避免应用程序停机。</block>
+  <block id="d7fbab8fe0fe681c9e815507bcdf85c8" category="list-text">请务必设置CloudWatch和其他监控工具警报、以便在存储填满时有足够的时间与用户联系以做出响应。</block>
+  <block id="626a89ea253e84625436538e7249e94d" category="section-title">为SQL Server配置存储并为备份、还原和克隆操作部署SnapCenter</block>
+  <block id="0a1c2236044192334a3fb3bbc0ab0dcd" category="paragraph">要使用SnapCenter 执行SQL Server操作、必须先为SQL Server创建卷和LUN。</block>
+  <block id="0cf06bf086c162ff9027bab7f6f36c93" category="example-title">为SQL Server创建卷和LUN</block>
+  <block id="ff6ef44023084895f5f22aaf568ee0e3" category="paragraph">要为SQL Server创建卷和LUN、请完成以下步骤：</block>
+  <block id="0165fcfd32879eacf541aadf086338d2" category="list-text">打开Amazon FSX控制台、网址为<block ref="977f5adc4374191d0e48b9c0a8830158" category="inline-link-rx"></block></block>
+  <block id="1e33ad7579c798ce6033c144ac99b840" category="list-text">使用创建方法下的标准创建选项为NetApp ONTAP 文件系统创建Amazon FSX。这样、您可以定义FSxadmin和vsadmin凭据。</block>
+  <block id="a83755c47ff9159637d0666c65d8c544" category="paragraph"><block ref="a83755c47ff9159637d0666c65d8c544" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="269452df07db5e5d5fb10125ef2dfc42" category="list-text">指定fsxadmin的密码。</block>
+  <block id="0939c7e9185662b3e54503cb12415c7a" category="paragraph"><block ref="0939c7e9185662b3e54503cb12415c7a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="dea5db34596930d023317e03284777e1" category="list-text">指定SVM的密码。</block>
+  <block id="d2b251088e201058dd19119478e04523" category="paragraph"><block ref="d2b251088e201058dd19119478e04523" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e5a504f8d9fd87dc54c0f8a370eed579" category="inline-link">在适用于NetApp ONTAP 的FSX上创建卷</block>
+  <block id="d0ff5f8be38ac60d217f9c007a52da0e" category="list-text">按照中列出的步骤创建卷<block ref="1146addad8000a8f0f70de9ea1e5f637" category="inline-link-rx"></block>。</block>
+  <block id="17288ccd1a2a55fccc24e084bec74a89" category="list-text">禁用存储 Snapshot 副本计划和保留策略。而是使用NetApp SnapCenter 来协调SQL Server数据和日志卷的Snapshot副本。</block>
+  <block id="c5023b4b04bc0ddc3d77e81fee7d99bb" category="list-text">在不同卷上的各个LUN上配置数据库、以利用快速、精细的还原功能。</block>
+  <block id="6cb174042332f6d15cedab79c1f88bac" category="list-text">将用户数据文件(.mdf)放在不同的卷上、因为它们是随机读/写工作负载。通常、创建事务日志备份的频率比创建数据库备份的频率更高。因此、请将事务日志文件(.ldf)与数据文件放在一个单独的卷上、以便为每个文件创建独立的备份计划。这种分离还会将日志文件的顺序写入I/O与数据文件的随机读/写I/O隔离开来、并显著提高SQL Server性能。</block>
+  <block id="0588cef8958d83f61aed452f853f5852" category="list-text">tempdb是Microsoft SQL Server使用的一个系统数据库、用作临时工作空间、尤其是用于I/O密集型DBCC CHECKDB操作。因此、请将此数据库放在专用卷上。在卷数量是一项挑战的大型环境中、您可以在仔细规划后将tempdb整合到较少的卷中、并将其与其他系统数据库存储在同一个卷中。tempdb的数据保护不是一个高优先级、因为每次重新启动Microsoft SQL Server时都会重新创建此数据库。</block>
+  <block id="0f33b537ada1b2dcb95880741120d7b6" category="list-text">使用以下SSH命令创建卷：</block>
+  <block id="4272c7e0323a62da36a59d8db2457c11" category="list-text">在Windows Server中使用提升的权限使用PowerShell启动iSCSI服务。</block>
+  <block id="91d0d079f1c5a2183c1012cd2c2e59ab" category="list-text">在Windows Server中使用提升的权限使用PowerShell安装Multipath-IO。</block>
+  <block id="4dee8d84e86540a5c4c302b3d75c32bc" category="list-text">在Windows Server中使用提升的权限查找具有PowerShell的Windows启动程序名称。</block>
+  <block id="13aca4cbeddb191f6e28fc3dc5b50aca" category="paragraph"><block ref="13aca4cbeddb191f6e28fc3dc5b50aca" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1fcce0650c7bce1532fc57b6af299dba" category="list-text">使用putty连接到Storage Virtual Machine (SVM)并创建iGroup。</block>
+  <block id="a260444f9f7265e7da0cffa861246e93" category="list-text">使用以下SSH命令创建LUN：</block>
+  <block id="0bf39861d87235a7c094d3de2e3a8840" category="paragraph"><block ref="0bf39861d87235a7c094d3de2e3a8840" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="52f5ef787d84b4ec1b5183cffdef5b56" category="list-text">要使用操作系统分区方案实现I/O对齐、请使用windows_2008作为建议的LUN类型。请参见<block ref="ff5fd3b71f5cd8b1a4e2fe23ad6d92ae" category="inline-link-rx"></block> 适用于追加信息 。</block>
+  <block id="4f10474fd5677d7f5caee5944cfd1a79" category="list-text">使用以下SSH命令将igroup映射到刚刚创建的LUN。</block>
+  <block id="e9cb77a7f24ef618789f32ace120d069" category="paragraph"><block ref="e9cb77a7f24ef618789f32ace120d069" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0108f548c7bfba3ca19e227db2ad81d9" category="list-text">对于使用Windows故障转移集群的共享磁盘、请运行SSH命令将同一个LUN映射到属于Windows故障转移集群中所有服务器的igroup。</block>
+  <block id="88c4f29ad54bd37fb1b7a1491b7af990" category="list-text">将Windows Server连接到具有iSCSI目标的SVM。从AWS门户查找目标IP地址。</block>
+  <block id="547003177db44afb512e9939c282d6c9" category="paragraph"><block ref="547003177db44afb512e9939c282d6c9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="df9eaa73034109b21c143e8c209823c2" category="list-text">从服务器管理器和工具菜单中、选择iSCSI启动程序。选择发现选项卡、然后选择发现门户。提供上一步中的iSCSI IP地址、然后选择高级。从本地适配器中、选择Microsoft iSCSI启动程序。从启动程序IP中、选择服务器的IP。然后选择确定以关闭所有窗口。</block>
+  <block id="076e00306637258d0363c74566eb915d" category="paragraph"><block ref="076e00306637258d0363c74566eb915d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8bd432f2fc3bb1fab0023bf42f7b4108" category="list-text">对SVM中的第二个iSCSI IP重复步骤12。</block>
+  <block id="5648333e8838336553b385e488639863" category="list-text">选择*目标*选项卡、选择*连接*、然后选择*启用多路径*。</block>
+  <block id="4bff8ed7bd736139029b8aa4f639ccd9" category="paragraph"><block ref="4bff8ed7bd736139029b8aa4f639ccd9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f94de8933712f5d52ca62caf7fef6eb5" category="list-text">为了获得最佳性能、请添加更多会话；NetApp建议创建五个iSCSI会话。选择*属性*&gt;*添加会话*&gt;*高级*并重复步骤12。</block>
+  <block id="5636fa6e8685f1da20bf9489bcadc782" category="paragraph"><block ref="5636fa6e8685f1da20bf9489bcadc782" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c762aaec425b12667f2a575012e48905" category="list-text">为每个目标接口配置五个iSCSI会话以获得最佳性能。</block>
+  <block id="72a53f90bcbaa031cad1c79575c53094" category="list-text">配置轮循策略以获得最佳整体iSCSI性能。</block>
+  <block id="168b03d713c83578e3c90be8e0a76a8e" category="list-text">格式化LUN时、请确保分区的分配单元大小设置为64K</block>
+  <block id="a196b0bfd5261a81ff3d40a2043f792c" category="list-text">运行以下PowerShell命令以确保iSCSI会话保持不变。</block>
+  <block id="58fbf35d4173787943d2fe31aed43341" category="paragraph"><block ref="58fbf35d4173787943d2fe31aed43341" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="22ae84abced8e9e1236160d982616772" category="list-text">使用以下PowerShell命令初始化磁盘。</block>
+  <block id="ac47df449db0c31d1ba6117a1dd19765" category="paragraph"><block ref="ac47df449db0c31d1ba6117a1dd19765" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b1e9edc2d6e907049df14a10a6fcc404" category="list-text">使用PowerShell运行创建分区和格式化磁盘命令。</block>
+  <block id="79484e9f2e5f0589c78f273edd80759f" category="paragraph">您可以使用附录B中的PowerShell脚本自动创建卷和LUN也可以使用SnapCenter 创建LUN。</block>
+  <block id="d05ae24753b4098046ae8369c5618b97" category="paragraph">定义卷和LUN后、您需要设置SnapCenter 才能执行数据库操作。</block>
+  <block id="6309043436d4e7e5bad9a81c89ff15e4" category="example-title">SnapCenter 概述</block>
+  <block id="419a08c6fdce80a29b8f8aeb7524f0e2" category="paragraph">NetApp SnapCenter 是适用于第1层企业级应用程序的下一代数据保护软件。SnapCenter 凭借其单一管理平台管理界面、可自动执行并简化与多个数据库和其他应用程序工作负载的备份、恢复和克隆相关的手动、复杂且耗时的流程。SnapCenter 利用NetApp技术、包括NetApp Snapshot、NetApp SnapMirror、SnapRestore 和NetApp FlexClone。通过这种集成、IT组织可以扩展其存储基础架构、满足日益严格的SLA承诺、并提高整个企业内管理员的工作效率。</block>
+  <block id="aa7c84b8a1ac7c27cbd3e14740e96214" category="example-title">SnapCenter 服务器要求</block>
+  <block id="4ee08603c9fd8ece4f670310954cdde6" category="paragraph">下表列出了在Microsoft Windows Server上安装SnapCenter 服务器和插件的最低要求。</block>
+  <block id="05bbb43b3d923283e0b6ffafd088f41f" category="cell">组件</block>
+  <block id="9b97b7bd5e0a87be7bf218224ada83cf" category="cell">要求</block>
+  <block id="44e5a606cb3fbfaed79ce8eb853ed886" category="paragraph">最小 CPU 计数</block>
+  <block id="ea54f01387bc5362f6e287ba66d656a8" category="paragraph">四核/vCPU</block>
+  <block id="99880291d6a6b72b928a1847a6135c88" category="paragraph">最小值：建议8 GB：32 GB</block>
+  <block id="96e1506a8b72a455b990ffe403eea2cf" category="paragraph">存储空间</block>
+  <block id="39b4c2fc16a74430850f1b767f816bdd" category="paragraph">最小安装空间：10 Gb存储库最小空间：10 Gb</block>
+  <block id="2e71b3fb71d89f18906d4807a6011e20" category="cell">支持的操作系统</block>
+  <block id="00aae0645113cb861020a7a42ded48c2" category="list-text">Windows Server 2012</block>
+  <block id="96bc7f42979153694e05a6a2b867772e" category="list-text">Windows Server 2012 R2</block>
+  <block id="ed590cb2453f0683b64cb528f78610a2" category="list-text">Windows Server 2016</block>
+  <block id="7c01fa88a74580e7e4f62ca6bfe7ee83" category="cell">软件包</block>
+  <block id="aab81d3c2e898a19cf0f270cdb285a21" category="list-text">.NET 4.5.2或更高版本</block>
+  <block id="43de0ba571a51d1adc60e6d05ecf8d70" category="list-text">Windows Management Framework （ WMF ） 4.0 或更高版本</block>
+  <block id="fd6133b32592ca288e63c1b1257f656d" category="list-text">PowerShell 4.0 或更高版本</block>
+  <block id="427d30c4045ae36c0130a14658100185" category="paragraph">有关详细信息、请参见空间和规模估算要求 <block ref="bcc48263fbca83f546b0bc02edad3f56" category="inline-link-rx"></block></block>
+  <block id="a19fb58a9ea7e8409b13e971960fdbf8" category="paragraph">有关版本兼容性、请参见<block ref="b7322bec4509d45107de6de43ca1f517" category="inline-link-rx"></block>。</block>
+  <block id="00324c8ea6b2abc68414748e587e15ec" category="example-title">数据库存储布局</block>
+  <block id="a02dce187534c84aa16d8849406a60eb" category="paragraph">下图介绍了使用SnapCenter 进行备份时创建Microsoft SQL Server数据库存储布局的一些注意事项。</block>
+  <block id="4c246b141980a6574bc7f111fe7abef7" category="paragraph"><block ref="4c246b141980a6574bc7f111fe7abef7" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="ebfae4b9e090c4988616a73ffc71415e" category="list-text">将具有I/O密集型查询或大型数据库(例如500 GB或更大)的数据库放置在一个单独的卷上、以加快恢复速度。此卷还应通过单独的作业进行备份。</block>
+  <block id="4916b57b0128fd5a0a4300f0a8763292" category="list-text">将不太重要或I/O要求较低的中小型数据库整合到一个卷。备份同一卷中的大量数据库会减少需要维护的Snapshot副本数量。此外、最佳做法是整合Microsoft SQL Server实例、以便使用相同的卷来控制所创建的备份Snapshot副本的数量。</block>
+  <block id="8db6b23eddd61aa572ca93a39703d4a8" category="list-text">创建单独的LUN以存储完整的文本相关文件和文件流相关文件。</block>
+  <block id="cb11fd215e0c541cb65535e582b9b273" category="list-text">为每个主机分配单独的LUN以存储Microsoft SQL Server日志备份。</block>
+  <block id="48b8325fd70d83c2d4e99987e23b07ef" category="list-text">存储数据库服务器元数据配置和作业详细信息的系统数据库不会频繁更新。将系统数据库/tempdb放置在单独的驱动器或LUN中。请勿将系统数据库与用户数据库放置在同一个卷中。用户数据库具有不同的备份策略、系统数据库的用户数据库备份频率不同。</block>
+  <block id="1be01a12dc77b3099b16d258c12db3f9" category="list-text">对于Microsoft SQL Server可用性组设置、请将副本的数据和日志文件置于所有节点上相同的文件夹结构中。</block>
+  <block id="a586cfc38b79b6539a9723b4d2f5af66" category="paragraph">除了将用户数据库布局隔离到不同卷的性能优势之外、数据库还会显著影响备份和还原所需的时间。与托管多个用户数据文件的卷相比、为数据和日志文件配置单独的卷可以显著缩短还原时间。同样、I/O密集型应用程序较高的用户数据库也容易增加备份时间。本文档稍后将详细介绍备份和还原实践。</block>
+  <block id="7f3611c256fabe67e4d74a6c70cfe9c5" category="admonition">从SQL Server 2012 (11.x)开始、系统数据库(主数据库、模型数据库、MSDB数据库和TempDB)、数据库引擎用户数据库可以作为存储选项随SMB文件服务器一起安装。此适用场景 既包括独立的SQL Server安装、也包括SQL Server故障转移集群安装。这样、您就可以将FSX for ONTAP 与所有性能和数据管理功能结合使用、包括卷容量、性能可扩展性和数据保护功能、SQL Server可以利用这些功能。应用程序服务器使用的共享必须使用持续可用属性集进行配置、并且应使用NTFS安全模式创建卷。NetApp SnapCenter 不能与FSX for ONTAP 中放置在SMB共享上的数据库结合使用。</block>
+  <block id="9e45010900186b3cbbe04f954a6f3562" category="admonition">对于不使用SnapCenter 执行备份的SQL Server数据库、Microsoft建议将数据和日志文件放置在不同的驱动器上。对于同时更新和请求数据的应用程序、日志文件会占用大量写入资源、而数据文件(取决于您的应用程序)会占用大量读/写资源。对于数据检索、不需要日志文件。因此、可以通过放置在其自己驱动器上的数据文件来满足数据请求。</block>
+  <block id="41a264a984b034248073a80093913e60" category="admonition">创建新数据库时、Microsoft建议为数据和日志指定单独的驱动器。要在创建数据库后移动文件、必须使数据库脱机。有关Microsoft的详细建议、请参见将数据和日志文件放置在不同的驱动器上。</block>
+  <block id="f4ea2029dd0e694cde33838315883930" category="example-title">安装和设置SnapCenter</block>
+  <block id="d39d360863f3fda3c5d615dc978e14ae" category="inline-link">安装 SnapCenter 服务器</block>
+  <block id="1155d165aa176b6275b67036497cd8e6" category="inline-link">安装适用于Microsoft SQL Server的SnapCenter 插件</block>
+  <block id="067f687182a68fccec4a3840e67fc889" category="paragraph">按照<block ref="4144149cc24a91f915be2d3b14f23c22" category="inline-link-rx"></block> 和<block ref="7e24f6ba39e2c63512c07f20cb1a71c0" category="inline-link-rx"></block> 安装和设置SnapCenter。</block>
+  <block id="3ab2ad2898088a813669db2948590562" category="paragraph">安装SnapCenter 后、请完成以下步骤进行设置。</block>
+  <block id="dd0c654d5a8ede80984b9526335bddc9" category="list-text">要设置凭据、请选择*设置*&gt;*新增*、然后输入凭据信息。</block>
+  <block id="ffe0bbfc2c08a0b0e98b92bee5d7a653" category="paragraph"><block ref="ffe0bbfc2c08a0b0e98b92bee5d7a653" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c790771cb60de4cb4a7212e8db25bf3c" category="list-text">通过选择存储系统&gt;新建并为ONTAP 存储信息提供适当的FSX来添加存储系统。</block>
+  <block id="28e78cc4b0ec3be7790fc763323de0f6" category="paragraph"><block ref="28e78cc4b0ec3be7790fc763323de0f6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c0e0b904d3c7826b806c48118543142c" category="list-text">通过选择*主机*&gt;*添加*来添加主机、然后提供主机信息。SnapCenter 会自动安装Windows和SQL Server插件。此过程可能需要一些时间。</block>
+  <block id="0f2c351522362209f5160c4794708c97" category="paragraph"><block ref="0f2c351522362209f5160c4794708c97" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="23dd2805cf2d7b26334d0678ab4e99b4" category="paragraph">安装完所有插件后、您必须配置日志目录。这是事务日志备份所在的位置。您可以通过选择主机并选择配置日志目录来配置日志目录。</block>
+  <block id="5c5fb88ff793d01c8b1a283f1ee88749" category="admonition">SnapCenter 使用主机日志目录存储事务日志备份数据。这是在主机和实例级别进行的。SnapCenter 使用的每个SQL Server主机都必须配置一个主机日志目录才能执行日志备份。SnapCenter 具有一个数据库存储库、因此与备份、还原或克隆操作相关的元数据存储在一个中央数据库存储库中。</block>
+  <block id="0fc057cb39ba1a444dbc365c0161d31f" category="paragraph">主机日志目录的大小计算如下：</block>
+  <block id="e067558831f8381f0970051292e0a02a" category="paragraph">主机日志目录大小=((系统数据库大小+(最大数据库LDF大小×每日日志更改率%))×(Snapshot副本保留)÷(1–LUN开销空间%)</block>
+  <block id="1b5bc043867e6da78577571c1070e56a" category="paragraph">主机日志目录大小调整公式假设以下条件：</block>
+  <block id="fa7afec3a90f55ad9aea3b76f336302f" category="list-text">不包含tempdb数据库的系统数据库备份</block>
+  <block id="f550013c290c4a21af7974f7440d758a" category="list-text">10%的LUN开销空间将主机日志目录置于专用卷或LUN上。主机日志目录中的数据量取决于备份的大小以及备份的保留天数。</block>
+  <block id="83924e370463c681c401f53e2b4b3f2d" category="paragraph"><block ref="83924e370463c681c401f53e2b4b3f2d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="bd9dfb7fc6f502e70f86a8c1f2d66aa1" category="paragraph">如果已配置LUN、则可以选择挂载点来表示主机日志目录。</block>
+  <block id="db38f16eb9374dba4590f05c202fa4a5" category="paragraph"><block ref="db38f16eb9374dba4590f05c202fa4a5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9a708f2af7ec6f7c7ae489cca832c811" category="paragraph">现在、您可以为SQL Server执行备份、还原和克隆操作了。</block>
+  <block id="7bfeafaf85908b711b618c069c66e99c" category="example-title">使用SnapCenter 备份数据库</block>
+  <block id="fc197cb26aec21d091eb6791c0d7cbff" category="paragraph">将数据库和日志文件放置在FSX ONTAP LUN上后、可以使用SnapCenter 备份数据库。以下过程用于创建完整备份。</block>
+  <block id="f52f437d3282493fd1855bba366c482a" category="list-text">在SnapCenter 术语中、RPO可以标识为备份频率、例如、您希望计划备份的频率、以便将数据丢失减少到最长几分钟。使用SnapCenter 、您可以计划每五分钟进行一次备份。但是、在某些情况下、备份可能无法在事务高峰时间的五分钟内完成、或者数据更改率在给定时间内较高。最佳做法是计划频繁执行事务日志备份、而不是执行完整备份。</block>
+  <block id="7b99ea666dfc26516833c088400741e6" category="list-text">可通过多种方法处理RPO和RTO。此备份方法的一种替代方法是、为不同间隔的数据和日志创建单独的备份策略。例如、在SnapCenter 中、每15分钟计划一次日志备份、每6小时计划一次数据备份。</block>
+  <block id="14b0febccc904523871b9498c72ab705" category="list-text">使用资源组进行备份配置、以优化Snapshot以及要管理的作业数。</block>
+  <block id="45be64dc5372d4c03684e301633c794c" category="list-text">选择*资源*、然后选择左上角下拉菜单中的* Microsoft SQL Server *。选择*刷新资源*。</block>
+  <block id="94cc612f3fcbd977b78ea3b7a422c531" category="paragraph"><block ref="94cc612f3fcbd977b78ea3b7a422c531" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3b8d60492f611ef339bf79fdbeb56dda" category="list-text">选择要备份的数据库、然后选择*下一步*和(*+)以添加策略(如果尚未创建策略)。按照*新SQL Server备份策略*创建新策略。</block>
+  <block id="d99e4391045a563d9d1d2d78ddd2417a" category="paragraph"><block ref="d99e4391045a563d9d1d2d78ddd2417a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="89f2e11b6c9317605c01622834d4853d" category="list-text">如有必要、选择验证服务器。此服务器是SnapCenter 在创建完整备份后运行DBCC CHECKDB的服务器。单击*下一步*进行通知、然后选择*摘要*进行查看。查看后、单击*完成*。</block>
+  <block id="fc2d6f88564b6e12fc40b19f28b7420d" category="paragraph"><block ref="fc2d6f88564b6e12fc40b19f28b7420d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="919295932fd1084fb39c4a1be23b37ed" category="list-text">单击*立即备份*以测试备份。在弹出窗口中、选择*备份*。</block>
+  <block id="93598d1ad688123817fda7d22fa0ac82" category="paragraph"><block ref="93598d1ad688123817fda7d22fa0ac82" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9c738a74e68034a98f4a38a1b41ef2d4" category="list-text">选择*监控*以验证备份是否已完成。</block>
+  <block id="710fa04917c218b834664e1f0d37a48c" category="paragraph"><block ref="710fa04917c218b834664e1f0d37a48c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="67459542a38abe56e00d4512bb475f05" category="list-text">从SnapCenter 备份事务日志备份、以便在还原过程中、SnapCenter 可以自动读取所有备份文件并按顺序还原。</block>
+  <block id="54d8d459dfb725a307f3bb54495de3e3" category="list-text">如果使用第三方产品进行备份、请选择在SnapCenter 中复制备份以避免日志序列问题、并在投入生产之前测试还原功能。</block>
+  <block id="83b7215bcd7cc73d11f34b95b4026718" category="example-title">使用SnapCenter 还原数据库</block>
+  <block id="7172cc34c1510c3891870c7c009c94e1" category="paragraph">在EC2上将FSX ONTAP 与SQL Server结合使用的一个主要优势是、它能够在每个数据库级别快速执行粒度还原。</block>
+  <block id="5afcacb3783eeead2b5317d1c455b3bc" category="paragraph">要使用SnapCenter 将单个数据库还原到特定时间点或最短时间、请完成以下步骤。</block>
+  <block id="a028f8b44f91b1338df98ed3237d093a" category="list-text">选择资源、然后选择要还原的数据库。</block>
+  <block id="b5f8165159678d41fab115d5a8f013d2" category="paragraph"><block ref="b5f8165159678d41fab115d5a8f013d2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="eb395b310e199ca7ef6b36360302bc50" category="list-text">选择需要从中还原数据库的备份名称、然后选择还原。</block>
+  <block id="e99d25ac3998e8701f51a1990c8d8785" category="list-text">按照*还原*弹出窗口还原数据库。</block>
+  <block id="8bdb6d6fe719d2506b9b5f86bda88b43" category="list-text">选择*监控*以验证还原过程是否成功。</block>
+  <block id="e445e84ca78cd7f21cdd70356d211583" category="paragraph"><block ref="e445e84ca78cd7f21cdd70356d211583" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="459c0a4ca065bbbedc6304d4c6903cc5" category="example-title">包含大量大小不一的数据库的实例的注意事项</block>
+  <block id="0be8a2d7e2996a1641824fa4250d2fd3" category="paragraph">SnapCenter 可以在资源组中的一个实例或一组实例中备份大量规模较大的数据库。数据库大小不是备份时间的主要因素。备份的持续时间可能因每个卷的LUN数量、Microsoft SQL Server上的负载、每个实例的数据库总数、尤其是I/O带宽和使用量而异。在配置用于从实例或资源组备份数据库的策略时、NetApp建议将每个Snapshot副本备份的最大数据库数限制为每个主机100个。确保Snapshot副本总数不超过1、023个副本的限制。</block>
+  <block id="33f3c567c61942e461392756abce64dc" category="paragraph">NetApp还建议对数据库数量进行分组、而不是为每个数据库或实例创建多个作业、以限制并行运行的备份作业。为了获得最佳备份持续时间性能、请将备份作业数量减少到一次可备份大约100个或更少数据库的数量。</block>
+  <block id="ea2e6af969539b040884e9a2ec1fcb49" category="paragraph">如前所述、I/O使用量是备份过程中的一个重要因素。备份过程必须等待暂停、直到数据库上的所有I/O操作完成。I/O操作非常密集的数据库应延迟到另一备份时间、或者应与其他备份作业隔离、以避免影响要备份的同一资源组中的其他资源。</block>
+  <block id="e5ad8f936997e1328b1b169bf5c6cc8b" category="paragraph">对于每个实例具有六个Microsoft SQL Server主机托管200个数据库的环境、假设每个主机具有四个LUN、并且每个卷创建了一个LUN、请将完整备份策略的每个Snapshot副本备份的最大数据库数设置为100。每个实例上的200个数据库布局为200个数据文件、在两个LUN上平均分布200个日志文件、在两个LUN上平均分布200个日志文件、即每个卷的每个LUN 100个文件。</block>
+  <block id="7804dbf4b7a37ec699db9a31f21bbea7" category="paragraph">通过创建三个资源组来计划三个备份作业、每个资源组对总共包含400个数据库的两个实例进行分组。</block>
+  <block id="e2ba702320599667af2b18f0fad307e0" category="paragraph">并行运行所有三个备份作业可同时备份1、200个数据库。根据服务器上的负载和I/O使用情况、每个实例上的开始和结束时间可能会有所不同。在这种情况下、总共会创建24个Snapshot副本。</block>
+  <block id="2d0d5c636161f9ca31c8ffbfa5ee5d7c" category="paragraph">除了完整备份之外、NetApp还建议您为关键数据库配置事务日志备份。确保数据库属性设置为完全恢复模式。</block>
+  <block id="aac1148375449745ddbbe1709a2375f5" category="list-text">请勿将tempdb数据库包括在备份中、因为它包含的数据是临时的。将tempdb放置在不会创建Snapshot副本的存储系统卷中的LUN或SMB共享上。</block>
+  <block id="16c5de1581b82a1f8657a3a98ac8fd34" category="list-text">对于I/O密集型应用程序较高的Microsoft SQL Server实例、应在不同的备份作业中隔离、以减少其他资源的整体备份时间。</block>
+  <block id="a9a558ac49f24a2b078812205f07179c" category="list-text">将要同时备份的一组数据库限制为大约100个、并错开其余一组数据库备份、以避免同时进行。</block>
+  <block id="68086c26b8c1644dfe6ea7d6fb859641" category="list-text">请在资源组中使用Microsoft SQL Server实例名称、而不是使用多个数据库、因为每当在Microsoft SQL Server实例中创建新数据库时、SnapCenter 都会自动考虑要备份的新数据库。</block>
+  <block id="5e5d80c17369e70061349fffb43b0aa8" category="list-text">如果更改数据库配置、例如将数据库恢复模型更改为完全恢复模型、请立即执行备份、以便执行最新的还原操作。</block>
+  <block id="3dce7613a0d76dcf6fcb8e1daf396bbb" category="list-text">SnapCenter 无法还原在SnapCenter 外部创建的事务日志备份。</block>
+  <block id="0007de7aba408b88984eb8eb18044303" category="list-text">克隆FlexVol 卷时、请确保您有足够的空间来容纳克隆元数据。</block>
+  <block id="9416a94214ef699335d78087cd9f12c6" category="list-text">还原数据库时、请确保卷上有足够的可用空间。</block>
+  <block id="86e3f69ee9647210c14858984e2649ef" category="list-text">创建一个单独的策略、以便每周至少管理和备份一次系统数据库。</block>
+  <block id="330337562cd623f5deb5908d4e8af736" category="example-title">使用SnapCenter 克隆数据库</block>
+  <block id="0a6bfc2082e52dc96430a6b7c0dfc7e7" category="paragraph">要将数据库还原到开发或测试环境中的其他位置或创建副本以进行业务分析、NetApp最佳实践是、利用克隆方法在同一实例或备用实例上创建数据库副本。</block>
+  <block id="0f462cc9e20017ed0597a6a199f57035" category="paragraph">在FSX for ONTAP 环境中托管的iSCSI磁盘上克隆500 GB的数据库通常需要不到五分钟的时间。克隆完成后、用户可以对克隆的数据库执行所有必需的读/写操作。大部分时间用于磁盘扫描(diskpart)。无论数据库大小如何、NetApp克隆操作步骤 通常都只需不到2分钟的时间。</block>
+  <block id="886ef20e3049a00bc0d9a1c734bb90da" category="paragraph">可以使用以下两种方法克隆数据库：您可以从最新备份创建克隆、也可以使用克隆生命周期管理功能在二级实例上提供最新副本。</block>
+  <block id="870999fc556eadefd7740857b96209c3" category="paragraph">使用SnapCenter 可以将克隆副本挂载到所需磁盘上、以保持二级实例上文件夹结构的格式并继续计划备份作业。</block>
+  <block id="b2face8e1d4561b0ed5b594bfc4c0063" category="example-title">将数据库克隆到同一实例中的新数据库名称</block>
+  <block id="4a3135e25926365f40a59fd88af69a44" category="paragraph">可以使用以下步骤将数据库克隆到EC2上运行的同一SQL Server实例中的新数据库名称：</block>
+  <block id="4655b3c9fecfc4d22a59068929be2bec" category="list-text">选择资源、然后选择需要克隆的数据库。</block>
+  <block id="944b75c61851b0ebc427a8aedc83d6f3" category="list-text">选择要克隆的备份名称、然后选择克隆。</block>
+  <block id="83d2194c2b06657769054af057f16b0a" category="list-text">按照备份窗口中的克隆说明完成克隆过程。</block>
+  <block id="8fb624c33e03c9d016909a11c669125d" category="list-text">选择Monitor以确保克隆已完成。</block>
+  <block id="0b075fd84c4c4a47346b99d43f9260be" category="example-title">将数据库克隆到EC2上运行的新SQL Server实例中</block>
+  <block id="9451e65c3b1fc3fc6cf89a3fc9cf3cfd" category="paragraph">以下步骤用于将数据库克隆到EC2上运行的新SQL Server实例：</block>
+  <block id="479cb4cd4ee76801e360aa03ddc20a3a" category="list-text">在同一VPC中的EC2上创建新的SQL Server。</block>
+  <block id="163733cab5060ba4621bb642ba3870a0" category="list-text">启用iSCSI协议和MPIO、然后按照"为SQL Server创建卷和LUN "一节中的步骤3和4设置与适用于ONTAP 的FSX的iSCSI连接。</block>
+  <block id="918269b8806c56ca4a0910482994e142" category="list-text">按照"安装和设置SnapCenter "一节中的步骤3将EC2上的新SQL Server添加到SnapCenter 中。</block>
+  <block id="e7130318e065eddd45ec86565b727731" category="list-text">选择资源&gt;查看实例、然后选择刷新资源。</block>
+  <block id="8be42b1e845c00bcb04c11269072f895" category="list-text">选择资源、然后选择要克隆的数据库。</block>
+  <block id="459801927d3c0bd5ddec9c1513f213ec" category="list-text">选择要克隆的备份名称、然后选择克隆。</block>
+  <block id="030603235fe06c85ee75276379fe5baa" category="paragraph"><block ref="030603235fe06c85ee75276379fe5baa" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="45d50db35e68c1259b414779e24fdbf5" category="list-text">按照"从备份克隆"说明、在EC2上提供新的SQL Server实例和实例名称、完成克隆过程。</block>
+  <block id="78c549c0e0fcfc0dd6bb0c2e3a09a79f" category="paragraph"><block ref="78c549c0e0fcfc0dd6bb0c2e3a09a79f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="20606e28a0d567be1dabd5cf50a2dc3b" category="section-title">附录</block>
+  <block id="16dfbb688028526582ec31ab802b9589" category="example-title">附录A：用于云形成模板的YAML文件</block>
+  <block id="4c76ae47de51751cc57a4033d14f2f2a" category="paragraph">以下.yaml文件可与AWS控制台中的云构成模板结合使用。</block>
+  <block id="76f249edcff2b74fcc17020455372f1b" category="inline-link"><block ref="76f249edcff2b74fcc17020455372f1b" category="inline-link-rx"></block></block>
+  <block id="57ea11aec1064892e5db378204f829c4" category="list-text"><block ref="57ea11aec1064892e5db378204f829c4" category="inline-link-rx"></block></block>
+  <block id="f6d8279768d195862ae69a3df8dd51ab" category="inline-link">此GitHub链接</block>
+  <block id="4d39c6875a330594fc8521c48cadd7f6" category="paragraph">要使用PowerShell自动创建iSCSI LUN并安装NetApp SnapCenter 、请从克隆此repo<block ref="445e758235a70998ddfcd1531f3ae35b" category="inline-link-rx"></block>。</block>
+  <block id="00867e5f5ae22280c11a2626b65e657b" category="example-title">附录B：用于配置卷和LUN的PowerShell脚本</block>
+  <block id="0826ee2b94a579e02e80bfcdf26c5648" category="paragraph">以下脚本用于配置卷和LUN、并根据上述说明设置iSCSI。有两个PowerShell脚本：</block>
+  <block id="81e24f41fbaff249c9819985065173e3" category="list-text"><block ref="2a9a99327bbfb47d37ee76307e959506" prefix="" category="inline-code"></block></block>
+  <block id="2ca8201f2a50e4aec0e5ba21f6afed4d" category="list-text"><block ref="d78c8f4fe63dbe3ffd666bbbaf054cd7" prefix="" category="inline-code"></block></block>
+  <block id="6385631c0b330c166b540183cec5af78" category="paragraph">运行文件<block ref="d2dd03515102971189549a37cb42eb14" prefix=" " category="inline-code"></block> 首先、第二个脚本会在服务器重新启动后自动执行。由于对SVM的凭据访问、可以在执行这些PowerShell脚本后将其删除。</block>
+  <block id="d82c21a48349085e4fd93fb6712e3789" category="inline-link"><block ref="d82c21a48349085e4fd93fb6712e3789" category="inline-link-rx"></block></block>
+  <block id="c745303ee8000be162517c239783af70" category="paragraph"><block ref="c745303ee8000be162517c239783af70" category="inline-link-rx"></block></block>
+  <block id="c6e485d51bc9da63bcac29189dac0f3c" category="list-text">适用于NetApp ONTAP 的FSX入门</block>
+  <block id="90572737558e59a2ecdd4618af07d6f3" category="inline-link"><block ref="90572737558e59a2ecdd4618af07d6f3" category="inline-link-rx"></block></block>
+  <block id="7545caf3d97477d3c569d56c512074fa" category="paragraph"><block ref="7545caf3d97477d3c569d56c512074fa" category="inline-link-rx"></block></block>
+  <block id="ad65cae8cf2bbd15ac77769974a440ce" category="list-text">SnapCenter 界面概述</block>
+  <block id="59cbc11e5ccd87939e1b70af73ec1f01" category="inline-link"><block ref="c0a7623803fcfb4ac66342d4ae76ffff" category="inline-link-rx"></block></block>
+  <block id="7ab2e91ecb30982855aa0dde8b78a361" category="paragraph"><block ref="89ba280df4e8c5cfd9bcd0f8c80d8ba5" category="inline-link-rx"></block></block>
+  <block id="1bdf7559e69b81c007496a063e71bca0" category="list-text">浏览SnapCenter 导航窗格选项</block>
+  <block id="6d5097a2c320359a8d212d07ea067dac" category="inline-link"><block ref="6d5097a2c320359a8d212d07ea067dac" category="inline-link-rx"></block></block>
+  <block id="e0ae39eeb7c7d78d56a1292229d1277a" category="paragraph"><block ref="e0ae39eeb7c7d78d56a1292229d1277a" category="inline-link-rx"></block></block>
+  <block id="d29a9430434c2654cce06036a4a478b2" category="list-text">设置适用于SQL Server的SnapCenter 4.0插件</block>
+  <block id="520419781af4d13a8b33c054a304985b" category="inline-link"><block ref="520419781af4d13a8b33c054a304985b" category="inline-link-rx"></block></block>
+  <block id="c2580a05e81a19c4b782e51932415e30" category="paragraph"><block ref="c2580a05e81a19c4b782e51932415e30" category="inline-link-rx"></block></block>
+  <block id="f781a682aea107fb2cdda3a0c1fd3ac5" category="list-text">如何使用带有SQL Server插件的SnapCenter 备份和还原数据库</block>
+  <block id="285a27614fdeee7f22969646d33edc95" category="inline-link"><block ref="285a27614fdeee7f22969646d33edc95" category="inline-link-rx"></block></block>
+  <block id="e1685ff793f13bbd2956f2156b0d5a67" category="paragraph"><block ref="e1685ff793f13bbd2956f2156b0d5a67" category="inline-link-rx"></block></block>
+  <block id="c8e300ff66d94fe7668ff8d5d5e7f1c3" category="list-text">如何使用带有SQL Server插件的SnapCenter 克隆数据库</block>
+  <block id="e482c7b116916a3d87aba2ab1365190b" category="inline-link"><block ref="e482c7b116916a3d87aba2ab1365190b" category="inline-link-rx"></block></block>
+  <block id="b916fd292760d6ae01e337bf2a132edb" category="paragraph"><block ref="b916fd292760d6ae01e337bf2a132edb" category="inline-link-rx"></block></block>
+  <block id="5d0dd45a93153403c2446a809dcb5fc3" category="sidebar">使用适用于NetApp ONTAP 的Amazon FSX的AWS EC2上的SQL Server</block>
 </blocks>
