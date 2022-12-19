@@ -14952,7 +14952,6 @@
   <block id="3100ca44a05fa97ed5f07875f442084e" category="paragraph">以下各节介绍了对Spark客户非常重要的存储功能。</block>
   <block id="da2518ef48c60077e2b2c0be7fed7193" category="section-title">存储分层</block>
   <block id="d9a83ca3a623dce37a2f84027f1495ce" category="paragraph">使用Hadoop存储分层、您可以根据存储策略存储具有不同存储类型的文件。存储类型包括`Hot`、`Cold`、`Warm`、`All_SSD`、`One_SSD`、 和`lazy_persist`。</block>
-  <block id="6a3bcc36155e13e7b4cdcebeb2b3c96e" category="paragraph">我们对使用不同存储策略的SSD和SAS驱动器的NetApp AFF 存储控制器和E系列存储控制器上的Hadoop存储分层进行了验证。采用AF-A800的Spark集群具有四个计算辅助节点、而采用E系列的集群则具有八个。</block>
   <block id="36edc8f5974bdf6ad51a220254b99dfb" category="paragraph">下图显示了适用于Hadoop SSD的NetApp解决方案的性能。</block>
   <block id="d09520ed9b4a17ada38e70314907675f" category="inline-image-macro">对1 TB数据进行排序的时间。</block>
   <block id="55fdf8b2dd620bd73dcd37db50e0f0e5" category="paragraph"><block ref="55fdf8b2dd620bd73dcd37db50e0f0e5" category="inline-image-macro-rx" type="image"></block></block>
@@ -16276,4 +16275,7 @@
   <block id="e482c7b116916a3d87aba2ab1365190b" category="inline-link"><block ref="e482c7b116916a3d87aba2ab1365190b" category="inline-link-rx"></block></block>
   <block id="b916fd292760d6ae01e337bf2a132edb" category="paragraph"><block ref="b916fd292760d6ae01e337bf2a132edb" category="inline-link-rx"></block></block>
   <block id="5d0dd45a93153403c2446a809dcb5fc3" category="sidebar">使用适用于NetApp ONTAP 的Amazon FSX的AWS EC2上的SQL Server</block>
+  <block id="a91e5d479805e8e523b723cccc32c826" category="paragraph">我们对使用不同存储策略的SSD和SAS驱动器的NetApp AFF 存储控制器和E系列存储控制器上的Hadoop存储分层进行了验证。采用AF-A800的Spark集群具有四个计算辅助节点、而采用E系列的集群则具有八个。我们这样做的主要目的是将固态驱动器与硬盘驱动器磁盘的性能进行比较。</block>
+  <block id="dc406f8350f51d99347d8d026c0435a5" category="list-text">总之、从旋转磁盘过渡到全闪存可提高性能。计算节点的数量不是瓶颈。借助NetApp全闪存存储、运行时性能可进行良好扩展。</block>
+  <block id="2334ec557e1d4fadaa1ebe6292ad3d06" category="list-text">使用NFS、数据在功能上相当于将所有数据池在一起、这样可以根据您的工作负载减少计算节点的数量。Apache Spark集群用户在更改计算节点数量时无需手动重新平衡数据。</block>
 </blocks>
