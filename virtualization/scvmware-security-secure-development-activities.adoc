@@ -1,0 +1,100 @@
+---
+sidebar: sidebar 
+permalink: virtualization/scvmware-security-secure-development-activities.html 
+keywords: security, snapcenter, treat modeling, dast, vulnerability scanning, penetration testing 
+summary:  
+---
+= WP-7355：SnapCenter 插件VMware vSphere—产品安全性
+:allow-uri-read: 
+
+
+NetApp 的 Chance Bingen
+
+适用于VMware vSphere的NetApp SnapCenter 插件软件工程部门使用以下安全开发活动：
+
+* 威胁建模。 * 威胁建模的目的是在软件开发生命周期早期发现功能，组件或产品中的安全缺陷。威胁模型是影响应用程序安全性的所有信息的结构化表示。从本质上说，它是从安全性角度来看待应用程序及其环境的。
+* *动态应用程序安全测试(DAST)。*用于检测处于运行状态的应用程序上的易受到攻击的情况的技术。Dast 会测试 Web 应用程序公开的 HTTP 和 HTML 接口。
+* *第三方代码货币。*在开发软件和使用开源软件(OSS)的过程中、解决可能与您的产品中所含的OSS相关的安全漏洞非常重要。这是一项持续努力、因为OSS组件的版本可能随时报告新发现的漏洞。
+* * 漏洞扫描。 * 漏洞扫描的目的是在 NetApp 产品发布给客户之前检测其常见和已知安全漏洞。
+* *渗透测试。*渗透测试是指评估系统、Web应用程序或网络以发现攻击者可能利用的安全漏洞的过程。NetApp 的渗透测试（笔测试）由一组经过批准且值得信赖的第三方公司执行。其测试范围包括使用复杂的利用方法或工具对恶意入侵者或黑客等应用程序或软件发起攻击。
+* *产品安全意外事件响应活动。*在公司内部和外部发现安全漏洞、如果不及时解决这些漏洞、可能会给NetApp€的声誉带来严重风险。为了便于执行此过程、产品安全意外事件响应团队(PSIRT)会报告并跟踪漏洞。
+
+
+
+
+== 产品安全功能
+
+适用于VMware vSphere的NetApp SnapCenter 插件在每个版本中都包含以下安全功能：
+
+* *限制Shell访问。*默认情况下、SSH处于禁用状态、只有在从VM控制台启用一次性登录后、才允许进行此类登录。
+* *登录横幅中显示访问警告。*用户在登录提示符中输入用户名后、将显示以下登录横幅：
++
+* 警告： * 禁止未经授权访问此系统，并将受到法律的起诉。访问此系统即表示您同意，如果怀疑未经授权使用，您的操作可能会受到监控。
+
++
+用户通过SSH通道完成登录后、将显示以下输出：
+
+
+
+....
+Linux vsc1 4.19.0-12-amd64 #1 SMP Debian 4.19.152-1 (2020-10-18) x86_64
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+....
+* *基于角色的访问控制(Role-Based Access Control、RBAC)。*与NetApp ONTAP 工具关联的RBAC控制有两种：
++
+** 本机vCenter Server特权。
+** VMware vCenter插件的特定特权。有关详细信息，请参见 https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_role_based_access_control.html["基于角色的访问控制（ Role-Based Access Control ， RBAC ）"^]。
+
+
+* *加密通信通道。*所有外部通信均使用TLS通过HTTPS进行。
+* * 最小端口暴露。 * 只有必要的端口在防火墙上处于打开状态。
+
+
+下表提供了打开的端口详细信息。
+
+|===
+| TCP v4/v6端口号 | 功能 
+
+
+| 8144 | 用于 REST API 的 HTTPS 连接 
+
+
+| 8080 | 用于OVA GUI的HTTPS连接 
+
+
+| 22. | SSH (默认情况下处于禁用状态) 
+
+
+| 3306 | MySQL (仅限内部连接；默认情况下、外部连接处于禁用状态) 
+
+
+| 443. | nginx (数据保护服务) 
+|===
+* *支持证书颁发机构(CA)签名证书。*适用于VMware vSphere的SnapCenter 插件支持CA签名证书的功能。请参见 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapCenter/How_to_create_and_or_import_an_SSL_certificate_to_SnapCenter_Plug-in_for_VMware_vSphere["如何创建和/或将SSL证书导入到适用于VMware vSphere的SnapCenter 插件(SCV)"^]。
+* *密码策略。*以下密码策略有效：
++
+** 密码不会记录在任何日志文件中。
+** 密码不会以纯文本形式传达。
+** 密码是在安装过程本身期间配置的。
+** 所有凭据信息均使用SHA256哈希进行存储。
+
+
+* *基本操作系统映像。*本产品随附Debian基础操作系统、用于OVA、但访问受限且Shell访问已禁用。这样可以减少攻击占用空间。每个SnapCenter 版本基础操作系统都会更新最新的安全修补程序、以最大限度地提高安全性。
+
+
+NetApp针对适用于VMware vSphere设备的SnapCenter 插件开发软件功能和安全修补程序、然后将其作为捆绑软件平台发布给客户。由于这些设备包括特定的Linux子操作系统依赖关系以及我们的专有软件、因此NetApp建议您不要更改子操作系统、因为这很可能会影响NetApp设备。这可能会影响NetApp支持此设备的能力。NetApp建议测试和部署我们最新的设备代码版本、因为发布这些代码版本是为了修补任何与安全相关的问题。
+
+
+
+== 版本历史记录
+
+|===
+| version | Date | 文档版本历史记录 
+
+
+| 版本 1.0 | 2022 年 3 月 | 初始版本。 
+|===

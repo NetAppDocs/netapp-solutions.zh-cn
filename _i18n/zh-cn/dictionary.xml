@@ -14824,7 +14824,6 @@
   <block id="c2f530d95c6332b106d86a53b41e4a36" category="inline-link">TR-3969适用于Hadoop的NetApp E系列解决方案</block>
   <block id="8cdadd1c9614abebd1b476daba691f36" category="list-text">基线NL-SAS配置使用8个计算节点和96个NL-SAS驱动器。此配置在4分38秒内生成1 TB的数据。请参见<block ref="f08cd7da48b5d74d9eaab10199016f47" category="inline-link-rx"></block> 有关集群和存储配置的详细信息。</block>
   <block id="f895fa75cdc40f4e672bba6f7a873e25" category="list-text">使用TeraGen、SSD配置生成的数据速度比NL-SAS配置快15.66倍。此外、SSD配置使用的计算节点数为计算节点数的一半、磁盘驱动器数的一半(总共24个SSD驱动器)。根据作业完成时间、该速度几乎是NL-SAS配置的两倍。</block>
-  <block id="459f180fc71a8f8bb773d3c879314e39" category="list-text">使用TeraSort、SSD配置的1 TB数据排序速度比NL-SAS配置快1138.36倍。此外、SSD配置使用的计算节点数为计算节点数的一半、磁盘驱动器数的一半(总共24个SSD驱动器)。因此、每个驱动器的速度大约是NL-SAS配置的三倍。</block>
   <block id="c13c2e056adb51078f3067ba570d2780" category="section-title">性能扩展—横向扩展</block>
   <block id="beb08cca1e99e0bdbf11c74ebb62d5ea" category="paragraph">如果您需要AFF 解决方案 中Hadoop集群的更多计算能力、则可以添加具有适当数量存储控制器的数据节点。NetApp建议从每个存储控制器阵列四个数据节点开始、并根据工作负载特征将每个存储控制器的数据节点数增加到八个。</block>
   <block id="431bd1a68814e184bc49ff7231450049" category="paragraph">AFF 和FAS 非常适合原位分析。根据计算要求、您可以添加节点管理器、而无中断操作允许您按需添加存储控制器、而无需停机。我们通过AFF 和FAS 提供丰富的功能、例如NVMe介质支持、有保障的效率、数据精简、QoS、预测性分析、 云分层、复制、云部署和安全性。为了帮助客户满足其需求、NetApp提供了文件系统分析、配额和机载负载平衡等功能、无需额外的许可证成本。与竞争对手相比、NetApp在并发作业数量方面的性能更好、延迟更短、操作更简单、每秒吞吐量也更高。此外、NetApp Cloud Volumes ONTAP 还可在所有三个主要云提供商上运行。</block>
@@ -16141,9 +16140,7 @@
   <block id="e482c7b116916a3d87aba2ab1365190b" category="inline-link"><block ref="e482c7b116916a3d87aba2ab1365190b" category="inline-link-rx"></block></block>
   <block id="b916fd292760d6ae01e337bf2a132edb" category="paragraph"><block ref="b916fd292760d6ae01e337bf2a132edb" category="inline-link-rx"></block></block>
   <block id="5d0dd45a93153403c2446a809dcb5fc3" category="sidebar">使用适用于NetApp ONTAP 的Amazon FSX的AWS EC2上的SQL Server</block>
-  <block id="a91e5d479805e8e523b723cccc32c826" category="paragraph">我们对使用不同存储策略的SSD和SAS驱动器的NetApp AFF 存储控制器和E系列存储控制器上的Hadoop存储分层进行了验证。采用AF-A800的Spark集群具有四个计算辅助节点、而采用E系列的集群则具有八个。我们这样做的主要目的是将固态驱动器与硬盘驱动器磁盘的性能进行比较。</block>
   <block id="dc406f8350f51d99347d8d026c0435a5" category="list-text">总之、从旋转磁盘过渡到全闪存可提高性能。计算节点的数量不是瓶颈。借助NetApp全闪存存储、运行时性能可进行良好扩展。</block>
-  <block id="2334ec557e1d4fadaa1ebe6292ad3d06" category="list-text">使用NFS、数据在功能上相当于将所有数据池在一起、这样可以根据您的工作负载减少计算节点的数量。Apache Spark集群用户在更改计算节点数量时无需手动重新平衡数据。</block>
   <block id="67c8804409fa1f91b1b477b7c99d1d71" category="paragraph">作者：Chris Reno、Josh Powell和Suresh ThopPay—NetApp解决方案工程部</block>
   <block id="37242160d8bbd9ad700322c3c2499272" category="section-title">假设、前提条件和组件概述</block>
   <block id="3ea8c755cca91dd6bbeec88e906263e9" category="paragraph">在部署此解决方案 之前、请查看组件概述、部署解决方案 所需的前提条件以及在记录此解决方案 时所做的假设。</block>
@@ -16156,4 +16153,41 @@
   <block id="ed8b9b5c064b716d4c1d3f30a595410f" category="example-title">Veeam Backup &amp; amp；复制</block>
   <block id="42c8c901c8d4c00c90f9f66d69df3cdb" category="example-title">Veeam Backup &amp; amp；复制服务器</block>
   <block id="17f0b02d31e76cb9b2878b4a08f19eb5" category="example-title">Veeam Backup &amp; amp；复制配置</block>
+  <block id="53f8aa6361303e58854a4451a706df5e" category="doc">WP-7355：SnapCenter 插件VMware vSphere—产品安全性</block>
+  <block id="ae9e79ac4b60eba67cf1c7508417b42c" category="paragraph">适用于VMware vSphere的NetApp SnapCenter 插件软件工程部门使用以下安全开发活动：</block>
+  <block id="b25a1098aff7d0c5ee590f1e1a114bb9" category="list-text">*动态应用程序安全测试(DAST)。*用于检测处于运行状态的应用程序上的易受到攻击的情况的技术。Dast 会测试 Web 应用程序公开的 HTTP 和 HTML 接口。</block>
+  <block id="6cc1fee6b4fc48755d78e93170bbed93" category="list-text">*第三方代码货币。*在开发软件和使用开源软件(OSS)的过程中、解决可能与您的产品中所含的OSS相关的安全漏洞非常重要。这是一项持续努力、因为OSS组件的版本可能随时报告新发现的漏洞。</block>
+  <block id="87bd0fb9b4198f33535e0e1888a809f5" category="list-text">*渗透测试。*渗透测试是指评估系统、Web应用程序或网络以发现攻击者可能利用的安全漏洞的过程。NetApp 的渗透测试（笔测试）由一组经过批准且值得信赖的第三方公司执行。其测试范围包括使用复杂的利用方法或工具对恶意入侵者或黑客等应用程序或软件发起攻击。</block>
+  <block id="e3a3be4b4b04c5e0b6a5f1b5ea388380" category="list-text">*产品安全意外事件响应活动。*在公司内部和外部发现安全漏洞、如果不及时解决这些漏洞、可能会给NetApp€的声誉带来严重风险。为了便于执行此过程、产品安全意外事件响应团队(PSIRT)会报告并跟踪漏洞。</block>
+  <block id="e91db3b3278f7bd95cc704d74c5c9597" category="paragraph">适用于VMware vSphere的NetApp SnapCenter 插件在每个版本中都包含以下安全功能：</block>
+  <block id="4abd7d1d5d223683d3346671efb7e89c" category="list-text">*限制Shell访问。*默认情况下、SSH处于禁用状态、只有在从VM控制台启用一次性登录后、才允许进行此类登录。</block>
+  <block id="8c264fa5ca2c588d960d98bd30cbc897" category="list-text">*登录横幅中显示访问警告。*用户在登录提示符中输入用户名后、将显示以下登录横幅：</block>
+  <block id="0d6633ada3a9803e206b2359d859e892" category="paragraph">用户通过SSH通道完成登录后、将显示以下输出：</block>
+  <block id="83e463bb73b12d9ca6e419327073c8a4" category="list-text">*基于角色的访问控制(Role-Based Access Control、RBAC)。*与NetApp ONTAP 工具关联的RBAC控制有两种：</block>
+  <block id="b883bf79639dfce77e395b8458ee69e4" category="list-text">本机vCenter Server特权。</block>
+  <block id="721796b1cb3468f0daf819180184d460" category="inline-link">基于角色的访问控制（ Role-Based Access Control ， RBAC ）</block>
+  <block id="1d08c46b7567a29be0690a92b9722a58" category="list-text">VMware vCenter插件的特定特权。有关详细信息，请参见<block ref="f351263ad3706bd0a472039400dece78" category="inline-link-rx"></block>。</block>
+  <block id="acab4c655c4a7b4db67fc07e22b86222" category="list-text">*加密通信通道。*所有外部通信均使用TLS通过HTTPS进行。</block>
+  <block id="47a37e2d5fc8b7c936ad9b2b7a569a08" category="paragraph">下表提供了打开的端口详细信息。</block>
+  <block id="10bd16a816f831080065e807daa36a9a" category="cell">TCP v4/v6端口号</block>
+  <block id="d4a973e303ec37692cc8923e3148eef7" category="cell">8080</block>
+  <block id="2c25c3d66f80eeaa8d6e5a144c6f942e" category="cell">用于OVA GUI的HTTPS连接</block>
+  <block id="14b3e670eec63cc0cc456fd904bbfbd9" category="cell">SSH (默认情况下处于禁用状态)</block>
+  <block id="16fc18d787294ad5171100e33d05d4e2" category="cell">3306</block>
+  <block id="4cbf9c234f6b34c242a110cb993252bd" category="cell">MySQL (仅限内部连接；默认情况下、外部连接处于禁用状态)</block>
+  <block id="29ab4efbdb7c727c81ee1382593bc5e2" category="cell">nginx (数据保护服务)</block>
+  <block id="89f152cad33314315b4995ed1ca71535" category="inline-link">如何创建和/或将SSL证书导入到适用于VMware vSphere的SnapCenter 插件(SCV)</block>
+  <block id="450adc59e39f23172756ac9369494a2d" category="list-text">*支持证书颁发机构(CA)签名证书。*适用于VMware vSphere的SnapCenter 插件支持CA签名证书的功能。请参见<block ref="9f83d87d5d9f604d96288df21d450fac" category="inline-link-rx"></block>。</block>
+  <block id="05a1aa8021df4579874c4eeb8788e5c9" category="list-text">*密码策略。*以下密码策略有效：</block>
+  <block id="2c87609dbbc3630573c64e271de8207d" category="list-text">所有凭据信息均使用SHA256哈希进行存储。</block>
+  <block id="0f1a6fa0a65f9d5c3c4a16b070104d7a" category="list-text">*基本操作系统映像。*本产品随附Debian基础操作系统、用于OVA、但访问受限且Shell访问已禁用。这样可以减少攻击占用空间。每个SnapCenter 版本基础操作系统都会更新最新的安全修补程序、以最大限度地提高安全性。</block>
+  <block id="83cd5867ba912e517fa1100299fd1cf3" category="paragraph">NetApp针对适用于VMware vSphere设备的SnapCenter 插件开发软件功能和安全修补程序、然后将其作为捆绑软件平台发布给客户。由于这些设备包括特定的Linux子操作系统依赖关系以及我们的专有软件、因此NetApp建议您不要更改子操作系统、因为这很可能会影响NetApp设备。这可能会影响NetApp支持此设备的能力。NetApp建议测试和部署我们最新的设备代码版本、因为发布这些代码版本是为了修补任何与安全相关的问题。</block>
+  <block id="e50e258ecc9eaa88d6c653c3a24cb319" category="cell">2022 年 3 月</block>
+  <block id="3107c066ea7eeb48bd5f87594a08fd7a" category="paragraph">&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;HEAD我们对使用不同存储策略的SSD和SAS驱动器的NetApp AFF 存储控制器和E系列存储控制器上的Hadoop存储分层进行了验证。采用AF-A800的Spark集群具有四个计算辅助节点、而采用E系列的集群则具有八个。这主要是为了比较固态驱动器(SSD)与硬盘驱动器(HDD)的性能。</block>
+  <block id="dba657bcaa661bcf5461e260c00e4f06" category="paragraph">我们对使用不同存储策略的SSD和SAS驱动器的NetApp AFF 存储控制器和E系列存储控制器上的Hadoop存储分层进行了验证。采用AF-A800的Spark集群具有四个计算辅助节点、而采用E系列的集群则具有八个。我们这样做的主要目的是将固态驱动器与硬盘驱动器磁盘的性能进行比较。&gt;&gt;&gt;&gt;&gt;a51c9ddf73ca69e1120ce05edc7b0b9607b96eae.</block>
+  <block id="f14f651fb8150de92c527d88344df494" category="list-text">使用TeraSort、SSD配置的1 TB数据排序速度比NL-SAS配置快1138.36倍。此外、SSD配置使用的计算节点数为计算节点数的一半、磁盘驱动器数的一半(总共24个SSD驱动器)。因此、每个驱动器的速度大约是NL-SAS配置的三倍。&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; 标题</block>
+  <block id="52be2edb04819f386804af38bd53a55d" category="list-text">这种方法正在从旋转磁盘过渡到全闪存、从而提高了性能。计算节点的数量不是瓶颈。借助NetApp的全闪存存储、运行时性能可进行良好扩展。</block>
+  <block id="8cc25131075ed11b8263304fceebc5c6" category="list-text">使用NFS时、数据在功能上相当于将全部池化在一起、这样可以根据您的工作负载减少计算节点的数量。更改计算节点数量时、Apache Spark集群用户无需手动重新平衡数据。</block>
+  <block id="6ed171c4fe1ca516676ea457d91105b1" category="list-text">使用NFS、数据在功能上相当于将所有数据池在一起、这样可以根据您的工作负载减少计算节点的数量。Apache Spark集群用户在更改计算节点数量时无需手动重新平衡数据。&gt;&gt;&gt;&gt;&gt;a51c9ddf73ca69e1120ce05edc7b0b9607b96eae.</block>
+  <block id="2668a3fec665f31a26e9e428b4ee62a7" category="sidebar">SnapCenter 插件VMware vSphere—产品安全性</block>
 </blocks>
