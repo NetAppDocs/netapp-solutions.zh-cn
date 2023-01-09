@@ -4446,21 +4446,16 @@
   <block id="926e4d89379d3dde2510965ca53771af" category="list-text"><block ref="926e4d89379d3dde2510965ca53771af" category="inline-link-macro-rx"></block></block>
   <block id="e229fd9b7b8948ddebf276bda8a9145e" category="inline-link-macro">创建 VMFS 数据存储库</block>
   <block id="3dbbea9263919f89335d7ba053f09a39" category="list-text"><block ref="3dbbea9263919f89335d7ba053f09a39" category="inline-link-macro-rx"></block></block>
-  <block id="19610155b973358e47466063b4b079a4" category="summary">ONTAP 支持用于虚拟化的所有主要存储协议，例如 iSCSI ，光纤通道（ FC ），以太网光纤通道（ FCoE ）或适用于 SAN 环境的非易失性光纤通道快速内存（ NVMe/FC ），以及 NFS （ v3 和 v4.1 ）和 SMB 或 S3 （用于子系统连接）。客户可以自由选择最适合其环境的协议，并可以根据需要在一个系统上组合协议。</block>
   <block id="93b698fac9d8f378474fb0765494c4e6" category="doc">适用于 vSphere 的 ONTAP 功能</block>
   <block id="9985b4390c40137573e6da05caf85874" category="section-title">协议</block>
-  <block id="561327c79c453379a7f11cb38aabf666" category="paragraph">ONTAP 支持用于虚拟化的所有主要存储协议，例如 iSCSI ，光纤通道（ FC ），以太网光纤通道（ FCoE ）或适用于 SAN 环境的非易失性光纤通道快速内存（ NVMe/FC ），以及 NFS （ v3 和 v4.1 ）和 SMB 或 S3 （用于子系统连接）。客户可以自由选择最适合其环境的协议，并可以根据需要在一个系统上组合使用协议（例如，使用几个 iSCSI LUN 或子系统共享来扩大 NFS 数据存储库的常规使用）。</block>
   <block id="99dd82c3472eab7ec4ea64a848fe032d" category="paragraph">许多 ONTAP 功能可用于管理虚拟化工作负载。下一节将介绍一些需要附加产品许可证的软件。之后将介绍其他打包为独立工具的工具，其中一些用于 ONTAP ，另一些用于整个 NetApp 产品组合。</block>
   <block id="671534601eb09388581f095632f815b2" category="paragraph">下面是有关基本 ONTAP 功能的更多详细信息：</block>
-  <block id="ef97088865d8960cc5a3a20f3c10f469" category="list-text">* NetApp Snapshot 副本。 * 创建或使用 Snapshot 副本时， ONTAP 可为 VM 或数据存储库提供即时 Snapshot 副本，而不会影响性能。它们可用于在修补之前为 VM 创建还原点，或者用于简单的数据保护。请注意，这些快照与 VMware （一致性）快照不同。创建 ONTAP Snapshot 副本的最简单方法是使用适用于 VMware vSphere 的 SnapCenter 插件备份 VM 和数据存储库。</block>
   <block id="dbef3659822e80f91a3a561ed6d0b0cd" category="list-text">* 存储效率。 * ONTAP 支持实时和后台重复数据删除和数据压缩，零块重复数据删除和数据缩减。</block>
   <block id="287c4830bc87771bdf2b3ae9880ab67e" category="list-text">* 卷和 LUN 移动。 * 允许在 ONTAP 集群中无中断移动支持 vSphere 数据存储库和 VVol 的卷和 LUN ，以平衡性能和容量，或支持无中断维护和升级。</block>
   <block id="ba96d4d48c1ff15e2732b37e2e7a435c" category="list-text">通过 * QoS 。 * QoS ，可以管理单个 LUN ，卷或文件的性能。此功能可用于限制未知或抢占资源的 VM ，或者确保重要的 VM 获得足够的性能资源。</block>
-  <block id="a946b6511f13dc2fbdaf1581d804d5b4" category="list-text">* NetApp 卷加密， NetApp 聚合加密。 * NetApp 加密选项提供基于软件的简单加密，可保护空闲数据。</block>
   <block id="28f638810590337576cbbe9979329c21" category="list-text">* FabricPool 。 * 此功能可在块级别自动将较冷的数据分层到单独的对象存储中，从而腾出昂贵的闪存存储。</block>
   <block id="ff8a0108cd7cd5019bfee6b6be672b17" category="inline-link">ONTAP REST API</block>
   <block id="9455a10ec937dafee664ae1e0e4fd98c" category="inline-link">Ansible 模块</block>
-  <block id="4fe65be709b755cfdf83cf3ff5534e52" category="list-text">* REST ， Ansible 。 * 使用<block ref="71191ff17e34498b2463e6167736896a" category="inline-link-rx"></block> 自动执行存储和数据管理，以及<block ref="d4fc0de110866702e0b8608590b39b64" category="inline-link-rx"></block> 用于 ONTAP 系统的配置管理。请注意，某些 ONTAP 功能不适合 vSphere 工作负载。例如， ONTAP 9.8 之前的 FlexGroup 不支持完全克隆，也未在 vSphere 中进行测试（请参见 FlexGroup 一节，了解有关将其与 vSphere 结合使用的最新信息）。FlexCache 也不是 vSphere 的最佳选择，因为它专为大多数读取工作负载而设计。如果缓存与原始数据存储库断开连接，则写入可能会出现问题，从而导致两端出现 NFS 数据存储库错误。</block>
   <block id="85402a535d923d0511a02d404893d1ba" category="section-title">ONTAP 许可</block>
   <block id="4a9fdcb14826a67d38a7b84170c54ea9" category="paragraph">对于管理虚拟化工作负载而言，某些 ONTAP 功能非常重要，因此需要额外的许可证，无论是以免费方式提供，还是以许可证包形式提供，还是按单点提供。对于许多客户来说，最经济高效的方法是使用许可证包。以下是与 vSphere 相关的关键许可证及其使用方式：</block>
   <block id="c598be4d4f9f8c476e7f51d6ef5ff139" category="list-text">* FlexClone 。 * FlexClone 支持对 ONTAP 卷和文件进行节省空间的即时克隆。如果 VMware vSphere 存储 API —阵列集成（ VAAI ）将操作卸载到存储系统，用于备份验证和恢复（ SnapCenter 软件）以及 VVOL 克隆和 Snapshot 副本，则会使用此克隆。以下是如何使用它们：</block>
@@ -4474,12 +4469,6 @@
   <block id="a20c69bb9262b2ab09ca5248996e7d63" category="list-text">* MetroCluster 。 * NetApp MetroCluster 是一种同步复制解决方案，可将园区或城域的高可用性和灾难恢复相结合，以防止发生站点灾难和硬件中断。它提供的解决方案可以从故障中透明地恢复，实现零数据丢失（ 0 RPO ）和快速恢复（几分钟内即可完成 RTO ）。它在 vSphere 环境中用作 vSphere Metro Storage Cluster 配置的一部分。</block>
   <block id="ee8cc65cae83009c275cd4748f4c58ae" category="section-title">适用于 ONTAP 的虚拟化工具</block>
   <block id="7b0abbba24b3ff594f013e524b352ef1" category="paragraph">NetApp 提供了多种独立软件工具，可与 ONTAP 和 vSphere 结合使用来管理虚拟化环境。ONTAP 许可证附带了以下工具，无需额外付费。有关这些工具在 vSphere 环境中如何协同工作的说明，请参见图 1 。</block>
-  <block id="abdbcbccf079982daa8ac87124199525" category="paragraph">适用于 VMware vSphere 的 ONTAP 工具是一组用于将 ONTAP 存储与 vSphere 结合使用的工具。无论您使用的是 SAN 还是 NAS ， vCenter 插件（以前称为 Virtual Storage Console （ VSC ））均可简化存储管理和效率功能，提高可用性并降低存储成本和运营开销。它使用最佳实践配置数据存储库，并为 NFS 和块存储环境优化 ESXi 主机设置。为了获得所有这些优势， NetApp 建议在将 vSphere 与运行 ONTAP 软件的系统结合使用时，最佳做法是使用这些 ONTAP 工具。它包括 vCenter 的服务器设备和用户界面扩展。</block>
-  <block id="72c2a2003ef348468d72454dc1a4e214" category="paragraph">适用于 VMware 的 NetApp NFS 插件是 ESXi 主机的一个插件，可用于在 ONTAP 上对 NFS 数据存储库使用 VAAI 功能。它支持克隆操作的副本卸载，厚虚拟磁盘文件的空间预留以及 Snapshot 副本卸载。将副本操作卸载到存储不一定会更快完成，但它确实会卸载 CPU 周期，缓冲区和队列等主机资源。您可以使用适用于 VMware vSphere 的 ONTAP 工具在 ESXi 主机上安装此插件。</block>
-  <block id="e3454e6928ae7a5f9e8a89f5999b80ad" category="section-title">适用于 ONTAP 的 VASA Provider</block>
-  <block id="708dacf32313dbab741753dcc3ea39fd" category="paragraph">适用于 ONTAP 的 VASA Provider 支持 VMware vStorage APIs for Storage Awareness （ VASA ）框架。它作为适用于 VMware vSphere 的 ONTAP 工具的一部分提供，作为一个虚拟设备，易于部署。VASA Provider 可将 vCenter Server 与 ONTAP 连接起来，以帮助配置和监控 VM 存储。它支持 VMware 虚拟卷（ VVOL ）支持，管理存储功能配置文件和单个 VM VVOL 性能，并提供警报以监控容量和配置文件合规性。</block>
-  <block id="0d05ff779ab06152e20062d098f7eb4a" category="section-title">Storage Replication Adapter</block>
-  <block id="33aa22e838a3c843929f5b6b75f6c56c" category="paragraph">SRA 与 VMware Site Recovery Manager （ SRM ）结合使用，用于管理生产站点和灾难恢复站点之间的数据复制，并无中断地测试灾难恢复副本。它有助于自动执行发现，恢复和重新保护任务。它包括适用于 Windows SRM 服务器和 SRM 设备的 SRA 服务器设备和 SRA 适配器。SRA 作为适用于 VMware vSphere 的 ONTAP 工具的一部分提供。</block>
   <block id="a1c13ec555198266776a3a7b904810dd" category="paragraph">下图显示了适用于 vSphere 的 ONTAP 工具。</block>
   <block id="f7e876d450acee7c9ed7b18438440fb2" category="paragraph"><block ref="f7e876d450acee7c9ed7b18438440fb2" category="inline-image-macro-rx" type="image"></block></block>
   <block id="a123daaac5749e4d0965aca160f0adfd" category="doc">NetApp 解决方案自动化</block>
@@ -16190,4 +16179,15 @@
   <block id="8cc25131075ed11b8263304fceebc5c6" category="list-text">使用NFS时、数据在功能上相当于将全部池化在一起、这样可以根据您的工作负载减少计算节点的数量。更改计算节点数量时、Apache Spark集群用户无需手动重新平衡数据。</block>
   <block id="6ed171c4fe1ca516676ea457d91105b1" category="list-text">使用NFS、数据在功能上相当于将所有数据池在一起、这样可以根据您的工作负载减少计算节点的数量。Apache Spark集群用户在更改计算节点数量时无需手动重新平衡数据。&gt;&gt;&gt;&gt;&gt;a51c9ddf73ca69e1120ce05edc7b0b9607b96eae.</block>
   <block id="2668a3fec665f31a26e9e428b4ee62a7" category="sidebar">SnapCenter 插件VMware vSphere—产品安全性</block>
+  <block id="50b6e1c7f2e81842d993d8ce88acc979" category="summary">ONTAP 支持用于虚拟化的所有主要存储协议，例如 iSCSI ，光纤通道（ FC ），以太网光纤通道（ FCoE ）或适用于 SAN 环境的非易失性光纤通道快速内存（ NVMe/FC ），以及 NFS （ v3 和 v4.1 ）和 SMB 或 S3 （用于子系统连接）。客户可以自由选择最适合其环境的协议，并可以根据需要在一个系统上组合协议。</block>
+  <block id="d7a198a9254afae95101f5ba8a96e769" category="paragraph">ONTAP 支持用于虚拟化的所有主要存储协议、例如iSCSI、光纤通道(FC)、以太网光纤通道(FCoE)或适用于SAN环境的非易失性光纤通道快速内存(NVMe/FC)、以及用于子系统连接的NFS (v3和v4.1)和SMB或S3。客户可以自由选择最适合其环境的协议，并可以根据需要在一个系统上组合协议。例如、您可以通过一些iSCSI LUN或子系统共享来扩大NFS数据存储库的一般使用范围。</block>
+  <block id="2df283d70436fd2d0a853af9fae00a91" category="list-text">* NetApp Snapshot副本。*创建或使用Snapshot副本时、ONTAP 可为VM或数据存储库提供即时Snapshot副本、而不会对性能造成任何影响。它们可用于在修补之前为 VM 创建还原点，或者用于简单的数据保护。请注意，这些快照与 VMware （一致性）快照不同。创建 ONTAP Snapshot 副本的最简单方法是使用适用于 VMware vSphere 的 SnapCenter 插件备份 VM 和数据存储库。</block>
+  <block id="0fed44d392929d099987f70fe23074b4" category="list-text">* NetApp卷加密和NetApp聚合加密。* NetApp加密选项提供基于软件的简单加密、可保护空闲数据。</block>
+  <block id="1a4c4db8b74f04b9da9ab150ff36e301" category="list-text">* REST和Ansible。*使用<block ref="71191ff17e34498b2463e6167736896a" category="inline-link-rx"></block> 自动执行存储和数据管理，以及<block ref="d4fc0de110866702e0b8608590b39b64" category="inline-link-rx"></block> 用于管理ONTAP 系统的配置。</block>
+  <block id="86544be11c52b782f03ad1ff879f872d" category="paragraph">请注意、某些ONTAP 功能不适合vSphere工作负载。例如、ONTAP 9.8之前的FlexGroup 技术不支持完全克隆、也未在vSphere中进行测试(请参见FlexGroup 一节、了解有关将其与vSphere结合使用的最新信息)。FlexCache 技术也不是vSphere的最佳选择、因为它专为大多数读取工作负载而设计。如果缓存与原始数据存储库断开连接，则写入可能会出现问题，从而导致两端出现 NFS 数据存储库错误。</block>
+  <block id="f364e3337f5237c93d7b5439c82d444b" category="paragraph">适用于 VMware vSphere 的 ONTAP 工具是一组用于将 ONTAP 存储与 vSphere 结合使用的工具。无论您使用的是 SAN 还是 NAS ， vCenter 插件（以前称为 Virtual Storage Console （ VSC ））均可简化存储管理和效率功能，提高可用性并降低存储成本和运营开销。它使用最佳实践配置数据存储库，并为 NFS 和块存储环境优化 ESXi 主机设置。为了获得所有这些优势， NetApp 建议在将 vSphere 与运行 ONTAP 软件的系统结合使用时，最佳做法是使用这些 ONTAP 工具。它包括服务器设备、vCenter的用户界面扩展、VASA Provider和Storage Replication Adapter。ONTAP 工具中的几乎所有内容都可以通过简单的REST API实现自动化、而大多数现代自动化工具都可以使用这些API。</block>
+  <block id="0b266371a133b176a2ee883ccf72b46c" category="list-text">* vCenter UI扩展。* ONTAP 工具UI扩展通过直接在vCenter UI中加入易于使用的上下文相关菜单来管理主机和存储、信息Portlet以及本机警报功能、简化了操作团队和vCenter管理员的工作、从而简化了工作流。</block>
+  <block id="e08c666b5127e745f8aacbacfce37dcf" category="list-text">*适用于ONTAP 的VASA Provider。*适用于ONTAP 的VASA Provider支持VMware vStorage APIs for Storage Awareness (VASA)框架。它作为适用于 VMware vSphere 的 ONTAP 工具的一部分提供，作为一个虚拟设备，易于部署。VASA Provider 可将 vCenter Server 与 ONTAP 连接起来，以帮助配置和监控 VM 存储。它支持 VMware 虚拟卷（ VVOL ）支持，管理存储功能配置文件和单个 VM VVOL 性能，并提供警报以监控容量和配置文件合规性。</block>
+  <block id="1c7bb8764fc089dda8481678ad1ea0b5" category="list-text">*存储复制适配器。* SRA与VMware Site Recovery Manager (SRM)结合使用、用于管理生产站点和灾难恢复站点之间的数据复制、并无中断地测试灾难恢复副本。它有助于自动执行发现，恢复和重新保护任务。它包括适用于 Windows SRM 服务器和 SRM 设备的 SRA 服务器设备和 SRA 适配器。</block>
+  <block id="eff6699ec911b615a51eb7e9e0d89970" category="paragraph">适用于VMware VAAI的NetApp NFS插件是一个适用于ESXi主机的插件、可用于在ONTAP 上对NFS数据存储库使用VAAI功能。它支持克隆操作的副本卸载，厚虚拟磁盘文件的空间预留以及 Snapshot 副本卸载。将副本操作卸载到存储不一定会更快完成、但它会降低网络带宽要求、并减轻CPU周期、缓冲区和队列等主机资源的负载。您可以使用适用于VMware vSphere的ONTAP 工具在ESXi主机或vSphere Lifecycle Manager (如果支持)上安装此插件。</block>
 </blocks>
