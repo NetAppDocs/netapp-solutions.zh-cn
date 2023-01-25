@@ -1,0 +1,190 @@
+---
+sidebar: sidebar 
+permalink: databases/azure_ora_nfile_migration.html 
+summary: 本节详细介绍了如何将Oracle数据库从内部迁移到Azure NetApp Files 、反之亦然。 
+keywords: database, Oracle, Azure, ANF, Azure NetApp Files, migration 
+---
+= 将数据库从内部迁移到Azure云
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:table-stripes: odd
+:imagesdir: ./../media/
+
+
+link:azure_ora_nfile_protection.html["先前：数据库保护。"]
+
+由于Oracle决定逐步淘汰单实例数据库、许多组织已将单实例Oracle数据库转换为多租户容器数据库。这样、可以使用最大可用性选项将一组称为PDB的容器数据库轻松地重新定位到云、从而最大限度地减少迁移期间的停机时间。
+
+但是、如果您仍有一个Oracle数据库实例、则可以先将其转换为多租户容器数据库、然后再尝试PDB重新定位。
+
+以下各节详细介绍了在这两种情况下将内部Oracle数据库迁移到Azure云的相关信息。
+
+
+
+== 将单个实例非CDB转换为多租户CDB中的PDB
+
+如果您仍有单实例Oracle数据库、则无论是否要将其迁移到云、都必须将其转换为多租户容器数据库、因为Oracle不久将停止支持单实例数据库。
+
+以下过程会将单个实例数据库作为可插拔数据库或PDB插入容器数据库。
+
+. 在与单实例数据库相同的主机上单独构建Shell容器数据库 `ORACLE_HOME`。
+. 关闭单个实例数据库并在只读模式下重新启动它。
+. 运行 `DBMS_PDB.DESCRIBE` 用于生成数据库元数据的操作步骤。
++
+[source, cli]
+----
+BEGIN
+  DBMS_PDB.DESCRIBE(
+    pdb_descr_file => '/home/oracle/ncdb.xml');
+END;
+/
+----
+. 关闭单实例数据库。
+. 启动容器数据库。
+. 运行 `DBMS_PDB.CHECK_PLUG_COMPATIBILITY` 用于确定非CDB是否与CDB兼容的函数。
++
+[source, cli]
+----
+SET SERVEROUTPUT ON
+DECLARE
+  compatible CONSTANT VARCHAR2(3) :=
+    CASE DBMS_PDB.CHECK_PLUG_COMPATIBILITY(
+           pdb_descr_file => '/disk1/oracle/ncdb.xml',
+           pdb_name       => 'NCDB')
+    WHEN TRUE THEN 'YES'
+    ELSE 'NO'
+END;
+BEGIN
+  DBMS_OUTPUT.PUT_LINE(compatible);
+END;
+/
+----
++
+如果输出为Yes、则表示非CDB兼容、您可以继续执行下一步。
+
++
+如果输出为no、则表示非CDB不兼容、您可以检查 `PDB_PLUG_IN_VIOLATIONS` 查看其不兼容的原因。必须先更正所有违规、然后才能继续。例如、任何版本或修补程序不匹配的问题都应通过运行升级或opatch实用程序来解决。更正违规后、运行 `DBMS_PDB.CHECK_PLUG_COMPATIBILITY` 再次确认、以确保非CDB与CDB兼容。
+
+. 插入单个实例非CDB。
++
+[source, cli]
+----
+CREATE PLUGGABLE DATABASE ncdb USING '/home/oracle/ncdb.xml'
+  COPY
+  FILE_NAME_CONVERT = ('/disk1/oracle/dbs/', '/disk2/oracle/ncdb/')
+;
+----
++
+
+NOTE: 如果主机上没有足够的空间、则 `NOCOPY` 选项可用于创建PDB。在这种情况下、单实例非CDB在作为PDB插入后不可用、因为PDB已使用原始数据文件。请确保在转换之前创建备份、以便在发生任何错误时可以恢复运行。
+
+. 如果源单实例非CDB与目标CDB之间的版本不同、则在转换后开始PDB升级。对于相同版本的转换、可以跳过此步骤。
++
+[source, cli]
+----
+sqlplus / as sysdba;
+----
++
+[source, cli]
+----
+alter session set container=ncdb;
+----
++
+[source, cli]
+----
+alter pluggable database open upgrade;
+exit;
+----
++
+[source, cli]
+----
+dbupgrade -c ncdb -l /home/oracle
+----
++
+查看中的升级日志文件 `/home/oracle` 目录。
+
+. 打开可插拔数据库、检查PDB插件违规、然后重新编译无效对象。
++
+[source, cli]
+----
+alter pluggable database ncdb open;
+----
++
+[source, cli]
+----
+alter session set container=ncdb;
+select message from pdb_plug_in_violations where type like '%ERR%' and status <> 'RESOLVED';
+----
++
+[source, cli]
+----
+$ORACLE_HOME/perl/bin/perl $ORACLE_HOME/rdbms/admin/catcon.pl -n 1 -c 'ncdb' -e -b utlrp -d $ORACLE_HOME/rdbms/admin utlrp.sql
+----
+. 执行 `noncdb_to_pdb.sql` 更新数据词典。
++
+[source, cli]
+----
+sqlplus / as sysdba
+----
++
+[source, cli]
+----
+alter session set container=ncdb;
+@$ORACLE_HOME/rdbms/admin/noncdb_to_pdb.sql;
+----
++
+关闭并重新启动容器数据库。ndb已退出受限模式。
+
+
+
+
+
+== 通过PDB重新定位将内部Oracle数据库迁移到Azure
+
+具有最大可用性选项的Oracle PDB重新定位使用PDB热克隆技术、在将PDB复制到目标时、可以启用源PDB可用性。切换后、会话和连接会自动重定向到目标PDB。因此、无论要重新定位的PDB大小如何、停机时间都会降至最低。NetApp提供了一个基于Ansible的工具包、用于自动执行迁移操作步骤。
+
+. 在Azure公共云中使用相同版本和修补程序级别在Azure虚拟机上创建CDB。
+. 从Ansible控制器克隆自动化工具包的副本。
++
+[source, cli]
+----
+git clone https://github.com/NetApp-Automation/na_ora_aws_migration.git
+----
+. 阅读README文件中的说明。
+. 为源和目标Oracle服务器配置Ansible主机变量文件、并为数据库服务器主机的配置文件配置名称解析。
+. 在Ansible控制器上安装Ansible控制器前提条件。
++
+[source, cli]
+----
+ansible-playbook -i hosts requirements.yml
+ansible-galaxy collection install -r collections/requirements.yml --force
+----
+. 对内部服务器执行任何迁移前任务。
++
+[source, cli]
+----
+ansible-playbook -i hosts ora_pdb_relocate.yml -u admin -k -K -t ora_pdb_relo_onprem
+----
++
+
+NOTE: admin用户是内部Oracle服务器主机上具有sudo权限的管理用户。管理员用户使用密码进行身份验证。
+
+. 执行从内部环境到目标Azure Oracle主机的Oracle PDB重新定位。
++
+[source, cli]
+----
+ansible-playbook -i hosts ora_pdb_relocate.yml -u azureuser --private-key db1.pem -t ora_pdb_relo_primary
+----
+
+
+
+NOTE: Ansible控制器可以位于内部或Azure云中。控制器需要连接到内部Oracle服务器主机和Azure Oracle VM主机。内部Oracle服务器主机和Azure Oracle VM主机之间的Oracle数据库端口(如1521)处于打开状态。
+
+
+
+== 其他Oracle数据库迁移选项
+
+有关其他迁移选项、请参见Microsoft文档： link:https://learn.microsoft.com/en-us/azure/architecture/example-scenario/oracle-migrate/oracle-migration-overview["Oracle数据库迁移决策过程"^]。

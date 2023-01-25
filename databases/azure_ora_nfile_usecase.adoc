@@ -1,0 +1,27 @@
+---
+sidebar: sidebar 
+permalink: databases/azure_ora_nfile_usecase.html 
+summary: 本最佳实践指南详细介绍了在Azure NetApp文件存储和Azure VM上部署和保护Oracle数据库的解决方案。 
+keywords: database, Oracle, Azure NetApp files, Azure 
+---
+= TR-4954：《Azure NetApp Files 上的Oracle数据库部署和保护》
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:table-stripes: odd
+:imagesdir: ./../media/
+
+
+NetApp公司Allen Cao、Niyaz Mohamed
+
+许多任务关键型Oracle企业数据库仍托管在内部、许多企业都希望将这些Oracle数据库迁移到公共云。这些Oracle数据库通常以应用程序为中心、因此需要用户专用配置、而许多数据库即服务公共云产品都缺少这一功能。因此、当前的数据库环境要求基于公共云的Oracle数据库解决方案 、该数据库是基于高性能、可扩展的计算和存储服务构建的、可满足独特的需求。Azure虚拟机计算实例和Azure NetApp Files 存储服务可能是这一难题中缺少的部分、您可以利用它构建任务关键型Oracle数据库工作负载并将其迁移到公共云。
+
+Azure虚拟机是Azure提供的多种按需、可扩展计算资源之一。通常、如果您需要比其他选项更好地控制计算环境、则可以选择虚拟机。Azure虚拟机提供了一种快速简单的方法来创建运行Oracle数据库所需的特定配置的计算机、无论该数据库是用于计算密集型工作负载还是内存密集型工作负载。Azure虚拟网络中的虚拟机可以轻松连接到您组织的网络、例如、通过安全的VPN通道。
+
+Azure NetApp Files 是一项完全受管的Microsoft服务、它可以让您的数据库工作负载以前所未有的速度更安全地迁移到云中。它旨在满足在云中运行高性能工作负载(例如Oracle数据库)的核心要求、并提供了能够反映实际IOPS需求范围、低延迟、高可用性、高持久性、大规模易管理性的性能层。以及快速高效的备份、恢复和克隆。之所以能够提供这些功能、是因为Azure NetApp Files 基于在Azure数据中心环境中运行的物理全闪存NetApp ONTAP 系统。Azure NetApp Files 完全集成到Azure DC和门户中、客户可以使用与任何其他Azure对象相同的舒适图形界面和API来创建和管理共享文件。借助Azure NetApp文件、您可以在不增加风险、成本或时间的情况下充分发挥Azure的全部功能、并信任Azure自带的唯一企业级文件服务。
+
+本文档详细介绍了如何使用Azure虚拟机和Azure NetApp Files 存储服务部署、配置和保护Oracle数据库、该服务可提供与内部系统类似的性能和持久性。有关最佳实践指导、请参见TR-4780 link:https://www.netapp.com/media/17105-tr4780.pdf["Microsoft Azure上的Oracle数据库"^]。更重要的是、NetApp还提供了自动化工具包、可自动执行在Azure公共云中部署、配置、数据保护、迁移和管理Oracle数据库工作负载所需的大部分任务。这些自动化工具包可从NetApp公共GitHub站点下载： link:https://github.com/NetApp-Automation/["NetApp-Automation"^]。
+
+link:azure_ora_nfile_architecture.html["接下来：解决方案架构。"]

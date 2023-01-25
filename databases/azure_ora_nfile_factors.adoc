@@ -1,0 +1,134 @@
+---
+sidebar: sidebar 
+permalink: databases/azure_ora_nfile_factors.html 
+summary: 本节详细介绍了在Azure虚拟机和Azure NetApp Files 存储上部署Oracle数据库时需要考虑的因素。 
+keywords: database, Oracle, Azure, Azure NetApp Files 
+---
+= 部署Oracle数据库时需要考虑的因素
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:table-stripes: odd
+:imagesdir: ./../media/
+
+
+link:azure_ora_nfile_architecture.html["先前版本：解决方案 架构。"]
+
+公有 云为计算和存储提供了多种选择、使用正确类型的计算实例和存储引擎是开始部署数据库的好地方。您还应选择针对Oracle数据库进行优化的计算和存储配置。
+
+以下各节介绍在采用Azure NetApp Files 存储的Azure虚拟机实例上的Azure公共云中部署Oracle数据库时的主要注意事项。
+
+
+
+== VM类型和规模估算
+
+选择合适的VM类型和大小对于优化公共云中关系数据库的性能非常重要。Azure虚拟机提供了各种计算实例、可用于托管Oracle数据库工作负载。请参见Microsoft文档 link:https://docs.microsoft.com/en-us/azure/virtual-machines/sizes["Azure中虚拟机的大小"^] 不同类型的Azure虚拟机及其规模估算。一般来说、NetApp建议使用通用Azure虚拟机来部署中小型Oracle数据库。对于部署大型Oracle数据库、适合使用经过内存优化的Azure VM。利用更多可用RAM、可以配置更大的Oracle SGA或智能闪存缓存、以减少物理I/O、进而提高数据库性能。
+
+Azure NetApp Files 用作连接到Azure虚拟机的NFS挂载、可提供更高的吞吐量、并通过本地存储克服存储优化的VM吞吐量限制。因此、在Azure NetApp Files 上运行Oracle可以减少可获得许可的Oracle CPU核心数量和许可成本。请参见 link:https://www.netapp.com/media/17105-tr4780.pdf["TR-4780：Microsoft Azure上的Oracle数据库"^]第7节—Oracle许可的工作原理
+
+需要考虑的其他因素包括：
+
+* 根据工作负载特征选择正确的vCPU和RAM组合。随着VM上的RAM大小增加、vCPU核心数也会增加。由于Oracle许可证费用是按vCPU核心数收取的、因此应在某一时刻保持平衡。
+* 向VM添加交换空间。默认Azure VM部署不会创建交换空间、而交换空间对于数据库来说并不是最佳选择。
+
+
+
+
+== Azure NetApp Files 性能
+
+Azure NetApp Files 卷从客户必须在其Azure NetApp Files 存储帐户中配置的容量池中分配。每个容量池的分配如下：
+
+* 定义整体性能功能的服务级别。
+* 最初为此容量池配置的存储容量或分层。一种服务质量(QoS)级别、用于定义每个已配置空间的总最大吞吐量。
+
+
+服务级别和初始配置的存储容量决定了特定Oracle数据库卷的性能级别。
+
+
+
+=== 1. Azure NetApp Files 的服务级别
+
+Azure NetApp Files 支持三种服务级别："超"、"高级"和"标准"。
+
+* *超存储。*此层可为分配的卷配额的每1 TiB提供高达128 MiB的吞吐量。
+* *高级存储。*此层分配的卷配额每1 TiB可提供高达64 MiB的吞吐量。
+* *标准存储。*此层可为分配的卷配额的每1 TiB提供高达16 MiB的吞吐量。
+
+
+
+
+=== 2.容量池和服务质量
+
+每个所需的服务级别都与已配置容量相关、并包括一个服务质量(QoS)级别、用于定义已配置空间的总最大吞吐量。
+
+例如、具有高级服务级别的10 TiB配置单容量池可为该容量池中的所有卷提供10倍64 MBps的整体可用吞吐量、因此、640 MBps可提供40、000 (16 K)个IOPS或80、000 (8 K)个IOPS。
+
+最小容量池大小为4 TiB。您可以根据工作负载需求的变化以1 TiB为增量更改容量池的大小、以管理存储需求和成本。
+
+
+
+=== 3.计算数据库卷的服务级别
+
+Oracle数据库卷的吞吐量限制由以下因素组合决定：卷所属容量池的服务级别以及分配给卷的配额。
+
+下图显示了如何计算Oracle数据库卷的吞吐量限制。
+
+image:db_ora_azure_anf_factors_01.PNG["此图显示了应用于三个容量层以确定总吞吐量的等式。"]
+
+在示例1中、如果容量池中的高级存储层分配了2 TiB的配额、则该卷的吞吐量限制为128 MiBps (2 TiB * 64 MiBps)。无论容量池大小或实际卷占用情况如何、此方案都适用。
+
+在示例2中、如果容量池中的高级存储层分配了100 GiB的配额、则该卷的吞吐量限制为6.25 MiBps (0.09765625TiB * 64 MiBps)。无论容量池大小或实际卷占用情况如何、此方案都适用。
+
+请注意、最小卷大小为100GiB。
+
+
+
+== 存储布局和设置
+
+NetApp建议采用以下存储布局：
+
+* 对于小型数据库、对所有Oracle文件使用单个卷布局。
++
+image:db_ora_azure_anf_factors_02.PNG["此图描绘了三个数据库(DB1、DB2和DB3)、每个数据库都包含数据文件、重做日志、归档日志和控制文件、这些文件都位于一个容量池中。"]
+
+* 对于大型数据库、建议的卷布局为多个卷：一个用于Oracle数据和一个重复的控制文件、一个用于Oracle活动日志、归档日志和控制文件。NetApp强烈建议为Oracle二进制文件而不是本地驱动器分配一个卷、以便可以将数据库重新定位到新主机并快速还原。
++
+image:db_ora_azure_anf_factors_03.PNG["此图显示了两个数据库、每个数据库包含两个卷。第一个卷包含数据文件、而每个数据库的第二个卷包含重做日志、归档日志和控制文件。全部位于一个容量池中。"]
+
+
+
+
+
+== NFS 配置
+
+最常见的操作系统Linux具有原生 NFS功能。Oracle提供了一个直接NFS (DNFS)客户端、该客户端本机集成到Oracle中。Oracle DNFS可绕过操作系统缓存并启用并行处理以提高数据库性能。Oracle支持NFSv3的时间已超过20年、而Oracle 12.1.0.2及更高版本支持NFSv4。
+
+通过使用DNFS (自Oracle 11g起提供)、在Azure虚拟机上运行的Oracle数据库可以比本机NFS客户端驱动更多的I/O。使用NetApp自动化工具包自动部署Oracle会自动在NFSv3上配置DNFS。
+
+下图展示了采用Oracle DNFS的Azure NetApp Files 上的SLOB基准测试。
+
+image:db_ora_azure_anf_factors_04.PNG["此图可显著显示DNFS比KNFS可提高数据库顺序文件延迟(毫秒)。"]
+
+需要考虑的其他因素：
+
+* TCP插槽表是主机总线适配器(host-bus-adapter、HBA)队列深度的NFS等效项。这些表可控制任何时候都可以处理的NFS操作的数量。默认值通常为16、该值太低、无法实现最佳性能。在较新的Linux内核上会出现相反的问题、这会自动将TCP插槽表限制增加到使NFS服务器充满请求的级别。
++
+为了获得最佳性能并防止出现性能问题、请将控制TCP插槽表的内核参数调整为128。
+
++
+[source, cli]
+----
+sysctl -a | grep tcp.*.slot_table
+----
+* 下表提供了单个Linux NFSv3实例的建议NFS挂载选项。
++
+image:aws_ora_fsx_ec2_nfs_01.PNG["此表显示了以下文件类型、控制文件、数据文件、重做日志、ORACLE_HOME、和ORACLE_BASE。"]
+
+
+
+
+NOTE: 在使用DNFS之前、请验证是否已安装Oracle文档1495104.1中所述的修补程序。从Oracle 12c开始、DNFS支持NFSv3、NFSv4和NFSv4.1。NetApp支持策略涵盖所有客户端的v3和v4、但在编写时、不支持将NFSv4.1与Oracle DNFS结合使用。
+
+link:azure_ora_nfile_procedures.html["下一步：部署过程。"]

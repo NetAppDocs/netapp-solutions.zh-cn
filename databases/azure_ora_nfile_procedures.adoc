@@ -1,0 +1,403 @@
+---
+sidebar: sidebar 
+permalink: databases/azure_ora_nfile_procedures.html 
+summary: 本节介绍使用FSX存储部署Oracle RDS自定义数据库的部署过程。 
+keywords: AWS, Oracle, RDS, HA, DR, database 
+---
+= Azure VM和Azure NetApp Files 上的Oracle分步部署过程
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:table-stripes: odd
+:imagesdir: ./../media/
+
+
+link:azure_ora_nfile_factors.html["先前：需要考虑的因素。"]
+
+
+
+== 通过Azure门户控制台使用适用于Oracle的ANF部署Azure虚拟机
+
+如果您是Azure的新用户、则首先需要设置Azure帐户环境。这包括注册您的组织以使用Azure Active Directory。以下部分总结了这些步骤。有关详细信息、请参见特定于Azure的链接文档。
+
+
+
+=== 创建和使用Azure资源
+
+设置Azure环境并创建帐户并将其与订阅关联后、您可以使用帐户登录到Azure门户以创建运行Oracle所需的资源。
+
+
+
+==== 1.创建虚拟网络或vNet
+
+Azure虚拟网络(vNet)是Azure中专用网络的基本组件。VNet支持Azure虚拟机(VM)等多种类型的Azure资源安全地相互通信、并与Internet和内部网络进行通信。在配置Azure VM之前、必须先配置vNet (部署VM的位置)。
+
+请参见 link:https://docs.microsoft.com/en-us/azure/virtual-network/quick-create-portal["使用Azure门户创建虚拟网络"^] 创建vNet。
+
+
+
+==== 2.为ANF创建NetApp存储帐户和容量池
+
+在此部署场景中、Azure VM操作系统使用常规Azure存储进行配置、但ANF卷配置为通过NFS运行Oracle数据库。首先、您需要创建NetApp存储帐户和容量池来托管存储卷。
+
+请参见 link:https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-quickstart-set-up-account-create-volumes?tabs=azure-portal["设置Azure NetApp Files 并创建NFS卷"^] 设置ANF容量池。
+
+
+
+==== 3.为Oracle配置Azure VM
+
+根据您的工作负载、确定您需要哪种类型的Azure VM以及要为Oracle部署的VM vCPU和RAM的大小。然后、在Azure控制台中、单击虚拟机图标以启动虚拟机部署工作流。
+
+. 在Azure VM页面中、单击*创建*、然后选择* Azure虚拟机*。
++
+image:db_ora_azure_anf_vm_01.PNG["此屏幕截图显示了可用Azure虚拟机的列表。"]
+
+. 选择部署的订阅ID、然后选择资源组、区域、主机名、VM映像、大小、和身份验证方法。转到磁盘页面。
++
+image:db_ora_azure_anf_vm_02-1.PNG["此屏幕截图显示了\"Create a Virtual Machine\"页面的输入。"]
+image:db_ora_azure_anf_vm_02-2.PNG["此屏幕截图显示了\"Create a Virtual Machine\"页面的其他输入。"]
+
+. 选择*高级SSD*以实现操作系统本地冗余、并将数据磁盘留空、因为数据磁盘是从ANF存储挂载的。转到网络连接页面。
++
+image:db_ora_azure_anf_vm_03.PNG["此屏幕截图显示了\"Create a Virtual Machine Disks\"页面的输入。"]
+
+. 选择vNet和子网。为外部VM访问分配公共IP。然后转到"管理"页面。
++
+image:db_ora_azure_anf_vm_04.PNG["此屏幕截图显示了创建虚拟机页面的其他输入。"]
+
+. 保留Management的所有默认值、然后转到Advanced页面。
++
+image:db_ora_azure_anf_vm_05.PNG["此屏幕截图显示了\"Create a Virtual Machine Management\"页面的输入。"]
+
+. 保留"高级"页面的所有默认值、除非您需要在使用自定义脚本部署后自定义VM。然后转到"标记"页面。
++
+image:db_ora_azure_anf_vm_06.PNG["此屏幕截图显示了\"Create a Virtual Machine Advanced\"页面的输入。"]
+
+. 如果需要、为虚拟机添加一个标记。然后、转到Review + create页面。
++
+image:db_ora_azure_anf_vm_07.PNG["此屏幕截图显示了\"Create a Virtual Machine Tags \"页面的输入。"]
+
+. 部署工作流将对配置运行验证、如果验证通过、请单击*创建*以创建虚拟机。
++
+image:db_ora_azure_anf_vm_08.PNG["\"此屏幕截图显示了\"Create a Virtual Machine review and create\"页面的输入。"]
+
+
+
+
+
+==== 4.为Oracle配置ANF数据库卷
+
+您必须分别为Oracle二进制卷、数据卷和日志卷的ANF容量池创建三个NFS卷。
+
+. 在Azure控制台中的Azure服务列表下、单击Azure NetApp Files 以打开卷创建工作流。如果您有多个ANF存储帐户、请单击要从中配置卷的帐户。
++
+image:db_ora_azure_anf_vols_00.PNG["此屏幕截图显示了Azure服务页面、其中ANF突出显示。"]
+
+. 在NetApp存储帐户下、单击*卷*、然后单击*添加卷*以创建新的Oracle卷。
++
+image:db_ora_azure_anf_vols_01_1.PNG["此屏幕截图显示了NetApp存储帐户的登录屏幕。"]
+image:db_ora_azure_anf_vols_01.PNG["此屏幕截图显示了可用于NetApp存储帐户的卷。"]
+
+. 作为一种良好做法、请先确定使用VM主机名作为前缀的Oracle卷、然后再确定主机上的挂载点、例如、对于Oracle二进制文件、可以使用u01表示Oracle数据、可以使用u02表示Oracle数据、也可以使用u03表示Oracle日志。为卷选择与VM相同的vNet。单击*下一步：协议>*。
++
+image:db_ora_azure_anf_vols_02.PNG["卷创建屏幕。"]
+
+. 选择NFS协议、将Oracle主机IP地址添加到允许的客户端、然后删除允许所有IP地址0.0.0.0/0的默认策略。然后单击*下一步：标记>*。
++
+image:db_ora_azure_anf_vols_03.PNG["卷创建屏幕上的协议输入。"]
+
+. 根据需要添加卷标记。然后单击*审阅+创建>*。
++
+image:db_ora_azure_anf_vols_04.PNG["卷创建屏幕上的标记输入。"]
+
+. 如果验证通过、请单击*创建*以创建卷。
++
+image:db_ora_azure_anf_vols_05.PNG["查看并创建卷创建屏幕的阶段。"]
+
+
+
+
+
+== 使用ANF在Azure虚拟机上安装和配置Oracle
+
+NetApp解决方案团队创建了许多基于Ansible的自动化工具包、可帮助您在Azure中顺利部署Oracle。按照以下步骤在Azure虚拟机上部署Oracle。
+
+
+
+=== 设置Ansible控制器
+
+如果尚未设置Ansible控制器、请参见 link:https://docs.netapp.com/us-en/netapp-solutions/automation/automation_introduction.html["NetApp 解决方案自动化"^]、其中详细说明了如何设置Ansible控制器。
+
+
+
+=== 获取Oracle部署自动化工具包
+
+在您的主目录中、使用您用于登录到Ansible控制器的用户ID克隆一份Oracle部署工具包副本。
+
+[source, cli]
+----
+git clone https://github.com/NetApp-Automation/na_oracle19c_deploy.git
+----
+
+
+=== 根据您的配置执行工具包
+
+请参见 link:https://docs.netapp.com/us-en/netapp-solutions/databases/cli_automation.html#cli-deployment-oracle-19c-database["CLI 部署 Oracle 19c 数据库"^] 使用命令行界面执行攻略手册。从Azure控制台而非命令行界面创建数据库卷时、您可以忽略全局VARS文件中变量配置的ONTAP 部分。
+
+
+NOTE: 该工具包默认部署Oracle 19c和RU 19.8。它可以轻松地适应任何其他修补程序级别、并对默认配置进行少量更改。此外、默认的种子数据库活动日志文件也会部署到数据卷中。如果需要日志卷上的活动日志文件、应在初始部署后重新定位。如有必要、请联系NetApp解决方案 团队以获得帮助。
+
+
+
+== 为Oracle的应用程序一致快照设置AzAcSnap备份工具
+
+Azure应用程序一致的Snapshot工具(AzAcSnap)是一个命令行工具、可通过处理在创建存储快照之前将第三方数据库置于应用程序一致状态所需的所有流程编排来为第三方数据库提供数据保护。然后、它会将这些数据库返回到运行状态。NetApp建议在数据库服务器主机上安装此工具。请参见以下安装和配置过程。
+
+
+
+=== 安装AzAcSnap工具
+
+. 获取的最新版本 link:https://aka.ms/azacsnapinstaller["AzArcSnap安装程序"^]。
+. 将下载的自安装程序复制到目标系统。
+. 使用默认安装选项以root用户身份执行自安装程序。如有必要、请使用使文件可执行 `chmod +x *.run` 命令：
++
+[source, cli]
+----
+ ./azacsnap_installer_v5.0.run -I
+----
+
+
+
+
+=== 配置Oracle连接
+
+快照工具与Oracle数据库进行通信、并且需要具有适当权限的数据库用户来启用或禁用备份模式。
+
+
+
+==== 1.设置AzAcSnap数据库用户
+
+以下示例显示了Oracle数据库用户的设置以及使用sqlplus与Oracle数据库进行通信。示例命令用于在Oracle数据库中设置用户(AZACSNAP)、并根据需要更改IP地址、用户名和密码。
+
+. 在Oracle数据库安装中、启动sqlplus以登录到数据库。
++
+[source, cli]
+----
+su – oracle
+sqlplus / AS SYSDBA
+----
+. 创建用户。
++
+[source, cli]
+----
+CREATE USER azacsnap IDENTIFIED BY password;
+----
+. 授予用户权限。此示例设置了AZACSNAP用户启用将数据库置于备份模式的权限。
++
+[source, cli]
+----
+GRANT CREATE SESSION TO azacsnap;
+GRANT SYSBACKUP TO azacsnap;
+----
+. 将默认用户的密码到期时间更改为无限制。
++
+[source, cli]
+----
+ALTER PROFILE default LIMIT PASSWORD_LIFE_TIME unlimited;
+----
+. 验证数据库的azacsnap连接。
++
+[source, cli]
+----
+connect azacsnap/password
+quit;
+----
+
+
+
+
+==== 2.使用Oracle Wallet为数据库访问配置Linux用户azacsnap
+
+AzAcSnap默认安装会创建一个azacsnap操作系统用户。必须使用存储在Oracle Wallet中的密码为其Bash shell环境配置Oracle数据库访问。
+
+. 以root用户身份运行 `cat /etc/oratab` 用于标识主机上的ORACLE_HOME和ORACLE_SID变量的命令。
++
+[source, cli]
+----
+cat /etc/oratab
+----
+. 将ORACLE_HOME、ORACLE_SID、TNS_admin和路径变量添加到azacsnap用户bash配置文件中。根据需要更改变量。
++
+[source, cli]
+----
+echo "export ORACLE_SID=ORATEST" >> /home/azacsnap/.bash_profile
+echo "export ORACLE_HOME=/u01/app/oracle/product/19800/ORATST" >> /home/azacsnap/.bash_profile
+echo "export TNS_ADMIN=/home/azacsnap" >> /home/azacsnap/.bash_profile
+echo "export PATH=\$PATH:\$ORACLE_HOME/bin" >> /home/azacsnap/.bash_profile
+----
+. 作为Linux用户azacsnap、创建电子钱包。系统将提示您输入电子邮件密码。
++
+[source, cli]
+----
+sudo su - azacsnap
+----
++
+[source, cli]
+----
+mkstore -wrl $TNS_ADMIN/.oracle_wallet/ -create
+----
+. 将连接字符串凭据添加到Oracle Wallet。在以下示例命令中、AZACSNAP是AzAcSnap要使用的ConnectString、azacsnap是Oracle数据库用户、AzPasswd1是Oracle用户的数据库密码。系统会再次提示您输入电子邮件密码。
++
+[source, cli]
+----
+mkstore -wrl $TNS_ADMIN/.oracle_wallet/ -createCredential AZACSNAP azacsnap AzPasswd1
+----
+. 创建 `tnsnames-ora` 文件在以下示例命令中、应将主机设置为Oracle数据库的IP地址、并将服务器SID设置为Oracle数据库SID。
++
+[source, cli]
+----
+echo "# Connection string
+AZACSNAP=\"(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=172.30.137.142)(PORT=1521))(CONNECT_DATA=(SID=ORATST)))\"
+" > $TNS_ADMIN/tnsnames.ora
+----
+. 创建 `sqlnet.ora` 文件
++
+[source, cli]
+----
+echo "SQLNET.WALLET_OVERRIDE = TRUE
+WALLET_LOCATION=(
+    SOURCE=(METHOD=FILE)
+    (METHOD_DATA=(DIRECTORY=\$TNS_ADMIN/.oracle_wallet))
+) " > $TNS_ADMIN/sqlnet.ora
+----
+. 使用Wallet测试Oracle访问。
++
+[source, cli]
+----
+sqlplus /@AZACSNAP as SYSBACKUP
+----
++
+命令的预期输出：[azacsnap@acao-ora01 ~]$ sqlplus /@AZACSNAP as SYSBACKUP
+
++
+SQL* Plus：版本19.0.0.0.0—生产时间为9月8日星期四18：02：07 2022年版本19.8.0.0.0
+
++
+版权所有（ c ） 1982-2019 ， Oracle 。保留所有权利。
+
++
+已连接到： Oracle Database 19c Enterprise Edition 版本 19.0.0.0.0 - 生产版本 19.8.0.0.0
+
++
+SQL/
+
+
+
+
+
+=== 配置ANF连接
+
+本节介绍如何启用与Azure NetApp Files (与VM)的通信。
+
+. 在Azure Cloud Shell会话中、确保您已登录到默认要与服务主体关联的订阅。
++
+[source, cli]
+----
+az account show
+----
+. 如果订阅不正确、请使用以下命令：
++
+[source, cli]
+----
+az account set -s <subscription name or id>
+----
+. 使用Azure命令行界面创建服务主体、如以下示例所示：
++
+[source, cli]
+----
+az ad sp create-for-rbac --name "AzAcSnap" --role Contributor --scopes /subscriptions/{subscription-id} --sdk-auth
+----
++
+预期输出：
+
++
+｛"clientId"："00aa000a-AAAA-0000-00A0-00aa000aaa0a"、"clientSecret"："00aa000a-AAAA-0000-00A0-00aa000aaa0a"、"subscriptionId"："00aa000a-AA0000-00AA-00A0-00aaa000A0-00aaa0a"、"Uraaa000a0a0a"："t00aaa0a0a000a0a0a"t00a0a0a" "https://login.microsoftonline.com"[]、"resourcesManagerEndpointUrl"： "https://management.azure.com/"[]、"activesGraphResourceId"： "https://graph.windows.net/"[]、"sqlManagementEndpointUrl"： "https://management.core.windows.net:8443/"[]、"gallerEndpointUrl"： "https://gallery.azure.com/"[]、"managementEndpointUrl"： "https://management.core.windows.net/"[]｝
+
+. 剪切输出内容并将其粘贴到名为的文件中 `oracle.json` 存储在Linux用户azacsnap用户箱目录中、并使用适当的系统权限保护文件。
+
+
+
+NOTE: 请确保JSON文件的格式与上述格式完全相同、尤其是使用双引号(")括起的URL。
+
+
+
+=== 完成AzAcSnap工具的设置
+
+按照以下步骤配置和测试快照工具。成功测试后、您可以执行第一个数据库一致的存储快照。
+
+. 更改为Snapshot用户帐户。
++
+[source, cli]
+----
+su - azacsnap
+----
+. 更改命令的位置。
++
+[source, cli]
+----
+cd /home/azacsnap/bin/
+----
+. 配置存储备份详细信息文件。这将创建 `azacsnap.json` 配置文件。
++
+[source, cli]
+----
+azacsnap -c configure –-configuration new
+----
++
+三个Oracle卷的预期输出：
+
++
+[azacsnap@acao-ora01 bin]$ azacsnap -c configure -configuration new building new config file Add comment to config file (blank entry to exit adding comments)：Oracle snapshot bkup向配置文件添加注释(空白条目用于退出添加注释)：输入要添加的数据库类型、"has"、"oracle"或"退出"(对于无Oracle数据库)
+
++
+=>添加Oracle数据库详细信息== Oracle数据库SID (例如CDB1)：ORAATST数据库服务器的地址(主机名或IP地址)：172.30.137.142 Oracle连接字符串(例如/@AZACSNAP)：/@AZACSNAP
+
++
+== Azure NetApp Files 存储详细信息==您是否正在对数据库使用Azure NetApp Files ？(Y/n)[n]：y—数据卷在创建快照之前已将应用程序置于一致状态—是否将Azure NetApp Files 资源添加到数据库配置的数据卷部分？(y/n)[n]：y完整Azure NetApp Files 存储卷资源ID (例如/subscriptions/.../resourcegroups/.../providers/Microsoft.NetApp/netAppAccounts/.../capacityPools/Premium/volumes/...):/subscriptions/0efa2dfb-917c-4497-b56a-b3f4eadb8111/resourcegroups/ANFAVSRG/providers/Microsoft.NetApp/netAppAccounts/ANFAVSAcct/capacityPools/CapPool/volumes/acao-ora01-u01服务主体身份验证或Azure密钥存储文件名(例如、文件名) https://...):[] ORACLE.json是否将Azure NetApp Files 资源添加到数据库配置的数据卷部分？(y/n)[n]：y完整Azure NetApp Files 存储卷资源ID (例如/subscriptions/.../resourcegroups/.../providers/Microsoft.NetApp/netAppAccounts/.../capacityPools/Premium/volumes/...):/subscriptions/0efa2dfb-917c-4497-b56a-b3f4eadb8111/resourcegroups/ANFAVSRG/providers/Microsoft.NetApp/netAppAccounts/ANFAVSAcct/capacityPools/CapPool/volumes/acao-ora01-u02服务主体身份验证或Azure密钥存储文件名(例如、文件名) https://...):[] ORACLE.json是否将Azure NetApp Files 资源添加到数据库配置的数据卷部分？(Y/n)[n]：n—其他卷立即成为快照、而不为快照准备任何应用程序—是否将Azure NetApp Files 资源添加到数据库配置的"其他卷"部分？(y/n)[n]：y完整Azure NetApp Files 存储卷资源ID (例如/subscriptions/.../resourcegroups/.../providers/Microsoft.NetApp/netAppAccounts/.../capacityPools/Premium/volumes/...):/subscriptions/0efa2dfb-917c-4497-b56a-b3f4eadb8111/resourcegroups/ANFAVSRG/providers/Microsoft.NetApp/netAppAccounts/ANFAVSAcct/capacityPools/CapPool/volumes/acao-ora01-u03服务主体身份验证或Azure密钥存储文件名(例如、文件名) https://...):[] ORACLE.json是否将Azure NetApp Files 资源添加到数据库配置的"其他卷"部分？(Y/n)[n]：n
+
++
+== Azure受管磁盘详细信息==您是否正在对数据库使用Azure受管磁盘？(Y/n)[n]：n
+
++
+== Azure大型实例(裸机)存储详细信息==您是否对数据库使用Azure大型实例(裸机)？(Y/n)[n]：n
+
++
+输入要添加的数据库类型"ha"、"oracle"或"exit"(对于无数据库)：exit
+
++
+编辑配置完成、将输出写入"azacsnap.json"。
+
+. 以azacsnap Linux用户身份、对Oracle备份运行azacsnap test命令。
++
+[source, cli]
+----
+cd ~/bin
+azacsnap -c test --test oracle --configfile azacsnap.json
+----
++
+预期输出：
+
++
+@azacsnap@acao-ora01 bin]$ azacsnap -c test -test oracle -configfile azacsnap.json bEGIN：Test process started for 'Oracle' BEGIN：Oracle DB tests passed.：successful connectivity to Oracle DB version 1908000000 end：Test process complete for 'Oracle'[azacsnap acao-ora01 bin]$
+
+. 运行第一个快照备份。
++
+[source, cli]
+----
+azacsnap -c backup –-volume data --prefix ora_test --retention=1
+----
+
+
+link:azure_ora_nfile_protection.html["下一步：数据库保护。"]

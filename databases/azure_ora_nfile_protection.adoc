@@ -1,0 +1,243 @@
+---
+sidebar: sidebar 
+permalink: databases/azure_ora_nfile_protection.html 
+summary: 本节介绍如何使用azacsnap工具以及快照备份、还原和快照分层到Azure Blob来保护Oracle数据库。 
+keywords: Oracle, Azure, database, backup, restore 
+---
+= 在Azure云中保护Oracle数据库
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:table-stripes: odd
+:imagesdir: ./../media/
+
+
+link:azure_ora_nfile_procedures.html["先前：部署过程。"]
+
+
+
+== 使用AzAcSnap工具使用Snapshot备份Oracle数据库
+
+Azure应用程序一致的Snapshot工具(AzAcSnap)是一个命令行工具、可通过处理在创建存储快照之前将第三方数据库置于应用程序一致状态所需的所有流程编排来为其提供数据保护、之后、它会将数据库恢复为运行状态。
+
+对于Oracle、您可以将数据库置于备份模式以创建快照、然后将数据库退出备份模式。
+
+
+
+=== 备份数据和日志卷
+
+可以使用执行snapshot命令的简单shell脚本在数据库服务器主机上设置备份。然后、可以计划从crontab运行此脚本。
+
+通常、备份频率取决于所需的RTO和RPO。频繁创建快照会占用更多存储空间。备份频率与空间占用之间存在一定的权衡。
+
+数据卷通常比日志卷占用更多的存储空间。因此、您可以每几小时在数据卷上创建一次快照、而每15到30分钟在日志卷上创建一次更频繁的快照。
+
+请参见以下备份脚本和计划示例。
+
+对于数据卷快照：
+
+[source, cli]
+----
+ # /bin/sh
+cd /home/azacsnap/bin
+. ~/.bash_profile
+azacsnap -c backup --volume data --prefix acao-ora01-data --retention 36
+azacsnap -c backup --volume other --prefix acao-ora01-log --retention 250
+----
+对于日志卷快照：
+
+[source, cli]
+----
+ # /bin/sh
+cd /home/azacsnap/bin
+. ~/.bash_profile
+azacsnap -c backup --volume other --prefix acao-ora01-log --retention 250
+----
+crontab计划：15、30、45 ***/home/azacsnp/snap_log.sh 0 */2 **/home/azacsnp/snap_data.sh
+
+
+NOTE: 设置备份时 `azacsnap.json` 配置文件中、将所有数据卷(包括二进制卷)添加到 `dataVolume` 以及所有日志卷 `otherVolume`。快照的最大保留空间为250个副本。
+
+
+
+=== 验证快照
+
+转至Azure门户> Azure NetApp文件/卷以检查是否已成功创建快照。
+
+image:db_ora_azure_anf_snap_01.PNG["此屏幕截图显示了快照列表中的两个文件。"]
+image:db_ora_azure_anf_snap_02.PNG["此屏幕截图显示了快照列表中的八个文件。"]
+
+
+
+== Oracle从本地备份还原和恢复
+
+Snapshot备份的一个主要优势是、它与源数据库卷共存、并且主数据库卷几乎可以即时回滚。
+
+
+
+=== 在主服务器上还原和恢复Oracle
+
+以下示例演示了如何从同一Oracle主机上的Azure信息板和CLI还原和恢复Oracle数据库。
+
+. 在要还原的数据库中创建一个测试表。[Oracle@acao-ora01 ~]$ sqlplus / as sysdba.
++
+SQL* Plus：版本19.0.0.0.0—生产时间：2012年9月12日星期一19：02：35 2022版本19.8.0.0.0
+
++
+版权所有（ c ） 1982-2019 ， Oracle 。保留所有权利。
+
++
+已连接到： Oracle Database 19c Enterprise Edition 版本 19.0.0.0.0 - 生产版本 19.8.0.0.0
+
++
+sql > create table testsnapshot (id integer、event varchar (100)、dt timestamp)；
+
++
+已创建表。
+
++
+SQL/insert into testsnapshot values (1、"insert a data marker to validate snapshot restore"、sysdate)；
+
++
+已创建1行。
+
++
+sql >提交；
+
++
+提交完成。
+
++
+sql >从testsnapshot中选择*；
+
++
+ ID
++
+[listing]
+----
+EVENT
+--------------------------------------------------------------------------------
+DT
+---------------------------------------------------------------------------
+         1
+insert a data marker to validate snapshot restore
+12-SEP-22 07.07.35.000000 PM
+----
+. 将此表放到快照备份之后。
++
+[Oracle@acao-ora01 ~]$ sqlplus / as sysdba.
+
++
+SQL* Plus：版本19.0.0.0.0—生产时间为9月13日星期二14：20：22 2022版本19.8.0.0.0
+
++
+版权所有（ c ） 1982-2019 ， Oracle 。保留所有权利。
+
++
+已连接到： Oracle Database 19c Enterprise Edition 版本 19.0.0.0.0 - 生产版本 19.8.0.0.0
+
++
+sql >下拉表testsnapshot；
+
++
+表已删除。
+
++
+SQL/SELECT * from testsnapshot；SELECT * from testsnapshot * error at line 1：ora-00942：table or view does not exist
+
++
+sql >立即关闭；数据库已关闭。已卸载数据库。Oracle实例已关闭。SQL/exit disconnected from Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 -生产版19.8.0.0.0
+
+. 从Azure NetApp Files 信息板中、将日志卷还原到最后一个可用快照。选择*还原卷*。
++
+image:db_ora_azure_anf_restore_01.PNG["此屏幕截图显示了ANF信息板中卷的快照还原方法。"]
+
+. 确认还原卷并单击*还原*以完成卷还原到最新可用备份的过程。
++
+image:db_ora_azure_anf_restore_02.PNG["出现\"Are you sure you want to do this？\"快照还原页面。"]
+
+. 对数据卷重复相同的步骤、并确保备份包含要恢复的表。
++
+image:db_ora_azure_anf_restore_03.PNG["此屏幕截图显示了ANF信息板中数据卷的快照还原方法。"]
+
+. 再次确认卷还原、然后单击"还原"。
++
+image:db_ora_azure_anf_restore_04.PNG["出现\"Are you sure you want to do this？\"数据卷快照还原页面。"]
+
+. 如果您有多个控制文件副本、请重新同步这些控制文件、并将旧控制文件替换为可用的最新副本。
++
+~ Oracle@acao-ora01 ~]$ mv /u02/oradata/oratST/control01.ctl /u02/oradata/ORAT/ORATST/control01.ctl.bk@Oracle acao-ora01 ]$ cp /u03/orareco/oratST/control02.ctl /ucadata /or02/ort1/tat01
+
+. 登录到Oracle服务器VM并使用sqlplus运行数据库恢复。
++
+[Oracle@acao-ora01 ~]$ sqlplus / as sysdba.
+
++
+SQL* Plus：版本19.0.0.0.0—生产时间为9月13日星期二15：10：17 2022版本19.8.0.0.0
+
++
+版权所有（ c ） 1982-2019 ， Oracle 。保留所有权利。
+
++
+已连接到闲置实例。
+
++
+sql >启动挂载；Oracle实例已启动。
+
++
+总系统全局区域6442448984字节固定大小8910936字节可变大小1090519040字节数据库缓冲区5335154688字节重做缓冲区7864320字节数据库已挂载。SQL/recover database using backup controlfile until cancel；ORA-00279：Change 3188523 generated at 09/13/2022 10：00：09 needed for thread1 ORA-00289：suggestion：/u03/orareco/orATST/archivelog /2022_09_13/o1_Mf_1_43_22rnjq_923_ for arc
+
++
+指定日志：｛<RET> = Suggested | filename = Auto | cancel｝
+
++
+ora-00279：Change 3188862 generated at 09/13/2022 10：01：20 needed for thread1 ORA-00289：suggestion：/u03/orareco/oraatST/archivelog/2022_09_13/o1_mf_1_44___29f2lgb5_.ORarc-00280：/oraST/archivelog/2022_13_1/o1/o1/ag_9_q_q_s_A
+
++
+指定日志：｛<RET> = Suggested | filename = Auto | cancel｝
+
++
+ora-00279：Change 3193117 generated at 09/13/2022 12：00：08 needed for thread1 ORA-00289：suggestion：/u03/orareco/oraatST/archivelog/2022_09_13/o1_mf_1_45__29h6qyw_.orarc-00oc/ort_1/ag_1/ag_3
+
++
+指定日志：｛<RET> = Suggested | filename = Auto | cancel｝
+
++
+ora-00279：Change 3193440 generated at 09/13/2022 12：01：20 needed for thread1 ORA-00289：suggestion：/u03/orareco/ORAATST/archivelog/2022_09_13/o1_mf_1_46_%u_.arc ORA-00280：change 31934o/or1/oc_1/ag_1/oc_1/oc_O1/378_A#A#A1/OQ_OA.1/OA.1/A#A#20202020_A_A#A_OR_OR_OA.1/A#A#A#A#A#2020202020_OR_OR_A#A#A_OR_OR_OR_A#A#A#A#A#A#
+
++
+指定日志：｛<RET> =已建议、文件名=自动、取消｝已取消介质恢复。SQL/ALTER DATABASE OPEN resetlogs；
+
++
+数据库已更改。
+
++
+sql >从testsnapshot中选择*；
+
++
+ ID
++
+[listing]
+----
+EVENT
+--------------------------------------------------------------------------------
+DT
+---------------------------------------------------------------------------
+         1
+insert a data marker to validate snapshot restore
+12-SEP-22 07.07.35.000000 PM
+
+
+SQL> select systimestamp from dual;
+
+ SYSTIMESTAMP
+---------------------------------------------------------------------------
+13-SEP-22 03.28.52.646977 PM +00:00
+----
+
+
+此屏幕显示已删除的表已使用本地快照备份进行恢复。
+
+link:azure_ora_nfile_migration.html["下一步：数据库迁移。"]
