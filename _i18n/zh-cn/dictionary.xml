@@ -12426,12 +12426,10 @@
   <block id="373ae4e24c2daa280a4a5aca82dd3818" category="paragraph">数据库迁移无论如何都是一项极具挑战性的工作。将Oracle数据库从内部迁移到云也不例外。</block>
   <block id="d1e968e04e34c971d41e644820094cef" category="paragraph">以下各节提供了在使用AWS EC2计算和FSX存储平台将Oracle数据库迁移到AWS公有 云时需要考虑的关键因素。</block>
   <block id="84639b5fb3b348e6a053dde95414e039" category="section-title">ONTAP 存储可在内部使用</block>
-  <block id="93336cb92f211f9ff347245c8559dd5e" category="paragraph">如果内部Oracle数据库位于ONTAP 存储阵列上、则使用NetApp SnapCenter UI工具更容易设置复制以进行数据库迁移。</block>
   <block id="df2111c23e70fa013a85041e1415639e" category="list-text">构建与内部实例匹配的目标计算EC2实例。</block>
   <block id="1931f75e563d3dc9ee112e9b4ebd66b7" category="list-text">从FSX控制台配置大小相等的匹配数据库卷。</block>
   <block id="98201e355445ae8a2eff3b7c33132cc6" category="list-text">将FSX数据库卷挂载到EC2实例。</block>
   <block id="53fad15133e494dc37bbd0494b8f3a6c" category="list-text">在内部数据库卷与目标FSX数据库卷之间设置SnapMirror复制。初始同步可能需要一段时间才能移动主源数据、但后续的任何增量更新都要快得多。</block>
-  <block id="fda597a9ad18b763048653fa5e87e38c" category="list-text">切换时、关闭主应用程序以停止所有事务。在SnapCenter 中、运行日志备份以将其余事务刷新到目标。</block>
   <block id="8da4f0ed2ee5c7e68c3fe9ec3dde280e" category="list-text">拆分镜像卷、在目标上运行Oracle恢复、并启动数据库以进行服务。</block>
   <block id="6efd103fd0a488a3d023523ab6377e4e" category="list-text">将应用程序指向云中的Oracle数据库。</block>
   <block id="86afa353cad293784396216eab80ee52" category="section-title">ONTAP 存储在内部不可用</block>
@@ -12446,16 +12444,6 @@
   <block id="3bac7326688b384ce82c7c9807cae4b7" category="list-text">切换时、关闭应用程序和源Oracle数据库。复制最后几个归档日志并将其应用于目标Oracle数据库以使其保持最新。</block>
   <block id="98cf6a7f87338026b5b95afee91d5676" category="list-text">启动目标数据库以供用户访问。</block>
   <block id="021e473c3a779caff7d794ce36c8ef68" category="list-text">将应用程序重定向到目标数据库以完成切换。</block>
-  <block id="46c977a489a77ea3a7d6ff4a7fa6d556" category="section-title">使用Oracle多租户CDB/PDB架构整合AWS中的Oracle数据库</block>
-  <block id="ea274b58537d36559ff3046cd5423083" category="list-text">在AWS公有 云中创建CDB。</block>
-  <block id="12c774c8ec030e1d104719cf317b5ca2" category="list-text">如果内部数据库也部署在CDB/PDB多租户中、请拔下要迁移的PDB。</block>
-  <block id="6ee0eb9b1d29207b2ae6feda6428e2cc" category="list-text">将元数据以及带下划线的Oracle数据文件传输到目标CDB实例。</block>
-  <block id="4bb12c493b32940ff849ac100d727582" category="list-text">验证与Oracle验证过程的兼容性。</block>
-  <block id="e7343c5c0db191b9c4841a6556ebc806" category="list-text">如果兼容性验证通过、请将已拔出的PDB插入目标CDB容器。</block>
-  <block id="5bb0b3fe813867de21d25f37b58dc0fc" category="list-text">根据需要更新数据词典。</block>
-  <block id="97b4c444678bacf256568fc4f7071634" category="list-text">备份并打开已迁移的PDB以进行访问。</block>
-  <block id="375116b8a4235f7fa12ebc4e2bddb3dc" category="admonition">PDB拔出和插件要求应用程序停机、在迁移规划期间应考虑到这一点。</block>
-  <block id="0978a2ea1e5676c9e8f017f05e988475" category="paragraph">同样、NetApp自动化团队还提供了一个迁移工具包、该工具包可以帮助Oracle数据库从内部迁移到AWS云。有关最新的数据库迁移工具、请访问NetApp公有 GitHub站点。</block>
   <block id="a8fba1abc3fbaa027d18daed3f6e170d" category="doc">安装MetalLB负载平衡器</block>
   <block id="48501496ee9b06b63701de94b6ffc3a5" category="paragraph">此页面列出了MetalLB受管负载平衡器的安装和配置说明。</block>
   <block id="ccd779a5e754b22c1589256334866c0a" category="paragraph">MetalLB负载平衡器与VMware上的Anthos集群完全集成在一起、并从1.11版开始在管理和用户集群设置中执行自动部署。在相应的`cluster.YAML`配置文件中存在文本块、您必须修改这些块才能提供负载平衡器信息。它可以在您的Anthos集群上自行托管、而无需像其他受支持的负载平衡器解决方案那样部署外部资源。此外、您还可以创建一个IP池、通过在未在云提供商上运行的集群中创建类型为负载平衡器的Kubernetes服务来自动分配地址。</block>
@@ -15046,7 +15034,6 @@
   <block id="e83c35e6afea2838c146155292120e3a" category="paragraph">&lt;在此处输入选项的详细信息&gt;</block>
   <block id="a8ec4bf9dc004e6dc4ec8c7c8cb307a3" category="example-title">&amp;lt；选项2&amp;gt的说明；</block>
   <block id="13e60333560bb11c5611ca7faa0dff3b" category="example-title">&amp;lt；选项说明n&amp;gt；</block>
-  <block id="955b9fb8bb717f45a2531f62ebef906d" category="doc">NVA-1151-design：采用NVIDIA DGX A100的NetApp ONTAP AI系统设计指南</block>
   <block id="329ecbed66c88e6c0c049d051ad6aa9a" category="paragraph">NetApp公司David Arnette和Sung-Han Lin</block>
   <block id="d940dfad6ae514d8235749f5f5bf92ed" category="paragraph">NVA-1151-design介绍了一种经过NetApp验证的架构、用于使用NetApp AFF A800存储系统、NVIDIA DGX A100系统和NVIDIA Mellanox网络交换机进行机器学习和人工智能工作负载。它还包括所实施架构的基准测试结果。</block>
   <block id="16550c71fdf2102ec8face86a5d82746" category="cell">2022年9月30日</block>
@@ -15600,19 +15587,15 @@
   <block id="3b04793c63a616fa65f54f1d98c263e1" category="admonition">单击"第二个选项卡"以查看该部分的内容。</block>
   <block id="c53dba1ad099d932b01eacd82bd500f2" category="doc">NVA-1155：《基于FlexPod 数据中心且采用Cisco UCS和基于FC的NetApp AFF A800的Oracle 19c RAC数据库—设计和部署指南》</block>
   <block id="547673676a9fdbc79f1364e749be4d0a" category="paragraph">NetApp公司Allen Cao</block>
-  <block id="a42a54d915f9cd474841cab349e2de5e" category="paragraph">本《基于Cisco UCS的FlexPod Datacenter上的Oracle 19c RAC数据库设计和部署指南》以及《基于FC的NetApp AFF A800》详细介绍了在采用Oracle Linux 8.2的最新FlexPod Datacenter基础架构上托管Oracle RAC数据库的解决方案 设计以及分步部署过程操作系统和Red Hat兼容内核。</block>
   <block id="6e170e4c0b9eb50546a09aafc90dc157" category="doc">TR-4794：《基于NetApp EF系列的Oracle数据库》</block>
   <block id="9b6fc59469e9f5ee36cb85b08daacec3" category="paragraph">NetApp公司Ebin Kadavy的Mitch Blackburn</block>
   <block id="fa8b4902d0c1e464dcf9256a434920ba" category="paragraph">TR-4794旨在帮助存储管理员和数据库管理员在NetApp EF系列存储上成功部署Oracle。</block>
-  <block id="954dcd3322a22ffd4d24f94c2d40abfc" category="doc">TR-4467：SAP与Windows上的Microsoft SQL Server—使用NetApp集群模式Data ONTAP 和SnapCenter 的最佳实践</block>
   <block id="611a4a6b98272a717f8e1f6bf5ba787b" category="paragraph">NetApp 公司 Marco Schoen</block>
   <block id="dbd408dfbba42c9529974244acc200aa" category="paragraph">TR-4467为客户和合作伙伴提供了部署集群模式NetApp Data ONTAP 以支持在Windows环境中的Microsoft SQL Server中运行SAP业务套件解决方案的最佳实践。</block>
-  <block id="e848c28a0a485bcf645b0791381d9c89" category="doc">打造现代化的Microsoft SQL Server环境</block>
   <block id="69015d285622bbd074d7bccf4ea12670" category="paragraph">在内部或云端优化运营并释放数据的潜能。</block>
   <block id="a23b0f6840eece1bcfc1a2ce047e740e" category="doc">TR-3633：ONTAP 上的Oracle数据库</block>
   <block id="3b1f454fff17aa123534722dc8b6870b" category="paragraph">NetApp公司Jeffrey Steiner</block>
   <block id="bb00932088674136830625fe37741beb" category="paragraph">请参见 <block ref="d0d24196afeacb93f8904954168bf8db" category="inline-link-macro-rx"></block> 确定TR-3633中指定的环境、配置和版本是否支持您的环境。</block>
-  <block id="d76cffc02762fcf81c8bb85e5fe9e987" category="doc">TR-4764：《采用NetApp EF系列的Microsoft SQL Server最佳实践指南》</block>
   <block id="d9cd8ac988f5ea26e28a2da5f3485ff9" category="paragraph">NetApp公司Pat Sithusan Mitch Blackburn</block>
   <block id="9db08b91ae68a77b71af230b40b31325" category="paragraph">本最佳实践指南旨在帮助存储管理员和数据库管理员在NetApp EF系列存储上成功部署Microsoft SQL Server。</block>
   <block id="d5b9082efbf726d2e38c5042668ae4f0" category="doc">TR-4250：SAP与基于UNIX的Oracle和NFS以及适用于SAP 3.4的NetApp集群模式Data ONTAP 和SnapManager</block>
@@ -15621,62 +15604,39 @@
   <block id="be52c99c6345cb49ab79a79b9565c737" category="doc">TR-4785：使用NetApp E系列和BeeGFS进行AI部署</block>
   <block id="36f4667e440709d475f1c5db4ecae97e" category="paragraph">Nagalakshmi Raju、Daniel Landes、Nathan Swartz、NetApp公司Amind本纳尼</block>
   <block id="c74f37bd5e8951b2feda7d19b03326e9" category="paragraph">人工智能(AI)、机器学习(ML)和深度学习(DL)应用程序涉及大型数据集和高计算。要成功运行这些工作负载、您需要一个灵活的基础架构、使您能够无缝地横向扩展存储和计算节点。本报告介绍了在分布式模式下运行AI训练模型的步骤、该模式允许无缝横向扩展计算和存储节点。该报告还包括各种性能指标、用于显示将NetApp E系列存储与BeeGFS并行文件系统相结合的解决方案 如何为AI工作负载提供灵活、经济高效且简单的解决方案。</block>
-  <block id="e889531653bc3baae2aadf3bee46a54f" category="doc">NVA-1156-Deploy：采用NVIDIA DGX A100系统和BeeGFS的NetApp EF系列AI</block>
   <block id="4472645bc6fe350406624df126edf4ac" category="paragraph">NetApp公司的公司包括：Abdel Satek、Tim Chau、Joe McCormick和David Arnette</block>
   <block id="7d8f094cc030aec75a343f1baad8c19d" category="paragraph">本文档介绍了经过NetApp验证的机器学习(ML)和人工智能(AI)工作负载架构、这些架构使用NetApp EF600 NVMe存储系统、ThinkParQ BeeGFS并行文件系统、NVIDIA DGX A100系统和NVIDIA Mellanox Quantum QM8700 200 Gbps InfiniBand (IB)交换机。本文档还介绍了如何在部署完成后执行验证基准测试。</block>
-  <block id="0046f5684030ae3e0fe25061bf411059" category="doc">NVA-1153-design：采用NVIDIA DGX A100系统和Mellanox频谱以太网交换机的NetApp ONTAP AI</block>
   <block id="7bfbd6c5c294b7f81d430bd31f53aea3" category="paragraph">NVA-1153-design介绍了经过NetApp验证的机器学习(ML)和人工智能(AI)工作负载架构、该架构使用NetApp AFF A800存储系统、NVIDIA DGX A100系统和NVIDIA Mellanox Spectrum SN3700V 200 Gb以太网交换机。此设计采用基于融合以太网的RDMA (RoCE)作为计算集群互连网络结构、可为客户提供完全基于以太网的架构来处理高性能工作负载。本文档还包括所实施架构的基准测试结果。</block>
-  <block id="455d43e3be683302c81c2b5626db170c" category="doc">TR-4851：适用于自主驾驶工作负载的NetApp StorageGRID 数据湖—解决方案 设计</block>
   <block id="981ed5a5ebc4fbc2a64f69a42d9ef36c" category="paragraph">NetApp公司David Arnette</block>
   <block id="0e2b7ed1591c52ac15ea956ecb6a5701" category="paragraph">TR-4851展示了NetApp StorageGRID 对象存储是机器学习(ML)和深度学习(DL)软件开发的数据存储库和管理系统。本白皮书介绍了自动驾驶汽车软件开发的数据流和要求、以及简化数据生命周期的StorageGRID 功能。此 解决方案 适用场景 是ML和DL开发流程中典型的任何多阶段数据管道工作流。</block>
-  <block id="a479dadc1f089681ec4db29c16fec163" category="doc">TR-4810：适用于AI和ML模型培训工作负载的NetApp ONTAP 和联想ThinkSystem SR670</block>
   <block id="5ebb854a0e7b0964891f587bfc1d231a" category="paragraph">NetApp公司Karthikeyan Nagalingam、联想公司Mirosav Hodak</block>
   <block id="17f161066b709ea249da0f86319938b3" category="paragraph">TR-4810介绍了一种经济高效的入门级计算和存储架构、用于在NetApp存储控制器和联想ThinkSystem服务器上部署基于GPU的人工智能(AI)培训。此设置是为同时运行多个培训作业的中小型团队设计的一种共享资源。</block>
-  <block id="44daeb1185bf6a8c6c548cc1df101795" category="paragraph">TR-4810可为行业标准的MLPerf基准测试提供性能数据、该基准测试使用V100 GPU上的TensorFlow进行图像分类培训。为了衡量性能、我们将ResNet50与ImageNet数据集结合使用、该数据集的批大小为512、半精度、CUDA和cuDNN。我们使用四GPU SR6.7服务器和入门级NetApp存储系统执行此分析。结果表明、在此处测试的多个使用情形中、性能非常高效―共享、多用户、多作业情形、单个作业最多可扩展到四个服务器。大型横向扩展作业效率较低、但仍然可行</block>
-  <block id="0ae928f6b14175d27f45a4e5ad647657" category="doc">NVA-1151-Deploy：采用NVIDIA DGX A100系统的NetApp ONTAP AI</block>
   <block id="290beddb4a567cd98ba4f9116eee11b4" category="paragraph">NVA-1151-deploy包括使用NetApp AFF A800存储系统、NVIDIA DGX A100系统和NVIDIA Mellanox网络交换机的适用于机器学习(ML)和人工智能(AI)工作负载的NetApp验证架构(NVA)的存储系统部署说明。此外、还提供了部署完成后运行验证基准测试的说明。</block>
   <block id="806008ac96286a2e08058ba3a3daa601" category="paragraph">NetApp公司Ryan Rodine</block>
-  <block id="25dbf1b5193ae9eff63687c18c19e6f5" category="paragraph">本文档详细介绍了如何在NetApp E系列存储系统中部署StorNext并行文件系统解决方案。此解决方案 涵盖NetApp EF280全闪存阵列、NetApp EF300全闪存NVMe阵列、NetApp EF600全闪存NVMe阵列和NetApp E5760混合系统。它基于Frametest基准测试提供性能特征化、该工具广泛用于媒体和娱乐行业的测试。</block>
   <block id="3e22ed7172d7770cfa1457b7e70b2b06" category="doc">TR-4915：利用E系列和BeeGFS移动数据、实现人工智能和分析工作流</block>
   <block id="b85127cc663f1e3f1a6a366bb2732406" category="paragraph">NetApp公司Cody Harryman和Ryan Rodine</block>
   <block id="f75519c0654938719b5319e8d452e91a" category="paragraph">TR-4915介绍了如何将数据从任何数据存储库移动到由NetApp E系列SAN存储提供支持的BeeGFS文件系统。对于人工智能(AI)和机器学习(ML)应用程序、客户可能会经常需要将超过数PB数据的大型数据集移动到BeeGFS集群中以进行模型开发。本文档将探讨如何使用NetApp XCP和NetApp Cloud Sync 工具来实现这一点。</block>
-  <block id="32940041bf5093eb48af6ffae914f8cc" category="doc">NVA-1156设计：采用NVIDIA DGX A100系统和BeeGFS的NetApp EF系列AI</block>
   <block id="ff50db1ba0f8ba4a103a810e1ceb2afc" category="paragraph">NetApp公司的公司包括：NetApp公司的Abdel Satek、Tim Chau、Joe McCormick和David Arnette</block>
   <block id="1d78c2c26f50714898cd986ca8147756" category="paragraph">NVA-1156-design介绍了经过NetApp验证的机器学习(ML)和人工智能(AI)工作负载架构、该架构使用NetApp EF600 NVMe存储系统、BeeGFS并行文件系统、NVIDIA DGX A100系统和NVIDIA Mellanox Quantum QM8700 200 Gbps IB交换机。此设计采用200 Gbps InfiniBand (IB)作为存储和计算集群互连网络结构、为客户提供完全基于IB的架构来处理高性能工作负载。本文档还包括所实施架构的基准测试结果。</block>
-  <block id="07bb9ea92d477ff776a5a9f59a55e75c" category="doc">TR-4799—设计：适用于自主驱动工作负载的NetApp ONTAP AI参考架构</block>
-  <block id="697dbe2a012e27540eab2481a9572ec4" category="paragraph">NVIDIA DGX系统系列是全球首款专为企业AI打造的集成人工智能(AI)平台。NetApp AFF 存储系统可提供极致性能和行业领先的混合云数据管理功能。NetApp和NVIDIA合作创建了NetApp ONTAP AI参考架构、为客户提供了一个统包解决方案 、可为AI和机器学习(ML)工作负载提供企业级性能、可靠性和支持。</block>
-  <block id="53abcff00f0617502a70da8730cab6c0" category="doc">TR-4811：《适用于医疗保健的NetApp ONTAP AI参考架构：诊断成像—解决方案 设计》</block>
   <block id="eae34d8ef755492887b6a7aa4362588d" category="paragraph">Rick Huang、Sung-Han Lin、Sathish Thyagarajan、NetApp JAcci Cenci、NVIDIA</block>
   <block id="c92ae00fd88c8477c24628d0f17deceb" category="paragraph">此参考架构可为使用NVIDIA DGX-2系统和NetApp AFF 存储构建人工智能(AI)基础架构以满足医疗保健用例的客户提供指导。其中包括有关在为医学诊断成像、经验证的测试案例和结果开发深度学习(DL)模型时所使用的高级工作流的信息。它还包括针对客户部署的规模估算建议。</block>
-  <block id="8ada98332d4bde2905136eacd122ca17" category="doc">NVA-1150-设计：《采用NetApp E系列系统的Quantum StorNext设计指南》</block>
   <block id="5ee668b979e736471a8d46609abdc49b" category="paragraph">本文档详细介绍了如何使用NetApp E系列存储系统设计StorNext并行文件系统解决方案。此解决方案 涵盖NetApp EF280全闪存阵列、NetApp EF300全闪存NVMe阵列、EF600全闪存NVMe阵列和NetApp E5760混合系统。它基于Frametest基准测试提供性能特征化、该工具广泛用于媒体和娱乐行业的测试。</block>
-  <block id="822b5b3ac9e0f170e124850176f6f5ad" category="doc">TR-4807：适用于金融服务工作负载的NetApp ONTAP AI参考架构—解决方案 设计</block>
   <block id="a8b8bcca1cc81c47655f69efaea66280" category="paragraph">Karthikeyan Nagalingam、Sung-Han Lin、NetApp JAcci Cenci、NVIDIA</block>
   <block id="5e01fc0ba3a2133ea5de509bf81e119d" category="paragraph">此参考架构为使用NVIDIA DGX-1系统和NetApp AFF 存储构建人工智能基础架构以满足金融部门使用情形的客户提供了准则。其中包括有关在为金融服务测试案例和结果开发深度学习模型时所使用的高级工作流的信息。它还包括针对客户部署的规模估算建议。</block>
-  <block id="208683138843b8d3d5e2d587c3c7655b" category="doc">TR-4815：适用于AI和ML模型培训工作负载的NetApp AFF A800和Fujitsu服务器PRIMERGY GX2570 M5</block>
   <block id="5f2ab39ba2f8133927b3b4608a712d5b" category="paragraph">NetApp公司Fujitsu Takashhi Oishs的David Arnette</block>
   <block id="62c32325e658b728843c4f250b5d1547" category="paragraph">此解决方案 侧重于横向扩展架构、以便在NetApp存储系统和Fujitsu服务器上部署人工智能系统。解决方案 已通过使用Fujitsu GX2570服务器和NetApp AFF A800存储系统的MLperf v0.6型号培训基准测试的验证。</block>
-  <block id="5c6463fd6d00a2574dfb072c48e8de49" category="doc">TR-4859：《使用NetApp E系列存储部署IBM Spectrum Scale—安装和验证》</block>
   <block id="7d8a7f37eb34080960253271b824ab2f" category="paragraph">NetApp公司Chris Seirer</block>
   <block id="fdb4fdcbeafc3d334651614437516062" category="paragraph">TR-4859介绍了基于IBM的Spectrum Scale软件堆栈部署完整并行文件系统解决方案 的过程。TR-4859旨在提供有关如何安装Spectrum Scale、验证基础架构以及管理配置的详细信息。</block>
   <block id="5f4c1dd940d24299c2c5a80211b1e330" category="paragraph">NVA-1153-Deploy提供了适用于使用NetApp AFF A800存储系统、NVIDIA DGX A100系统和NVIDIA Mellanox Spectrum SN3700V 200 GB以太网交换机的经过NetApp验证的机器学习(ML)和人工智能(AI)工作负载架构的存储系统部署说明。此外、还提供了部署完成后执行验证基准测试的说明。</block>
-  <block id="c1ba6d72bba1b6f1d94714d4fcc78480" category="doc">TR-4320：NetApp E系列和Commvault数据平台V11—参考架构和存储最佳实践</block>
   <block id="23b69f42a62554346d10d302e32866df" category="paragraph">NetApp Girish Chanchlani的Akash Gupta、Commvault</block>
   <block id="451f1cdad20049e4046b157a54826db1" category="paragraph">TR-4320概述了在Commvault Data Platform V11环境中使用NetApp E系列存储时的参考架构和最佳实践。Commvault和NetApp联合开发了此参考架构、为使用NetApp E系列存储的Commvault数据平台V11部署提供了指导、可加快应用此解决方案 的速度。</block>
-  <block id="fe85f62ed86fedb2f150ec1a40d67f2e" category="doc">TR-4704：使用NetApp E系列存储部署Veritas NetBackup</block>
   <block id="d223d0d947999082ea93b57a68b3614b" category="paragraph">NetApp的Akash Gupta和Principed Technologies</block>
   <block id="9c993f8d3d3aa7be9c86474635154c12" category="paragraph">TR-4704介绍了如何在NetApp E系列存储上部署Veritas NetBackup。</block>
-  <block id="fd031987b2da91ab23764bc7a2eeb897" category="doc">TR-4471：《E系列和EF系列参考架构以及Veeam Backup &amp; Replication 9.5存储最佳实践》</block>
   <block id="febdd047851001456a2f0c683cfcfd2b" category="paragraph">NetApp Shawn Lieu (美洲)、Stefan Renner (欧洲、中东和非洲)和Veeam Michael Cade (性能)</block>
-  <block id="a207fab8627637842c817cfbb6e2a3e5" category="paragraph">TR-4471概述了在Veeam Backup &amp; Replication 9.5环境中使用NetApp E系列存储时的参考架构和最佳实践</block>
-  <block id="6a2c7fa6b0a402c3b9034538d8c9771f" category="doc">NVA-1143：NetApp HCI —适用于采用HyTrust的多租户基础架构的FISMA的NIST安全控制—NVA设计和部署</block>
   <block id="2de6bbd06654b0c6d7bd5a6f2bb218f8" category="paragraph">NetApp公司Abhinav Singh Arvind Ramakrishnan</block>
   <block id="6fdf0a62913845390e552b0f7d42cbf7" category="paragraph">NVA-1143介绍了如何设计和部署NetApp HCI 以满足国家标准和技术协会(NIST) SP 800-53修订版4的安全和隐私控制要求、这些控制对于私有云基础架构和多租户部署至关重要。</block>
-  <block id="b1567dc4fc97586a9f0b9a3cc9b7fafa" category="doc">NVA-1157-Deploy：采用NetApp Storage解决方案 的Apache Spark工作负载</block>
-  <block id="a9828ed348eedd7a35b76de35fda7796" category="paragraph">NVA-1157-Deploy介绍了在NetApp NFS AFF 存储系统上验证Apache Spark SQL的性能和功能。本文档将根据各种场景审查配置、架构和性能测试、并提出将Spark与NetApp ONTAP 数据管理软件结合使用的建议。此外、本指南还介绍了仅基于一组磁盘(JBOD)与NetApp AFF A800存储控制器的测试结果。</block>
   <block id="404af9ebdf8554a92ea8d3dde06945b4" category="doc">TR-4623：NetApp E系列E5700和Splunk Enterprise</block>
   <block id="1dcb8fb2d6ad519f4a7ecd244f9c7c76" category="paragraph">NetApp公司Mitch Blackburn</block>
-  <block id="821c9e3ae35ae3b188264d2461cec030" category="paragraph">TR-4623介绍了NetApp E系列和Splunk设计的集成架构。针对节点存储平衡、可靠性、性能、存储容量和密度进行了优化、此设计采用Splunk集群索引节点模式、可扩展性更高、TCO更低。通过将存储与计算分离、可以单独扩展每个存储、从而节省过度配置一个或另一个存储的成本。此外、本文档还总结了从Splunk计算机日志事件模拟工具获得的性能测试结果。</block>
   <block id="6a67053961e2b9d7e16bf757a5bea347" category="doc">现代数据分析—适用于不同分析策略的不同解决方案</block>
   <block id="8e1e8679efe4694874eb9820dff26af8" category="paragraph">本白皮书介绍了NetApp的现代数据分析解决方案 战略。其中包括有关业务成果、客户挑战、技术趋势、竞争传统架构、现代工作流、用例、行业、云、技术合作伙伴、数据移动者、NetApp Active IQ 、NetApp DataOps工具包、Hadoop to Spark、采用NetApp Astra Control的软件定义存储、容器、企业数据管理、归档和分层、以实现AI和分析的目标、以及NetApp和客户如何携手打造现代化的数据架构。</block>
   <block id="4eb5c705ea54813c084d88a3d5a668f0" category="admonition">每个文档只能有一个文档标题(级别0)、并且不能跳过部分标题(小节子标题必须为该部分下的下一个标题级别)。因此、为了消除处理期间的构建错误、该示例不会显示在输出中。</block>
@@ -16431,40 +16391,14 @@
   <block id="879f2366c198b1fc05740657cacebcc1" category="sidebar">Azure NetApp Files 上的Oracle数据库部署和保护</block>
   <block id="fc305603a3cb90ea71cabdf327aaf437" category="sidebar">数据库保护</block>
   <block id="2ca630161d7251bb59a9e458ddef241c" category="paragraph"><block ref="2ca630161d7251bb59a9e458ddef241c" category="inline-link-macro-rx"></block></block>
-  <block id="aeea76583fee41261c5ffc8c00a3267a" category="paragraph"><block ref="aeea76583fee41261c5ffc8c00a3267a" category="inline-link-macro-rx"></block></block>
-  <block id="b9557a1d641b87d1cc6ef8b451ce2adc" category="paragraph"><block ref="b9557a1d641b87d1cc6ef8b451ce2adc" category="inline-link-macro-rx"></block></block>
   <block id="68a03283d8017637709e60ab77052710" category="paragraph"><block ref="68a03283d8017637709e60ab77052710" category="inline-link-macro-rx"></block></block>
-  <block id="ecbeb34ee595be4e023b540c190493c4" category="paragraph"><block ref="ecbeb34ee595be4e023b540c190493c4" category="inline-link-macro-rx"></block></block>
-  <block id="f9568a3ed472f4c9b624ea562a8ed2d7" category="paragraph"><block ref="f9568a3ed472f4c9b624ea562a8ed2d7" category="inline-link-macro-rx"></block></block>
-  <block id="d9ac523fbc69cd6cbac63da0d06d74bd" category="paragraph"><block ref="d9ac523fbc69cd6cbac63da0d06d74bd" category="inline-link-macro-rx"></block></block>
-  <block id="a448735f219482146b82166b75fe6fcb" category="paragraph"><block ref="a448735f219482146b82166b75fe6fcb" category="inline-link-macro-rx"></block></block>
-  <block id="03f086e34f633c696179c8795432be8f" category="paragraph"><block ref="03f086e34f633c696179c8795432be8f" category="inline-link-macro-rx"></block></block>
-  <block id="8a6fc0037f8caade6d96df6b42926026" category="paragraph"><block ref="8a6fc0037f8caade6d96df6b42926026" category="inline-link-macro-rx"></block></block>
-  <block id="444bba289fed246f2f7afa8437903a01" category="paragraph"><block ref="444bba289fed246f2f7afa8437903a01" category="inline-link-macro-rx"></block></block>
-  <block id="bf4095b46d040216f0675d0e4dce6a5b" category="doc">NVA-1150-Deploy：《采用NetApp E系列系统的Quantum StorNext部署指南》</block>
-  <block id="739c3e4d9cffcb7922caa005e8a5011f" category="paragraph"><block ref="739c3e4d9cffcb7922caa005e8a5011f" category="inline-link-macro-rx"></block></block>
-  <block id="44b68aa0bc1d38138e92da37df838886" category="paragraph"><block ref="44b68aa0bc1d38138e92da37df838886" category="inline-link-macro-rx"></block></block>
-  <block id="cdbb55c13cfefabe29d437176747c5db" category="paragraph"><block ref="cdbb55c13cfefabe29d437176747c5db" category="inline-link-macro-rx"></block></block>
-  <block id="5e97801514b6b84b1271bf8755f1fd2a" category="paragraph"><block ref="5e97801514b6b84b1271bf8755f1fd2a" category="inline-link-macro-rx"></block></block>
-  <block id="9f5113f3ad3c6a6b07d25cd691e2c5c2" category="paragraph"><block ref="9f5113f3ad3c6a6b07d25cd691e2c5c2" category="inline-link-macro-rx"></block></block>
-  <block id="fa36ff92cc073990099f0d341c4d7e7d" category="doc">NVA-1153-Deploy：采用NVIDIA DGX A100系统和Mellanox Spectrum以太网交换机的NetApp ONTAP AI</block>
-  <block id="37012fe2b5f9d5bc5c5a123d117234ee" category="paragraph"><block ref="37012fe2b5f9d5bc5c5a123d117234ee" category="inline-link-macro-rx"></block></block>
   <block id="fb558936249b78a9b426ac6a575ece20" category="paragraph"><block ref="fb558936249b78a9b426ac6a575ece20" category="inline-link-macro-rx"></block></block>
   <block id="8b742cda768ff35bcc87798d5c8efcf1" category="paragraph"><block ref="8b742cda768ff35bcc87798d5c8efcf1" category="inline-link-macro-rx"></block></block>
-  <block id="de51f1d60a35f741b8fe1a0f540803d4" category="paragraph"><block ref="de51f1d60a35f741b8fe1a0f540803d4" category="inline-link-macro-rx"></block></block>
-  <block id="3202b821db710b3def0cd6ff1ad88f97" category="paragraph"><block ref="3202b821db710b3def0cd6ff1ad88f97" category="inline-link-macro-rx"></block></block>
   <block id="c6f1106d361e6595d08ff6340c004516" category="paragraph"><block ref="c6f1106d361e6595d08ff6340c004516" category="inline-link-macro-rx"></block></block>
-  <block id="13195cf75d5b7f204ef242dd5cb18724" category="paragraph"><block ref="13195cf75d5b7f204ef242dd5cb18724" category="inline-link-macro-rx"></block></block>
   <block id="3b872d3a96131109e4700e3031e4b158" category="inline-link-macro">NVA-1155：FlexPod Datacenter上的Oracle 19c RAC数据库、采用Cisco UCS和基于FC的NetApp AFF A800</block>
   <block id="202f51b1cd08b9562681a95f87429702" category="paragraph"><block ref="202f51b1cd08b9562681a95f87429702" category="inline-link-macro-rx"></block></block>
   <block id="29f20bee1f160a8e20c6ef9d7ce1bfe2" category="paragraph"><block ref="29f20bee1f160a8e20c6ef9d7ce1bfe2" category="inline-link-macro-rx"></block></block>
   <block id="9a13b1875b1cf906383834093477aa0b" category="paragraph"><block ref="9a13b1875b1cf906383834093477aa0b" category="inline-link-macro-rx"></block></block>
-  <block id="602e5468e4782b1a9c18a2a36a694c2f" category="paragraph"><block ref="602e5468e4782b1a9c18a2a36a694c2f" category="inline-link-macro-rx"></block></block>
-  <block id="f4eae31b62793b5b51597a9ec164b4fb" category="paragraph"><block ref="f4eae31b62793b5b51597a9ec164b4fb" category="inline-link-macro-rx"></block></block>
-  <block id="055d65065e38cf18bad21d6f24999628" category="paragraph"><block ref="055d65065e38cf18bad21d6f24999628" category="inline-link-macro-rx"></block></block>
-  <block id="723a6390c169d3bc05d13cf2c2d2c46c" category="inline-link-macro">TR-4471：《E系列和EF系列参考架构以及Veeam Backup &amp; amp存储最佳实践》；《复制9.5》</block>
-  <block id="e81cee893fb9c125a8f73a309501d032" category="paragraph"><block ref="862c81debde204611fa91d8a05e4cd96" category="inline-link-macro-rx"></block></block>
-  <block id="8f8f25fc4c86cc0268d10fa4ac7a91c2" category="paragraph"><block ref="8f8f25fc4c86cc0268d10fa4ac7a91c2" category="inline-link-macro-rx"></block></block>
   <block id="a3a1167ff30c63b986224a9bc982915e" category="inline-link-macro">NetApp Cloud Volumes Service 数据存储库支持Google Cloud VMware引擎</block>
   <block id="0c0dedff77b5c6aef92b969b951a742e" category="list-text"><block ref="0c0dedff77b5c6aef92b969b951a742e" category="inline-link-macro-rx"></block></block>
   <block id="b46d6d6e100776ecf2985ff50a451beb" category="cell">2023年7月2日</block>
@@ -16573,4 +16507,80 @@
   <block id="1ecab9e830a635b196a9f6c159eefe2c" category="list-text"><block ref="1ecab9e830a635b196a9f6c159eefe2c" category="inline-link-macro-rx"></block></block>
   <block id="28ff345640432a15bb22250f5f3f0b04" category="sidebar">CVS作为补充数据存储库</block>
   <block id="46d1e37416bef4df8c1962b95c983bb0" category="sidebar">GCVE + CVS TCO估算工具</block>
+  <block id="15a2a7497ac6041e1b73d7cb41406245" category="doc">TR-4811：《适用于医疗保健的NetApp ONTAP AI参考架构：诊断映像—解决方案 设计》</block>
+  <block id="5c6168ae6047f496e6903dde0fd3033c" category="paragraph"><block ref="5c6168ae6047f496e6903dde0fd3033c" category="inline-link-macro-rx"></block></block>
+  <block id="4adfb8f589471885ed2256c4719146a6" category="doc">TR-4815：适用于AI和ML型号培训工作负载的NetApp AFF A800和Fujitsu服务器PRIMERGY GX2570 M5</block>
+  <block id="d6f6c54736f64c202c28a1736214c268" category="paragraph"><block ref="d6f6c54736f64c202c28a1736214c268" category="inline-link-macro-rx"></block></block>
+  <block id="96f5c57f6fea73d6692c5f8c2703e9b9" category="doc">NVA-1150-设计：《采用NetApp E系列系统的Quantum StorNext》设计指南</block>
+  <block id="4f8b12df588cb1e82eb6d578f26c6c62" category="paragraph"><block ref="4f8b12df588cb1e82eb6d578f26c6c62" category="inline-link-macro-rx"></block></block>
+  <block id="7054aac0ed39fa340a2d8034700f7366" category="doc">NVA-1151-design：采用NVIDIA DGX A100的NetApp ONTAP AI系统设计指南</block>
+  <block id="c3e7dfc3691f26701d35cccf4caf7151" category="paragraph"><block ref="c3e7dfc3691f26701d35cccf4caf7151" category="inline-link-macro-rx"></block></block>
+  <block id="4357c1771697cec588056fc32ddcb708" category="doc">TR-4810：适用于AI和ML型号培训工作负载的NetApp ONTAP 和联想ThinkSystem SR670</block>
+  <block id="e0f6e346d478416affd57903ead08043" category="paragraph">TR-4810可为行业标准的MLPerf基准测试提供性能数据、该基准测试使用V100 GPU上的TensorFlow进行图像分类培训。为了衡量性能、我们将ResNet50与ImageNet数据集结合使用、该数据集的批大小为512、半精度、CUDA和cuDNN。我们使用四GPU SR6.7服务器和入门级NetApp存储系统执行此分析。结果表明、在此处测试的多个使用情形中、性能非常高效―共享、多用户、多作业情形、单个作业最多可扩展到四个服务器。大型横向扩展作业效率较低、但仍然可行。</block>
+  <block id="f19874be6cd1b381c570f4157608de5f" category="paragraph"><block ref="f19874be6cd1b381c570f4157608de5f" category="inline-link-macro-rx"></block></block>
+  <block id="c95fe91ba2d256285401bdabdd666ca7" category="doc">NVA-1151-Deploy：采用NVIDIA DGX A100系统的NetApp ONTAP AI</block>
+  <block id="3f8a5951b902f50dcbc39690406ade15" category="paragraph"><block ref="3f8a5951b902f50dcbc39690406ade15" category="inline-link-macro-rx"></block></block>
+  <block id="83c4efb371f86415987632c0baa2d086" category="doc">NVA-1156设计：采用NVIDIA DGX A100系统和BeeGFS的NetApp EF系列AI</block>
+  <block id="2003f72965a4dbc9f31bdaa3da5deaa2" category="paragraph"><block ref="2003f72965a4dbc9f31bdaa3da5deaa2" category="inline-link-macro-rx"></block></block>
+  <block id="716c8038f7ef1bc60bc3fe6c036e2d3b" category="doc">TR-4807：适用于金融服务工作负载的NetApp ONTAP AI参考架构—解决方案 设计</block>
+  <block id="96ac76dbb46fec3f4db7ec194dc52d2a" category="paragraph"><block ref="96ac76dbb46fec3f4db7ec194dc52d2a" category="inline-link-macro-rx"></block></block>
+  <block id="a5e99aa2ffae2218fdcf2038b1b3fd1b" category="doc">TR-4851：适用于自动驾驶工作负载的NetApp StorageGRID 数据湖—解决方案 设计</block>
+  <block id="ba9a0dcacc73fb54c527ad33eceb30c1" category="paragraph"><block ref="ba9a0dcacc73fb54c527ad33eceb30c1" category="inline-link-macro-rx"></block></block>
+  <block id="fcf432f7f886df6aeafb1dec9357085d" category="doc">NVA-1150-Deploy：《采用NetApp E系列系统的Quantum StorNext部署指南》</block>
+  <block id="74e37c842f0aa66d129305c85d5f458a" category="paragraph">本文档详细介绍了如何在NetApp E系列存储系统中部署StorNext并行文件系统解决方案。此解决方案 涵盖NetApp EF280全闪存阵列、NetApp EF300全闪存NVMe阵列、NetApp EF600全闪存NVMe阵列和NetApp E5760混合系统。它基于Frametest基准测试提供性能特征化、该工具广泛用于媒体和娱乐行业的测试。</block>
+  <block id="a06fe4c2db4f7b09c705e4e8dafb5627" category="paragraph"><block ref="a06fe4c2db4f7b09c705e4e8dafb5627" category="inline-link-macro-rx"></block></block>
+  <block id="837896d23c0eee81106906ab4cef7a6d" category="doc">TR-4799-design：适用于自主驱动工作负载的NetApp ONTAP AI参考架构</block>
+  <block id="63e3877ed0a830d2fb8beed8fffb2df4" category="paragraph">NVIDIA DGX系统系列是全球首款专为企业AI打造的集成人工智能(AI)平台。NetApp AFF 存储系统可提供极致性能和行业领先的混合云数据管理功能。NetApp和NVIDIA合作创建了NetApp ONTAP AI参考架构、为客户提供了一个统包解决方案 、可为AI和机器学习(ML)工作负载提供企业级性能、可靠性和支持。</block>
+  <block id="873b0fe1ee8adb4c5e6401e2fabf0734" category="paragraph"><block ref="873b0fe1ee8adb4c5e6401e2fabf0734" category="inline-link-macro-rx"></block></block>
+  <block id="b7c82ef45da5d640a92ce6fb8fb757b7" category="doc">NVA-1153-design：采用NVIDIA DGX A100系统和Mellanox Spectrum以太网交换机的NetApp ONTAP AI</block>
+  <block id="3dbdc92d258dcfc8f4fb9e2723a77875" category="paragraph"><block ref="3dbdc92d258dcfc8f4fb9e2723a77875" category="inline-link-macro-rx"></block></block>
+  <block id="bf6adc497a862180909278cf6ed029f1" category="doc">TR-4859：使用NetApp E系列存储部署IBM Spectrum Scale—安装和验证</block>
+  <block id="6a51aeb3b4e11ee4436f8ad323e23c5a" category="paragraph"><block ref="6a51aeb3b4e11ee4436f8ad323e23c5a" category="inline-link-macro-rx"></block></block>
+  <block id="9892437a073c63ca6232150c28b21c7b" category="doc">NVA-1156-Deploy：采用NVIDIA DGX A100系统和BeeGFS的NetApp EF系列AI</block>
+  <block id="ac6445146035971ff06dde08fd7cd295" category="paragraph"><block ref="ac6445146035971ff06dde08fd7cd295" category="inline-link-macro-rx"></block></block>
+  <block id="9708ffc88c964c7e13b023f7eba9396b" category="doc">NVA-1153-Deploy：采用NVIDIA DGX A100系统和Mellanox Spectrum以太网交换机的NetApp ONTAP AI</block>
+  <block id="50f2d8c31ffcba4aeffd6f55fd0f8bd2" category="paragraph"><block ref="50f2d8c31ffcba4aeffd6f55fd0f8bd2" category="inline-link-macro-rx"></block></block>
+  <block id="3c2e1436532e8615aa8fdb7bb7432f80" category="paragraph">如果内部Oracle数据库位于ONTAP 存储阵列上、则可以使用AWS FSX ONTAP 存储中内置的NetApp SnapMirror技术更轻松地设置复制以进行数据库迁移。可以使用NetApp BlueXP控制台协调迁移过程。</block>
+  <block id="ed7c233990ddaa2e7103a9f5b77ee3de" category="list-text">切换时、关闭主应用程序以停止所有事务。在Oracle sqlplus命令行界面中、执行Oracle联机日志切换并允许SnapMirror同步将最后一个归档日志推送到目标卷。</block>
+  <block id="094ef1326e70f1212e06a1b5d65d2922" category="paragraph">以下视频演示了如何使用NetApp BlueXP控制台和SnapMirror复制将Oracle数据库从内部迁移到AWS FSX/EC2。</block>
+  <block id="0ed0689d68d30d32584025a19c85c9e1" category="inline-link-macro">通过SnapMirror和BlueXP将Oracle数据库从内部迁移到FSX/EC2</block>
+  <block id="bb74f90e0bd42cad827c08c3b5a1d1f8" category="paragraph"><block ref="bb74f90e0bd42cad827c08c3b5a1d1f8" category="inline-link-macro-rx"></block></block>
+  <block id="e54801d4a4497c3566a98c0ef4ec6f18" category="section-title">使用PDB重新定位将内部Oracle数据库迁移到AWS FSX/EC2、并最大程度地提高可用性</block>
+  <block id="16d584a60d17de3de7cd0dcc0828fee9" category="paragraph">这种迁移方法最适合已部署在PDB或CDB多租户模式下的Oracle数据库、并且ONTAP 存储在内部不可用。PDB重新定位方法利用Oracle PDB热克隆技术在源CDB和目标CDB之间移动PDB、同时最大程度地减少服务中断。</block>
+  <block id="c5bd16be343bf2e5a3c081284c6c799b" category="paragraph">首先、在AWS FSX/EC2中创建CDB、并为其提供足够的存储空间来托管要从内部迁移的PDB。可以一次重新定位一个多个内部部署的PDB。</block>
+  <block id="a6c9ea7b4477a21ac635b1db86abae5e" category="list-text">如果内部数据库部署在单个实例中、而不是部署在多租户PDB或CDB模式中、请按照中的说明进行操作 <block ref="1a6a40cd2cc4844be72d5fbe9fd5f1e6" category="inline-link-macro-rx"></block> 将单个实例转换为多租户PDB或CDB。然后、按照下一步将转换后的PDB迁移到AWS FSX/EC2中的CDB。</block>
+  <block id="92c29ab4b5bfbc6de30e29363bc9aea7" category="inline-link-macro">通过PDB重新定位将内部Oracle数据库迁移到云</block>
+  <block id="522ca40aa0d528d119dec226eb9719b8" category="list-text">如果已在多租户PDB或CDB模式中部署内部数据库、请按照中的说明进行操作 <block ref="02137814e079cdfea8552a492195c829" category="inline-link-macro-rx"></block> 以执行迁移。</block>
+  <block id="499d7c245aad786a568d21227b5b65d8" category="paragraph">以下视频演示了如何使用PDB重新定位将Oracle数据库(PDB)迁移到FSX/EC2并最大程度地提高可用性。</block>
+  <block id="c0d2cea4b49d55201605052121b68ca7" category="inline-link-macro">将内部Oracle PDB迁移到具有最大可用性的AWS CDB</block>
+  <block id="e3d2de69302b3f20931015cece4526e4" category="paragraph"><block ref="5deefe7b3e78f7f08541c2e7b5b56e54" category="inline-link-macro-rx"></block></block>
+  <block id="5eae2f4290a9e1f77061f80c6c015bc6" category="admonition">尽管第1步和第2步中的说明在Azure公共云环境中进行了说明、但这些过程适用于AWS云、不会发生任何更改。</block>
+  <block id="41099d15ad008ac11d04538ef8e57575" category="paragraph">NetApp解决方案自动化团队提供了一个迁移工具包、可帮助Oracle数据库从内部迁移到AWS云。使用以下命令下载用于PDB重新定位的Oracle数据库迁移工具包。</block>
+  <block id="eef7539c8eab25bfe5c089aab85ec418" category="paragraph">要了解有关解决方案 和用例的更多信息、请观看以下概述视频：</block>
+  <block id="0df1fe5dfbca17caa87c91ffea49223a" category="inline-link-macro">利用AWS和FSX ONTAP 中的混合云打造现代化的Oracle数据库、第1部分—用例和解决方案 架构</block>
+  <block id="adf8d1fc36b4704904a6251fde19535e" category="paragraph"><block ref="bab032e290776958656c886d774a2bf6" category="inline-link-macro-rx"></block></block>
+  <block id="3282bd4b5c29b5e9be65469e592bba18" category="doc">打造现代化的Microsoft SQL Server环境</block>
+  <block id="b5b095487ccabae138c7872353cadbe6" category="paragraph"><block ref="b5b095487ccabae138c7872353cadbe6" category="inline-link-macro-rx"></block></block>
+  <block id="ebcadd0d5b1096e72d18133b1e0e3098" category="doc">TR-4467：SAP与Windows上的Microsoft SQL Server—使用NetApp集群模式Data ONTAP 和SnapCenter 的最佳实践</block>
+  <block id="d90b6dfa1c90883fc207f3309f98b1bf" category="paragraph"><block ref="d90b6dfa1c90883fc207f3309f98b1bf" category="inline-link-macro-rx"></block></block>
+  <block id="046c9e52934c311f81497ca664d86a24" category="doc">TR-4764：《采用NetApp EF系列的Microsoft SQL Server最佳实践》</block>
+  <block id="730874cec0e792d7ebad5a796a90b3be" category="paragraph"><block ref="730874cec0e792d7ebad5a796a90b3be" category="inline-link-macro-rx"></block></block>
+  <block id="ffaaa5a04a78a6ce5d807980dbf83e64" category="paragraph">本《基于Cisco UCS的FlexPod Datacenter上的Oracle 19c RAC数据库设计和部署指南》以及《基于FC的NetApp AFF A800》详细介绍了在采用Oracle Linux 8.2的最新FlexPod Datacenter基础架构上托管Oracle RAC数据库的解决方案 设计以及分步部署过程操作系统和Red Hat兼容内核。</block>
+  <block id="8c121c8c1e758ef244a52184e2d48c66" category="paragraph">TR-4623介绍了NetApp E系列和Splunk设计的集成架构。针对节点存储平衡、可靠性、性能、存储容量和密度进行了优化、此设计采用Splunk集群索引节点模式、可扩展性更高、TCO更低。通过将存储与计算分离、可以单独扩展每个存储、从而节省过度配置一个或另一个存储的成本。此外、本文档还总结了从Splunk计算机日志事件模拟工具获得的性能测试结果。</block>
+  <block id="e2e44d09263d2131a3697ad71cadb51b" category="doc">NVA-1157-Deploy：采用NetApp Storage解决方案 的Apache Spark工作负载</block>
+  <block id="ddf79baf38c476a90774aad122f73cb5" category="paragraph">NVA-1157-Deploy介绍了在NetApp NFS AFF 存储系统上验证Apache Spark SQL的性能和功能。本文档将根据各种场景审查配置、架构和性能测试、并提出将Spark与NetApp ONTAP 数据管理软件结合使用的建议。此外、本指南还介绍了仅基于一组磁盘(JBOD)与NetApp AFF A800存储控制器的测试结果。</block>
+  <block id="39234cd00ad225afa457b33c5b2c5957" category="paragraph"><block ref="39234cd00ad225afa457b33c5b2c5957" category="inline-link-macro-rx"></block></block>
+  <block id="2eded16d414f6935c27c95495a25eb53" category="cell">2023年1月24日</block>
+  <block id="d75c9f4acb46fbd1cc7aeecbd376940e" category="cell">添加了TR-4954：《Azure NetApp Files 上的Oracle数据库部署和保护》</block>
+  <block id="f0a30c2a34036665913459cc735f4786" category="doc">TR-4704：使用NetApp E系列存储部署Veritas NetBackup</block>
+  <block id="7ff53b7713dd7f38a4729f8a1a48f24e" category="paragraph"><block ref="7ff53b7713dd7f38a4729f8a1a48f24e" category="inline-link-macro-rx"></block></block>
+  <block id="5e8c99d8eb1f9fde413c715abb6fa392" category="doc">TR-4320：NetApp E系列和Commvault数据平台V11—参考架构和存储最佳实践</block>
+  <block id="b5132c157b5da84909699e1aad5ea13d" category="inline-link-macro">TR-4320：NetApp E系列和Commvault数据平台V11—参考架构和存储最佳实践</block>
+  <block id="65c8e697e97b6ce1bd59d8334eaaab6f" category="paragraph"><block ref="65c8e697e97b6ce1bd59d8334eaaab6f" category="inline-link-macro-rx"></block></block>
+  <block id="849bdf40e7fa0e2cab1cb845682e6f56" category="doc">TR-4471：E系列和EF系列参考架构以及Veeam Backup &amp; Replication 9.5的存储最佳实践</block>
+  <block id="3bad2cd66e539f0136fbf484133914dd" category="paragraph">TR-4471概述了在Veeam Backup &amp; Replication 9.5环境中使用NetApp E系列存储时的参考架构和最佳实践。</block>
+  <block id="f86686bed105d7053fbb06167a05f38e" category="inline-link-macro">TR-4471：E系列和EF系列参考架构以及Veeam Backup &amp; amp；Replication 9.5的存储最佳实践</block>
+  <block id="8a9473d2b45da95a2d08524f5b182c4d" category="paragraph"><block ref="30941a222a593c860776bbf0831d36d0" category="inline-link-macro-rx"></block></block>
+  <block id="97b39392e3b66691f26174f9392c96d0" category="doc">NVA-1143：NetApp HCI —适用于采用HyTrust的多租户基础架构的FISMA的NIST安全控制—NVA设计和部署</block>
+  <block id="86e20b04ba1f19de7a30d7843155e285" category="paragraph"><block ref="86e20b04ba1f19de7a30d7843155e285" category="inline-link-macro-rx"></block></block>
 </blocks>

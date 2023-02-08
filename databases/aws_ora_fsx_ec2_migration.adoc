@@ -24,16 +24,20 @@ link:aws_ora_fsx_ec2_mgmt.html["先前版本：数据库管理。"]
 
 == ONTAP 存储可在内部使用
 
-如果内部Oracle数据库位于ONTAP 存储阵列上、则使用NetApp SnapCenter UI工具更容易设置复制以进行数据库迁移。
+如果内部Oracle数据库位于ONTAP 存储阵列上、则可以使用AWS FSX ONTAP 存储中内置的NetApp SnapMirror技术更轻松地设置复制以进行数据库迁移。可以使用NetApp BlueXP控制台协调迁移过程。
 
 . 构建与内部实例匹配的目标计算EC2实例。
 . 从FSX控制台配置大小相等的匹配数据库卷。
 . 将FSX数据库卷挂载到EC2实例。
 . 在内部数据库卷与目标FSX数据库卷之间设置SnapMirror复制。初始同步可能需要一段时间才能移动主源数据、但后续的任何增量更新都要快得多。
-. 切换时、关闭主应用程序以停止所有事务。在SnapCenter 中、运行日志备份以将其余事务刷新到目标。
+. 切换时、关闭主应用程序以停止所有事务。在Oracle sqlplus命令行界面中、执行Oracle联机日志切换并允许SnapMirror同步将最后一个归档日志推送到目标卷。
 . 拆分镜像卷、在目标上运行Oracle恢复、并启动数据库以进行服务。
 . 将应用程序指向云中的Oracle数据库。
 
+
+以下视频演示了如何使用NetApp BlueXP控制台和SnapMirror复制将Oracle数据库从内部迁移到AWS FSX/EC2。
+
+link:https://docs.netapp.com/us-en/netapp-solutions/media/oracle-aws-fsx-part2b-migration-snapmirror_callout.mp4["通过SnapMirror和BlueXP将Oracle数据库从内部迁移到FSX/EC2"^]
 
 
 
@@ -56,18 +60,26 @@ AWS S3可用作数据库移动和迁移的暂存存储区域。有关此方法�
 
 
 
-== 使用Oracle多租户CDB/PDB架构整合AWS中的Oracle数据库
+== 使用PDB重新定位将内部Oracle数据库迁移到AWS FSX/EC2、并最大程度地提高可用性
 
-. 在AWS公有 云中创建CDB。
-. 如果内部数据库也部署在CDB/PDB多租户中、请拔下要迁移的PDB。
-. 将元数据以及带下划线的Oracle数据文件传输到目标CDB实例。
-. 验证与Oracle验证过程的兼容性。
-. 如果兼容性验证通过、请将已拔出的PDB插入目标CDB容器。
-. 根据需要更新数据词典。
-. 备份并打开已迁移的PDB以进行访问。
+这种迁移方法最适合已部署在PDB或CDB多租户模式下的Oracle数据库、并且ONTAP 存储在内部不可用。PDB重新定位方法利用Oracle PDB热克隆技术在源CDB和目标CDB之间移动PDB、同时最大程度地减少服务中断。
 
+首先、在AWS FSX/EC2中创建CDB、并为其提供足够的存储空间来托管要从内部迁移的PDB。可以一次重新定位一个多个内部部署的PDB。
+
+. 如果内部数据库部署在单个实例中、而不是部署在多租户PDB或CDB模式中、请按照中的说明进行操作 link:https://docs.netapp.com/us-en/netapp-solutions/databases/azure_ora_nfile_migration.html#converting-a-single-instance-non-cdb-to-a-pdb-in-a-multitenant-cdb["将单个实例非CDB转换为多租户CDB中的PDB"^] 将单个实例转换为多租户PDB或CDB。然后、按照下一步将转换后的PDB迁移到AWS FSX/EC2中的CDB。
+. 如果已在多租户PDB或CDB模式中部署内部数据库、请按照中的说明进行操作 link:https://docs.netapp.com/us-en/netapp-solutions/databases/azure_ora_nfile_migration.html#migrate-on-premises-oracle-databases-to-azure-with-pdb-relocation["通过PDB重新定位将内部Oracle数据库迁移到云"^] 以执行迁移。
 
 
-NOTE: PDB拔出和插件要求应用程序停机、在迁移规划期间应考虑到这一点。
+以下视频演示了如何使用PDB重新定位将Oracle数据库(PDB)迁移到FSX/EC2并最大程度地提高可用性。
 
-同样、NetApp自动化团队还提供了一个迁移工具包、该工具包可以帮助Oracle数据库从内部迁移到AWS云。有关最新的数据库迁移工具、请访问NetApp公有 GitHub站点。
+link:https://www.netapp.tv/insight/details/29998?playlist_id=0&mcid=85384745435828386870393606008847491796["将内部Oracle PDB迁移到具有最大可用性的AWS CDB"^]
+
+
+NOTE: 尽管第1步和第2步中的说明在Azure公共云环境中进行了说明、但这些过程适用于AWS云、不会发生任何更改。
+
+NetApp解决方案自动化团队提供了一个迁移工具包、可帮助Oracle数据库从内部迁移到AWS云。使用以下命令下载用于PDB重新定位的Oracle数据库迁移工具包。
+
+[source, cli]
+----
+git clone https://github.com/NetApp-Automation/na_ora_aws_migration.git
+----
