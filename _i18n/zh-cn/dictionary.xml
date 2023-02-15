@@ -16687,4 +16687,178 @@
   <block id="67bb2ef7cf3c5ff59f35f28e513bfda3" category="sidebar">AWS FSX/EC2中的PostgreSQL高可用性部署和灾难恢复</block>
   <block id="1ae3eccde141a365ede8f18b188ae588" category="sidebar">在AWS FSX/EC2中自动部署PostgreSQL HA和灾难恢复</block>
   <block id="6fabfc29f0b3a196c8407c190bb67293" category="sidebar">适用于数据库的SnapCenter</block>
+  <block id="1f599c1b266e901a2c8d38e266e23c6f" category="summary">本节介绍详细的测试操作步骤 结果。</block>
+  <block id="c87fa6e515cf0976291b387e5a8ab6f6" category="doc">测试操作步骤 和详细结果</block>
+  <block id="5a05f12c2c7f8b9ff569496691352e05" category="paragraph"><block ref="5a05f12c2c7f8b9ff569496691352e05" category="inline-link-macro-rx"></block></block>
+  <block id="b70dd619781891706b7d2f44c418a2b5" category="section-title">在ONTAP 中使用RESNET进行图像识别培训</block>
+  <block id="bf523bb892b07c71c90bd7ea34a091a9" category="paragraph">我们使用一台和两台SR670V2服务器运行ResNet50基准测试。此测试使用了MXNet 22.04-py3 NGC容器来运行培训。</block>
+  <block id="a08c4eedb9047aae68f44b82037739b0" category="paragraph">在此验证中、我们使用了以下测试操作步骤 ：</block>
+  <block id="df1a5f60f20e6aa3336812f58095e04f" category="list-text">在运行脚本之前、我们已清除主机缓存、以确保数据尚未缓存：</block>
+  <block id="ab93a65fabd2eaae21f5a6e097320730" category="list-text">我们在服务器存储(本地SSD存储)以及NetApp AFF 存储系统中使用ImageNet数据集运行了基准测试脚本。</block>
+  <block id="9f98453c4a6eede45b87d72527b49e7e" category="list-text">我们使用验证了网络和本地存储性能<block ref="1aabac6d068eef6a7bad3fdf50a05cc8" prefix=" " category="inline-code"></block> 命令：</block>
+  <block id="47b048d9dcf1d84d76bddb033b842b3b" category="list-text">对于单节点运行、我们使用了以下命令：</block>
+  <block id="014e128029d9142b6957ca4f1b291090" category="list-text">对于分布式运行、我们使用了参数服务器的并行化模型。我们为每个节点使用了两个参数服务器、并将epodchs的数量设置为与单节点运行相同。之所以这样做、是因为分布式培训往往需要更多的时间、因为各个流程之间的同步不完美。不同数量的时间间隔可能会使单节点案例与分布式案例之间的比较偏差。</block>
+  <block id="8f74be345dbaeac65cc3a488503b2a1f" category="section-title">数据读取速度：本地存储与网络存储</block>
+  <block id="16d8fe364e1a7846c093983bec75e764" category="paragraph">已使用测试读取速度<block ref="1aabac6d068eef6a7bad3fdf50a05cc8" prefix=" " category="inline-code"></block> 对ImageNet数据集的其中一个文件执行命令。具体来说、我们对本地数据和网络数据运行以下命令：</block>
+  <block id="c685a224eb9a88c5b7bd2be45fe5a128" category="paragraph">这两个值都相似、表明网络存储可以以类似于本地存储的速率提供数据。</block>
+  <block id="aa613e8f689a1a64605aef401595bfd2" category="section-title">共享使用情形：多个独立的并发作业</block>
+  <block id="7e4312d3e922a98bfc1dc4a84c80f12c" category="paragraph">此测试模拟了此解决方案 的预期用例：多作业、多用户AI培训。每个节点在使用共享网络存储时都进行了自己的培训。下图显示了这些结果、其中显示了解决方案 案例在所有作业以与单个作业基本相同的速度运行时提供了出色的性能。总吞吐量随节点数线性扩展。</block>
+  <block id="2b9215e7cc3c2422637b6f95b0d47d97" category="inline-image-macro">此图显示了每秒的聚合映像数。</block>
+  <block id="5224aacbc4b8472eb40ead3ee8856b90" category="paragraph"><block ref="5224aacbc4b8472eb40ead3ee8856b90" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="45f5fcaaad259a917b031b3169cd5ad4" category="inline-image-macro">此图显示的是运行时(以分钟为单位)。</block>
+  <block id="8255e8c790967568129f1f898048f1c5" category="paragraph"><block ref="8255e8c790967568129f1f898048f1c5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="289b386724c768cabf5ad786a3842335" category="paragraph">这些图以分钟为单位显示了计算节点的运行时间、每秒聚合映像数、这些计算节点在100 GbE客户端网络上使用了每个服务器的八个GPU、并结合了并发训练模型和单个训练模型。此训练模型的平均运行时间为35分9秒。单个运行时间分别为34分32秒、36分21秒、34分37秒、35分25秒和34分31秒。训练模型的平均每秒图像数为22、673个、每秒单个图像数为21、764个、23、438个、22、556个、22、264个和22、548个。</block>
+  <block id="ce47a442fe1dc7c09bf9a3ec5ed71236" category="paragraph">根据我们的验证、一个采用NetApp数据运行时的独立训练模型为34分54秒、每秒显示22、231个图像一个采用本地数据(DAS)运行时间的独立训练模型为34分21秒、每秒显示22、102个图像在这些运行期间、平均GPU利用率为96%、如NVIDIA-SMI上所观察到的那样。请注意、此平均值包括测试阶段、在此阶段、不使用GPU、而使用mpstat测量的CPU利用率为40%。这表明、在每种情况下、数据交付率都足以满足要求。</block>
+  <block id="f63534f8e2150e0624ee2af349f77999" category="inline-link-macro">接下来：架构调整。</block>
+  <block id="92a7087794ac4c23f482ff2db8cf1742" category="paragraph"><block ref="92a7087794ac4c23f482ff2db8cf1742" category="inline-link-macro-rx"></block></block>
+  <block id="686ebb62ce1be84dcfae0007fb84562d" category="summary">用于验证的设置可以根据其他使用情形进行调整。</block>
+  <block id="bf46169695d75ff844d955af09f33e75" category="doc">架构调整</block>
+  <block id="747bf7dbe4329cb636a09e1a7e4b297b" category="inline-link-macro">上一步：测试操作步骤 和详细结果。</block>
+  <block id="61862ef71b0230e76d56381617d456b0" category="paragraph"><block ref="61862ef71b0230e76d56381617d456b0" category="inline-link-macro-rx"></block></block>
+  <block id="1cf27bd587c6c632877c322cf42c0d97" category="paragraph">可根据其他使用情形调整用于此验证的设置。</block>
+  <block id="a752efb5fb2512dc99b2045f032779f7" category="section-title">CPU调整</block>
+  <block id="122acc941b98ef5a11208d23ed0a8090" category="paragraph">我们按照联想的建议、使用Skylake Intel Xeon Platinum 8360Y处理器进行此验证。我们预计同等的级联湖CPU (Intel Xeon Gold 6330处理器)的性能将相似、因为此工作负载不受CPU限制。</block>
+  <block id="3cc37c167d58a1828b00c13cc6018ae8" category="section-title">存储容量增加</block>
+  <block id="f40ff1aaa4f2e4ccd4189adfb3584e29" category="paragraph">根据您的存储容量需求、您可以按需增加共享存储(NFS卷)、但前提是您拥有更多的磁盘架和控制器型号。您可以通过CLI或存储控制器的NetApp Web界面以管理员用户身份执行此操作。</block>
+  <block id="326221403d8b3298094c46f2012726ea" category="paragraph"><block ref="326221403d8b3298094c46f2012726ea" category="inline-link-macro-rx"></block></block>
+  <block id="f737e7cc3d8aa89c5b49c4fe701e9e40" category="summary">在此验证中、我们按照MLPerf v2.0的要求执行了映像识别培训。具体来说、我们使用ImageNet数据集对RESNET v2.0模型进行了培训。主要指标是达到所需准确性的时间。我们还会报告每秒图像数的训练带宽、以便更好地判断横向扩展效率。</block>
+  <block id="813c7764ec170fb5498e50560d32a97f" category="paragraph"><block ref="813c7764ec170fb5498e50560d32a97f" category="inline-link-macro-rx"></block></block>
+  <block id="0f25983094bc4cf5cea830260da8ee75" category="paragraph">在此验证中、我们按照MLPerf v2.0的要求执行了映像识别培训。具体来说、我们使用ImageNet数据集对RESNET v2.0模型进行了培训、直到达到76.1%的准确性。主要指标是达到所需准确性的时间。我们还会报告每秒图像数的训练带宽、以便更好地判断横向扩展效率。</block>
+  <block id="ac3e6a4fbe8e02d639c2defeebeac17f" category="paragraph">主测试案例评估了多个同时运行的独立培训流程(每个节点一个)。此操作可模拟主要使用情形、即由多位数据科学家使用的共享系统。第二个测试用例评估了横向扩展效率。</block>
+  <block id="e34017da9a1a8d672a4859eb7c75947a" category="paragraph"><block ref="e34017da9a1a8d672a4859eb7c75947a" category="inline-link-macro-rx"></block></block>
+  <block id="1d126a9d86b70dcdbc0585754993a848" category="summary">本解决方案 侧重于使用针对人工智能工作负载优化的NetApp存储和联想服务器的入门级和中端集群架构。它适用于大多数计算作业为单节点(单或多GPU)或分布在几个计算节点上的中小型团队。这不是一个主要限制、因为大多数日常AI培训作业都是单节点的。</block>
+  <block id="119a956725a313a60a3ef97db900f9fa" category="doc">TR-4810：《采用联想ThinkSystem SR670V2的NetApp AFF A400人工智能和ML模型培训》</block>
+  <block id="4bdd810ac842a2485ea52dbd42c4d5f8" category="paragraph">Sathish Thyagarajan、David Arnette、NetApp Mircona Troaca、Lonovo</block>
+  <block id="252875fbe73a0c4ecbd42a23cc730022" category="paragraph">此解决方案 采用针对人工智能(AI)工作负载优化的NetApp存储和联想服务器、提供了一个中端集群架构。它适用于大多数计算作业为单节点(单GPU或多GPU)或分布在几个计算节点上的中小型企业。此解决方案 可与许多企业的大多数日常AI培训工作保持一致。</block>
+  <block id="2fd79dc2b0743358191fe41cd806d103" category="paragraph">本文档介绍了对由八GPU联想SR670V2服务器、中端NetApp AFF A400存储系统和100GbE互连交换机组成的计算和存储配置的测试和验证。为了衡量性能、我们将ResNet50与ImageNet数据集结合使用、批大小为408、半精度、CUDA和cuDNN。这种架构为中小型企业提供了一个高效且经济高效的解决方案 、这只是从需要NetApp ONTAP 云连接数据存储的企业级功能的AI计划开始。</block>
+  <block id="a186cc4a556d59a6e7b787796afd96a6" category="list-text">数据科学家、数据工程师、数据管理员和AI系统开发人员</block>
+  <block id="9f16d751276619605acf16a23befe48e" category="list-text">设计AI模型开发解决方案的企业架构师</block>
+  <block id="e8982c30a351cd862612b0062923a81e" category="list-text">正在寻找高效方法实现深度学习(DL)和机器学习(ML)开发目标的数据科学家和数据工程师</block>
+  <block id="ca84e34dfe1115f7b462050a20377876" category="list-text">希望以最快速度将AI计划推向市场的业务主管和OT/IT决策者</block>
+  <block id="a2dac0ecb0b60ec2625d20a5003869fb" category="paragraph">这款采用联想ThinkSystem服务器的解决方案 以及采用AFF 存储的NetApp ONTAP 专为处理大型数据集的AI培训而设计、可利用GPU与传统CPU的处理能力。此验证通过横向扩展架构展示了高性能和最佳数据管理、该架构使用一个、两个或四个联想SR670V2服务器以及一个NetApp AFF A400存储系统。下图提供了架构概述。</block>
+  <block id="9eaa73568302c6f5b850762b65b3f334" category="inline-image-macro">此图显示了一个以太网交换机、该交换机由管理服务器围绕、四个SR670V2 (每个GPU具有八个GPU)以及一个NetApp ONTAP 存储系统。</block>
+  <block id="d0d5bc4c21e600127e347c093cc29e80" category="paragraph"><block ref="d0d5bc4c21e600127e347c093cc29e80" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9336931f4103d973313cb8539e5c2613" category="list-text">并行执行多个培训作业时、性能高效且经济高效</block>
+  <block id="81c3992924ee5cdc4cb02692dcae98b4" category="list-text">可根据不同数量的联想服务器和不同型号的NetApp存储控制器扩展性能</block>
+  <block id="bdcea52fecbcd9741f95a6bc0dbbde0f" category="list-text">强大的数据保护功能、可满足低恢复点目标(RPO)和恢复时间目标(RTO)的要求、而不会丢失任何数据</block>
+  <block id="98393526d67c065feb588e5665301706" category="list-text">利用快照和克隆优化数据管理、以简化开发工作流</block>
+  <block id="c8da2691d0a05080662301b92e048a74" category="paragraph"><block ref="c8da2691d0a05080662301b92e048a74" category="inline-link-macro-rx"></block></block>
+  <block id="2d316c5d9e0cd748d1890ee69f57dc6c" category="summary">本节总结了在此解决方案 中测试的结果。</block>
+  <block id="6385fabeefcfa0be0a013cdd61625e31" category="paragraph"><block ref="6385fabeefcfa0be0a013cdd61625e31" category="inline-link-macro-rx"></block></block>
+  <block id="80b6b969d6707ba1b92d65466e8325f0" category="paragraph">下表总结了对此解决方案 执行的所有测试的结果。</block>
+  <block id="f5bc14ae022ba581c26f3bdb35badef1" category="cell">测试问题描述</block>
+  <block id="34d8129946f1108a296f033dc66db266" category="cell">结果摘要</block>
+  <block id="ab0d993807168c3a70cdd2952d4edfc0" category="cell">映像识别培训：多个并发作业</block>
+  <block id="290ba1c81812edd0651d8e18c5895054" category="cell">高效率性能。即使集群已完全使用、所有作业也会以全速运行。NetApp存储系统可提供与本地SSD存储相当的训练性能、同时可在服务器之间轻松共享数据。</block>
+  <block id="d58827ca3ccfccb5c83b1dc9c7e12289" category="cell">图像识别培训：横向扩展</block>
+  <block id="afb4fda11ecde317daa521e054df2bd4" category="cell">效率高、最多可支持四个节点。当时、横向扩展效率较低、但仍然可行。使用速度更快的计算网络可提高可扩展性。NetApp存储系统可提供与本地SSD存储相当的训练性能、同时可在服务器之间轻松共享数据。</block>
+  <block id="09011e7c7cce04b0b96cec58ace75585" category="paragraph"><block ref="09011e7c7cce04b0b96cec58ace75585" category="inline-link-macro-rx"></block></block>
+  <block id="bd7c9d63c88eb380170362e93db6ba46" category="summary">本节介绍测试的配置、网络基础架构、SR670V2服务器以及存储配置详细信息。</block>
+  <block id="86473a82da3bbf22df039db481fe256f" category="paragraph"><block ref="86473a82da3bbf22df039db481fe256f" category="inline-link-macro-rx"></block></block>
+  <block id="a1052c50691421535c201fa50690a1ca" category="paragraph">本节介绍测试的配置、网络基础架构、SR670V2服务器以及NetApp存储配置详细信息。</block>
+  <block id="7c8d74d4c719b2f2e30a143bb98717ad" category="paragraph">我们使用下表中列出的解决方案 组件进行了此验证。</block>
+  <block id="35c99b744e4464f42b9b61595c1a1e79" category="list-text">两个SR670V2服务器、每个服务器具有八个NVIDIA A100 80 GB GPU卡</block>
+  <block id="222a9edda77d8676279c651c1b06d653" category="list-text">每台服务器包含2个Intel Xeon Platinum 8360Y CPU (28个物理核心)和1 TB RAM</block>
+  <block id="e18f1a9d73bf89b2b1245e5af1a99cf4" category="cell">Linux (Ubuntu—20.04与CUDA 11.8)</block>
+  <block id="2113187ee3a9451b60e960fdea11bbac" category="cell">NetApp AFF 存储系统(HA对)</block>
+  <block id="73b4d2da39f967445be9b79a6016c84c" category="list-text">NetApp ONTAP 9.10.1软件</block>
+  <block id="4028b206981977bc3aea334fd55f4cb9" category="list-text">每个控制器1个接口组(ifgrp)、挂载点有四个逻辑IP地址</block>
+  <block id="82693066c3bae0719e01ba8060494172" category="paragraph">在此验证中、我们使用的是RESNET v2.0、并且ImageNet基础设置为由MLPerf v2.0指定的基础。数据集存储在采用NFS协议的NetApp AFF 存储系统中。SR670s通过100GbE交换机连接到NetApp AFF A400存储系统。</block>
+  <block id="e4869dda2a4e140bc138f43895626550" category="paragraph">ImageNet是一个常用的映像数据集。它包含近130万个映像、总大小为144 GB。平均映像大小为108 KB。</block>
+  <block id="3961f6874ee29dab2f4982bc3e0a1be5" category="paragraph">下图显示了测试配置的网络拓扑。</block>
+  <block id="d015822ec6fd4a7fc9867768f5a27898" category="inline-image-macro">此图展示了计算层、联想ThinkSystem SR670V2、网络层、联想以太网交换机和存储层、即NetApp AFF A400存储控制器。包括所有网络连接。</block>
+  <block id="1ee331a29f95ebce1684e5e998f3e70c" category="paragraph"><block ref="1ee331a29f95ebce1684e5e998f3e70c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="18866bc1d6ba54b48522f7a219e02740" category="paragraph">下表列出了存储配置。</block>
+  <block id="f64bc191156dac76ffce8622c16cb21d" category="cell">聚合大小</block>
+  <block id="6bb41960470a19d97556b9240ac0b3ff" category="cell">卷大小</block>
+  <block id="abd2beb6abe5072ffab5f1aad1a8c27f" category="cell">操作系统挂载点</block>
+  <block id="a38b6dcf7d1d2c2957803ba9a28b472e" category="cell">/a400-100g</block>
+  <block id="43f5cd38d362fc55ace2f313e6b5cf09" category="cell">9.9 TB</block>
+  <block id="09808554056bf39d02319e3dbc2d6667" category="cell">19 TB</block>
+  <block id="a27053e11ec415312f3dc32f4e351b67" category="admonition">/a400-100g文件夹包含用于RESNET验证的数据集。</block>
+  <block id="1ea4953a2e32bbad1a47dd39cbfe929a" category="inline-link-macro">接下来：测试操作步骤 和详细结果。</block>
+  <block id="b20175407b354f0dfc3a4d6a98917f6f" category="paragraph"><block ref="b20175407b354f0dfc3a4d6a98917f6f" category="inline-link-macro-rx"></block></block>
+  <block id="15977ebfd8c3685ca2d8911f74efcc2d" category="summary">这款NetApp和联想解决方案 是一款灵活的横向扩展架构、非常适合入门级中型企业AI。NetApp存储可提供与本地SSD存储相同或更好的性能、并为数据科学家、数据工程师和IT决策者带来以下优势。</block>
+  <block id="632d8fd87d5999301cfd5bd0c0f29b5f" category="inline-link-macro">上一篇：架构调整。</block>
+  <block id="b145bbef70e5528880cc5abbbe8575cd" category="paragraph"><block ref="b145bbef70e5528880cc5abbbe8575cd" category="inline-link-macro-rx"></block></block>
+  <block id="aa91666790d55bdaa993592c884df440" category="paragraph">此处验证的NetApp和联想解决方案 是一种灵活的横向扩展架构、非常适合入门级企业AI。NetApp存储可提供与本地SSD存储相同或更好的性能、并为数据科学家、数据工程师和IT决策者带来以下优势：</block>
+  <block id="6127562591a3f60f8ac270d3967754dd" category="list-text">可独立扩展的计算和存储、最大限度地降低成本并提高资源利用率。</block>
+  <block id="74902bcc2ed17395305301b925afee3f" category="list-text">利用集成快照和克隆简化开发和部署工作流、实现瞬时且节省空间的用户工作空间、集成版本控制和自动化部署。</block>
+  <block id="42e2aaa2f651d8ad800a51f65a258f1e" category="list-text">企业级数据保护、可实现灾难恢复和业务连续性。</block>
+  <block id="2ea563f362255807faae7242f06c9881" category="list-text">NetApp技术营销工程师Karthikeyan Nagalingam</block>
+  <block id="cccf21ceeae034a9e54b62eb00d9b6b3" category="list-text">联想AI实验室系统部门管理员Jarrett Upton</block>
+  <block id="fdc944d7a0de8d8e3dfff03c6a0e03c6" category="list-text">NetApp全闪存阵列产品页面</block>
+  <block id="d875955d78b62e4aff0847425410f79a" category="inline-link"><block ref="d875955d78b62e4aff0847425410f79a" category="inline-link-rx"></block></block>
+  <block id="45f6f9585c85146b389a4f896653a5f9" category="paragraph"><block ref="45f6f9585c85146b389a4f896653a5f9" category="inline-link-rx"></block></block>
+  <block id="ec5282877903d9d2aceb3db45b21da54" category="list-text">NetApp AFF A400页面</block>
+  <block id="1f84bc4168c48270f2cc931b900d9eb4" category="inline-link"><block ref="1f84bc4168c48270f2cc931b900d9eb4" category="inline-link-rx"></block></block>
+  <block id="04438df627d0343d17b2f6f307b489ed" category="paragraph"><block ref="04438df627d0343d17b2f6f307b489ed" category="inline-link-rx"></block></block>
+  <block id="9d92155996555576a58d20e697fc2bd6" category="list-text">NetApp ONTAP 数据管理软件产品页面</block>
+  <block id="dae4be95628a9cc8cb5ecb4b90cd738e" category="inline-link"><block ref="dae4be95628a9cc8cb5ecb4b90cd738e" category="inline-link-rx"></block></block>
+  <block id="2f08744b4a39af375744e1fc4a15b53a" category="paragraph"><block ref="2f08744b4a39af375744e1fc4a15b53a" category="inline-link-rx"></block></block>
+  <block id="45913847e0b47b72b60766711f7a8c21" category="inline-link"><block ref="45913847e0b47b72b60766711f7a8c21" category="inline-link-rx"></block></block>
+  <block id="229469a202dbd3052c7b165bd55eda87" category="paragraph"><block ref="229469a202dbd3052c7b165bd55eda87" category="inline-link-rx"></block></block>
+  <block id="dedba6b3261804ab1e5c2b75051c62ac" category="list-text">NVIDIA SMI (NVIDIA-SMI)</block>
+  <block id="f5800a0bf7fbf711d11868c2913c218f" category="inline-link"><block ref="f5800a0bf7fbf711d11868c2913c218f" category="inline-link-rx"></block></block>
+  <block id="41299b529a1014318d5e7776b9f92ad1" category="paragraph"><block ref="41299b529a1014318d5e7776b9f92ad1" category="inline-link-rx"></block></block>
+  <block id="cf2dfa7ef96d78d1f3ec76316e1481d0" category="cell">2020年2月</block>
+  <block id="54858f2e7ecb57a17b7c0be2dedfcd7b" category="cell">初始版本。使用TensorFlow验证SR6.7和AFF A220。</block>
+  <block id="abb14d21829ba186172f6e1d0b64b55b" category="cell">2023年1月</block>
+  <block id="c04468d92a14823a475df983d69e5f9f" category="cell">已更新版本。使用MXNet验证SR 670V2和AFF A400。</block>
+  <block id="e59b92fc604ecde201ab865ddefca7c2" category="summary">本节将更详细地介绍此解决方案 的主要组件。</block>
+  <block id="56cdae354d8e4efeaa936d576b919c49" category="paragraph"><block ref="56cdae354d8e4efeaa936d576b919c49" category="inline-link-macro-rx"></block></block>
+  <block id="995049066ee0a46858d3a35e74f687fc" category="paragraph">借助NetApp AFF 存储系统、企业可以通过行业领先的性能、卓越的灵活性、云集成和一流的数据管理功能满足企业级存储需求。AFF 系统专为闪存而设计、有助于加速、管理和保护业务关键型数据。</block>
+  <block id="bd06e3e9a11cc16a8f389477f9ed6a95" category="paragraph">NetApp AFF A400是一款基于FAS2650硬件和SSD闪存介质的中端NVMe闪存存储系统。</block>
+  <block id="9cdcb25bd8b8e9dd029f0c58f1c1ce14" category="inline-image-macro">此图显示了NetApp AFF A400存储控制器的正面。</block>
+  <block id="55f69aa150e5e2d9b4339594dbb70471" category="paragraph"><block ref="55f69aa150e5e2d9b4339594dbb70471" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6a4c41eb7420fce0589579f0f045df87" category="inline-image-macro">此图展示了NetApp AFF A400存储控制器的背面。</block>
+  <block id="e83035ebe127e618e86974c913d42589" category="paragraph"><block ref="e83035ebe127e618e86974c913d42589" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5062a65c6ae4cbe0c015396c4011a811" category="paragraph">NetApp AFF A400中端存储系统的功能包括：</block>
+  <block id="722f61060a76e673835749dd7040109c" category="list-text">最大有效容量：702.7 PB</block>
+  <block id="9b150a217729988c3dd54fdaf7b0f9b3" category="list-text">最大横向扩展：2-24个节点(12个HA对)</block>
+  <block id="ae3b033d221455bb2825ac51bee7200e" category="list-text">支持25GbE和16GB FC主机</block>
+  <block id="e16f4e2b178ce47880c3556c501efea4" category="list-text">通过融合以太网(RoCE)连接到NVMe扩展存储架的100GbE RDMA</block>
+  <block id="2f5979909b8c4a0d58f13de4881feaf1" category="list-text">如果未连接NVMe磁盘架、则可以使用100GbE RoCE端口进行主机网络连接</block>
+  <block id="dff1410020c1b676f56ee973acea57d3" category="list-text">完整的12 Gbps SAS连接扩展存储架</block>
+  <block id="565637725a05c879995851c50d41275c" category="list-text">提供两种配置：</block>
+  <block id="8e707b713d26c4b020eda98a37207373" category="list-text">以太网：4个25 Gb以太网(SFP28)端口</block>
+  <block id="1d3c6ad9f15fc70a1cf63e449e90436a" category="list-text">光纤通道：4个16 Gb FC (SFP+)端口</block>
+  <block id="6a2a811bcec501901ab6f8f94694d1b2" category="list-text">100% 8 KB随机读取@.4毫秒400、000次IOPS</block>
+  <block id="d3309961dfabc3043c3ea1878752450b" category="paragraph">适用于入门级AI/ML部署的NetApp AFF A250功能包括：</block>
+  <block id="68448ae40d26fce5bb74cd3bf75999c4" category="list-text">最大有效容量：35 PB</block>
+  <block id="83fa45e9cc2def5751527547e3c57b61" category="list-text">最大横向扩展：2-24个节点(12个HA对)</block>
+  <block id="1283cfcd2651148a611c2c4b105458c3" category="list-text">基于最新的NetApp ONTAP 版本ONTAP 9.8或更高版本构建</block>
+  <block id="f31903137775862e1157677f447b0f52" category="list-text">两个25 Gb以太网端口、用于HA和集群互连</block>
+  <block id="f6c48fdc99c510156e0364e03a6fbd9e" category="paragraph">此外、NetApp还提供了其他存储系统、例如AFF A800和AFF A700、可为大规模AI/ML部署提供更高的性能和可扩展性。</block>
+  <block id="b2c0ed3ea756cb47f24ee9aef32e0f01" category="paragraph">ONTAP 9是NetApp推出的最新一代存储管理软件、可帮助企业打造现代化的基础架构并过渡到云就绪数据中心。借助行业领先的数据管理功能，无论数据位于何处， ONTAP 都可以通过一组工具来管理和保护数据。数据也可以自由移动到需要的任何位置：边缘、核心或云。ONTAP 9包含许多功能、可简化数据管理、加快和保护关键数据、以及跨混合云架构打造适应未来需求的基础架构。</block>
+  <block id="ddf38f965aeb6f6b5785254e6f143a09" category="list-text">* ONTAP FabricPool。*此功能可自动将冷数据分层到公共云和私有云存储选项、包括Amazon Web Services (AWS)、Azure和NetApp StorageGRID 对象存储。</block>
+  <block id="2a228ac6322b6d496b4cb0cf22cfbfe4" category="list-text">* 性能和低延迟。 * ONTAP 可提供尽可能高的吞吐量，并尽可能降低延迟。</block>
+  <block id="cf4d3359e3cce4324a54d8e1864d2647" category="paragraph">ONTAP 9有助于满足不断变化的苛刻业务需求：</block>
+  <block id="99f4fd3a9ea4a861a7095bfe26937f28" category="list-text">*无缝扩展和无中断运行。* ONTAP 支持向现有控制器以及横向扩展集群无中断添加容量。客户可以升级到 NVMe 和 32 Gb FC 等最新技术，而无需进行成本高昂的数据迁移或中断。</block>
+  <block id="ba1e7aff40da44f3c5b86ba78a62e7d0" category="list-text">*与新兴应用程序集成。* ONTAP 使用支持现有企业级应用程序的相同基础架构、为OpenStack、Hadoop和MongoDB等下一代平台和应用程序提供企业级数据服务。</block>
+  <block id="0fdd508a09442b5caa00e47bc0563112" category="section-title">NetApp FlexGroup 卷</block>
+  <block id="641653fdc449e0b1e30f3ee9d04182ab" category="paragraph">培训数据集通常是一组可能包含数十亿个文件的集合。文件可以包括文本，音频，视频以及其他形式的非结构化数据，这些数据必须进行存储和处理才能并行读取。存储系统必须存储许多小文件、并且必须并行读取这些文件、以便执行顺序和随机I/O</block>
+  <block id="e6ad1152aea2aa4f79a47e3b80410fce" category="paragraph">FlexGroup 卷(下图)是一个由多个成分卷组成的命名空间、存储管理员可以对其进行管理、使其与NetApp FlexVol 卷类似。FlexGroup 卷中的文件将分配给各个成员卷，并且不会在卷或节点之间进行条带化。它们支持以下功能：</block>
+  <block id="381a99cae8c29b3b8fd64a207b811935" category="list-text">为高元数据工作负载提供高达20 PB的容量和可预测的低延迟</block>
+  <block id="b0e05251a53a0118d23cd469db4b1903" category="list-text">同一命名空间中最多可容纳4000亿个文件</block>
+  <block id="4eb6665794643a2afabf63f90ddbe4da" category="list-text">在CPU、节点、聚合和成分卷之间的NAS工作负载中执行并行操作FlexVol</block>
+  <block id="19adba666d12642fc956c8a4c4607a66" category="inline-image-macro">"此图显示了一个存储控制器HA对、其中包含许多卷以及FlexGroup 中的主文件。</block>
+  <block id="67243c21916276b166b8cad21f937c57" category="paragraph"><block ref="3998ac0cd0b54d5528002049c9fb6e1f" category="inline-image-macro-rx" type="image"></block>"</block>
+  <block id="f52dbcd9b43086f1d2957e6eb89f4113" category="section-title">联想ThinkSystem产品组合</block>
+  <block id="c5ac419e5467e7539d60c18be3da4b99" category="paragraph">部署联想ThinkSystem服务器的主要优势包括：</block>
+  <block id="c19629173ec04d03fae09e96ce30b98c" category="list-text">高度可扩展的模块化设计、可随业务发展而扩展</block>
+  <block id="9ac34c98220e3dd285a7cd6c8679caeb" category="paragraph">在 AI 领域，联想正在采取切实可行的方法帮助企业了解 ML 和 AI 的优势并将其用于工作负载。联想客户可以在联想 AI 创新中心探索和评估联想 AI 产品，以充分了解其特定用例的价值。为了缩短实现价值的时间、这种以客户为中心的方法可以为客户提供解决方案 开发平台的概念验证、这些平台已准备就绪、可供AI使用并进行优化。</block>
+  <block id="7cbc0e3d7cff391aa0e61b487dc29df1" category="section-title">联想SR670V2</block>
+  <block id="5889950b76dcc45f10977523225c92a8" category="paragraph">联想ThinkSystem SR670V2机架式服务器可为加速AI和高性能计算(HPC)提供最佳性能。SR670V2最多可支持八个GPU、适合ML、DL和推理的计算密集型工作负载要求。</block>
+  <block id="327669874a587f6f9336f608f83d451d" category="inline-image-macro">此图显示了三种SR670"配置。第一个显示了四个SXM GPU、其中包含八个2.5英寸HS驱动器和两个PCIe I/O插槽。第二个显示了四个双宽或八个单宽GPU插槽以及两个PCIe I/O插槽、其中包含八个2.5英寸或四个3.5英寸HS驱动器。第三个显示了八个双宽GPU插槽、其中包括六个EDSFF HS驱动器和两个PCIe I/O插槽。</block>
+  <block id="f3ebf0cd9319acd4d10b09be0d9220c2" category="paragraph"><block ref="f3ebf0cd9319acd4d10b09be0d9220c2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="85b1e2eb4bc61f3bdaea9a9f040eb3a0" category="paragraph">借助支持高端GPU (包括NVIDIA A100 80 GB PCIe 8x GPU)的最新可扩展Intel Xeon CPU、ThinkSystem SR670V2可为AI和HPC工作负载提供经过优化的加速性能。</block>
+  <block id="d7ed5fdb2102567c3c051078e7c72e11" category="paragraph">由于越来越多的工作负载使用加速器的性能、因此对GPU密度的需求也在增加。零售、金融服务、能源和医疗保健等行业正在使用GPU通过ML、DL和推理技术获得更深入的见解并推动创新。</block>
+  <block id="89a846b0823ae167964c8a02382225cf" category="paragraph">ThinkSystem SR670V2是一款经过优化的企业级解决方案 、可在生产环境中部署加速的HPC和AI工作负载、在最大程度地提高系统性能的同时、还能为采用下一代平台的超级计算集群保持数据中心密度。</block>
+  <block id="9378d87a3787bb6ab3fe4605dd558aaf" category="paragraph">其他功能包括：</block>
+  <block id="fe62ffc0b0188329f10e2bfc0c560ece" category="list-text">支持GPU直接RDMA I/O、其中高速网络适配器直接连接到GPU、以最大程度地提高I/O性能。</block>
+  <block id="03e5fd8f257caa94eae847639e18b1a9" category="list-text">支持GPU直接存储、其中NVMe驱动器直接连接到GPU、以最大程度地提高存储性能。</block>
+  <block id="ad7857a40388167e99516cfe367478d5" category="paragraph">MLPerf 是用于评估 AI 性能的行业领先基准套件。在此验证中、我们使用了最受欢迎的AI框架之一MXNet的图像分类基准。我们使用了MXNet_Benchmarks培训脚本来推动AI培训。该脚本包含多种常见传统模式的实施、设计速度尽可能快。它可以在一台计算机上运行、也可以在多台主机上以分布式模式运行。</block>
+  <block id="a29118c3c40b6309f6b6354a52631e91" category="paragraph"><block ref="a29118c3c40b6309f6b6354a52631e91" category="inline-link-macro-rx"></block></block>
+  <block id="f0cbafc85a7a8d2836dd3a3d51266f61" category="sidebar">采用联想ThinkSystem SR670V2的NetApp AFF A400人工智能和ML模型培训</block>
 </blocks>

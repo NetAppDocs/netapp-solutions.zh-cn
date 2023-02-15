@@ -1,0 +1,51 @@
+---
+sidebar: sidebar 
+permalink: ai/a400-thinksystem-introduction.html 
+keywords: tr4810, 4810, introduction, cluster architecture, lenovo, ai 
+summary: '本解决方案 侧重于使用针对人工智能工作负载优化的NetApp存储和联想服务器的入门级和中端集群架构。它适用于大多数计算作业为单节点(单或多GPU)或分布在几个计算节点上的中小型团队。这不是一个主要限制、因为大多数日常AI培训作业都是单节点的。' 
+---
+= TR-4810：《采用联想ThinkSystem SR670V2的NetApp AFF A400人工智能和ML模型培训》
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+Sathish Thyagarajan、David Arnette、NetApp Mircona Troaca、Lonovo
+
+[role="lead"]
+此解决方案 采用针对人工智能(AI)工作负载优化的NetApp存储和联想服务器、提供了一个中端集群架构。它适用于大多数计算作业为单节点(单GPU或多GPU)或分布在几个计算节点上的中小型企业。此解决方案 可与许多企业的大多数日常AI培训工作保持一致。
+
+本文档介绍了对由八GPU联想SR670V2服务器、中端NetApp AFF A400存储系统和100GbE互连交换机组成的计算和存储配置的测试和验证。为了衡量性能、我们将ResNet50与ImageNet数据集结合使用、批大小为408、半精度、CUDA和cuDNN。这种架构为中小型企业提供了一个高效且经济高效的解决方案 、这只是从需要NetApp ONTAP 云连接数据存储的企业级功能的AI计划开始。
+
+
+
+== 目标受众
+
+本文档面向以下受众：
+
+* 数据科学家、数据工程师、数据管理员和AI系统开发人员
+* 设计AI模型开发解决方案的企业架构师
+* 正在寻找高效方法实现深度学习(DL)和机器学习(ML)开发目标的数据科学家和数据工程师
+* 希望以最快速度将AI计划推向市场的业务主管和OT/IT决策者
+
+
+
+
+== 解决方案架构
+
+这款采用联想ThinkSystem服务器的解决方案 以及采用AFF 存储的NetApp ONTAP 专为处理大型数据集的AI培训而设计、可利用GPU与传统CPU的处理能力。此验证通过横向扩展架构展示了高性能和最佳数据管理、该架构使用一个、两个或四个联想SR670V2服务器以及一个NetApp AFF A400存储系统。下图提供了架构概述。
+
+image:a400-thinksystem-image2.png["此图显示了一个以太网交换机、该交换机由管理服务器围绕、四个SR670V2 (每个GPU具有八个GPU)以及一个NetApp ONTAP 存储系统。"]
+
+NetApp 和联想解决方案具有以下主要优势：
+
+* 并行执行多个培训作业时、性能高效且经济高效
+* 可根据不同数量的联想服务器和不同型号的NetApp存储控制器扩展性能
+* 强大的数据保护功能、可满足低恢复点目标(RPO)和恢复时间目标(RTO)的要求、而不会丢失任何数据
+* 利用快照和克隆优化数据管理、以简化开发工作流
+
+
+link:a400-thinksystem-technology-overview.html["接下来：技术概述"]
