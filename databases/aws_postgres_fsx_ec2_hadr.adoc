@@ -1,0 +1,288 @@
+---
+sidebar: sidebar 
+permalink: databases/aws_postgres_fsx_ec2_hadr.html 
+keywords: PostgreSQL, AWS, FSx ONTAP, Database, Open Source Database 
+summary: 解决方案 概述了PostgreSQL数据库部署以及基于FSX ONTAP 存储产品中内置的NetApp SnapMirror技术和AWS中的NetApp Ansible自动化工具包的HA/DR设置、故障转移和重新同步的详细信息。 
+---
+= TR-4956：在AWS FSX/EC2中自动部署PostgreSQL高可用性和灾难恢复
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+NetApp公司Allen Cao、Niyaz Mohamed
+
+
+
+== 目的
+
+PostgreSQL是一种广泛使用的开源数据库、在排名前十位最受欢迎的数据库引擎中排名第四 link:https://db-engines.com/en/ranking["数据库引擎"^]。一方面、PostgreSQL从其无许可证的开源模式中获得了广泛的使用、同时它仍具有复杂的功能。另一方面、由于它是开源的、因此在高可用性和灾难恢复(HA/DR)领域、特别是在公共云中、缺乏有关生产级数据库部署的详细指导。通常、很难为典型的PostgreSQL HA/DR系统设置热备用和热备用、流复制等。通过提升备用站点并切换回主站点来测试HA/DR环境可能会对生产造成中断。在流式热备用系统上部署读取工作负载时、主系统上存在大量已记录的性能问题。
+
+在本文档中、我们将演示如何取消应用程序级别的PostgreSQL流式HA/DR解决方案 、并基于AWS FSX ONTAP 存储构建基于PostgreSQL HA/DR解决方案 、用于存储数据库文件和EC2计算实例、例如PostgreSQL DB服务器。与传统的PostgreSQL应用程序级HA/DR流复制相比、解决方案 可创建一个更简单、更具可比性的系统、并提供同等的结果。
+
+此解决方案 基于经验证的成熟NetApp SnapMirror存储级别复制技术构建、该技术可在适用于PostgreSQL HA/DR的AWS本机FSX ONTAP 云存储中使用。借助NetApp解决方案团队提供的自动化工具包、可以轻松实施。借助基于应用程序级别流式传输的HA/DR解决方案 、它可以提供类似的功能、同时消除主站点上的复杂性和性能阻力。可以轻松部署和测试解决方案 、而不会影响活动主站点。
+
+此解决方案 可解决以下使用情形：
+
+* 在公共AWS云中为PostgreSQL部署生产级HA/DR
+* 在公共AWS云中测试和验证PostgreSQL工作负载
+* 测试和验证基于NetApp SnapMirror复制技术的PostgreSQL HA/DR策略
+
+
+
+
+== audience
+
+此解决方案 适用于以下人员：
+
+* 有兴趣在公共AWS云中使用HA/DR部署PostgreSQL的DBA。
+* 数据库解决方案 架构师、负责在公共AWS云中测试PostgreSQL工作负载。
+* 存储管理员、负责部署和管理部署到AWS FSX存储的PostgreSQL实例。
+* 有意在AWS FSX/EC2中建立PostgreSQL环境的应用程序所有者。
+
+
+
+
+== 解决方案 测试和验证环境
+
+此解决方案 的测试和验证是在AWS FSX和EC2环境中执行的、该环境可能与最终部署环境不匹配。有关详细信息，请参见一节 <<Key Factors for Deployment Consideration>>。
+
+
+
+=== 架构
+
+image::aws_postgres_fsx_ec2_architecture.PNG[此图详细展示了PostgreSQL混合云解决方案 的组织结构、包括内部部署端和AWS站点。]
+
+
+
+=== 硬件和软件组件
+
+|===
+
+
+3+| * 硬件 * 
+
+
+| FSX ONTAP 存储 | 当前版本 | 与主HA集群和备用HA集群位于同一VPC和可用性区域中的两个FSX HA对 
+
+
+| 用于计算的EC2实例 | t2.xlarge/4vCPU/16G | 两个EC2 t2 xlarge作为主计算实例和备用计算实例 
+
+
+| Ansible控制器 | 内部CentOS VM/4vCPU/8G | 用于在内部或云中托管Ansible自动化控制器的VM 
+
+
+3+| *软件* 
+
+
+| RedHat Linux | rhel-8.6.0_hvm-20220503-x86_64-2-Hourly2-gp2 | 已部署RedHat订阅以进行测试 
+
+
+| CentOS Linux | CentOS Linux 8.2.2004版(核心) | 托管部署在内部实验室中的Ansible控制器 
+
+
+| PostgreSQL | 版本14.5% | 自动化从PostgreSQL .ora yum repo.中提取最新可用的PostgreSQL版本 
+
+
+| Ansible | 版本2.10.3 | 使用要求攻略手册安装的所需集合和库的前提条件 
+|===
+
+
+=== 部署注意事项的关键因素
+
+* * PostgreSQL数据库备份、还原和恢复。* PostgreSQL数据库支持多种备份方法、例如使用pg-dump的逻辑备份、使用pG_basebackup或较低级别的操作系统备份命令的物理联机备份以及存储级别一致的快照。此解决方案 使用NetApp一致性组快照在备用站点上备份、还原和恢复PostgreSQL数据库数据和WAL卷。NetApp一致性组卷快照会在写入存储时对I/O进行排序、并保护数据库数据文件的完整性。
+* * EC2计算实例。*在这些测试和验证中、我们对PostgreSQL数据库计算实例使用了AWS EC2 T2.xlarge实例类型。NetApp建议在部署中使用M5类型的EC2实例作为PostgreSQL的计算实例、因为它针对数据库工作负载进行了优化。备用计算实例应始终部署在为FSX HA集群部署的被动(备用)文件系统所在的分区中。
+* * FSX存储HA集群单区域或多区域部署。*在这些测试和验证中、我们在一个AWS可用性区域中部署了一个FSX HA集群。对于生产部署、NetApp建议在两个不同的可用性区域中部署一个FSX HA对。如果主存储系统与备用存储系统之间需要特定距离、则可以在其他区域设置用于实现业务连续性的灾难恢复备用HA对。FSX HA集群始终配置在一个HA对中、该HA对在一对主动-被动文件系统中进行同步镜像、以提供存储级别的冗余。
+* * PostgreSQL数据和日志放置。*典型的PostgreSQL部署共享同一个或多个根目录、用于存储数据和日志文件。在测试和验证中、我们将PostgreSQL数据分离、并登录到两个单独的卷中以提高性能。数据目录中使用软链接指向托管PostgreSQL WAL日志和归档WAL日志的日志目录或卷。
+* * PostgreSQL服务启动延迟计时器。*此解决方案 使用NFS挂载的卷存储PostgreSQL数据库文件和WAL日志文件。在数据库主机重新启动期间、如果未挂载卷、PostgreSQL服务可能会尝试启动。这会导致数据库服务启动失败。要使PostgreSQL数据库正常启动、需要10到15秒的计时器延迟。
+* *用于业务连续性的RPO/RTO。*用于灾难恢复的FSX数据从主节点复制到备用节点基于异步、这意味着RPO取决于Snapshot备份和SnapMirror复制的频率。Snapshot副本和SnapMirror复制的频率越高、RPO就越低。因此、在发生灾难时的潜在数据丢失与增加的存储成本之间可以取得平衡。我们已确定、对于RPO、Snapshot副本和SnapMirror复制的实施间隔可低至5分钟、而对于RTO、PostgreSQL通常可在灾难恢复备用站点的一分钟内恢复。
+* *数据库备份。*在实施PostgreSQL数据库或将该数据库从未命中数据中心迁移到AWS FSX存储后、该数据会自动同步镜像到FSX HA对中以进行保护。发生灾难时、可以使用复制的备用站点进一步保护数据。为了实现长期备份保留或数据保护、NetApp建议使用内置的PostgreSQL pG_basebackup实用程序运行可移植到S3 Blob存储的完整数据库备份。
+
+
+
+
+== 解决方案 部署
+
+可以使用基于NetApp Ansible的自动化工具包按照以下详细说明自动完成此解决方案 的部署。
+
+. 阅读自动化工具包readme.md中的说明 link:https://github.com/NetApp-Automation/na_postgresql_aws_deploy_hadr["NA_PostgreSQL _AWS_deploy_HADR"]。
+. 观看以下视频逐步介绍。
++
+video::aws_postgres_fsx_ec2_deploy_hadr.mp4[]
+. 配置所需的参数文件 (`hosts`， `host_vars/host_name.yml`， `fsx_vars.yml`)、在相关部分的模板中输入用户专用参数。然后、使用复制按钮将文件复制到Ansible控制器主机。
+
+
+
+
+=== 自动化部署的前提条件
+
+部署需要满足以下前提条件。
+
+. 已设置AWS帐户、并已在您的AWS帐户中创建必要的VPC和网段。
+. 在AWS EC2控制台中、您必须部署两个EC2 Linux实例、一个在主站点上作为主PostgreSQL DB服务器、一个在备用灾难恢复站点上。要在主灾难恢复站点和备用灾难恢复站点实现计算冗余、请另外部署两个EC2 Linux实例作为备用PostgreSQL DB服务器。有关环境设置的详细信息、请参见上一节中的架构图。另请查看 link:https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html["Linux实例用户指南"] 有关详细信息 ...
+. 在AWS EC2控制台中、部署两个FSX ONTAP 存储HA集群来托管PostgreSQL数据库卷。如果您不熟悉FSX存储的部署、请参见相关文档 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/creating-file-systems.html["为ONTAP 文件系统创建FSX"] 了解分步说明。
+. 构建CentOS Linux VM以托管Ansible控制器。Ansible控制器可以位于内部或AWS云中。如果它位于内部、则必须通过SSH连接到VPC、EC2 Linux实例和FSX存储集群。
+. 按照资源中的"为RHEL/CentOS上的CLI部署设置Ansible控制器"一节所述设置Ansible控制器 link:https://docs.netapp.com/us-en/netapp-solutions/automation/getting-started.html["NetApp解决方案 自动化入门"]。
+. 从NetApp GitHub公共站点克隆自动化工具包的副本。
++
+[source, cli]
+----
+git clone https://github.com/NetApp-Automation/na_postgresql_aws_deploy_hadr.git
+----
+. 从工具包根目录中、执行前提条件攻略手册、为Ansible控制器安装所需的集合和库。
++
+[source, cli]
+----
+ansible-playbook -i hosts requirements.yml
+----
++
+[source, cli]
+----
+ansible-galaxy collection install -r collections/requirements.yml --force --force-with-deps
+----
+. 检索DB主机变量文件所需的EC2 FSX实例参数 `host_vars/*` 和全局变量文件 `fsx_vars.yml` Configuration
+
+
+
+
+=== 配置hosts文件
+
+将主FSX ONTAP 集群管理IP和EC2实例主机名称输入到hosts文件中。
+
+....
+# Primary FSx cluster management IP address
+[fsx_ontap]
+172.30.15.33
+....
+....
+# Primary PostgreSQL DB server at primary site where database is initialized at deployment time
+[postgresql]
+psql_01p ansible_ssh_private_key_file=psql_01p.pem
+....
+....
+# Primary PostgreSQL DB server at standby site where postgresql service is installed but disabled at deployment
+# Standby DB server at primary site, to setup this server comment out other servers in [dr_postgresql]
+# Standby DB server at standby site, to setup this server comment out other servers in [dr_postgresql]
+[dr_postgresql] --
+psql_01s ansible_ssh_private_key_file=psql_01s.pem
+#psql_01ps ansible_ssh_private_key_file=psql_01ps.pem
+#psql_01ss ansible_ssh_private_key_file=psql_01ss.pem
+....
+
+
+=== 在host_vars文件夹中配置host_name.yml文件
+
+在带下划线的蓝色字段中输入适合您系统的参数、然后将这些条目复制并粘贴到中 `host_name.yml` 文件 `host_vars` 文件夹。
+
+
+
+
+=== 在vars文件夹中配置全局FSx_vars.yml文件
+
+在带下划线的蓝色字段中输入适合您系统的参数、然后将这些条目复制并粘贴到中 `fsx_vars.yml` Ansible控制器主机上的文件。
+
+
+
+
+=== PostgreSQL部署和HA/DR设置
+
+以下任务将在主EC2 DB服务器主机的主站点上部署PostgreSQL DB服务器服务并初始化数据库。然后、在备用站点上设置备用主EC2 DB服务器主机。最后、将数据库卷从主站点FSX集群复制到备用站点FSX集群、以便进行灾难恢复。
+
+. 在主FSX集群上创建数据库卷、并在主EC2实例主机上设置PostgreSQL。
++
+[source, cli]
+----
+ansible-playbook -i hosts postgresql_deploy.yml -u ec2-user --private-key psql_01p.pem -e @vars/fsx_vars.yml
+----
+. 设置备用DR EC2实例主机。
++
+[source, cli]
+----
+ansible-playbook -i hosts postgresql_standby_setup.yml -u ec2-user --private-key psql_01s.pem -e @vars/fsx_vars.yml
+----
+. 设置FSX ONTAP 集群对等和数据库卷复制。
++
+[source, cli]
+----
+ansible-playbook -i hosts fsx_replication_setup.yml -e @vars/fsx_vars.yml
+----
+. 将上述步骤整合为一步式PostgreSQL部署和HA/DR设置。
++
+[source, cli]
+----
+ansible-playbook -i hosts postgresql_hadr_setup.yml -u ec2-user -e @vars/fsx_vars.yml
+----
+. 要在主站点或备用站点设置备用PostgreSQL DB主机、请在hosts文件(dr_PostgreSQL)部分中注释掉所有其他服务器、然后使用相应的目标主机(例如、主站点的psql_01ps或备用EC2计算实例)执行PostgreSQL standby_setup.yml攻略手册。请确保使用主机参数文件、例如 `psql_01ps.yml` 在下配置 `host_vars` 目录。
++
+[source, cli]
+----
+[dr_postgresql] --
+#psql_01s ansible_ssh_private_key_file=psql_01s.pem
+psql_01ps ansible_ssh_private_key_file=psql_01ps.pem
+#psql_01ss ansible_ssh_private_key_file=psql_01ss.pem
+----
++
+[source, cli]
+----
+ansible-playbook -i hosts postgresql_standby_setup.yml -u ec2-user --private-key psql_01ps.pem -e @vars/fsx_vars.yml
+----
+
+
+
+
+=== 将PostgreSQL数据库快照备份和复制到备用站点
+
+可以在Ansible控制器上按用户定义的时间间隔控制并执行PostgreSQL数据库快照备份和到备用站点的复制。我们已验证此间隔可低至5分钟。因此、如果主站点发生故障、则在下次计划的快照备份之前发生故障、可能会丢失5分钟的数据。
+
+[source, cli]
+----
+*/15 * * * * /home/admin/na_postgresql_aws_deploy_hadr/data_log_snap.sh
+----
+
+
+=== 故障转移到备用站点进行灾难恢复
+
+要将PostgreSQL HA/DR系统测试为灾难恢复练习、请执行以下攻略手册、在备用站点上的主备用EC2 DB实例上执行故障转移和PostgreSQL数据库恢复。在实际灾难恢复情形中、对实际故障转移到灾难恢复站点执行相同的操作。
+
+[source, cli]
+----
+ansible-playbook -i hosts postgresql_failover.yml -u ec2-user --private-key psql_01s.pem -e @vars/fsx_vars.yml
+----
+
+
+=== 在故障转移测试后重新同步复制的数据库卷
+
+在故障转移测试后运行resync以重新建立数据库-卷SnapMirror复制。
+
+[source, cli]
+----
+ansible-playbook -i hosts postgresql_standby_resync.yml -u ec2-user --private-key psql_01s.pem -e @vars/fsx_vars.yml
+----
+
+
+=== 由于EC2计算实例故障、从主EC2数据库服务器故障转移到备用EC2数据库服务器
+
+NetApp建议使用成熟的操作系统集群软件运行手动故障转移、该软件可能需要许可证。
+
+
+
+== 从何处查找追加信息
+
+要了解有关本文档中所述信息的更多信息，请查看以下文档和 / 或网站：
+
+* 适用于 NetApp ONTAP 的 Amazon FSX
++
+link:https://aws.amazon.com/fsx/netapp-ontap/["https://aws.amazon.com/fsx/netapp-ontap/"^]
+
+* Amazon EC2
++
+link:https://aws.amazon.com/pm/ec2/?trk=36c6da98-7b20-48fa-8225-4784bced9843&sc_channel=ps&s_kwcid=AL!4422!3!467723097970!e!!g!!aws%20ec2&ef_id=Cj0KCQiA54KfBhCKARIsAJzSrdqwQrghn6I71jiWzSeaT9Uh1-vY-VfhJixF-xnv5rWwn2S7RqZOTQ0aAh7eEALw_wcB:G:s&s_kwcid=AL!4422!3!467723097970!e!!g!!aws%20ec2["https://aws.amazon.com/pm/ec2/?trk=36c6da98-7b20-48fa-8225-4784bced9843&sc_channel=ps&s_kwcid=AL!4422!3!467723097970!e!!g!!aws%20ec2&ef_id=Cj0KCQiA54KfBhCKARIsAJzSrdqwQrghn6I71jiWzSeaT9Uh1-vY-VfhJixF-xnv5rWwn2S7RqZOTQ0aAh7eEALw_wcB:G:s&s_kwcid=AL!4422!3!467723097970!e!!g!!aws%20ec2"^]
+
+* NetApp 解决方案自动化
++
+link:https://review.docs.netapp.com/us-en/netapp-solutions_ajc_psql_aws/automation/automation_introduction.html["https://review.docs.netapp.com/us-en/netapp-solutions_ajc_psql_aws/automation/automation_introduction.html"^]
+
+
