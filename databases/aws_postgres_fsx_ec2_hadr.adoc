@@ -21,7 +21,7 @@ NetApp公司Allen Cao、Niyaz Mohamed
 
 PostgreSQL是一种广泛使用的开源数据库、在排名前十位最受欢迎的数据库引擎中排名第四 link:https://db-engines.com/en/ranking["数据库引擎"^]。一方面、PostgreSQL从其无许可证的开源模式中获得了广泛的使用、同时它仍具有复杂的功能。另一方面、由于它是开源的、因此在高可用性和灾难恢复(HA/DR)领域、特别是在公共云中、缺乏有关生产级数据库部署的详细指导。通常、很难为典型的PostgreSQL HA/DR系统设置热备用和热备用、流复制等。通过提升备用站点并切换回主站点来测试HA/DR环境可能会对生产造成中断。在流式热备用系统上部署读取工作负载时、主系统上存在大量已记录的性能问题。
 
-在本文档中、我们将演示如何取消应用程序级别的PostgreSQL流式HA/DR解决方案 、并基于AWS FSX ONTAP 存储构建基于PostgreSQL HA/DR解决方案 、用于存储数据库文件和EC2计算实例、例如PostgreSQL DB服务器。与传统的PostgreSQL应用程序级HA/DR流复制相比、解决方案 可创建一个更简单、更具可比性的系统、并提供同等的结果。
+在本文档中、我们将演示如何取消应用程序级别的PostgreSQL流式HA/DR解决方案 、以及如何使用存储级别复制基于AWS FSX ONTAP 存储和EC2计算实例构建PostgreSQL HA/DR解决方案。与传统的PostgreSQL应用程序级HA/DR流复制相比、解决方案 可创建一个更简单、更具可比性的系统、并提供同等的结果。
 
 此解决方案 基于经验证的成熟NetApp SnapMirror存储级别复制技术构建、该技术可在适用于PostgreSQL HA/DR的AWS本机FSX ONTAP 云存储中使用。借助NetApp解决方案团队提供的自动化工具包、可以轻松实施。借助基于应用程序级别流式传输的HA/DR解决方案 、它可以提供类似的功能、同时消除主站点上的复杂性和性能阻力。可以轻松部署和测试解决方案 、而不会影响活动主站点。
 
@@ -265,7 +265,7 @@ ansible-playbook -i hosts postgresql_standby_resync.yml -u ec2-user --private-ke
 
 === 由于EC2计算实例故障、从主EC2数据库服务器故障转移到备用EC2数据库服务器
 
-NetApp建议使用成熟的操作系统集群软件运行手动故障转移、该软件可能需要许可证。
+NetApp建议运行手动故障转移或使用成熟的操作系统集群软件、这些软件可能需要许可证。
 
 
 
@@ -283,6 +283,6 @@ link:https://aws.amazon.com/pm/ec2/?trk=36c6da98-7b20-48fa-8225-4784bced9843&sc_
 
 * NetApp 解决方案自动化
 +
-link:https://review.docs.netapp.com/us-en/netapp-solutions_ajc_psql_aws/automation/automation_introduction.html["https://review.docs.netapp.com/us-en/netapp-solutions_ajc_psql_aws/automation/automation_introduction.html"^]
+link:https://docs.netapp.com/us-en/netapp-solutions/automation/automation_introduction.html["https://docs.netapp.com/us-en/netapp-solutions/automation/automation_introduction.html"^]
 
 
