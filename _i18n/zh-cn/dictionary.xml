@@ -12969,7 +12969,6 @@
   <block id="feb87b8a766262f1649eb73f664b5237" category="paragraph">因此、概括地说、使用情形可以分为两种分类方式：</block>
   <block id="113270f68f35ffcbf2a57597bd22e665" category="list-text">使用ANF数据存储库扩展存储容量</block>
   <block id="a46f3b69652b37f2becc5ad8def389fe" category="list-text">在软件定义的数据中心(SDDC)之间、将ANF数据存储库用作从内部或Azure区域进行成本优化的恢复工作流的灾难恢复目标。本指南深入介绍如何使用Azure NetApp Files 为数据存储库提供优化的存储(当前处于公有 预览模式) 除了Azure VMware解决方案 中同类最佳的数据保护和灾难恢复功能之外、您还可以通过此功能从vSAN存储中卸载存储容量。</block>
-  <block id="301964836d84fb491fca23f51f902cd0" category="admonition">Azure NetApp Files 数据存储库功能当前处于公有 预览状态。请联系您所在地区的NetApp或Microsoft解决方案 架构师获取追加信息。</block>
   <block id="9d5486edf9a5ddec98d7f7509d50101c" category="section-title">Azure中的VMware Cloud选项</block>
   <block id="809dd7fcec8077467eab0222ea68e259" category="paragraph">Azure VMware解决方案 (AVS)是一种混合云服务、可在Microsoft Azure公有 云中提供功能完备的VMware SDDC。AVS是由Microsoft全面管理和支持并经过VMware验证的第一方解决方案 、它使用Azure基础架构。因此、客户可以获得用于计算虚拟化的VMware ESXi、用于超融合存储的vSAN以及用于网络连接和安全的NSX、同时充分利用Microsoft Azure的全球影响力、一流的数据中心设施以及与丰富的原生 Azure服务和解决方案生态系统的邻近性。Azure VMware解决方案 SDDC与Azure NetApp Files 相结合、可提供最佳性能、同时将网络延迟降至最低。</block>
   <block id="8718654ef588a85b2a2e46a7727fa16d" category="paragraph">无论使用何种云、在部署VMware SDDC时、初始集群都包括以下组件：</block>
@@ -13017,7 +13016,6 @@
   <block id="b2666a13d31389019b43a9085ffd2fe8" category="section-title">使用Azure VMware解决方案 配置Azure NetApp Files</block>
   <block id="dbfbac0b1aee2557c747f90a52c200ed" category="paragraph">通过Azure NetApp Files 之间的新集成、您可以通过Azure VMware解决方案 资源提供程序API/CLI为Azure NetApp Files 卷创建NFS数据存储库、并将这些数据存储库挂载到私有云中您选择的集群上。除了托管VM和应用程序VMDK之外、还可以从Azure VMware解决方案 SDDC环境中创建的VM挂载Azure NetApp文件卷。这些卷可以挂载到Linux客户端上并映射到Windows客户端上、因为Azure NetApp Files 支持服务器消息块(SMB)和网络文件系统(NFS)协议。</block>
   <block id="3fcf61e60f3486b366489a2db86e92c0" category="admonition">为了获得最佳性能、请将Azure NetApp Files 部署在与私有云相同的可用性区域中。与Express路由快速路径的主机代管可提供最佳性能、并将网络延迟降至最低。</block>
-  <block id="2a499560ec410b1e1caeb95f6021ac1e" category="admonition">此功能当前处于公有 预览模式。</block>
   <block id="7042805ebe69bccc6ab09f9518f94556" category="paragraph">要将Azure NetApp文件卷作为Azure VMware解决方案 私有云的VMware数据存储库附加、请确保满足以下前提条件。</block>
   <block id="49588f95c73f4a9df95958ba5e856d0c" category="list-text">使用AZ登录并验证订阅是否已注册到Microsoft .AVS命名空间中的CloudSanExpertion功能。</block>
   <block id="c0e46e4183896be214bad3fd077b5834" category="list-text">如果未注册、请注册它。</block>
@@ -13033,11 +13031,9 @@
   <block id="187927c7525fb36ec9428b4d84fe0aff" category="list-text">创建NetApp帐户后、使用所需的服务级别和大小设置容量池。有关详细信息、请参见此<block ref="0a52e91c67ac030fc237a7b13d0404c6" category="inline-link-rx"></block>。</block>
   <block id="c7d6fd5f235d0c8a960facf04a79e4a7" category="paragraph"><block ref="c7d6fd5f235d0c8a960facf04a79e4a7" category="inline-image-macro-rx" type="image"></block></block>
   <block id="c573a9eace62b9790820458dd59448b0" category="list-text">Azure NetApp Files 上的数据存储库支持NFSv3。</block>
-  <block id="62dfd4c1cc43e59ef3c56bb615d3b182" category="list-text">使用高级版或超高级版可获得最佳性能。</block>
   <block id="0d55d5c3a7459f59fd437a2311322791" category="list-text">为Azure NetApp Files 配置委派子网、并在创建卷时指定此子网。有关创建委派子网的详细步骤、请参见此文档<block ref="e84891bed408b1977d062f4ccc1816aa" category="inline-link-rx"></block>。</block>
   <block id="36fc58c2c3fa32ac586d5628570e9499" category="list-text">使用容量池刀片下的卷刀片为数据存储库添加NFS卷。</block>
   <block id="2832d137c1714a9759f87412fb05253e" category="paragraph"><block ref="2832d137c1714a9759f87412fb05253e" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="47e7f43ca3ba65dbd1b1edbe26db8cc4" category="paragraph">要了解按大小或配额显示的Azure NetApp Files 卷性能、请参见<block ref="bcd13cd67f856c9e615d78327e957b9c" category="inline-link-rx"></block>。</block>
   <block id="372d7a6604390fe9757888aff0a92970" category="example-title">将Azure NetApp Files 数据存储库添加到私有云</block>
   <block id="0f9e7cabe2f81455810e96baca91c6a7" category="paragraph">要将Azure NetApp Files 数据存储库添加到私有云、请完成以下步骤：</block>
   <block id="b1248573ef968f7d6fc7eaa453fa4d45" category="list-text">注册所需功能后、运行相应的命令将NFS数据存储库连接到Azure VMware解决方案 私有云集群。</block>
@@ -13048,8 +13044,6 @@
   <block id="078f601da77f62e8c7e097d5744f9b1b" category="section-title">规模估算和性能优化</block>
   <block id="2954ff66e26b577154cf218d077ff1a9" category="paragraph">Azure NetApp Files 支持三种服务级别：标准（每 TB 16 MBps ），高级（每 TB 64 MBps ）和超级（每 TB 128 MBps ）。配置适当的卷大小对于优化数据库工作负载性能非常重要。使用Azure NetApp Files 时、卷性能和吞吐量限制取决于以下因素：</block>
   <block id="a5d62ae512b963e1f05e839467577f19" category="paragraph"><block ref="a5d62ae512b963e1f05e839467577f19" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="9ce18fddaa7dc898334afc4ab63a163b" category="list-text">使用数据存储库卷的高级或超高级层可获得最佳性能。</block>
-  <block id="f681df268b9e05fa5155bbf1f38d672f" category="list-text">要了解子虚拟机的文件共享要求、请使用标准或高级层卷。</block>
   <block id="1261ba8eeb83d9d138ff9e9a37214a7e" category="section-title">性能注意事项</block>
   <block id="f4479400cc63a0bc54ea3a609d8d89aa" category="paragraph">请务必了解、在NFS版本3中、ESXi主机和单个存储目标之间只有一个活动管道用于连接。这意味着、尽管可能有备用连接可用于故障转移、但单个数据存储库和底层存储的带宽仅限于单个连接可以提供的带宽。</block>
   <block id="f4c57c87dfa0d5843279b51c6e10d0a6" category="paragraph">要利用Azure NetApp Files 卷的更多可用带宽、ESXi主机必须与存储目标建立多个连接。要解决此问题描述 问题、您可以配置多个数据存储库、每个数据存储库在ESXi主机和存储之间使用单独的连接。</block>
@@ -13057,19 +13051,10 @@
   <block id="c01a936a44f773bc3d0a636cb655c28c" category="list-text">默认情况下、Azure VMware解决方案 允许八个NFS数据存储库。可以通过支持请求来增加此数量。</block>
   <block id="cd58e3b202d882202a16834028640630" category="list-text">利用ER快速通道和超SKU提高带宽并降低延迟。更多信息</block>
   <block id="6ef5173b6cc36d0f4efabbafeeee7443" category="list-text">借助Azure NetApp Files 中的"基本"网络功能、Azure VMware解决方案 的连接受ExpressRoute电路和ExpressRoute网关的带宽限制。</block>
-  <block id="0a8e9b67042320d1a2f3f6155fc3e096" category="list-text">对于具有"标准"网络功能的Azure NetApp Files 卷(当前处于公有 预览模式)、支持ExpressRoute快速路径。启用此选项后、FastPath将网络流量直接发送到Azure NetApp Files 卷、从而绕过网关、从而提供更高的带宽和更低的延迟。</block>
-  <block id="1b75d86136a5cde892b315650fd5ea43" category="section-title">性能优化</block>
-  <block id="213debd5ccd87a89487239a8460a0f0e" category="paragraph">虽然每个NFS数据存储库建议的虚拟机数量是主观的、但许多因素决定了可以放置在每个数据存储库上的最佳VM数量。虽然大多数管理员仅考虑容量、但发送到VMDK的并发I/O量是影响整体性能的最重要因素之一。ESXi主机具有多种机制、可确保虚拟机争用数据存储库资源时保持公平。但是、控制性能的最简单方法是、对每个数据存储库上放置的虚拟机数量进行限制。如果并发虚拟机I/O模式向数据存储库发送的流量过多、则磁盘队列将填满、并生成较高的延迟。</block>
-  <block id="f9fd5bbf2764cc5b16e9eeeb8b57ee91" category="section-title">卷和数据存储库规模估算</block>
-  <block id="01ab7b17836cfa3916b003d7febafe43" category="paragraph">在Azure NetApp Files 上为数据存储库创建卷时、最佳做法是创建的卷不超过所需大小。尽管最大卷大小可以高达100 TB、但NetApp建议从较小的数据存储库容量开始、并根据需要增加该容量。对数据存储库进行适当规模估算可防止意外在数据存储库上放置过多虚拟机、并降低资源争用的可能性。由于在虚拟机需要额外容量时可以轻松增加数据存储库和VMDK大小、因此创建的数据存储库不必超过所需大小。为了获得最佳性能、最佳实践是增加数据存储库数量、而不是增加其大小。</block>
   <block id="fad725216d945a6443f15949ae73b316" category="cell">需要记住的要点</block>
-  <block id="28c7e0cc515aa1271633669cf0e579ad" category="list-text">ANF NFS数据存储库的大小合适、从4 TB到8 TB不等。</block>
-  <block id="90f9dde25089c324af635a76b75a7509" category="list-text">在一个数据存储库上放置15到20个VM。根据虚拟机要求、此数量可以增加到35-40个虚拟机。</block>
-  <block id="3236c97f9f8c9cb7fcbc35b9ff162ab3" category="list-text">为了获得最佳性能和易管理性、请考虑使用子系统管理的文件系统、例如数据库等高I/O应用程序的NFS/SMB文件系统。</block>
   <block id="0d3f5dc8a647758ee9ad71d0af34e75e" category="section-title">增加数据存储库的大小</block>
   <block id="9ae97248366686f76c6f9f6ac9b8d073" category="paragraph">卷重新调整和动态服务级别更改对SDDC是完全透明的。在Azure NetApp Files 中、这些功能可实现持续的性能、容量和成本优化。通过从Azure Portal调整卷大小或使用命令行界面来增加NFS数据存储库的大小。完成后、访问vCenter、转到数据存储库选项卡、右键单击相应的数据存储库、然后选择刷新容量信息。此方法可用于增加数据存储库容量、并以动态方式提高数据存储库的性能、而不会造成停机。此过程对于应用程序也是完全透明的。</block>
   <block id="264b475cf0374b319edf3b094fe25874" category="list-text">通过卷重新调整和动态服务级别功能、您可以针对稳定状态的工作负载进行规模估算、从而优化成本、从而避免过度配置。</block>
-  <block id="c38ea7c6c5e1aef9a1df0cebd81737d9" category="list-text">在公有 预览期间、未启用VAAI。</block>
   <block id="35084d885dea7b061e6894c1cf3036d9" category="section-title">工作负载</block>
   <block id="f7458ac9343d5418ff038f156d9b29fc" category="paragraph">迁移是最常见的使用情形之一。使用VMware HCX或vMotion移动内部VM。或者、您也可以使用Riverbadow.将VM迁移到Azure NetApp Files 数据存储库。</block>
   <block id="36e402ac6b1a4b9a31bd376a7f89c68e" category="paragraph">备份VM并快速恢复VM是ANF数据存储库的主要优势之一。使用Snapshot副本在不影响性能的情况下快速创建虚拟机或数据存储库的副本、然后将其发送到Azure存储以实现长期数据保护、或者使用跨区域复制将其发送到二级区域以实现灾难恢复。这种方法只存储更改后的信息，从而最大限度地减少存储空间和网络带宽。</block>
@@ -14374,7 +14359,6 @@
   <block id="477aa009d1d8f0ca50a38092473e92c8" category="paragraph">本文档将指导您完成在AWS上将适用于ONTAP 的FSX配置和连接为适用于VMware Cloud的NFS数据存储库所需的步骤。</block>
   <block id="dfc876546f6dc1183356f103bca8c9bf" category="section-title">连接选项</block>
   <block id="96ebe87ba2bf6e2436936fad5261faee" category="paragraph">本节介绍了高级连接架构以及实施解决方案 以扩展SDDC集群中的存储而无需添加其他主机所需的步骤。</block>
-  <block id="373604cc33724c808b5ea035d2c5d911" category="paragraph">适用于NetApp ONTAP 的Amazon FSX是一种完全托管的服务、可提供基于常见NetApp ONTAP 文件系统构建的高度可靠、可扩展、高性能和功能丰富的文件存储。Amazon FSX for NetApp ONTAP (Multi-AZ)使用浮动IP地址、在可用性区域级别出现故障时、可为NAS流量提供故障转移功能。此IP地址不在VPC CIDR地址空间内、因此无法通过ENI路由到SDDC。因此、应使用VMware Transit Connect连接到NAS接口的浮动IP地址。</block>
   <block id="f86935ff4bae98bba5454898ea941c13" category="paragraph"><block ref="f86935ff4bae98bba5454898ea941c13" category="inline-image-macro-rx" type="image"></block></block>
   <block id="b5dfb62423539055e813d9c1ad0de5ec" category="paragraph">高级部署步骤如下：</block>
   <block id="a7e048390e1de16427d130135387bbfa" category="list-text">在新的指定VPC中创建适用于ONTAP 的Amazon FSx。</block>
@@ -16855,4 +16839,18 @@
   <block id="0a6f7f4424be62bd8f9208328496eeaf" category="inline-link-macro"><block ref="0a6f7f4424be62bd8f9208328496eeaf" category="inline-link-rx"></block></block>
   <block id="b898d8d538a4529dfdb2b8bf025323c2" category="paragraph"><block ref="b898d8d538a4529dfdb2b8bf025323c2" category="inline-link-macro-rx"></block></block>
   <block id="db297dc3a6b72858a5039fa6507a2b34" category="paragraph">Sathish Thyagarajan、David Arnette、NetApp Mircea Troaca、Lenovo</block>
+  <block id="c12ff13215c1f6de4c6dad4b8a475398" category="paragraph">【下划线】#* SQL Server数据库视频*</block>
+  <block id="b4aaa3fbc0d85cfa527c7cb7f59187fd" category="video-title">使用适用于NetApp ONTAP 的Amazon FSX在AWS EC2上部署SQL Server</block>
+  <block id="785e5e204bcb101e73976a8c3ad22887" category="paragraph">要了解有关此过程的更多信息、请观看以下视频：</block>
+  <block id="c91dcf7c665570f3603fa32cb3a8c644" category="list-text">如果需要、可对容量受限的工作负载使用高级或标准层、而对性能受限的工作负载使用超高级或标准层、同时对默认vSAN存储进行补充。</block>
+  <block id="60ce6ba5fcd445684c9982883f234b8c" category="paragraph">要了解按大小或配额显示的Azure NetApp Files 卷性能、请参见 <block ref="62d66f64400ed6e4ba5e012bbe140a31" category="inline-link-macro-rx"></block>。</block>
+  <block id="a01ca5d7b443422e0bc655c4d457707f" category="inline-link-macro">Microsoft提供的链接</block>
+  <block id="37028a2422f1f35ed56a07f1003896d1" category="admonition">可以使用Azure门户将Azure NetApp Files 卷附加到您的私有云。请遵循此操作 <block ref="c627cf01abf17d7b29d4322a9f16e21d" category="inline-link-macro-rx"></block> 使用Azure门户挂载Azure NetApp Files 数据存储库的分步方法。</block>
+  <block id="7dfe1e95238cceec93165ab8ff605d28" category="paragraph">请参见此部分 <block ref="06f6144b70bdd3c5a376672271533656" category="inline-link-macro-rx"></block> 了解可在规模估算过程中使用的详细性能基准。</block>
+  <block id="b1404b6b3614fe54358fb1bdb8bd294a" category="list-text">使用数据存储库卷的高级或标准层可获得最佳容量和性能。如果需要性能、则可以使用超层。</block>
+  <block id="1048ee221e43763386324d16721681fc" category="list-text">对于子系统挂载要求、请使用高级或超高级层；对于子系统VM的文件共享要求、请使用标准或高级层卷。</block>
+  <block id="e421004f0e3e2303f272ef4b0fa6c089" category="list-text">对于具有"标准"网络功能的Azure NetApp Files 卷、支持ExpressRoute快速路径。启用此选项后、FastPath将网络流量直接发送到Azure NetApp Files 卷、从而绕过网关、从而提供更高的带宽和更低的延迟。</block>
+  <block id="80a4a92a47a4b87bb9d0fcf9ded1dda8" category="list-text">未启用VAAI。</block>
+  <block id="94e2529c9624e06356bacdc7dc76dab9" category="admonition">有关如何使用ANF数据存储库的信息、请联系您所在地区的NetApp或Microsoft解决方案 架构师以获取追加信息。</block>
+  <block id="a8a748d1990bd3dbc648c22396cec9c4" category="admonition">基于AWS的VMware Cloud支持适用于ONTAP 的FSX的多AZ和单AZ部署。</block>
 </blocks>

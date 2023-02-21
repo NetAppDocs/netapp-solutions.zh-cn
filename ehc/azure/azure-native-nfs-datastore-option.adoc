@@ -86,9 +86,6 @@ NOTE: 与子系统内存储一起使用的子系统VM必须单独计算；但是
 
 NOTE: 为了获得最佳性能、请将Azure NetApp Files 部署在与私有云相同的可用性区域中。与Express路由快速路径的主机代管可提供最佳性能、并将网络延迟降至最低。
 
-
-NOTE: 此功能当前处于公有 预览模式。
-
 要将Azure NetApp文件卷作为Azure VMware解决方案 私有云的VMware数据存储库附加、请确保满足以下前提条件。
 
 .前提条件
@@ -167,7 +164,7 @@ image:vmware-dr-image3.png["错误：缺少图形映像"]
 
  a| 
 * Azure NetApp Files 上的数据存储库支持NFSv3。
-* 使用高级版或超高级版可获得最佳性能。
+* 如果需要、可对容量受限的工作负载使用高级或标准层、而对性能受限的工作负载使用超高级或标准层、同时对默认vSAN存储进行补充。
 
 
 |===
@@ -177,12 +174,15 @@ image:vmware-dr-image3.png["错误：缺少图形映像"]
 
 image:vmware-dr-image4.png["错误：缺少图形映像"]
 
-要了解按大小或配额显示的Azure NetApp Files 卷性能、请参见 https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-performance-considerations["Azure NetApp Files 的性能注意事项"^]。
+要了解按大小或配额显示的Azure NetApp Files 卷性能、请参见 link:https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-performance-considerations["Azure NetApp Files 的性能注意事项"^]。
 
 ====
 .将Azure NetApp Files 数据存储库添加到私有云
 [%collapsible]
 ====
+
+NOTE: 可以使用Azure门户将Azure NetApp Files 卷附加到您的私有云。请遵循此操作 link:https://learn.microsoft.com/en-us/azure/azure-vmware/attach-azure-netapp-files-to-azure-vmware-solution-hosts?tabs=azure-portal["Microsoft提供的链接"] 使用Azure门户挂载Azure NetApp Files 数据存储库的分步方法。
+
 要将Azure NetApp Files 数据存储库添加到私有云、请完成以下步骤：
 
 . 注册所需功能后、运行相应的命令将NFS数据存储库连接到Azure VMware解决方案 私有云集群。
@@ -230,13 +230,15 @@ image:vmware-dr-image6.png["错误：缺少图形映像"]
 
 有关详细信息，请参见 https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-service-levels["Azure NetApp Files 的服务级别"^]。
 
+请参见此部分 link:https://learn.microsoft.com/en-us/azure/azure-netapp-files/performance-benchmarks-azure-vmware-solution["Microsoft提供的链接"] 了解可在规模估算过程中使用的详细性能基准。
+
 |===
 | 需要记住的要点 
 
 
  a| 
-* 使用数据存储库卷的高级或超高级层可获得最佳性能。
-* 要了解子虚拟机的文件共享要求、请使用标准或高级层卷。
+* 使用数据存储库卷的高级或标准层可获得最佳容量和性能。如果需要性能、则可以使用超层。
+* 对于子系统挂载要求、请使用高级或超高级层；对于子系统VM的文件共享要求、请使用标准或高级层卷。
 
 
 |===
@@ -250,6 +252,8 @@ image:vmware-dr-image6.png["错误：缺少图形映像"]
 
 为了提高带宽、最佳做法是使用多个ANF卷创建多个数据存储库、创建VMDK并在VMDK之间对逻辑卷进行条带化。
 
+请参见此部分 link:https://learn.microsoft.com/en-us/azure/azure-netapp-files/performance-benchmarks-azure-vmware-solution["Microsoft提供的链接"] 了解可在规模估算过程中使用的详细性能基准。
+
 |===
 | 需要记住的要点 
 
@@ -258,30 +262,7 @@ image:vmware-dr-image6.png["错误：缺少图形映像"]
 * 默认情况下、Azure VMware解决方案 允许八个NFS数据存储库。可以通过支持请求来增加此数量。
 * 利用ER快速通道和超SKU提高带宽并降低延迟。更多信息
 * 借助Azure NetApp Files 中的"基本"网络功能、Azure VMware解决方案 的连接受ExpressRoute电路和ExpressRoute网关的带宽限制。
-* 对于具有"标准"网络功能的Azure NetApp Files 卷(当前处于公有 预览模式)、支持ExpressRoute快速路径。启用此选项后、FastPath将网络流量直接发送到Azure NetApp Files 卷、从而绕过网关、从而提供更高的带宽和更低的延迟。
-
-
-|===
-
-
-== 性能优化
-
-虽然每个NFS数据存储库建议的虚拟机数量是主观的、但许多因素决定了可以放置在每个数据存储库上的最佳VM数量。虽然大多数管理员仅考虑容量、但发送到VMDK的并发I/O量是影响整体性能的最重要因素之一。ESXi主机具有多种机制、可确保虚拟机争用数据存储库资源时保持公平。但是、控制性能的最简单方法是、对每个数据存储库上放置的虚拟机数量进行限制。如果并发虚拟机I/O模式向数据存储库发送的流量过多、则磁盘队列将填满、并生成较高的延迟。
-
-
-
-== 卷和数据存储库规模估算
-
-在Azure NetApp Files 上为数据存储库创建卷时、最佳做法是创建的卷不超过所需大小。尽管最大卷大小可以高达100 TB、但NetApp建议从较小的数据存储库容量开始、并根据需要增加该容量。对数据存储库进行适当规模估算可防止意外在数据存储库上放置过多虚拟机、并降低资源争用的可能性。由于在虚拟机需要额外容量时可以轻松增加数据存储库和VMDK大小、因此创建的数据存储库不必超过所需大小。为了获得最佳性能、最佳实践是增加数据存储库数量、而不是增加其大小。
-
-|===
-| 需要记住的要点 
-
-
- a| 
-* ANF NFS数据存储库的大小合适、从4 TB到8 TB不等。
-* 在一个数据存储库上放置15到20个VM。根据虚拟机要求、此数量可以增加到35-40个虚拟机。
-* 为了获得最佳性能和易管理性、请考虑使用子系统管理的文件系统、例如数据库等高I/O应用程序的NFS/SMB文件系统。
+* 对于具有"标准"网络功能的Azure NetApp Files 卷、支持ExpressRoute快速路径。启用此选项后、FastPath将网络流量直接发送到Azure NetApp Files 卷、从而绕过网关、从而提供更高的带宽和更低的延迟。
 
 
 |===
@@ -297,7 +278,7 @@ image:vmware-dr-image6.png["错误：缺少图形映像"]
 
  a| 
 * 通过卷重新调整和动态服务级别功能、您可以针对稳定状态的工作负载进行规模估算、从而优化成本、从而避免过度配置。
-* 在公有 预览期间、未启用VAAI。
+* 未启用VAAI。
 
 
 |===

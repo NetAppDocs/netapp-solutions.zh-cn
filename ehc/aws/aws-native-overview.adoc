@@ -34,9 +34,10 @@ NOTE: VMware也提供了此解决方案。请访问 link:https://vmc.techzone.vm
 
 == 连接选项
 
-本节介绍了高级连接架构以及实施解决方案 以扩展SDDC集群中的存储而无需添加其他主机所需的步骤。
 
-适用于NetApp ONTAP 的Amazon FSX是一种完全托管的服务、可提供基于常见NetApp ONTAP 文件系统构建的高度可靠、可扩展、高性能和功能丰富的文件存储。Amazon FSX for NetApp ONTAP (Multi-AZ)使用浮动IP地址、在可用性区域级别出现故障时、可为NAS流量提供故障转移功能。此IP地址不在VPC CIDR地址空间内、因此无法通过ENI路由到SDDC。因此、应使用VMware Transit Connect连接到NAS接口的浮动IP地址。
+NOTE: 基于AWS的VMware Cloud支持适用于ONTAP 的FSX的多AZ和单AZ部署。
+
+本节介绍了高级连接架构以及实施解决方案 以扩展SDDC集群中的存储而无需添加其他主机所需的步骤。
 
 image:fsx-nfs-image1.png["错误：缺少图形映像"]
 
