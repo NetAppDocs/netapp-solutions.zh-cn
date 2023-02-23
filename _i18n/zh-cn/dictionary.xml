@@ -4524,7 +4524,6 @@
   <block id="cf04feec36847ba9c9671b28661cd1fc" category="sidebar">NetApp 解决方案文档</block>
   <block id="38d9ffc674675d65fbb8aabd7e47acd3" category="sidebar">FlexPod 解决方案</block>
   <block id="3523ec156cfc8217bb64d1273e5663fa" category="sidebar">关于 NetApp 解决方案</block>
-  <block id="91770f038cd944a1d3b9b347edeb2b10" category="sidebar">新增功能</block>
   <block id="74bef786b12cb9d03a6c04df1f605181" category="sidebar">NetApp DataOps 工具包</block>
   <block id="17c3771ed0b6c1ae15740eff715e9922" category="sidebar">视频和演示</block>
   <block id="0333ddced253ee1c6929eda5612dea92" category="sidebar">请求自动化</block>
@@ -16853,4 +16852,104 @@
   <block id="80a4a92a47a4b87bb9d0fcf9ded1dda8" category="list-text">未启用VAAI。</block>
   <block id="94e2529c9624e06356bacdc7dc76dab9" category="admonition">有关如何使用ANF数据存储库的信息、请联系您所在地区的NetApp或Microsoft解决方案 架构师以获取追加信息。</block>
   <block id="a8a748d1990bd3dbc648c22396cec9c4" category="admonition">基于AWS的VMware Cloud支持适用于ONTAP 的FSX的多AZ和单AZ部署。</block>
+  <block id="c3b1da56e0792b4ce28bc91a4bf79841" category="inline-link-macro">使用VMware HCX将工作负载迁移到NetApp Cloud Volume Service NFS数据存储库</block>
+  <block id="c2dd2858771476e1bd26526be2c1f5ad" category="list-text"><block ref="c2dd2858771476e1bd26526be2c1f5ad" category="inline-link-macro-rx"></block></block>
+  <block id="7ca47d49ee6c57c993203315ea11c82b" category="doc">使用VMware HCX -快速入门指南将工作负载迁移到Google Cloud VMware Engine上的NetApp Cloud Volume Service数据存储库</block>
+  <block id="925d41ba352b91ef0de674e109988a23" category="section-title">概述：迁移具有VMware HCX、NetApp Cloud Volume Service数据存储库和Google Cloud VMware Engine (GCVE)的虚拟机</block>
+  <block id="ecca6d9dd6ca6c76191faa472f8c6df9" category="paragraph">Google Cloud VMware引擎和Cloud Volume Service数据存储库最常见的使用情形之一是迁移VMware工作负载。VMware HCX是首选选项、可通过各种迁移机制将内部虚拟机(VM)及其数据移动到Cloud Volume Service NFS数据存储库。</block>
+  <block id="d5230db8260d991194ad332af34aa9de" category="paragraph">VMware HCX主要是一个迁移平台、旨在简化应用程序迁移、工作负载重新平衡、甚至跨云实现业务连续性。它是Google Cloud VMware Engine Private Cloud的一部分、提供了多种迁移工作负载的方法、可用于灾难恢复(DR)操作。</block>
+  <block id="cac5c7468f43bdedfbaa5b47e384516c" category="paragraph">本文档分步指导您配置Cloud Volume Service数据存储库、然后下载、部署和配置VMware HCX、包括内部部署和Google Cloud VMware Engine端的所有主要组件、包括互连、网络扩展和WAN优化、以启用各种VM迁移机制。</block>
+  <block id="256044a3a14b99a48569af0ee614f2c4" category="admonition">VMware HCX可用于任何数据存储库类型、因为迁移是在VM级别进行的。因此、本文档适用于计划通过Google Cloud VMware Engine部署Cloud Volume Service以实现经济高效的VMware云部署的现有NetApp客户和非NetApp客户。</block>
+  <block id="b0568534d9aa25692e3a5fe6337361bc" category="paragraph">此列表概括介绍了将VM与内部HCX Connector配对并迁移到Google Cloud VMware Engine端的HCX Cloud Manager所需的步骤：</block>
+  <block id="08ac9dd8c46a01de111ff552302c4b8b" category="list-text">通过Google VMware引擎门户准备HCX。</block>
+  <block id="c51c3de337c64144b065b508d7092f70" category="list-text">将内部VMware HCX Connector与Google Cloud VMware Engine HCX Cloud Manager配对。</block>
+  <block id="b8da85496a56d9f8f2c4db60c06b6c4a" category="paragraph">开始之前、请确保满足以下前提条件。有关详细信息，请参见此<block ref="d195855fe41d7993983c9e07318b9bad" category="inline-link-rx"></block>。满足包括连接在内的前提条件后、从Google Cloud VMware Engine门户下载HCX许可证密钥。下载OVA安装程序后、按如下所述继续安装过程。</block>
+  <block id="e2f64bf47a1540374c40a3ede73573e5" category="admonition">默认选项为HCX高级版、VMware HCX Enterprise版本也可通过支持服务单获得、并且无需额外付费。请参见<block ref="d860d3a39c377ffee7e9262276d5a062" category="inline-link-rx"></block></block>
+  <block id="8cea371309574d6004c96292961aae25" category="inline-link">Google链接</block>
+  <block id="2fe1711b46889920c53ebb512b61bc78" category="list-text">使用现有Google Cloud VMware Engine软件定义的数据中心(SDDC)或使用此功能创建私有云<block ref="e829d3b8e1188066e830ce55cc4a4e51" category="inline-link-rx"></block> 或这一点<block ref="a00f1cbf0fed787208cc1bff752e650f" category="inline-link-rx"></block>。</block>
+  <block id="792178f6051d02890db289c3d249504a" category="inline-link">设置Cloud VPN或Cloud Interconnect连接</block>
+  <block id="136020259e42699a5f3259ade2d1a34f" category="list-text">从启用了VMware vSphere的内部数据中心迁移VM和关联数据需要从数据中心到SDDC环境的网络连接。迁移工作负载之前、<block ref="bef4838acfa84f7c195dab1fed38f189" category="inline-link-rx"></block> 在内部环境和相应的私有云之间。</block>
+  <block id="b62ace404956042129e3b88bdf88cc9d" category="list-text">从内部VMware vCenter Server环境到Google Cloud VMware Engine私有云的网络路径必须支持使用vMotion迁移VM。</block>
+  <block id="20ced0e16abf47f28e1313f368ad6f6f" category="list-text">确保满足所需<block ref="75de7fce953864ac8abf1081d395e485" category="inline-link-rx"></block> 允许内部vCenter Server与SDDC vCenter之间的vMotion流量。</block>
+  <block id="2991589cdf3c2d6d60db9953585e1b04" category="list-text">Cloud Volume Service NFS卷应作为数据存储库挂载到Google Cloud VMware Engine中。请按照本节中详细介绍的步骤进行操作<block ref="5c088b3a89e196aaeb81f75ec6428544" category="inline-link-rx"></block> 将Cloud Volume Service数据存储库连接到Google Cloud VMware Engines主机。</block>
+  <block id="4d74daf8e004df493e26c50161d35bd9" category="paragraph">出于测试目的、用于此验证的内部实验室环境通过云VPN进行连接、从而可以在内部连接到Google Cloud VPC。</block>
+  <block id="44197d2707e0d62a7cdddb22b96b5d73" category="paragraph"><block ref="44197d2707e0d62a7cdddb22b96b5d73" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="bdd8ea25a7e8ed9b55cbe0a3d16b342d" category="paragraph">有关HCX的更多详细图表、请参见<block ref="7d6a057cc94389224fa6745cc76b1870" category="inline-link-rx"></block></block>
+  <block id="cd7d4a329d381d6c2399222be4a728d6" category="example-title">第1步：通过Google VMware引擎门户准备HCX</block>
+  <block id="5435b8e0738b76228bad99efecb45790" category="paragraph">在使用VMware Engine配置私有云时、会自动安装HCX Cloud Manager组件。要准备站点配对、请完成以下步骤：</block>
+  <block id="f6f646bebf3c14227b9b610041749d2b" category="list-text">登录到Google VMware引擎门户并登录到HCX Cloud Manager。</block>
+  <block id="f3c4e020173d4055af3d73eabb546a5f" category="inline-image-macro">通过GCVE资源上的链接访问HCX控制台</block>
+  <block id="d481d49ad5e07c065daa1b652e1e93f6" category="inline-image-macro">使用FQDN链接访问HCX控制台</block>
+  <block id="1509189c3a021030c9c75afd5e0ee142" category="paragraph">您可以通过单击HCX版本链接登录到HCX控制台<block ref="e0eabfd77e9b6a166bd62bce317f2ca6" category="inline-image-macro-rx" type="image"></block>或者单击vSphere Management Network选项卡下的HCX FQDN。<block ref="1bc7b537d1e927f2f5e06674a9fb9636" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="72580ca988ce9234d221d19195a8ced9" category="list-text">在HCX Cloud Manager中、转到*管理&gt;系统更新*。</block>
+  <block id="4477d36b1c0d580b9493616b9a3cdc6a" category="inline-image-macro">请求下载链接</block>
+  <block id="e3428ddcd1ea8611a819b5a63134abdd" category="list-text">单击*请求下载链接*并下载OVA文件。<block ref="b27b0af334d354a85d901dbf7f557880" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7b2574bff5f52ebae3e52462b6f64628" category="list-text">将HCX Cloud Manager更新为可从HCX Cloud Manager UI获得的最新版本。</block>
+  <block id="71c11944a5e7c7a2e01d85bf931a4e0c" category="paragraph">要使内部连接器连接到Google Cloud VMware Engine中的HCX Manager、请确保在内部环境中打开相应的防火墙端口。</block>
+  <block id="cded3ab78e1131b2cb252673847fc8cd" category="list-text">按照上一步所述、从Google Cloud VMware Engine上的HCX控制台下载ova。</block>
+  <block id="80177ed47e2799b2f8133ec987c4f413" category="paragraph"><block ref="80177ed47e2799b2f8133ec987c4f413" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2f35d393de16f7f328d28c3c3f9a36fd" category="paragraph">有关分步说明、请参见<block ref="6281ad4977a05e5987f07e864fefe4fe" category="inline-link-rx"></block>。</block>
+  <block id="3981acf431a0cb2b387f1fc62e246114" category="paragraph">在内部部署VMware HCX Connector OVA并启动设备后、请完成以下步骤以激活HCX Connector。从Google Cloud VMware Engine门户生成许可证密钥、并在VMware HCX Manager中激活它。</block>
+  <block id="842413b7e215b2d5b82a5bb3dd7a07cd" category="inline-image-macro">下载HCX许可证</block>
+  <block id="61b61b56e3a9ddaa25f900492dbfaafc" category="list-text">在VMware引擎门户中、单击资源、选择私有云、然后*单击HCX Manager Cloud Version*下的下载图标。<block ref="be9330ae20074d9fd27022c3077c5923" category="inline-image-macro-rx" type="image"></block>打开下载的文件并复制许可证密钥字符串。</block>
+  <block id="8680173d99521ba5a429ed524d3615e3" category="admonition">使用在OVA部署期间定义的hcxmanagerIP和密码。</block>
+  <block id="35c93ae128c86187e819ac86d8df4979" category="list-text">在*配置SSE/PSC*下、提供平台服务控制器(PSC)的FQDN或IP地址、然后单击*继续*。</block>
+  <block id="6098ad379dba0c94396b9b690b83b1b0" category="admonition">对于嵌入式PSC、输入VMware vCenter Server FQDN或IP地址。</block>
+  <block id="09bf9812f77e2e14861b7f3360ca026c" category="paragraph"><block ref="09bf9812f77e2e14861b7f3360ca026c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b23a293b550e17ca6e836b05c01b4a76" category="example-title">第4步：将内部VMware HCX Connector与Google Cloud VMware Engine HCX Cloud Manager配对</block>
+  <block id="47234b871b1edd33168f7394e72a5b4d" category="paragraph">在内部vCenter上部署和配置HCX Connector后、通过添加配对来建立与Cloud Manager的连接。要配置站点配对、请完成以下步骤：</block>
+  <block id="594e3fbccf355af479f921ff2a455e68" category="list-text">要在内部vCenter环境和Google Cloud VMware Engine SDDC之间创建站点对、请登录到内部vCenter Server并访问新的HCX vSphere Web Client插件。</block>
+  <block id="bf29c65588093243bdcd92d7e57d228c" category="paragraph"><block ref="bf29c65588093243bdcd92d7e57d228c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1b3c5cdedf84c785d5ee65ca00324e36" category="admonition">输入拥有云所有者角色特权的用户访问私有云的Google Cloud VMware Engine HCX Cloud Manager URL或IP地址以及凭据。</block>
+  <block id="6b5c33ae4600df59658bcd86a24ca532" category="inline-image-macro">CloudOwner角色的URL或IP地址和凭据屏幕截图。</block>
+  <block id="b7b6a499bbb533c0e3da098fa71d75c8" category="paragraph"><block ref="b7b6a499bbb533c0e3da098fa71d75c8" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a3874f23d22312a1be0f07b98dda866c" category="paragraph"><block ref="a3874f23d22312a1be0f07b98dda866c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="593c226b2f1fa412557c01630aaaafa0" category="paragraph"><block ref="593c226b2f1fa412557c01630aaaafa0" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="575a0d0e1243eeff47338ea176157139" category="inline-image-macro">网络配置文件的屏幕截图。</block>
+  <block id="47a6f72e73b15b7be0f3c4cf577c9229" category="paragraph"><block ref="47a6f72e73b15b7be0f3c4cf577c9229" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="179a1380fec15d2ca58ae44d36bc70ea" category="list-text">在*互连*选项中选择*服务网格*选项卡以创建服务网格、然后选择内部站点和GCVE SDDC站点。</block>
+  <block id="4200f06936ac63230a0663a772209a07" category="paragraph"><block ref="4200f06936ac63230a0663a772209a07" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="347a982d83a0b2cce2d1ec814a70ae8f" category="inline-image-macro">vSphere客户端互连页面上的HCX设备的屏幕截图。</block>
+  <block id="26c83c715efad97126cacdaebf25d274" category="paragraph"><block ref="26c83c715efad97126cacdaebf25d274" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="070b97376b0c0aea0c9cb598600c4662" category="paragraph">可以使用各种VMware HCX迁移技术在内部部署和GCVE SDDC之间双向迁移工作负载。可以使用多种迁移技术将VM移入和移出VMware HCX激活的实体、例如HCX批量迁移、HCX vMotion、HCX冷迁移、HCX复制辅助vMotion (适用于HCX Enterprise版本)和HCX操作系统辅助迁移(适用于HCX Enterprise版本)。</block>
+  <block id="a50268e48a4ee751d804978922edf189" category="paragraph">要了解有关各种HCX迁移机制的更多信息、请参见<block ref="78adb493f3638835899da003743379e3" category="inline-link-rx"></block>。</block>
+  <block id="de5218d95fb66ad99c822109709a45af" category="paragraph">* HCX vMotion*</block>
+  <block id="803853313afe589d091d3f55583d78c2" category="paragraph">本节介绍HCX vMotion机制。此迁移技术使用VMware vMotion协议将VM迁移到GCVE。vMotion迁移选项用于一次迁移单个VM的VM状态。此迁移方法期间不会发生服务中断。</block>
+  <block id="6b253c8fd6849183f558040da38608cb" category="paragraph"><block ref="6b253c8fd6849183f558040da38608cb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="844c529dbe1866abc23447f68eb60ba6" category="list-text">在迁移虚拟机向导中、选择远程站点连接(目标GCVE)。</block>
+  <block id="4e862b96a802868c38004aa7c404252b" category="paragraph"><block ref="4e862b96a802868c38004aa7c404252b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d2a3abee640eaa37034e3ce3f7b7075e" category="list-text">更新必填字段(集群、存储和目标网络)、然后单击验证。</block>
+  <block id="dbccaf1da09c1555918b6548737f4c62" category="paragraph"><block ref="dbccaf1da09c1555918b6548737f4c62" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6a88d0b48c0e4e339e4f73353d906d12" category="admonition">vMotion传输会捕获VM活动内存、其执行状态、IP地址及其MAC地址。有关HCX vMotion的要求和限制的详细信息、请参见<block ref="23e132bfd0fa1c0804ce8b87a8fad5cd" category="inline-link-rx"></block>。</block>
+  <block id="9292100550c5fda83387e2e78b8a2a2a" category="paragraph"><block ref="9292100550c5fda83387e2e78b8a2a2a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="38f70a328b4ae90f9650bc4c029b6a3f" category="admonition">目标CVS NFS数据存储库应具有足够的空间来处理迁移。</block>
+  <block id="2de1e2776c8a8d3b752e50dc8c6550df" category="paragraph">无论您的目标是全云还是混合云、以及驻留在内部任何类型/供应商存储上的数据、Cloud Volume Service和HCX都可以提供出色的选项来部署和迁移应用程序工作负载、同时通过将数据需求无缝地迁移到应用程序层来降低TCO。无论使用何种情形、都可以选择Google Cloud VMware Engine以及Cloud Volume Service、以便快速实现云优势、一致的基础架构以及跨内部和多个云的运营、工作负载的双向可移植性以及企业级容量和性能。使用VMware vSphere复制、VMware vMotion甚至网络文件复制(Network File Copy、NFCs)连接存储和迁移VM时、使用的过程与步骤相同。</block>
+  <block id="6bb8d723218f4efa76cd05165c603ac6" category="list-text">现在、您可以在Google Cloud VMware Engine SDDC上使用Cloud Volume Service作为数据存储库。</block>
+  <block id="06b37831abeee3229c61a3285dc4100c" category="list-text">您可以轻松地将数据从内部迁移到Cloud Volume Service数据存储库。</block>
+  <block id="dcb763cc64570798740f3e41b84fff0e" category="list-text">您可以轻松地扩展和缩减Cloud Volume Service数据存储库、以满足迁移活动期间的容量和性能要求。</block>
+  <block id="267029140dfbe181dd69e7d084de9b69" category="section-title">Google和VMware提供的视频供参考</block>
+  <block id="e35dee203b7c81af1f3954054112ba15" category="example-title">来自Google</block>
+  <block id="50144090c2258cae139ecf6022e7367b" category="inline-link-macro">使用GCVE部署HCX Connector</block>
+  <block id="b7b1de0b057bbef976725c6fff3da9b9" category="list-text"><block ref="b7b1de0b057bbef976725c6fff3da9b9" category="inline-link-macro-rx"></block></block>
+  <block id="328f11633999c58a7b282b8632e2797d" category="inline-link-macro">使用GCVE配置HCX ServiceMesh</block>
+  <block id="79cb5f4e657f45df30765c695fd1925a" category="list-text"><block ref="79cb5f4e657f45df30765c695fd1925a" category="inline-link-macro-rx"></block></block>
+  <block id="7a749829f023d0ee25c026f4f6bbba9a" category="inline-link-macro">将具有HCX的VM迁移到GCVE</block>
+  <block id="a53a9cd13cd53b632a558fc3657092ab" category="list-text"><block ref="a53a9cd13cd53b632a558fc3657092ab" category="inline-link-macro-rx"></block></block>
+  <block id="252de7413389db6514f76f43d66fd8e3" category="example-title">来自VMware</block>
+  <block id="13e623e9a14240dd859556650e9b531a" category="inline-link-macro">适用于GCVE的HCX Connector部署</block>
+  <block id="d323fc5e6199a5240de090ee56887d79" category="list-text"><block ref="d323fc5e6199a5240de090ee56887d79" category="inline-link-macro-rx"></block></block>
+  <block id="691fd2fc5f5666a82025c09044b4227e" category="inline-link-macro">适用于GCVE的HCX ServiceMeshy配置</block>
+  <block id="1d057bc0c304f69e3c2b912a056d3823" category="list-text"><block ref="1d057bc0c304f69e3c2b912a056d3823" category="inline-link-macro-rx"></block></block>
+  <block id="f27a9b33e86b3a166fd93f5581d2fd88" category="inline-link-macro">HCX工作负载迁移到GCVE</block>
+  <block id="4ac5ecc506f53d87d5405d25cca52053" category="list-text"><block ref="4ac5ecc506f53d87d5405d25cca52053" category="inline-link-macro-rx"></block></block>
+  <block id="b5375bdf07e11b544fe361d241528cd4" category="list-text">Google Cloud VMware Engine文档</block>
+  <block id="cc7538adb5f65b8e12ceeea77a9fe2b4" category="inline-link"><block ref="cc7538adb5f65b8e12ceeea77a9fe2b4" category="inline-link-rx"></block></block>
+  <block id="c403f0f0cd3710f7ff6a40c31193feef" category="paragraph"><block ref="c403f0f0cd3710f7ff6a40c31193feef" category="inline-link-rx"></block></block>
+  <block id="19e28367f565bf74c0b929f09ffdeb90" category="list-text">Cloud Volume Service文档</block>
+  <block id="87a450a8cc5c8bc3aa98266544b13aeb" category="inline-link"><block ref="87a450a8cc5c8bc3aa98266544b13aeb" category="inline-link-rx"></block></block>
+  <block id="bc99ee2635f4933c3a1ae1a2d397722f" category="paragraph"><block ref="bc99ee2635f4933c3a1ae1a2d397722f" category="inline-link-rx"></block></block>
+  <block id="92cbc7969081067fa7972b77f8b4c803" category="inline-link"><block ref="92cbc7969081067fa7972b77f8b4c803" category="inline-link-rx"></block></block>
+  <block id="dccf3c5043aaab19b4c6eed2cd51be7e" category="paragraph"><block ref="dccf3c5043aaab19b4c6eed2cd51be7e" category="inline-link-rx"></block></block>
+  <block id="16844b6a71b4ccf3790079518b5286c4" category="sidebar">使用VMware HCX将工作负载迁移到NetApp Cloud Volume Service NFS数据存储库</block>
+  <block id="204c2f72244c7b6bb96fa507fcbfdde0" category="sidebar">使用VMware HCX将工作负载迁移到Cloud Volume Service NFS数据存储库</block>
 </blocks>

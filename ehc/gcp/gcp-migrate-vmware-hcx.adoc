@@ -1,0 +1,331 @@
+---
+sidebar: sidebar 
+permalink: ehc/gcp/gcp-migrate-vmware-hcx.html 
+keywords: gcp, gcve, hybrid multicloud, migrate, vmware hcx, hcx, google cloud, enterprise, hybrid, cloud, migration 
+summary:  
+---
+= 使用VMware HCX -快速入门指南将工作负载迁移到Google Cloud VMware Engine上的NetApp Cloud Volume Service数据存储库
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+[role="lead"]
+作者：NetApp Solutions Engineering
+
+
+
+== 概述：迁移具有VMware HCX、NetApp Cloud Volume Service数据存储库和Google Cloud VMware Engine (GCVE)的虚拟机
+
+Google Cloud VMware引擎和Cloud Volume Service数据存储库最常见的使用情形之一是迁移VMware工作负载。VMware HCX是首选选项、可通过各种迁移机制将内部虚拟机(VM)及其数据移动到Cloud Volume Service NFS数据存储库。
+
+VMware HCX主要是一个迁移平台、旨在简化应用程序迁移、工作负载重新平衡、甚至跨云实现业务连续性。它是Google Cloud VMware Engine Private Cloud的一部分、提供了多种迁移工作负载的方法、可用于灾难恢复(DR)操作。
+
+本文档分步指导您配置Cloud Volume Service数据存储库、然后下载、部署和配置VMware HCX、包括内部部署和Google Cloud VMware Engine端的所有主要组件、包括互连、网络扩展和WAN优化、以启用各种VM迁移机制。
+
+
+NOTE: VMware HCX可用于任何数据存储库类型、因为迁移是在VM级别进行的。因此、本文档适用于计划通过Google Cloud VMware Engine部署Cloud Volume Service以实现经济高效的VMware云部署的现有NetApp客户和非NetApp客户。
+
+.高级步骤
+[%collapsible]
+====
+此列表概括介绍了将VM与内部HCX Connector配对并迁移到Google Cloud VMware Engine端的HCX Cloud Manager所需的步骤：
+
+. 通过Google VMware引擎门户准备HCX。
+. 在内部部署的VMware vCenter Server中下载并部署HCX Connector Open Virtualization Appliance (OVA)安装程序。
+. 使用许可证密钥激活HCX。
+. 将内部VMware HCX Connector与Google Cloud VMware Engine HCX Cloud Manager配对。
+. 配置网络配置文件、计算配置文件和服务网格。
+. (可选)执行网络扩展、以避免在迁移期间重新进行IP。
+. 验证设备状态并确保可以进行迁移。
+. 迁移VM工作负载。
+
+
+====
+.前提条件
+[%collapsible]
+====
+开始之前、请确保满足以下前提条件。有关详细信息，请参见此 https://cloud.google.com/vmware-engine/docs/workloads/howto-migrate-vms-using-hcx["链接。"^]。满足包括连接在内的前提条件后、从Google Cloud VMware Engine门户下载HCX许可证密钥。下载OVA安装程序后、按如下所述继续安装过程。
+
+
+NOTE: 默认选项为HCX高级版、VMware HCX Enterprise版本也可通过支持服务单获得、并且无需额外付费。请参见 https://cloud.google.com/blog/products/compute/whats-new-with-google-cloud-vmware-engine["此链接。"^]
+
+* 使用现有Google Cloud VMware Engine软件定义的数据中心(SDDC)或使用此功能创建私有云 https://docs.netapp.com/us-en/netapp-solutions/ehc/gcp/gcp-setup.html["NetApp链接"^] 或这一点 https://cloud.google.com/vmware-engine/docs/create-private-cloud["Google链接"^]。
+* 从启用了VMware vSphere的内部数据中心迁移VM和关联数据需要从数据中心到SDDC环境的网络连接。迁移工作负载之前、 https://cloud.google.com/vmware-engine/docs/networking/howto-connect-to-onpremises["设置Cloud VPN或Cloud Interconnect连接"^] 在内部环境和相应的私有云之间。
+* 从内部VMware vCenter Server环境到Google Cloud VMware Engine私有云的网络路径必须支持使用vMotion迁移VM。
+* 确保满足所需 https://ports.esp.vmware.com/home/VMware-HCX["防火墙规则和端口"^] 允许内部vCenter Server与SDDC vCenter之间的vMotion流量。
+* Cloud Volume Service NFS卷应作为数据存储库挂载到Google Cloud VMware Engine中。请按照本节中详细介绍的步骤进行操作 https://cloud.google.com/vmware-engine/docs/vmware-ecosystem/howto-cloud-volumes-service-datastores["链接。"^] 将Cloud Volume Service数据存储库连接到Google Cloud VMware Engines主机。
+
+
+====
+.高级架构
+[%collapsible]
+====
+出于测试目的、用于此验证的内部实验室环境通过云VPN进行连接、从而可以在内部连接到Google Cloud VPC。
+
+image:gcpd-hcx-image1.png["此图显示了此解决方案 中使用的高级架构。"]
+
+有关HCX的更多详细图表、请参见 https://www.vmware.com/content/dam/digitalmarketing/vmware/en/pdf/products/vmw-google-cloud-vmware-engine-logical-design-poster-for-workload-mobility.pdf["VMware链接"^]
+
+====
+
+
+== 解决方案 部署
+
+按照一系列步骤完成此解决方案 的部署：
+
+.第1步：通过Google VMware引擎门户准备HCX
+[%collapsible]
+====
+在使用VMware Engine配置私有云时、会自动安装HCX Cloud Manager组件。要准备站点配对、请完成以下步骤：
+
+. 登录到Google VMware引擎门户并登录到HCX Cloud Manager。
++
+您可以通过单击HCX版本链接登录到HCX控制台image:gcpd-hcx-image2.png["通过GCVE资源上的链接访问HCX控制台"]或者单击vSphere Management Network选项卡下的HCX FQDN。image:gcpd-hcx-image3.png["使用FQDN链接访问HCX控制台"]
+
+. 在HCX Cloud Manager中、转到*管理>系统更新*。
+. 单击*请求下载链接*并下载OVA文件。image:gcpd-hcx-image4.png["请求下载链接"]
+. 将HCX Cloud Manager更新为可从HCX Cloud Manager UI获得的最新版本。
+
+
+====
+.第2步：在内部vCenter Server中部署安装程序OVA
+[%collapsible]
+====
+要使内部连接器连接到Google Cloud VMware Engine中的HCX Manager、请确保在内部环境中打开相应的防火墙端口。
+
+要在内部vCenter Server中下载并安装HCX Connector、请完成以下步骤：
+
+. 按照上一步所述、从Google Cloud VMware Engine上的HCX控制台下载ova。
+. 下载OVA后、使用*部署OVF模板*选项将其部署到内部VMware vSphere环境中。
++
+image:gcpd-hcx-image5.png["错误：用于选择正确OVA模板的屏幕截图。"]
+
+. 输入OVA部署所需的所有信息、单击*下一步*、然后单击*完成*以部署VMware HCX连接器OVA。
++
+
+NOTE: 手动启动虚拟设备。
+
+
+
+有关分步说明、请参见 https://docs.vmware.com/en/VMware-HCX/4.5/hcx-user-guide/GUID-47774FEA-6BDA-48E5-9D5F-ABEAD64FDDF7.html["《VMware HCX用户指南》"^]。
+
+====
+.第3步：使用许可证密钥激活HCX Connector
+[%collapsible]
+====
+在内部部署VMware HCX Connector OVA并启动设备后、请完成以下步骤以激活HCX Connector。从Google Cloud VMware Engine门户生成许可证密钥、并在VMware HCX Manager中激活它。
+
+. 在VMware引擎门户中、单击资源、选择私有云、然后*单击HCX Manager Cloud Version*下的下载图标。image:gcpd-hcx-image6.png["下载HCX许可证"]打开下载的文件并复制许可证密钥字符串。
+. 登录到内部部署的VMware HCX Manager、网址为 https://hcxmanagerIP:9443["https://hcxmanagerIP:9443"^] 使用管理员凭据。
++
+
+NOTE: 使用在OVA部署期间定义的hcxmanagerIP和密码。
+
+. 在许可中、输入从步骤3复制的密钥、然后单击*激活*。
++
+
+NOTE: 内部HCX连接器应可访问Internet。
+
+. 在*数据中心位置*下、提供最近的位置、以便在内部安装VMware HCX Manager。单击 * 继续 * 。
+. 在*系统名称*下、更新名称并单击*继续*。
+. 单击*是、继续*。
+. 在*连接vCenter *下、提供vCenter Server的完全限定域名(FQDN)或IP地址以及相应的凭据、然后单击*继续*。
++
+
+NOTE: 使用FQDN以避免稍后出现连接问题。
+
+. 在*配置SSE/PSC*下、提供平台服务控制器(PSC)的FQDN或IP地址、然后单击*继续*。
++
+
+NOTE: 对于嵌入式PSC、输入VMware vCenter Server FQDN或IP地址。
+
+. 验证输入的信息是否正确、然后单击*重新启动*。
+. 服务重新启动后、vCenter Server将在显示的页面上显示为绿色。vCenter Server和SSO都必须具有适当的配置参数、这些参数应与上一页相同。
++
+
+NOTE: 此过程大约需要10到20分钟、并且需要将此插件添加到vCenter Server中。
+
++
+image:gcpd-hcx-image7.png["显示已完成过程的屏幕截图。"]
+
+
+
+====
+.第4步：将内部VMware HCX Connector与Google Cloud VMware Engine HCX Cloud Manager配对
+[%collapsible]
+====
+在内部vCenter上部署和配置HCX Connector后、通过添加配对来建立与Cloud Manager的连接。要配置站点配对、请完成以下步骤：
+
+. 要在内部vCenter环境和Google Cloud VMware Engine SDDC之间创建站点对、请登录到内部vCenter Server并访问新的HCX vSphere Web Client插件。
++
+image:gcpd-hcx-image8.png["HCX vSphere Web Client插件的屏幕截图。"]
+
+. 在基础架构下、单击*添加站点配对*。
++
+
+NOTE: 输入拥有云所有者角色特权的用户访问私有云的Google Cloud VMware Engine HCX Cloud Manager URL或IP地址以及凭据。
+
++
+image:gcpd-hcx-image9.png["CloudOwner角色的URL或IP地址和凭据屏幕截图。"]
+
+. 单击 * 连接 * 。
++
+
+NOTE: VMware HCX Connector必须能够通过端口443路由到HCX Cloud Manager IP。
+
+. 创建配对后、新配置的站点配对将显示在HCX信息板上。
++
+image:gcpd-hcx-image10.png["HCX信息板上已完成过程的屏幕截图。"]
+
+
+
+====
+.第5步：配置网络配置文件、计算配置文件和服务网格
+[%collapsible]
+====
+VMware HCX互连服务设备可通过Internet以及与目标站点的专用连接提供复制和基于vMotion的迁移功能。互连可提供加密、流量工程和VM移动性。要创建互连服务设备、请完成以下步骤：
+
+. 在基础架构下、选择*互连>多站点服务网格>计算配置文件>创建计算配置文件*。
++
+
+NOTE: 计算配置文件定义了部署参数、包括部署的设备以及HCL服务可访问的VMware数据中心的哪个部分。
+
++
+image:gcpd-hcx-image11.png["vSphere客户端互连页面的屏幕截图。"]
+
+. 创建计算配置文件后、通过选择*多站点服务网格>网络配置文件>创建网络配置文件*来创建网络配置文件。
++
+网络配置文件定义了HCX用于其虚拟设备的IP地址和网络范围。
+
++
+
+NOTE: 此步骤需要两个或更多IP地址。这些IP地址将从管理网络分配给互连设备。
+
++
+image:gcpd-hcx-image12.png["网络配置文件的屏幕截图。"]
+
+. 此时、已成功创建计算和网络配置文件。
+. 在*互连*选项中选择*服务网格*选项卡以创建服务网格、然后选择内部站点和GCVE SDDC站点。
+. 服务网格用于指定本地和远程计算和网络配置文件对。
++
+
+NOTE: 在此过程中、源站点和目标站点都会部署并自动配置HCX设备、以便创建安全的传输网络结构。
+
++
+image:gcpd-hcx-image13.png["vSphere客户端互连页面上的服务网格选项卡的屏幕截图。"]
+
+. 这是配置的最后一步。完成部署大约需要30分钟。配置服务网格后、环境便已准备就绪、可以成功创建IPsec通道来迁移工作负载VM。
++
+image:gcpd-hcx-image14.png["vSphere客户端互连页面上的HCX设备的屏幕截图。"]
+
+
+
+====
+.第6步：迁移工作负载
+[%collapsible]
+====
+可以使用各种VMware HCX迁移技术在内部部署和GCVE SDDC之间双向迁移工作负载。可以使用多种迁移技术将VM移入和移出VMware HCX激活的实体、例如HCX批量迁移、HCX vMotion、HCX冷迁移、HCX复制辅助vMotion (适用于HCX Enterprise版本)和HCX操作系统辅助迁移(适用于HCX Enterprise版本)。
+
+要了解有关各种HCX迁移机制的更多信息、请参见 https://docs.vmware.com/en/VMware-HCX/4.5/hcx-user-guide/GUID-8A31731C-AA28-4714-9C23-D9E924DBB666.html["VMware HCX迁移类型"^]。
+
+HCX-IX设备使用移动代理服务执行vMotion、冷迁移和复制辅助vMotion (RAV)迁移。
+
+
+NOTE: HCX-IX设备会将移动代理服务添加为vCenter Server中的主机对象。此对象上显示的处理器、内存、存储和网络资源并不表示托管IX设备的物理虚拟机管理程序上的实际消耗量。
+
+* HCX vMotion*
+
+本节介绍HCX vMotion机制。此迁移技术使用VMware vMotion协议将VM迁移到GCVE。vMotion迁移选项用于一次迁移单个VM的VM状态。此迁移方法期间不会发生服务中断。
+
+
+NOTE: 应设置网络扩展(对于VM所连接的端口组)、以便在不更改IP地址的情况下迁移VM。
+
+. 从内部vSphere客户端中、转到清单、右键单击要迁移的虚拟机、然后选择HCX操作>迁移到HCX目标站点。
++
+image:gcpd-hcx-image15.png["错误：缺少图形映像"]
+
+. 在迁移虚拟机向导中、选择远程站点连接(目标GCVE)。
++
+image:gcpd-hcx-image16.png["错误：缺少图形映像"]
+
+. 更新必填字段(集群、存储和目标网络)、然后单击验证。
++
+image:gcpd-hcx-image17.png["错误：缺少图形映像"]
+
+. 验证检查完成后、单击"Go"启动迁移。
++
+
+NOTE: vMotion传输会捕获VM活动内存、其执行状态、IP地址及其MAC地址。有关HCX vMotion的要求和限制的详细信息、请参见 https://docs.vmware.com/en/VMware-HCX/4.5/hcx-user-guide/GUID-517866F6-AF06-4EFC-8FAE-DA067418D584.html["了解VMware HCX vMotion和冷迁移"^]。
+
+. 您可以从"HCX">"迁移"信息板监控vMotion的进度和完成情况。
++
+image:gcpd-hcx-image18.png["错误：缺少图形映像"]
+
+
+
+
+NOTE: 目标CVS NFS数据存储库应具有足够的空间来处理迁移。
+
+====
+
+
+== 结论
+
+无论您的目标是全云还是混合云、以及驻留在内部任何类型/供应商存储上的数据、Cloud Volume Service和HCX都可以提供出色的选项来部署和迁移应用程序工作负载、同时通过将数据需求无缝地迁移到应用程序层来降低TCO。无论使用何种情形、都可以选择Google Cloud VMware Engine以及Cloud Volume Service、以便快速实现云优势、一致的基础架构以及跨内部和多个云的运营、工作负载的双向可移植性以及企业级容量和性能。使用VMware vSphere复制、VMware vMotion甚至网络文件复制(Network File Copy、NFCs)连接存储和迁移VM时、使用的过程与步骤相同。
+
+
+
+== 要点总结
+
+本文档的要点包括：
+
+* 现在、您可以在Google Cloud VMware Engine SDDC上使用Cloud Volume Service作为数据存储库。
+* 您可以轻松地将数据从内部迁移到Cloud Volume Service数据存储库。
+* 您可以轻松地扩展和缩减Cloud Volume Service数据存储库、以满足迁移活动期间的容量和性能要求。
+
+
+
+
+== Google和VMware提供的视频供参考
+
+.来自Google
+[%collapsible]
+====
+* link:https://www.youtube.com/watch?v=xZOtqiHY5Uw["使用GCVE部署HCX Connector"]
+* link:https://youtu.be/2ObPvekMlqA["使用GCVE配置HCX ServiceMesh"]
+* link:https://youtu.be/zQSGq4STX1s["将具有HCX的VM迁移到GCVE"]
+
+
+====
+.来自VMware
+[%collapsible]
+====
+* link:https://youtu.be/EFE5ZYFit3M["适用于GCVE的HCX Connector部署"]
+* link:https://youtu.be/uwRFFqbezIE["适用于GCVE的HCX ServiceMeshy配置"]
+* link:https://youtu.be/4KqL0Rxa3kM["HCX工作负载迁移到GCVE"]
+
+
+====
+
+
+== 从何处查找追加信息
+
+要了解有关本文档中所述信息的更多信息，请访问以下网站链接：
+
+* Google Cloud VMware Engine文档
++
+https://cloud.google.com/vmware-engine/docs/overview/["https://cloud.google.com/vmware-engine/docs/overview"^]
+
+* Cloud Volume Service文档
++
+https://cloud.google.com/architecture/partners/netapp-cloud-volumes["https://cloud.google.com/architecture/partners/netapp-cloud-volumes"^]
+
+* 《VMware HCX用户指南》
++
+https://docs.vmware.com/en/VMware-HCX/index.html["https://docs.vmware.com/en/VMware-HCX/index.html"^]
+
+
