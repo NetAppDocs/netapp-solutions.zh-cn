@@ -19,7 +19,7 @@ VMware上的Anthos集群是Google Kubernetes Engine的扩展、部署在最终�
 
 下图显示了VMware上部署Anthos-clusters的问题描述。
 
-image:a-w-n_anthos_vm_architecture.png["错误：缺少图形映像"]
+image:a-w-n_anthos_controlplanev2_vm_architecture.png["错误：缺少图形映像"]
 
 
 
@@ -59,19 +59,6 @@ VMware vSphere 可提供以下功能：
 
 Google Cloud会定期通过其Anthos Ready平台合作伙伴计划请求更新对包含新版本Anthos的合作伙伴服务器平台的验证。您可以找到当前已验证的服务器平台以及支持的Anthos版本的列表 https://cloud.google.com/anthos/docs/resources/partner-platforms["此处"^]。
 
-下表列出了已由NetApp和NetApp合作伙伴工程师针对VMware部署中的Anthos集群验证进行测试的服务器平台。这些解决方案包括、例如 https://www.netapp.com/data-storage/flexpod/documentation/["NetApp FlexPod"^] Cisco UCS服务器和 https://docs.netapp.com/us-en/hci/["NetApp HCI"^] 混合云基础架构平台。
-
-|===
-
-
-| 制造商 | 创建 | 型号 
-
-
-| Cisco | UCS | B200 M5 
-
-
-| NetApp | HCI | C410 
-|===
 
 
 === 操作系统
@@ -81,13 +68,12 @@ VMware上的Anthos集群可以根据客户的选择部署到vSphere 6和7环境�
 下表列出了NetApp和我们的合作伙伴用于验证解决方案 的vSphere版本。
 
 |===
+
+
 | 操作系统 | 版本。 | Anthos版本 
 
 
-| VMware vSphere | 6.7U3. | 1.11 
-
-
-| VMware vSphere | 7.0U3. | 1.11 
+| VMware vSphere | 7.0U3. | 1.14 
 |===
 
 
@@ -98,16 +84,16 @@ VMware上的Anthos集群可以根据客户的选择部署到vSphere 6和7环境�
 下表提供了有关这些附加基础架构组件的信息。
 
 |===
-| 制造商 | 硬件名称 | 型号 
+| 制造商 | 硬件组件 
 
 
-| Mellanox | 序列号 | 2010年 
+| Mellanox | 交换机(数据网络) 
 
 
-| NetApp | AFF | A250 
+| Cisco | 交换机(管理网络) 
 
 
-| NetApp | HCI | S410 
+| NetApp | AFF 存储系统 
 |===
 
 
@@ -116,26 +102,19 @@ VMware上的Anthos集群可以根据客户的选择部署到vSphere 6和7环境�
 下表列出了在验证环境中部署的软件版本。
 
 |===
+
+
 | 制造商 | 软件名称 | version 
 
 
-| Cisco | UCS | 4.1 (3e) 
+| NetApp | ONTAP | 9.12.1 
 
 
-| NetApp | Element | 12 
-
-
-| NetApp | HCI | 1.8 
-
-
-| NetApp | ONTAP | 9.9.1 
-
-
-| NetApp | Astra Trident | 22.04 
+| NetApp | Astra Trident | 23.01 
 |===
-在NetApp执行Anthos Ready平台验证期间、实验室环境是基于下图构建的、通过该图、我们可以测试多个已部署的用户集群以及多个NetApp存储系统和存储后端。
+在NetApp执行Anthos Ready平台验证期间、实验室环境是基于下图构建的、通过该图、我们可以使用各种NetApp ONTAP 存储后端测试多种场景。
 
-image:a-w-n_anthos_vmware_validation.png["错误：缺少图形映像"]
+image:a-w-n_Anthos-1.14-vsphere7_validation.png["错误：缺少图形映像"]
 
 
 
