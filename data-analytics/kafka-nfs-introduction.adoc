@@ -1,0 +1,65 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/kafka-nfs-introduction.html 
+keywords: tr4947, 4947, introduction, kafka, nfs 
+summary: 本文档介绍以下主题、错误重命名问题和解决方案 验证、降低CPU利用率以缩短I/O等待时间、加快Kafka代理恢复时间以及提高云和内部环境的性能。 
+---
+= TR-4947：Apache Kafka工作负载与NetApp NFS存储—功能验证和性能
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+NetApp公司Shantanu Chakole、Karthikeyan Nagalingam和Joe Scott
+
+[role="lead"]
+Kafka是一个分布式发布订阅消息传送系统、具有一个强大的队列、可以接受大量消息数据。借助Kafka、应用程序可以非常快速地对主题进行数据写入和读取。由于Kafka具有容错能力和可扩展性、因此通常在大数据空间中使用它作为快速载入和移动多个数据流的可靠方式。使用情形包括流处理、网站活动跟踪、指标收集和监控、日志聚合、实时分析等。
+
+虽然NFS上的正常Kafka操作运行良好、但 https://sbg.technology/2018/07/10/kafka-nfs/["重命名操作不明智"^] 在调整NFS上运行的Kafka集群的大小或重新分区期间、问题描述 会使应用程序崩溃。这是一个重要的问题描述 、因为出于负载平衡或维护目的、必须调整Kafka集群的大小或对其进行重新分区。您可以找到其他详细信息 https://www.netapp.com/blog/ontap-ready-for-streaming-applications/["此处"^]。
+
+本文档介绍了以下主题：
+
+* 错误重命名问题和解决方案 验证
+* 降低CPU利用率以缩短I/O等待时间
+* Kafka代理恢复时间更快
+* 云端和内部环境中的性能
+
+
+
+
+== 为什么要对Kafka工作负载使用NFS存储？
+
+生产应用程序中的Kafka工作负载可以在应用程序之间流式传输大量数据。此数据会保留并存储在Kafka集群中的Kafka代理节点中。Kafka也以可用性和并行性而闻名、它通过将主题划分为分区、然后在整个集群中复制这些分区来实现这一点。这最终意味着、流经Kafka集群的大量数据通常会成倍增加。NFS可以随着代理数量的变化轻松快速地重新平衡数据。对于大型环境、在代理数量发生变化时跨DAS重新平衡数据非常耗时、在大多数Kafka环境中、代理数量经常发生变化。
+
+其他优势包括：
+
+* *成熟度。* NFS是一种成熟的协议、这意味着实施、保护和使用NFS的大部分方面都已被充分理解。
+* *开放式* NFS是一种开放式协议、其持续开发已作为一种免费的开放式网络协议记录在互联网规格中。
+* *经济高效。* NFS是一种用于网络文件共享的低成本解决方案 、由于它使用现有网络基础架构、因此易于设置。
+* *集中管理。*集中管理NFS可减少单个用户系统上对添加软件和磁盘空间的需求。
+* *分布式。* NFS可用作分布式文件系统、从而减少了对可移动介质存储设备的需求。
+
+
+
+
+== 为什么选择NetApp来处理Kafka工作负载？
+
+NetApp NFS实施被视为该协议的黄金标准、用于无数企业级NAS环境。除了NetApp的信誉之外、它还具有以下优势：
+
+* 可靠性和效率
+* 可扩展性和性能
+* 高可用性(NetApp ONTAP 集群中的HA配对节点)
+* 数据保护
++
+** *灾难恢复(NetApp SnapMirror)。*您的站点发生故障、或者您希望从其他站点跳转并从您离开的位置继续。
+** 存储系统的易管理性(使用NetApp OnCommand 进行管理和管理)。
+** *负载平衡。*集群允许您从不同节点上托管的数据LIF访问不同的卷。
+** *无中断操作。* LIF或卷移动对NFS客户端是透明的。
+
+
+
+
+link:kafka-nfs-netapp-solution-for-silly-rename-issue-in-nfs-to-kafka-workload.html["接下来：NetApp解决方案 for fly将问题描述 for NFS重命名为Kafka工作负载。"]

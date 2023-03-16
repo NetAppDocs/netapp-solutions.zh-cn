@@ -1,0 +1,31 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/kafka-nfs-netapp-solution-for-silly-rename-issue-in-nfs-to-kafka-workload.html 
+keywords: solution, posix, xfs, ext4, rebalancing 
+summary: 本节介绍了对问题描述 进行的愚蠢重命名以及NFS服务器和NFS客户端为处理问题描述 而需要进行的更改。 
+---
+= NetApp解决方案 for fly将问题描述 for NFS重命名为Kafka工作负载
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:kafka-nfs-introduction.html["上一页：简介。"]
+
+[role="lead"]
+Kafka的构建假定底层文件系统符合POSIX标准：例如XFS或ext4。Kafka资源重新平衡会在应用程序仍在使用文件时删除这些文件。符合POSIX的文件系统允许取消链接以继续。但是、它仅会在对文件的所有引用均消失后删除该文件。如果底层文件系统已通过网络连接、则NFS客户端将截获取消链接调用并管理工作流。由于正在取消链接的文件存在待定打开状态、因此NFS客户端会向NFS服务器发送重命名请求、并在未链接的文件最后一次关闭时对已重命名的文件执行删除操作。此行为通常称为NFS愚蠢的重命名、它由NFS客户端进行编排。
+
+由于此行为、使用NFSv3服务器中存储的任何Kafka代理都会遇到问题。但是、NFSv4.x协议具有一些功能、可以通过允许服务器对打开的未链接文件负责来解决此问题描述。支持此可选功能的NFS服务器会在文件打开时将所有权功能传递给NFS客户端。然后、当打开并等待处理时、NFS客户端将停止取消链接管理、并允许服务器管理此流。虽然NFSv4规范提供了实施准则、但到目前为止、还没有任何已知的NFS服务器实施支持此可选功能。
+
+NFS服务器和NFS客户端需要进行以下更改、才能处理愚蠢的重命名问题描述 ：
+
+* *对NFS客户端(Linux)所做的更改。*打开文件时、NFS服务器会通过一个标志进行响应、指示能够处理已打开文件的解除链接。NFS客户端更改允许NFS服务器在存在标志的情况下处理解除链接。NetApp已使用这些更改更新了开源Linux NFS客户端。更新后的NFS客户端现在在RHEL8.7和RHEL9.1中普遍可用。
+* *对NFS服务器所做的更改。* NFS服务器会跟踪打开情况。现在、服务器会管理现有打开文件的取消链接、以匹配POSIX语义。关闭上次打开的文件后、NFS服务器会启动文件的实际删除、从而避免了愚蠢的重命名过程。ONTAP NFS服务器已在其最新版本ONTAP 9.12.1.中实施此功能。
+
+
+通过对NFS客户端和服务器进行上述更改、Kafka可以安全地获得网络连接NFS存储的所有优势。
+
+link:kafka-nfs-functional-validation-silly-rename-fix.html["下一步：功能验证—错误的重命名修复。"]

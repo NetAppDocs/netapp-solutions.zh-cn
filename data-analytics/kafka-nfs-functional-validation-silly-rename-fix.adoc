@@ -1,0 +1,138 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/kafka-nfs-functional-validation-silly-rename-fix.html 
+keywords: validation setup, architecture flow, testing methodology 
+summary: 在功能验证方面、我们显示了具有NFSv3存储挂载的Kafka集群无法执行分区重新分配等Kafka操作、而具有修复程序的NFSv4上挂载的另一个集群可以执行相同的操作而不会造成任何中断。 
+---
+= 功能验证—错误的重命名修复
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:kafka-nfs-netapp-solution-for-silly-rename-issue-in-nfs-to-kafka-workload.html["先前版本：NetApp解决方案 for fly rename问题描述 in NFS to Kafka workload。"]
+
+[role="lead"]
+在功能验证方面、我们显示了具有NFSv3存储挂载的Kafka集群无法执行分区重新分配等Kafka操作、而具有修复程序的NFSv4上挂载的另一个集群可以执行相同的操作而不会造成任何中断。
+
+
+
+== 验证设置
+
+此设置将在AWS上运行。下表显示了用于验证的不同平台组件和环境配置。
+
+|===
+| 平台组件 | 环境配置 
+
+
+| Confuent Platform 7.2.1版  a| 
+* 3个Zookepers—T3.xlarge
+* 4个代理服务器—r3.xlarge
+* 1个Grafana—T3.xlarge
+* 1个控制中心—T3.xlarge
+* 3个生产者/使用者
+
+
+
+
+| 所有节点上的操作系统 | RHEL8.7或更高版本 
+
+
+| NetApp Cloud Volumes ONTAP 实例 | 单节点实例—M5.2xLarge 
+|===
+下图显示了此解决方案 的架构配置。
+
+image:kafka-nfs-image1.png["此图显示了AWS拓扑、其中包含三个专用子网、分别包含一个生产者Swarm、Kafka集群和CVO实例。"]
+
+
+
+== 架构流程
+
+* *计算。*我们使用了一个四节点Kafka集群、其中三节点Zookeeper集合在专用服务器上运行。
+* *监控。*我们将两个节点用于Prometheus-Grafana组合。
+* *工作负载。*为了生成工作负载、我们使用了一个单独的三节点集群、该集群可以生成并使用此Kafka集群。
+* *存储。*我们使用了一个单节点NetApp Cloud Volumes ONTAP 实例、该实例连接了两个500 GB GP2 AWS-EBS卷。然后、这些卷会通过LIF作为一个NFSv4.1卷公开到Kafka集群中。
+
+
+已为所有服务器选择Kafka的默认属性。Zookeeper Swarm也是如此。
+
+
+
+== 测试方法
+
+. 创建了两个类似的Kafka集群、但差别如下：
++
+** *集群1.*运行生产就绪型ONTAP 9.12.1的后端NFS v4.1服务器由NetApp CVO实例托管。这些代理上安装了RHEL 8.7/RHEL 9.1。
+** *集群2.*后端NFS服务器是手动创建的通用Linux NFSv3服务器。
+
+
+. 在这两个Kafka集群上都创建了一个演示主题。
++
+集群1：
+
++
+image:kafka-nfs-image2.png["此屏幕截图显示了在集群1上创建的演示主题。"]
+
++
+集群2：
+
++
+image:kafka-nfs-image3.png["此屏幕截图显示了在集群2上创建的演示主题。"]
+
+. 数据已加载到这两个集群的新创建主题中。这是使用默认Kafka软件包中提供的producer-perf-test工具包实现的：
++
+....
+./kafka-producer-perf-test.sh --topic __a_demo_topic --throughput -1 --num-records 3000000 --record-size 1024 --producer-props acks=all bootstrap.servers=172.30.0.160:9092,172.30.0.172:9092,172.30.0.188:9092,172.30.0.123:9092
+....
+. 已使用telnet对每个集群的Broker-1执行运行状况检查：
++
+** Telnet `172.30.0.160 9092`
+** Telnet `172.30.0.198 9092`
++
+下一个屏幕截图显示了两个集群上的代理的成功运行状况检查：
+
++
+image:kafka-nfs-image4.png["此屏幕截图显示了对两个代理成功执行运行状况检查时的读取结果。"]
+
+
+
+. 为了触发导致使用NFSv3存储卷的Kafka集群崩溃的故障情况、我们在这两个集群上启动了分区重新分配过程。分区重新分配是使用执行的 `kafka-reassign-partitions.sh`。详细过程如下：
++
+.. 为了为Kafka集群中的某个主题重新分配分区、我们生成了建议的重新分配配置JSON (这是为这两个集群执行的)。
++
+....
+kafka-reassign-partitions --bootstrap-server=172.30.0.160:9092,172.30.0.172:9092,172.30.0.188:9092,172.30.0.123:9092 --broker-list "1,2,3,4" --topics-to-move-json-file /tmp/topics.json --generate
+....
+.. 生成的重新分配JSON随后保存在中 `/tmp/reassignment- file.json`。
+.. 实际分区重新分配过程由以下命令触发：
++
+....
+kafka-reassign-partitions --bootstrap-server=172.30.0.198:9092,172.30.0.163:9092,172.30.0.221:9092,172.30.0.204:9092 --reassignment-json-file /tmp/reassignment-file.json –execute
+....
+
+
+. 在完成重新分配几分钟后、对代理进行的另一项运行状况检查显示、使用NFSv3存储卷的集群运行到一个错误的重命名问题描述 中并发生崩溃、而使用NetApp ONTAP NFSv4.1存储卷的集群1则在修复后继续运行、而不会造成任何中断。
++
+image:kafka-nfs-image5.png["此屏幕截图显示了崩溃代理的输出。"]
+
++
+** cluster1-Broker-1处于活动状态。
+** CLUSTER2-Broker-1已失效。
+
+
+. 检查Kafka日志目录后、可以明显看出、使用NetApp ONTAP NFSv4.1存储卷并进行修复的集群1分配了干净的分区、而使用通用NFSv3存储的集群2则不是由于错误的重命名问题而导致崩溃。下图显示了集群2的分区重新平衡、这会导致在NFSv3存储上对问题描述 进行重命名、操作很不明智。
++
+image:kafka-nfs-image6.png["此屏幕截图显示了集群2崩溃的日志输出。"]
+
++
+下图显示了使用NetApp NFSv4.1存储重新平衡集群1的全新分区。
+
++
+image:kafka-nfs-image7.png["此屏幕截图显示了成功为集群1分配清理分区的日志输出、而"]
+
+
+
+link:kafka-nfs-why-netapp-nfs-for-kafka-workloads.html["下一步：为什么要使用NetApp NFS处理Kafka工作负载？"]

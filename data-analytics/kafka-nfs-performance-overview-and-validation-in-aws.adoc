@@ -1,0 +1,373 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/kafka-nfs-performance-overview-and-validation-in-aws.html 
+keywords: AWS cloud, ha pair, high availability, openmessage benchmarking, architectural setup 
+summary: 基于AWS云中的性能对存储层挂载在NetApp NFS上的Kafka集群进行了基准测试。以下各节将介绍这些基准测试示例。 
+---
+= AWS中的性能概述和验证
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:kafka-nfs-why-netapp-nfs-for-kafka-workloads.html["上一篇：为什么要使用NetApp NFS处理Kafka工作负载？"]
+
+[role="lead"]
+基于AWS云中的性能对存储层挂载在NetApp NFS上的Kafka集群进行了基准测试。以下各节将介绍这些基准测试示例。
+
+
+
+== 采用NetApp Cloud Volumes ONTAP 的AWS云中的Kafka (高可用性对和单节点)
+
+采用NetApp Cloud Volumes ONTAP (HA对)的Kafka集群已通过AWS云性能基准测试。以下各节将介绍此基准测试。
+
+
+
+=== 架构设置
+
+下表显示了使用NAS的Kafka集群的环境配置。
+
+|===
+| 平台组件 | 环境配置 
+
+
+| Kafka 3.2.3  a| 
+* 3个Zookepers—T2.Small
+* 3个代理服务器—i3en.2xlarge
+* 1个Grafana—c5n.2xlarge
+* 4个生产者/使用者—c5n.2xlarge *
+
+
+
+
+| 所有节点上的操作系统 | RHEL8.6 
+
+
+| NetApp Cloud Volumes ONTAP 实例 | HA对实例—m5dn.12x插入x双节点单节点实例—m5dn.12x插入x 1个节点 
+|===
+
+
+=== NetApp集群卷ONTAP 设置
+
+. 对于Cloud Volumes ONTAP HA对、我们在每个存储控制器的每个聚合上创建了两个聚合、其中包含三个卷。对于单个Cloud Volumes ONTAP 节点、我们会在一个聚合中创建六个卷。
++
+image:kafka-nfs-image25.png["此图显示了aggr3和aggr22的属性。"]
+
++
+image:kafka-nfs-image26.png["此图显示了aggr2的属性。"]
+
+. 为了提高网络性能、我们为HA对和单个节点启用了高速网络连接。
++
+image:kafka-nfs-image27.png["此图显示了如何启用高速网络连接。"]
+
+. 我们注意到ONTAP NVRAM的IOPS较多、因此将Cloud Volumes ONTAP 根卷的IOPS更改为2350。Cloud Volumes ONTAP 中的根卷磁盘大小为47 GB。以下ONTAP 命令适用于HA对、同一步骤适用于单个节点。
++
+....
+statistics start -object vnvram -instance vnvram -counter backing_store_iops -sample-id sample_555
+kafka_nfs_cvo_ha1::*> statistics show -sample-id sample_555
+Object: vnvram
+Instance: vnvram
+Start-time: 1/18/2023 18:03:11
+End-time: 1/18/2023 18:03:13
+Elapsed-time: 2s
+Scope: kafka_nfs_cvo_ha1-01
+    Counter                                                     Value
+    -------------------------------- --------------------------------
+    backing_store_iops                                           1479
+Object: vnvram
+Instance: vnvram
+Start-time: 1/18/2023 18:03:11
+End-time: 1/18/2023 18:03:13
+Elapsed-time: 2s
+Scope: kafka_nfs_cvo_ha1-02
+    Counter                                                     Value
+    -------------------------------- --------------------------------
+    backing_store_iops                                           1210
+2 entries were displayed.
+kafka_nfs_cvo_ha1::*>
+....
++
+image:kafka-nfs-image28.png["此图显示了如何修改卷属性。"]
+
+
+
+下图展示了基于NAS的Kafka集群的架构。
+
+* *计算。*我们使用了一个三节点Kafka集群、其中三节点Zookeeper集合在专用服务器上运行。每个代理都通过一个专用LIF与Cloud Volumes ONTAP 实例上的一个卷具有两个NFS挂载点。
+* *监控。*我们将两个节点用于Prometheus-Grafana组合。为了生成工作负载、我们使用了一个单独的三节点集群、该集群可能会生成此Kafka集群并将其占用。
+* *存储。*我们使用了一个HA对Cloud Volumes ONTAP 实例、该实例上挂载了一个6 TB的GP3 AWS-EBS卷。然后、该卷会通过NFS挂载导出到Kafka代理。
+
+
+image:kafka-nfs-image29.png["此图显示了基于NAS的Kafka集群的架构。"]
+
+
+
+=== OpenMessage基准配置
+
+. 为了提高NFS性能、我们需要在NFS服务器和NFS客户端之间建立更多的网络连接、这些连接可以使用nconnect来创建。运行以下命令、使用nconnect选项在代理节点上挂载NFS卷：
++
+....
+[root@ip-172-30-0-121 ~]# cat /etc/fstab
+UUID=eaa1f38e-de0f-4ed5-a5b5-2fa9db43bb38/xfsdefaults00
+/dev/nvme1n1 /mnt/data-1 xfs defaults,noatime,nodiscard 0 0
+/dev/nvme2n1 /mnt/data-2 xfs defaults,noatime,nodiscard 0 0
+172.30.0.233:/kafka_aggr3_vol1 /kafka_aggr3_vol1 nfs defaults,nconnect=16 0 0
+172.30.0.233:/kafka_aggr3_vol2 /kafka_aggr3_vol2 nfs defaults,nconnect=16 0 0
+172.30.0.233:/kafka_aggr3_vol3 /kafka_aggr3_vol3 nfs defaults,nconnect=16 0 0
+172.30.0.242:/kafka_aggr22_vol1 /kafka_aggr22_vol1 nfs defaults,nconnect=16 0 0
+172.30.0.242:/kafka_aggr22_vol2 /kafka_aggr22_vol2 nfs defaults,nconnect=16 0 0
+172.30.0.242:/kafka_aggr22_vol3 /kafka_aggr22_vol3 nfs defaults,nconnect=16 0 0
+[root@ip-172-30-0-121 ~]# mount -a
+[root@ip-172-30-0-121 ~]# df -h
+Filesystem                       Size  Used Avail Use% Mounted on
+devtmpfs                          31G     0   31G   0% /dev
+tmpfs                             31G  249M   31G   1% /run
+tmpfs                             31G     0   31G   0% /sys/fs/cgroup
+/dev/nvme0n1p2                    10G  2.8G  7.2G  28% /
+/dev/nvme1n1                     2.3T  248G  2.1T  11% /mnt/data-1
+/dev/nvme2n1                     2.3T  245G  2.1T  11% /mnt/data-2
+172.30.0.233:/kafka_aggr3_vol1   1.0T   12G 1013G   2% /kafka_aggr3_vol1
+172.30.0.233:/kafka_aggr3_vol2   1.0T  5.5G 1019G   1% /kafka_aggr3_vol2
+172.30.0.233:/kafka_aggr3_vol3   1.0T  8.9G 1016G   1% /kafka_aggr3_vol3
+172.30.0.242:/kafka_aggr22_vol1  1.0T  7.3G 1017G   1% /kafka_aggr22_vol1
+172.30.0.242:/kafka_aggr22_vol2  1.0T  6.9G 1018G   1% /kafka_aggr22_vol2
+172.30.0.242:/kafka_aggr22_vol3  1.0T  5.9G 1019G   1% /kafka_aggr22_vol3
+tmpfs                            6.2G     0  6.2G   0% /run/user/1000
+[root@ip-172-30-0-121 ~]#
+....
+. 在Cloud Volumes ONTAP 中检查网络连接。从单个Cloud Volumes ONTAP 节点使用以下ONTAP 命令。同一步骤也适用于Cloud Volumes ONTAP HA对。
++
+....
+Last login time: 1/20/2023 00:16:29
+kafka_nfs_cvo_sn::> network connections active show -service nfs* -fields remote-host
+node                cid        vserver              remote-host
+------------------- ---------- -------------------- ------------
+kafka_nfs_cvo_sn-01 2315762628 svm_kafka_nfs_cvo_sn 172.30.0.121
+kafka_nfs_cvo_sn-01 2315762629 svm_kafka_nfs_cvo_sn 172.30.0.121
+kafka_nfs_cvo_sn-01 2315762630 svm_kafka_nfs_cvo_sn 172.30.0.121
+kafka_nfs_cvo_sn-01 2315762631 svm_kafka_nfs_cvo_sn 172.30.0.121
+kafka_nfs_cvo_sn-01 2315762632 svm_kafka_nfs_cvo_sn 172.30.0.121
+kafka_nfs_cvo_sn-01 2315762633 svm_kafka_nfs_cvo_sn 172.30.0.121
+kafka_nfs_cvo_sn-01 2315762634 svm_kafka_nfs_cvo_sn 172.30.0.121
+kafka_nfs_cvo_sn-01 2315762635 svm_kafka_nfs_cvo_sn 172.30.0.121
+kafka_nfs_cvo_sn-01 2315762636 svm_kafka_nfs_cvo_sn 172.30.0.121
+kafka_nfs_cvo_sn-01 2315762637 svm_kafka_nfs_cvo_sn 172.30.0.121
+kafka_nfs_cvo_sn-01 2315762639 svm_kafka_nfs_cvo_sn 172.30.0.72
+kafka_nfs_cvo_sn-01 2315762640 svm_kafka_nfs_cvo_sn 172.30.0.72
+kafka_nfs_cvo_sn-01 2315762641 svm_kafka_nfs_cvo_sn 172.30.0.72
+kafka_nfs_cvo_sn-01 2315762642 svm_kafka_nfs_cvo_sn 172.30.0.72
+kafka_nfs_cvo_sn-01 2315762643 svm_kafka_nfs_cvo_sn 172.30.0.72
+kafka_nfs_cvo_sn-01 2315762644 svm_kafka_nfs_cvo_sn 172.30.0.72
+kafka_nfs_cvo_sn-01 2315762645 svm_kafka_nfs_cvo_sn 172.30.0.72
+kafka_nfs_cvo_sn-01 2315762646 svm_kafka_nfs_cvo_sn 172.30.0.72
+kafka_nfs_cvo_sn-01 2315762647 svm_kafka_nfs_cvo_sn 172.30.0.72
+kafka_nfs_cvo_sn-01 2315762648 svm_kafka_nfs_cvo_sn 172.30.0.72
+kafka_nfs_cvo_sn-01 2315762649 svm_kafka_nfs_cvo_sn 172.30.0.121
+kafka_nfs_cvo_sn-01 2315762650 svm_kafka_nfs_cvo_sn 172.30.0.121
+kafka_nfs_cvo_sn-01 2315762651 svm_kafka_nfs_cvo_sn 172.30.0.121
+kafka_nfs_cvo_sn-01 2315762652 svm_kafka_nfs_cvo_sn 172.30.0.121
+kafka_nfs_cvo_sn-01 2315762653 svm_kafka_nfs_cvo_sn 172.30.0.121
+kafka_nfs_cvo_sn-01 2315762656 svm_kafka_nfs_cvo_sn 172.30.0.223
+kafka_nfs_cvo_sn-01 2315762657 svm_kafka_nfs_cvo_sn 172.30.0.223
+kafka_nfs_cvo_sn-01 2315762658 svm_kafka_nfs_cvo_sn 172.30.0.223
+kafka_nfs_cvo_sn-01 2315762659 svm_kafka_nfs_cvo_sn 172.30.0.223
+kafka_nfs_cvo_sn-01 2315762660 svm_kafka_nfs_cvo_sn 172.30.0.223
+kafka_nfs_cvo_sn-01 2315762661 svm_kafka_nfs_cvo_sn 172.30.0.223
+kafka_nfs_cvo_sn-01 2315762662 svm_kafka_nfs_cvo_sn 172.30.0.223
+kafka_nfs_cvo_sn-01 2315762663 svm_kafka_nfs_cvo_sn 172.30.0.223
+kafka_nfs_cvo_sn-01 2315762664 svm_kafka_nfs_cvo_sn 172.30.0.223
+kafka_nfs_cvo_sn-01 2315762665 svm_kafka_nfs_cvo_sn 172.30.0.223
+kafka_nfs_cvo_sn-01 2315762666 svm_kafka_nfs_cvo_sn 172.30.0.223
+kafka_nfs_cvo_sn-01 2315762667 svm_kafka_nfs_cvo_sn 172.30.0.72
+kafka_nfs_cvo_sn-01 2315762668 svm_kafka_nfs_cvo_sn 172.30.0.72
+kafka_nfs_cvo_sn-01 2315762669 svm_kafka_nfs_cvo_sn 172.30.0.72
+kafka_nfs_cvo_sn-01 2315762670 svm_kafka_nfs_cvo_sn 172.30.0.72
+kafka_nfs_cvo_sn-01 2315762671 svm_kafka_nfs_cvo_sn 172.30.0.72
+kafka_nfs_cvo_sn-01 2315762672 svm_kafka_nfs_cvo_sn 172.30.0.72
+kafka_nfs_cvo_sn-01 2315762673 svm_kafka_nfs_cvo_sn 172.30.0.223
+kafka_nfs_cvo_sn-01 2315762674 svm_kafka_nfs_cvo_sn 172.30.0.223
+kafka_nfs_cvo_sn-01 2315762676 svm_kafka_nfs_cvo_sn 172.30.0.121
+kafka_nfs_cvo_sn-01 2315762677 svm_kafka_nfs_cvo_sn 172.30.0.223
+kafka_nfs_cvo_sn-01 2315762678 svm_kafka_nfs_cvo_sn 172.30.0.223
+kafka_nfs_cvo_sn-01 2315762679 svm_kafka_nfs_cvo_sn 172.30.0.223
+48 entries were displayed.
+ 
+kafka_nfs_cvo_sn::>
+....
+. 我们使用以下Kafka `server.properties` 在Cloud Volumes ONTAP HA对的所有Kafka代理中。。 `log.dirs` 每个代理的属性都不同、其余属性对于代理是通用的。对于Broker1、为 `log.dirs` 值如下：
++
+....
+[root@ip-172-30-0-121 ~]# cat /opt/kafka/config/server.properties
+broker.id=0
+advertised.listeners=PLAINTEXT://172.30.0.121:9092
+#log.dirs=/mnt/data-1/d1,/mnt/data-1/d2,/mnt/data-1/d3,/mnt/data-2/d1,/mnt/data-2/d2,/mnt/data-2/d3
+log.dirs=/kafka_aggr3_vol1/broker1,/kafka_aggr3_vol2/broker1,/kafka_aggr3_vol3/broker1,/kafka_aggr22_vol1/broker1,/kafka_aggr22_vol2/broker1,/kafka_aggr22_vol3/broker1
+zookeeper.connect=172.30.0.12:2181,172.30.0.30:2181,172.30.0.178:2181
+num.network.threads=64
+num.io.threads=64
+socket.send.buffer.bytes=102400
+socket.receive.buffer.bytes=102400
+socket.request.max.bytes=104857600
+num.partitions=1
+num.recovery.threads.per.data.dir=1
+offsets.topic.replication.factor=1
+transaction.state.log.replication.factor=1
+transaction.state.log.min.isr=1
+replica.fetch.max.bytes=524288000
+background.threads=20
+num.replica.alter.log.dirs.threads=40
+num.replica.fetchers=20
+[root@ip-172-30-0-121 ~]#
+....
++
+** 对于Broker2、为 `log.dirs` 属性值如下：
++
+....
+log.dirs=/kafka_aggr3_vol1/broker2,/kafka_aggr3_vol2/broker2,/kafka_aggr3_vol3/broker2,/kafka_aggr22_vol1/broker2,/kafka_aggr22_vol2/broker2,/kafka_aggr22_vol3/broker2
+....
+** 对于Broker3、为 `log.dirs` 属性值如下：
++
+....
+log.dirs=/kafka_aggr3_vol1/broker3,/kafka_aggr3_vol2/broker3,/kafka_aggr3_vol3/broker3,/kafka_aggr22_vol1/broker3,/kafka_aggr22_vol2/broker3,/kafka_aggr22_vol3/broker3
+....
+
+
+. 对于单个Cloud Volumes ONTAP 节点、为Kafka `servers.properties` 与Cloud Volumes ONTAP HA对相同、但不包括 `log.dirs` 属性。
++
+** 对于Broker1、为 `log.dirs` 值如下：
++
+....
+log.dirs=/kafka_aggr2_vol1/broker1,/kafka_aggr2_vol2/broker1,/kafka_aggr2_vol3/broker1,/kafka_aggr2_vol4/broker1,/kafka_aggr2_vol5/broker1,/kafka_aggr2_vol6/broker1
+....
+** 对于Broker2、为 `log.dirs` 值如下：
++
+....
+log.dirs=/kafka_aggr2_vol1/broker2,/kafka_aggr2_vol2/broker2,/kafka_aggr2_vol3/broker2,/kafka_aggr2_vol4/broker2,/kafka_aggr2_vol5/broker2,/kafka_aggr2_vol6/broker2
+....
+** 对于Broker3、为 `log.dirs` 属性值如下：
++
+....
+log.dirs=/kafka_aggr2_vol1/broker3,/kafka_aggr2_vol2/broker3,/kafka_aggr2_vol3/broker3,/kafka_aggr2_vol4/broker3,/kafka_aggr2_vol5/broker3,/kafka_aggr2_vol6/broker3
+....
+
+
+. OMB中的工作负载配置了以下属性： `(/opt/benchmark/workloads/1-topic-100-partitions-1kb.yaml)`。
++
+....
+topics: 4
+partitionsPerTopic: 100
+messageSize: 32768
+useRandomizedPayloads: true
+randomBytesRatio: 0.5
+randomizedPayloadPoolSize: 100
+subscriptionsPerTopic: 1
+consumerPerSubscription: 80
+producersPerTopic: 40
+producerRate: 1000000
+consumerBacklogSizeGB: 0
+testDurationMinutes: 5
+....
++
+。 `messageSize` 可能因使用情形而异。在性能测试中、我们使用了3 K。
+
++
+我们使用OMB中的两个不同驱动程序Sync或Throughput在Kafka集群上生成工作负载。
+
++
+** 用于Sync驱动程序属性的YAML文件如下所示 `(/opt/benchmark/driver- kafka/kafka-sync.yaml)`：
++
+....
+name: Kafka
+driverClass: io.openmessaging.benchmark.driver.kafka.KafkaBenchmarkDriver
+# Kafka client-specific configuration
+replicationFactor: 3
+topicConfig: |
+  min.insync.replicas=2
+  flush.messages=1
+  flush.ms=0
+commonConfig: |
+  bootstrap.servers=172.30.0.121:9092,172.30.0.72:9092,172.30.0.223:9092
+producerConfig: |
+  acks=all
+  linger.ms=1
+  batch.size=1048576
+consumerConfig: |
+  auto.offset.reset=earliest
+  enable.auto.commit=false
+  max.partition.fetch.bytes=10485760
+....
+** 用于吞吐量驱动程序属性的YAML文件如下所示 `(/opt/benchmark/driver- kafka/kafka-throughput.yaml)`：
++
+....
+name: Kafka
+driverClass: io.openmessaging.benchmark.driver.kafka.KafkaBenchmarkDriver
+# Kafka client-specific configuration
+replicationFactor: 3
+topicConfig: |
+  min.insync.replicas=2
+commonConfig: |
+  bootstrap.servers=172.30.0.121:9092,172.30.0.72:9092,172.30.0.223:9092
+  default.api.timeout.ms=1200000
+  request.timeout.ms=1200000
+producerConfig: |
+  acks=all
+  linger.ms=1
+  batch.size=1048576
+consumerConfig: |
+  auto.offset.reset=earliest
+  enable.auto.commit=false
+  max.partition.fetch.bytes=10485760
+....
+
+
+
+
+
+
+== 测试方法
+
+. Kafka集群是按照上述规范使用Terraform和Ansible配置的。Terraform用于使用适用于Kafka集群的AWS实例构建基础架构、Ansible在这些实例上构建Kafka集群。
+. 已使用上述工作负载配置和Sync驱动程序触发OMB工作负载。
++
+....
+Sudo bin/benchmark –drivers driver-kafka/kafka- sync.yaml workloads/1-topic-100-partitions-1kb.yaml
+....
+. 使用相同工作负载配置的吞吐量驱动程序触发了另一个工作负载。
++
+....
+sudo bin/benchmark –drivers driver-kafka/kafka-throughput.yaml workloads/1-topic-100-partitions-1kb.yaml
+....
+
+
+
+
+== 观察结果
+
+我们使用了两种不同类型的驱动程序来生成工作负载、以便对在NFS上运行的Kafka实例的性能进行基准测试。驱动程序之间的区别在于日志刷新属性。
+
+对于Cloud Volumes ONTAP HA对：
+
+* Sync驱动程序一致生成的总吞吐量：~1236 MBps。
+* 为吞吐量驱动程序生成的总吞吐量：峰值~1412 MBps。
+
+
+对于单个Cloud Volumes ONTAP 节点：
+
+* Sync驱动程序一致生成的总吞吐量：~ 1962MBps。
+* 吞吐量驱动程序生成的总吞吐量：峰值~1660MBps
+
+
+同步驱动程序可以在日志即时转储到磁盘时生成一致的吞吐量、而吞吐量驱动程序则在将日志批量提交到磁盘时生成突发的吞吐量。
+
+这些吞吐量数字是为给定的AWS配置生成的。为了满足更高的性能要求、可以进一步扩展和调整实例类型、以提高吞吐量。总吞吐量或总速率是生产者和使用者速率的组合。
+
+image:kafka-nfs-image30.png["此处显示了四个不同的图形。CVO-HA对吞吐量驱动程序。CVO-HA对Sync驱动程序。CVO单节点吞吐量驱动程序。CVO单节点同步驱动程序。"]
+
+在执行吞吐量或同步驱动程序基准测试时、请务必检查存储吞吐量。
+
+image:kafka-nfs-image31.png["此图显示了延迟、IOPS和吞吐量方面的性能。"]
+
+link:kafka-nfs-performance-overview-and-validation-with-aff-on-premises.html["接下来：使用AFF 内部部署进行性能概述和验证。"]

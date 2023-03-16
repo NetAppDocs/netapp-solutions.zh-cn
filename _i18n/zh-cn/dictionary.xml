@@ -16961,4 +16961,367 @@
   <block id="d822bbb4d6960be49b781e594679db64" category="paragraph">应用程序可以通过在POD中挂载卷来使用上述步骤中配置的卷。以下链接显示了一个示例。<block ref="48fadb04c46cf19aa1b5e274dd9b5da9" category="inline-link-macro-rx"></block></block>
   <block id="7a11d367cfedc152ce1db261fb8f21fd" category="inline-link-macro">接下来：适用于Anthos的高级配置选项。</block>
   <block id="fca5cd0af87c3fa0c3d74ee21a3d346f" category="paragraph"><block ref="fca5cd0af87c3fa0c3d74ee21a3d346f" category="inline-link-macro-rx"></block></block>
+  <block id="34ea6423c17a78bdf284132538078bac" category="summary">本文档介绍以下主题、错误重命名问题和解决方案 验证、降低CPU利用率以缩短I/O等待时间、加快Kafka代理恢复时间以及提高云和内部环境的性能。</block>
+  <block id="47e33b895b285760d0d1bcb64e42e5d0" category="doc">TR-4947：Apache Kafka工作负载与NetApp NFS存储—功能验证和性能</block>
+  <block id="62233ad21bd81bbbff938616c0106477" category="paragraph">NetApp公司Shantanu Chakole、Karthikeyan Nagalingam和Joe Scott</block>
+  <block id="8150fcf9bdcb89b4901e10f34571667e" category="paragraph">Kafka是一个分布式发布订阅消息传送系统、具有一个强大的队列、可以接受大量消息数据。借助Kafka、应用程序可以非常快速地对主题进行数据写入和读取。由于Kafka具有容错能力和可扩展性、因此通常在大数据空间中使用它作为快速载入和移动多个数据流的可靠方式。使用情形包括流处理、网站活动跟踪、指标收集和监控、日志聚合、实时分析等。</block>
+  <block id="91bd7e3ce9e18912d60b1c4cd3f9f7d2" category="inline-link">重命名操作不明智</block>
+  <block id="7453e2e58a9df0c80d79a8fd0ab4ed1e" category="paragraph">虽然NFS上的正常Kafka操作运行良好、但<block ref="99770e723960c674a5dd9394155d2111" category="inline-link-rx"></block> 在调整NFS上运行的Kafka集群的大小或重新分区期间、问题描述 会使应用程序崩溃。这是一个重要的问题描述 、因为出于负载平衡或维护目的、必须调整Kafka集群的大小或对其进行重新分区。您可以找到其他详细信息<block ref="eff8c14b44ddf611b2ff09607d7665a2" category="inline-link-rx"></block>。</block>
+  <block id="229b214236b3c346dc9f6c75d096604b" category="paragraph">本文档介绍了以下主题：</block>
+  <block id="995fd45f2f5174bc9a5d8029655c1b88" category="list-text">错误重命名问题和解决方案 验证</block>
+  <block id="7c9e8a4fdb767e60565e9c4b4d95eed2" category="list-text">降低CPU利用率以缩短I/O等待时间</block>
+  <block id="915a1ce7d578786f5aa93e503452d2b9" category="list-text">Kafka代理恢复时间更快</block>
+  <block id="5810e3ce10e4e8edfee5f25cae3459c1" category="list-text">云端和内部环境中的性能</block>
+  <block id="7910f734d679965fb4e725f87dcb3c61" category="section-title">为什么要对Kafka工作负载使用NFS存储？</block>
+  <block id="932e5edaa1f66c6b109d045d3c7ba0bc" category="paragraph">生产应用程序中的Kafka工作负载可以在应用程序之间流式传输大量数据。此数据会保留并存储在Kafka集群中的Kafka代理节点中。Kafka也以可用性和并行性而闻名、它通过将主题划分为分区、然后在整个集群中复制这些分区来实现这一点。这最终意味着、流经Kafka集群的大量数据通常会成倍增加。NFS可以随着代理数量的变化轻松快速地重新平衡数据。对于大型环境、在代理数量发生变化时跨DAS重新平衡数据非常耗时、在大多数Kafka环境中、代理数量经常发生变化。</block>
+  <block id="a49afd0b2827b8f1d1b83a36f75d3efc" category="paragraph">其他优势包括：</block>
+  <block id="889d2761ec65245a621931da633b8cfe" category="list-text">*成熟度。* NFS是一种成熟的协议、这意味着实施、保护和使用NFS的大部分方面都已被充分理解。</block>
+  <block id="c231daeb716325a2bca62a5e30431c8d" category="list-text">*开放式* NFS是一种开放式协议、其持续开发已作为一种免费的开放式网络协议记录在互联网规格中。</block>
+  <block id="6526aeb62806bf842c7ab66949c2de0c" category="list-text">*经济高效。* NFS是一种用于网络文件共享的低成本解决方案 、由于它使用现有网络基础架构、因此易于设置。</block>
+  <block id="8c70ad2ab84f33f7d462109fc8edc329" category="list-text">*集中管理。*集中管理NFS可减少单个用户系统上对添加软件和磁盘空间的需求。</block>
+  <block id="dbb4f7d4eb0147816ffd5d84e4a79e19" category="list-text">*分布式。* NFS可用作分布式文件系统、从而减少了对可移动介质存储设备的需求。</block>
+  <block id="37377984e38462f1628867b8e7a1e772" category="section-title">为什么选择NetApp来处理Kafka工作负载？</block>
+  <block id="300fdb82e8f9a8b6ebb6d42a92483544" category="paragraph">NetApp NFS实施被视为该协议的黄金标准、用于无数企业级NAS环境。除了NetApp的信誉之外、它还具有以下优势：</block>
+  <block id="f7e7d6aebe6163c0f639238b2e1a0333" category="list-text">可靠性和效率</block>
+  <block id="735980c2ea138788423c50ba2ef7c6c5" category="list-text">可扩展性和性能</block>
+  <block id="a8fbd78750bfdd72ecb8371fa5fa9648" category="list-text">高可用性(NetApp ONTAP 集群中的HA配对节点)</block>
+  <block id="e005f1a13de2a01927e39ecb29ff1a7c" category="list-text">*灾难恢复(NetApp SnapMirror)。*您的站点发生故障、或者您希望从其他站点跳转并从您离开的位置继续。</block>
+  <block id="81757222cee28779fe25327e8ef3f5a2" category="list-text">存储系统的易管理性(使用NetApp OnCommand 进行管理和管理)。</block>
+  <block id="7d411cbcfa7cf122ac8423795b89a4b8" category="list-text">*负载平衡。*集群允许您从不同节点上托管的数据LIF访问不同的卷。</block>
+  <block id="6c38013b179499c32ccf05a98b927de6" category="list-text">*无中断操作。* LIF或卷移动对NFS客户端是透明的。</block>
+  <block id="4d7de9fb7cbfcd5bb144aea084dd9e99" category="inline-link-macro">接下来：NetApp解决方案 for fly将问题描述 for NFS重命名为Kafka工作负载。</block>
+  <block id="771648345c64342ddd78bfb7ade5c3df" category="paragraph"><block ref="771648345c64342ddd78bfb7ade5c3df" category="inline-link-macro-rx"></block></block>
+  <block id="cc2e9a005ff6b9d50a1fca9914e8eac0" category="summary">本节介绍了对问题描述 进行的愚蠢重命名以及NFS服务器和NFS客户端为处理问题描述 而需要进行的更改。</block>
+  <block id="0d5e61a5d0c056718a15d6df7037a50c" category="doc">NetApp解决方案 for fly将问题描述 for NFS重命名为Kafka工作负载</block>
+  <block id="5b7b60a56a6be9e9e9e8ff305a6e8ac6" category="paragraph"><block ref="5b7b60a56a6be9e9e9e8ff305a6e8ac6" category="inline-link-macro-rx"></block></block>
+  <block id="e5ee0fc73f4f4f38e75acb2c0b2343be" category="paragraph">Kafka的构建假定底层文件系统符合POSIX标准：例如XFS或ext4。Kafka资源重新平衡会在应用程序仍在使用文件时删除这些文件。符合POSIX的文件系统允许取消链接以继续。但是、它仅会在对文件的所有引用均消失后删除该文件。如果底层文件系统已通过网络连接、则NFS客户端将截获取消链接调用并管理工作流。由于正在取消链接的文件存在待定打开状态、因此NFS客户端会向NFS服务器发送重命名请求、并在未链接的文件最后一次关闭时对已重命名的文件执行删除操作。此行为通常称为NFS愚蠢的重命名、它由NFS客户端进行编排。</block>
+  <block id="f17efbdff90d69935a8d84a6215665a5" category="paragraph">由于此行为、使用NFSv3服务器中存储的任何Kafka代理都会遇到问题。但是、NFSv4.x协议具有一些功能、可以通过允许服务器对打开的未链接文件负责来解决此问题描述。支持此可选功能的NFS服务器会在文件打开时将所有权功能传递给NFS客户端。然后、当打开并等待处理时、NFS客户端将停止取消链接管理、并允许服务器管理此流。虽然NFSv4规范提供了实施准则、但到目前为止、还没有任何已知的NFS服务器实施支持此可选功能。</block>
+  <block id="219af746424bba4643138d0820ab40b5" category="paragraph">NFS服务器和NFS客户端需要进行以下更改、才能处理愚蠢的重命名问题描述 ：</block>
+  <block id="36efd47a4ba95b58e3b2a0f2ed7420ad" category="list-text">*对NFS客户端(Linux)所做的更改。*打开文件时、NFS服务器会通过一个标志进行响应、指示能够处理已打开文件的解除链接。NFS客户端更改允许NFS服务器在存在标志的情况下处理解除链接。NetApp已使用这些更改更新了开源Linux NFS客户端。更新后的NFS客户端现在在RHEL8.7和RHEL9.1中普遍可用。</block>
+  <block id="f400588f268c9f90112ff6290a81575a" category="list-text">*对NFS服务器所做的更改。* NFS服务器会跟踪打开情况。现在、服务器会管理现有打开文件的取消链接、以匹配POSIX语义。关闭上次打开的文件后、NFS服务器会启动文件的实际删除、从而避免了愚蠢的重命名过程。ONTAP NFS服务器已在其最新版本ONTAP 9.12.1.中实施此功能。</block>
+  <block id="21a87b96dd7bfc9863d6bca5fc12f005" category="paragraph">通过对NFS客户端和服务器进行上述更改、Kafka可以安全地获得网络连接NFS存储的所有优势。</block>
+  <block id="29d38aea11265de7104c96a7a3818299" category="inline-link-macro">下一步：功能验证—错误的重命名修复。</block>
+  <block id="b75f47bcddf300f706113b833f9e5857" category="paragraph"><block ref="b75f47bcddf300f706113b833f9e5857" category="inline-link-macro-rx"></block></block>
+  <block id="bf06620c2cdf1b79a1673e62b409eae0" category="summary">针对错误重命名问题的NetApp解决方案 为以前与NFS不兼容的工作负载提供了一种简单、廉价且集中管理的存储形式。</block>
+  <block id="83abec4269fdeaff3d2819895273a563" category="inline-link-macro">上一页：使用AFF 内部部署进行性能概述和验证。</block>
+  <block id="d620ffb7e12e202c45f9f8ca1cd8c18a" category="paragraph"><block ref="d620ffb7e12e202c45f9f8ca1cd8c18a" category="inline-link-macro-rx"></block></block>
+  <block id="e6f7341043f7816d4a31b223bf8d3be3" category="paragraph">针对错误重命名问题的NetApp解决方案 为以前与NFS不兼容的工作负载提供了一种简单、廉价且集中管理的存储形式。这种新模式使客户能够创建更易于管理的Kafka集群、这些集群更易于迁移和镜像、以实现灾难恢复和数据保护。我们还发现、NFS还可以通过NetApp ONTAP 提供更多优势、例如降低CPU利用率和加快恢复速度、显著提高存储效率以及提高性能。</block>
+  <block id="7cd1d87ec9e0fa1c7a867ad6377c7d37" category="paragraph"><block ref="7cd1d87ec9e0fa1c7a867ad6377c7d37" category="inline-link-macro-rx"></block></block>
+  <block id="d4baa2e552beefa00e93883ed51f3ba2" category="summary">在内部部署中、我们使用NetApp AFF A900存储控制器和ONTAP 9.12.1RC1来验证Kafka集群的性能和扩展能力。我们使用的测试平台与先前使用ONTAP 和AFF 的分层存储最佳实践中的测试平台相同。</block>
+  <block id="1e753c720a0b773dd9d69024ca734577" category="doc">使用AFF A900内部部署进行性能概述和验证</block>
+  <block id="8f5ebe1b5fee3c826c16a4c5e9c8f473" category="inline-link-macro">上一页：AWS中的性能概述和验证。</block>
+  <block id="dfaa047aba8947a9ca42df42a70eb4ad" category="paragraph"><block ref="dfaa047aba8947a9ca42df42a70eb4ad" category="inline-link-macro-rx"></block></block>
+  <block id="94391d4f56386aadb6f39e1a596f2427" category="paragraph">在内部部署中、我们使用NetApp AFF A900存储控制器和ONTAP 9.12.1RC1来验证Kafka集群的性能和扩展能力。我们使用的测试平台与先前使用ONTAP 和AFF 的分层存储最佳实践中的测试平台相同。</block>
+  <block id="b1e7584c9874b52caeb25c3646e8f273" category="paragraph">我们使用Confluent Kafka 6.2.0对AFF A900进行了评估。集群具有八个代理节点和三个Zookeeper节点。在性能测试中、我们使用了五个OMB辅助节点。</block>
+  <block id="e41e134e8e174865d04443048e1866af" category="paragraph"><block ref="e41e134e8e174865d04443048e1866af" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="637d24b49cc32320a5e44ea905f65d10" category="paragraph">我们使用NetApp FlexGroup实例为日志目录提供了一个命名空间、从而简化了恢复和配置。我们使用NFSv4.1和pNFS为日志段数据提供直接路径访问。</block>
+  <block id="50ff5e789ae0742f2485b5147c072643" category="section-title">客户端调整</block>
+  <block id="fc3a7751877b7f4e9a71c82ad3da7e44" category="paragraph">每个客户端都使用以下命令挂载FlexGroup 实例。</block>
+  <block id="a5b2794b174e20f0b6dd9350cba3df82" category="paragraph">此外、我们还增加了<block ref="44d907b0e69e5aa31320f9e86a7ef440" prefix=" " category="inline-code"></block> 默认值<block ref="ea5d2f1c4608232e07d3aa3d998e5135" prefix=" " category="inline-code"></block> to<block ref="045117b0e0a11a242b9765e79cbf113f" prefix=" " category="inline-code"></block>。这与ONTAP 中的默认会话插槽限制匹配。</block>
+  <block id="31305973da10c7b492918a2ad2b3deee" category="section-title">Kafka代理调整</block>
+  <block id="8f9087ae165490f7d809fb8ffd625bba" category="paragraph">为了最大程度地提高测试系统中的吞吐量、我们显著增加了某些关键线程池的默认参数。对于大多数配置、我们建议遵循Confluent Kafka最佳实践。此调整用于最大程度地提高存储未处理I/O的并发性。可以根据代理的计算资源和存储属性调整这些参数。</block>
+  <block id="0e80721091b1e58209e2877462ebbd21" category="section-title">工作负载生成器测试方法</block>
+  <block id="9707ee58e22a2478985c56025e656cad" category="paragraph">我们使用的OMB配置与对吞吐量驱动程序和主题配置进行云测试相同。</block>
+  <block id="dbdfae7d08a693255815e0890397b78f" category="list-text">已在AFF 集群上使用Ansible配置FlexGroup 实例。</block>
+  <block id="6c2577e00543c33096c33e1b2e79742d" category="list-text">已在ONTAP SVM上启用pNFS。</block>
+  <block id="7fe5c7aaf126c7432ba86d9e145f59a4" category="list-text">此工作负载是使用与Cloud Volumes ONTAP 相同的工作负载配置通过吞吐量驱动程序触发的。请参见第节"<block ref="f628eac6c1ff8c1b0462e81ea7b2efc1" category="inline-xref-macro-rx"></block>"。工作负载使用的复制系数为3、这意味着在NFS中维护了三个日志段副本。</block>
+  <block id="dfe2c8a29d6798ed2d2dae4af3b4e5e7" category="inline-xref">探索存储限制</block>
+  <block id="c2a038ea3f35076598b99806cd90a3c5" category="list-text">最后、我们使用积压数据完成了测量、以衡量消费者是否能够跟上最新消息的步伐。OMB通过在测量开始期间暂停使用者来构建积压。这会产生三个不同的阶段：创建积压(仅限生产商的流量)、积压耗尽(消费者在一个主题中遇到未完成的事件时会遇到大量耗时的阶段)和稳定状态。请参见第节"<block ref="a2eee99fc052f067d68a9273d62093f1" category="inline-xref-macro-rx"></block>"了解更多信息。</block>
+  <block id="158bb82f009332b2fe16aba7bebc0c15" category="section-title">稳定状态性能</block>
+  <block id="216824b7a5a0da585075bc35333402f6" category="paragraph">我们使用Open消息 基准测试对AFF A900进行了评估、以提供与AWS中的Cloud Volumes ONTAP 和AWS中的DAS类似的比较结果。所有性能值均表示生产商和消费者级别的Kafka-cluster吞吐量。</block>
+  <block id="34121e3b81b5330bbb499603af5609e6" category="paragraph">借助Confluent Kafka和AFF A900实现稳定的状态性能、生产者和使用者的平均吞吐量均超过3.4 GBps。在整个Kafka集群中、此消息超过340万条。通过直观地显示BrokerTopicMetrics的持续吞吐量(以字节/秒为单位)、我们可以看到AFF A900所支持的出色稳定状态性能和流量。</block>
+  <block id="c99b1e0f8a1447330448c8c7dc3df6b6" category="inline-image-macro">此图显示了代理网络吞吐量。</block>
+  <block id="0b01283779b69987a07a2c2d50ccb15d" category="paragraph"><block ref="0b01283779b69987a07a2c2d50ccb15d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9877d3e22635e0b37f0b74ab2d832d05" category="paragraph">这与每个主题所传送消息的视图非常一致。下图按主题显示了细分情况。在测试的配置中、我们在四个主题中看到了每个主题近900、000条消息。</block>
+  <block id="a0a1dff924171568d861731a12802528" category="paragraph"><block ref="a0a1dff924171568d861731a12802528" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="cc35bf5a15bb7c42ab972c7038f773f5" category="section-title">极致性能并探索存储限制</block>
+  <block id="58b4fe8d21ee892b9633349960eaa7ab" category="paragraph">对于AFF 、我们还使用积压功能对OMB进行了测试。在Kafka集群中创建积压事件时、积压功能会暂停使用者订阅。在此阶段、仅会发生生成方流量、此流量会生成提交到日志的事件。这最能模拟批处理或脱机分析工作流；在这些工作流中、用户订阅会启动、并且必须读取已从代理缓存中逐出的历史数据。</block>
+  <block id="5519a4dc3c42cae95400800bbaeaecfc" category="paragraph">为了了解此配置中对使用者吞吐量的存储限制、我们测量了纯生产者阶段、以了解A900可以吸收多少写入流量。请参见下一节"<block ref="dbf93a9130703fe2432219c42c2bf311" category="inline-xref-macro-rx"></block>了解如何利用这些数据。</block>
+  <block id="feec11a45c1fd079250c6f3603d708cd" category="paragraph">在本次测量中、我们发现、在仅用于生产商的部分、峰值吞吐量会突破A900性能的限制(此时、其他代理资源不会饱和地为生产商和消费者提供服务)。</block>
+  <block id="364db2a868997ed12ba4b16039b53a68" category="paragraph"><block ref="364db2a868997ed12ba4b16039b53a68" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f237b36d09d10702066fb620cf352dcf" category="admonition">我们将此度量值的消息大小增加到16k、以限制每条消息的开销、并最大程度地提高NFS挂载点的存储吞吐量。</block>
+  <block id="9e1dbe9319ed19b15341f3000f56398a" category="paragraph">Confluent Kafka集群的生产商吞吐量峰值为4.03 GBps。</block>
+  <block id="3355268f822f520fe03b272691c2e428" category="paragraph">在OMB完成事件积压填充后、使用者流量将重新启动。在对积压量进行测量期间、我们在所有主题中观察到消费者峰值吞吐量超过20 Gbps。存储OMB日志数据的NFS卷的总吞吐量接近~30Gbps。</block>
+  <block id="157a25969caf77d231e319ce70f0b637" category="section-title">规模估算指南</block>
+  <block id="2e4bacad236b9e36d868b929042e2bad" category="inline-link">规模估算指南</block>
+  <block id="eec877a6f9c2530996fae2423259c2c6" category="paragraph">Amazon Web Services提供了<block ref="e9ae0e8f89540055129f0fae422bdb9a" category="inline-link-rx"></block> 用于Kafka集群规模估算和扩展。</block>
+  <block id="cc4abcaa3ba3e4f795b82759d3dcd056" category="paragraph">此规模估算为确定Kafka集群的存储吞吐量要求提供了一个有用的公式：</block>
+  <block id="f2fb73fb163775775c1145d28c68ad20" category="paragraph">对于复制因子为r的tcluster集群生成的聚合吞吐量、代理存储收到的吞吐量如下：</block>
+  <block id="0acbbdd0cc159664d8baab43c6d168bd" category="paragraph">这一点可以进一步简化：</block>
+  <block id="28c949d6bdead032a1410c176cbf74cb" category="paragraph">使用此公式、您可以根据Kafka热层需求选择合适的ONTAP 平台。</block>
+  <block id="df3f8ed04b35156def4360bb05a77cc1" category="paragraph">下表说明了A900的预期生产者吞吐量以及不同的复制因素：</block>
+  <block id="329589e3ff014cb50ee2238aecc6a867" category="cell">复制因子</block>
+  <block id="75ec49708cc8881a7762e3740e342ca3" category="cell">生产者吞吐量(GPP)</block>
+  <block id="c2b3050f7fde2050bb86e4e9ef0f7567" category="cell">3 (测量值)</block>
+  <block id="31053ad0506e935470ca21b43cae98cf" category="cell">3.4</block>
+  <block id="a9d9d1b0257dda96d595bd00149cccdb" category="cell">10.2</block>
+  <block id="e5a7cf20f86f14251d25ab33d3eb07fb" category="paragraph"><block ref="e5a7cf20f86f14251d25ab33d3eb07fb" category="inline-link-macro-rx"></block></block>
+  <block id="8a1762b0db0285b0ca6661669e3a9aec" category="summary">在功能验证方面、我们显示了具有NFSv3存储挂载的Kafka集群无法执行分区重新分配等Kafka操作、而具有修复程序的NFSv4上挂载的另一个集群可以执行相同的操作而不会造成任何中断。</block>
+  <block id="2b1635c7ae2a72d0b26454157a03e197" category="doc">功能验证—错误的重命名修复</block>
+  <block id="bfc46a432aa7385a6228ff50401aca2b" category="inline-link-macro">先前版本：NetApp解决方案 for fly rename问题描述 in NFS to Kafka workload。</block>
+  <block id="6e56361f7ef0ac98b8b5c8c120de1fd8" category="paragraph"><block ref="6e56361f7ef0ac98b8b5c8c120de1fd8" category="inline-link-macro-rx"></block></block>
+  <block id="a8ead7a6a54d47ea0a38e64908ab321f" category="section-title">验证设置</block>
+  <block id="e087dbbdc5792f1e574cdf41c135d858" category="paragraph">此设置将在AWS上运行。下表显示了用于验证的不同平台组件和环境配置。</block>
+  <block id="cccdd75af54f32ac7f570bbcca39f516" category="cell">Confuent Platform 7.2.1版</block>
+  <block id="185b9d1a84206af090c5f70ac68f24ad" category="list-text">3个Zookepers—T3.xlarge</block>
+  <block id="6677060ff0c6c4620e427121a576713c" category="list-text">4个代理服务器—r3.xlarge</block>
+  <block id="61e62294effd3d2046982e7d5a22b824" category="list-text">1个Grafana—T3.xlarge</block>
+  <block id="1e2657a43dca2051e4684eb73c2a856c" category="list-text">1个控制中心—T3.xlarge</block>
+  <block id="2dcca349e332f9e312cebc29485dadf0" category="list-text">3个生产者/使用者</block>
+  <block id="00ecb59dfdd1b1378b38c6b7bf8e91dc" category="cell">RHEL8.7或更高版本</block>
+  <block id="4f04a8a7e04e79aafa7150a5ae2bab1b" category="cell">NetApp Cloud Volumes ONTAP 实例</block>
+  <block id="d09d15c71c68b596f76c57a87a19e0e5" category="cell">单节点实例—M5.2xLarge</block>
+  <block id="3ba4ec8d167c12be652d6829ce6e51d8" category="paragraph">下图显示了此解决方案 的架构配置。</block>
+  <block id="b3c6c8984f5671892932b2a7eacc5bf4" category="inline-image-macro">此图显示了AWS拓扑、其中包含三个专用子网、分别包含一个生产者Swarm、Kafka集群和CVO实例。</block>
+  <block id="2eee6b516bfba2cd7f7f3bbe52d98104" category="paragraph"><block ref="2eee6b516bfba2cd7f7f3bbe52d98104" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7d580bb4c55b441a712ec6c9dc12d38b" category="section-title">架构流程</block>
+  <block id="82c8c0c94e152cc00496c6c5a1fa76b0" category="list-text">*计算。*我们使用了一个四节点Kafka集群、其中三节点Zookeeper集合在专用服务器上运行。</block>
+  <block id="e236bd14d5d59a952978645a606dd7f9" category="list-text">*监控。*我们将两个节点用于Prometheus-Grafana组合。</block>
+  <block id="c375f003dbf6b1accc45fd3811ce2b82" category="list-text">*工作负载。*为了生成工作负载、我们使用了一个单独的三节点集群、该集群可以生成并使用此Kafka集群。</block>
+  <block id="ada284cbb65ff7bad5814ecb0c6ecb2f" category="list-text">*存储。*我们使用了一个单节点NetApp Cloud Volumes ONTAP 实例、该实例连接了两个500 GB GP2 AWS-EBS卷。然后、这些卷会通过LIF作为一个NFSv4.1卷公开到Kafka集群中。</block>
+  <block id="e86dc7584f98dc172fd46661ef8b935a" category="paragraph">已为所有服务器选择Kafka的默认属性。Zookeeper Swarm也是如此。</block>
+  <block id="91c26176df142d17ab999313541632c5" category="section-title">测试方法</block>
+  <block id="5ca41832794ba1f8118f718465d6ffe4" category="list-text">创建了两个类似的Kafka集群、但差别如下：</block>
+  <block id="fc1a46a26a283c18443e516b58cb0a58" category="list-text">*集群1.*运行生产就绪型ONTAP 9.12.1的后端NFS v4.1服务器由NetApp CVO实例托管。这些代理上安装了RHEL 8.7/RHEL 9.1。</block>
+  <block id="183a9a6c4f97a876554696844cf5cd19" category="list-text">*集群2.*后端NFS服务器是手动创建的通用Linux NFSv3服务器。</block>
+  <block id="8dac413f2b3b7fdfc73d642ae6e79a33" category="list-text">在这两个Kafka集群上都创建了一个演示主题。</block>
+  <block id="dc30a10b7f3dac3bcce7b54e12502e89" category="paragraph">集群1：</block>
+  <block id="0cdb385ae4a7f7449cf10919962c71c8" category="inline-image-macro">此屏幕截图显示了在集群1上创建的演示主题。</block>
+  <block id="c99c5591acf7724aed404fdd225a51d6" category="paragraph"><block ref="c99c5591acf7724aed404fdd225a51d6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="83655cf6beab33b344c9ae17bec532d0" category="paragraph">集群2：</block>
+  <block id="772ab3218dd37dea5c304575fe358498" category="inline-image-macro">此屏幕截图显示了在集群2上创建的演示主题。</block>
+  <block id="1fd29f3ac81f16a73dae3761643fac74" category="paragraph"><block ref="1fd29f3ac81f16a73dae3761643fac74" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="bb392c27040a7eb25cfeb1d96323917e" category="list-text">数据已加载到这两个集群的新创建主题中。这是使用默认Kafka软件包中提供的producer-perf-test工具包实现的：</block>
+  <block id="bd5bb4c79c0fd5aea6e14277bbd9c5fe" category="list-text">已使用telnet对每个集群的Broker-1执行运行状况检查：</block>
+  <block id="ec97e8f78ae99ff145018ede90a47c77" category="list-text">Telnet<block ref="da440d4c50d5bbb0ffa4021d6db8332c" prefix=" " category="inline-code"></block></block>
+  <block id="a93dad1338160e3b828529ad6a585d13" category="list-text">Telnet<block ref="2a3da46f5894b7e15be0ea3be46975cc" prefix=" " category="inline-code"></block></block>
+  <block id="a7892fb38856d45eb1f6cd89d3118830" category="paragraph">下一个屏幕截图显示了两个集群上的代理的成功运行状况检查：</block>
+  <block id="855ba5b1fb4b822400c8e412d08df6e4" category="inline-image-macro">此屏幕截图显示了对两个代理成功执行运行状况检查时的读取结果。</block>
+  <block id="0017223ce5bee33d9165b88b478ac306" category="paragraph"><block ref="0017223ce5bee33d9165b88b478ac306" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a63ad47b1692dcaccf39fb2a5c42e393" category="list-text">为了触发导致使用NFSv3存储卷的Kafka集群崩溃的故障情况、我们在这两个集群上启动了分区重新分配过程。分区重新分配是使用执行的<block ref="5cbd65bd2e4824bbb4876b792e513e10" prefix=" " category="inline-code"></block>。详细过程如下：</block>
+  <block id="9ea6b7d5de4fbe3c468699ad3c8bb6ef" category="list-text">为了为Kafka集群中的某个主题重新分配分区、我们生成了建议的重新分配配置JSON (这是为这两个集群执行的)。</block>
+  <block id="c4c8306a70b22c96715a3f79fe60eca9" category="list-text">生成的重新分配JSON随后保存在中<block ref="d773b1c180323b61e54dc5acaa6fb66f" prefix=" " category="inline-code"></block>。</block>
+  <block id="05e65fb821eccc3b4cb26cc7285d75f8" category="list-text">实际分区重新分配过程由以下命令触发：</block>
+  <block id="83c299e30316ef5659e9b3bbd34b40ad" category="list-text">在完成重新分配几分钟后、对代理进行的另一项运行状况检查显示、使用NFSv3存储卷的集群运行到一个错误的重命名问题描述 中并发生崩溃、而使用NetApp ONTAP NFSv4.1存储卷的集群1则在修复后继续运行、而不会造成任何中断。</block>
+  <block id="197bc98012d3a74f45e086c86b7237bc" category="inline-image-macro">此屏幕截图显示了崩溃代理的输出。</block>
+  <block id="b32b7199140b7e4479d72c3f0c8c506b" category="paragraph"><block ref="b32b7199140b7e4479d72c3f0c8c506b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7796cd6b11de5af34093097d2db9b94f" category="list-text">cluster1-Broker-1处于活动状态。</block>
+  <block id="fef78f6445fec5a3c0d0cb2008e6c34e" category="list-text">CLUSTER2-Broker-1已失效。</block>
+  <block id="e413a6c934b14b11c478c905d8c0489b" category="list-text">检查Kafka日志目录后、可以明显看出、使用NetApp ONTAP NFSv4.1存储卷并进行修复的集群1分配了干净的分区、而使用通用NFSv3存储的集群2则不是由于错误的重命名问题而导致崩溃。下图显示了集群2的分区重新平衡、这会导致在NFSv3存储上对问题描述 进行重命名、操作很不明智。</block>
+  <block id="1c2cca9f5ca8cce4b11ebdc970e4a78c" category="inline-image-macro">此屏幕截图显示了集群2崩溃的日志输出。</block>
+  <block id="14b7c5d09f2ae8862c1f59ee1823a5e3" category="paragraph"><block ref="14b7c5d09f2ae8862c1f59ee1823a5e3" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="43fea21bb45bdea6ebc007efbf3c0053" category="paragraph">下图显示了使用NetApp NFSv4.1存储重新平衡集群1的全新分区。</block>
+  <block id="1ac73d9186e013f2157d22422bc044ff" category="inline-image-macro">此屏幕截图显示了成功为集群1分配清理分区的日志输出、而</block>
+  <block id="bdab654bf4d623f517718ee0c01ce4f2" category="paragraph"><block ref="bdab654bf4d623f517718ee0c01ce4f2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1ecf40a5f4c022357e753dea69b66285" category="inline-link-macro">下一步：为什么要使用NetApp NFS处理Kafka工作负载？</block>
+  <block id="1a2139ac1273f5dc6ebea0a90a0b8caa" category="paragraph"><block ref="1a2139ac1273f5dc6ebea0a90a0b8caa" category="inline-link-macro-rx"></block></block>
+  <block id="8eac57fa6403d9c896c24cb94767e954" category="summary">现在、在使用Kafka的NFS存储中、有一个解决方案 用于愚蠢地重命名问题描述 、您可以创建强大的部署、利用NetApp ONTAP 存储来处理Kafka工作负载。这样不仅可以显著降低运营开销、还可以为Kafka集群带来以下优势。</block>
+  <block id="76827cff700415303c6b7420a1869192" category="doc">为什么选择适用于Kafka工作负载的NetApp NFS？</block>
+  <block id="dfcc8e1c7335951df2dcc87acef063d3" category="inline-link-macro">Previous：Functional validation - Silly rename fix。</block>
+  <block id="daa2168d5bad682cea233a9548c0172f" category="paragraph"><block ref="daa2168d5bad682cea233a9548c0172f" category="inline-link-macro-rx"></block></block>
+  <block id="984b2b530f32710e640393a80677e426" category="paragraph">现在、在使用Kafka的NFS存储中、有一个解决方案 用于愚蠢地重命名问题描述 、您可以创建强大的部署、利用NetApp ONTAP 存储来处理Kafka工作负载。这样不仅可以显著降低运营开销、还可以为Kafka集群带来以下优势：</block>
+  <block id="2dbec01439aed1c5b5fbe8a521623f2d" category="list-text">*降低Kafka代理的CPU利用率。*使用分解的NetApp ONTAP 存储可将磁盘I/O操作与代理分离、从而减少其CPU占用空间。</block>
+  <block id="24c6011da569f3cc3fede5c4eafff91e" category="list-text">*代理恢复时间更快。*由于分离式NetApp ONTAP 存储在Kafka代理节点之间共享、因此与传统Kafka部署相比、新的计算实例可以在任意时间点替换损坏的代理、而无需重建数据。</block>
+  <block id="04615fed33ad7a5a209c685460f2c557" category="list-text">*存储效率。*由于应用程序的存储层现在通过NetApp ONTAP 进行配置、因此客户可以利用ONTAP 带来的存储效率的所有优势、例如实时数据压缩、重复数据删除和数据缩减。</block>
+  <block id="c7444ea1ca211e0d3dd1b89c4f792d00" category="paragraph">我们在本节详细讨论的测试案例中对这些优势进行了测试和验证。</block>
+  <block id="454cd026e1a6a7761ee25bf6682aeb2b" category="section-title">降低了Kafka代理的CPU利用率</block>
+  <block id="70c59ac3ed6ee89fe977676b2dba2f05" category="paragraph">我们发现、当我们在两个sperate Kafka集群上运行类似的工作负载时、总CPU利用率低于其DAS对应项、这两个集群的技术规格相同、但存储技术却不同。当Kafka集群使用ONTAP 存储时、不仅整体CPU利用率较低、而且CPU利用率的增加也显示出比基于DAS的Kafka集群更温和的梯度。</block>
+  <block id="029bc8dc2b20f11a166635df18b0a419" category="section-title">架构设置</block>
+  <block id="c9d177e7e6018d464567bf6a8f9773e7" category="paragraph">下表显示了用于展示CPU利用率降低情况的环境配置。</block>
+  <block id="5ed4a4dbe122b39d7103642bff11de54" category="cell">Kafka 3.2.3基准工具：OpenMessaging</block>
+  <block id="e2322efe17a0927e7f855686b9597301" category="list-text">3个Zookepers—T2.Small</block>
+  <block id="ea55ea3b374458b5777457efaf0db679" category="list-text">3个代理服务器—i3en.2xlarge</block>
+  <block id="d521f24278937c9ada520622e97168d8" category="list-text">1个Grafana—c5n.2xlarge</block>
+  <block id="3cb61b8b67329a8a20d9128458cf6633" category="list-text">4个生产者/使用者—c5n.2xlarge</block>
+  <block id="d34010cfee0f2a6d774e450acd135088" category="cell">RHEL 8.7或更高版本</block>
+  <block id="bce5fbe7fa89f635a887c6af2f95a9be" category="cell">单节点实例—M5.2xLarge</block>
+  <block id="a27bb92a9fdd5b8b4c084b824b810232" category="section-title">基准测试工具</block>
+  <block id="d483516be45a355eab4c7f9b129540c9" category="inline-link">Open消息 传送</block>
+  <block id="0a48e066bcee681066419fb01ccd9f16" category="paragraph">此测试案例中使用的基准测试工具是<block ref="3990ab384d3299fd4c655b02444eb5d6" category="inline-link-rx"></block> 框架。Openmessaging不受供应商限制、不受语言限制；它为金融、电子商务、物联网和大数据提供行业指导；它有助于跨异构系统和平台开发消息传送和流式传输应用程序。下图展示了Open消息 客户端与Kafka集群的交互。</block>
+  <block id="ac6d62ee86368b8c24366434f9b5d5a1" category="inline-image-macro">此图显示了Open消息 客户端与Kafka集群的交互。</block>
+  <block id="370c47f03f13e0b2954d14225811e64c" category="paragraph"><block ref="370c47f03f13e0b2954d14225811e64c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6250495e61aa2eb3c47f71d21f58c6f8" category="list-text">*计算。*我们使用了一个三节点Kafka集群、其中三节点Zookeeper集合在专用服务器上运行。每个代理都通过一个专用LIF将两个NFSv4.1挂载点连接到NetApp CVO实例上的一个卷。</block>
+  <block id="f91ee5c5359f2260d72c50f2c8009925" category="list-text">*监控。*我们将两个节点用于Prometheus-Grafana组合。为了生成工作负载、我们提供了一个单独的三节点集群、该集群可以生成并使用此Kafka集群。</block>
+  <block id="e2b1493c4214be739b2c9349a2c481ef" category="list-text">*存储。*我们使用了一个单节点NetApp Cloud Volumes ONTAP 实例、该实例上挂载了六个250 GB GP2 AWS-EBS卷。然后、这些卷会通过专用LIF作为六个NFSv4.1卷公开到Kafka集群中。</block>
+  <block id="ede634748bd4515e69245593cfc4478c" category="list-text">*配置。*本测试用例中的两个可配置元素是Kafka代理和Open消息 工作负载。</block>
+  <block id="b053d1656e3b9dcaa2b4834fbdc4fb86" category="list-text">*代理配置*为Kafka代理选择了以下规格。我们对所有测量结果使用了复制因子3、如下所示。</block>
+  <block id="d5ee20b40da2061d10bff33a6f13467a" category="inline-image-macro">此图显示了为Kafka代理选择的规格。</block>
+  <block id="d0255d634f4013c1da82b391ac0fa7f5" category="paragraph"><block ref="d0255d634f4013c1da82b391ac0fa7f5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="82f54619faeaa86063f362102c160601" category="list-text">提供了以下规格：* Open消息 基准测试(OMB)工作负载配置*。我们指定了一个目标生产者比率、并在下面重点说明了这一比率。</block>
+  <block id="da43f96a4bfe17af8039df6b15f4f6da" category="inline-image-macro">此图显示了为Open消息 基准工作负载配置选择的规格。</block>
+  <block id="39e4197e665f900596d0136c11eaa851" category="paragraph"><block ref="39e4197e665f900596d0136c11eaa851" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="bc6067cc387407f4d8dc9d623c770cfd" category="list-text">创建了两个类似的集群、每个集群都有自己的一组基准集群Swarms。</block>
+  <block id="c85bb905404dda665035e21b11ab1a58" category="list-text">*集群1.*基于NFS的Kafka集群。</block>
+  <block id="9ed0b3eccef17299a0119b0f28568e78" category="list-text">*集群2.*基于DAS的Kafka集群。</block>
+  <block id="a38c46362b3feb9b3bb5f53b1957d50f" category="list-text">使用Open消息 命令、在每个集群上触发类似的工作负载。</block>
+  <block id="c18ed3feb8720fe4fc76d90a9fa6a6e3" category="list-text">生产率配置在四次迭代中增加、CPU利用率记录在Grafana中。生产率设置为以下级别：</block>
+  <block id="04207e7bb62b9b5d14bdb603f74e683c" category="list-text">10、000</block>
+  <block id="e19784a5420512b2876c7b24680652b5" category="list-text">40,000</block>
+  <block id="e57650a6c15f273334d41da58fa72111" category="list-text">80、000</block>
+  <block id="ee70718f6a92d6c1b099a6942f594963" category="list-text">100、000</block>
+  <block id="c680d437163cc6bab4f9bdb35c3073d0" category="section-title">观察结果</block>
+  <block id="524fdb84d137ea63c19f5efab343f82b" category="paragraph">将NetApp NFS存储与Kafka结合使用具有两个主要优势：</block>
+  <block id="612e27ad9fd383437f1445cf80d554b1" category="list-text">*您可以将CPU利用率降低近三分之一。*与DAS SSD相比、NFS在类似工作负载下的整体CPU利用率更低；节省量从较低生产率的5%到较高生产率的32%不等。</block>
+  <block id="bc31b9852409e970a3a4659fef4b4f93" category="list-text">*在较高的生产率下、CPU利用率漂移减少了三倍。*正如预期的那样、随着生产率的增加、CPU利用率的增加也出现了上升趋势。但是、使用DAS的Kafka代理的CPU利用率从较低生产率的31%上升到较高生产率的70%、即增加39%。但是、在NFS存储后端、CPU利用率从26%上升到38%、增加了12%。</block>
+  <block id="6299b9c8f7a14a0a0ca7407cbb9a187a" category="inline-image-macro">此图显示了基于DAS的集群的行为。</block>
+  <block id="1e669d4d02de91a94a05137bdd1dc491" category="paragraph"><block ref="1e669d4d02de91a94a05137bdd1dc491" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="60e393621d29424b529201d4bc48e3b4" category="inline-image-macro">此图显示了基于NFS的集群的行为。</block>
+  <block id="68437c53e33bd5423258ea6fd20a35f5" category="paragraph"><block ref="68437c53e33bd5423258ea6fd20a35f5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="03d4293a3bcf73010216e2f0399fd571" category="paragraph">此外、当消息达到100、000时、DAS显示的CPU利用率比NFS集群高。</block>
+  <block id="a0e6052c526d2d343fa217b609c943a6" category="inline-image-macro">此图显示了一个基于DAS的集群在收到100、000条消息时的行为。</block>
+  <block id="7c994cd9d5150762faf629fff71db6c6" category="paragraph"><block ref="7c994cd9d5150762faf629fff71db6c6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f9d76c4aeb68cf4d7ef9bf3ce121bdd2" category="inline-image-macro">此图显示了一个基于NFS的集群在收到100、000条消息时的行为。</block>
+  <block id="0dd7c57e19e01e516dc697178954bfd5" category="paragraph"><block ref="0dd7c57e19e01e516dc697178954bfd5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="60a5caa55d79e52e0af298cf19b5c73d" category="section-title">代理恢复速度更快</block>
+  <block id="bc0ed21388f4042414a88362de068e14" category="paragraph">我们发现、Kafka代理在使用共享NetApp NFS存储时恢复速度更快。当Kafka集群中的代理崩溃时、可以使用具有相同代理ID的运行状况良好的代理来替换此代理。执行此测试案例后、我们发现、对于基于DAS的Kafka集群、集群会在新添加的运行状况良好的代理上重建数据、这非常耗时。对于基于NetApp NFS的Kafka集群、替代代理将继续从先前的日志目录读取数据并以更快的速度恢复。</block>
+  <block id="61c964c4267b0fa60eeaa1a7ccdf706e" category="paragraph">下表显示了使用NAS的Kafka集群的环境配置。</block>
+  <block id="f874b8bfe50ce846d8156aabe96e5a34" category="cell">Kafka 3.2.3</block>
+  <block id="687972ccb765e5204fa2220ba3dff130" category="list-text">4个生产者/使用者—c5n.2xlarge</block>
+  <block id="31638173210d76d464e93c8f3f53711c" category="list-text">1个备份Kafka节点—i3en.2xlarge</block>
+  <block id="5d27021addda02398c54d28a4ceee767" category="cell">RHEL8.7或更高版本</block>
+  <block id="6c2cacbcd5f4927358fee9d8a0b60252" category="paragraph">下图展示了基于NAS的Kafka集群的架构。</block>
+  <block id="78f0f1d311c4aae35de324851ecea08a" category="inline-image-macro">此图显示了基于NAS的Kafka集群的架构。</block>
+  <block id="f11ab4a9f30f1c13023294b83c1968fb" category="paragraph"><block ref="f11ab4a9f30f1c13023294b83c1968fb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="64898c42d1ced91d44ff2e383b066de3" category="list-text">*计算。*一种三节点Kafka集群、其中三节点zookeeper集合在专用服务器上运行。每个代理都有两个NFS挂载点、可通过专用LIF连接到NetApp CVO实例上的一个卷。</block>
+  <block id="06e870f499bc90bbe828323be8625621" category="list-text">*监控。* Prometheus-Grafana组合的两个节点。在生成工作负载时、我们会使用一个单独的三节点集群来生成此Kafka集群并将其使用。</block>
+  <block id="1a5c8241b05feb71d0733c2cc2f073c2" category="list-text">*存储。*一个单节点NetApp Cloud Volumes ONTAP 实例、该实例上挂载了六个250 GB GP2 AWS-EBS卷。然后、这些卷会通过专用LIF作为六个NFS卷公开到Kafka集群中。</block>
+  <block id="1f4b2c66cbc586fa9658b18333582240" category="list-text">*代理配置。*本测试用例中的一个可配置元素是Kafka代理。为Kafka代理选择了以下规格。。<block ref="2aa7cd054835892b354c130576c17b61" prefix=" " category="inline-code"></block> 设置为高值、因为这决定了从ISR列表中删除特定节点的速度。在不良节点和运行状况良好的节点之间切换时、您不希望从ISR列表中排除该代理ID。</block>
+  <block id="d6068b616491b51ff179d0138965bba4" category="inline-image-macro">此图显示了为Kafka代理选择的规格。</block>
+  <block id="4bc3bbed275832f042bf33735b245eee" category="paragraph"><block ref="4bc3bbed275832f042bf33735b245eee" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7f6ea5961f5640ce4fa828022abc91c1" category="list-text">创建了两个类似的集群：</block>
+  <block id="71754d8c640cd0a117a3c82af0bd3646" category="list-text">基于EC2的融合集群。</block>
+  <block id="c4b4e0617e4a38a83a00fc9bd8083465" category="list-text">基于NetApp NFS的融合集群。</block>
+  <block id="fbbf8c78f6f01371b1caa7b79bfa91b9" category="list-text">创建了一个备用Kafka节点、其配置与原始Kafka集群中的节点相同。</block>
+  <block id="b2d04ce59538c1ba125aa91697b3854f" category="list-text">在每个集群上创建了一个示例主题、并在每个代理上填充了大约110 GB的数据。</block>
+  <block id="25bb70a763a5456f70f68d98646ecbd6" category="list-text">基于* EC2的集群。*已映射Kafka代理数据目录<block ref="8463a3643fa4431218a88d6e1e85f064" prefix=" " category="inline-code"></block> (在下图中、为cluster1的Broker-1 (左端子)。</block>
+  <block id="bbec1799f53d01620bdd78881b0f0310" category="list-text">*基于NetApp NFS的集群。* Kafka代理数据目录挂载在NFS点上<block ref="ecabd55f704fe0f0dcc41be6e7e7ab83" prefix=" " category="inline-code"></block> (在下图中、为cluster2的Broker-1 [右端子])。</block>
+  <block id="86f85a2a5eed8a784f9a06a8fe205c9a" category="inline-image-macro">此图显示了两个终端屏幕。</block>
+  <block id="390d46f539d5037b90b3b548ca4abc79" category="paragraph"><block ref="390d46f539d5037b90b3b548ca4abc79" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="02296aafa9e3a6424418dd97a673e931" category="list-text">在每个集群中、Broker-1都已终止、以触发失败的代理恢复过程。</block>
+  <block id="fe4c3f604a59eb786f64f0fc5a7cfa01" category="list-text">代理终止后、代理IP地址将作为二级IP分配给备用代理。之所以需要这样做、是因为Kafka集群中的代理可通过以下方式进行标识：</block>
+  <block id="597bfb23e3e10c354a661882e4728565" category="list-text">通过将故障代理IP重新分配给备用代理来分配* IP地址*。</block>
+  <block id="d86a6ec6cd64cd7365ad5d46f7c32d85" category="list-text">*代理ID*。此ID已在备用代理中配置<block ref="05cc8f97f27bba0114c55d20c80d4fe7" prefix=" " category="inline-code"></block>。</block>
+  <block id="c71af5d75ff28fc80b8aa2c6c6832c39" category="list-text">分配IP后、在备用代理上启动了Kafka服务。</block>
+  <block id="e6f0e1804a85ff41f08342fa0cd0e8c5" category="list-text">一段时间后、服务器日志被提取、用于检查在集群中的替代节点上构建数据所用的时间。</block>
+  <block id="b4e6de827ba8af76c3d7cf0e11dee63e" category="paragraph">Kafka代理恢复速度几乎是原来的九倍。我们发现、与在Kafka集群中使用DAS SSD相比、使用NetApp NFS共享存储时、恢复发生故障的代理节点所需的时间要快得多。对于1 TB的主题数据、基于DAS的集群的恢复时间为48分钟、而基于NetApp-NFS的Kafka集群的恢复时间不到5分钟。</block>
+  <block id="fcd5351f741ba27a03aeaa4aff141fde" category="paragraph">我们发现、基于EC2的集群需要10分钟才能在新代理节点上重建110 GB的数据、而基于NFS的集群则需要3分钟才能完成恢复。我们还在日志中观察到、EC2分区的使用者偏移量为0、而在NFS集群上、使用者偏移量是从先前的代理中获取的。</block>
+  <block id="01a0d5c558a836a74adf3dc3fe1de25d" category="section-title">基于DAS的集群</block>
+  <block id="542ac5d9dd4769eb5fb4a8a7da3aa594" category="list-text">备份节点从08：55：53、730开始。</block>
+  <block id="b5f0acf8be0dd329b7dae7c96c9b3dc8" category="inline-image-macro">此图显示了基于DAS的集群的日志输出。</block>
+  <block id="04b616f87a48976d96105dd8da106220" category="paragraph"><block ref="04b616f87a48976d96105dd8da106220" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d48d1996a0b89fc5aa313e48f1c2c149" category="list-text">数据重建过程于09：05：24、860结束。处理110 GB的数据大约需要10分钟。</block>
+  <block id="56e5a0f063355e55045e219c7ff3cae3" category="paragraph"><block ref="56e5a0f063355e55045e219c7ff3cae3" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d10d1e0d7dc7546ca2ee585553c90f24" category="section-title">基于NFS的集群</block>
+  <block id="e163d6812be40c2618b43cc9d2ed21a1" category="list-text">备份节点的启动时间为09：39：17、213。下面突出显示了起始日志条目。</block>
+  <block id="1af763f7fe72be73a16f6a9010023e1f" category="inline-image-macro">此图显示了基于NFS的集群的日志输出。</block>
+  <block id="97d0b1f6f9620cf3ad52778c81887d14" category="paragraph"><block ref="97d0b1f6f9620cf3ad52778c81887d14" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="459f0a82f7fc8505de6db94698f5e9c8" category="list-text">数据重建过程于09：42：29、115结束。处理110 GB的数据大约需要3分钟。</block>
+  <block id="f21adb2cdf95034f20ec22d797a2b2be" category="paragraph"><block ref="f21adb2cdf95034f20ec22d797a2b2be" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="24c9b21a2ca87ae467a56b044593521b" category="paragraph">对于包含大约1 TB数据的代理、重复执行此测试、对于DAS、此测试需要大约48分钟、对于NFS、此测试需要3分钟。下图显示了这些结果。</block>
+  <block id="6994918ac91afbe69dd9a20ab257afa1" category="inline-image-macro">此图显示了根据基于DAS的集群或基于NFS的集群的代理上加载的数据量进行代理恢复所需的时间。</block>
+  <block id="a853fdd02599082a126937405a2c304c" category="paragraph"><block ref="a853fdd02599082a126937405a2c304c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f94ef2603834178da773ec5ccd97683b" category="paragraph">由于Kafka集群的存储层是通过NetApp ONTAP 配置的、因此我们获得了ONTAP 的所有存储效率功能。测试方法是、在Cloud Volumes ONTAP 上配置了NFS存储的Kafka集群上生成大量数据。我们可以看到、由于ONTAP 功能、空间显著减少。</block>
+  <block id="747684069b5286f0282d40e544a04812" category="list-text">4个生产者/使用者—c5n.2xlarge *</block>
+  <block id="d1030267f4090d953bd3cabbb565b51b" category="cell">单节点实例—M5.2xLarge</block>
+  <block id="717373873e977ccdc16d9a371e92b55b" category="list-text">*计算。*我们使用了一个三节点Kafka集群、其中三节点Zookeeper集合在专用服务器上运行。每个代理都通过一个专用LIF在NetApp CVO实例上有两个NFS挂载点到一个卷。</block>
+  <block id="493b3bd02a683f505d957bb27957e1b6" category="list-text">*监控。*我们将两个节点用于Prometheus-Grafana组合。为了生成工作负载、我们使用了一个单独的三节点集群、该集群可能会生成此Kafka集群并将其占用。</block>
+  <block id="cce21f164c30f5ce10f914c4542e252f" category="list-text">*存储。*我们使用了一个单节点NetApp Cloud Volumes ONTAP 实例、该实例上挂载了六个250 GB GP2 AWS-EBS卷。然后、这些卷会通过专用LIF作为六个NFS卷公开到Kafka集群中。</block>
+  <block id="68f29d01fbebb4ad998127522e13950b" category="list-text">*配置。*此测试案例中可配置的元素是Kafka代理。</block>
+  <block id="86e1dede1fc5701676bec82003409aff" category="paragraph">在生产商端关闭了数据压缩、从而使生产商能够生成高吞吐量。而是由计算层处理存储效率。</block>
+  <block id="7da10cbdbba2e826cd4954054b5c1843" category="list-text">已按照上述规格配置Kafka集群。</block>
+  <block id="e857c1394ce43b04a9548d5a3dec0ee5" category="list-text">在集群上、使用Open消息 基准工具生成了大约350 GB的数据。</block>
+  <block id="efc4a3d9bfed3a9a80b0caea9016ca6c" category="list-text">工作负载完成后、将使用ONTAP 系统管理器和命令行界面收集存储效率统计信息。</block>
+  <block id="9c9850d81b369454a9610d48c5bfe8a0" category="paragraph">对于使用OMB工具生成的数据、我们发现空间节省~33%、存储效率比率为1.70：1。如下图所示、生成的数据所使用的逻辑空间为420.3 GB、用于存放数据的物理空间为281.7 GB。</block>
+  <block id="f11c8594ca77ceb3e0ab124768dd061d" category="inline-image-macro">此图显示了VMDISK中的空间节省。</block>
+  <block id="e9cfd3a2897ae25384f04fb11643ac21" category="paragraph"><block ref="e9cfd3a2897ae25384f04fb11643ac21" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3afbd9828e011526955ca93b48b57524" category="inline-image-macro">屏幕截图</block>
+  <block id="1509f2dafd7ef601c7bf6b69e651ebaf" category="paragraph"><block ref="1509f2dafd7ef601c7bf6b69e651ebaf" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="419c9cc44cd35123f9e118ff58d18c8d" category="paragraph"><block ref="419c9cc44cd35123f9e118ff58d18c8d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9336817b144fc8ca86c3b1bf261ff0dc" category="inline-link-macro">接下来：AWS中的性能概述和验证。</block>
+  <block id="2843eeeffb833436dcf46445acebde91" category="paragraph"><block ref="2843eeeffb833436dcf46445acebde91" category="inline-link-macro-rx"></block></block>
+  <block id="bc0316be7ba1d2f8b53c282f09f9b532" category="summary">基于AWS云中的性能对存储层挂载在NetApp NFS上的Kafka集群进行了基准测试。以下各节将介绍这些基准测试示例。</block>
+  <block id="02b742a6a1f227191aecb81d8822d2ee" category="doc">AWS中的性能概述和验证</block>
+  <block id="514db64c2189adefee1fd55171e6c154" category="inline-link-macro">上一篇：为什么要使用NetApp NFS处理Kafka工作负载？</block>
+  <block id="5ff5bf199d6f8c7420eaf142a44e1b84" category="paragraph"><block ref="5ff5bf199d6f8c7420eaf142a44e1b84" category="inline-link-macro-rx"></block></block>
+  <block id="28e2dfa4242e2b504727dab8605d1432" category="section-title">采用NetApp Cloud Volumes ONTAP 的AWS云中的Kafka (高可用性对和单节点)</block>
+  <block id="1dc7a426b0cbf7d35c5edda73f68403d" category="paragraph">采用NetApp Cloud Volumes ONTAP (HA对)的Kafka集群已通过AWS云性能基准测试。以下各节将介绍此基准测试。</block>
+  <block id="a0d574b61a80df70bd921b269853cc18" category="cell">RHEL8.6</block>
+  <block id="462fed98d4e5a4d1be4d08b1fdd3f0df" category="cell">HA对实例—m5dn.12x插入x双节点单节点实例—m5dn.12x插入x 1个节点</block>
+  <block id="29e8b4fdf26266c94b184b76858f935e" category="section-title">NetApp集群卷ONTAP 设置</block>
+  <block id="febbbf2a22b781c8cb2d828a8cbf52d6" category="list-text">对于Cloud Volumes ONTAP HA对、我们在每个存储控制器的每个聚合上创建了两个聚合、其中包含三个卷。对于单个Cloud Volumes ONTAP 节点、我们会在一个聚合中创建六个卷。</block>
+  <block id="72bcc37cf8850d4e74a6305d71727956" category="inline-image-macro">此图显示了aggr3和aggr22的属性。</block>
+  <block id="3fb62725866c106a90b2f81d00b4bfd8" category="paragraph"><block ref="3fb62725866c106a90b2f81d00b4bfd8" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="518fcf406a83698c4ba5d2f41cafab41" category="inline-image-macro">此图显示了aggr2的属性。</block>
+  <block id="2ec040888274c50ed4f2140a40ff8b70" category="paragraph"><block ref="2ec040888274c50ed4f2140a40ff8b70" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5a6501fcefae41cda9ecf425cdc1ef15" category="list-text">为了提高网络性能、我们为HA对和单个节点启用了高速网络连接。</block>
+  <block id="a4de9e1c332b656e2e19024cce28f939" category="inline-image-macro">此图显示了如何启用高速网络连接。</block>
+  <block id="ebfcaff376ca9e4653f751fb35b6ff05" category="paragraph"><block ref="ebfcaff376ca9e4653f751fb35b6ff05" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="678217b29dc6cbf917f08c79a1819f92" category="list-text">我们注意到ONTAP NVRAM的IOPS较多、因此将Cloud Volumes ONTAP 根卷的IOPS更改为2350。Cloud Volumes ONTAP 中的根卷磁盘大小为47 GB。以下ONTAP 命令适用于HA对、同一步骤适用于单个节点。</block>
+  <block id="71ac6dbf3d671b6b9db5497aad37fc67" category="inline-image-macro">此图显示了如何修改卷属性。</block>
+  <block id="a278e7398c9bee17762c3a92d2e6f247" category="paragraph"><block ref="a278e7398c9bee17762c3a92d2e6f247" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a5f2ebf87b5aa37d2e02d041ede98e4f" category="list-text">*计算。*我们使用了一个三节点Kafka集群、其中三节点Zookeeper集合在专用服务器上运行。每个代理都通过一个专用LIF与Cloud Volumes ONTAP 实例上的一个卷具有两个NFS挂载点。</block>
+  <block id="dcb39d8372b01f5eb051372b3d943fbd" category="list-text">*存储。*我们使用了一个HA对Cloud Volumes ONTAP 实例、该实例上挂载了一个6 TB的GP3 AWS-EBS卷。然后、该卷会通过NFS挂载导出到Kafka代理。</block>
+  <block id="e4d534a810d0b173e29dc8ae17ae8e30" category="paragraph"><block ref="e4d534a810d0b173e29dc8ae17ae8e30" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="cce0ad6ab772599285bd32c539025c1f" category="section-title">OpenMessage基准配置</block>
+  <block id="6a1fe63829e046313e1b3073459bf538" category="list-text">为了提高NFS性能、我们需要在NFS服务器和NFS客户端之间建立更多的网络连接、这些连接可以使用nconnect来创建。运行以下命令、使用nconnect选项在代理节点上挂载NFS卷：</block>
+  <block id="a973eefced896f4a698ed64af6dc0199" category="list-text">在Cloud Volumes ONTAP 中检查网络连接。从单个Cloud Volumes ONTAP 节点使用以下ONTAP 命令。同一步骤也适用于Cloud Volumes ONTAP HA对。</block>
+  <block id="828ed34406e4dab30166070e0af1f142" category="list-text">我们使用以下Kafka<block ref="05cc8f97f27bba0114c55d20c80d4fe7" prefix=" " category="inline-code"></block> 在Cloud Volumes ONTAP HA对的所有Kafka代理中。。<block ref="b858cc142f1fc84a95bfd5a17ea09e1d" prefix=" " category="inline-code"></block> 每个代理的属性都不同、其余属性对于代理是通用的。对于Broker1、为<block ref="b858cc142f1fc84a95bfd5a17ea09e1d" prefix=" " category="inline-code"></block> 值如下：</block>
+  <block id="66ddebf2d4ab98ff8682a008dc466ce6" category="list-text">对于Broker2、为<block ref="b858cc142f1fc84a95bfd5a17ea09e1d" prefix=" " category="inline-code"></block> 属性值如下：</block>
+  <block id="fcfc381980a9ed554f51cbfd5b77616a" category="list-text">对于Broker3、为<block ref="b858cc142f1fc84a95bfd5a17ea09e1d" prefix=" " category="inline-code"></block> 属性值如下：</block>
+  <block id="00d57462d7009374713be86d6c491d89" category="list-text">对于单个Cloud Volumes ONTAP 节点、为Kafka<block ref="21d5034d4d99d6ca0da314367f1cccd6" prefix=" " category="inline-code"></block> 与Cloud Volumes ONTAP HA对相同、但不包括<block ref="b858cc142f1fc84a95bfd5a17ea09e1d" prefix=" " category="inline-code"></block> 属性。</block>
+  <block id="cf168cce281f1eccdc9f9fb55c933d29" category="list-text">对于Broker1、为<block ref="b858cc142f1fc84a95bfd5a17ea09e1d" prefix=" " category="inline-code"></block> 值如下：</block>
+  <block id="1692ac5191f19e15cf0e3a8af0820752" category="list-text">对于Broker2、为<block ref="b858cc142f1fc84a95bfd5a17ea09e1d" prefix=" " category="inline-code"></block> 值如下：</block>
+  <block id="4b0728fa62359454465b3a26a608d83c" category="list-text">OMB中的工作负载配置了以下属性：<block ref="9a97642a426510e31f49e0a98ed35e46" prefix=" " category="inline-code"></block>。</block>
+  <block id="433b44cf3e6084d97e5162a06d481873" category="paragraph">。<block ref="f21d26061df60c086aedb156e38f66b5" prefix=" " category="inline-code"></block> 可能因使用情形而异。在性能测试中、我们使用了3 K。</block>
+  <block id="bd9348653b0cfa7f0962b694fa058428" category="paragraph">我们使用OMB中的两个不同驱动程序Sync或Throughput在Kafka集群上生成工作负载。</block>
+  <block id="50e5861dab89d00bf88787e044b2c24f" category="list-text">用于Sync驱动程序属性的YAML文件如下所示<block ref="46c2adf6b9dc6e5883c47b1d76feb008" prefix=" " category="inline-code"></block>：</block>
+  <block id="9ae100f8fb1875133a485c355266af55" category="list-text">用于吞吐量驱动程序属性的YAML文件如下所示<block ref="658e4b47fcd8812e9b0b2886af867717" prefix=" " category="inline-code"></block>：</block>
+  <block id="a887b430cb278fa8f52827a223308324" category="list-text">Kafka集群是按照上述规范使用Terraform和Ansible配置的。Terraform用于使用适用于Kafka集群的AWS实例构建基础架构、Ansible在这些实例上构建Kafka集群。</block>
+  <block id="d9a3b4ca51b8378374ab25c3f90ec2a2" category="list-text">已使用上述工作负载配置和Sync驱动程序触发OMB工作负载。</block>
+  <block id="3f6a85702112dff5bcd0970b7ceb3f02" category="list-text">使用相同工作负载配置的吞吐量驱动程序触发了另一个工作负载。</block>
+  <block id="5f2da6c069f19294c52f39a18639f0d2" category="paragraph">我们使用了两种不同类型的驱动程序来生成工作负载、以便对在NFS上运行的Kafka实例的性能进行基准测试。驱动程序之间的区别在于日志刷新属性。</block>
+  <block id="59f70e2d523801f5ede7c9bb7b48cc76" category="paragraph">对于Cloud Volumes ONTAP HA对：</block>
+  <block id="ffb03fd768825b381d478b114716f8cf" category="list-text">Sync驱动程序一致生成的总吞吐量：~1236 MBps。</block>
+  <block id="84c96e7c92d1f10aac5f3600c7df9299" category="list-text">为吞吐量驱动程序生成的总吞吐量：峰值~1412 MBps。</block>
+  <block id="5896e2cd1e01fb8ef69cdf280a9a38e3" category="paragraph">对于单个Cloud Volumes ONTAP 节点：</block>
+  <block id="d3c9dedf3eb9fce5e9a983948c3cef0e" category="list-text">Sync驱动程序一致生成的总吞吐量：~ 1962MBps。</block>
+  <block id="86acf2bdaf8de60bbc77d3dc8f0e1b12" category="list-text">吞吐量驱动程序生成的总吞吐量：峰值~1660MBps</block>
+  <block id="4bb1ab47e2a029960970bd2e246f9a57" category="paragraph">同步驱动程序可以在日志即时转储到磁盘时生成一致的吞吐量、而吞吐量驱动程序则在将日志批量提交到磁盘时生成突发的吞吐量。</block>
+  <block id="920a7d00fe9032493a9a70c1e6c8972a" category="paragraph">这些吞吐量数字是为给定的AWS配置生成的。为了满足更高的性能要求、可以进一步扩展和调整实例类型、以提高吞吐量。总吞吐量或总速率是生产者和使用者速率的组合。</block>
+  <block id="c5616509b949bfcdee10d7e87918ec9d" category="inline-image-macro">此处显示了四个不同的图形。CVO-HA对吞吐量驱动程序。CVO-HA对Sync驱动程序。CVO单节点吞吐量驱动程序。CVO单节点同步驱动程序。</block>
+  <block id="0e33cf4077892dd25c1212a135870c2b" category="paragraph"><block ref="0e33cf4077892dd25c1212a135870c2b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8c6ad6fcb6db991d86273d33ed35d3c9" category="paragraph">在执行吞吐量或同步驱动程序基准测试时、请务必检查存储吞吐量。</block>
+  <block id="22156e4cc2df3388f0f9dfe0c178db37" category="inline-image-macro">此图显示了延迟、IOPS和吞吐量方面的性能。</block>
+  <block id="cd86eb722445699d358d0ded28ff649a" category="paragraph"><block ref="cd86eb722445699d358d0ded28ff649a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="43553dc216049ebf89672dd26173e4b2" category="inline-link-macro">接下来：使用AFF 内部部署进行性能概述和验证。</block>
+  <block id="310a0beeb0f22515730a4e70d0b545ec" category="paragraph"><block ref="310a0beeb0f22515730a4e70d0b545ec" category="inline-link-macro-rx"></block></block>
+  <block id="19e775234c718c1f4e40d8023fe9dbad" category="paragraph"><block ref="19e775234c718c1f4e40d8023fe9dbad" category="inline-link-macro-rx"></block></block>
+  <block id="996099c5b9fa96634feb727528db335e" category="list-text">什么是Apache Kafka？</block>
+  <block id="64512a184434b7e7734cf3c0a7283f2a" category="list-text">什么是愚蠢的重命名？</block>
+  <block id="c4fe8f5f0b73bc80c0f8289fac9a6123" category="inline-link"><block ref="c4fe8f5f0b73bc80c0f8289fac9a6123" category="inline-link-rx"></block></block>
+  <block id="0bf644a00aca415462aeb30f96e502cf" category="paragraph"><block ref="0bf644a00aca415462aeb30f96e502cf" category="inline-link-rx"></block></block>
+  <block id="4a15e598cdac14bbb90bb0e4020f4a79" category="list-text">正在为流式应用程序读取ONATP。</block>
+  <block id="90bd054ee4c47533d08a6c79bd89dc5a" category="inline-link"><block ref="90bd054ee4c47533d08a6c79bd89dc5a" category="inline-link-rx"></block></block>
+  <block id="05c0a7e8a1aa7fd9f25faae2cfd814e9" category="paragraph"><block ref="05c0a7e8a1aa7fd9f25faae2cfd814e9" category="inline-link-rx"></block></block>
+  <block id="6a12d786416c40632fb0604b5414460b" category="list-text">愚蠢—将问题描述 重命名为Kafka。</block>
+  <block id="e31eb904be590e91ff0fbce5199e738b" category="inline-link"><block ref="e31eb904be590e91ff0fbce5199e738b" category="inline-link-rx"></block></block>
+  <block id="0c1546e70acde7c8a21a85e45df7d5a1" category="paragraph"><block ref="0c1546e70acde7c8a21a85e45df7d5a1" category="inline-link-rx"></block></block>
+  <block id="e861ab8ac55c9110672ee8b4ba3c5990" category="list-text">什么是NFS？</block>
+  <block id="bbdb25bd27a345174d3b4ea622b9ec26" category="inline-link"><block ref="bbdb25bd27a345174d3b4ea622b9ec26" category="inline-link-rx"></block></block>
+  <block id="6b6d6a7e1bfbb25506c4af7f443a7b25" category="paragraph"><block ref="6b6d6a7e1bfbb25506c4af7f443a7b25" category="inline-link-rx"></block></block>
+  <block id="9fee8c35c177577e85d941aa2c9dedc4" category="list-text">什么是Kafka分区重新分配？</block>
+  <block id="2363cdcf0f5fc9a387ed87b925979747" category="inline-link"><block ref="2363cdcf0f5fc9a387ed87b925979747" category="inline-link-rx"></block></block>
+  <block id="12b4d09f121a118c1b63eba5f3523fa2" category="paragraph"><block ref="12b4d09f121a118c1b63eba5f3523fa2" category="inline-link-rx"></block></block>
+  <block id="f06a814ac7d838a2d019219102377120" category="list-text">什么是Open消息 基准？</block>
+  <block id="9466397f90b4d13297982537f7f1f157" category="inline-link"><block ref="9466397f90b4d13297982537f7f1f157" category="inline-link-rx"></block></block>
+  <block id="f42769fbe9abef93dd4da40d8f886c4a" category="paragraph"><block ref="f42769fbe9abef93dd4da40d8f886c4a" category="inline-link-rx"></block></block>
+  <block id="bcc483eab76f7252a6d3060ae223f024" category="list-text">如何迁移Kafka代理？</block>
+  <block id="7702dea2646d94249d97c22a4dcb6f96" category="inline-link"><block ref="7702dea2646d94249d97c22a4dcb6f96" category="inline-link-rx"></block></block>
+  <block id="ebdd7bc6eaa2157f5f400c61c1826417" category="paragraph"><block ref="ebdd7bc6eaa2157f5f400c61c1826417" category="inline-link-rx"></block></block>
+  <block id="3f7e227a8b3d0fc0cdcbf84e2bc565ac" category="list-text">您如何监控与Prometheus的Kafka代理？</block>
+  <block id="2d2cb8fe8b8d32b7fb984622e41036f1" category="paragraph"><block ref="2d2cb8fe8b8d32b7fb984622e41036f1" category="inline-link-rx"></block></block>
+  <block id="01a314c1b9df8a1e936aee8eb0691f89" category="cell">2022年11月</block>
+  <block id="7d576967253ca2f566f9693183407367" category="sidebar">Apache Kafka工作负载与NetApp NFS存储</block>
+  <block id="a5428e6b4b42638886ab5870a883efb9" category="sidebar">NetApp解决方案 for fly将NFS中的问题描述 重命名为Kafka工作负载</block>
+  <block id="0d7c7eeec9388fceaff3d06e03b45fe9" category="sidebar">使用AFF 内部部署进行性能概述和验证</block>
 </blocks>
