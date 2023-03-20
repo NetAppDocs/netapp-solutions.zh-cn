@@ -63,6 +63,12 @@ image:kafka-nfs-image1.png["此图显示了AWS拓扑、其中包含三个专用�
 
 == 测试方法
 
+. 更新 `-is-preserve-unlink-enabled true` 到Kafka卷、如下所示：
++
+....
+aws-shantanclastrecall-aws::*> volume create -vserver kafka_svm -volume kafka_fg_vol01 -aggregate kafka_aggr -size 3500GB -state online -policy kafka_policy -security-style unix -unix-permissions 0777 -junction-path /kafka_fg_vol01 -type RW -is-preserve-unlink-enabled true
+[Job 32] Job succeeded: Successful
+....
 . 创建了两个类似的Kafka集群、但差别如下：
 +
 ** *集群1.*运行生产就绪型ONTAP 9.12.1的后端NFS v4.1服务器由NetApp CVO实例托管。这些代理上安装了RHEL 8.7/RHEL 9.1。
