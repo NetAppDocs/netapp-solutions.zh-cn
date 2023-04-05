@@ -16614,7 +16614,6 @@
   <block id="61c8e892dd7e1908020eb0a312fd4bbb" category="cell">2023年2月15日</block>
   <block id="2ee6a0567aa163f6ace02183cb041cbd" category="cell">在AWS FSX/EC2中添加了PostgreSQL高可用性部署和灾难恢复功能</block>
   <block id="a54420e6e0f519f841f4280cf2545365" category="sidebar">开源数据库</block>
-  <block id="67bb2ef7cf3c5ff59f35f28e513bfda3" category="sidebar">AWS FSX/EC2中的PostgreSQL高可用性部署和灾难恢复</block>
   <block id="1ae3eccde141a365ede8f18b188ae588" category="sidebar">在AWS FSX/EC2中自动部署PostgreSQL HA和灾难恢复</block>
   <block id="6fabfc29f0b3a196c8407c190bb67293" category="sidebar">适用于数据库的SnapCenter</block>
   <block id="1f599c1b266e901a2c8d38e266e23c6f" category="summary">本节介绍详细的测试操作步骤 结果。</block>
@@ -17423,4 +17422,310 @@
   <block id="fb4d860c1938626a4cb9b8f66c6eb6f2" category="cell">2023年3月</block>
   <block id="0ab328bbf8073ef01a9d54504bf7b317" category="paragraph">NetApp存储可以通过多种方式在3个主要超大规模主机中的每一个上作为子系统连接或作为补充NFS数据存储库加以利用。</block>
   <block id="f53db24f3a12ed8109f77a0f93c877af" category="paragraph">本节介绍每个云提供商如何在其各自的公共云产品中支持VMware软件定义的数据中心(SDDC)和/或VMware Cloud Foundation (VCF)堆栈。</block>
+  <block id="4557eca5dd55b5b5ecc0b0ef61f1dd21" category="cell">2023年3月31日</block>
+  <block id="71cc1ac63221b4b22fee5b3615ed204b" category="cell">在AWS FSX/EC2中添加了使用iSCSI/ASM的Oracle数据库部署和保护功能</block>
+  <block id="5df30196a94efca9537353cd93678f3a" category="cell">添加了使用SnapCenter 服务进行Oracle数据库备份、还原和克隆的功能</block>
+  <block id="86d943d0743178f4b51317bf89a99ff7" category="summary">解决方案 提供了有关在AWS FSX ONTAP 存储和EC2计算实例中部署和保护Oracle数据库的概述和详细信息、其中使用ASM作为卷管理器单独重新启动时配置了iSCSI协议和Oracle数据库。</block>
+  <block id="4f3c9d31ccf189b3cb7f494f26684484" category="doc">TR-4965：《使用iSCSI/ASM在AWS FSX/EC2中部署和保护Oracle数据库》</block>
+  <block id="418241bdca49e4aec92c0ff810e8e099" category="paragraph">ASM (自动存储管理)是一种受欢迎的Oracle存储卷管理器、广泛应用于许多Oracle安装。这也是Oracle建议的存储管理解决方案。它提供了传统卷管理器和文件系统的替代方案。自Oracle 11g以来、ASM已随网格基础架构打包、而不是数据库打包在一起。因此、要在不使用RAC的情况下使用Oracle ASM进行存储管理、您必须在独立服务器中安装Oracle网格基础架构、也称为Oracle Restart。这样做确实会在以其他方式简化Oracle数据库部署过程中增加更多的复杂性。但是、顾名思义、在重新启动模式下部署Oracle时、任何出现故障的Oracle服务都会在主机重新启动后重新启动、而无需用户干预、从而提供一定程度的高可用性或HA功能。</block>
+  <block id="47a7a6100cb8ee47f5b0126bacce0e8f" category="paragraph">在本文档中、我们将演示如何在使用EC2计算实例的Amazon FSX for ONTAP 存储环境中部署采用iSCSI协议的Oracle数据库和Oracle ASM。我们还演示了如何通过NetApp BlueXP控制台使用NetApp SnapCenter 服务来备份、还原和克隆Oracle数据库、以便在AWS公共云中进行开发/测试或其他存储效率数据库操作用例。</block>
+  <block id="2dda300300a9a8c69d259bcce9dff4f3" category="list-text">在Amazon FSX中部署Oracle数据库、用于使用iSCSI/ASM的ONTAP 存储和EC2计算实例</block>
+  <block id="a47b73991317ed980de57441ff2ec0b0" category="list-text">使用iSCSI/ASM在公共AWS云中测试和验证Oracle工作负载</block>
+  <block id="7776a288eb4d92068f227343e40955be" category="list-text">测试和验证AWS中部署的Oracle数据库重新启动功能</block>
+  <block id="c7940228c5d339083ac147fb2a5041de" category="list-text">希望使用iSCSI/ASM在AWS公共云中部署Oracle的DBA。</block>
+  <block id="53a21d50adb7cce93e4304c816d40c51" category="list-text">一名数据库解决方案 架构师、希望在AWS公共云中测试Oracle工作负载。</block>
+  <block id="b316baf0d21d8e459e4220a2cf5102a5" category="list-text">希望部署和管理部署到AWS FSX存储的Oracle数据库的存储管理员。</block>
+  <block id="6b41622d6a121d89a6342fe9ff47665c" category="list-text">希望在AWS FSX/EC2中建立Oracle数据库的应用程序所有者。</block>
+  <block id="60eafe38e4de145948f4622ffcf3fecf" category="image-alt">此图详细展示了AWS公共云中使用iSCSI和ASM的Oracle部署配置。</block>
+  <block id="f90fb2d1bd04ce25f4b6a79bead231a3" category="cell">AWS提供的当前版本</block>
+  <block id="ceafc9f8393b625e8cce03cbeba6e867" category="cell">一个FSX HA集群位于同一VPC和可用性区域中</block>
+  <block id="0fcdacbce30d770260160f025dfa97ef" category="cell">两个EC2 t2 xlarge EC2实例、一个用作主数据库服务器、另一个用作克隆数据库服务器</block>
+  <block id="357401b243915afd7226703258f54f69" category="cell">Oracle网格基础架构</block>
+  <block id="8cbabca4a2c1b4268e8c216b1710182d" category="cell">版本19.18</block>
+  <block id="4cd47afc935feac95110477afb324f6f" category="cell">已应用RU修补程序p34762026_190000_Linux-x86-64.zip</block>
+  <block id="a7c40910ade029baa6baa8b8e613db65" category="cell">已应用RU修补程序p34765931_190000_Linux-x86-64.zip</block>
+  <block id="a8b401bad03767cc28230a30d6556c5b" category="cell">Oracle OPatch</block>
+  <block id="cc61533b1a42263eaadfd935441bb4b5" category="cell">版本12.2.0.1.36</block>
+  <block id="8091f15fd8b9f1a609b3a98e8bcdda81" category="cell">最新修补程序p6880880_190000_Linux-x86-64.zip</block>
+  <block id="fed6fa1f1b675c268f8b78258e2545a7" category="cell">SnapCenter 服务</block>
+  <block id="313d712dbc391a0b9d6dca3efe0d2608" category="cell">v2.3.1.2324</block>
+  <block id="b1a9b82f5c1b9e62aff87e622f684e76" category="list-text">* EC2计算实例。*在这些测试和验证中、我们对Oracle数据库计算实例使用了AWS EC2 T2.xlarge实例类型。NetApp建议在生产部署中使用M5类型的EC2实例作为Oracle的计算实例、因为它针对数据库工作负载进行了优化。您需要根据实际工作负载要求根据vCPU数量和RAM量适当调整EC2实例的大小。</block>
+  <block id="11a64b78983fb952ba99933c98fc56df" category="list-text">* FSX存储HA集群单区域或多区域部署。*在这些测试和验证中、我们在一个AWS可用性区域中部署了一个FSX HA集群。对于生产部署、NetApp建议在两个不同的可用性区域中部署一个FSX HA对。FSX HA集群始终配置在一个HA对中、该HA对在一对主动-被动文件系统中进行同步镜像、以提供存储级别的冗余。多区域部署可在单个AWS区域发生故障时进一步提高高可用性。</block>
+  <block id="660a107d1d4a80542a6c11d9a1ed2db4" category="list-text">* FSX存储集群规模估算。*适用于ONTAP 存储文件系统的Amazon FSX可提供高达160、000个原始SSD IOPS、高达4 Gbps吞吐量以及最大192 TiB容量。但是、您可以根据部署时的实际要求、根据已配置的IOPS、吞吐量和存储限制(最小1、024 GiB)来调整集群的大小。可以动态调整容量、而不会影响应用程序可用性。</block>
+  <block id="0907de49479565aae7dd2f8a84ef2915" category="list-text">* Oracle数据和日志布局。*在测试和验证中、我们分别为数据和日志部署了两个ASM磁盘组。在+data ASM磁盘组中、我们在一个数据卷中配置了四个LUN。在+logs ASM磁盘组中、我们在一个日志卷中配置了两个LUN。通常、在适用于ONTAP 的Amazon FSX卷中部署多个LUN可提高性能。</block>
+  <block id="511a515ed4428c1ca16462485a26f4fc" category="list-text">* iSCSI配置。* EC2实例数据库服务器使用iSCSI协议连接到FSX存储。EC2实例通常使用一个网络接口或ENI进行部署。单个NIC接口可同时传输iSCSI和应用程序流量。通过仔细分析Oracle AWR报告来衡量Oracle数据库预览I/O吞吐量要求非常重要、这样才能选择既能满足应用程序流量需求又能满足iSCSI流量吞吐量需求的正确EC2计算实例。NetApp还建议为正确配置多路径的两个FSX iSCSI端点分配四个iSCSI连接。</block>
+  <block id="db1de135a2e3ba870a8f80ce78d2d05e" category="list-text">*要为创建的每个Oracle ASM磁盘组使用的Oracle ASM冗余级别。*由于FSX已在FSX集群级别镜像存储、因此应使用外部冗余、这意味着该选项不允许Oracle ASM镜像磁盘组的内容。</block>
+  <block id="e35fd1c687443b2da6a609bba53616b4" category="list-text">*数据库备份。* NetApp提供SaaS版本的SnapCenter 软件服务、用于在云中备份、还原和克隆数据库、该服务可通过NetApp BlueXP控制台UI访问。NetApp建议实施此类服务、以实现快速(不到一分钟)的快照备份、快速(几分钟)的数据库还原和数据库克隆。</block>
+  <block id="77e4d80ae2f4257081e17476b146608a" category="section-title">解决方案 部署</block>
+  <block id="2398118900b3388f97d9931571f1bbda" category="paragraph">下一节介绍了分步部署过程。</block>
+  <block id="782bd8949cb40c80fd3f3126eccab35a" category="section-title">部署的前提条件</block>
+  <block id="2cb106b524fea2beb3ee19372f04427b" category="list-text">在AWS EC2控制台中、您必须部署两个EC2 Linux实例、一个用作主Oracle数据库服务器、另一个用作可选的克隆目标数据库服务器。有关环境设置的详细信息、请参见上一节中的架构图。另请查看 <block ref="b75ecbbec453f67f58d497ccd97a8075" category="inline-link-macro-rx"></block> 有关详细信息 ...</block>
+  <block id="11f86864c5928690c88625e77eb1a480" category="list-text">在AWS EC2控制台中、部署适用于ONTAP 存储HA集群的Amazon FSX以托管Oracle数据库卷。如果您不熟悉FSX存储的部署、请参见相关文档 <block ref="17d8b312d287f0afd6f44b3f25c4f20b" category="inline-link-macro-rx"></block> 了解分步说明。</block>
+  <block id="dd303169f721e79331b3683ddafddcc1" category="list-text">可以使用以下Terraform自动化工具包执行步骤2和步骤3、该工具包会创建一个名为的EC2实例<block ref="460dc55b5ffb0266f2c889b06ee73344" prefix=" " category="inline-code"></block> 和名为的FSX文件系统<block ref="8cbb7b3050d3c3aa08a529f429bc4555" prefix=" " category="inline-code"></block>。执行前、请仔细阅读该说明并根据您的环境更改变量。</block>
+  <block id="62ee860e3d0c08c6573d2e328543e8de" category="section-title">EC2实例内核配置</block>
+  <block id="39fb43106d288435c8737acd0c5b18ba" category="paragraph">在配置了前提条件的情况下、以root用户身份登录到EC2实例、以便为Oracle安装配置Linux内核。</block>
+  <block id="5a8cdca62a149c76be848350ba5cbfd0" category="list-text">创建暂存目录<block ref="d66a510d21988f96fd9c018f6843c729" prefix=" " category="inline-code"></block> 文件夹并设置<block ref="f1c1592588411002af340cbaedd6fc33" prefix=" " category="inline-code"></block> 权限。</block>
+  <block id="e252f38e51fe6c121fdf68268f7365b7" category="list-text">将Oracle二进制安装文件和其他所需的rpm文件下载并暂存到<block ref="d66a510d21988f96fd9c018f6843c729" prefix=" " category="inline-code"></block> 目录。</block>
+  <block id="2463a0e4e0f5e0cae480165d25c3d218" category="paragraph">请参见以下要在中说明的安装文件列表<block ref="d66a510d21988f96fd9c018f6843c729" prefix=" " category="inline-code"></block> 在EC2实例上。</block>
+  <block id="7b25ef659963c88fe23b78fc4712aabf" category="list-text">安装Oracle 19c预安装RPM、以满足大多数内核配置要求。</block>
+  <block id="1527576f8dc9eea4d63eb05b809aaa52" category="list-text">下载并安装缺少的<block ref="d2e5af6ee2b267de9dac1b472a03adf3" prefix=" " category="inline-code"></block> 在Linux 8中。</block>
+  <block id="b2371ec5566671ad5a4ad4a5ea6cba11" category="list-text">从NetApp下载并安装NetApp主机实用程序。</block>
+  <block id="b6e7702627b94eaa3030b577d6d705bc" category="list-text">安装<block ref="c8dff58175a7ddfedf00d77953ef42dd" prefix=" " category="inline-code"></block>、在EC2实例中不可用。</block>
+  <block id="9a16a877dc258dab15fccea468433118" category="list-text">安装Open JDK 1.8版。</block>
+  <block id="1684a037c41a5a896a961b99be3d79c7" category="list-text">安装iSCSI启动程序实用程序。</block>
+  <block id="c9d53c5d17f956afae2225c70107de12" category="list-text">安装<block ref="4c17da57a03262c55ed7eaf9b11476b4" prefix=" " category="inline-code"></block>。</block>
+  <block id="390748df672cba58066187eedd5aae0e" category="list-text">安装<block ref="a3938eeca32dce6ca3908d2eae163c75" prefix=" " category="inline-code"></block>。</block>
+  <block id="8d5128c24aba40267289419650d61baf" category="list-text">在当前系统中禁用透明页面。</block>
+  <block id="0410d25eb8075ef0d6eb88ced58d20d0" category="paragraph">在中添加以下行<block ref="08561da4afe8299be4016c92bfe83435" prefix=" " category="inline-code"></block> 以禁用<block ref="d78ade61a64b6a278ed6278e7cfd91f3" prefix=" " category="inline-code"></block> 重新启动后：</block>
+  <block id="ac762383bc7427decd2147abbadaccaa" category="list-text">通过更改禁用SELinux<block ref="cb42f4736bc8f64983eeffc1e0b4f44a" prefix=" " category="inline-code"></block> to<block ref="52647e37ec523adfcaa3fec9bcef128e" prefix=" " category="inline-code"></block>。要使更改生效、必须重新启动主机。</block>
+  <block id="2d1601e142ebdb74931ee9a254b65262" category="list-text">将以下行添加到<block ref="8b5eec1c5f63341b700263cc37cbae02" prefix=" " category="inline-code"></block> 设置不带引号的文件描述符限制和堆栈大小<block ref="fcc3d7489d15ef49dbbf735234234cf7" prefix=" " category="inline-code"></block>。</block>
+  <block id="410eaf64cdfb52cb0921ea732490d0db" category="list-text">按照以下说明向EC2实例添加交换空间： <block ref="53c9867a131506eab4afe1a1678bb974" category="inline-link-macro-rx"></block> 要添加的确切空间量取决于RAM大小、最高可达16G。</block>
+  <block id="c9f7be60d92cf42de8f14f5ab8547971" category="list-text">更改<block ref="b7e6d8bff01730e41b7d91437e6a25d0" prefix=" " category="inline-code"></block> 在中<block ref="c30b27a1b058924e30212c72bb553665" prefix=" " category="inline-code"></block> 配置文件的时间从120秒到5秒不等。</block>
+  <block id="bca8f765f0293b09679dd10ece969e68" category="list-text">在EC2实例上启用并启动iSCSI服务。</block>
+  <block id="3cb574654986fcf318668b4bf3313724" category="list-text">检索要用于数据库LUN映射的iSCSI启动程序地址。</block>
+  <block id="d5dbcd1ace089fec7f75fa03e884cb93" category="list-text">添加要用于ASM sysasm组的ASM组</block>
+  <block id="f7b4c2e912a168f005ed7cc2b4799c08" category="list-text">修改Oracle用户以将ASM添加为二级组(Oracle用户应在安装Oracle预安装RPM后创建)。</block>
+  <block id="8d3a75a7cdef66372dcf58e6278bba70" category="list-text">重新启动EC2实例。</block>
+  <block id="64014fc61a9016f43a5537d6da141cc1" category="section-title">配置数据库卷和LUN并将其映射到EC2实例主机</block>
+  <block id="44d3f8c485fe8f9d96289b7bb283f99c" category="paragraph">从FSX控制台配置三个卷以托管Oracle数据库二进制文件、数据和日志文件。</block>
+  <block id="c848cfd9c04d86e7b9919e11add79f6c" category="list-text">以fsxadmin用户身份通过SSH登录到FSX集群。</block>
+  <block id="eff24d82c422927b06fd0cacd430b653" category="list-text">执行以下命令为Oracle二进制文件创建卷。</block>
+  <block id="569cffa50e6428a06bffa2e19d12e0e3" category="list-text">执行以下命令为Oracle数据创建卷。</block>
+  <block id="9985026df910c788cb47555f7d72a68e" category="list-text">执行以下命令为Oracle日志创建卷。</block>
+  <block id="cc70e928fff63a76ca8cf30a05d95a80" category="list-text">在数据库二进制卷中创建二进制LUN。</block>
+  <block id="dc4301dd6be2058cb9d1a1e3408388eb" category="list-text">在数据库数据卷中创建数据LUN。</block>
+  <block id="49cf66e4521ade9e7ffc2aae313ee978" category="list-text">在数据库日志卷中创建日志LUN。</block>
+  <block id="3e408df5c51ac33acd5978f1f48cab19" category="list-text">使用从上述EC2内核配置的步骤14中检索到的启动程序为EC2实例创建一个igroup。</block>
+  <block id="ceed9a3dd22f247b70bb6774943f9284" category="list-text">将LUN映射到上述创建的igroup。按顺序增加卷中每个附加LUN的LUN ID。</block>
+  <block id="18519dc23f47343cf516e789bf2e818b" category="list-text">验证LUN映射。</block>
+  <block id="3208f25d37711dd9ffc43d93ada2a3cc" category="paragraph">这将返回：</block>
+  <block id="35c1914e41e83f92dd8779f5708f3224" category="section-title">数据库存储配置</block>
+  <block id="47d78479fc855bd2f99f02fb94118789" category="paragraph">现在、为EC2实例主机上的Oracle网格基础架构和数据库安装导入并设置FSX存储。</block>
+  <block id="d4d6ba977b18ebe6448e464802298bbf" category="list-text">以EC2-user身份通过SSH登录到EC2实例。然后更改为SSH密钥和EC2实例IP地址。</block>
+  <block id="a7939166c08e8ac6da1530309825a401" category="list-text">使用任一SVM iSCSI IP地址发现FSX iSCSI端点。然后、更改为您的环境专用门户地址。</block>
+  <block id="1bc103d13645d8a07f4a05f2eee064f8" category="list-text">登录到每个目标以建立iSCSI会话。</block>
+  <block id="fc5113f60b8b0390133d7abda7290515" category="paragraph">命令的预期输出为：</block>
+  <block id="c541a8df6ddefee9ae370e31bf1109cc" category="list-text">查看并验证活动iSCSI会话的列表。</block>
+  <block id="efe44c0a293be7b9e3d17291e1bd0fce" category="paragraph">返回iSCSI会话。</block>
+  <block id="e4a8008161f8d488131b8bf10831bf6c" category="list-text">验证LUN是否已导入到主机中。</block>
+  <block id="f467f5c5010c383146b412ebc7d2a967" category="paragraph">此操作将从FSX返回Oracle LUN的列表。</block>
+  <block id="08b7a2f63e8caee3c8d0f32a3d9dd5ea" category="list-text">配置<block ref="9ac80d53ede05256c28cf9e043eb423c" prefix=" " category="inline-code"></block> 包含以下默认条目和黑名单条目的文件。</block>
+  <block id="794a654f60052714db9eba2a7ff4b608" category="list-text">启动多路径服务。</block>
+  <block id="65b4cea56e6d27de22dc85622fe6a7fb" category="paragraph">现在、多路径设备将显示在中<block ref="9c9f766701f811ef6f170c7a3453c53f" prefix=" " category="inline-code"></block> 目录。</block>
+  <block id="d282577e5b16ee7f17ce7cd0f718be4c" category="list-text">通过SSH以fsxadmin用户身份登录到FSX集群、以检索每个LUN的序列号十六进制值、该值以6c574xxx开头...、十六进制值以3600a0980开头、即AWS供应商ID。</block>
+  <block id="2720e08c2a6367757e2dc57afee1620c" category="paragraph">并返回如下内容：</block>
+  <block id="ecf2aff9ad02b9026ff22f4fc6a68e73" category="list-text">更新<block ref="bacd7d75ae434c4a777b1baef0e31f36" prefix=" " category="inline-code"></block> 文件、用于为多路径设备添加用户友好名称。</block>
+  <block id="75104fff60881baaf37dcb441594f8a1" category="paragraph">包含以下条目：</block>
+  <block id="e73e686392436f1038dd926c4a775f24" category="list-text">重新启动多路径服务以验证下的设备<block ref="9c9f766701f811ef6f170c7a3453c53f" prefix=" " category="inline-code"></block> 已更改为LUN名称与串行十六进制ID。</block>
+  <block id="5f9e8fcf665ea0cca4e1c6eea45645e4" category="paragraph">检查<block ref="9c9f766701f811ef6f170c7a3453c53f" prefix=" " category="inline-code"></block> 返回如下内容：</block>
+  <block id="6f6e08574875efd99672521b7c49bd5f" category="list-text">使用一个主分区对二进制LUN进行分区。</block>
+  <block id="d90e8b8ea181e08e8bf690f2c3143681" category="list-text">使用XFS文件系统格式化分区的二进制LUN。</block>
+  <block id="999ccfc779bcbed2a3561bff37f884d1" category="list-text">将二进制LUN挂载到<block ref="a8946fa5f211c5345e3610710e471cb4" prefix=" " category="inline-code"></block>。</block>
+  <block id="22e45c04a42f3d5d2b9ca76b19445949" category="list-text">更改<block ref="a8946fa5f211c5345e3610710e471cb4" prefix=" " category="inline-code"></block> 将点所有权挂载到Oracle用户及其所属的主组。</block>
+  <block id="a7d5cd359d07f4d25f07c14cac7c892f" category="list-text">查找二进制LUN的UUI。</block>
+  <block id="419b15da0e06224d0919aaf7cf7c0394" category="list-text">将挂载点添加到<block ref="816a3ef77b62ade41c3f936c958aa555" prefix=" " category="inline-code"></block>。</block>
+  <block id="4f86d8e0be25b09fa4c4f087139fcd0d" category="paragraph">添加以下行。</block>
+  <block id="b79f3809b435063f1d43819c9baaf816" category="admonition">请务必仅使用UUID和nodfail选项挂载二进制文件、以避免在EC2实例重新启动期间可能出现根锁定问题。</block>
+  <block id="ad7b51bb9b820412dddd78b34ccf36ea" category="list-text">以root用户身份为Oracle设备添加udev规则。</block>
+  <block id="8e7c7ff83f0da1eceabb8c7fbb255de4" category="paragraph">包括以下条目：</block>
+  <block id="d347f5dbb8625ab56eb3b8ad0f1ed6ca" category="list-text">以root用户身份重新加载udev规则。</block>
+  <block id="967abd537fdc45fbfc59ee4d5fbd70d2" category="list-text">以root用户身份触发udev规则。</block>
+  <block id="aeead6d2d9990fef69ffefd2efd88b90" category="list-text">以root用户身份重新加载multipathd。</block>
+  <block id="3cadabe14e57cb049891c97e754906d7" category="section-title">Oracle网格基础架构安装</block>
+  <block id="2ba967266d1ac37f6ee2c138c7a219f1" category="list-text">通过SSH以EC2-user身份登录到EC2实例、并通过取消注释启用密码身份验证<block ref="cd94e87e5216cd088acdc4de0e9c30f1" prefix=" " category="inline-code"></block> 然后进行注释<block ref="f18918133cfc22e041baab71b051c41f" prefix=" " category="inline-code"></block>。</block>
+  <block id="f919e378a236907726426311e1222ca5" category="list-text">重新启动sshd服务。</block>
+  <block id="886890ea240491bd5c7fbf2ad26038e0" category="list-text">重置Oracle用户密码。</block>
+  <block id="312dbdb4917346c5535b58edeb72d5d8" category="list-text">以Oracle Restart软件所有者用户(Oracle)身份登录。按如下所示创建Oracle目录：</block>
+  <block id="2fce107e9da63a27050a1b7738518797" category="list-text">更改目录权限设置。</block>
+  <block id="de76f7d30e13c7b0fac443a1b582500b" category="list-text">创建网格主目录并进行更改。</block>
+  <block id="ca3eab9cf7a8f03f19d82f95a9ccebc0" category="list-text">解压缩网格安装文件。</block>
+  <block id="4cb0c768cefd4361adc66dd3dfac2ad8" category="list-text">从网格主页中、删除<block ref="29b6fb214b3224ca10c7261aa01e44b5" prefix=" " category="inline-code"></block> 目录。</block>
+  <block id="572656c141066b10c23d5205e70be53b" category="list-text">从网格主页复制<block ref="63628571f2dfaeb6f0a0a676290e6e82" prefix=" " category="inline-code"></block> 到grid_home、然后将其解压缩。</block>
+  <block id="5d940bd40ee32694345bce5774d5c678" category="list-text">从网格主页修改<block ref="ef8657f0a0a00af93ba7f1c8885339ca" prefix=" " category="inline-code"></block>、取消注释并替换<block ref="bb7738211dd8eb3dbadf4cc63ae8eb8a" prefix=" " category="inline-code"></block> 使用<block ref="b2affc1a941fe7e5e65933911250249c" prefix=" " category="inline-code"></block>。</block>
+  <block id="e4dae708382daa7f76913b9e5b686a1c" category="list-text">准备<block ref="77d9f4d56c58834c8dacf6d0cb94e085" prefix=" " category="inline-code"></block> 文件以进行静默安装、并将rsp文件置于中<block ref="d66a510d21988f96fd9c018f6843c729" prefix=" " category="inline-code"></block> 目录。rsp文件应涵盖A、B和G部分、并提供以下信息：</block>
+  <block id="72eab9d7fc33889fd5bf6a85943c4e4a" category="list-text">以root用户身份登录到EC2实例并进行设置<block ref="e1f651debac4f720c13ae930ff3ca14a" prefix=" " category="inline-code"></block> 和<block ref="456a3c82b7208b5c2a000597b1330564" prefix=" " category="inline-code"></block>。</block>
+  <block id="d134d418859128801ec294cd10bcbd8e" category="list-text">配置磁盘设备以与Oracle ASM筛选器驱动程序结合使用。</block>
+  <block id="8826276fbf00e07d49f72479d3b0da2b" category="list-text">将设备所有权更改为<block ref="ab3d4d3deefe8df93125b9c71378718c" prefix=" " category="inline-code"></block>。</block>
+  <block id="3e6c5f0c8e9c1310879c66839bb0f8d5" category="list-text">安装<block ref="a27b4e2b8f4a0b0419894dfeac36419e" prefix=" " category="inline-code"></block>。</block>
+  <block id="cfdbf231484c64b98bc4f3569cd7b324" category="list-text">未设置<block ref="c0c2c8394b04a929ffc60091aa1f72ca" prefix=" " category="inline-code"></block>。</block>
+  <block id="9817d9ff96af960709b8094b73294545" category="list-text">以Oracle用户身份登录到EC2实例、然后在中提取修补程序<block ref="d66a510d21988f96fd9c018f6843c729" prefix=" " category="inline-code"></block> 文件夹。</block>
+  <block id="971a0a45b8dae69114b7ad2a60cb7f96" category="list-text">以Oracle用户身份启动<block ref="30c950549715985c6b7c7cd6990d0f4b" prefix=" " category="inline-code"></block> 用于网格基础架构安装。</block>
+  <block id="5de6732dda1e7bccbd8e8b367ad248dd" category="paragraph">忽略有关网格基础架构的错误组的警告。我们正在使用一个Oracle用户来管理Oracle Restart、因此这是预期的。</block>
+  <block id="306b4d4b77c54aeb5cbfcd36749043f5" category="list-text">以root用户身份执行以下脚本：</block>
+  <block id="7dff0a250c79eafa071ee2d5713b7123" category="list-text">以Oracle用户身份执行以下命令以完成配置：</block>
+  <block id="ecbea27c1b60fd5cd72a96184d8d2bef" category="list-text">如果您收到消息"[ins-43080] Some of the configuration assists failed、were cancelled or skipped"、请以Oracle用户身份运行以下命令以检查是否已创建数据磁盘组资源。</block>
+  <block id="02521e82deae97953ff19793ad44493b" category="list-text">如果未创建数据磁盘组、请以root用户身份重新加载multipathd。</block>
+  <block id="e8c5b866f6d35a070a878d3abb75cf8d" category="list-text">作为Oracle用户、如果数据磁盘组不是在网格安装期间创建的、请创建该数据磁盘组。</block>
+  <block id="3f2a67de0c5824d878c62c0bc347e09b" category="list-text">以Oracle用户身份创建日志磁盘组。</block>
+  <block id="f71fbb7ff86224d636aac5f9bb42f27d" category="list-text">以Oracle用户身份、在安装配置后验证网格服务。</block>
+  <block id="f9ba171dd47a8cef31bac8aa17eeb44d" category="list-text">Valiate ASM筛选器驱动程序状态。</block>
+  <block id="b7e3e332087b6a041c83ce22cce9043c" category="section-title">Oracle数据库安装</block>
+  <block id="9250c441cd32cef9ac89c4aaea3311e2" category="list-text">以Oracle用户身份登录并取消设置<block ref="88ee3ad336791517a935931e1e50382a" prefix=" " category="inline-code"></block> 和<block ref="1548c2f12948ef1485a923f5891a3489" prefix=" " category="inline-code"></block> 如果已设置。</block>
+  <block id="9c1b98a904b357f470c8d87cf837d8cf" category="list-text">创建Oracle DB主目录并进行更改。</block>
+  <block id="74d5f0f080c7e7c4f0011e6b16a1072f" category="list-text">解压缩Oracle数据库安装文件。</block>
+  <block id="1fdd02c9779c06712368af7ed65c00dd" category="list-text">从数据库主目录中、删除<block ref="29b6fb214b3224ca10c7261aa01e44b5" prefix=" " category="inline-code"></block> 目录。</block>
+  <block id="948ac6ddaa5b19c62366a04abf60547d" category="list-text">从数据库主页复制<block ref="63628571f2dfaeb6f0a0a676290e6e82" prefix=" " category="inline-code"></block> to<block ref="22f5bd75d60d3065afc99a50bc98d9ae" prefix=" " category="inline-code"></block>、然后将其解压缩。</block>
+  <block id="d86c0eec890e4216540c2b834f6339f5" category="list-text">在数据库主页中、修改<block ref="ef8657f0a0a00af93ba7f1c8885339ca" prefix=" " category="inline-code"></block>和取消注释并替换<block ref="bb7738211dd8eb3dbadf4cc63ae8eb8a" prefix=" " category="inline-code"></block> 使用<block ref="b2affc1a941fe7e5e65933911250249c" prefix=" " category="inline-code"></block>。</block>
+  <block id="95233719931805924ded9cd671e036df" category="list-text">从<block ref="d66a510d21988f96fd9c018f6843c729" prefix=" " category="inline-code"></block> 目录中、解压缩DB 19.18 RU修补程序。</block>
+  <block id="0181cf4258f052eaf2d48f78cd4fed7b" category="list-text">在中准备DB静默安装rsp文件<block ref="2d9ffa0a3db25b02bcd0091245449764" prefix=" " category="inline-code"></block> 具有以下值的目录：</block>
+  <block id="0838265859443cbbcdfc0834fb13e402" category="list-text">执行静默纯软件数据库安装。</block>
+  <block id="4c3b15e92dacacd38d6f1d3174ad1e9f" category="list-text">运行<block ref="08030ad08b2b991d61b424afd8828758" prefix=" " category="inline-code"></block> 在仅安装软件后编写脚本。</block>
+  <block id="67bee4155203a684288d87caec62ca7e" category="list-text">创建<block ref="c170c347c737b82ad62c48db1f7bff3c" prefix=" " category="inline-code"></block> 包含以下条目的文件：</block>
+  <block id="6ffd5c1d97bca346a601eadabda25b0d" category="list-text">使用dbca创建数据库。</block>
+  <block id="0bdb291c3f45b8d3e9cd39da181febb1" category="list-text">创建数据库后验证Oracle重新启动HA服务。</block>
+  <block id="05472424b7ce7bd118009f6cde3a0614" category="list-text">设置Oracle用户<block ref="9e0037ad71166970bde5f910189cc94a" prefix=" " category="inline-code"></block>。</block>
+  <block id="cadaa91ab9001028d3a153b4325f10a5" category="list-text">添加以下条目：</block>
+  <block id="ab5f5bab123b3441fc9c838b46ff1150" category="list-text">验证已创建的CDB/PDB。</block>
+  <block id="561a4d93b7f68977bd06286fa019a254" category="list-text">将数据库恢复位置设置为+logs磁盘组。</block>
+  <block id="a0b58d032d36bf0801e5ca3a2aa515d9" category="list-text">使用sqlplus登录到数据库并启用归档日志模式。</block>
+  <block id="0a31d377857a1d2e24f8e85950a44aac" category="paragraph">至此、在适用于ONTAP 和EC2计算实例的Amazon FSX上完成Oracle 19c版本19.18重新启动部署。如果需要、NetApp建议将Oracle控制文件和联机日志文件重新定位到+logs磁盘组。</block>
+  <block id="4d3617697efd9a8201cb07f5e610e306" category="section-title">自动化部署选项</block>
+  <block id="3809b24192da05cb9bdf6fc7f86ce5d6" category="paragraph">NetApp将随Ansible发布一个完全自动化的解决方案 部署工具包、以便于实施此解决方案。请查看此工具包的可用性。发布后、此处将发布一个链接。</block>
+  <block id="6cf7e59477fa5c8722c79a0910c40cd8" category="section-title">使用SnapCenter 服务备份、还原和克隆Oracle数据库</block>
+  <block id="a0c9cf73752e72933d08cadbcdf8c05a" category="inline-link-macro">适用于Oracle的SnapCenter 服务</block>
+  <block id="916b48729c536f6a12c2122673bc394a" category="paragraph">请参见 <block ref="3e99507ec3d2036a04c899dadd6c66e9" category="inline-link-macro-rx"></block> 有关使用NetApp BlueXP控制台备份、还原和克隆Oracle数据库的详细信息。</block>
+  <block id="aa5a3d07c03024007dadc921fdbe67cb" category="paragraph">要了解有关本文档中所述信息的更多信息，请查看以下文档和 / 或网站：</block>
+  <block id="5424ed1a1b4c4815e1d1676f23aa1da4" category="list-text">在安装新数据库的情况下为独立服务器安装Oracle网格基础架构</block>
+  <block id="a7410994d191ba6c350f0f764df86934" category="inline-link-macro"><block ref="a7410994d191ba6c350f0f764df86934" category="inline-link-rx"></block></block>
+  <block id="094328bca120efd3d6fba90d69b806f8" category="paragraph"><block ref="094328bca120efd3d6fba90d69b806f8" category="inline-link-macro-rx"></block></block>
+  <block id="8ae84196c6f373ef488c40b0b95e030d" category="list-text">使用响应文件安装和配置Oracle数据库</block>
+  <block id="ee622e67d0075e37fff43bbf337e98b2" category="inline-link-macro"><block ref="ee622e67d0075e37fff43bbf337e98b2" category="inline-link-rx"></block></block>
+  <block id="2d94d091f5afb89e4f1aab002cef14a3" category="paragraph"><block ref="2d94d091f5afb89e4f1aab002cef14a3" category="inline-link-macro-rx"></block></block>
+  <block id="6845898fa7e9ec1fa3b8934d8e91b0c1" category="summary">解决方案 提供了有关使用BlueXP控制台使用NetApp SnapCenter SaaS进行Oracle数据库备份、还原和克隆的概述和详细信息。</block>
+  <block id="9caa022ffa5eb0757a1a86c936148e7f" category="doc">TR-4964：《使用SnapCenter 服务备份、还原和克隆Oracle数据库》</block>
+  <block id="8ae5c33b293249b4befae60cdc1d6364" category="paragraph">SnapCenter 服务是一款SaaS版本的经典SnapCenter 数据库管理UI工具、可通过NetApp BlueXP云管理控制台访问。它是NetApp云备份和数据保护产品不可或缺的一部分、适用于在NetApp云存储上运行的Oracle和HANA等数据库。这种基于SaaS的服务简化了传统的SnapCenter 独立服务器部署、该部署通常需要在Windows域环境中运行的Windows服务器。</block>
+  <block id="05530a14144f96daea2a6f96bb61b38b" category="paragraph">在本文档中、我们将演示如何设置SnapCenter 服务来备份、还原和克隆部署到Amazon FSX for ONTAP 存储和EC2计算实例的Oracle数据库。虽然设置和使用起来要简单得多、但SnapCenter 服务可提供传统SnapCenter UI工具中提供的主要功能。</block>
+  <block id="d47397f53e6c7682397a8f8688daddcc" category="list-text">为Amazon FSX for ONTAP 中托管的Oracle数据库执行数据库备份和快照</block>
+  <block id="403ca933973134cbaf8f9354830b4d9c" category="list-text">发生故障时恢复Oracle数据库</block>
+  <block id="6f2d8b46ec98e47be22d4747b82a02d2" category="list-text">为开发/测试环境或其他使用情形快速、高效地克隆主数据库</block>
+  <block id="de98fb1438e12380191eaa97d6c6b90d" category="paragraph">本解决方案 面向以下受众：</block>
+  <block id="bdc080d1f53262a817a1472a559d75dd" category="list-text">管理在适用于ONTAP 存储的Amazon FSX上运行的Oracle数据库的DBA</block>
+  <block id="d6e066caa1ab2a9ead96779ac0a95670" category="list-text">解决方案 架构师、负责在公共AWS云中测试Oracle数据库备份、还原和克隆</block>
+  <block id="3e05bb0c3eae0733dd3f5b6eda0da89e" category="list-text">支持和管理适用于ONTAP 存储的Amazon FSX的存储管理员</block>
+  <block id="e55870c74749ffe7a1d8b4c1a9cb5b60" category="list-text">拥有部署到Amazon FSX for ONTAP 存储的应用程序的应用程序所有者</block>
+  <block id="a9bed64bc676f536e10a189728888614" category="image-alt">此图详细展示了BlueXP控制台中适用于应用程序的Cloud Backup、包括其管理的UI、连接器和资源。</block>
+  <block id="ccd967b78d046cba29272c0823500e3f" category="paragraph">此图详细展示了BlueXP控制台中适用于应用程序的Cloud Backup、包括UI、连接器及其管理的资源。</block>
+  <block id="6f4cd1b0523380b825fa78ec70975a14" category="cell">两个EC2 t2 xlarge EC2实例、一个用作主数据库服务器、另一个用作克隆数据库服务器</block>
+  <block id="86fae68c14c723bf36942c2c83e8a847" category="list-text">*连接器应与数据库和FSX部署在同一VPC中。*如果可能、应将连接器部署在同一AWS VPC中、以便能够连接到FSX存储和EC2计算实例。</block>
+  <block id="f4c5cbc76886ee4d3b06a979e007f04c" category="list-text">*为SnapCenter 连接器创建的AWS IAM策略。*详细的SnapCenter 服务文档中提供了JSON格式的策略。使用BlueXP控制台启动连接器部署时、系统会提示您设置前提条件。应将此策略分配给拥有此连接器的AWS用户帐户。</block>
+  <block id="9a4e5feb06bb2dae4e8b115b6528fb7d" category="list-text">* AWS帐户访问密钥和在AWS帐户中创建的SSH密钥对。* SSH密钥对分配给EC2-user、用于登录到连接器主机、然后将数据库插件部署到EC2 DB服务器主机。访问密钥可授予配置所需连接器的权限。</block>
+  <block id="e59f5f07f322e64b80fa8264dd4389e7" category="list-text">*已添加到BlueXP控制台设置中的凭据。*要将适用于ONTAP 的Amazon FSX添加到BlueXP工作环境、可在BlueXP控制台中设置一个凭据、用于授予从BluXP控制台访问适用于ONTAP 的Amazon FSX的权限。</block>
+  <block id="7d3fac201e712c335b848cf4411e68e0" category="list-text">部署到EC2数据库实例主机的* SnapCenter 插件。* SnapCenter 服务执行由SnapCenter 插件在EC2数据库实例主机上执行的API调用。您必须在设置服务之前部署它。</block>
+  <block id="16d04337973f389d2f7da86eac115afd" category="paragraph">我们提供了大量的NetApp文档、范围更广、可帮助您保护云原生应用程序数据。本文档的目标是提供有关使用SnapCenter 控制台部署ONTAP 服务的分步过程、以保护部署到Amazon FSX for和EC2计算实例中的Oracle数据库。本文档将填写一些可能在一般说明中缺少的详细信息。</block>
+  <block id="20c4c0cc24d7fc086bd9c72220d4827f" category="paragraph">要开始使用、请完成以下步骤：</block>
+  <block id="eb5668f5c3459c84cc715cf197e7c91a" category="inline-link-macro">保护您的Cloud原生 应用程序数据</block>
+  <block id="fba4ab9f47a6aa18ae1b02fb3d8f6db1" category="list-text">阅读一般说明 <block ref="ac041fb7031b2bcbcb203adcabf84a4f" category="inline-link-macro-rx"></block> 以及与Oracle和Amazon FSX for ONTAP 相关的章节。</block>
+  <block id="f2f7f5c9af8a75d22b9aca95d23faad9" category="list-text">观看以下视频演练。</block>
+  <block id="80478dbd4349cfca50f458d912a95795" category="section-title">部署SnapCenter 服务的前提条件</block>
+  <block id="ee260886ab2b6b27905543032620ac6f" category="list-text">EC2实例上的主Oracle数据库服务器、其中Oracle数据库已完全部署且正在运行。</block>
+  <block id="d7ab5019b6e4c888e46cb145fb2d5fc4" category="list-text">部署在托管上述数据库的AWS中的Amazon FSX for ONTAP 集群。</block>
+  <block id="0191527f1e188e7a6d18289a5ac9c936" category="list-text">EC2实例上的一个可选数据库服务器、可用于测试将Oracle数据库克隆到备用主机的情况、以便为开发/测试工作负载或任何需要完整Oracle生产数据库数据集的用例提供支持。</block>
+  <block id="ab12a73272bb7f9d19f02c65ce057f61" category="inline-link-macro">使用iSCSI/ASM在AWS FSX/EC2中部署和保护Oracle数据库</block>
+  <block id="58580b46e10b35944b7405415499a369" category="list-text">如果您需要帮助以满足在Amazon FSX for ONTAP 和EC2计算实例上部署Oracle数据库的上述前提条件、请参见 <block ref="84dfb8b43ed6d356540ab11fdb4b0e89" category="inline-link-macro-rx"></block>。</block>
+  <block id="b8b1139d652a0eeb20f8d04852ac0ff4" category="section-title">加入BlueXP准备阶段</block>
+  <block id="1273c8a63109161e6fd1f18d6998523f" category="inline-link-macro">NetApp BlueXP</block>
+  <block id="87d337785ad5798c5ccb41300628991a" category="list-text">使用链接 <block ref="f796c57cbc184209dde3e35268bc382f" category="inline-link-macro-rx"></block> 注册访问BlueXP控制台。</block>
+  <block id="398c495b453cb83c96b3fd0cda544bd5" category="list-text">要设置BlueXP来管理AWS云资源、例如Amazon FSX for ONTAP 、您应已设置AWS帐户。然后、您可以登录到AWS帐户、创建一个IAM策略、以便为AWS帐户授予SnapCenter 服务访问权限、以便用于连接器部署。</block>
+  <block id="ead8f2b206d64f3dc022b5aff7ebf5ef" category="inline-image-macro">在图形用户界面中显示此步骤的屏幕截图。</block>
+  <block id="f6d580bf790e26134ef61bf9d6fe18fe" category="paragraph"><block ref="f6d580bf790e26134ef61bf9d6fe18fe" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="72c085381ac33d4812eff61d168042a4" category="paragraph">此策略应配置一个JSON字符串、此字符串在启动连接器配置时可用、系统会提示您已创建IAM策略并将其授予用于连接器部署的AWS帐户。</block>
+  <block id="a54002868f2640fbd1fc4f9adc7d9df8" category="list-text">此外、您还需要AWS VPC、AWS帐户的密钥和机密、EC2访问的SSH密钥、安全组等、以便于配置连接器。</block>
+  <block id="43e23d889dea00cd09a68857a66540a2" category="section-title">为SnapCenter 服务部署连接器</block>
+  <block id="6e557be0e45c40d783bbd8866f9a399d" category="list-text">登录到BlueXP控制台。对于共享帐户、最佳做法是通过单击*帐户*&gt;*管理帐户*&gt;*工作空间*来创建单个工作空间以添加新工作空间。</block>
+  <block id="ff983eb1cf4195dbceed01ba6d95f4bd" category="paragraph"><block ref="ff983eb1cf4195dbceed01ba6d95f4bd" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c47cec29fcf0d8e782f2c91ad12914b4" category="list-text">单击*添加连接器*以启动连接器配置工作流。</block>
+  <block id="06daec2780fc4a5c0089241439b6abc4" category="paragraph"><block ref="06daec2780fc4a5c0089241439b6abc4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6bb78288dc7f5beb506e79a3af8041de" category="list-text">选择您的云提供商(此处为* Amazon Web Services*)。</block>
+  <block id="8087e08b633357d4802bcc914799e1e0" category="paragraph"><block ref="8087e08b633357d4802bcc914799e1e0" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="06a5177c61e31798acfdd25d766ef121" category="list-text">如果您已在AWS帐户中设置了*权限*、*身份验证*和*网络*步骤、请跳过这些步骤。如果没有、则必须先配置这些组件、然后再继续。您还可以从此处检索上一节中引用的AWS策略的权限"<block ref="2204dd011c923b13eaa19e758c798231" category="inline-xref-macro-rx"></block>。 "</block>
+  <block id="79463376ddcde3119f1d61ab3e8ace01" category="paragraph"><block ref="79463376ddcde3119f1d61ab3e8ace01" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d3aa90e294a5c6f1393c075c038193c2" category="list-text">输入AWS帐户身份验证访问密钥和机密密钥。</block>
+  <block id="6a45e1d81bff2e550eac67a6a5fa7cbf" category="paragraph"><block ref="6a45e1d81bff2e550eac67a6a5fa7cbf" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="712e596a90ac38ed31c6d4d55347a559" category="list-text">为连接器实例命名、然后在*详细信息*下选择*创建角色*。</block>
+  <block id="98c5e6a562ea83f6e395b91667156df3" category="paragraph"><block ref="98c5e6a562ea83f6e395b91667156df3" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a195a46dbd792968c9fcafd533a33b51" category="list-text">使用正确的VPC、子网和SSH密钥对配置网络连接、以便进行EC2访问。</block>
+  <block id="fde599fe1b1ccfb7275d4e17f0b4fc17" category="paragraph"><block ref="fde599fe1b1ccfb7275d4e17f0b4fc17" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1509007123cad8688bdef6b265c409ce" category="list-text">设置连接器的安全组。</block>
+  <block id="e3d2711238be85fe0acd7b353cb0571c" category="paragraph"><block ref="e3d2711238be85fe0acd7b353cb0571c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f067570884442aa68da666583a8530cc" category="list-text">查看摘要页面、然后单击*添加*以开始创建连接器。完成部署通常需要大约10分钟。完成后、此连接器实例将显示在AWS EC2信息板中。</block>
+  <block id="165138d0d406e2c17d45e777fc26ebc5" category="paragraph"><block ref="165138d0d406e2c17d45e777fc26ebc5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="96e8e4df8b3ca0b4eec3a79081f69a5f" category="inline-link-macro">使用脚本部署插件、并使用手动选项从UI添加主机</block>
+  <block id="bb7fc4f6e011b0abf2d72151ba43d448" category="list-text">部署连接器后、按照以下说明以EC2-user身份使用SSH密钥登录到连接器EC2主机以安装SnapCenter 插件： <block ref="4d36f47e6f1b893c6ddd7262bda1c9b4" category="inline-link-macro-rx"></block>。</block>
+  <block id="bb46d1e3b94fe670b59ad65582cc45d9" category="section-title">SnapCenter 服务设置</block>
+  <block id="c874496d8de4031470108dc34d998d2c" category="paragraph">部署此连接器后、现在可以使用以下操作步骤 设置SnapCenter 服务：</block>
+  <block id="3ecf7d7cbb172543fe0f740496cfb9b0" category="list-text">在*我的工作环境*中、单击*添加工作环境*以发现AWS中部署的FSX。</block>
+  <block id="537b713708147506a182f9e62348c997" category="paragraph"><block ref="537b713708147506a182f9e62348c997" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4daeb16c1a9b1a0d173181068ef06541" category="list-text">选择* Amazon Web Services*作为位置。</block>
+  <block id="25949fd8842fc6d4e2a3d0e74bbc18d9" category="paragraph"><block ref="25949fd8842fc6d4e2a3d0e74bbc18d9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="beb3aca877ee917cc965b653f4f954c2" category="list-text">单击*适用于ONTAP 的Amazon FSx *旁边的*发现现有*。</block>
+  <block id="669e7983bcf1791e42789eb5557823c1" category="paragraph"><block ref="669e7983bcf1791e42789eb5557823c1" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="818214abd1c968ef46c7d7ffea09d9cf" category="list-text">选择为BlueXP提供管理适用于ONTAP 的FSX所需权限的凭据。如果您尚未添加凭据、则可以从BlueXP控制台右上角的*设置*菜单中添加此凭据。</block>
+  <block id="2dd86f2e91e85ccea46f244108988758" category="paragraph"><block ref="2dd86f2e91e85ccea46f244108988758" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1c90af5467bb4ade93f516a477fab6ce" category="list-text">选择部署了Amazon FSX for ONTAP 的AWS区域、选择托管Oracle数据库的FSX集群、然后单击添加。</block>
+  <block id="39accbdb3a3b52363e35c6bd0a5768d8" category="paragraph"><block ref="39accbdb3a3b52363e35c6bd0a5768d8" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c6a9497923f20e49ad508a714878556d" category="list-text">此时、发现的Amazon FSX for ONTAP 实例将显示在工作环境中。</block>
+  <block id="b996189c5d6c6476140b17331222eaf4" category="paragraph"><block ref="b996189c5d6c6476140b17331222eaf4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5abed4635dac308091151770538f31f6" category="list-text">您可以使用fsxadmin帐户凭据登录到FSX集群。</block>
+  <block id="a0297da6f92a68d1492ecdf77c4949fb" category="paragraph"><block ref="a0297da6f92a68d1492ecdf77c4949fb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="72788f45d9fca0c46cf26a1728176b48" category="list-text">登录到Amazon FSX for ONTAP 后、请查看数据库存储信息(例如数据库卷)。</block>
+  <block id="8a51384a3ecf5b098e9facdac7fd4742" category="paragraph"><block ref="8a51384a3ecf5b098e9facdac7fd4742" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="04353f9112bb1b7ff1621abd8ff0ef5b" category="list-text">从控制台的左侧边栏中、将鼠标悬停在保护图标上、然后单击*保护*&gt;*应用程序*以打开应用程序启动页面。单击*发现应用程序*。</block>
+  <block id="c174305d25dc1c3ea7e6fd64534c302d" category="paragraph"><block ref="c174305d25dc1c3ea7e6fd64534c302d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="598fd5b506ddf6b5a73368a488fa16c0" category="list-text">选择*云原生*作为应用程序源类型。</block>
+  <block id="4645a6f0abb4aa3edf2172708fd672e0" category="paragraph"><block ref="4645a6f0abb4aa3edf2172708fd672e0" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="bfcedcc06ce70b69b0c25371a7b68359" category="list-text">选择* Oracle *作为应用程序类型。</block>
+  <block id="d90ff0259aa21df9ff992d15f1efcbd2" category="paragraph"><block ref="d90ff0259aa21df9ff992d15f1efcbd2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6cbdf0cef43778a4cfb3432da64609c7" category="list-text">提供Oracle EC2实例主机详细信息以添加主机。选中此复选框以确认主机上已安装适用于Oracle的插件、因为您需要在配置此连接器后部署此插件。</block>
+  <block id="932a85fd3682f29ed640be5455be6e1d" category="paragraph"><block ref="932a85fd3682f29ed640be5455be6e1d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="99674e4e12f2b87ea13d459f88886121" category="list-text">发现Oracle EC2主机并将其添加到*应用程序*中、该主机上的任何数据库也会被发现并显示在页面上。数据库*保护状态*显示为*未受保护*。</block>
+  <block id="a91f39c3d22fe697afbaa8e861c6f1e1" category="paragraph"><block ref="a91f39c3d22fe697afbaa8e861c6f1e1" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9958dec2bab238d2e917ab477e6687a5" category="paragraph">至此、适用于Oracle的SnapCenter 服务的初始设置完成。本文档接下来的三节将介绍Oracle数据库备份、还原和克隆操作。</block>
+  <block id="7f7c0dda9cb78e17432e91abc3c9a290" category="section-title">Oracle数据库备份</block>
+  <block id="d243d925299e4128a453e9d54b57e25d" category="list-text">单击数据库*保护状态*旁边的三点、然后单击*策略*以查看可应用于保护Oracle数据库的默认预加载数据库保护策略。</block>
+  <block id="f5ec19f9ff10edc4aa6fc1c116c6b23e" category="paragraph"><block ref="f5ec19f9ff10edc4aa6fc1c116c6b23e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5b95d24dbc11f9b34c6cf18b07dcf3f7" category="list-text">您还可以使用自定义的备份频率和备份数据保留窗口创建自己的策略。</block>
+  <block id="dd06e85eab955d6e3843bf0f5c71961c" category="paragraph"><block ref="dd06e85eab955d6e3843bf0f5c71961c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="44fa14fc437558bfdfce0d0ac643d1e2" category="list-text">如果您对策略配置满意、则可以分配所选的策略来保护数据库。</block>
+  <block id="2bf8224a90f863c821d826f3501d5c0a" category="paragraph"><block ref="2bf8224a90f863c821d826f3501d5c0a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4861abebdaa3d58ada4e621adac79010" category="list-text">选择要分配给数据库的策略。</block>
+  <block id="c6f05663d6855c56941461ecc27d6b12" category="paragraph"><block ref="c6f05663d6855c56941461ecc27d6b12" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="da1635fa4036afa9fa39c868740e8560" category="list-text">应用此策略后、数据库保护状态将更改为*受保护*、并带有绿色复选标记。</block>
+  <block id="0d63626c21bc3f6eaeff860db7839e8e" category="paragraph"><block ref="0d63626c21bc3f6eaeff860db7839e8e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7474327f9583bb0f2aa4aa276aa11e53" category="list-text">数据库备份按预定义的计划运行。您还可以运行一次性按需备份、如下所示。</block>
+  <block id="3adad6846dd8bf1ff91c627d2f4bea27" category="paragraph"><block ref="3adad6846dd8bf1ff91c627d2f4bea27" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f7ba3fa48656ab6088ca8f9f4c64578f" category="list-text">可以通过单击菜单列表中的*查看详细信息*来查看数据库备份详细信息。其中包括备份名称、备份类型、SCN和备份日期。备份集涵盖数据卷和日志卷的快照。日志卷快照会在数据库卷快照之后立即发生。如果要在长列表中查找特定备份、则可以应用筛选器。</block>
+  <block id="c76057368e5767af8f13e84e53b3194f" category="paragraph"><block ref="c76057368e5767af8f13e84e53b3194f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8fd0ba63e6574c7326fb2e810b4537e0" category="section-title">Oracle数据库还原和恢复</block>
+  <block id="d747acf93ee8abac3afd574a32b975fe" category="list-text">对于数据库还原、请按SCN或备份时间选择合适的备份。单击数据库数据备份中的三个点、然后单击*还原*以启动数据库还原和恢复。</block>
+  <block id="7331f40ac7ceea61fa15e6868eba99e7" category="paragraph"><block ref="7331f40ac7ceea61fa15e6868eba99e7" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4ced09bd050d5fa98df8a41ef04173e0" category="list-text">选择还原设置。如果您确定备份后物理数据库结构中没有任何变化(例如添加数据文件或磁盘组)、则可以使用*强制原位还原*选项、该选项通常速度更快。否则、请勿选中此框。</block>
+  <block id="2684b5e65a8e3b537bd594678549bc4e" category="paragraph"><block ref="2684b5e65a8e3b537bd594678549bc4e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d58c0a59c722f81b5e2d0f77ffc4e126" category="list-text">查看并启动数据库还原和恢复。</block>
+  <block id="9ab34ce0349fd7db7573bad83c07a487" category="paragraph"><block ref="9ab34ce0349fd7db7573bad83c07a487" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e370cf26e04645138a40a3379e743fb7" category="list-text">在*作业监控*选项卡中、您可以查看恢复作业的状态以及运行期间的任何详细信息。</block>
+  <block id="e9214106e8bbcaae5a214e937af349e6" category="paragraph"><block ref="e9214106e8bbcaae5a214e937af349e6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="bd84eda02c29b3672e3476ed8c8be12d" category="paragraph"><block ref="bd84eda02c29b3672e3476ed8c8be12d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9dc2f50af584776a2ecc51a0ebcdded2" category="section-title">Oracle数据库克隆</block>
+  <block id="35526fc92bd49edc3a11a0affafeae3b" category="paragraph">要克隆数据库、请从同一数据库备份详细信息页面启动克隆工作流。</block>
+  <block id="71f8cd32cfa279d796f673879629f671" category="list-text">选择正确的数据库备份副本、单击三点以查看菜单、然后选择*克隆*选项。</block>
+  <block id="b858b9fa0a1f0db13263cc0c2cc5cf3d" category="paragraph"><block ref="b858b9fa0a1f0db13263cc0c2cc5cf3d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d552bd00a2d8ed3e1872a0f795180b9f" category="list-text">如果不需要更改任何克隆的数据库参数、请选择*基本*选项。</block>
+  <block id="867de7ff195f530db4a1e5643a75c689" category="paragraph"><block ref="867de7ff195f530db4a1e5643a75c689" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="90b931da49f7db8ce97de89c2b7ea8d5" category="list-text">或者、也可以选择*规格文件*、这样您可以选择下载当前的init文件并进行更改、然后将其上传到作业。</block>
+  <block id="f89a131e2cb4beb2f5dc697ac61b460f" category="paragraph"><block ref="f89a131e2cb4beb2f5dc697ac61b460f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="58b9252d48a9fcf8c03ec68f357e943a" category="list-text">查看并启动作业。</block>
+  <block id="77281e34749b6599332dd1416b12f533" category="paragraph"><block ref="77281e34749b6599332dd1416b12f533" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3d388d0f32172ebe7aea2c3eeae0dfc4" category="list-text">从*作业监控*选项卡监控克隆作业状态。</block>
+  <block id="827b60b27e967d900114ade1f31eed53" category="paragraph"><block ref="827b60b27e967d900114ade1f31eed53" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4e0fb0a8b932b4f05d487ea8a5748901" category="list-text">验证EC2实例主机上的克隆数据库。</block>
+  <block id="d139cf7562ab53c3922d5a0a6804786c" category="paragraph"><block ref="d139cf7562ab53c3922d5a0a6804786c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6cfa4396db779261100202ab3f0ffdcd" category="paragraph"><block ref="6cfa4396db779261100202ab3f0ffdcd" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f12aeeed0f164c86af69a57fddb01689" category="list-text">设置和管理BlueXP</block>
+  <block id="74e12c8bec754bf4a9feb44c8cada2dc" category="inline-link-macro"><block ref="74e12c8bec754bf4a9feb44c8cada2dc" category="inline-link-rx"></block></block>
+  <block id="54d1b98b8cdfd12e2afc7f08278645ba" category="paragraph"><block ref="54d1b98b8cdfd12e2afc7f08278645ba" category="inline-link-macro-rx"></block></block>
+  <block id="846099e77083903f32f72c0e2156c3c5" category="list-text">Cloud Backup 文档</block>
+  <block id="ed133d2d4bade971a41aae35897a0bd2" category="inline-link-macro"><block ref="ed133d2d4bade971a41aae35897a0bd2" category="inline-link-rx"></block></block>
+  <block id="21af149e524c5f7a8eb5e23197309e60" category="paragraph"><block ref="21af149e524c5f7a8eb5e23197309e60" category="inline-link-macro-rx"></block></block>
+  <block id="7e7efb7e7b278c5ce5253a775d1c8313" category="sidebar">在AWS FSX/EC2中自动部署PostgreSQL高可用性和灾难恢复</block>
+  <block id="d36111f9de8e485ef98facff50b6fd6e" category="sidebar">使用iSCSI/ASM部署和保护Oracle数据库</block>
 </blocks>
