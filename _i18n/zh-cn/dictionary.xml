@@ -17744,4 +17744,113 @@
   <block id="ff1d278a485c443dc5d8fc9f10f1a702" category="doc">适用于采用VMware Horizon 7的虚拟桌面基础架构的NetApp HCI —为高级用户提供3D图形功能</block>
   <block id="e3162938e0d7b1bbc74111cc5b5871c5" category="paragraph">TR-4792提供了在由NVIDIA图形处理单元(GPU)和虚拟化软件提供支持的VMware Horizon环境中使用NetApp H615C计算节点处理3D图形工作负载的指导。此外、还提供了对H615C的SPECviewperf 13进行的初步测试的结果。</block>
   <block id="1de37c09602b46db5de57a946efe2768" category="paragraph"><block ref="1de37c09602b46db5de57a946efe2768" category="inline-link-macro-rx"></block></block>
+  <block id="6e74710636e2da95cda4899adcdf891e" category="summary">数据在NFS中可用、并可从AWS SageMaker的S3访问。</block>
+  <block id="8394db253ec71ed9d59b9429983b8eb4" category="doc">数据科学家和其他应用程序的数据双重性</block>
+  <block id="352ca87bc1d3676d3b2548644189d052" category="paragraph"><block ref="352ca87bc1d3676d3b2548644189d052" category="inline-link-macro-rx"></block></block>
+  <block id="f4900d1d4a0a26325c4c9514e57c2c75" category="paragraph">您需要使用NetApp BlueXP、NetApp Cloud Volumes ONTAP 和AWS SageMaker笔记本电脑作为数据双用用例。</block>
+  <block id="6e6b6052efed2574e2dc05cbdc5d66d5" category="paragraph">下表列出了实施此用例所需的软件组件。</block>
+  <block id="9b9477e579c3b44dd623d5a6e1ea8d78" category="cell">BlueXP</block>
+  <block id="dda9f6d67571441afa5cfb6b54b70873" category="cell">AWS SageMaker笔记本电脑</block>
+  <block id="cc5f7f3bee6dcb16913051d6fc267977" category="paragraph">部署数据双率解决方案 涉及以下任务：</block>
+  <block id="6bb1f60bf0d00924a1bba54557e1feae" category="list-text">BlueXP连接器</block>
+  <block id="cf25fa6cf104cc1a67119acb6d4d364d" category="list-text">用于机器学习的数据</block>
+  <block id="5a1439989b12745b5a4ed4b944539247" category="list-text">AWS SageMaker</block>
+  <block id="59b20c2117a395af59d54a6533498e99" category="list-text">通过Jupyter笔记本电脑经验证的机器学习</block>
+  <block id="46e0bb4f28dbf5013a68a8a69a3cf9f5" category="section-title">BlueXP连接器</block>
+  <block id="de3e31c5aaf9bdeca7bc072f649ddc2e" category="paragraph">在此验证中、我们使用了AWS。它也适用于Azure和Google Cloud。要在AWS中创建BlueXP Connector、请完成以下步骤：</block>
+  <block id="4d7b48a5181bdd203b2ff52910c67d94" category="list-text">我们根据BlueXP中的mcarl-marketplace-subscription使用了这些凭据。</block>
+  <block id="c0caffb5ab49caead75d39f6416ba841" category="list-text">选择适合您环境的区域(例如us-east-1 [N.Virginia)、然后选择身份验证方法(例如、假设角色或AWS密钥)。在此验证中、我们将使用AWS密钥。</block>
+  <block id="86b72593a2ce2f4e46e7669ced916111" category="list-text">提供连接器的名称并创建角色。</block>
+  <block id="71ffd00d3592df40d0db94a71ceab12d" category="list-text">根据您是否需要公共IP、提供VPC、子网或密钥对等网络详细信息。</block>
+  <block id="b5b37cef840fa0a17af0ef55c09a0e1f" category="list-text">提供安全组的详细信息、例如从源类型访问HTTP、HTTPS或SSH、例如Anywhere和IP范围信息。</block>
+  <block id="45b20434e20aeebd5991cd84f2cf11c9" category="list-text">查看并创建BlueXP Connector。</block>
+  <block id="92043f8a1dc0b0180854c25bcf5ff79d" category="list-text">确认在AWS控制台中运行的是BlueXP EC2实例状态、然后从*网络连接*选项卡中检查IP地址。</block>
+  <block id="7044ee6a43ee2152ca6d008fcb8228c3" category="list-text">从BlueXP门户登录到连接器用户界面、或者您也可以使用IP地址从浏览器进行访问。</block>
+  <block id="064d933c0c02c4fe7ef1a07ad3a537d7" category="paragraph">要在BlueXP中创建Cloud Volumes ONTAP 实例、请完成以下步骤：</block>
+  <block id="da6e487de6af8700c3cf58ffb20a876c" category="list-text">创建新的工作环境、选择云提供商、然后选择Cloud Volumes ONTAP 实例的类型(例如、适用于ONTAP 的单CVO、HA或Amazon FSxN)。</block>
+  <block id="dcb89e397dde3dedb1a32224f0c15b78" category="list-text">提供Cloud Volumes ONTAP 集群名称和凭据等详细信息。在此验证中、我们创建了一个名为的Cloud Volumes ONTAP 实例<block ref="c7e44ecb645a5c83f843ae05090c5940" prefix=" " category="inline-code"></block>。</block>
+  <block id="9cf479af21359b2928a1b672d60577f2" category="list-text">选择Cloud Volumes ONTAP 所需的服务。在此验证中、我们选择仅监控、因此禁用了*数据感知与合规性*和*备份到云服务*。</block>
+  <block id="cb95ef3838d59d553c71f50b1cadee27" category="list-text">在*位置和连接*部分中、选择AWS区域、VPC、子网、安全组、SSH身份验证方法、 以及密码或密钥对。</block>
+  <block id="fdd5d37c21ee01084537317345b3d78b" category="list-text">选择充电方法。我们使用*专业版*进行此验证。</block>
+  <block id="00efec60d606ea6ad0bafe93bc77df92" category="list-text">您可以选择预配置的软件包、例如* POC和小型工作负载*、*数据库和应用程序数据生产工作负载*、*经济高效的灾难恢复*或*最高性能生产工作负载*。在此验证中、我们选择了* POC和小型工作负载*。</block>
+  <block id="f22934293c2f2a761ea26fa4ae1828e1" category="list-text">创建具有特定大小、允许的协议和导出选项的卷。在此验证中、我们创建了一个名为的卷<block ref="2b0d59c7031769e80c8e5118b6ec7694" prefix=" " category="inline-code"></block>。</block>
+  <block id="f2706214c4a60177d14fb8495cbc6924" category="list-text">选择配置文件磁盘类型和分层策略。在此验证中、我们禁用了*存储效率*和*通用SSD–动态性能*。</block>
+  <block id="40d3f73a73f67ce67b286aef7a5d3ecb" category="list-text">最后、查看并创建Cloud Volumes ONTAP 实例。然后等待15到20分钟、让BlueXP创建Cloud Volumes ONTAP 工作环境。</block>
+  <block id="a8b538b74c3f662c2248af9c6d4742db" category="list-text">配置以下参数以启用双率协议。ONTAP 9支持双度协议(NFS/S3)。12：1及更高版本。</block>
+  <block id="15b53c14b58ee146309847451d1eb90a" category="list-text">在此验证中、我们创建了一个名为的SVM<block ref="c7e44ecb645a5c83f843ae05090c5940" prefix=" " category="inline-code"></block> 和卷<block ref="2b0d59c7031769e80c8e5118b6ec7694" prefix=" " category="inline-code"></block>。</block>
+  <block id="3514969b2381af83551c246e34b74403" category="list-text">验证SVM是否支持NFS和S3协议。如果不支持、请修改SVM以支持它们。</block>
+  <block id="e41c06ffff0f8c9cadbc7f8bb37f8ae5" category="list-text">根据需要创建并安装CA证书。</block>
+  <block id="0395f8062a8a7f4af05113bae8133737" category="list-text">创建服务数据策略。</block>
+  <block id="6e16e110899749a795fe713253d850e7" category="list-text">检查聚合详细信息。</block>
+  <block id="5d3f8e127103f0d5cf3de305db892b4d" category="list-text">创建用户和组。</block>
+  <block id="efa22127bde2d3ab2e4f5b9a42d14814" category="list-text">在NFS卷上创建存储分段。</block>
+  <block id="c3fd6f44bf88d3f0eae4742edb58eafc" category="paragraph">要从AWS SageMaker创建AWS笔记本电脑、请完成以下步骤：</block>
+  <block id="31378aab1ee6190e0b7fe33c501a5625" category="list-text">确保正在创建笔记本实例的用户具有AmazonSageMakerFullAccess IAM策略或属于具有AmazonSageMakerFullAccess权限的现有组。在此验证中、用户属于现有组。</block>
+  <block id="13c1455885d16af64f1bb96c4e48680a" category="list-text">请提供以下信息：</block>
+  <block id="bb8101aed18120fa18dedaa994ffeea0" category="list-text">笔记本实例名称。</block>
+  <block id="6239d232142a089e53e7a13fa721237a" category="list-text">实例类型。</block>
+  <block id="37056dac7373f7e1b74382036d25b69e" category="list-text">平台标识符。</block>
+  <block id="38e2059c32c628cf89e90a6844a93800" category="list-text">选择具有AmazonSageMakerFullAccess权限的IAM角色。</block>
+  <block id="55d7da5ede713135b1c2ebd7a615c3b4" category="list-text">root访问—启用。</block>
+  <block id="8f0e92e4434abc32ff62a914ae9f2ba6" category="list-text">加密密钥-不选择自定义加密。</block>
+  <block id="8b77028d248afd826900d895636b4e98" category="list-text">保留其余默认选项。</block>
+  <block id="78456ee20793f732edfa9105bbb4e490" category="list-text">在此验证中、SageMaker实例详细信息如下所示：</block>
+  <block id="e90e797343ea3f751b0c32e808edaff8" category="inline-image-macro">描述步骤的屏幕截图。</block>
+  <block id="07d5be91bebaccd4767fcceff99f3dde" category="paragraph"><block ref="07d5be91bebaccd4767fcceff99f3dde" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="69e41ee119a70fc66edf204cbcf365b1" category="paragraph"><block ref="69e41ee119a70fc66edf204cbcf365b1" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4789a9ab6472480889e111503d068623" category="list-text">启动AWS笔记本电脑。</block>
+  <block id="faf1aea43a6d3bd1af488b8baa828561" category="paragraph"><block ref="faf1aea43a6d3bd1af488b8baa828561" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="cbfbebd805ee7945ad38bc26f8fa9f1b" category="list-text">打开Jupyter实验室。</block>
+  <block id="bcca330921c0ce477877bc982c12a6fb" category="paragraph"><block ref="bcca330921c0ce477877bc982c12a6fb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="ab3269ab0de58f5611205f6ace06f3af" category="list-text">登录到终端并挂载Cloud Volumes ONTAP 卷。</block>
+  <block id="cc0649b0871fde24c4a46e09186a36e0" category="list-text">使用AWS命令行界面命令检查在Cloud Volumes ONTAP 卷上创建的存储分段。</block>
+  <block id="4f31ff9815d3a8a959e7c557213068d6" category="paragraph">在此次验证中、我们使用了一个来自大众社区的DBipedia的数据集、从各种Wikimedia项目中创建的信息中提取结构化内容。</block>
+  <block id="06d6ccf33b49ed20a34cdc26b6820253" category="list-text">从DBipedia GitHub位置下载数据并提取数据。请使用上一节中使用的相同终端。</block>
+  <block id="7f50b7f719282741fdf7ce5b8ca1f3dd" category="list-text">将数据复制到Cloud Volumes ONTAP 位置、并使用AWS命令行界面从S3存储分段中进行检查。</block>
+  <block id="0ecfbac978ab3f5979ec31eb5574d93e" category="list-text">执行基本验证以确保读取/写入功能在S3存储分段上正常工作。</block>
+  <block id="877169a066e14f0512d5f119945ef14d" category="section-title">验证从Jupyter笔记本电脑学习机器的情况</block>
+  <block id="6f73420916237ed836932ccf967d82ba" category="paragraph">以下验证使用以下SageMaker BlazingText示例、通过文本分类提供机器学习构建、培训和部署模型：</block>
+  <block id="3cf03767e04159d1ec88e7fb0827b487" category="list-text">安装boto3和SageMaker软件包。</block>
+  <block id="b1282d58a4dcde0a2015d98ad33afd4c" category="paragraph">输出：</block>
+  <block id="39017441ac701ebaef8de7116e7f71a0" category="list-text">在以下步骤中、将显示数据 <block ref="0a726fdd06082d233cd4eade40f12612" prefix="(" category="inline-code"></block>)下载<block ref="90d9a986b9b5e7c07c50a03ccc06a244" prefix=" " category="inline-code"></block> 机器学习中使用的Jupyter笔记本实例。</block>
+  <block id="a270350e3527fea9a36815fa5fe04ba0" category="list-text">以下代码将创建从整数索引到类标签的映射、用于在推理期间检索实际类名称。</block>
+  <block id="d17fa3d0aed3f8aaa5e78b447054126d" category="paragraph">输出将列出中的文件和文件夹<block ref="90d9a986b9b5e7c07c50a03ccc06a244" prefix=" " category="inline-code"></block> 用于AWS SageMaker机器学习验证的数据分段。</block>
+  <block id="0cfbf64679378e3e5367734fd2bd69aa" category="list-text">启动数据预处理阶段、将训练数据预处理为空格分隔的令牌化文本格式、BlazingText算法和Nultk库可以使用该格式来标记DBPedia数据集的输入语句。下载nltk令牌程序和其他库。。<block ref="6d49a792c1080aa5b33d27ec694621b6" prefix=" " category="inline-code"></block> 并行应用于每个数据实例时、会使用Python多处理模块。</block>
+  <block id="d68566815a7248bae03e105c2db8853a" category="list-text">将格式化的训练数据集上传到S3、以便SageMaker可以使用它来执行训练作业。然后、使用Python SDK将两个文件上传到存储分段和前缀位置。</block>
+  <block id="bc41af112e1f02120a4a6e16f34767ef" category="list-text">在S3上设置加载模型项目的输出位置、以便项目可以作为算法训练作业的输出。创建<block ref="6e3281884db83f9ee468a6e798b6bdfb" prefix=" " category="inline-code"></block> 用于启动培训作业的对象。</block>
+  <block id="41215e143c2b3810b37c4e4f47819077" category="list-text">定义SageMaker<block ref="a0b1f5f7b93af313b6e2452f52c8f3f6" prefix=" " category="inline-code"></block> 通过资源配置和超参数、在c4.4xlarge实例上使用受监控模式在DBPedia数据集上训练文本分类。</block>
+  <block id="6c773c4d6e4a7dda7e00352894786bdb" category="list-text">准备数据通道和算法之间的握手。为此、请创建<block ref="0e021845d2c0e4ad94a91ce444c13681" prefix=" " category="inline-code"></block> 数据通道中的对象、并将其保留在词典中、以供算法使用。</block>
+  <block id="3b29bef19a742b8ab66cddf620871d31" category="list-text">作业完成后、将显示作业完成消息。您可以在设置为的S3存储分段中找到经过培训的型号<block ref="212ad7a4c11069727ffd02f333d7d8b1" prefix=" " category="inline-code"></block> 在估算器中。</block>
+  <block id="6cb5683d87e53b375bd915572f960759" category="list-text">培训完成后、将经过培训的模型部署为Amazon SageMaker实时托管端点、以进行预测。</block>
+  <block id="4254a612097ca58653de7c0c39da8df2" category="list-text">默认情况下、模型返回一个概率最高的预测。以检索顶部<block ref="8ce4b16b22b58894aa86c421e8759df3" prefix=" " category="inline-code"></block> 预测、设置<block ref="8ce4b16b22b58894aa86c421e8759df3" prefix=" " category="inline-code"></block> 在配置文件中。</block>
+  <block id="67be4f1bb90039baec0d8f73ff82a47e" category="list-text">请先删除端点、然后再关闭此笔记本。</block>
+  <block id="891844576f11e816faf55d68309946b4" category="paragraph"><block ref="891844576f11e816faf55d68309946b4" category="inline-link-macro-rx"></block></block>
+  <block id="7caace9abf76a798c629a9134d1bb259" category="summary">NFS和S3的双协议访问的一个潜在用例是机器学习和数据科学领域。例如、数据科学家团队可能正在使用AWS SageMaker执行机器学习项目、该项目要求访问以NFS格式存储的数据。但是、可能还需要通过S3存储分段访问和共享数据、以便与其他团队成员协作或与使用S3的其他应用程序集成。</block>
+  <block id="c065dcd23d9d1ec5adae07e55bed5122" category="paragraph"><block ref="c065dcd23d9d1ec5adae07e55bed5122" category="inline-link-macro-rx"></block></block>
+  <block id="ee8cf3bf54dea46135e299d79fa1c179" category="paragraph">此解决方案 利用以下技术：</block>
+  <block id="a03ea23912d3b35c875ff398aa4888af" category="list-text">* AWS SageMaker Notebook.*为开发人员和数据科学家提供机器学习功能、帮助他们高效地创建、训练和部署高质量的ML模型。</block>
+  <block id="bbe2552dc6295d353c02fd85c243f334" category="list-text">* NetApp BlueXp。*支持发现、部署和操作内部以及AWS、Azure和Google Cloud上的存储。它可以防止数据丢失、网络威胁和计划外中断、并优化数据存储和基础架构。</block>
+  <block id="aa6fa71ab9848c5875470d36bbc2138a" category="list-text">* NetApp Cloud Volumes ONTAP。*在AWS、Azure和Google Cloud上提供采用NFS、SMB/CIFS、iSCSI和S3协议的企业级存储卷、使用户可以更灵活地访问和管理云中的数据。</block>
+  <block id="eea496572a01ca3e5ced1dfe99a5809c" category="paragraph">NetApp Cloud Volumes ONTAP 是从BlueXP创建的、用于存储ML数据。</block>
+  <block id="923baf107dc23ca10f968a4fdecd4f4f" category="paragraph">下图显示了解决方案的技术组件。</block>
+  <block id="8afbfe3aeb9c594404d5c244cf8f6024" category="inline-image-macro">此图显示了解决方案 的技术组件。</block>
+  <block id="eaf4eb821a18e60305e45cf9cce407dd" category="paragraph"><block ref="eaf4eb821a18e60305e45cf9cce407dd" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="55c5281d80934f950192f768715495f0" category="paragraph">通过使用NetApp Cloud Volumes ONTAP 、该团队可以将数据存储在一个位置、并可通过NFS和S3协议访问这些数据。数据科学家可以直接从AWS SageMaker访问NFS格式的数据、而其他团队成员或应用程序则可以通过S3存储分段访问相同的数据。</block>
+  <block id="f8ba1b513231e9ca54a5c3b94733c28d" category="paragraph">这种方法可以轻松高效地访问和共享数据、而无需在不同的存储解决方案之间进行额外的软件或数据迁移。此外、它还可以简化工作流并在团队成员之间进行协作、从而更快、更有效地开发机器学习模型。</block>
+  <block id="90c0fb73ec9f52bf43a1ec0b34196d95" category="inline-link-macro">接下来：数据科学家和其他应用程序的数据双重性。</block>
+  <block id="b425d409342f0d671a0dd6742f8bf09f" category="paragraph"><block ref="b425d409342f0d671a0dd6742f8bf09f" category="inline-link-macro-rx"></block></block>
+  <block id="16147684eb6910d9d73a43bb83091da4" category="summary">数据科学家和工程师通常需要访问以NFS格式存储的数据、但在AWS SageMaker中直接从S3协议访问此数据可能会面临挑战、因为AWS仅支持S3存储分段访问。但是、NetApp ONTAP 通过为NFS和S3启用双协议访问来提供解决方案。借助此解决方案 、数据科学家和工程师可以通过NetApp Cloud Volumes ONTAP 的S3存储分段从AWS SageMaker笔记本电脑访问NFS数据。这种方法可以轻松地从NFS和S3访问和共享相同的数据、而无需额外的软件。</block>
+  <block id="e8ce8afdd7d335aed5b93d4a41ae0115" category="doc">TR-4967：《使用NetApp文件对象双处理和AWS SageMaker进行云数据管理》</block>
+  <block id="6b9283149a6cf88268f83de626fe265f" category="paragraph"><block ref="6b9283149a6cf88268f83de626fe265f" category="inline-link-macro-rx"></block></block>
+  <block id="af7ba099603ccd4070a5102166f2c998" category="summary">根据此验证、数据科学家和工程师可以通过NetApp Cloud Volumes ONTAP 的S3存储分段从AWS SageMaker Jupyter笔记本电脑访问NFS数据。这种方法可以轻松地从NFS和S3访问和共享相同的数据、而无需额外的软件。</block>
+  <block id="4fb1e7ca4e76c4bb7a3052dc8d47879b" category="inline-link-macro">以前的版本：数据科学家和其他应用程序的数据双重性。</block>
+  <block id="51218734514eb89f2125e2ee2c444e31" category="paragraph"><block ref="51218734514eb89f2125e2ee2c444e31" category="inline-link-macro-rx"></block></block>
+  <block id="8053f00cf5e08f449b7cafe189c73a39" category="list-text">使用SageMaker BlazingText进行文本分类</block>
+  <block id="7fba377195a6600e8ac2b2d5a433e7d3" category="inline-link"><block ref="7fba377195a6600e8ac2b2d5a433e7d3" category="inline-link-rx"></block></block>
+  <block id="d8908a1e1cf55570441dd5a42baadacc" category="paragraph"><block ref="d8908a1e1cf55570441dd5a42baadacc" category="inline-link-rx"></block></block>
+  <block id="d6667429b7c60bcbf5e5d593e91d6cae" category="list-text">S3 对象存储的 ONTAP 版本支持</block>
+  <block id="91ef54d96688b56bf968f57803df6675" category="inline-link"><block ref="91ef54d96688b56bf968f57803df6675" category="inline-link-rx"></block></block>
+  <block id="53a581d907d105a589be9419e91b16fa" category="paragraph"><block ref="53a581d907d105a589be9419e91b16fa" category="inline-link-rx"></block></block>
+  <block id="904837c9cf9bc52a96ce17d051fddec9" category="cell">2023年4月</block>
+  <block id="1d2114df6a9f8f5d7e8f597e9c70a6c1" category="sidebar">借助NetApp文件对象双处理能力和AWS SageMaker实现云数据管理</block>
 </blocks>
