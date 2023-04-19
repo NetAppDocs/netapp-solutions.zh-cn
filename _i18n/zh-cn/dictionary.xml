@@ -17326,7 +17326,6 @@
   <block id="1ebfeec31c440a4fac484932940c73b1" category="paragraph">作者：Dhruv Tyagi、Niyaz Mohamed</block>
   <block id="77b2a3f373c1bcab9cefd635e81303eb" category="section-title">概述：通过AWS Lambda功能监控和自动调整适用于ONTAP 的FSX的大小</block>
   <block id="88f21a3befc798942cec953cec96af16" category="paragraph">FSX for ONTAP 是AWS上提供的第一方企业级云存储服务、可提供基于常见NetApp ONTAP 文件系统构建的高度可靠、可扩展、高性能和功能丰富的文件存储。</block>
-  <block id="d533eef302a4867b401818c0958d07d5" category="paragraph">适用于ONTAP 的FSX可提供无缝的部署和管理体验。无需具备存储专业知识即可开始使用。为了简化监控、可以使用AWS lamdba功能(根据阈值自动调整总存储容量、卷大小或LUN大小)。本文档提供了一个分步指南、用于创建一个自动设置、以便定期监控ONTAP 的FSX、在超过用户指定的阈值时发出通知并调整大小、并将调整大小活动通知给管理员。</block>
   <block id="8799f4655655a26ca808c044ad467a88" category="paragraph">解决方案 提供了以下功能：</block>
   <block id="c342d53b891fb460586d3a137ff99a6e" category="list-text">能够监控：</block>
   <block id="138be07c6f8ee03d211e5f345546b7af" category="list-text">适用于ONTAP 的FSX的整体存储容量的使用情况</block>
@@ -17336,11 +17335,8 @@
   <block id="378c1fc07823bfb610dec17052eacf6d" category="list-text">通过电子邮件接收使用情况警告和调整大小通知的警报机制</block>
   <block id="f4f72a76c2acbf4ea687920f5e120816" category="list-text">可以删除低于用户定义阈值的快照</block>
   <block id="91602eeac7d8a4cc46329128033d33d3" category="list-text">能够获取关联的FlexClone卷和快照列表</block>
-  <block id="a8a8309e8496f6fa8767a3b768fd917a" category="list-text">能够定期运行检查</block>
   <block id="dd0679a0ea834bda0a34b306e7a09346" category="paragraph">开始之前、请确保满足以下前提条件：</block>
   <block id="561d599e4e659439d1b142dbe29b15c7" category="list-text">已部署适用于ONTAP 的FSx</block>
-  <block id="b0855635fd601c0aa86b37aad2b039ac" category="list-text">lambda功能需要连接NAT网关的专用子网才能进行Internet连接</block>
-  <block id="86cdbeab26faaadbe0e57ddc9fdc1c89" category="list-text">专用子网还应连接到适用于ONTAP 的FSX</block>
   <block id="7f42d2e23aac4d85dca59633ff2cf58d" category="list-text">已为ONTAP 的FSX设置"fsxadmin"密码</block>
   <block id="eb99e653d349f732eb98619784a340ac" category="list-text">AWS Lambda功能可通过API调用FSX for ONTAP 、以检索和更新存储容量、卷和LUN的大小。</block>
   <block id="f350c91a602035a3521ac328a432c7ed" category="list-text">"fsxadmin"密码作为安全字符串存储在AWS SSM参数存储中、以增加安全层。</block>
@@ -17348,17 +17344,14 @@
   <block id="432a24ba141fb90355a80ec4c6d3825e" category="paragraph"><block ref="432a24ba141fb90355a80ec4c6d3825e" category="inline-image-macro-rx" type="image"></block></block>
   <block id="974bba02716a5e7c8414499dd06bbb62" category="example-title">第1步：克隆GitHub存储库</block>
   <block id="3233c0d0dc9395d6085fb8167fdd8393" category="paragraph">在本地系统上克隆GitHub存储库：</block>
-  <block id="9f4febbd8959b367ebeccd3c9b980bed" category="example-title">第2步：为fsxadmin密码创建SSM参数</block>
   <block id="06df343d3a431a2f511aa7fef58e4a23" category="paragraph">导航到AWS控制台&gt;*参数存储*、然后单击*创建参数*。</block>
   <block id="faec730272cd4b39d377b89835a6a82c" category="paragraph">单击*创建参数*。</block>
   <block id="1cefa861aa6d9ba408841133e7325545" category="inline-image-macro">此图显示了AWS控制台上的SSM参数创建窗口。</block>
   <block id="a19e362ed1a0d7ca174a7abf2c59853a" category="paragraph"><block ref="a19e362ed1a0d7ca174a7abf2c59853a" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="34ed02bd2b8200c71e9f3ac3a57c6339" category="example-title">第3步：设置电子邮件服务</block>
   <block id="bcd5fa3fbab9dadf361d9eba36b8382c" category="paragraph">导航到AWS控制台&gt;*简单电子邮件服务(SES)*、然后单击*创建身份*。</block>
   <block id="60461626b891b858b74da97b0ee89b6e" category="paragraph">单击*创建身份*</block>
   <block id="af9b6260888bf7e72d2766823e7a2bb6" category="inline-image-macro">此图显示了AWS控制台上的SES身份创建窗口。</block>
   <block id="59f38a9e267a3ea7e5d173c163613f58" category="paragraph"><block ref="59f38a9e267a3ea7e5d173c163613f58" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="d4150206805713c5170f55a3e2f8c424" category="example-title">第4步：创建和设置AWS Lambda功能</block>
   <block id="f7eef2aeccb65815a4f57ad9796278b3" category="list-text">导航到AWS控制台&gt;* AWS Lambda"、然后单击与FSX for ONTAP 位于同一区域的*创建功能*</block>
   <block id="eb625a560eb6c02ecd5a6a9f47d5d768" category="list-text">使用默认的*从头开始*作者并更新以下字段：</block>
   <block id="8af4ad16f59e1ac333921353c65b1492" category="paragraph">单击*创建功能*。</block>
@@ -17399,7 +17392,6 @@
   <block id="e405587a28590f4765b9cca9a439aee0" category="cell">* FSx_password_SSM_parameter*</block>
   <block id="fd6fdc9b8903fcc41d72463456f66547" category="cell">(必需)输入在AWS参数存储中用于存储"fsxadmin"密码的路径名称。</block>
   <block id="a2b399451f43de7415c9c8d2f2430019" category="cell">*警告通知*</block>
-  <block id="8075a3b4477383f02ada5dc1dd51ddf8" category="cell">(必需)将此变量设置为True、以便在存储容量/卷/LUN使用量超过75%但小于阈值时接收通知。</block>
   <block id="4a011a0efb5e78112e4ed7930b4d4ac6" category="cell">*启用_snapshot_deletion*</block>
   <block id="f2a43adf70fef2a5bca3a335b60d96ec" category="cell">(必需)将此变量设置为True、以便为早于"snapshot_age_threshold_in_days"中指定值的快照启用卷级快照删除。</block>
   <block id="d7cef1097d40a983ff6c131976641be8" category="cell">* snapshot_age_threshold_in_days*</block>
@@ -17853,4 +17845,69 @@
   <block id="53a581d907d105a589be9419e91b16fa" category="paragraph"><block ref="53a581d907d105a589be9419e91b16fa" category="inline-link-rx"></block></block>
   <block id="904837c9cf9bc52a96ce17d051fddec9" category="cell">2023年4月</block>
   <block id="1d2114df6a9f8f5d7e8f597e9c70a6c1" category="sidebar">借助NetApp文件对象双处理能力和AWS SageMaker实现云数据管理</block>
+  <block id="f8fea07785033364d3453e53cbf82aae" category="cell">2023年3月29日</block>
+  <block id="74ed7031eb75ffbb784ebe9ffbd6be6a" category="cell">更新了博客《使用AWS Lambda/Function进行ONTAP 监控和自动调整大小FSx》、其中提供了私有/公共部署选项以及手动/自动部署选项。</block>
+  <block id="385a1ac85546ae5b25d9899873bf540d" category="cell">2023年3月22日</block>
+  <block id="2ab02c4627e2022ecdf98de0e3b6b18d" category="cell">添加了博客：FSx for ONTAP 监控和使用AWS Lambda-Function自动调整大小</block>
+  <block id="2991ec0aa5bd4825c01d9bef4b9bdaad" category="paragraph">适用于ONTAP 的FSX可提供无缝的部署和管理体验。无需具备存储专业知识即可开始使用。为了简化监控、可以使用AWS兰达功能(根据阈值自动调整总存储容量、卷大小或LUN大小的大小)。本文档提供了一个分步指南、用于创建一个自动设置、以便定期监控ONTAP 的FSX、在超过用户指定的阈值时发出通知并调整大小、并将调整大小活动通知给管理员。</block>
+  <block id="8e8aff933e5047a57263663f8a18e3c3" category="list-text">能够定期监控检查</block>
+  <block id="e2b4916d6d7f53cde2d5633fd6119cc4" category="list-text">可以使用解决方案 访问互联网、也可以不访问互联网</block>
+  <block id="a90d7c3c15ad351b936f52283c3587ef" category="list-text">可以手动部署或使用AWS CloudFormation模板进行部署</block>
+  <block id="1526ea467258021d67f8f59298e57f70" category="list-text">连接到FSx for ONTAP 的专用子网</block>
+  <block id="baebd0d5b177b5744e776be025952058" category="list-text">如果在无法访问Internet的VPC中部署解决方案 、则会对适用于AWS SSM、FSx和SES的VPC端点进行设置、使Lamb达 能够通过AWS内部网络访问这些服务。</block>
+  <block id="5215f5ee52e78e416520bfecaf294472" category="paragraph">按照一系列步骤完成此解决方案 的自动部署：</block>
+  <block id="6436b05fc0216b37135d2a66a585e96f" category="example-title">第2步：设置AWS S3存储分段</block>
+  <block id="7d54d293b4849834117fc9160feb6cbc" category="list-text">导航到AWS控制台&gt;*。s3*并单击*创建存储分段*。使用默认设置创建存储分段。</block>
+  <block id="040d8a375b4543c424d11036c6faa0d7" category="list-text">进入存储分段后、单击*上传*&gt;*添加文件*、然后从系统上克隆的GitHub存储库中选择*配置式.zip*和*请求式.zip*。</block>
+  <block id="66b09b43432fbb9814d51e48e9a98ade" category="inline-image-macro">此图显示了正在上传zip文件的S3窗口</block>
+  <block id="0f71a8c9bb8a785323461956bf9e217a" category="paragraph"><block ref="0f71a8c9bb8a785323461956bf9e217a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6ea6ef5eae0a05760ec8bf19495d8645" category="example-title">第3步：AWS SES SMTP设置(如果无法访问Internet、则需要此设置)</block>
+  <block id="90db95943ff24327f32dd935aa7395d5" category="paragraph">如果您要在不访问Internet的情况下部署解决方案 、请执行此步骤(注意：由于正在设置VPC端点、因此会增加相关成本。)</block>
+  <block id="972167638becf55a9af0b4e5c414a75e" category="list-text">导航到AWS控制台&gt;*AWS Simple Email Service (SES)*&gt; SMTP Settings，然后单击*Create SMTP crederations*</block>
+  <block id="68d59bd0e9b2839f0843ab1b2d6b136f" category="list-text">输入IAM用户名或将其保留为默认值、然后单击创建。保存用户名和密码以供将来使用。</block>
+  <block id="796d9a158268a6ea8a7895c4fc08b2f7" category="admonition">如果SES SMTP设置已到位、请跳过此步骤。</block>
+  <block id="c492e5ad14c10d85050111f49b9ccd32" category="inline-image-macro">此图显示了AWS SES下的创建SMTP凭据窗口</block>
+  <block id="311486bd300a1e6b104a8c2d1edc4b1d" category="paragraph"><block ref="311486bd300a1e6b104a8c2d1edc4b1d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="53f52a194e6b0e83b281c128d8c9536d" category="example-title">第4步：AWS CloudFormation部署</block>
+  <block id="d2edefb4d7f05ffadcc2ce87ffde5e98" category="list-text">导航到AWS控制台&gt;* CloudFormation*&gt;创建堆栈&gt;使用新资源(标准)。</block>
+  <block id="f9555c9e4ee9872bd73e1554f90b137c" category="inline-image-macro">此图显示了AWS CloudFormation创建堆栈窗口</block>
+  <block id="302a433b27874ed6225d3a3553f31fdb" category="paragraph"><block ref="302a433b27874ed6225d3a3553f31fdb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1a65108ded0e706a6c44742b2f313e4e" category="paragraph">单击下一步</block>
+  <block id="ef7b077619d0583a71ba9fda28bc53fc" category="list-text">输入堆栈详细信息。单击Next、选中I Accloned that AWS CloudFormation m赡 会创建IAM资源复选框、然后单击Submit。</block>
+  <block id="1b61f2cbcfae90671dbb048e72bb8918" category="admonition">如果"VPC是否可访问互联网？" 设置为False、需要提供"AWS SES的SMTP用户名"和"AWS SES的SMTP密码"。否则、可以将其留空。</block>
+  <block id="1f5aede37b8170af3cfbd901f22d591e" category="inline-image-macro">此图显示了AWS CloudFormation堆栈详细信息窗口</block>
+  <block id="7e2652655cc5cfead2ca4bff65032215" category="paragraph"><block ref="7e2652655cc5cfead2ca4bff65032215" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="113624fc80b505576882228d73fc03c5" category="paragraph"><block ref="113624fc80b505576882228d73fc03c5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="13069c8f4182a2f6ab810369ebe8b0ad" category="paragraph"><block ref="13069c8f4182a2f6ab810369ebe8b0ad" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="bd90b3549ddb2a170121e2cae9d2e442" category="paragraph"><block ref="bd90b3549ddb2a170121e2cae9d2e442" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="dcd7d4e3b6e000a6821009f7370ab47e" category="list-text">一旦CloudFormation部署开始、"发件人电子邮件ID"中提及的电子邮件ID将收到一封电子邮件、要求他们授权在AWS SES中使用此电子邮件地址。单击链接以验证电子邮件地址。</block>
+  <block id="d22d74b4244b97ca549876dbaf6e5906" category="list-text">CloudFormation堆栈部署完成后、如果出现任何警告/通知、系统将向收件人电子邮件ID发送一封电子邮件、其中包含通知详细信息。</block>
+  <block id="bb44dcc303804fcbbf13971e05b223b4" category="inline-image-macro">此图显示了通知可用时收到的电子邮件通知</block>
+  <block id="80b7092ae7ee31bafccb6f27ea2a5603" category="paragraph"><block ref="80b7092ae7ee31bafccb6f27ea2a5603" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5e482488f8434036ccb78ddb9cea595f" category="paragraph"><block ref="5e482488f8434036ccb78ddb9cea595f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7ae845e97e60673c293edce9fe3a65f9" category="section-title">手动部署</block>
+  <block id="d4f4ecbc346d14b30240c605c5884282" category="paragraph">按照一系列步骤完成此解决方案 的手动部署：</block>
+  <block id="c960dffe03501c470f4219bb16fab5ef" category="example-title">第2步：AWS SES SMTP设置(如果无法访问Internet、则需要此设置)</block>
+  <block id="0aa7c69c57f475cc1f055c49b0e3136e" category="example-title">第3步：为fsxadmin密码创建SSM参数</block>
+  <block id="8a7ca52152a916f189b032d05768ed10" category="paragraph">如果在不访问Internet的情况下部署解决方案 、则执行相同的步骤来存储SMTP用户名和SMTP密码。否则、跳过添加这2个参数。</block>
+  <block id="06e0a02f6ce962b7038b6b2918585271" category="example-title">第4步：设置电子邮件服务</block>
+  <block id="14bcb93088a1eb5d0e0d7ce578a73a08" category="paragraph">"发件人电子邮件ID"中提及的电子邮件ID将收到一封电子邮件、要求所有者授权AWS SES使用此电子邮件地址。单击链接以验证电子邮件地址。</block>
+  <block id="88adaee1fa88f871bc7cf8d579e59cdd" category="example-title">第5步：设置VPC端点(如果无法访问Internet、则需要此端点)</block>
+  <block id="0261907012c6fd6ed0e80ab991a9d462" category="admonition">只有在部署时不能访问Internet时才需要。由于VPC端点的原因、还会产生额外的成本。</block>
+  <block id="71bb5fff33b1866d7266866fb9c94f45" category="list-text">导航到AWS控制台&gt;* VPC*&gt;*端点*并单击*创建端点*并输入以下详细信息：</block>
+  <block id="6683864f2c9e5bbb1fa4128837ed8eab" category="paragraph">单击创建端点。</block>
+  <block id="5f80bfe9763fe273a3a7722c1c647604" category="inline-image-macro">此图显示了VPC端点创建窗口</block>
+  <block id="9a4cd1bb8a39a7c230290453794b4429" category="paragraph"><block ref="9a4cd1bb8a39a7c230290453794b4429" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="603ef5b528d0bd1def7291cf6417ff56" category="paragraph"><block ref="603ef5b528d0bd1def7291cf6417ff56" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1c96306d4c766c38569c564c9bdb80a7" category="list-text">按照相同的过程创建SES和SSM VPC端点。除将&lt;region&gt; 分别对应于*com.aws.mas.smp.smNT*和*com.惊奇aws.smssm*的服务外，所有参数均与上述相同&lt;region&gt;。</block>
+  <block id="a07090d2d501e8e696338339ab098115" category="example-title">第6步：创建和设置AWS Lamb编制 函数</block>
+  <block id="6b0889223ab16d524cd0322c25d0b4b3" category="cell">(必需)将此变量设置为True、以便在存储容量/卷/LUN使用量超过75%但小于阈值时接收通知。</block>
+  <block id="785e900d8ea09cab57830ac6967cb709" category="cell">*internet_access*</block>
+  <block id="24498a6850ca31bfb18f639aae517582" category="cell">(必需)如果部署了此兰德的子网可以访问Internet、请将此变量设置为True。否则、请将其设置为False。</block>
+  <block id="cd9e7c04a0bb02c275868aa4344613da" category="cell">*SMT_REARAY*</block>
+  <block id="4a892fb521dc4ec57f770f02637e0d0d" category="cell">(可选)如果"internet_access"变量设置为False、请输入部署了兰德的区域。例如us-east-1 (采用此格式)</block>
+  <block id="07dba5c28924867968d12040d14d8b57" category="cell">*SMT_USERNAME_SSM_Parameter*</block>
+  <block id="611e6e1c3920f2514daecc54ecfb79d1" category="cell">(可选)如果"internet_access"变量设置为False、请输入AWS参数存储中用于存储SMTP用户名的路径名称。</block>
+  <block id="00dc34bddd9d78c3a39608fed34bb12c" category="cell">*SMT_password_SSM_parameter*</block>
+  <block id="7d7fbea26b1aa16fe546b51310bfd752" category="cell">(可选)如果"internet_access"变量设置为False、请输入AWS参数存储中用于存储SMTP密码的路径名称。</block>
 </blocks>
