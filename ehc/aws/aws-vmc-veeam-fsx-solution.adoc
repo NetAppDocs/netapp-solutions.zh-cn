@@ -1,0 +1,463 @@
+---
+sidebar: sidebar 
+permalink: ehc/aws/aws-vmc-veeam-fsx-solution.html 
+keywords: disaster recovery, vmc, vmware cloud, aws, amazon web services, nfs datastore, fsxn, fsx for ontap, fsx for netapp ontap, backup, restore, sql server, oracle 
+summary:  
+---
+= VMware Cloud中的Veeam备份和还原、采用AWS FSx for ONTAP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+[role="lead"]
+作者：Jsh Powell—NetApp解决方案工程部
+
+
+
+== 概述
+
+Veeam Backup & Replication是一款高效可靠的解决方案 、用于保护VMware Cloud中的数据。此解决方案 演示了使用Veeam备份和复制在VMware Cloud中备份和还原FSx for ONTAP NFS数据存储库上的应用程序VM的正确设置和配置。
+
+VMware Cloud (在AWS中)支持使用NFS数据存储库作为补充存储、而FSx for NetApp ONTAP 是一款安全解决方案 、适用于需要为云应用程序存储大量数据的客户、该数据存储库可以独立于SDDC集群中的ESXi主机数量进行扩展。这项集成的AWS存储服务可提供具有所有传统NetApp ONTAP 功能的高效存储。
+
+
+
+=== 用例
+
+此解决方案 可解决以下使用情形：
+
+* 使用FSx for NetApp ONTAP 作为备份存储库、备份和还原VMC中托管的Windows和Linux虚拟机。
+* 使用FSx for NetApp ONTAP 作为备份存储库来备份和还原Microsoft SQL Server应用程序数据。
+* 使用FSx for NetApp ONTAP 作为备份存储库来备份和还原Oracle应用程序数据。
+
+
+
+
+=== 使用Amazon FSx for ONTAP 的NFS数据存储库
+
+此解决方案 中的所有虚拟机都位于FSx上、用于ONTAP 补充NFS数据存储库。使用FSx for ONTAP 作为补充NFS数据存储库具有若干优势。例如、它允许您：
+
+* 在云中创建可扩展且高度可用的文件系统、而无需复杂的设置和管理。
+* 与现有VMware环境集成、支持您使用熟悉的工具和流程来管理云资源。
+* 利用ONTAP 提供的高级数据管理功能(例如快照和复制)保护数据并确保其可用性。
+
+
+.解决方案 部署概述
+[%collapsible]
+====
+此列表简要介绍了配置Veeam备份和复制、使用FSx for ONTAP 作为备份存储库执行备份和还原作业以及还原SQL Server和Oracle VM和数据库所需的步骤：
+
+. 创建FSx for ONTAP 文件系统、用作Veeam Backup & Replication的iSCSI备份存储库。
+. 部署Veeam代理以分布备份工作负载并挂载FSx for ONTAP 上托管的iSCSI备份存储库。
+. 配置Veeam备份作业以备份SQL Server、Oracle、Linux和Windows虚拟机。
+. 还原SQL Server虚拟机和各个数据库。
+. 还原Oracle虚拟机和各个数据库。
+
+
+====
+.前提条件
+[%collapsible]
+====
+本解决方案 的目的是演示在VMware Cloud中运行的虚拟机以及由FSx for NetApp ONTAP 托管的NFS数据存储库中的虚拟机的数据保护。此解决方案 假定已配置以下组件并可供使用：
+
+. 一个或多个NFS数据存储库连接到VMware Cloud的FSx for ONTAP 文件系统。
+. 安装了Veeam Backup & Replication软件的Microsoft Windows Server VM。
++
+** Veeam Backup & Replication服务器已使用其IP地址或完全限定域名发现vCenter Server。
+
+
+. 在解决方案 部署期间、要与Veeam备份代理组件一起安装的Microsoft Windows Server VM。
+. VMDK和应用程序数据驻留在FSx for ONTAP NFS数据存储库上的Microsoft SQL Server VM。对于此解决方案 、我们在两个单独的VMDK上有两个SQL数据库。
++
+** 注意：作为最佳实践、数据库和事务日志文件应放置在单独的驱动器上、因为这样可以提高性能和可靠性。这部分是由于事务日志是按顺序写入的、而数据库文件是随机写入的。
+
+
+. 包含VMDK和应用程序数据的Oracle数据库VM驻留在FSx上、用于ONTAP NFS数据存储库。
+. VMDK驻留在FSx上的Linux和Windows文件服务器VM、用于ONTAP NFS数据存储库。
+. Veeam需要使用特定的TCP端口在备份环境中的服务器和组件之间进行通信。在Veeam备份基础架构组件上、系统会自动创建所需的防火墙规则。有关网络端口要求的完整列表、请参阅的端口部分 https://helpcenter.veeam.com/docs/backup/vsphere/used_ports.html?zoom_highlight=network+ports&ver=120["适用于VMware vSphere的Veeam备份和复制用户指南"]。
+
+
+====
+
+
+== 高级架构
+
+此解决方案 的测试/验证是在可能与最终部署环境匹配或可能不匹配的实验室中执行的。有关详细信息、请参见以下各节。
+
+image::aws-vmc-veeam-00.png[解决方案 架构图]
+
+.硬件/软件组件
+[%collapsible]
+====
+本解决方案 的目的是演示在VMware Cloud中运行的虚拟机以及由FSx for NetApp ONTAP 托管的NFS数据存储库中的虚拟机的数据保护。此解决方案 假定已配置以下组件并可供使用：
+
+* Microsoft Windows VM位于FSx for ONTAP NFS数据存储库上
+* Linux (CentOS) VM位于FSx for ONTAP NFS数据存储库上
+* Microsoft SQL Server VM位于FSx for ONTAP NFS数据存储库上
++
+** 两个数据库托管在不同的VMDK上
+
+
+* Oracle VM位于FSx for ONTAP NFS数据存储库上
+
+
+====
+
+
+== 解决方案 部署
+
+在本解决方案 中、我们详细说明了如何使用Veeam备份和复制软件部署和验证解决方案 、以便在AWS上的VMware Cloud SDDC中对SQL Server、Oracle以及Windows和Linux文件服务器虚拟机执行备份和恢复。此解决方案 中的虚拟机位于FSx for ONTAP 托管的补充NFS数据存储库中。此外、还会使用一个单独的FSx for ONTAP 文件系统来托管要用于Veeam备份存储库的iSCSI卷。
+
+我们将通过FSx创建ONTAP 文件系统、挂载要用作备份存储库的iSCSI卷、创建和运行备份作业以及执行VM和数据库还原。
+
+有关FSx for NetApp ONTAP 的详细信息、请参见 https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html["FSx for ONTAP 用户指南"^]。
+
+有关Veeam备份和复制的详细信息、请参见 https://www.veeam.com/documentation-guides-datasheets.html?productId=8&version=product%3A8%2F221["Veeam帮助中心技术文档"^] 站点
+
+有关将Veeam Backup and Replication与VMware Cloud on AWS结合使用时的注意事项和限制、请参见 https://www.veeam.com/kb2414["基于AWS的VMware Cloud和基于Dell EMC支持的VMware Cloud。注意事项和限制"]。
+
+
+
+=== 部署Veeam代理服务器
+
+Veeam代理服务器是Veeam Backup & Replication软件的一个组件、充当源与备份或复制目标之间的中介。代理服务器通过在本地处理数据来帮助优化和加速备份作业期间的数据传输、并且可以使用不同的传输模式通过VMware vStorage API进行数据保护或通过直接存储访问来访问数据。
+
+在选择Veeam代理服务器设计时、请务必考虑并发任务的数量以及所需的传输模式或存储访问类型。
+
+有关代理服务器数量的规模估算及其系统要求、请参见 https://bp.veeam.com/vbr/2_Design_Structures/D_Veeam_Components/D_backup_proxies/vmware_proxies.html["Veeam VMware vSphere最佳实践指南"]。
+
+Veeam Data Mover是Veeam代理服务器的一个组件、它利用传输模式从源获取VM数据并将其传输到目标。传输模式是在配置备份作业期间指定的。通过使用直接存储访问、可以提高从NFS数据存储库备份的效率。
+
+有关运输模式的详细信息、请参阅 https://helpcenter.veeam.com/docs/backup/vsphere/transport_modes.html?ver=120["适用于VMware vSphere的Veeam备份和复制用户指南"]。
+
+在下面的步骤中、我们将介绍如何在VMware Cloud SDDC中的Windows VM上部署Veeam代理服务器。
+
+.部署Veeam代理以分布备份工作负载
+[%collapsible]
+====
+在此步骤中、Veeam代理将部署到现有Windows VM。这样便可在主Veeam备份服务器和Veeam代理之间分布备份作业。
+
+. 在Veeam Backup and Replication服务器上、打开管理控制台并选择左下方菜单中的*备份基础架构*。
+. 右键单击*备份代理*，然后单击*添加VMware备份代理...*以打开向导。
++
+image::aws-vmc-veeam-04.png[打开添加Veeam备份代理向导]
+
+. 在*Add VMware Proxy*向导中，单击*Add New...*按钮以添加新的代理服务器。
++
+image::aws-vmc-veeam-05.png[选择以添加新服务器]
+
+. 选择以添加Microsoft Windows、然后按照提示添加服务器：
++
+** 填写DNS名称或IP地址
+** 选择要用于新系统上的凭据的帐户或添加新凭据
+** 查看要安装的组件，然后单击*Apply*开始部署
++
+image::aws-vmc-veeam-06.png[填写添加新服务器的提示]
+
+
+
+. 返回“*新建VMware代理*”向导，选择传输模式。在本例中，我们选择了*自动选择*。
++
+image::aws-vmc-veeam-07.png[选择传输模式]
+
+. 选择希望VMware代理直接访问的已连接数据存储库。
++
+image::aws-vmc-veeam-08.png[为VMware代理选择一个服务器]
+
++
+image::aws-vmc-veeam-09.png[选择要访问的数据存储库]
+
+. 根据需要配置和应用任何特定网络流量规则、例如加密或限制。完成后，单击*Apply*按钮完成部署。
++
+image::aws-vmc-veeam-10.png[配置网络流量规则]
+
+
+
+====
+
+
+=== 配置存储和备份存储库
+
+主Veeam备份服务器和Veeam代理服务器可访问直连存储形式的备份存储库。在本节中、我们将介绍如何创建适用于ONTAP 文件系统的FSx、如何将iSCSI LUN挂载到Veeam服务器以及如何创建备份存储库。
+
+.为ONTAP 文件系统创建FSx
+[%collapsible]
+====
+创建FSx for ONTAP 文件系统、用于托管Veeam备份存储库的iSCSI卷。
+
+. 在AWS控制台中，转到FSx，然后选择*Create file system*
++
+image::aws-vmc-veeam-01.png[为ONTAP 文件系统创建FSx]
+
+. 选择*Amazon FSx for NetApp ONTAP FS*，然后选择*Next*继续。
++
+image::aws-vmc-veeam-02.png[选择Amazon FSx for NetApp ONTAP]
+
+. 填写文件系统名称、部署类型、SSD存储容量以及FSx for ONTAP 集群将驻留的VPC。此VPC必须配置为与VMware Cloud中的虚拟机网络进行通信。单击“*下一步*”。
++
+image::aws-vmc-veeam-03.png[填写文件系统信息]
+
+. 查看部署步骤，然后单击*Create File System*开始文件系统创建过程。
+
+
+====
+.配置和挂载iSCSI LUN
+[%collapsible]
+====
+在FSx for ONTAP 上创建和配置iSCSI LUN、然后挂载到Veeam备份和代理服务器。这些LUN稍后将用于创建Veeam备份存储库。
+
+
+NOTE: 在FSx for ONTAP 上创建iSCSI LUN是一个多步骤过程。创建卷的第一步可以在Amazon FSx控制台中完成、也可以使用NetApp ONTAP 命令行界面完成。
+
+
+NOTE: 有关使用FSx for ONTAP 的详细信息、请参见 https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html["FSx for ONTAP 用户指南"^]。
+
+. 在NetApp ONTAP 命令行界面中、使用以下命令创建初始卷：
++
+....
+FSx-Backup::> volume create -vserver svm_name -volume vol_name -aggregate aggregate_name -size vol_size -type RW
+....
+. 使用上一步中创建的卷创建LUN：
++
+....
+FSx-Backup::> lun create -vserver svm_name -path /vol/vol_name/lun_name -size size -ostype windows -space-allocation enabled
+....
+. 通过创建包含Veeam备份和代理服务器的iSCSI IQN的启动程序组来授予对LUN的访问权限：
++
+....
+FSx-Backup::> igroup create -vserver svm_name -igroup igroup_name -protocol iSCSI -ostype windows -initiator IQN
+....
++
+
+NOTE: 要完成上述步骤、您需要先从Windows服务器上的iSCSI启动程序属性检索IQN。
+
+. 最后、将LUN映射到刚刚创建的启动程序组：
++
+....
+FSx-Backup::> lun mapping create -vserver svm_name -path /vol/vol_name/lun_name igroup igroup_name
+....
+. 要挂载iSCSI LUN、请登录到Veeam Backup & Replication Server并打开iSCSI启动程序属性。进入*Discover (*发现)*选项卡并输入iSCSI目标IP地址。
++
+image::aws-vmc-veeam-11.png[iSCSI启动程序发现]
+
+. 在*目标*选项卡上，突出显示非活动LUN并单击*Connect*。选中*启用多路径*框，然后单击*确定*以连接到LUN。
++
+image::aws-vmc-veeam-12.png[将iSCSI启动程序连接到LUN]
+
+. 在磁盘管理实用程序中、初始化新的LUN并使用所需的名称和驱动器盘符创建卷。选中*启用多路径*框，然后单击*确定*以连接到LUN。
++
+image::aws-vmc-veeam-13.png[Windows磁盘管理]
+
+. 重复上述步骤、将iSCSI卷挂载到Veeam代理服务器上。
+
+
+====
+.创建Veeam备份系统信息源
+[%collapsible]
+====
+在Veeam Backup and Replication控制台中、为Veeam Backup和Veeam Proxy服务器创建备份存储库。这些存储库将用作虚拟机备份的备份目标。
+
+. 在Veeam Backup and Replication控制台中、单击左下方的*备份基础架构*、然后选择*添加存储库*
++
+image::aws-vmc-veeam-14.png[创建新的备份存储库]
+
+. 在"New Backup Repository (新建备份存储库)"向导中、输入存储库的名称、然后从下拉列表中选择服务器、并单击*填充*按钮以选择要使用的NTFS卷。
++
+image::aws-vmc-veeam-15.png[选择备份存储库服务器]
+
+. 在下一页上、选择执行高级还原时用于挂载备份的挂载服务器。默认情况下、此服务器与存储库存储连接在一起。
+. 查看您的选择，然后单击*Apply*开始创建备份存储库。
++
+image::aws-vmc-veeam-16.png[选择挂载服务器]
+
+. 对任何其他代理服务器重复上述步骤。
+
+
+====
+
+
+=== 配置Veeam备份作业
+
+应使用上一节中的备份系统信息栏创建备份作业。创建备份作业是任何存储管理员的常规任务、此处不会介绍所有步骤。有关在Veeam中创建备份作业的详细信息、请参见 https://www.veeam.com/documentation-guides-datasheets.html?productId=8&version=product%3A8%2F221["Veeam帮助中心技术文档"^]。
+
+在此解决方案 中、为以下项创建了单独的备份作业：
+
+* Microsoft Windows SQL Server
+* Oracle数据库服务器
+* Windows文件服务器
+* Linux文件服务器
+
+
+.配置Veeam备份作业时的一般注意事项
+[%collapsible]
+====
+. 启用应用程序感知型处理、以创建一致的备份并执行事务日志处理。
+. 启用应用程序感知型处理后、请向应用程序添加具有管理员权限的正确凭据、因为此凭据可能与子操作系统凭据不同。
++
+image::aws-vmc-veeam-17.png[应用程序处理设置]
+
+. 要管理备份的保留策略，请选中*将某些完整备份保留更长的时间以供归档使用*，然后单击*配置...*按钮以配置策略。
++
+image::aws-vmc-veeam-18.png[长期保留策略]
+
+
+
+====
+
+
+=== 使用Veeam完全恢复还原应用程序VM
+
+使用Veeam执行完全还原是执行应用程序还原的第一步。我们验证了已启动的VM的完全恢复以及所有服务均正常运行。
+
+还原服务器是任何存储管理员职责的正常组成部分、此处不会介绍所有步骤。有关在Veeam中执行完全恢复的更多完整信息、请参见 https://www.veeam.com/documentation-guides-datasheets.html?productId=8&version=product%3A8%2F221["Veeam帮助中心技术文档"^]。
+
+
+
+=== 还原SQL Server数据库
+
+Veeam Backup & Replication提供了多种还原SQL Server数据库的选项。在此验证中、我们使用Veeam Explorer for SQL Server with Instant Recovery执行SQL Server数据库还原。SQL Server即时恢复是一项功能、可用于快速还原SQL Server数据库、而无需等待完整的数据库还原。这种快速恢复过程可最大限度地减少停机时间并确保业务连续性。工作原理如下：
+
+* Veeam Explorer *挂载包含要还原的SQL Server数据库的备份*。
+* 软件*直接从装载的文件发布数据库*，使其可作为目标SQL Server实例上的临时数据库访问。
+* 在使用临时数据库时、Veeam Explorer *将用户查询*重定向到此数据库、以确保用户可以继续访问和使用数据。
+* 在后台、Veeam *执行完整数据库还原*、将数据从临时数据库传输到原始数据库位置。
+* 完整数据库还原完成后、Veeam Explorer *将用户查询切换回原始*数据库并删除临时数据库。
+
+
+.使用Veeam Explorer即时恢复还原SQL Server数据库
+[%collapsible]
+====
+. 在Veeam备份和复制控制台中、导航到SQL Server备份列表、右键单击某个服务器并选择*还原应用程序项*、然后选择* Microsoft SQL Server数据库...*。
++
+image::aws-vmc-veeam-19.png[还原SQL Server数据库]
+
+. 在Microsoft SQL Server数据库还原向导中，从列表中选择还原点，然后单击*Next*。
++
+image::aws-vmc-veeam-20.png[从列表中选择还原点]
+
+. 如果需要、输入*恢复原因*、然后在摘要页面上、单击*浏览*按钮以启动Veeam Explorer for Microsoft SQL Server。
++
+image::aws-vmc-veeam-21.png[单击浏览以启动Veeam Explorer]
+
+. 在Veeam Explorer中展开数据库实例列表、右键单击并选择*即时恢复*、然后选择要恢复到的特定还原点。
++
+image::aws-vmc-veeam-22.png[选择即时恢复还原点]
+
+. 在即时恢复向导中、指定切换类型。这可以是自动执行的、停机时间最短、也可以是手动执行的、也可以是在指定时间执行的。然后单击*recover (恢复)*按钮开始恢复过程。
++
+image::aws-vmc-veeam-23.png[选择切换类型]
+
+. 可以从Veeam Explorer监控恢复过程。
++
+image::aws-vmc-veeam-24.png[监控SQL Server恢复过程]
+
+
+
+====
+有关使用Veeam Explorer执行SQL Server还原操作的详细信息、请参阅中的Microsoft SQL Server一节 https://helpcenter.veeam.com/docs/backup/explorers/vesql_user_guide.html?ver=120["《Veeam Explorers用户指南》"]。
+
+
+
+=== 使用Veeam Explorer还原Oracle数据库
+
+Veeam Explorer for Oracle数据库支持使用即时恢复执行标准Oracle数据库还原或无中断还原。它还支持发布数据库、以便快速访问、恢复Data Guard数据库以及从RMAN备份中恢复。
+
+有关使用Veeam Explorer执行Oracle数据库还原操作的详细信息、请参阅中的Oracle一节 https://helpcenter.veeam.com/docs/backup/explorers/veor_user_guide.html?ver=120["《Veeam Explorers用户指南》"]。
+
+.使用Veeam Explorer还原Oracle数据库
+[%collapsible]
+====
+本节将介绍如何使用Veeam Explorer将Oracle数据库还原到其他服务器。
+
+. 在Veeam Backup and Replication控制台中、导航到Oracle备份列表、右键单击某个服务器并选择*还原应用程序项*、然后选择* Oracle数据库...*。
++
+image::aws-vmc-veeam-25.png[还原Oracle数据库]
+
+. 在Oracle数据库恢复向导中，从列表中选择一个还原点，然后单击*Next*。
++
+image::aws-vmc-veeam-26.png[从列表中选择还原点]
+
+. 如果需要、输入*恢复原因*、然后在摘要页面上、单击*浏览*按钮以启动Veeam Explorer for Oracle。
++
+image::aws-vmc-veeam-27.png[单击浏览以启动Veeam Explorer]
+
+. 在Veeam Explorer中展开数据库实例列表、单击要还原的数据库、然后从顶部的*还原数据库*下拉菜单中选择*还原到另一台服务器...*。
++
+image::aws-vmc-veeam-28.png[选择还原到其他服务器]
+
+. 在“恢复向导”中，指定要从中恢复的还原点，然后单击“*下一步*”。
++
+image::aws-vmc-veeam-29.png[选择还原点]
+
+. 指定数据库将还原到的目标服务器和帐户凭据，然后单击*Next*。
++
+image::aws-vmc-veeam-30.png[指定目标服务器凭据]
+
+. 最后，指定数据库文件的目标位置，然后单击*Restore*按钮开始恢复过程。
++
+image::aws-vmc-veeam-31.png[指定目标位置]
+
+. 数据库恢复完成后、请检查Oracle数据库是否在服务器上正确启动。
+
+
+====
+.将Oracle数据库发布到备用服务器
+[%collapsible]
+====
+在本节中、数据库会发布到备用服务器、以便在不启动完全还原的情况下快速访问。
+
+. 在Veeam Backup and Replication控制台中、导航到Oracle备份列表、右键单击某个服务器并选择*还原应用程序项*、然后选择* Oracle数据库...*。
++
+image::aws-vmc-veeam-32.png[还原Oracle数据库]
+
+. 在Oracle数据库恢复向导中，从列表中选择一个还原点，然后单击*Next*。
++
+image::aws-vmc-veeam-33.png[从列表中选择还原点]
+
+. 如果需要、输入*恢复原因*、然后在摘要页面上、单击*浏览*按钮以启动Veeam Explorer for Oracle。
+. 在Veeam Explorer中展开数据库实例列表、单击要还原的数据库、然后从顶部的*发布数据库*下拉菜单中选择*发布到另一台服务器...*。
++
+image::aws-vmc-veeam-34.png[从列表中选择还原点]
+
+. 在发布向导中，指定发布数据库的还原点，然后单击*Next*。
+. 最后，指定目标Linux文件系统位置，然后单击*发布*开始恢复过程。
++
+image::aws-vmc-veeam-35.png[从列表中选择还原点]
+
+. 发布完成后、登录到目标服务器并运行以下命令、以确保数据库正在运行：
++
+....
+oracle@ora_srv_01> sqlplus / as sysdba
+....
++
+....
+SQL> select name, open_mode from v$database;
+....
++
+image::aws-vmc-veeam-36.png[从列表中选择还原点]
+
+
+
+====
+
+
+== 结论
+
+VMware Cloud是一个功能强大的平台、用于运行业务关键型应用程序和存储敏感数据。对于依赖VMware Cloud的企业来说、安全的数据保护解决方案 对于确保业务连续性并帮助抵御网络威胁和数据丢失至关重要。通过选择可靠且强大的数据保护解决方案 、企业可以确信无论什么情况、其关键数据都是安全可靠的。
+
+本文档中提供的使用情形重点介绍经验证的数据保护技术、这些技术重点介绍了NetApp、VMware和Veeam之间的集成。在AWS中、FSx for ONTAP 可用作VMware Cloud的补充NFS数据存储库、并可用于所有虚拟机和应用程序数据。Veeam Backup & Replication是一款全面的数据保护解决方案 、旨在帮助企业改进、自动化和简化备份和恢复流程。Veeam可与FSx for ONTAP 上托管的iSCSI备份目标卷结合使用、为驻留在VMware Cloud中的应用程序数据提供安全且易于管理的数据保护解决方案。
+
+
+
+== 追加信息
+
+要详细了解此解决方案 中提供的技术、请参阅以下追加信息。
+
+* https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html["FSx for ONTAP 用户指南"^]
+* https://www.veeam.com/documentation-guides-datasheets.html?productId=8&version=product%3A8%2F221["Veeam帮助中心技术文档"^]
+* https://www.veeam.com/kb2414["基于AWS的VMware Cloud和基于Dell EMC支持的VMware Cloud。注意事项和限制"]
+
