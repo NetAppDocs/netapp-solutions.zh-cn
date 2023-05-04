@@ -15,6 +15,7 @@ summary: 本节将介绍从此认证中获得的经验教训。
 
 link:confluent-kafka-confluent-kafka-rebalance.html["上一步：融合自重新平衡集群。"]
 
+[role="lead"]
 * 根据我们的验证， S3 对象存储对于 Confluent 来说是保留数据的最佳选择。
 * 我们可以使用高吞吐量 SAN （尤其是 FC ）来保留代理热数据或本地磁盘，因为在 Confluent 分层存储配置中， 代理数据目录中保留的数据大小取决于数据移动到对象存储时的区块大小和保留时间。
 * 当 seg.bytes 较高时，对象存储可提供更好的性能；我们测试了 512 MB 。

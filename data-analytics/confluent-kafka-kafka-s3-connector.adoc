@@ -15,6 +15,7 @@ summary: 在此设置中，我们将向您展示如何使用 Kafka S3 接收器�
 
 link:confluent-kafka-performance-tests-with-scalability.html["上一篇：性能测试与可扩展性。"]
 
+[role="lead"]
 Amazon S3 Sink Connector 以 Avro ， JSON 或字节格式将数据从 Apache Kafka 主题导出到 S3 对象。Amazon S3 Sink Connector 会定期轮询 Kafka 中的数据，然后将其上传到 S3 。分区程序用于将每个 Kafka 分区的数据拆分为多个区块。每个数据区块都表示为 S3 对象。密钥名称会对主题， Kafka 分区以及此数据块的起始偏移进行编码。
 
 在此设置中，我们将向您展示如何使用 Kafka S3 接收器连接器直接从 Kafka 读取和写入对象存储中的主题。在此测试中，我们使用了独立的 Consfluent 集群，但此设置适用于分布式集群。
