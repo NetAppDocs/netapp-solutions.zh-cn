@@ -18124,4 +18124,268 @@
   <block id="1e0561f6acd458eaa1243b2cd1f781e1" category="inline-link">VMware Cloud on AWS支持。注意事项和限制</block>
   <block id="2d57bbd81ef9a580a0f2d6b36c8d86c2" category="list-text"><block ref="2d57bbd81ef9a580a0f2d6b36c8d86c2" category="inline-link-rx"></block></block>
   <block id="25dbf1b5193ae9eff63687c18c19e6f5" category="paragraph">本文档详细介绍了如何在NetApp E系列存储系统中部署StorNext并行文件系统解决方案。此解决方案 涵盖NetApp EF280全闪存阵列、NetApp EF300全闪存NVMe阵列、NetApp EF600全闪存NVMe阵列和NetApp E5760混合系统。它基于Frametest基准测试提供性能特征化、该工具广泛用于媒体和娱乐行业的测试。</block>
+  <block id="e48febb9ce9511ad6a07eb2feefcf987" category="doc">TR-4951：《AWS FSx for ONTAP 上Microsoft SQL Server的备份和恢复》</block>
+  <block id="89801e66cf61a843ac015db626c0ecde" category="paragraph">作者：Niyaz Mohammed、Carine Ngwekwe - NetApp解决方案工程部</block>
+  <block id="a5ddf739ea634e933770ce212cd12b29" category="paragraph">本文档介绍了在AWS FSx for ONTAP 上使用SnapCenter 对Microsoft SQL Server执行备份和恢复所需的步骤。其中包括以下信息：</block>
+  <block id="5bf8a1308ebd487796bd4db12222cf4a" category="list-text">NetApp SnapCenter 配置</block>
+  <block id="ecc57313124902e4c42227ae61bb9bf1" category="list-text">SnapCenter 备份操作</block>
+  <block id="d939d79ed61dbf23169c4f7badcc1788" category="list-text">FCI数据库的备份操作</block>
+  <block id="cb9f91cd2f1ab77ae604d05be34c3d59" category="list-text">多个数据库的备份操作</block>
+  <block id="6be8f3086a30e59e908d53eb620b51dd" category="list-text">还原和恢复</block>
+  <block id="9fa83b367c23a5d2579b5aebdddebe77" category="section-title">SnapCenter 配置</block>
+  <block id="f979bf3f98ebe58fd55555efea856e3f" category="paragraph">要配置SnapCenter 和保护Microsoft SQL Server资源、必须执行以下步骤。以下各节将详细介绍以下每个步骤。</block>
+  <block id="7c1e7491c7e3588e56a0b05940cc2840" category="list-text">为SQL Server备份和还原用户配置sysadmin凭据。</block>
+  <block id="d6442b5b8ad78236b2966fc5c1191c1e" category="list-text">配置存储设置。提供Amazon Web Services (AWS)管理凭据、以便从SnapCenter 访问适用于NetApp ONTAP Storage Virtual Machine (SVM)的Amazon FSx。</block>
+  <block id="bf1e7185f6bb09e0f2b1527acbbb47df" category="list-text">将SQL Server主机添加到SnapCenter。部署并安装所需的SnapCenter 插件。</block>
+  <block id="1e5b163165e28d2c04a5c2cc25406fa0" category="list-text">配置策略。定义备份操作类型、保留和可选的Snapshot备份复制。</block>
+  <block id="7839511c8247bb78354925ce2771284a" category="list-text">配置和保护Microsoft SQL Server数据库。</block>
+  <block id="1719e3b1afdebd05d1f71b0881a7083c" category="section-title">新安装的SnapCenter 用户界面</block>
+  <block id="97504cb249856d98431bd413caeb43ce" category="paragraph">为SQL Server备份配置凭据、并使用sysadmin权限还原用户。</block>
+  <block id="cdff526b5e5a4339e5ad188cb61b446f" category="paragraph"><block ref="cdff526b5e5a4339e5ad188cb61b446f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1a8b4eaab7153d620e4be3372cee492d" category="paragraph">NetApp建议使用基于角色的访问控制(Role-Based Access Control、RBAC)将数据保护和管理功能委派给SnapCenter 和Window主机中的各个用户。用户必须有权访问托管数据库的SQL Server。对于多个主机、不同主机的用户名和密码必须相同。此外、要使SnapCenter 能够在SQL Server主机上部署所需的插件、您必须为SnapCenter 注册域信息以验证凭据和主机。</block>
+  <block id="2f5eb1bcad8467d8b1a3a761e7a52e7c" category="paragraph">展开以下各节、查看有关如何完成每个步骤的详细说明。</block>
+  <block id="36bc52aaebad43ec3e49ed9a0efacd43" category="example-title">添加凭据</block>
+  <block id="994e670ad871a1a1a8968ef47fce1bd2" category="paragraph">进入*Settings*，选择*凭证*，然后单击(*+*)。</block>
+  <block id="9816a3711fba5a6da62899f4fa6ce522" category="paragraph"><block ref="9816a3711fba5a6da62899f4fa6ce522" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6ef34a5260859bfffb6bf580955ffb1e" category="paragraph">新用户必须对SQL Server主机具有管理员权限。</block>
+  <block id="bcd04483b0b1e054777058931ef7d117" category="paragraph"><block ref="bcd04483b0b1e054777058931ef7d117" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d25223f4065ca21361aff2e7cdc61203" category="example-title">配置存储</block>
+  <block id="8d4520cc707d4607fe5abe132aecdbf2" category="paragraph">要在SnapCenter 中配置存储、请完成以下步骤：</block>
+  <block id="17b1ba0b70ebf5f6fcfd2f39e760ac1c" category="list-text">在SnapCenter UI中，选择*Storage Systems*。存储类型有两种：* ONTAP SVM*和* ONTAP Cluster*。默认情况下，存储类型为* ONTAP SVM*。</block>
+  <block id="84bf89b0b19fc811dad7c11f9b65802e" category="list-text">单击(*+*)添加存储系统信息。</block>
+  <block id="09710a8bb6b2b53186f42bcfb4cdf2d7" category="paragraph"><block ref="09710a8bb6b2b53186f42bcfb4cdf2d7" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="517cf06d127b73ca2104c46eedc40e4e" category="list-text">提供*FSx for ONTAP 管理*端点。</block>
+  <block id="ecbf2692688ddd1d8cffae4eb2adae87" category="paragraph"><block ref="ecbf2692688ddd1d8cffae4eb2adae87" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4c99ac5cbe66f4968da17288cff14037" category="list-text">现在、已在SnapCenter 中配置SVM。</block>
+  <block id="193ab9cc10d32956324c73a0aad32ece" category="paragraph"><block ref="193ab9cc10d32956324c73a0aad32ece" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9f4cf5450244ae3361ec7b130b139860" category="example-title">将SQL Server主机添加到SnapCenter</block>
+  <block id="865ea603dd93a3a23cc7e80825b29624" category="paragraph">要添加SQL Server主机、请完成以下步骤：</block>
+  <block id="e14bea01dc3a10ca47f216a08f68fa85" category="list-text">在主机选项卡中，单击(*+*)以添加Microsoft SQL Server主机。</block>
+  <block id="f2a1bec0c1120023662a8abe57c12c35" category="paragraph"><block ref="f2a1bec0c1120023662a8abe57c12c35" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0c802780a0f54f5e4f22e25de9fa33be" category="list-text">提供远程主机的完全限定域名(FQDN)或IP地址。</block>
+  <block id="fb62a23910339f3168b6b89b4e0f77b7" category="admonition">默认情况下、这些凭据会进行填充。</block>
+  <block id="65d9345f77faaa3bf7bb8031bb92f814" category="list-text">选择Microsoft Windows和Microsoft SQL Server的选项、然后选择提交。</block>
+  <block id="42a8898b70e0495a43f4df86d0f689cd" category="paragraph"><block ref="42a8898b70e0495a43f4df86d0f689cd" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="53b2d796e625fe393f84e48a5c6c6e91" category="paragraph">此时将安装SQL Server软件包。</block>
+  <block id="b7778c4b2da8a542de9529435e8ec22a" category="paragraph"><block ref="b7778c4b2da8a542de9529435e8ec22a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="af3617c8e674a62860e153751b1b62d8" category="list-text">安装完成后，转到*Resource*选项卡以验证所有FSx for ONTAP iSCSI卷是否都存在。</block>
+  <block id="c919f693c37c2d168175e649e14c3293" category="paragraph"><block ref="c919f693c37c2d168175e649e14c3293" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3b83af25a71030e8f59b11202c70c1a4" category="example-title">配置日志目录</block>
+  <block id="144931b7282f9d86fce2e97aa69aa046" category="paragraph">要配置主机日志目录、请完成以下步骤：</block>
+  <block id="089f0c00b86bab7c6ce3e455e39b4111" category="list-text">单击复选框。此时将打开一个新选项卡。</block>
+  <block id="a4ce6f0dbf75e4ef516f57614792a907" category="paragraph"><block ref="a4ce6f0dbf75e4ef516f57614792a907" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="57fab4c72318fea3bba8b3c321098ab3" category="list-text">单击*configure log directory*链接。</block>
+  <block id="d6c8cb16951a3c787db9f20c0fb09057" category="paragraph"><block ref="d6c8cb16951a3c787db9f20c0fb09057" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1b06cca5c441f86e0c4ad342dc4949c5" category="list-text">为主机日志目录和FCI实例日志目录选择驱动器。单击 * 保存 * 。对集群中的第二个节点重复相同过程。关闭窗口。</block>
+  <block id="24519841c3d33e14f5bb7d209d673a35" category="paragraph"><block ref="24519841c3d33e14f5bb7d209d673a35" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4c36dc3499eaa7955922477da928c37d" category="paragraph">主机现在处于running状态。</block>
+  <block id="820630e9a1c808068eda3661f49042cf" category="paragraph"><block ref="820630e9a1c808068eda3661f49042cf" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="21ff17f2a463836d33f1c25b922e2aad" category="list-text">在“*资源*”选项卡中，我们有所有的服务器和数据库。</block>
+  <block id="076c245e9e02588c21d76bd30de179dd" category="paragraph"><block ref="076c245e9e02588c21d76bd30de179dd" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="43e2457547c492c6001e30b828b6540e" category="section-title">配置备份策略</block>
+  <block id="febe42e6f9b7fb03483725eb94b7dc4f" category="paragraph">备份策略是一组规则、用于控制如何管理、计划和保留备份。它有助于根据贵公司的SLA确定备份类型和频率。</block>
+  <block id="e28ebacaa4299d5022a9ce52d607c076" category="example-title">配置FCI数据库的备份操作</block>
+  <block id="41cc72961a6c592ec36223498c3bd705" category="paragraph">要为FCI数据库配置备份策略、请完成以下步骤：</block>
+  <block id="55e9263abc7e93fbc1274424af911693" category="list-text">进入*Settings*并选择左上方的*Policies*。然后单击*New*。</block>
+  <block id="adf5449547fda2e595556e9d231a2066" category="paragraph"><block ref="adf5449547fda2e595556e9d231a2066" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="00f0ce22eac68a6bd05a1b0f221c4870" category="list-text">输入策略名称和问题描述。单击 * 下一步 * 。</block>
+  <block id="f2eb0a484f9105201d7b6af1e010db00" category="paragraph"><block ref="f2eb0a484f9105201d7b6af1e010db00" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="55efa7fad4afc963d783654da41300bf" category="list-text">选择*完整备份*作为备份类型。</block>
+  <block id="23b0ad9ad1f66315e2659ed3b39e490e" category="paragraph"><block ref="23b0ad9ad1f66315e2659ed3b39e490e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8270c99b48ebbc3928233b0365c4aeef" category="list-text">选择计划频率(此频率基于公司SLA)。单击 * 下一步 * 。</block>
+  <block id="24207525bc0e567d54fbd4c12e87169e" category="paragraph"><block ref="24207525bc0e567d54fbd4c12e87169e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="de3ec07218c2ba18d85a3130b6583520" category="list-text">配置备份的保留设置。</block>
+  <block id="b05832e4c7bab22b79bc5802800a0dab" category="paragraph"><block ref="b05832e4c7bab22b79bc5802800a0dab" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8e0b22898b3d80ad22f4aec2ecdb63d6" category="list-text">配置复制选项。</block>
+  <block id="14b05e91fa711b3a9719853be184206c" category="paragraph"><block ref="14b05e91fa711b3a9719853be184206c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="44ea4d24c42b8fec22a7b9816f31e892" category="list-text">指定要在运行备份作业之前和之后运行的运行脚本(如果有)。</block>
+  <block id="eac922e5175c542119573b500882c077" category="paragraph"><block ref="eac922e5175c542119573b500882c077" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3b94cb3e0f4abcd010f6711fe214e35a" category="list-text">根据备份计划运行验证。</block>
+  <block id="4608b019002a2c4ec256372aa8480a1a" category="paragraph"><block ref="4608b019002a2c4ec256372aa8480a1a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="cbfa414efc5d445675fd9077ba0c56b3" category="list-text">“*摘要*”页面提供了备份策略的详细信息。可以在此处更正任何错误。</block>
+  <block id="b8b8dbdb6cb7e67fa35e47b550da474f" category="paragraph"><block ref="b8b8dbdb6cb7e67fa35e47b550da474f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e8e93df919756b105bc83306d032d098" category="section-title">配置和保护MSSQL Server数据库</block>
+  <block id="27db30e5a59f8be2fcb99cf63599a91c" category="list-text">设置备份策略的开始日期和到期日期。</block>
+  <block id="34dd0aa3564bb913360badbaaaa83faa" category="paragraph"><block ref="34dd0aa3564bb913360badbaaaa83faa" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="db43ab486fbd21378315f50453a84170" category="list-text">定义备份计划。为此，请单击(*+*)配置一个计划。输入*开始日期*和*到期日期*日期。根据公司的SLA设置时间。</block>
+  <block id="f27c76657d54395e925b36cbee1be886" category="paragraph"><block ref="f27c76657d54395e925b36cbee1be886" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="cae5bd999deab910421c886467a77f95" category="list-text">配置验证服务器。从下拉菜单中选择服务器。</block>
+  <block id="1984132ea5425099c6b2573e487c3814" category="paragraph"><block ref="1984132ea5425099c6b2573e487c3814" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="eafe5ed3ae193bf0df0699f63047967c" category="list-text">单击加号确认已配置的计划、然后进行确认。</block>
+  <block id="acbb9c633debb26a3e087f175b289654" category="list-text">提供电子邮件通知信息。单击 * 下一步 * 。</block>
+  <block id="6da5c045f179e9f4b7f9a93a743e59bb" category="paragraph"><block ref="6da5c045f179e9f4b7f9a93a743e59bb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="12c3e31e09364bc821b8b38bfe3fa90b" category="paragraph">现在、SQL Server数据库的备份策略摘要已配置完毕。</block>
+  <block id="2da07f989d7b3e93f17cf4dc6237a9ff" category="paragraph"><block ref="2da07f989d7b3e93f17cf4dc6237a9ff" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f93a0490c2398c42ac8bc4c8027da25b" category="paragraph">要创建按需SQL Server备份、请完成以下步骤：</block>
+  <block id="a27b159fa260ee860202b1a37efb3a24" category="list-text">从*资源*视图中，选择资源并选择*立即备份*。</block>
+  <block id="1d8d5b0070c26adc7cbd7d50e2ad9bd4" category="paragraph"><block ref="1d8d5b0070c26adc7cbd7d50e2ad9bd4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e8ebbd547f5d127b496961a116deba1b" category="list-text">在*Backup*对话框中，单击*Backup*。</block>
+  <block id="ec9b7af4f9e32bbcc3462f3f0651d17e" category="paragraph"><block ref="ec9b7af4f9e32bbcc3462f3f0651d17e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="28a70f29b174bb67f6ba18c34afe8917" category="list-text">此时将显示确认屏幕。单击*是*进行确认。</block>
+  <block id="aa3b467bd6d728ef126ee24085996989" category="paragraph"><block ref="aa3b467bd6d728ef126ee24085996989" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6f8452076484ec284c5858e0a7826acc" category="section-title">监控备份作业</block>
+  <block id="3c171063c0a7e42fe17578dc53e1a362" category="list-text">从*Monitor*选项卡中，单击作业并选择右侧的*Details*以查看作业。</block>
+  <block id="0a5505b752196a5d3967276a8e020bec" category="paragraph"><block ref="0a5505b752196a5d3967276a8e020bec" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a78488fda38cb0f6c33d06d8774309cb" category="paragraph"><block ref="a78488fda38cb0f6c33d06d8774309cb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="187d97d7f4855a2e10ce27f378db96dd" category="paragraph">备份完成后、"Topology"视图中将显示一个新条目。</block>
+  <block id="134678acd20d853075ff197c7c9c3fcb" category="paragraph">要为多个SQL Server数据库配置备份策略、请完成以下步骤以创建资源组策略：</block>
+  <block id="95fea20057274bffe889a463c6617053" category="list-text">在*View*菜单的*Resources*选项卡中，使用下拉菜单更改为资源组。</block>
+  <block id="5179400c083eea1a5c874c9ced10a4f3" category="paragraph"><block ref="5179400c083eea1a5c874c9ced10a4f3" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3d30ce7f1b8370331622f388e31ba9fd" category="list-text">单击(*+*)可选择新的资源组。</block>
+  <block id="29b5c325b4a3721982a139efeaa22354" category="paragraph"><block ref="29b5c325b4a3721982a139efeaa22354" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2267ba30d8bc4b2cb24be81ba224b9a0" category="list-text">请提供名称和标记。单击 * 下一步 * 。</block>
+  <block id="49a74a15bbe124a186a4b3154b4d2b61" category="paragraph"><block ref="49a74a15bbe124a186a4b3154b4d2b61" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="71128d86107d5d3be141764b52ec6e0a" category="list-text">将资源添加到资源组：</block>
+  <block id="6938eb21ffd3468679899baee35fc02c" category="list-text">*Host.*从托管数据库的下拉菜单中选择服务器。</block>
+  <block id="d9cab3ec910c4d091f194a6fbe1ce649" category="list-text">*Resource type.*从下拉菜单中选择*Database。</block>
+  <block id="9d00adb9ff02c740bad1655a08befbc8" category="list-text">*SQL Server实例。*选择服务器。</block>
+  <block id="e5b057829741e7d66ccb84dd34659d15" category="paragraph"><block ref="e5b057829741e7d66ccb84dd34659d15" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="52cbd1487d8eb5aca62ae227f26154cd" category="paragraph">默认情况下，已选中*option * Auto select all the Resources from the sall Storage Volumes*。清除该选项并仅选择需要添加到资源组的数据库，单击要添加的箭头并单击*Next*。</block>
+  <block id="a390f1ac44166070ca9168d6db494a3c" category="paragraph"><block ref="a390f1ac44166070ca9168d6db494a3c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4bc914d30c298d5a1be5b17d60f91d32" category="list-text">在策略上，单击(*+*)。</block>
+  <block id="c8012ccb0cf9aea5ab3d75c5946839bc" category="paragraph"><block ref="c8012ccb0cf9aea5ab3d75c5946839bc" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0503c62843919fd6d77d98333ddc0d46" category="list-text">输入资源组策略名称。</block>
+  <block id="773774cec41f86cf7c812856bb5532f4" category="paragraph"><block ref="773774cec41f86cf7c812856bb5532f4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="84c7b78e63b4d35a0da59b9c1547859f" category="list-text">根据贵公司的SLA，选择*完整备份*和计划频率。</block>
+  <block id="439033b0e525dcfb01f503bce465bab7" category="paragraph"><block ref="439033b0e525dcfb01f503bce465bab7" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c3d3f39805e6cab1e0c8e41e3a8045d4" category="list-text">配置保留设置。</block>
+  <block id="b33d774bbfed75c94879fc316e7bcd21" category="paragraph"><block ref="b33d774bbfed75c94879fc316e7bcd21" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0d3b49aed2989d78ff906ce8d5d3dd65" category="paragraph"><block ref="0d3b49aed2989d78ff906ce8d5d3dd65" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b438cf4e498dc0e4f65b8cf167949153" category="list-text">配置要在执行备份之前运行的脚本。单击 * 下一步 * 。</block>
+  <block id="cf4f12ed143c80bc6af35a01c1fe98be" category="paragraph"><block ref="cf4f12ed143c80bc6af35a01c1fe98be" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6504e635a92d1b0a8c52749c309ce7f6" category="list-text">确认验证以下备份计划。</block>
+  <block id="30f1d3b33a552e64394acbb9a8039813" category="paragraph"><block ref="30f1d3b33a552e64394acbb9a8039813" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="06919ef230a779cfc26a7b40e58c155f" category="list-text">在*Summary (摘要)*页上，验证信息，然后单击*Finish (完成)*。</block>
+  <block id="6ec4de8e33fceb0e3382dbba9a3e7fef" category="paragraph"><block ref="6ec4de8e33fceb0e3382dbba9a3e7fef" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="03db038251d30409b163cac10e15fb64" category="section-title">配置和保护多个SQL Server数据库</block>
+  <block id="60d1f006544fc2635c785f35a2bb75fa" category="list-text">单击(*+*)符号以配置开始日期和到期日期。</block>
+  <block id="90a0be0d18aa1385f7d629b041ec3586" category="paragraph"><block ref="90a0be0d18aa1385f7d629b041ec3586" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1709dfd12096305753ee7705ead06515" category="list-text">设置时间。</block>
+  <block id="abce8a42e2fe798102907c89873652ff" category="paragraph"><block ref="abce8a42e2fe798102907c89873652ff" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="34af8b580bd3f78a0594fd1a6ed33f72" category="paragraph"><block ref="34af8b580bd3f78a0594fd1a6ed33f72" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d1dc4c7af7fe0f51e864695931afcc5d" category="list-text">从*验证*选项卡中，选择服务器，配置计划，然后单击*下一步*。</block>
+  <block id="0a04449841d608c1b828876aade9dd57" category="paragraph"><block ref="0a04449841d608c1b828876aade9dd57" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b91c4ea39a59e7c5891197a3b275c62c" category="list-text">配置通知以发送电子邮件。</block>
+  <block id="c9d11c4594f1660f0438901255de824c" category="paragraph"><block ref="c9d11c4594f1660f0438901255de824c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="017b37b38c310ea0d90dccec6f86d049" category="paragraph">现在、该策略已配置为备份多个SQL Server数据库。</block>
+  <block id="7a6908a4518e7d0a99f7991bcede071d" category="paragraph"><block ref="7a6908a4518e7d0a99f7991bcede071d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="86b13e5f17a2bd60ebf403962a656abb" category="section-title">为多个SQL Server数据库触发按需备份</block>
+  <block id="f7dde35cb7209b4eae92eb8ec9dbe3ea" category="list-text">从*Resource*选项卡中，选择“查看”。从下拉菜单中选择*Resource Group*。</block>
+  <block id="9179022dda578f3bced2dd96da8c87ff" category="paragraph"><block ref="9179022dda578f3bced2dd96da8c87ff" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="fdbf213e9f1bcad7fef14029eb9b537b" category="list-text">选择资源组名称。</block>
+  <block id="1ac4dec59e8f8197fb29b8bfa0237d91" category="list-text">单击右上角的*立即备份*。</block>
+  <block id="1cecf31da10780e2d39609c010d3df62" category="paragraph"><block ref="1cecf31da10780e2d39609c010d3df62" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d29aeb4de3166648265a417a3ebdfa8d" category="list-text">此时将打开一个新窗口。单击*备份后验证*复选框，然后单击备份。</block>
+  <block id="9e877656fc311f532df6e62273e160d5" category="paragraph"><block ref="9e877656fc311f532df6e62273e160d5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1b01a18ba54b03ab361195cda9e11a04" category="list-text">此时将显示一条确认消息。单击 * 是 * 。</block>
+  <block id="06ec3c59d97a4c7d9984adda2108135e" category="paragraph"><block ref="06ec3c59d97a4c7d9984adda2108135e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2c39edf183648c1d5db4f2c93fb4eb28" category="section-title">监控多数据库备份作业</block>
+  <block id="1010c73c274c132c818aa34d45372dd5" category="paragraph">从左侧导航栏中，单击*Monitor*，选择备份作业，然后单击*Details*以查看作业进度。</block>
+  <block id="50d14527999ad5610803d042f0537b0b" category="paragraph"><block ref="50d14527999ad5610803d042f0537b0b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="cf2af39d79fe9b75d3b016a40a1cb886" category="paragraph">单击*Resource*选项卡查看完成备份所需的时间。</block>
+  <block id="e1aa3da997feec6419955ef32aa87bdc" category="paragraph"><block ref="e1aa3da997feec6419955ef32aa87bdc" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b702b14abe98f98e647cd791bcb90f8d" category="section-title">用于多数据库备份的事务日志备份</block>
+  <block id="26d8c1709e6a02cee73b16f5c2acf6dc" category="paragraph">SnapCenter 支持完整、庞大日志记录和简单恢复模式。简单恢复模式不支持事务日志备份。</block>
+  <block id="a60ccf2e4a30da040f5a49732187a6b7" category="paragraph">要执行事务日志备份、请完成以下步骤：</block>
+  <block id="be7235e7e6dc252e8daebedf54c3b6c7" category="list-text">从*Reseres*选项卡中，将“视图”菜单从*Database *更改为*Resource group*。</block>
+  <block id="e0fa4309d306e577eb4ee7fae977e8ec" category="paragraph"><block ref="e0fa4309d306e577eb4ee7fae977e8ec" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c48d8cc9d4f748c135f5b4812c1d7412" category="list-text">选择已创建的资源组备份策略。</block>
+  <block id="f38bbe0d9131c48ea9ee602675754140" category="list-text">选择右上角的*修改资源组*。</block>
+  <block id="2c49b9da12e1f8828a27c12785ae9fc3" category="paragraph"><block ref="2c49b9da12e1f8828a27c12785ae9fc3" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6d4b5ab9594400df9f8e77cbab0abea7" category="list-text">默认情况下，*Name*部分使用备份策略名称和标记。单击 * 下一步 * 。</block>
+  <block id="9a35ea0c782dad0d67865885d193f274" category="paragraph">"*Resores*(资源*)"选项卡突出显示要配置事务备份策略的基准。</block>
+  <block id="11b8d03d27b3abc5c6b6e021930b3e9e" category="paragraph"><block ref="11b8d03d27b3abc5c6b6e021930b3e9e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6daf111fad11fdef17162a8f8bf18b9c" category="list-text">输入策略名称。</block>
+  <block id="22f2c4c423feb263d1b0200d62e77858" category="paragraph"><block ref="22f2c4c423feb263d1b0200d62e77858" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7f993771df9dbe7cf6b38a0f84b409d7" category="list-text">选择SQL Server备份选项。</block>
+  <block id="ac47af84d5357e6141e59c1659b4ffb1" category="list-text">选择日志备份。</block>
+  <block id="1cf75fb83a264d296888dbfc66c1e24c" category="list-text">根据公司的RTO设置计划频率。单击 * 下一步 * 。</block>
+  <block id="3da946d8c357e8d3ba7d9dee6d9c48fc" category="paragraph"><block ref="3da946d8c357e8d3ba7d9dee6d9c48fc" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a6a1a00356a0947050a129ae89c585c9" category="list-text">配置日志备份保留设置。单击 * 下一步 * 。</block>
+  <block id="eca8085a550a32e2ea75af78dde57b58" category="paragraph"><block ref="eca8085a550a32e2ea75af78dde57b58" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="46caf3d6b884d110f60cf7f4937e7519" category="list-text">(可选)配置复制选项。</block>
+  <block id="6e942622a4fc392b1c732fcb6128144f" category="paragraph"><block ref="6e942622a4fc392b1c732fcb6128144f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a1a4bc0234ce8dfcbb64e7eeee67fad6" category="list-text">(可选)配置要在执行备份作业之前运行的任何脚本。</block>
+  <block id="b1537af3c8af0a513d927136e6069e69" category="paragraph"><block ref="b1537af3c8af0a513d927136e6069e69" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="ec35f0f916d59604b82ba19007187115" category="list-text">(可选)配置备份验证。</block>
+  <block id="a5b416c5101ea80de98741569ba40ad8" category="paragraph"><block ref="a5b416c5101ea80de98741569ba40ad8" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4a7ecfa93fa04065caa7a2ead6d3d113" category="list-text">在“*摘要*”页上，单击“*完成*”。</block>
+  <block id="85f4218eb49261c9a10c3ae757a7673e" category="paragraph"><block ref="85f4218eb49261c9a10c3ae757a7673e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="21c62f698c67203ca218e38cedd9fd4a" category="section-title">配置和保护多个MSSQL Server数据库</block>
+  <block id="851434acbe50444b77cc093290088e54" category="list-text">单击新创建的事务日志备份策略。</block>
+  <block id="aab3313d777fdf9a008349b1c52a3b38" category="paragraph"><block ref="aab3313d777fdf9a008349b1c52a3b38" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8dc5a42c40277ce2884bea86757d8dda" category="list-text">设置*开始日期*和*到期日期*日期。</block>
+  <block id="2137cef28d44fe16621167c38bd398e5" category="list-text">根据SLA、RTP和RPO输入日志备份策略的频率。单击确定。</block>
+  <block id="699cfd55473b1a08a3afc68cdd6c0bc0" category="paragraph"><block ref="699cfd55473b1a08a3afc68cdd6c0bc0" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="eef345e42eb1ff7b7177a232bb1d1247" category="list-text">您可以看到这两个策略。单击 * 下一步 * 。</block>
+  <block id="f0f5bc22b5d1f8a0d6c00b4127875d56" category="paragraph"><block ref="f0f5bc22b5d1f8a0d6c00b4127875d56" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0d3d450b94383f42a06333f58c0ffb5a" category="list-text">配置验证服务器。</block>
+  <block id="df8d18ae668699fdea57fa8103444b04" category="paragraph"><block ref="df8d18ae668699fdea57fa8103444b04" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9b705cea4d9eb8b1497ffce97bfe3609" category="list-text">配置电子邮件通知。</block>
+  <block id="46e4cfc3ee8ac0fcf4621b3b601fae9e" category="paragraph"><block ref="46e4cfc3ee8ac0fcf4621b3b601fae9e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="722243257c592026b8405ff352c17887" category="paragraph"><block ref="722243257c592026b8405ff352c17887" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1ea4baaafde2e79cfcd31d97b84b1a12" category="section-title">触发多个SQL Server数据库的按需事务日志备份</block>
+  <block id="a75cd7342eb195ccea0a0f5ef399cb13" category="paragraph">要为多个SQL Server数据库触发事务日志按需备份、请完成以下步骤：</block>
+  <block id="f790ac7cb18962dff9c720679845e234" category="list-text">在新创建的策略页面上，选择页面右上角的*立即备份*。</block>
+  <block id="44991ec351e06a97a765cfca75d312af" category="paragraph"><block ref="44991ec351e06a97a765cfca75d312af" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1552095f0c2d2521f14458e1899ee71b" category="list-text">从*Policy*选项卡的弹出窗口中，选择下拉菜单，选择备份策略，然后配置事务日志备份。</block>
+  <block id="5baef8fc5a836fc8dce7a8277d0ebc84" category="paragraph"><block ref="5baef8fc5a836fc8dce7a8277d0ebc84" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b0df35ef9b242c9f422a4cc2e1784903" category="list-text">单击 * 备份 * 。此时将显示一个新窗口。</block>
+  <block id="b16f685ee226b95caaad151608f96a19" category="list-text">单击*Yes*确认备份策略。</block>
+  <block id="a8f620ad18e6f3f85da2b7be0f178e00" category="paragraph"><block ref="a8f620ad18e6f3f85da2b7be0f178e00" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d0ccd5722bd3156105a495a57a9fcc19" category="paragraph">移动到*Monitoring*选项卡并监控备份作业的进度。</block>
+  <block id="1a289d2ae0641f0084f363bc4bf29ed2" category="paragraph"><block ref="1a289d2ae0641f0084f363bc4bf29ed2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a4a58eef11580db01b6b09289a7975b6" category="paragraph">请参见在SnapCenter 中还原SQL Server数据库所需的以下前提条件。</block>
+  <block id="7ddc4eb994d251e5502d17ee020d88ad" category="list-text">目标实例必须联机且正在运行、才能完成还原作业。</block>
+  <block id="4c5a871f473eb2bc6ade24dc7c9abda4" category="list-text">必须禁用计划对SQL Server数据库运行的SnapCenter 操作、包括在远程管理或远程验证服务器上计划的任何作业。</block>
+  <block id="542e99a23c6a8ebaa0cc7df2db932223" category="list-text">如果要将自定义日志目录备份还原到备用主机、则SnapCenter 服务器和插件主机必须安装相同版本的SnapCenter。</block>
+  <block id="81ec57bf05a69240771c922d647a651c" category="list-text">您可以将系统数据库还原到备用主机。</block>
+  <block id="ec5b173df4b3313050ca64425e06f516" category="list-text">SnapCenter 可以在不使SQL Server集群组脱机的情况下还原Windows集群中的数据库。</block>
+  <block id="042d132354b0d48ad24ee674bebdb6af" category="section-title">将SQL Server数据库上已删除的表还原到某个时间点</block>
+  <block id="4b4968094e7a3d8c79f9bc8caa8b22e4" category="paragraph">要将SQL Server数据库还原到某个时间点、请完成以下步骤：</block>
+  <block id="6df13174e00d0f623a406e9148d1548c" category="list-text">以下屏幕截图显示了SQL Server数据库在删除表之前的初始状态。</block>
+  <block id="dbc2a72710499aa1cf69652093b3b999" category="paragraph"><block ref="dbc2a72710499aa1cf69652093b3b999" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d61cd88cd62206db3a9f9cab1565d3ad" category="paragraph">屏幕截图显示已从表中删除20行。</block>
+  <block id="515d7eb17c3e413f271bddce4ba5f6bd" category="paragraph"><block ref="515d7eb17c3e413f271bddce4ba5f6bd" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2d3c565402042673af1d4898a8ff52a9" category="list-text">登录到SnapCenter 服务器。从*Resues*选项卡中，选择数据库。</block>
+  <block id="4863869b2ef5500a5ca305ffb9127ade" category="paragraph"><block ref="4863869b2ef5500a5ca305ffb9127ade" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a69269402d35f0cccddfd918911a97d9" category="list-text">选择最新的备份。</block>
+  <block id="583e868d2c26244722b015fea16af076" category="list-text">在右侧，选择*Restore*。</block>
+  <block id="6b153885f2f75c1ff541921d0081d74b" category="paragraph"><block ref="6b153885f2f75c1ff541921d0081d74b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="39435af0deb93996df3394c1b2036fd8" category="list-text">此时将显示一个新窗口。选择*Restore*选项。</block>
+  <block id="d7020dd530a8bef5050168b840079b00" category="list-text">将数据库还原到创建备份的同一主机。单击 * 下一步 * 。</block>
+  <block id="5a718f24061d92ae97e1314ea8cb5fde" category="paragraph"><block ref="5a718f24061d92ae97e1314ea8cb5fde" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="503e2d366ad9c17a4f549670670ad33e" category="list-text">对于*恢复类型*，请选择*所有日志备份*。单击 * 下一步 * 。</block>
+  <block id="979629b8cf5823b370da8e731560f8cb" category="paragraph"><block ref="979629b8cf5823b370da8e731560f8cb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="68a3564e8eebf683090a9b209db57831" category="paragraph"><block ref="68a3564e8eebf683090a9b209db57831" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e63cae13f4b41b3fe8c7e3fec3319f06" category="paragraph">*还原前选项:*</block>
+  <block id="de181095a646159b289fbcdbcf419e7b" category="list-text">选择选项*在还原期间覆盖同名数据库*。单击 * 下一步 * 。</block>
+  <block id="ad55b8f82ca21417dc4da683b1de0924" category="paragraph"><block ref="ad55b8f82ca21417dc4da683b1de0924" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6ed71c6a01179057b2d9bf0077204c6b" category="paragraph">*还原后选项:*</block>
+  <block id="9cfc344a514e0de0c6b807382b26c075" category="list-text">选择选项*可操作、但不可用于还原其他事务日志*。单击 * 下一步 * 。</block>
+  <block id="3ca7aa8d51b34a6dc37b4a42b98be1fe" category="paragraph"><block ref="3ca7aa8d51b34a6dc37b4a42b98be1fe" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8420a5fc7b326a91c636b314aa454ec6" category="list-text">提供电子邮件设置。单击 * 下一步 * 。</block>
+  <block id="735c30c428c3e84050f483061752691e" category="paragraph"><block ref="735c30c428c3e84050f483061752691e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8778317b34992e7e7c0354762cf0db9f" category="paragraph"><block ref="8778317b34992e7e7c0354762cf0db9f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4506debb4b8eeba79855725078a52afb" category="section-title">监控还原进度</block>
+  <block id="9aff1c679025b15fa483f8f730686633" category="list-text">在*监控*选项卡中，单击恢复作业详细信息以查看恢复作业的进度。</block>
+  <block id="1e062bc4b91bf77257da0f6d3b81e64d" category="paragraph"><block ref="1e062bc4b91bf77257da0f6d3b81e64d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d2f265e204d2aa866e88f009e207aa68" category="list-text">还原作业详细信息。</block>
+  <block id="1a50192540a2e763a60070967a8a04fd" category="paragraph"><block ref="1a50192540a2e763a60070967a8a04fd" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3c5d988b8258420ba376fd703ae323bd" category="list-text">返回到SQL Server主机&gt;数据库&gt;表存在。</block>
+  <block id="f3048bb52b66a41d7be00e28a6eaf957" category="paragraph"><block ref="f3048bb52b66a41d7be00e28a6eaf957" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="425103b894468ffe6015f984f2683d74" category="inline-link">TR-4714：《使用NetApp SnapCenter 的Microsoft SQL Server最佳实践指南》</block>
+  <block id="9c42feba6d2410200720e2ceda752e13" category="list-text"><block ref="9c42feba6d2410200720e2ceda752e13" category="inline-link-rx"></block></block>
+  <block id="ee50ef71e7fa5dbc3292cb856c5f8ee5" category="inline-link"><block ref="ee50ef71e7fa5dbc3292cb856c5f8ee5" category="inline-link-rx"></block></block>
+  <block id="822d30d1b5bfcb219aa830739d5b89a0" category="paragraph"><block ref="822d30d1b5bfcb219aa830739d5b89a0" category="inline-link-rx"></block></block>
+  <block id="818095849ac39056a1077a0f3a155684" category="inline-link">还原数据库的要求</block>
+  <block id="0305a2a48c225d49081b5bccd776b23d" category="list-text"><block ref="0305a2a48c225d49081b5bccd776b23d" category="inline-link-rx"></block></block>
+  <block id="9f413d2e154ecad28af03b6125df6837" category="inline-link"><block ref="9f413d2e154ecad28af03b6125df6837" category="inline-link-rx"></block></block>
+  <block id="98c7a90e9f834e61987ed9dd4072a0f3" category="paragraph"><block ref="98c7a90e9f834e61987ed9dd4072a0f3" category="inline-link-rx"></block></block>
+  <block id="9b256b378583dbf8a4aea7e4d96460ff" category="list-text">了解克隆的数据库生命周期</block>
+  <block id="a35c63f82a8b880dd7d77b8868394548" category="inline-link"><block ref="a35c63f82a8b880dd7d77b8868394548" category="inline-link-rx"></block></block>
+  <block id="622d6fd30919e1009adf5b3b6a9b61c4" category="paragraph"><block ref="622d6fd30919e1009adf5b3b6a9b61c4" category="inline-link-rx"></block></block>
+  <block id="3a20c678f6addcc9b8fec17f91c8cfa4" category="cell">2023年5月5日</block>
+  <block id="957df08ed5fbb9ca926ca88b2c974f4f" category="cell">新TR-4951：《AWS FSx for ONTAP 上Microsoft SQL Server的备份和恢复》</block>
+  <block id="d5ae477fb23aecff7256445ae91344bc" category="sidebar">在AWS FSx for ONTAP 上备份和恢复Microsoft SQL Server</block>
 </blocks>

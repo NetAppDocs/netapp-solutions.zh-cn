@@ -1,0 +1,621 @@
+---
+sidebar: sidebar 
+permalink: databases/sqlsb-backup-and-restore-aws-fsxn.html 
+keywords: SQL server, SQL, backup, recover, AWS, aws, sql 
+summary:  
+---
+= TR-4951：《AWS FSx for ONTAP 上Microsoft SQL Server的备份和恢复》
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+作者：Niyaz Mohammed、Carine Ngwekwe - NetApp解决方案工程部
+
+本文档介绍了在AWS FSx for ONTAP 上使用SnapCenter 对Microsoft SQL Server执行备份和恢复所需的步骤。其中包括以下信息：
+
+* NetApp SnapCenter 配置
+* SnapCenter 备份操作
+* FCI数据库的备份操作
+* 多个数据库的备份操作
+* 还原和恢复
+
+
+
+
+== SnapCenter 配置
+
+要配置SnapCenter 和保护Microsoft SQL Server资源、必须执行以下步骤。以下各节将详细介绍以下每个步骤。
+
+. 为SQL Server备份和还原用户配置sysadmin凭据。
+. 配置存储设置。提供Amazon Web Services (AWS)管理凭据、以便从SnapCenter 访问适用于NetApp ONTAP Storage Virtual Machine (SVM)的Amazon FSx。
+. 将SQL Server主机添加到SnapCenter。部署并安装所需的SnapCenter 插件。
+. 配置策略。定义备份操作类型、保留和可选的Snapshot备份复制。
+. 配置和保护Microsoft SQL Server数据库。
+
+
+
+
+== 新安装的SnapCenter 用户界面
+
+为SQL Server备份配置凭据、并使用sysadmin权限还原用户。
+
+image:sqlsb-aws-image1.png["错误：缺少图形映像"]
+
+NetApp建议使用基于角色的访问控制(Role-Based Access Control、RBAC)将数据保护和管理功能委派给SnapCenter 和Window主机中的各个用户。用户必须有权访问托管数据库的SQL Server。对于多个主机、不同主机的用户名和密码必须相同。此外、要使SnapCenter 能够在SQL Server主机上部署所需的插件、您必须为SnapCenter 注册域信息以验证凭据和主机。
+
+展开以下各节、查看有关如何完成每个步骤的详细说明。
+
+.添加凭据
+[%collapsible]
+====
+进入*Settings*，选择*凭证*，然后单击(*+*)。
+
+image:sqlsb-aws-image2.png["错误：缺少图形映像"]
+
+新用户必须对SQL Server主机具有管理员权限。
+
+image:sqlsb-aws-image3.png["错误：缺少图形映像"]
+
+====
+.配置存储
+[%collapsible]
+====
+要在SnapCenter 中配置存储、请完成以下步骤：
+
+. 在SnapCenter UI中，选择*Storage Systems*。存储类型有两种：* ONTAP SVM*和* ONTAP Cluster*。默认情况下，存储类型为* ONTAP SVM*。
+. 单击(*+*)添加存储系统信息。
++
+image:sqlsb-aws-image4.png["错误：缺少图形映像"]
+
+. 提供*FSx for ONTAP 管理*端点。
++
+image:sqlsb-aws-image5.png["错误：缺少图形映像"]
+
+. 现在、已在SnapCenter 中配置SVM。
++
+image:sqlsb-aws-image6.png["错误：缺少图形映像"]
+
+
+
+====
+.将SQL Server主机添加到SnapCenter
+[%collapsible]
+====
+要添加SQL Server主机、请完成以下步骤：
+
+. 在主机选项卡中，单击(*+*)以添加Microsoft SQL Server主机。
++
+image:sqlsb-aws-image7.png["错误：缺少图形映像"]
+
+. 提供远程主机的完全限定域名(FQDN)或IP地址。
++
+
+NOTE: 默认情况下、这些凭据会进行填充。
+
+. 选择Microsoft Windows和Microsoft SQL Server的选项、然后选择提交。
++
+image:sqlsb-aws-image8.png["错误：缺少图形映像"]
+
+
+
+此时将安装SQL Server软件包。
+
+image:sqlsb-aws-image9.png["错误：缺少图形映像"]
+
+. 安装完成后，转到*Resource*选项卡以验证所有FSx for ONTAP iSCSI卷是否都存在。
++
+image:sqlsb-aws-image10.png["错误：缺少图形映像"]
+
+
+
+====
+.配置日志目录
+[%collapsible]
+====
+要配置主机日志目录、请完成以下步骤：
+
+. 单击复选框。此时将打开一个新选项卡。
++
+image:sqlsb-aws-image11.png["错误：缺少图形映像"]
+
+. 单击*configure log directory*链接。
++
+image:sqlsb-aws-image12.png["错误：缺少图形映像"]
+
+. 为主机日志目录和FCI实例日志目录选择驱动器。单击 * 保存 * 。对集群中的第二个节点重复相同过程。关闭窗口。
++
+image:sqlsb-aws-image13.png["错误：缺少图形映像"]
+
+
+
+主机现在处于running状态。
+
+image:sqlsb-aws-image14.png["错误：缺少图形映像"]
+
+. 在“*资源*”选项卡中，我们有所有的服务器和数据库。
++
+image:sqlsb-aws-image15.png["错误：缺少图形映像"]
+
+
+
+====
+
+
+== 配置备份策略
+
+备份策略是一组规则、用于控制如何管理、计划和保留备份。它有助于根据贵公司的SLA确定备份类型和频率。
+
+展开以下各节、查看有关如何完成每个步骤的详细说明。
+
+.配置FCI数据库的备份操作
+[%collapsible]
+====
+要为FCI数据库配置备份策略、请完成以下步骤：
+
+. 进入*Settings*并选择左上方的*Policies*。然后单击*New*。
++
+image:sqlsb-aws-image16.png["错误：缺少图形映像"]
+
+. 输入策略名称和问题描述。单击 * 下一步 * 。
++
+image:sqlsb-aws-image17.png["错误：缺少图形映像"]
+
+. 选择*完整备份*作为备份类型。
++
+image:sqlsb-aws-image18.png["错误：缺少图形映像"]
+
+. 选择计划频率(此频率基于公司SLA)。单击 * 下一步 * 。
++
+image:sqlsb-aws-image19.png["错误：缺少图形映像"]
+
+. 配置备份的保留设置。
++
+image:sqlsb-aws-image20.png["错误：缺少图形映像"]
+
+. 配置复制选项。
++
+image:sqlsb-aws-image21.png["错误：缺少图形映像"]
+
+. 指定要在运行备份作业之前和之后运行的运行脚本(如果有)。
++
+image:sqlsb-aws-image22.png["错误：缺少图形映像"]
+
+. 根据备份计划运行验证。
++
+image:sqlsb-aws-image23.png["错误：缺少图形映像"]
+
+. “*摘要*”页面提供了备份策略的详细信息。可以在此处更正任何错误。
++
+image:sqlsb-aws-image24.png["错误：缺少图形映像"]
+
+
+
+====
+
+
+== 配置和保护MSSQL Server数据库
+
+. 设置备份策略的开始日期和到期日期。
++
+image:sqlsb-aws-image25.png["错误：缺少图形映像"]
+
+. 定义备份计划。为此，请单击(*+*)配置一个计划。输入*开始日期*和*到期日期*日期。根据公司的SLA设置时间。
++
+image:sqlsb-aws-image26.png["错误：缺少图形映像"]
+
+. 配置验证服务器。从下拉菜单中选择服务器。
++
+image:sqlsb-aws-image27.png["错误：缺少图形映像"]
+
+. 单击加号确认已配置的计划、然后进行确认。
+. 提供电子邮件通知信息。单击 * 下一步 * 。
++
+image:sqlsb-aws-image28.png["错误：缺少图形映像"]
+
+
+
+现在、SQL Server数据库的备份策略摘要已配置完毕。
+
+image:sqlsb-aws-image29.png["错误：缺少图形映像"]
+
+
+
+== SnapCenter 备份操作
+
+要创建按需SQL Server备份、请完成以下步骤：
+
+. 从*资源*视图中，选择资源并选择*立即备份*。
++
+image:sqlsb-aws-image30.png["错误：缺少图形映像"]
+
+. 在*Backup*对话框中，单击*Backup*。
++
+image:sqlsb-aws-image31.png["错误：缺少图形映像"]
+
+. 此时将显示确认屏幕。单击*是*进行确认。
++
+image:sqlsb-aws-image32.png["错误：缺少图形映像"]
+
+
+
+
+
+== 监控备份作业
+
+. 从*Monitor*选项卡中，单击作业并选择右侧的*Details*以查看作业。
++
+image:sqlsb-aws-image33.png["错误：缺少图形映像"]
+
++
+image:sqlsb-aws-image34.png["错误：缺少图形映像"]
+
+
+
+备份完成后、"Topology"视图中将显示一个新条目。
+
+
+
+== 多个数据库的备份操作
+
+要为多个SQL Server数据库配置备份策略、请完成以下步骤以创建资源组策略：
+
+. 在*View*菜单的*Resources*选项卡中，使用下拉菜单更改为资源组。
++
+image:sqlsb-aws-image35.png["错误：缺少图形映像"]
+
+. 单击(*+*)可选择新的资源组。
++
+image:sqlsb-aws-image36.png["错误：缺少图形映像"]
+
+. 请提供名称和标记。单击 * 下一步 * 。
++
+image:sqlsb-aws-image37.png["错误：缺少图形映像"]
+
+. 将资源添加到资源组：
++
+** *Host.*从托管数据库的下拉菜单中选择服务器。
+** *Resource type.*从下拉菜单中选择*Database。
+** *SQL Server实例。*选择服务器。
++
+image:sqlsb-aws-image38.png["错误：缺少图形映像"]
+
++
+默认情况下，已选中*option * Auto select all the Resources from the sall Storage Volumes*。清除该选项并仅选择需要添加到资源组的数据库，单击要添加的箭头并单击*Next*。
+
++
+image:sqlsb-aws-image39.png["错误：缺少图形映像"]
+
+
+
+. 在策略上，单击(*+*)。
++
+image:sqlsb-aws-image40.png["错误：缺少图形映像"]
+
+. 输入资源组策略名称。
++
+image:sqlsb-aws-image41.png["错误：缺少图形映像"]
+
+. 根据贵公司的SLA，选择*完整备份*和计划频率。
++
+image:sqlsb-aws-image42.png["错误：缺少图形映像"]
+
+. 配置保留设置。
++
+image:sqlsb-aws-image43.png["错误：缺少图形映像"]
+
+. 配置复制选项。
++
+image:sqlsb-aws-image44.png["错误：缺少图形映像"]
+
+. 配置要在执行备份之前运行的脚本。单击 * 下一步 * 。
++
+image:sqlsb-aws-image45.png["错误：缺少图形映像"]
+
+. 确认验证以下备份计划。
++
+image:sqlsb-aws-image46.png["错误：缺少图形映像"]
+
+. 在*Summary (摘要)*页上，验证信息，然后单击*Finish (完成)*。
++
+image:sqlsb-aws-image47.png["错误：缺少图形映像"]
+
+
+
+
+
+== 配置和保护多个SQL Server数据库
+
+. 单击(*+*)符号以配置开始日期和到期日期。
++
+image:sqlsb-aws-image48.png["错误：缺少图形映像"]
+
+. 设置时间。
++
+image:sqlsb-aws-image49.png["错误：缺少图形映像"]
+
++
+image:sqlsb-aws-image50.png["错误：缺少图形映像"]
+
+. 从*验证*选项卡中，选择服务器，配置计划，然后单击*下一步*。
++
+image:sqlsb-aws-image51.png["错误：缺少图形映像"]
+
+. 配置通知以发送电子邮件。
++
+image:sqlsb-aws-image52.png["错误：缺少图形映像"]
+
+
+
+现在、该策略已配置为备份多个SQL Server数据库。
+
+image:sqlsb-aws-image53.png["错误：缺少图形映像"]
+
+
+
+== 为多个SQL Server数据库触发按需备份
+
+. 从*Resource*选项卡中，选择“查看”。从下拉菜单中选择*Resource Group*。
++
+image:sqlsb-aws-image54.png["错误：缺少图形映像"]
+
+. 选择资源组名称。
+. 单击右上角的*立即备份*。
++
+image:sqlsb-aws-image55.png["错误：缺少图形映像"]
+
+. 此时将打开一个新窗口。单击*备份后验证*复选框，然后单击备份。
++
+image:sqlsb-aws-image56.png["错误：缺少图形映像"]
+
+. 此时将显示一条确认消息。单击 * 是 * 。
++
+image:sqlsb-aws-image57.png["错误：缺少图形映像"]
+
+
+
+
+
+== 监控多数据库备份作业
+
+从左侧导航栏中，单击*Monitor*，选择备份作业，然后单击*Details*以查看作业进度。
+
+image:sqlsb-aws-image58.png["错误：缺少图形映像"]
+
+单击*Resource*选项卡查看完成备份所需的时间。
+
+image:sqlsb-aws-image59.png["错误：缺少图形映像"]
+
+
+
+== 用于多数据库备份的事务日志备份
+
+SnapCenter 支持完整、庞大日志记录和简单恢复模式。简单恢复模式不支持事务日志备份。
+
+要执行事务日志备份、请完成以下步骤：
+
+. 从*Reseres*选项卡中，将“视图”菜单从*Database *更改为*Resource group*。
++
+image:sqlsb-aws-image60.png["错误：缺少图形映像"]
+
+. 选择已创建的资源组备份策略。
+. 选择右上角的*修改资源组*。
++
+image:sqlsb-aws-image61.png["错误：缺少图形映像"]
+
+. 默认情况下，*Name*部分使用备份策略名称和标记。单击 * 下一步 * 。
++
+"*Resores*(资源*)"选项卡突出显示要配置事务备份策略的基准。
+
++
+image:sqlsb-aws-image62.png["错误：缺少图形映像"]
+
+. 输入策略名称。
++
+image:sqlsb-aws-image63.png["错误：缺少图形映像"]
+
+. 选择SQL Server备份选项。
+. 选择日志备份。
+. 根据公司的RTO设置计划频率。单击 * 下一步 * 。
++
+image:sqlsb-aws-image64.png["错误：缺少图形映像"]
+
+. 配置日志备份保留设置。单击 * 下一步 * 。
++
+image:sqlsb-aws-image65.png["错误：缺少图形映像"]
+
+. (可选)配置复制选项。
++
+image:sqlsb-aws-image66.png["错误：缺少图形映像"]
+
+. (可选)配置要在执行备份作业之前运行的任何脚本。
++
+image:sqlsb-aws-image67.png["错误：缺少图形映像"]
+
+. (可选)配置备份验证。
++
+image:sqlsb-aws-image68.png["错误：缺少图形映像"]
+
+. 在“*摘要*”页上，单击“*完成*”。
++
+image:sqlsb-aws-image69.png["错误：缺少图形映像"]
+
+
+
+
+
+== 配置和保护多个MSSQL Server数据库
+
+. 单击新创建的事务日志备份策略。
++
+image:sqlsb-aws-image70.png["错误：缺少图形映像"]
+
+. 设置*开始日期*和*到期日期*日期。
+. 根据SLA、RTP和RPO输入日志备份策略的频率。单击确定。
++
+image:sqlsb-aws-image71.png["错误：缺少图形映像"]
+
+. 您可以看到这两个策略。单击 * 下一步 * 。
++
+image:sqlsb-aws-image72.png["错误：缺少图形映像"]
+
+. 配置验证服务器。
++
+image:sqlsb-aws-image73.png["错误：缺少图形映像"]
+
+. 配置电子邮件通知。
++
+image:sqlsb-aws-image74.png["错误：缺少图形映像"]
+
+. 在“*摘要*”页上，单击“*完成*”。
++
+image:sqlsb-aws-image75.png["错误：缺少图形映像"]
+
+
+
+
+
+== 触发多个SQL Server数据库的按需事务日志备份
+
+要为多个SQL Server数据库触发事务日志按需备份、请完成以下步骤：
+
+. 在新创建的策略页面上，选择页面右上角的*立即备份*。
++
+image:sqlsb-aws-image76.png["错误：缺少图形映像"]
+
+. 从*Policy*选项卡的弹出窗口中，选择下拉菜单，选择备份策略，然后配置事务日志备份。
++
+image:sqlsb-aws-image77.png["错误：缺少图形映像"]
+
+. 单击 * 备份 * 。此时将显示一个新窗口。
+. 单击*Yes*确认备份策略。
++
+image:sqlsb-aws-image78.png["错误：缺少图形映像"]
+
+
+
+
+
+== 监控
+
+移动到*Monitoring*选项卡并监控备份作业的进度。
+
+image:sqlsb-aws-image79.png["错误：缺少图形映像"]
+
+
+
+== 还原和恢复
+
+请参见在SnapCenter 中还原SQL Server数据库所需的以下前提条件。
+
+* 目标实例必须联机且正在运行、才能完成还原作业。
+* 必须禁用计划对SQL Server数据库运行的SnapCenter 操作、包括在远程管理或远程验证服务器上计划的任何作业。
+* 如果要将自定义日志目录备份还原到备用主机、则SnapCenter 服务器和插件主机必须安装相同版本的SnapCenter。
+* 您可以将系统数据库还原到备用主机。
+* SnapCenter 可以在不使SQL Server集群组脱机的情况下还原Windows集群中的数据库。
+
+
+
+
+== 将SQL Server数据库上已删除的表还原到某个时间点
+
+要将SQL Server数据库还原到某个时间点、请完成以下步骤：
+
+. 以下屏幕截图显示了SQL Server数据库在删除表之前的初始状态。
++
+image:sqlsb-aws-image80.png["错误：缺少图形映像"]
+
++
+屏幕截图显示已从表中删除20行。
+
++
+image:sqlsb-aws-image81.png["错误：缺少图形映像"]
+
+. 登录到SnapCenter 服务器。从*Resues*选项卡中，选择数据库。
++
+image:sqlsb-aws-image82.png["错误：缺少图形映像"]
+
+. 选择最新的备份。
+. 在右侧，选择*Restore*。
++
+image:sqlsb-aws-image83.png["错误：缺少图形映像"]
+
+. 此时将显示一个新窗口。选择*Restore*选项。
+. 将数据库还原到创建备份的同一主机。单击 * 下一步 * 。
++
+image:sqlsb-aws-image84.png["错误：缺少图形映像"]
+
+. 对于*恢复类型*，请选择*所有日志备份*。单击 * 下一步 * 。
++
+image:sqlsb-aws-image85.png["错误：缺少图形映像"]
+
++
+image:sqlsb-aws-image86.png["错误：缺少图形映像"]
+
+
+
+*还原前选项:*
+
+. 选择选项*在还原期间覆盖同名数据库*。单击 * 下一步 * 。
++
+image:sqlsb-aws-image87.png["错误：缺少图形映像"]
+
+
+
+*还原后选项:*
+
+. 选择选项*可操作、但不可用于还原其他事务日志*。单击 * 下一步 * 。
++
+image:sqlsb-aws-image88.png["错误：缺少图形映像"]
+
+. 提供电子邮件设置。单击 * 下一步 * 。
++
+image:sqlsb-aws-image89.png["错误：缺少图形映像"]
+
+. 在“*摘要*”页上，单击“*完成*”。
++
+image:sqlsb-aws-image90.png["错误：缺少图形映像"]
+
+
+
+
+
+== 监控还原进度
+
+. 在*监控*选项卡中，单击恢复作业详细信息以查看恢复作业的进度。
++
+image:sqlsb-aws-image91.png["错误：缺少图形映像"]
+
+. 还原作业详细信息。
++
+image:sqlsb-aws-image92.png["错误：缺少图形映像"]
+
+. 返回到SQL Server主机>数据库>表存在。
++
+image:sqlsb-aws-image93.png["错误：缺少图形映像"]
+
+
+
+
+
+== 从何处查找追加信息
+
+要了解有关本文档中所述信息的更多信息，请查看以下文档和 / 或网站：
+
+* https://www.netapp.com/pdf.html?item=/media/12400-tr4714pdf.pdf["TR-4714：《使用NetApp SnapCenter 的Microsoft SQL Server最佳实践指南》"^]
++
+https://www.netapp.com/pdf.html?item=/media/12400-tr4714pdf.pdf["https://www.netapp.com/pdf.html?item=/media/12400-tr4714pdf.pdf"^]
+
+* https://docs.netapp.com/us-en/snapcenter-45/protect-scsql/concept_requirements_for_restoring_a_database.html["还原数据库的要求"^]
++
+https://docs.netapp.com/us-en/snapcenter-45/protect-scsql/concept_requirements_for_restoring_a_database.html["https://docs.netapp.com/us-en/snapcenter-45/protect-scsql/concept_requirements_for_restoring_a_database.html"^]
+
+* 了解克隆的数据库生命周期
++
+https://library.netapp.com/ecmdocs/ECMP1217281/html/GUID-4631AFF4-64FE-4190-931E-690FCADA5963.html["https://library.netapp.com/ecmdocs/ECMP1217281/html/GUID-4631AFF4-64FE-4190-931E-690FCADA5963.html"^]
+
+
