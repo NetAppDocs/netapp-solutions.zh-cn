@@ -17448,7 +17448,6 @@
   <block id="11f86864c5928690c88625e77eb1a480" category="list-text">在AWS EC2控制台中、部署适用于ONTAP 存储HA集群的Amazon FSX以托管Oracle数据库卷。如果您不熟悉FSX存储的部署、请参见相关文档 <block ref="17d8b312d287f0afd6f44b3f25c4f20b" category="inline-link-macro-rx"></block> 了解分步说明。</block>
   <block id="dd303169f721e79331b3683ddafddcc1" category="list-text">可以使用以下Terraform自动化工具包执行步骤2和步骤3、该工具包会创建一个名为的EC2实例<block ref="460dc55b5ffb0266f2c889b06ee73344" prefix=" " category="inline-code"></block> 和名为的FSX文件系统<block ref="8cbb7b3050d3c3aa08a529f429bc4555" prefix=" " category="inline-code"></block>。执行前、请仔细阅读该说明并根据您的环境更改变量。</block>
   <block id="62ee860e3d0c08c6573d2e328543e8de" category="section-title">EC2实例内核配置</block>
-  <block id="39fb43106d288435c8737acd0c5b18ba" category="paragraph">在配置了前提条件的情况下、以root用户身份登录到EC2实例、以便为Oracle安装配置Linux内核。</block>
   <block id="5a8cdca62a149c76be848350ba5cbfd0" category="list-text">创建暂存目录<block ref="d66a510d21988f96fd9c018f6843c729" prefix=" " category="inline-code"></block> 文件夹并设置<block ref="f1c1592588411002af340cbaedd6fc33" prefix=" " category="inline-code"></block> 权限。</block>
   <block id="e252f38e51fe6c121fdf68268f7365b7" category="list-text">将Oracle二进制安装文件和其他所需的rpm文件下载并暂存到<block ref="d66a510d21988f96fd9c018f6843c729" prefix=" " category="inline-code"></block> 目录。</block>
   <block id="2463a0e4e0f5e0cae480165d25c3d218" category="paragraph">请参见以下要在中说明的安装文件列表<block ref="d66a510d21988f96fd9c018f6843c729" prefix=" " category="inline-code"></block> 在EC2实例上。</block>
@@ -17472,7 +17471,6 @@
   <block id="f7b4c2e912a168f005ed7cc2b4799c08" category="list-text">修改Oracle用户以将ASM添加为二级组(Oracle用户应在安装Oracle预安装RPM后创建)。</block>
   <block id="8d3a75a7cdef66372dcf58e6278bba70" category="list-text">重新启动EC2实例。</block>
   <block id="64014fc61a9016f43a5537d6da141cc1" category="section-title">配置数据库卷和LUN并将其映射到EC2实例主机</block>
-  <block id="44d3f8c485fe8f9d96289b7bb283f99c" category="paragraph">从FSX控制台配置三个卷以托管Oracle数据库二进制文件、数据和日志文件。</block>
   <block id="c848cfd9c04d86e7b9919e11add79f6c" category="list-text">以fsxadmin用户身份通过SSH登录到FSX集群。</block>
   <block id="eff24d82c422927b06fd0cacd430b653" category="list-text">执行以下命令为Oracle二进制文件创建卷。</block>
   <block id="569cffa50e6428a06bffa2e19d12e0e3" category="list-text">执行以下命令为Oracle数据创建卷。</block>
@@ -17486,7 +17484,6 @@
   <block id="3208f25d37711dd9ffc43d93ada2a3cc" category="paragraph">这将返回：</block>
   <block id="35c1914e41e83f92dd8779f5708f3224" category="section-title">数据库存储配置</block>
   <block id="47d78479fc855bd2f99f02fb94118789" category="paragraph">现在、为EC2实例主机上的Oracle网格基础架构和数据库安装导入并设置FSX存储。</block>
-  <block id="d4d6ba977b18ebe6448e464802298bbf" category="list-text">以EC2-user身份通过SSH登录到EC2实例。然后更改为SSH密钥和EC2实例IP地址。</block>
   <block id="a7939166c08e8ac6da1530309825a401" category="list-text">使用任一SVM iSCSI IP地址发现FSX iSCSI端点。然后、更改为您的环境专用门户地址。</block>
   <block id="1bc103d13645d8a07f4a05f2eee064f8" category="list-text">登录到每个目标以建立iSCSI会话。</block>
   <block id="fc5113f60b8b0390133d7abda7290515" category="paragraph">命令的预期输出为：</block>
@@ -17530,17 +17527,11 @@
   <block id="e4dae708382daa7f76913b9e5b686a1c" category="list-text">准备<block ref="77d9f4d56c58834c8dacf6d0cb94e085" prefix=" " category="inline-code"></block> 文件以进行静默安装、并将rsp文件置于中<block ref="d66a510d21988f96fd9c018f6843c729" prefix=" " category="inline-code"></block> 目录。rsp文件应涵盖A、B和G部分、并提供以下信息：</block>
   <block id="72eab9d7fc33889fd5bf6a85943c4e4a" category="list-text">以root用户身份登录到EC2实例并进行设置<block ref="e1f651debac4f720c13ae930ff3ca14a" prefix=" " category="inline-code"></block> 和<block ref="456a3c82b7208b5c2a000597b1330564" prefix=" " category="inline-code"></block>。</block>
   <block id="d134d418859128801ec294cd10bcbd8e" category="list-text">配置磁盘设备以与Oracle ASM筛选器驱动程序结合使用。</block>
-  <block id="8826276fbf00e07d49f72479d3b0da2b" category="list-text">将设备所有权更改为<block ref="ab3d4d3deefe8df93125b9c71378718c" prefix=" " category="inline-code"></block>。</block>
   <block id="3e6c5f0c8e9c1310879c66839bb0f8d5" category="list-text">安装<block ref="a27b4e2b8f4a0b0419894dfeac36419e" prefix=" " category="inline-code"></block>。</block>
   <block id="cfdbf231484c64b98bc4f3569cd7b324" category="list-text">未设置<block ref="c0c2c8394b04a929ffc60091aa1f72ca" prefix=" " category="inline-code"></block>。</block>
   <block id="9817d9ff96af960709b8094b73294545" category="list-text">以Oracle用户身份登录到EC2实例、然后在中提取修补程序<block ref="d66a510d21988f96fd9c018f6843c729" prefix=" " category="inline-code"></block> 文件夹。</block>
-  <block id="971a0a45b8dae69114b7ad2a60cb7f96" category="list-text">以Oracle用户身份启动<block ref="30c950549715985c6b7c7cd6990d0f4b" prefix=" " category="inline-code"></block> 用于网格基础架构安装。</block>
   <block id="5de6732dda1e7bccbd8e8b367ad248dd" category="paragraph">忽略有关网格基础架构的错误组的警告。我们正在使用一个Oracle用户来管理Oracle Restart、因此这是预期的。</block>
-  <block id="306b4d4b77c54aeb5cbfcd36749043f5" category="list-text">以root用户身份执行以下脚本：</block>
   <block id="7dff0a250c79eafa071ee2d5713b7123" category="list-text">以Oracle用户身份执行以下命令以完成配置：</block>
-  <block id="ecbea27c1b60fd5cd72a96184d8d2bef" category="list-text">如果您收到消息"[ins-43080] Some of the configuration assists failed、were cancelled or skipped"、请以Oracle用户身份运行以下命令以检查是否已创建数据磁盘组资源。</block>
-  <block id="02521e82deae97953ff19793ad44493b" category="list-text">如果未创建数据磁盘组、请以root用户身份重新加载multipathd。</block>
-  <block id="e8c5b866f6d35a070a878d3abb75cf8d" category="list-text">作为Oracle用户、如果数据磁盘组不是在网格安装期间创建的、请创建该数据磁盘组。</block>
   <block id="3f2a67de0c5824d878c62c0bc347e09b" category="list-text">以Oracle用户身份创建日志磁盘组。</block>
   <block id="f71fbb7ff86224d636aac5f9bb42f27d" category="list-text">以Oracle用户身份、在安装配置后验证网格服务。</block>
   <block id="f9ba171dd47a8cef31bac8aa17eeb44d" category="list-text">Valiate ASM筛选器驱动程序状态。</block>
@@ -17553,11 +17544,6 @@
   <block id="d86c0eec890e4216540c2b834f6339f5" category="list-text">在数据库主页中、修改<block ref="ef8657f0a0a00af93ba7f1c8885339ca" prefix=" " category="inline-code"></block>和取消注释并替换<block ref="bb7738211dd8eb3dbadf4cc63ae8eb8a" prefix=" " category="inline-code"></block> 使用<block ref="b2affc1a941fe7e5e65933911250249c" prefix=" " category="inline-code"></block>。</block>
   <block id="95233719931805924ded9cd671e036df" category="list-text">从<block ref="d66a510d21988f96fd9c018f6843c729" prefix=" " category="inline-code"></block> 目录中、解压缩DB 19.18 RU修补程序。</block>
   <block id="0181cf4258f052eaf2d48f78cd4fed7b" category="list-text">在中准备DB静默安装rsp文件<block ref="2d9ffa0a3db25b02bcd0091245449764" prefix=" " category="inline-code"></block> 具有以下值的目录：</block>
-  <block id="0838265859443cbbcdfc0834fb13e402" category="list-text">执行静默纯软件数据库安装。</block>
-  <block id="4c3b15e92dacacd38d6f1d3174ad1e9f" category="list-text">运行<block ref="08030ad08b2b991d61b424afd8828758" prefix=" " category="inline-code"></block> 在仅安装软件后编写脚本。</block>
-  <block id="67bee4155203a684288d87caec62ca7e" category="list-text">创建<block ref="c170c347c737b82ad62c48db1f7bff3c" prefix=" " category="inline-code"></block> 包含以下条目的文件：</block>
-  <block id="6ffd5c1d97bca346a601eadabda25b0d" category="list-text">使用dbca创建数据库。</block>
-  <block id="0bdb291c3f45b8d3e9cd39da181febb1" category="list-text">创建数据库后验证Oracle重新启动HA服务。</block>
   <block id="05472424b7ce7bd118009f6cde3a0614" category="list-text">设置Oracle用户<block ref="9e0037ad71166970bde5f910189cc94a" prefix=" " category="inline-code"></block>。</block>
   <block id="cadaa91ab9001028d3a153b4325f10a5" category="list-text">添加以下条目：</block>
   <block id="ab5f5bab123b3441fc9c838b46ff1150" category="list-text">验证已创建的CDB/PDB。</block>
@@ -18388,4 +18374,17 @@
   <block id="3a20c678f6addcc9b8fec17f91c8cfa4" category="cell">2023年5月5日</block>
   <block id="957df08ed5fbb9ca926ca88b2c974f4f" category="cell">新TR-4951：《AWS FSx for ONTAP 上Microsoft SQL Server的备份和恢复》</block>
   <block id="d5ae477fb23aecff7256445ae91344bc" category="sidebar">在AWS FSx for ONTAP 上备份和恢复Microsoft SQL Server</block>
+  <block id="0f7a8130eb652cd33a4fa9cdefc41cc6" category="admonition">确保您已在EC2实例根卷中至少分配50G、以便有足够的空间来暂存Oracle安装文件。</block>
+  <block id="f352a88dccea452ec98375dda0311257" category="paragraph">在配置了前提条件的情况下、以EC2-user身份登录到EC2实例、并使用sudo to root user配置Linux内核以进行Oracle安装。</block>
+  <block id="35e176617d52dd956b8015d8ca19c32d" category="paragraph">使用FSx集群管理IP通过ssh以fsxadmin用户身份登录FSx集群、从命令行配置三个卷、以托管Oracle数据库二进制文件、数据和日志文件。</block>
+  <block id="aa218771b85a8ecc41cc249ba90ea5f8" category="list-text">以EC2用户身份使用SSH密钥和EC2实例IP地址通过SSH登录到EC2实例。</block>
+  <block id="71d434c6aec8c195bc1cd610cf2aadf7" category="list-text">重新启动EC2实例主机。</block>
+  <block id="5fa683f35265bf7469d9de8c3afc1f42" category="list-text">从Grid home /u01/app/oracle/product/19.0.0/grid中、以Oracle用户身份启动<block ref="30c950549715985c6b7c7cd6990d0f4b" prefix=" " category="inline-code"></block> 用于网格基础架构安装。</block>
+  <block id="26f36488ec442bab2ba0cda087d435eb" category="list-text">以root用户身份执行以下脚本：</block>
+  <block id="ada113db66e2b1b6ed982918830cd12e" category="list-text">以root用户身份重新加载multipathd。</block>
+  <block id="bdae34f2df30f19488bd87890188b905" category="list-text">从db1 home /u01/app/oracle/product/19.0.0/db1中、执行无提示纯软件DB安装。</block>
+  <block id="f9db0d5335309d4958e09e8149d7de4d" category="list-text">以root用户身份运行<block ref="08030ad08b2b991d61b424afd8828758" prefix=" " category="inline-code"></block> 在仅安装软件后编写脚本。</block>
+  <block id="2bba715ff3b85da75ce86da55f5d9173" category="list-text">以Oracle用户身份创建<block ref="c170c347c737b82ad62c48db1f7bff3c" prefix=" " category="inline-code"></block> 包含以下条目的文件：</block>
+  <block id="c96739fe831515243fc940e9ee867ea3" category="list-text">以Oracle用户身份、使用dbca启动数据库创建。</block>
+  <block id="2a00dbe4c39e81805212ab123d0995df" category="list-text">以Oracle用户身份、在创建数据库后验证Oracle Restart HA服务。</block>
 </blocks>

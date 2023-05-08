@@ -124,6 +124,9 @@ git clone https://github.com/NetApp-Automation/na_aws_fsx_ec2_deploy.git
 ....
 
 
+
+NOTE: 确保您已在EC2实例根卷中至少分配50G、以便有足够的空间来暂存Oracle安装文件。
+
 ====
 
 
@@ -131,7 +134,7 @@ git clone https://github.com/NetApp-Automation/na_aws_fsx_ec2_deploy.git
 
 [%collapsible]
 ====
-在配置了前提条件的情况下、以root用户身份登录到EC2实例、以便为Oracle安装配置Linux内核。
+在配置了前提条件的情况下、以EC2-user身份登录到EC2实例、并使用sudo to root user配置Linux内核以进行Oracle安装。
 
 . 创建暂存目录 `/tmp/archive` 文件夹并设置 `777` 权限。
 +
@@ -266,9 +269,13 @@ usermod -a -G asm oracle
 
 [%collapsible]
 ====
-从FSX控制台配置三个卷以托管Oracle数据库二进制文件、数据和日志文件。
+使用FSx集群管理IP通过ssh以fsxadmin用户身份登录FSx集群、从命令行配置三个卷、以托管Oracle数据库二进制文件、数据和日志文件。
 
 . 以fsxadmin用户身份通过SSH登录到FSX集群。
++
+....
+ssh fsxadmin@172.30.15.53
+....
 . 执行以下命令为Oracle二进制文件创建卷。
 +
 ....
@@ -356,7 +363,7 @@ svm_ora    /vol/ora_01_logs/ora_01_logs_02           ora_01        6  iscsi
 ====
 现在、为EC2实例主机上的Oracle网格基础架构和数据库安装导入并设置FSX存储。
 
-. 以EC2-user身份通过SSH登录到EC2实例。然后更改为SSH密钥和EC2实例IP地址。
+. 以EC2用户身份使用SSH密钥和EC2实例IP地址通过SSH登录到EC2实例。
 +
 ....
 ssh -i ora_01.pem ec2-user@172.30.15.58
@@ -565,7 +572,7 @@ sudo mount -t xfs /dev/mapper/ora_01_biny_01p1 /u01
 . 更改 `/u01` 将点所有权挂载到Oracle用户及其所属的主组。
 +
 ....
-chown oracle:oinstall /u01
+sudo chown oracle:oinstall /u01
 ....
 . 查找二进制LUN的UUI。
 +
@@ -598,8 +605,7 @@ vi /etc/udev/rules.d/99-oracle-asmdevices.rules
 
 +
 ....
-ENV{DM_NAME}=="ora_01_data_*", GROUP:="oinstall", OWNER:="oracle", MODE:="660"
-ENV{DM_NAME}=="ora_01_logs_*", GROUP:="oinstall", OWNER:="oracle", MODE:="660"
+ENV{DM_NAME}=="ora*", GROUP:="oinstall", OWNER:="oracle", MODE:="660"
 ....
 . 以root用户身份重新加载udev规则。
 +
@@ -616,6 +622,7 @@ udevadm trigger
 ....
 systemctl restart multipathd
 ....
+. 重新启动EC2实例主机。
 
 
 ====
@@ -692,7 +699,7 @@ oracle.install.asm.diskGroup.name=DATA
 oracle.install.asm.diskGroup.redundancy=EXTERNAL
 oracle.install.asm.diskGroup.AUSize=4
 oracle.install.asm.diskGroup.disks=/dev/mapper/ora_01_data*
-oracle.install.asm.diskGroup.diskDiscoveryString=/dev/mapper/*
+oracle.install.asm.diskGroup.diskDiscoveryString=/dev/mapper/ora_01_data_01,/dev/mapper/ora_01_data_02,/dev/mapper/ora_01_data_03,/dev/mapper/ora_01_data_04
 oracle.install.asm.monitorPassword="SetPWD"
 oracle.install.asm.configureAFD=true
 ....
@@ -718,16 +725,6 @@ cd /u01/app/oracle/product/19.0.0/grid/bin
 
  ./asmcmd afd_label LOGS02 /dev/mapper/ora_01_logs_02 --init
 ....
-. 将设备所有权更改为 `oracle:oinstall`。
-+
-....
-chown oracle:oinstall /dev/mapper/ora_01_data_01
-chown oracle:oinstall /dev/mapper/ora_01_data_02
-chown oracle:oinstall /dev/mapper/ora_01_data_03
-chown oracle:oinstall /dev/mapper/ora_01_data_04
-chown oracle:oinstall /dev/mapper/ora_01_logs_01
-chown oracle:oinstall /dev/mapper/ora_01_logs_02
-....
 . 安装 `cvuqdisk-1.0.10-1.rpm`。
 +
 ....
@@ -743,7 +740,7 @@ unset ORACLE_BASE
 ....
 unzip p34762026_190000_Linux-x86-64.zip
 ....
-. 以Oracle用户身份启动 `gridSetup.sh` 用于网格基础架构安装。
+. 从Grid home /u01/app/oracle/product/19.0.0/grid中、以Oracle用户身份启动 `gridSetup.sh` 用于网格基础架构安装。
 +
 ....
  ./gridSetup.sh -applyRU /tmp/archive/34762026/ -silent -responseFile /tmp/archive/gridsetup.rsp
@@ -758,30 +755,20 @@ unzip p34762026_190000_Linux-x86-64.zip
 
 /u01/app/oracle/product/19.0.0/grid/root.sh
 ....
+. 以root用户身份重新加载multipathd。
++
+....
+systemctl restart multipathd
+....
 . 以Oracle用户身份执行以下命令以完成配置：
 +
 ....
 /u01/app/oracle/product/19.0.0/grid/gridSetup.sh -executeConfigTools -responseFile /tmp/archive/gridsetup.rsp -silent
 ....
-. 如果您收到消息"[ins-43080] Some of the configuration assists failed、were cancelled or skipped"、请以Oracle用户身份运行以下命令以检查是否已创建数据磁盘组资源。
-+
-....
-bin/crsctl stat res -t
-....
-. 如果未创建数据磁盘组、请以root用户身份重新加载multipathd。
-+
-....
-systemctl restart multipathd
-....
-. 作为Oracle用户、如果数据磁盘组不是在网格安装期间创建的、请创建该数据磁盘组。
-+
-....
-bin/asmca -silent -sysAsmPassword 'yourPWD' -asmsnmpPassword 'yourPWD' -createDiskGroup -diskString '/dev/mapper/*' -diskGroupName DATA -disklist '/dev/mapper/ora_01_data_01,/dev/mapper/ora_01_data_02,/dev/mapper/ora_01_data_03,/dev/mapper/ora_01_data_04' -redundancy EXTERNAL
-....
 . 以Oracle用户身份创建日志磁盘组。
 +
 ....
-bin/asmca -silent -sysAsmPassword 'yourPWD' -asmsnmpPassword 'yourPWD' -createDiskGroup -diskString '/dev/mapper/*' -diskGroupName LOGS -disklist '/dev/mapper/ora_01_logs_01,/dev/mapper/ora_01_logs_02' -redundancy EXTERNAL
+bin/asmca -silent -sysAsmPassword 'yourPWD' -asmsnmpPassword 'yourPWD' -createDiskGroup -diskGroupName LOGS -disk 'AFD:LOGS*' -redundancy EXTERNAL -au_size 4
 ....
 . 以Oracle用户身份、在安装配置后验证网格服务。
 +
@@ -879,17 +866,17 @@ oracle.install.db.OSKMDBA_GROUP=dba
 oracle.install.db.OSRACDBA_GROUP=dba
 oracle.install.db.rootconfig.executeRootScript=false
 ....
-. 执行静默纯软件数据库安装。
+. 从db1 home /u01/app/oracle/product/19.0.0/db1中、执行无提示纯软件DB安装。
 +
 ....
  ./runInstaller -applyRU /tmp/archive/34765931/ -silent -ignorePrereqFailure -responseFile /tmp/archive/dbinstall.rsp
 ....
-. 运行 `root.sh` 在仅安装软件后编写脚本。
+. 以root用户身份运行 `root.sh` 在仅安装软件后编写脚本。
 +
 ....
 /u01/app/oracle/product/19.0.0/db1/root.sh
 ....
-. 创建 `dbca.rsp` 包含以下条目的文件：
+. 以Oracle用户身份创建 `dbca.rsp` 包含以下条目的文件：
 +
 ....
 gdbName=db1.demo.netapp.com
@@ -912,7 +899,7 @@ databaseType=MULTIPURPOSE
 automaticMemoryManagement=false
 totalMemory=8192
 ....
-. 使用dbca创建数据库。
+. 以Oracle用户身份、使用dbca启动数据库创建。
 +
 ....
 bin/dbca -silent -createDatabase -responseFile /tmp/archive/dbca.rsp
@@ -948,7 +935,7 @@ Global Database Name:db1.demo.netapp.com
 System Identifier(SID):db1
 Look at the log file "/u01/app/oracle/cfgtoollogs/dbca/db1/db1.log" for further details.
 ....
-. 创建数据库后验证Oracle重新启动HA服务。
+. 以Oracle用户身份、在创建数据库后验证Oracle Restart HA服务。
 +
 ....
 [oracle@ip-172-30-15-58 db1]$ ../grid/bin/crsctl stat res -t
