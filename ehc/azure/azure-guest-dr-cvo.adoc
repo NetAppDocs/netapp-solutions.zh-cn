@@ -71,7 +71,7 @@ NOTE: 将内部数据中心连接到Azure有多种选项、这使我们无法在
 .在Azure上配置CVO并将卷复制到CVO
 [%collapsible]
 ====
-第一步是在Azure上配置Cloud Volumes ONTAP (https://docs.netapp.com/us-en/netapp-solutions/ehc/azure/azure-guest.html["链接。"^])并使用所需的频率和快照保留将所需的卷复制到Cloud Volumes ONTAP。
+第一步是在Azure上配置Cloud Volumes ONTAP (https://["链接。"^])并使用所需的频率和快照保留将所需的卷复制到Cloud Volumes ONTAP。
 
 image:dr-cvo-avs-image2.png["错误：缺少图形映像"]
 
@@ -85,7 +85,7 @@ image:dr-cvo-avs-image2.png["错误：缺少图形映像"]
 
 最常见的部署选项是、SDDC以无中断的引导模式运行。此选项占用的空间很小、可容纳三台始终可用的主机、还可以通过为模拟活动和合规性检查提供运行基线来加快恢复操作的速度、从而避免生产站点和灾难恢复站点之间发生操作偏差的风险。当需要处理实际灾难恢复事件时、可以快速将引导灯集群扩展到所需的级别。
 
-要配置AVS SDDC (无论是按需配置还是在指示灯模式下配置)、请参见 https://docs.netapp.com/us-en/netapp-solutions/ehc/azure/azure-setup.html["在 Azure 上部署和配置虚拟化环境"^]。前提条件是、在建立连接后、验证AVS主机上的子虚拟机是否能够使用Cloud Volumes ONTAP 中的数据。
+要配置AVS SDDC (无论是按需配置还是在指示灯模式下配置)、请参见 https://["在 Azure 上部署和配置虚拟化环境"^]。前提条件是、在建立连接后、验证AVS主机上的子虚拟机是否能够使用Cloud Volumes ONTAP 中的数据。
 
 正确配置Cloud Volumes ONTAP 和AVS后、请使用VAIO机制并利用SnapMirror将应用程序卷副本复制到Cloud Volumes ONTAP 、开始配置Jetstream、以便自动将内部工作负载恢复到AVS (具有应用程序VMDK的VM和具有来宾存储的VM)。
 

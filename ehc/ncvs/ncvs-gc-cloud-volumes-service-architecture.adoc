@@ -14,9 +14,9 @@ summary: 'Cloud Volumes Service 采用与其他Google Cloud原生 服务类似�
 
 
 [role="lead"]
-Cloud Volumes Service 采用与其他Google Cloud原生 服务类似的方式、例如CloudSQL、Google Cloud VMware引擎(GCVE)和文件存储库 https://cloud.google.com/vpc/docs/private-services-access?hl=en_US["Google PSA"^] 交付服务。在PSA中、服务构建在服务生产者项目中、该项目使用 https://cloud.google.com/vpc/docs/vpc-peering?hl=en_US["VPC网络对等"^] 以连接到服务使用者。服务生产者由NetApp提供和运营、服务使用者是客户项目中的VPC、负责托管要访问Cloud Volumes Service 文件共享的客户端。
+Cloud Volumes Service 采用与其他Google Cloud原生 服务类似的方式、例如CloudSQL、Google Cloud VMware引擎(GCVE)和文件存储库 https://["Google PSA"^] 交付服务。在PSA中、服务构建在服务生产者项目中、该项目使用 https://["VPC网络对等"^] 以连接到服务使用者。服务生产者由NetApp提供和运营、服务使用者是客户项目中的VPC、负责托管要访问Cloud Volumes Service 文件共享的客户端。
 
-下图、引用自 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/architecture?hl=en_US["架构部分"^] 显示了Cloud Volumes Service 文档的概要视图。
+下图、引用自 https://["架构部分"^] 显示了Cloud Volumes Service 文档的概要视图。
 
 image:ncvs-gc-image1.png["错误：缺少图形映像"]
 
@@ -46,7 +46,7 @@ image:ncvs-gc-image1.png["错误：缺少图形映像"]
 
 VPC服务控制功能可围绕连接到互联网且可在全球访问的Google Cloud服务建立访问控制边界。这些服务可通过用户身份提供访问控制、但不能限制发出哪些网络位置请求。VPC服务控制通过引入限制对定义的网络的访问的功能来缩小这一差距。
 
-Cloud Volumes Service 数据平面不会连接到外部Internet、而是连接到具有明确定义的网络边界(边界)的私有VPC。在该网络中、每个卷都使用特定于协议的访问控制。任何外部网络连接均由Google Cloud项目管理员明确创建。但是、控制平面不提供与数据平面相同的保护、任何人都可以使用有效凭据( https://datatracker.ietf.org/doc/html/rfc7519["JWT令牌"^]）。
+Cloud Volumes Service 数据平面不会连接到外部Internet、而是连接到具有明确定义的网络边界(边界)的私有VPC。在该网络中、每个卷都使用特定于协议的访问控制。任何外部网络连接均由Google Cloud项目管理员明确创建。但是、控制平面不提供与数据平面相同的保护、任何人都可以使用有效凭据( https://["JWT令牌"^]）。
 
 简而言之、Cloud Volumes Service 数据平面可提供网络访问控制功能、无需支持VPC服务控制、也不明确使用VPC服务控制。
 
@@ -73,7 +73,7 @@ image:ncvs-gc-image4.png["错误：缺少图形映像"]
 
 === VM网络接口
 
-攻击者可能会尝试的一个技巧是、在中向虚拟机添加新的网络接口卡(Network Interface Card、NIC) https://en.wikipedia.org/wiki/Promiscuous_mode["混杂模式"^] (端口镜像)或在现有NIC上启用混杂模式以嗅探所有流量。在Google Cloud中、添加新的NIC需要完全关闭虚拟机、这样会创建警报、因此攻击者无法在无人察觉的情况下执行此操作。
+攻击者可能会尝试的一个技巧是、在中向虚拟机添加新的网络接口卡(Network Interface Card、NIC) https://["混杂模式"^] (端口镜像)或在现有NIC上启用混杂模式以嗅探所有流量。在Google Cloud中、添加新的NIC需要完全关闭虚拟机、这样会创建警报、因此攻击者无法在无人察觉的情况下执行此操作。
 
 此外、NIC根本无法设置为混杂模式、并会在Google Cloud中触发警报。
 

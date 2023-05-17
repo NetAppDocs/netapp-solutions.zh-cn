@@ -14,11 +14,11 @@ summary: 在使用 Trident 在 Kubernetes 集群中动态配置存储资源之�
 
 
 [role="lead"]
-在使用 Trident 在 Kubernetes 集群中动态配置存储资源之前，必须创建一个或多个 Kubernetes StorageClasses 。以下示例展示了在 ONTAP AI POD 上部署 NetApp AI 控制平面解决方案时可能需要创建的不同类型的 StorageClasses 。有关 StorageClasses 的详细信息，请参见 https://netapp-trident.readthedocs.io/["Trident 文档"^]。
+在使用 Trident 在 Kubernetes 集群中动态配置存储资源之前，必须创建一个或多个 Kubernetes StorageClasses 。以下示例展示了在 ONTAP AI POD 上部署 NetApp AI 控制平面解决方案时可能需要创建的不同类型的 StorageClasses 。有关 StorageClasses 的详细信息，请参见 https://["Trident 文档"^]。
 
-. NetApp 建议为在一节中创建的每个启用了 FlexGroup 的 Trident 后端创建一个单独的 StorageClass link:aicp_example_trident_backends_for_ontap_ai_deployments.html["ONTAP AI 部署的 Trident 后端示例"]，步骤 1 。通过这些粒度级 StorageClasses ，您可以将与特定 LIF （创建 Trident 后端时指定的 LIF ）相对应的 NFS 挂载添加为 StorageClass 规范文件中指定的特定后端。下面的示例命令显示了两个 StorageClasses 的创建过程，这两个 StorageClasses 对应于在部分中创建的两个示例后端 link:aicp_example_trident_backends_for_ontap_ai_deployments.html["ONTAP AI 部署的 Trident 后端示例"]，步骤 1 。有关 StorageClasses 的详细信息，请参见 https://netapp-trident.readthedocs.io/["Trident 文档"^]。
+. NetApp 建议为在一节中创建的每个启用了 FlexGroup 的 Trident 后端创建一个单独的 StorageClass link:aicp_example_trident_backends_for_ontap_ai_deployments.html["ONTAP AI 部署的 Trident 后端示例"]，步骤 1 。通过这些粒度级 StorageClasses ，您可以将与特定 LIF （创建 Trident 后端时指定的 LIF ）相对应的 NFS 挂载添加为 StorageClass 规范文件中指定的特定后端。下面的示例命令显示了两个 StorageClasses 的创建过程，这两个 StorageClasses 对应于在部分中创建的两个示例后端 link:aicp_example_trident_backends_for_ontap_ai_deployments.html["ONTAP AI 部署的 Trident 后端示例"]，步骤 1 。有关 StorageClasses 的详细信息，请参见 https://["Trident 文档"^]。
 +
-为了在删除相应的 PersistentVolumeClaim （ PVC ）时不删除永久性卷，以下示例使用了 `reClaimPolicy` 值 `Retain` 。有关 `re"claimPolicy` " 字段的详细信息，请参见相关官员 https://kubernetes.io/docs/concepts/storage/storage-classes/["Kubernetes 文档"^]。
+为了在删除相应的 PersistentVolumeClaim （ PVC ）时不删除永久性卷，以下示例使用了 `reClaimPolicy` 值 `Retain` 。有关 `re"claimPolicy` " 字段的详细信息，请参见相关官员 https://["Kubernetes 文档"^]。
 
 +
 ....

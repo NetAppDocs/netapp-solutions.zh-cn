@@ -22,13 +22,13 @@ link:ncvs-gc-cloud-volumes-service-architecture.html["先前版本：Cloud Volum
 
 == 身份和访问管理
 
-身份和访问管理 (https://cloud.google.com/iam/docs/overview["IAM"^])是一项标准服务、可用于控制对Google Cloud项目实例的身份验证(登录)和授权(权限)。Google IAM可提供权限授权和删除的完整审核跟踪。目前、Cloud Volumes Service 不提供控制平面审核。
+身份和访问管理 (https://["IAM"^])是一项标准服务、可用于控制对Google Cloud项目实例的身份验证(登录)和授权(权限)。Google IAM可提供权限授权和删除的完整审核跟踪。目前、Cloud Volumes Service 不提供控制平面审核。
 
 
 
 === 授权/权限概述
 
-IAM为Cloud Volumes Service 提供内置的粒度权限。您可以找到 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/security-considerations?hl=en_US["在此填写粒度权限列表"^]。
+IAM为Cloud Volumes Service 提供内置的粒度权限。您可以找到 https://["在此填写粒度权限列表"^]。
 
 IAM还提供了两个预定义角色、称为`netappcloudvolumes.admin`和`netappcloudvolumes.viewer`。可以将这些角色分配给特定用户或服务帐户。
 
@@ -45,19 +45,19 @@ IAM还提供了两个预定义角色、称为`netappcloudvolumes.admin`和`netap
 
 === 服务帐户
 
-通过脚本或进行Cloud Volumes Service API调用 https://registry.terraform.io/providers/NetApp/netapp-gcp/latest/docs["Terraform"^]、您必须创建一个具有`角色/netappcloudvolumes.admin`角色的服务帐户。您可以使用此服务帐户通过两种不同的方式生成对Cloud Volumes Service API请求进行身份验证所需的JWT令牌：
+通过脚本或进行Cloud Volumes Service API调用 https://["Terraform"^]、您必须创建一个具有`角色/netappcloudvolumes.admin`角色的服务帐户。您可以使用此服务帐户通过两种不同的方式生成对Cloud Volumes Service API请求进行身份验证所需的JWT令牌：
 
 * 生成JSON密钥并使用Google API从该密钥派生JWT令牌。这是最简单的方法、但涉及手动密钥(JSON密钥)管理。
-* 使用 ... https://cloud.google.com/iam/docs/impersonating-service-accounts["服务帐户模拟"^] 使用`Roles/iam.serviceAccountTokenCreator`。代码(脚本、Terraform等)运行 https://google.aip.dev/auth/4110["应用程序默认凭据"^] 并模拟服务帐户以获取其权限。此方法反映了Google的安全最佳实践。
+* 使用 ... https://["服务帐户模拟"^] 使用`Roles/iam.serviceAccountTokenCreator`。代码(脚本、Terraform等)运行 https://["应用程序默认凭据"^] 并模拟服务帐户以获取其权限。此方法反映了Google的安全最佳实践。
 
 
-请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/api?hl=en_US["正在创建服务帐户和私钥"^] 有关详细信息、请参见Google云文档。
+请参见 https://["正在创建服务帐户和私钥"^] 有关详细信息、请参见Google云文档。
 
 
 
 == Cloud Volumes Service API
 
-Cloud Volumes Service API使用基于REST的API、并使用HTTPS (TLSv1.2)作为底层网络传输。您可以找到最新的API定义 https://cloudvolumesgcp-api.netapp.com/swagger.json["此处"^] 以及有关如何使用API的信息、请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/api?hl=en_US["Google云文档中的Cloud Volumes API"^]。
+Cloud Volumes Service API使用基于REST的API、并使用HTTPS (TLSv1.2)作为底层网络传输。您可以找到最新的API定义 https://["此处"^] 以及有关如何使用API的信息、请参见 https://["Google云文档中的Cloud Volumes API"^]。
 
 API端点由NetApp使用标准HTTPS (TLSv1.2)功能进行操作和保护。
 
@@ -65,7 +65,7 @@ API端点由NetApp使用标准HTTPS (TLSv1.2)功能进行操作和保护。
 
 === JWT令牌
 
-使用JWT承载令牌对API进行身份验证 (https://datatracker.ietf.org/doc/html/rfc7519["RFC-7519"^]）。必须使用Google Cloud IAM身份验证获取有效的JWT令牌。必须通过提供服务帐户JSON密钥从IAM提取令牌来完成此操作。
+使用JWT承载令牌对API进行身份验证 (https://["RFC-7519"^]）。必须使用Google Cloud IAM身份验证获取有效的JWT令牌。必须通过提供服务帐户JSON密钥从IAM提取令牌来完成此操作。
 
 
 

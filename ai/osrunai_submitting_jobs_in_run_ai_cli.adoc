@@ -55,14 +55,14 @@ $ runai logs hyper1
 ....
 在此示例中，您应看到正在运行的 DL 会话的日志，包括当前训练时间， ETA ，损失函数值，准确性以及每个步骤所用时间。
 
-您可以在运行： AI UI 上查看集群状态，网址为 https://app.run.ai/["https://app.run.ai/"^]。在 Dashboards > Overview 下，您可以监控 GPU 利用率。
+您可以在运行： AI UI 上查看集群状态，网址为 https://["https://app.run.ai/"^]。在 Dashboards > Overview 下，您可以监控 GPU 利用率。
 
 要停止此工作负载，请运行以下命令：
 
 ....
 $ runai delte hyper1
 ....
-此命令将停止训练工作负载。您可以再次运行 `runai list` 来验证此操作。有关详细信息，请参见 https://docs.run.ai/Researcher/Walkthroughs/Walkthrough-Launch-Unattended-Training-Workloads-/["启动无人参与的培训工作负载"^]。
+此命令将停止训练工作负载。您可以再次运行 `runai list` 来验证此操作。有关详细信息，请参见 https://["启动无人参与的培训工作负载"^]。
 
 
 
@@ -92,15 +92,15 @@ $ runai bash build1
 ....
 这样就可以直接将 shell 连接到计算机。然后，数据科学家可以在容器中开发或微调其模型。
 
-您可以在运行： AI UI 上查看集群状态，网址为 https://app.run.ai["https://app.run.ai"^]。有关详细信息，请参见 https://docs.run.ai/Researcher/Walkthroughs/Walkthrough-Start-and-Use-Interactive-Build-Workloads-/["启动和使用交互式构建工作负载"^]。
+您可以在运行： AI UI 上查看集群状态，网址为 https://["https://app.run.ai"^]。有关详细信息，请参见 https://["启动和使用交互式构建工作负载"^]。
 
 
 
 == 使用已连接端口的交互式工作负载
 
-作为交互式构建工作负载的扩展，在使用 Run ： AI CLI 启动容器时，您可以向容器用户显示内部端口。这对于云环境，使用 Jupyter 笔记本电脑或连接到其他微服务非常有用。 https://kubernetes.io/docs/concepts/services-networking/ingress/["传入"^] 允许从 Kubernetes 集群外部访问 Kubernetes 服务。您可以通过创建一组规则来配置访问，这些规则定义哪些入站连接访问哪些服务。
+作为交互式构建工作负载的扩展，在使用 Run ： AI CLI 启动容器时，您可以向容器用户显示内部端口。这对于云环境，使用 Jupyter 笔记本电脑或连接到其他微服务非常有用。 https://["传入"^] 允许从 Kubernetes 集群外部访问 Kubernetes 服务。您可以通过创建一组规则来配置访问，这些规则定义哪些入站连接访问哪些服务。
 
-为了更好地管理对集群中服务的外部访问，我们建议集群管理员安装 https://kubernetes.io/docs/concepts/services-networking/ingress/["传入"^] 并配置负载平衡器。
+为了更好地管理对集群中服务的外部访问，我们建议集群管理员安装 https://["传入"^] 并配置负载平衡器。
 
 要使用传入作为服务类型，请在提交工作负载时运行以下命令以设置方法类型和端口：
 
@@ -109,8 +109,8 @@ $ runai submit test-ingress -i jupyter/base-notebook -g 1 \
   --interactive --service-type=ingress --port 8888 \
   --args="--NotebookApp.base_url=test-ingress" --command=start-notebook.sh
 ....
-容器成功启动后，执行 `runai list` 以查看用于访问 Jupyter 笔记本电脑的 `S服务 URL （ S ）` 。此 URL 由入口端点，作业名称和端口组成。例如，请参见 https://10.255.174.13/test-ingress-8888[]。
+容器成功启动后，执行 `runai list` 以查看用于访问 Jupyter 笔记本电脑的 `S服务 URL （ S ）` 。此 URL 由入口端点，作业名称和端口组成。例如，请参见 https://[]。
 
-有关详细信息，请参见 https://docs.run.ai/Researcher/Walkthroughs/Walkthrough-Launch-an-Interactive-Build-Workload-with-Connected-Ports/["使用连接的端口启动交互式构建工作负载"^]。
+有关详细信息，请参见 https://["使用连接的端口启动交互式构建工作负载"^]。
 
 link:osrunai_achieving_high_cluster_utilization.html["接下来：实现高集群利用率"]

@@ -16,13 +16,13 @@ summary: 通过Cloud Volumes Service 、可以向SMB和NFS客户端共享相同�
 link:ncvs-gc-smb.html["上一步：SMB。"]
 
 [role="lead"]
-通过Cloud Volumes Service 、可以向SMB和NFS客户端共享相同的数据集、同时保持适当的访问权限 (https://cloud.google.com/architecture/partners/netapp-cloud-volumes/managing-dual-protocol-access["双协议"^]）。这是通过协调协议之间的身份映射以及使用中央后端LDAP服务器向Cloud Volumes Service 提供UNIX身份来实现的。您可以使用Windows Active Directory为Windows和UNIX用户提供方便易用的功能。
+通过Cloud Volumes Service 、可以向SMB和NFS客户端共享相同的数据集、同时保持适当的访问权限 (https://["双协议"^]）。这是通过协调协议之间的身份映射以及使用中央后端LDAP服务器向Cloud Volumes Service 提供UNIX身份来实现的。您可以使用Windows Active Directory为Windows和UNIX用户提供方便易用的功能。
 
 
 
 == 访问控制
 
-* *共享访问控制。*确定哪些客户端和/或用户和组可以访问NAS共享。对于NFS、导出策略和规则控制客户端对导出的访问。NFS导出可通过Cloud Volumes Service 实例进行管理。SMB使用CIFS/SMB共享和共享ACL、在用户和组级别提供更精细的控制。您只能使用从SMB客户端配置共享级ACL https://library.netapp.com/ecmdocs/ECMP1401220/html/GUID-C1772CDF-8AEE-422B-AB87-CFCB7E50FF94.html["MMC/计算机管理"^] 具有Cloud Volumes Service 实例管理员权限的帐户(请参见一节 link:ncvs-gc-smb.html#accounts-with-local/builtin-administrator/backup-rights[""具有本地/BUILTIN管理员/备份权限的帐户。""]）。
+* *共享访问控制。*确定哪些客户端和/或用户和组可以访问NAS共享。对于NFS、导出策略和规则控制客户端对导出的访问。NFS导出可通过Cloud Volumes Service 实例进行管理。SMB使用CIFS/SMB共享和共享ACL、在用户和组级别提供更精细的控制。您只能使用从SMB客户端配置共享级ACL https://["MMC/计算机管理"^] 具有Cloud Volumes Service 实例管理员权限的帐户(请参见一节 link:ncvs-gc-smb.html#accounts-with-local/builtin-administrator/backup-rights[""具有本地/BUILTIN管理员/备份权限的帐户。""]）。
 * *文件访问控制。*在文件或文件夹级别控制权限、并且始终从NAS客户端进行管理。NFS客户端可以使用传统模式位(rwx)或NFSv4 ACL。SMB客户端利用NTFS权限。
 
 
@@ -38,7 +38,7 @@ link:ncvs-gc-smb.html["上一步：SMB。"]
 
 或者、如果名为`Joe`的UNIX用户尝试使用Windows权限访问Cloud Volumes Service 卷、则UNIX用户必须能够映射到有效的Windows用户。否则、将拒绝对卷的访问。
 
-目前、只有Active Directory支持使用LDAP进行外部UNIX身份管理。有关配置对此服务的访问权限的详细信息、请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/creating-smb-volumes["创建AD连接"^]。
+目前、只有Active Directory支持使用LDAP进行外部UNIX身份管理。有关配置对此服务的访问权限的详细信息、请参见 https://["创建AD连接"^]。
 
 
 

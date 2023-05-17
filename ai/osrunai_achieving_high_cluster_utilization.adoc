@@ -19,7 +19,7 @@ summary:
 ....
 $ runai submit netapp1 -i netapp/tensorflow-tf1-py3:20.01.0 --local-image --large-shm  -v /mnt:/mnt -v /tmp:/tmp --command python --args "/netapp/scripts/run.py" --args "--dataset_dir=/mnt/mount_0/dataset/imagenet/imagenet_original/" --args "--num_mounts=2"  --args "--dgx_version=dgx1" --args "--num_devices=1" -g 1
 ....
-我们运行的 RESNET-50 基准测试与中相同 https://www.netapp.com/us/media/nva-1121-design.pdf["NVA-1121"^]。对于不驻留在公有 Docker 存储库中的容器，我们使用了标志 ` -local-image` 。我们将主机 DGX-1 节点上的目录 ` /mnt` 和 ` /tm` 分别挂载到 ` /mnt` 和 ` /tm` 。该数据集位于 NetApp AFFA800 上，并且 `dataset_dir` 参数指向目录。` -num_devices=1` 和 ` -g 1` 表示我们为此作业分配一个 GPU 。前者是 `run.py` 脚本的参数，而后者是 `runai Submit` 命令的标志。
+我们运行的 RESNET-50 基准测试与中相同 https://["NVA-1121"^]。对于不驻留在公有 Docker 存储库中的容器，我们使用了标志 ` -local-image` 。我们将主机 DGX-1 节点上的目录 ` /mnt` 和 ` /tm` 分别挂载到 ` /mnt` 和 ` /tm` 。该数据集位于 NetApp AFFA800 上，并且 `dataset_dir` 参数指向目录。` -num_devices=1` 和 ` -g 1` 表示我们为此作业分配一个 GPU 。前者是 `run.py` 脚本的参数，而后者是 `runai Submit` 命令的标志。
 
 下图显示了一个系统概述信息板，其中 GPU 利用率为 97% ，所有十六个可用 GPU 均已分配。您可以在 GPU/ 项目条形图中轻松查看为每个团队分配的 GPU 数量。" 正在运行的作业 " 窗格显示当前正在运行的作业名称，项目，用户，类型，节点， GPU 已用，运行时间，进度和利用率详细信息。队列中的工作负载列表及其等待时间显示在 "Pending" 作业中。最后，节点框将提供集群中各个 DGX-1 节点的 GPU 编号和利用率。
 

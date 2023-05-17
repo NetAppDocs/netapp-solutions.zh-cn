@@ -87,21 +87,9 @@ NOTE: 如果主机上没有足够的空间、则 `NOCOPY` 选项可用于创建P
 [source, cli]
 ----
 sqlplus / as sysdba;
-----
-+
-[source, cli]
-----
-alter session set container=ncdb;
-----
-+
-[source, cli]
-----
+alter session set container=ncdb
 alter pluggable database open upgrade;
 exit;
-----
-+
-[source, cli]
-----
 dbupgrade -c ncdb -l /home/oracle
 ----
 +
@@ -112,16 +100,8 @@ dbupgrade -c ncdb -l /home/oracle
 [source, cli]
 ----
 alter pluggable database ncdb open;
-----
-+
-[source, cli]
-----
 alter session set container=ncdb;
 select message from pdb_plug_in_violations where type like '%ERR%' and status <> 'RESOLVED';
-----
-+
-[source, cli]
-----
 $ORACLE_HOME/perl/bin/perl $ORACLE_HOME/rdbms/admin/catcon.pl -n 1 -c 'ncdb' -e -b utlrp -d $ORACLE_HOME/rdbms/admin utlrp.sql
 ----
 . 执行 `noncdb_to_pdb.sql` 更新数据词典。
@@ -129,10 +109,6 @@ $ORACLE_HOME/perl/bin/perl $ORACLE_HOME/rdbms/admin/catcon.pl -n 1 -c 'ncdb' -e 
 [source, cli]
 ----
 sqlplus / as sysdba
-----
-+
-[source, cli]
-----
 alter session set container=ncdb;
 @$ORACLE_HOME/rdbms/admin/noncdb_to_pdb.sql;
 ----
@@ -179,10 +155,11 @@ NOTE: admin用户是内部Oracle服务器主机上具有sudo权限的管理用�
 ----
 ansible-playbook -i hosts ora_pdb_relocate.yml -u azureuser --private-key db1.pem -t ora_pdb_relo_primary
 ----
-
-
++
 
 NOTE: Ansible控制器可以位于内部或Azure云中。控制器需要连接到内部Oracle服务器主机和Azure Oracle VM主机。内部Oracle服务器主机和Azure Oracle VM主机之间的Oracle数据库端口(如1521)处于打开状态。
+
+
 
 
 

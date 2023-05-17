@@ -59,7 +59,7 @@ link:ncvs-gc-considerations--creating-active-directory-connections.htm["先前�
 
 == 用于LDAP和Kerberos的网络端口
 
-使用LDAP和Kerberos时、您应确定这些服务正在使用的网络端口。您可以在中找到Cloud Volumes Service 正在使用的端口的完整列表 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/security-considerations?hl=en_US["有关安全注意事项的Cloud Volumes Service 文档"^]。
+使用LDAP和Kerberos时、您应确定这些服务正在使用的网络端口。您可以在中找到Cloud Volumes Service 正在使用的端口的完整列表 https://["有关安全注意事项的Cloud Volumes Service 文档"^]。
 
 
 
@@ -67,9 +67,9 @@ link:ncvs-gc-considerations--creating-active-directory-connections.htm["先前�
 
 Cloud Volumes Service 充当LDAP客户端、并使用标准LDAP搜索查询来查找用户和组的UNIX身份。如果要使用Cloud Volumes Service 提供的标准默认用户之外的用户和组、则需要使用LDAP。如果您计划将NFS Kerberos与用户主体(如user1@domain.com)结合使用、也需要LDAP。目前、仅支持使用Microsoft Active Directory的LDAP。
 
-要使用Active Directory作为UNIX LDAP服务器、您必须在要用于UNIX身份的用户和组上填充必要的UNIX属性。Cloud Volumes Service 使用默认LDAP模式模板、根据查询属性 https://tools.ietf.org/id/draft-howard-rfc2307bis-01.txt["RFC-2307-bis"^]。因此、下表显示了为用户和组填充所需的最小Active Directory属性以及每个属性的用途。
+要使用Active Directory作为UNIX LDAP服务器、您必须在要用于UNIX身份的用户和组上填充必要的UNIX属性。Cloud Volumes Service 使用默认LDAP模式模板、根据查询属性 https://["RFC-2307-bis"^]。因此、下表显示了为用户和组填充所需的最小Active Directory属性以及每个属性的用途。
 
-有关在Active Directory中设置LDAP属性的详细信息、请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/managing-dual-protocol-access["管理双协议访问。"^]
+有关在Active Directory中设置LDAP属性的详细信息、请参见 https://["管理双协议访问。"^]
 
 |===
 | 属性 | 功能 
@@ -305,7 +305,7 @@ TEXT
 
 === LDAP通道绑定
 
-由于Windows Active Directory域控制器存在一个漏洞、 https://msrc.microsoft.com/update-guide/vulnerability/ADV190023["Microsoft安全建议ADV190023"^] 更改DC允许LDAP绑定的方式。
+由于Windows Active Directory域控制器存在一个漏洞、 https://["Microsoft安全建议ADV190023"^] 更改DC允许LDAP绑定的方式。
 
 对Cloud Volumes Service 的影响与对任何LDAP客户端的影响相同。Cloud Volumes Service 当前不支持通道绑定。由于Cloud Volumes Service 默认通过协商支持LDAP签名、因此LDAP通道绑定不应是问题描述。如果在启用了通道绑定的情况下绑定到LDAP时确实存在问题、请按照ADV190023中的修复步骤操作、以允许从Cloud Volumes Service 进行LDAP绑定。
 
@@ -313,13 +313,13 @@ TEXT
 
 == DNS
 
-Active Directory和Kerberos都依赖于DNS来进行主机名到IP/IP到主机名解析。DNS要求端口53处于打开状态。Cloud Volumes Service 不会对DNS记录进行任何修改、目前也不支持使用 https://support.google.com/domains/answer/6147083?hl=en["动态DNS"^] 在网络接口上。
+Active Directory和Kerberos都依赖于DNS来进行主机名到IP/IP到主机名解析。DNS要求端口53处于打开状态。Cloud Volumes Service 不会对DNS记录进行任何修改、目前也不支持使用 https://["动态DNS"^] 在网络接口上。
 
-您可以配置Active Directory DNS以限制哪些服务器可以更新DNS记录。有关详细信息，请参见 https://docs.microsoft.com/en-us/learn/modules/secure-windows-server-domain-name-system/["保护Windows DNS的安全"^]。
+您可以配置Active Directory DNS以限制哪些服务器可以更新DNS记录。有关详细信息，请参见 https://["保护Windows DNS的安全"^]。
 
 请注意、Google项目中的资源默认使用Google Cloud DNS、而Google Cloud DNS未连接到Active Directory DNS。使用云DNS的客户端无法解析Cloud Volumes Service 返回的UNC路径。加入Active Directory域的Windows客户端已配置为使用Active Directory DNS、并且可以解析此类UNC路径。
 
-要将客户端加入Active Directory、必须将其DNS配置为使用Active Directory DNS。或者、您也可以配置云DNS以将请求转发到Active Directory DNS。请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/faqs-netapp["为什么我的客户端无法解析SMB NetBIOS名称？"^]有关详细信息 ...
+要将客户端加入Active Directory、必须将其DNS配置为使用Active Directory DNS。或者、您也可以配置云DNS以将请求转发到Active Directory DNS。请参见 https://["为什么我的客户端无法解析SMB NetBIOS名称？"^]有关详细信息 ...
 
 
 NOTE: Cloud Volumes Service 当前不支持DNSSEC、DNS查询以纯文本形式执行。

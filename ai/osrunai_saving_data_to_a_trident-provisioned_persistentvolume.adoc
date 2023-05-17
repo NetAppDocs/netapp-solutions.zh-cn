@@ -20,7 +20,7 @@ NetApp Trident 是一个完全受支持的开源项目，旨在帮助您满足�
 
 == 重复使用现有命名空间中的 PVC
 
-对于规模较大的 AI 项目，不同容器向同一个 Kubernetes PV 读取和写入数据可能会更高效。要重复使用 Kubernetes 永久性卷声明（ PVC ），用户必须已创建 PVC 。请参见 https://netapp-trident.readthedocs.io/["NetApp Trident 文档"^] 有关创建 PVC 的详细信息。以下是重复使用现有 PVC 的示例：
+对于规模较大的 AI 项目，不同容器向同一个 Kubernetes PV 读取和写入数据可能会更高效。要重复使用 Kubernetes 永久性卷声明（ PVC ），用户必须已创建 PVC 。请参见 https://["NetApp Trident 文档"^] 有关创建 PVC 的详细信息。以下是重复使用现有 PVC 的示例：
 
 ....
 $ runai submit pvc-test -p team-a --pvc test:/tmp/pvc1mount -i gcr.io/run-ai-demo/quickstart -g 1

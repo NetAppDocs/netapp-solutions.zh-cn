@@ -64,7 +64,7 @@ cnvrg-app-69fbb9df98-6xrgf              1/1     Running     0          2m cnvrg-
 
 == 使用 ResNet50 和 Chest X 射线数据集的计算机视觉模型培训
 
-cnvrg.io AI 操作系统部署在 Kubernetes 设置中，并部署在由 NVIDIA DGX 系统提供支持的 NetApp ONTAP AI 架构上。为了进行验证，我们使用了 NIH Chest X ray 数据集，该数据集包含经去除身份识别的胸 x 射线图像。这些映像采用 PNG 格式。这些数据由 NIH 临床中心提供，可通过获取 https://nihcc.app.box.com/v/ChestXray-NIHCC["NIH 下载站点"^]。我们使用了一个 250 GB 的数据样本，其中包含 627 ， 615 个图像，分布在 15 个类别中。
+cnvrg.io AI 操作系统部署在 Kubernetes 设置中，并部署在由 NVIDIA DGX 系统提供支持的 NetApp ONTAP AI 架构上。为了进行验证，我们使用了 NIH Chest X ray 数据集，该数据集包含经去除身份识别的胸 x 射线图像。这些映像采用 PNG 格式。这些数据由 NIH 临床中心提供，可通过获取 https://["NIH 下载站点"^]。我们使用了一个 250 GB 的数据样本，其中包含 627 ， 615 个图像，分布在 15 个类别中。
 
 数据集已上传到 cnvrg 平台，并在 NetApp AFF A800 存储系统的 NFS 导出中进行缓存。
 
@@ -84,7 +84,7 @@ image:hcaios_image7.png["错误：缺少图形映像"]
 
 要上传数据，请完成以下步骤：
 
-. 下载 https://app.cnvrg.io/docs/cli/install.html["cnvrg 命令行界面"^]。
+. 下载 https://["cnvrg 命令行界面"^]。
 . 导航到 x-ray 目录。
 . 使用 `cnvrg data init` 命令初始化平台中的数据集。
 . 使用 `cnvrg data sync` 命令将目录的所有内容上传到中央数据湖。将数据上传到中央对象存储（ StorageGRID ， S3 或其他）后，您可以使用 GUI 进行浏览。下图显示了一个已加载的胸 X 射线纤维化影像 PNG 文件。此外， cnvrg 会对数据进行版本控制，以便您构建的任何模型都可以复制到数据版本。

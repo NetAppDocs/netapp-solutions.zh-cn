@@ -16,7 +16,7 @@ summary: SMB是Microsoft开发的一种网络文件共享协议、可通过以�
 link:ncvs-gc-nfs.html["上一步：NFS。"]
 
 [role="lead"]
-https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/hh831795(v=ws.11)["SMB"^] 是Microsoft开发的一种网络文件共享协议、可通过以太网为多个SMB客户端提供集中式用户/组身份验证、权限、锁定和文件共享。文件和文件夹通过共享呈现给客户端、共享可以配置各种共享属性、并通过共享级别权限提供访问控制。SMB可以提供给提供协议支持的任何客户端、包括Windows、Apple和Linux客户端。
+https://["SMB"^] 是Microsoft开发的一种网络文件共享协议、可通过以太网为多个SMB客户端提供集中式用户/组身份验证、权限、锁定和文件共享。文件和文件夹通过共享呈现给客户端、共享可以配置各种共享属性、并通过共享级别权限提供访问控制。SMB可以提供给提供协议支持的任何客户端、包括Windows、Apple和Linux客户端。
 
 Cloud Volumes Service 支持SMB 2.1和3.x版本的协议。
 
@@ -97,7 +97,7 @@ image:ncvs-gc-image9.png["错误：缺少图形映像"]
 
 === SMB身份验证方言
 
-Cloud Volumes Service 支持以下功能 https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-smb2/8df1a501-ce4e-4287-8848-5f1d4733e280["方言"^] 对于SMB身份验证：
+Cloud Volumes Service 支持以下功能 https://["方言"^] 对于SMB身份验证：
 
 * LM
 * NTLM
@@ -109,7 +109,7 @@ Cloud Volumes Service 支持以下功能 https://docs.microsoft.com/en-us/opensp
 
 Cloud Volumes Service 还支持LM和NTLM身份验证的向后兼容性。如果Kerberos配置不当(例如创建SMB别名)、则共享访问会回退到身份验证方法较弱的位置(例如NTLMv2)。由于这些机制的安全性较低、因此在某些Active Directory环境中会禁用它们。如果禁用了较弱的身份验证方法、并且未正确配置Kerberos、则共享访问将失败、因为没有可回退的有效身份验证方法。
 
-有关在Active Directory中配置/查看受支持的身份验证级别的信息、请参见 https://docs.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/network-security-lan-manager-authentication-level["网络安全：LAN Manager身份验证级别"^]。
+有关在Active Directory中配置/查看受支持的身份验证级别的信息、请参见 https://["网络安全：LAN Manager身份验证级别"^]。
 
 
 
@@ -160,7 +160,7 @@ image:ncvs-gc-image11.png["错误：缺少图形映像"]
 * 使用组进行访问控制、而不是使用单个用户、以便于管理、并加快删除/添加用户的速度、以便通过组管理共享ACL。
 * 允许对共享权限上的ACE进行限制性更低的常规共享访问、并锁定对具有文件权限的用户和组的访问、以实现更精细的访问控制。
 * 避免常规使用显式拒绝ACL、因为它们会覆盖允许ACL。限制需要限制的用户或组快速访问文件系统时使用显式拒绝ACL。
-* 请务必注意 https://www.varonis.com/blog/permission-propagation/["ACL继承"^] 修改权限时的设置；在文件数量较多的目录或卷的顶层设置继承标志意味着该目录或卷下的每个文件都添加了继承权限、 这可能会在调整每个文件时产生不必要的行为、例如意外访问/拒绝以及长时间更改权限。
+* 请务必注意 https://["ACL继承"^] 修改权限时的设置；在文件数量较多的目录或卷的顶层设置继承标志意味着该目录或卷下的每个文件都添加了继承权限、 这可能会在调整每个文件时产生不必要的行为、例如意外访问/拒绝以及长时间更改权限。
 
 
 
@@ -180,17 +180,17 @@ image:ncvs-gc-image12.png["错误：缺少图形映像"]
 
 * *启用SMB加密(可用于CVS-Performance和CVS-SW)。*默认情况下、SMB共享上禁用SMB加密(未选中)。选中此复选框可启用SMB加密、这意味着SMB客户端和服务器之间的流量将使用协商的最高支持加密级别进行动态加密。Cloud Volumes Service 最多支持对SMB进行AES-256加密。启用SMB加密确实会对SMB客户端造成性能降低、这种降低可能会也可能不会对SMB客户端造成明显影响、大致处于10-20%的范围内。NetApp强烈建议通过测试来确定性能降低是否可接受。
 * *隐藏SMB共享(可用于CVS-Performance和CVS-SW)。*设置此选项可在正常浏览时隐藏SMB共享路径。这意味着、不知道共享路径的客户端在访问默认UNC路径(例如`\\CVS-SMB`)时无法看到共享。选中此复选框后、只有明确知道SMB共享路径或具有组策略对象定义的共享路径的客户端才能访问此路径(通过混淆实现安全性)。
-* *启用基于访问的枚举(ABE)(仅限CVS-SW)。*这与隐藏SMB共享类似、只是共享或文件仅对无权访问对象的用户或组隐藏。例如、如果至少不允许Windows用户`Joe`通过权限进行读取访问、则Windows用户`Joe`根本看不到SMB共享或文件。默认情况下、此选项处于禁用状态、您可以通过选中此复选框来启用它。有关ABE的详细信息、请参见NetApp知识库文章 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_does_Access_Based_Enumeration_(ABE)_work["基于访问的枚举(ABE)如何工作？"^]
-* *启用持续可用(CA)共享支持(仅限CVS-Performance)。* https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/What_are_SMB_Continuously_Available_(CA)_Shares["持续可用的SMB共享"^] 通过在Cloud Volumes Service 后端系统中的节点之间复制锁定状态、提供一种在故障转移事件期间最大限度地减少应用程序中断的方法。这不是一项安全功能、但可以提供更好的整体故障恢复能力。目前、此功能仅支持SQL Server和FSLogix应用程序。
+* *启用基于访问的枚举(ABE)(仅限CVS-SW)。*这与隐藏SMB共享类似、只是共享或文件仅对无权访问对象的用户或组隐藏。例如、如果至少不允许Windows用户`Joe`通过权限进行读取访问、则Windows用户`Joe`根本看不到SMB共享或文件。默认情况下、此选项处于禁用状态、您可以通过选中此复选框来启用它。有关ABE的详细信息、请参见NetApp知识库文章 https://["基于访问的枚举(ABE)如何工作？"^]
+* *启用持续可用(CA)共享支持(仅限CVS-Performance)。* https://["持续可用的SMB共享"^] 通过在Cloud Volumes Service 后端系统中的节点之间复制锁定状态、提供一种在故障转移事件期间最大限度地减少应用程序中断的方法。这不是一项安全功能、但可以提供更好的整体故障恢复能力。目前、此功能仅支持SQL Server和FSLogix应用程序。
 
 
 
 
 == 默认隐藏共享
 
-在Cloud Volumes Service 中创建SMB服务器时、会显示 https://library.netapp.com/ecmdocs/ECMP1366834/html/GUID-5B56B12D-219C-4E23-B3F8-1CB1C4F619CE.html["隐藏的管理共享"^] (使用$命名约定)。其中包括C$(命名空间访问)和IPC$(共享命名管道以在程序之间进行通信、例如用于Microsoft管理控制台(MMC)访问的远程操作步骤 调用(RPC))。
+在Cloud Volumes Service 中创建SMB服务器时、会显示 https://["隐藏的管理共享"^] (使用$命名约定)。其中包括C$(命名空间访问)和IPC$(共享命名管道以在程序之间进行通信、例如用于Microsoft管理控制台(MMC)访问的远程操作步骤 调用(RPC))。
 
-ipc$共享不包含共享ACL、无法修改—它严格用于RPC调用和 https://docs.microsoft.com/en-us/troubleshoot/windows-server/networking/inter-process-communication-share-null-session["默认情况下、Windows不允许匿名访问这些共享"^]。
+ipc$共享不包含共享ACL、无法修改—它严格用于RPC调用和 https://["默认情况下、Windows不允许匿名访问这些共享"^]。
 
 默认情况下、C$共享允许BUILTIN/Administrators访问、但Cloud Volumes Service 自动化会删除共享ACL、并且不允许任何人访问、因为访问C$共享可以查看Cloud Volumes Service 文件系统中所有已挂载的卷。因此、尝试导航到`\\Server\C$`失败。
 
@@ -200,9 +200,9 @@ ipc$共享不包含共享ACL、无法修改—它严格用于RPC调用和 https:
 
 Cloud Volumes Service SMB服务器与常规Windows SMB服务器具有类似的功能、因为有本地组(例如BUILTIN\Administrators)会将访问权限应用于选定域用户和组。
 
-指定要添加到备份用户的用户时、该用户将添加到使用该Active Directory连接的Cloud Volumes Service 实例中的BUILTIN\Backup Operators组中、然后该组将获取 https://docs.microsoft.com/en-us/windows-hardware/drivers/ifs/privileges["SeBackupPrivilege和SeRestorePrivilege"^]。
+指定要添加到备份用户的用户时、该用户将添加到使用该Active Directory连接的Cloud Volumes Service 实例中的BUILTIN\Backup Operators组中、然后该组将获取 https://["SeBackupPrivilege和SeRestorePrivilege"^]。
 
-将用户添加到安全权限用户时、系统会为该用户授予SeSecurityPrivilege、这在某些应用程序使用情形下非常有用、例如 https://docs.netapp.com/us-en/ontap/smb-hyper-v-sql/add-sesecurityprivilege-user-account-task.html["SMB共享上的SQL Server"^]。
+将用户添加到安全权限用户时、系统会为该用户授予SeSecurityPrivilege、这在某些应用程序使用情形下非常有用、例如 https://["SMB共享上的SQL Server"^]。
 
 image:ncvs-gc-image13.png["错误：缺少图形映像"]
 
