@@ -46,7 +46,7 @@ summary: 借助 ONTAP ， Storage Virtual Machine （ SVM ）的概念可在安�
 * 默认 vsadmin SVM 帐户没有执行 ONTAP 工具任务所需的访问级别。因此，您需要创建新的 SVM 帐户。
 * 如果您使用的是 ONTAP 9.8 或更高版本， NetApp 建议使用 ONTAP 系统管理器的用户菜单以及 ONTAP 工具设备上提供的 JSON 文件创建一个权限最低的 RBAC 用户帐户，网址为 ` \https://<IP address> ： 9083/VSC/config/` 。使用您的管理员密码下载 JSON 文件。这可以用于 SVM 或集群范围的帐户。
 +
-如果您使用的是 ONTAP 9.6 或更早版本，则应使用中提供的 RBAC User Creator （ RUC ）工具 https://["NetApp 支持站点工具箱"^]。
+如果您使用的是 ONTAP 9.6 或更早版本，则应使用中提供的 RBAC User Creator （ RUC ）工具 https://mysupport.netapp.com/site/tools/tool-eula/rbac["NetApp 支持站点工具箱"^]。
 
 * 由于 vCenter UI 插件， VASA Provider 和 SRA 服务器都是完全集成的服务，因此您必须按照在 vCenter UI for ONTAP Tools 中添加存储的方式在 SRM 中向 SRA 适配器添加存储。否则， SRA 服务器可能无法识别通过 SRA 适配器从 SRM 发送的请求。
 * 使用 SVM 范围的凭据时，不会执行 NFS 路径检查。这是因为物理位置从 SVM 中进行了逻辑抽象。不过，这并不是一个值得关注的发生原因，因为现代 ONTAP 系统在使用间接路径时不再出现任何明显的性能下降。

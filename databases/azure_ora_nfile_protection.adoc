@@ -58,8 +58,13 @@ cd /home/azacsnap/bin
 . ~/.bash_profile
 azacsnap -c backup --volume other --prefix acao-ora01-log --retention 250
 ----
-68b7e37ef318c0e56eabf3e1aded4216
+crontab计划：
 
+[listing]
+----
+15,30,45 * * * * /home/azacsnap/snap_log.sh
+0 */2 * * * /home/azacsnap/snap_data.sh
+----
 
 NOTE: 设置备份时 `azacsnap.json` 配置文件中、将所有数据卷(包括二进制卷)添加到 `dataVolume` 以及所有日志卷 `otherVolume`。快照的最大保留空间为250个副本。
 
@@ -84,42 +89,40 @@ Snapshot备份的一个主要优势是、它与源数据库卷共存、并且主
 
 以下示例演示了如何从同一Oracle主机上的Azure信息板和CLI还原和恢复Oracle数据库。
 
-. aa30a622663e0f34541394e008fe82cd
-+
-ea16560565f3889db4dabf938628b462
-
-+
-版权所有（ c ） 1982-2019 ， Oracle 。保留所有权利。
-
-+
-已连接到： Oracle Database 19c Enterprise Edition 版本 19.0.0.0.0 - 生产版本 19.8.0.0.0
-
-+
-0409b2fce118cc126a532dea158d2943
-
-+
-bec6da77877c0793c1d3eb6c6896e98e
-
-+
-a5b83945adfd5370663cb2d9c4f31d09
-
-+
-6ba18fa8fa7d170dfd8fc80f0f3d39f7
-
-+
-d1d2dcb121f8bf8fd39724ea075c6409
-
-+
-a92090dde5e820fde0a68705ee3f2bd0
-
-+
-fd9736dfc88a182f9cb6e5f6a2b97487
-
-+
- ID
+. 在要还原的数据库中创建一个测试表。
 +
 [listing]
 ----
+[oracle@acao-ora01 ~]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Mon Sep 12 19:02:35 2022
+Version 19.8.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.8.0.0.0
+
+SQL> create table testsnapshot(
+     id integer,
+     event varchar(100),
+     dt timestamp);
+
+Table created.
+
+SQL> insert into testsnapshot values(1,'insert a data marker to validate snapshot restore',sysdate);
+
+1 row created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select * from testsnapshot;
+
+ ID
+----------
 EVENT
 --------------------------------------------------------------------------------
 DT
@@ -130,29 +133,38 @@ insert a data marker to validate snapshot restore
 ----
 . 将此表放到快照备份之后。
 +
-07b56c53a9fec8c477afb0cb5f2394af
+[listing]
+----
+[oracle@acao-ora01 ~]$ sqlplus / as sysdba
 
-+
-dcd4d50ecf59b4752c161f0ddc44df44
+SQL*Plus: Release 19.0.0.0.0 - Production on Tue Sep 13 14:20:22 2022
+Version 19.8.0.0.0
 
-+
-版权所有（ c ） 1982-2019 ， Oracle 。保留所有权利。
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
 
-+
-已连接到： Oracle Database 19c Enterprise Edition 版本 19.0.0.0.0 - 生产版本 19.8.0.0.0
 
-+
-bee0f13528c2f6f5b67053dc1e942328
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.8.0.0.0
 
-+
-cd85f26775e453b2177d5fcc6265b31d
+SQL> drop table testsnapshot;
 
-+
-07e18ec921a195478cdbab47d8d68d89
+Table dropped.
 
-+
-f06f4fbf6e3e0e45b0d4b241ceaf19c9
+SQL> select * from testsnapshot;
+select * from testsnapshot
+              *
+ERROR at line 1:
+ORA-00942: table or view does not exist
 
+SQL> shutdown immediate;
+Database closed.
+Database dismounted.
+ORACLE instance shut down.
+SQL> exit
+Disconnected from Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.8.0.0.0
+----
 . 从Azure NetApp Files 信息板中、将日志卷还原到最后一个可用快照。选择*还原卷*。
 +
 image:db_ora_azure_anf_restore_01.PNG["此屏幕截图显示了ANF信息板中卷的快照还原方法。"]
@@ -171,59 +183,80 @@ image:db_ora_azure_anf_restore_04.PNG["出现\"Are you sure you want to do this�
 
 . 如果您有多个控制文件副本、请重新同步这些控制文件、并将旧控制文件替换为可用的最新副本。
 +
-952cd3804f479f3c31f123d064ccbdf5
-
+[listing]
+----
+[oracle@acao-ora01 ~]$ mv /u02/oradata/ORATST/control01.ctl /u02/oradata/ORATST/control01.ctl.bk
+[oracle@acao-ora01 ~]$ cp /u03/orareco/ORATST/control02.ctl /u02/oradata/ORATST/control01.ctl
+----
 . 登录到Oracle服务器VM并使用sqlplus运行数据库恢复。
-+
-07b56c53a9fec8c477afb0cb5f2394af
-
-+
-125ab5cbfb90c4a6d038bcca4da6fdc4
-
-+
-版权所有（ c ） 1982-2019 ， Oracle 。保留所有权利。
-
-+
-010621501012cd31b6666d17dad683d2
-
-+
-6bd3f70e5ab38ca26f8cabd390e15fc0
-
-+
-424459a4363a5afdd1e45d31fcd11efe
-
-+
-db9afd3f7adaff3fe1135208fa6b6a09
-
-+
-abc467423916c8ee7c16f566b4ab4ca8
-
-+
-db9afd3f7adaff3fe1135208fa6b6a09
-
-+
-479d2dfa77fdcde3bfd41fcdebbca1ff
-
-+
-db9afd3f7adaff3fe1135208fa6b6a09
-
-+
-c76ff2f7e10a42adf7faec8f9e6faeab
-
-+
-0e98028493ec8c4a1d181c0d71c3ec7b
-
-+
-f6c9ea366c01da7d664a8c7c3813e0bd
-
-+
-fd9736dfc88a182f9cb6e5f6a2b97487
-
-+
- ID
 +
 [listing]
 ----
+[oracle@acao-ora01 ~]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Tue Sep 13 15:10:17 2022
+Version 19.8.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+Connected to an idle instance.
+
+SQL> startup mount;
+ORACLE instance started.
+
+Total System Global Area 6442448984 bytes
+Fixed Size                  8910936 bytes
+Variable Size            1090519040 bytes
+Database Buffers         5335154688 bytes
+Redo Buffers                7864320 bytes
+Database mounted.
+SQL> recover database using backup controlfile until cancel;
+ORA-00279: change 3188523 generated at 09/13/2022 10:00:09 needed for thread 1
+ORA-00289: suggestion :
+/u03/orareco/ORATST/archivelog/2022_09_13/o1_mf_1_43__22rnjq9q_.arc
+ORA-00280: change 3188523 for thread 1 is in sequence #43
+
+Specify log: {<RET>=suggested | filename | AUTO | CANCEL}
+
+ORA-00279: change 3188862 generated at 09/13/2022 10:01:20 needed for thread 1
+ORA-00289: suggestion :
+/u03/orareco/ORATST/archivelog/2022_09_13/o1_mf_1_44__29f2lgb5_.arc
+ORA-00280: change 3188862 for thread 1 is in sequence #44
+ORA-00278: log file
+'/u03/orareco/ORATST/archivelog/2022_09_13/o1_mf_1_43__22rnjq9q_.arc' no longer
+needed for this recovery
+
+Specify log: {<RET>=suggested | filename | AUTO | CANCEL}
+
+ORA-00279: change 3193117 generated at 09/13/2022 12:00:08 needed for thread 1
+ORA-00289: suggestion :
+/u03/orareco/ORATST/archivelog/2022_09_13/o1_mf_1_45__29h6qqyw_.arc
+ORA-00280: change 3193117 for thread 1 is in sequence #45
+ORA-00278: log file
+'/u03/orareco/ORATST/archivelog/2022_09_13/o1_mf_1_44__29f2lgb5_.arc' no longer
+needed for this recovery
+
+Specify log: {<RET>=suggested | filename | AUTO | CANCEL}
+
+ORA-00279: change 3193440 generated at 09/13/2022 12:01:20 needed for thread 1
+ORA-00289: suggestion :
+/u03/orareco/ORATST/archivelog/2022_09_13/o1_mf_1_46_%u_.arc
+ORA-00280: change 3193440 for thread 1 is in sequence #46
+ORA-00278: log file
+'/u03/orareco/ORATST/archivelog/2022_09_13/o1_mf_1_45__29h6qqyw_.arc' no longer
+needed for this recovery
+
+Specify log: {<RET>=suggested | filename | AUTO | CANCEL}
+cancel
+Media recovery cancelled.
+SQL> alter database open resetlogs;
+
+Database altered.
+
+SQL> select * from testsnapshot;
+
+  ID
+----------
 EVENT
 --------------------------------------------------------------------------------
 DT
@@ -231,7 +264,6 @@ DT
          1
 insert a data marker to validate snapshot restore
 12-SEP-22 07.07.35.000000 PM
-
 
 SQL> select systimestamp from dual;
 

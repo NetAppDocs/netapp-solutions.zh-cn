@@ -17,7 +17,7 @@ summary: 本节介绍在云中使用 Azure NetApp Files 和 SQL Server 时应考
 
 == 虚拟机性能
 
-选择合适的 VM 大小对于公有云中关系数据库的最佳性能非常重要。Microsoft 建议您继续使用适用于内部服务器环境中 SQL Server 的相同数据库性能调整选项。使用 ... https://["内存优化"^] VM 大小可实现 SQL Server 工作负载的最佳性能。收集现有部署的性能数据，以确定 RAM 和 CPU 利用率，同时选择合适的实例。大多数部署可选择 D ， E 或 M 系列。
+选择合适的 VM 大小对于公有云中关系数据库的最佳性能非常重要。Microsoft 建议您继续使用适用于内部服务器环境中 SQL Server 的相同数据库性能调整选项。使用 ... https://docs.microsoft.com/en-us/azure/virtual-machines/sizes-memory["内存优化"^] VM 大小可实现 SQL Server 工作负载的最佳性能。收集现有部署的性能数据，以确定 RAM 和 CPU 利用率，同时选择合适的实例。大多数部署可选择 D ， E 或 M 系列。
 
 * 注： *
 
@@ -29,7 +29,7 @@ summary: 本节介绍在云中使用 Azure NetApp Files 和 SQL Server 时应考
 
 == VM 冗余
 
-要提高冗余和高可用性， SQL Server VM 应处于同一状态 https://["可用性集"^] 或其他 https://["可用性区域"^]。创建 Azure VM 时，您必须在配置可用性集与可用性区域之间进行选择； Azure VM 不能同时参与这两者。
+要提高冗余和高可用性， SQL Server VM 应处于同一状态 https://docs.microsoft.com/en-us/azure/virtual-machines/availability-set-overview["可用性集"^] 或其他 https://docs.microsoft.com/en-us/azure/availability-zones/az-overview["可用性区域"^]。创建 Azure VM 时，您必须在配置可用性集与可用性区域之间进行选择； Azure VM 不能同时参与这两者。
 
 
 
@@ -46,7 +46,7 @@ Microsoft SQL Server 可以使用 SMB 文件共享作为存储选项进行部署
 
 NOTE: SQL Server 数据库的文件共享存储应支持持续可用的属性。这样可以无中断地访问文件共享数据。
 
-Azure NetApp Files 可提供高性能文件存储来满足任何苛刻的工作负载要求，与块存储解决方案相比，它可以降低 SQL Server 的 TCO 。对于块存储， VM 会对磁盘操作的 I/O 和带宽施加限制；仅对 Azure NetApp Files 应用网络带宽限制即可。换言之，不会对 Azure NetApp Files 应用 VM 级别的 I/O 限制。如果没有这些 I/O 限制，在连接到 Azure NetApp Files 的较小 VM 上运行的 SQL Server 以及在较大 VM 上运行的 SQL Server 就可以正常运行。Azure NetApp Files 可降低计算和软件许可成本，从而降低 SQL Server 部署成本。有关使用 Azure NetApp Files for SQL Server 部署的详细成本分析和性能优势，请参见 https://["使用 Azure NetApp Files for SQL Server 部署的优势"^]。
+Azure NetApp Files 可提供高性能文件存储来满足任何苛刻的工作负载要求，与块存储解决方案相比，它可以降低 SQL Server 的 TCO 。对于块存储， VM 会对磁盘操作的 I/O 和带宽施加限制；仅对 Azure NetApp Files 应用网络带宽限制即可。换言之，不会对 Azure NetApp Files 应用 VM 级别的 I/O 限制。如果没有这些 I/O 限制，在连接到 Azure NetApp Files 的较小 VM 上运行的 SQL Server 以及在较大 VM 上运行的 SQL Server 就可以正常运行。Azure NetApp Files 可降低计算和软件许可成本，从而降低 SQL Server 部署成本。有关使用 Azure NetApp Files for SQL Server 部署的详细成本分析和性能优势，请参见 https://docs.microsoft.com/en-us/azure/azure-netapp-files/solutions-benefits-azure-netapp-files-sql-server["使用 Azure NetApp Files for SQL Server 部署的优势"^]。
 
 
 
@@ -61,8 +61,8 @@ Azure NetApp Files 可提供高性能文件存储来满足任何苛刻的工作�
 
 * 注： *
 
-* 要提高冗余和高可用性， SQL Server VM 应处于同一状态 https://["可用性集"^] 或不同的 https://["可用性区域"^]。如果需要用户定义的数据文件，请考虑文件路径要求；在这种情况下，请选择 SQL FCI over SQL AOAG 。
-* 支持以下 UNC 路径： file://["\\ANFSMB-b4ca.anf.test\SQLDB 和 \\ANFSMB-b4ca.anf.test\SQLDB\"^]。
+* 要提高冗余和高可用性， SQL Server VM 应处于同一状态 https://docs.microsoft.com/en-us/azure/virtual-machines/availability-set-overview["可用性集"^] 或不同的 https://docs.microsoft.com/en-us/azure/availability-zones/az-overview["可用性区域"^]。如果需要用户定义的数据文件，请考虑文件路径要求；在这种情况下，请选择 SQL FCI over SQL AOAG 。
+* 支持以下 UNC 路径： file:///\\ANFSMB-b4ca.anf.test\SQLDB%20and%20\\ANFSMB-b4ca.anf.test\SQLDB\["\\ANFSMB-b4ca.anf.test\SQLDB 和 \\ANFSMB-b4ca.anf.test\SQLDB\"^]。
 * 不支持环回 UNC 路径。
 * 要进行规模估算，请使用内部环境中的历史数据。对于 OLTP 工作负载，使用平均和高峰时间的工作负载以及磁盘读取 / 秒和磁盘写入 / 秒性能计数器将目标 IOPS 与性能要求进行匹配。对于数据仓库和报告工作负载，请使用工作负载在平均和峰值时间以及磁盘读取字节 / 秒和磁盘写入字节 / 秒匹配目标吞吐量平均值可与卷重新调整功能结合使用。
 
@@ -71,14 +71,14 @@ Azure NetApp Files 可提供高性能文件存储来满足任何苛刻的工作�
 
 == 创建持续可用的共享
 
-使用 Azure 门户或 Azure 命令行界面创建持续可用的共享。在门户中，选择启用持续可用性属性选项。对于 Azure 命令行界面，使用 `az netappfiles volume create 并将 smb-continuoused-avl` 选项设置为 ` $True` 来将共享指定为持续可用的共享。要了解有关创建启用了持续可用性的新卷的详细信息，请参见 https://["创建持续可用的共享"^]。
+使用 Azure 门户或 Azure 命令行界面创建持续可用的共享。在门户中，选择启用持续可用性属性选项。对于 Azure 命令行界面，使用 `az netappfiles volume create 并将 smb-continuoused-avl` 选项设置为 ` $True` 来将共享指定为持续可用的共享。要了解有关创建启用了持续可用性的新卷的详细信息，请参见 https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-create-volumes-smb["创建持续可用的共享"^]。
 
 * 注： *
 
 * 为 SMB 卷启用持续可用性，如下图所示。
 * 如果使用的是非管理员域帐户，请确保已为该帐户分配所需的安全权限。
 * 在共享级别设置适当的权限，并设置适当的文件级别权限。
-* 无法在现有 SMB 卷上启用持续可用属性。要将现有卷转换为使用持续可用的共享，请使用 NetApp Snapshot 技术。有关详细信息，请参见 https://["将现有 SMB 卷转换为使用持续可用性"^]。
+* 无法在现有 SMB 卷上启用持续可用属性。要将现有卷转换为使用持续可用的共享，请使用 NetApp Snapshot 技术。有关详细信息，请参见 https://docs.microsoft.com/en-us/azure/azure-netapp-files/convert-smb-continuous-availability["将现有 SMB 卷转换为使用持续可用性"^]。
 
 
 image:sql-srv-anf_image1.png["错误：缺少图形映像"]
@@ -94,7 +94,7 @@ Azure NetApp Files 支持三种服务级别：标准（每 TB 16 MBps ），高�
 * 容量池的服务质量（ QoS ）类型（自动或手动）
 
 
-有关详细信息，请参见 https://["Azure NetApp Files 的服务级别"^]。
+有关详细信息，请参见 https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-service-levels["Azure NetApp Files 的服务级别"^]。
 
 image:sql-srv-anf_image2.png["错误：缺少图形映像"]
 
@@ -102,7 +102,7 @@ image:sql-srv-anf_image2.png["错误：缺少图形映像"]
 
 == 性能验证
 
-与任何部署一样，测试虚拟机和存储也至关重要。对于存储验证，可使用 HammerDB ， Apploader ，等工具 https://["SQL Server 存储基准测试（ Storage Benchmark ， SB ）工具"^]或任何具有适当读 / 写混合的自定义脚本或 FIO 。但请注意，大多数 SQL Server 工作负载，甚至繁忙的 OLTP 工作负载，读取率接近 80% – 90% ，写入率接近 10% – 20% 。
+与任何部署一样，测试虚拟机和存储也至关重要。对于存储验证，可使用 HammerDB ， Apploader ，等工具 https://github.com/NetApp/SQL_Storage_Benchmark["SQL Server 存储基准测试（ Storage Benchmark ， SB ）工具"^]或任何具有适当读 / 写混合的自定义脚本或 FIO 。但请注意，大多数 SQL Server 工作负载，甚至繁忙的 OLTP 工作负载，读取率接近 80% – 90% ，写入率接近 10% – 20% 。
 
 为了展示性能，我们对使用高级服务级别的卷执行了快速测试。在此测试中，卷大小从 100 GB 实时增加到 2 TB ，而不会中断应用程序访问和零数据迁移。
 

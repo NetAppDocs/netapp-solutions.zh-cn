@@ -39,11 +39,11 @@ Kubectl -n default-tenant apply -f <your yaml file>
 
 == 将 NetApp 卷附加到 Jupyter 笔记本电脑
 
-Iguazio 提供多种托管服务，为数据科学家提供完整的端到端堆栈，用于开发和部署 AI/ML 应用程序。有关这些组件的详细信息，请参见 https://["Iguazio 应用程序服务和工具概述"^]。
+Iguazio 提供多种托管服务，为数据科学家提供完整的端到端堆栈，用于开发和部署 AI/ML 应用程序。有关这些组件的详细信息，请参见 https://www.iguazio.com/docs/intro/latest-release/ecosystem/app-services/["Iguazio 应用程序服务和工具概述"^]。
 
 其中一项托管服务是 Jupyter Notebook 。每个开发人员都可以使用开发所需的资源自行部署一个笔记本容器。要授予他们对 NetApp Cloud Volume 的访问权限，您可以将卷分配给容器，并在下图中显示了永久性卷声明的正在运行的用户和环境变量设置。
 
-对于内部配置，您可以参见 https://["TR-4798"^] 在 Trident 设置中启用 NetApp ONTAP 数据管理功能，例如为数据或模型创建 Snapshot 副本以进行版本控制。在 Trident 后端配置文件中添加以下行，以使 Snapshot 目录可见：
+对于内部配置，您可以参见 https://www.netapp.com/us/media/tr-4798.pdf["TR-4798"^] 在 Trident 设置中启用 NetApp ONTAP 数据管理功能，例如为数据或模型创建 Snapshot 副本以进行版本控制。在 Trident 后端配置文件中添加以下行，以使 Snapshot 目录可见：
 
 ....
 {
@@ -53,7 +53,7 @@ Iguazio 提供多种托管服务，为数据科学家提供完整的端到端堆
     }
 }
 ....
-您必须以 JSON 格式创建 Trident 后端配置文件，然后运行以下命令 https://["Trident 命令"^] 要参考此指南：
+您必须以 JSON 格式创建 Trident 后端配置文件，然后运行以下命令 https://netapp-trident.readthedocs.io/en/stable-v18.07/kubernetes/operations/tasks/backends.html["Trident 命令"^] 要参考此指南：
 
 ....
 tridentctl create backend -f <backend-file>

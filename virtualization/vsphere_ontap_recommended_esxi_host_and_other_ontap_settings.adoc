@@ -136,6 +136,6 @@ NOTE: 1—使用VMware vSphere ESXi 7.0.1和VMware vSphere ESXi 7.0.2时、NFS�
 
 虽然目前未使用可用的 ONTAP 工具进行配置，但 NetApp 建议考虑以下配置选项：
 
-* 在高性能环境中或使用单个 LUN 数据存储库测试性能时，请考虑将轮循（ VMW_PSP_RR ）路径选择策略（ PSP ）的负载平衡设置从默认 IOPS 设置 1000 更改为 1 。请参见 VMware 知识库 https://["2069356"^] 了解更多信息。
-* 在 vSphere 6.7 Update 1 中， VMware 为轮循 PSP 引入了一种新的延迟负载平衡机制。新选项会在选择最佳 I/O 路径时考虑 I/O 带宽和路径延迟如果在具有非等效路径连接的环境中使用该工具，则可能会受益，例如，一条路径上的网络跃点多于另一条路径，或者使用 NetApp 全 SAN 阵列系统时。请参见 https://["路径选择插件和策略"^] 有关详细信息 ...
+* 在高性能环境中或使用单个 LUN 数据存储库测试性能时，请考虑将轮循（ VMW_PSP_RR ）路径选择策略（ PSP ）的负载平衡设置从默认 IOPS 设置 1000 更改为 1 。请参见 VMware 知识库 https://kb.vmware.com/s/article/2069356["2069356"^] 了解更多信息。
+* 在 vSphere 6.7 Update 1 中， VMware 为轮循 PSP 引入了一种新的延迟负载平衡机制。新选项会在选择最佳 I/O 路径时考虑 I/O 带宽和路径延迟如果在具有非等效路径连接的环境中使用该工具，则可能会受益，例如，一条路径上的网络跃点多于另一条路径，或者使用 NetApp 全 SAN 阵列系统时。请参见 https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.storage.doc/GUID-B7AD0CA0-CBE2-4DB4-A22C-AD323226A257.html?hWord=N4IghgNiBcIA4Gc4AIJgC4FMB2BjAniAL5A["路径选择插件和策略"^] 有关详细信息 ...
 

@@ -31,7 +31,7 @@ link:ai-sent-design-considerations.html["先前：设计注意事项。"]
 
 == NetApp DataOps 工具包：支持中心情感分析
 
-以使用 https://["NetApp DataOps 工具包"^]，完成以下步骤：
+以使用 https://github.com/NetApp/netapp-dataops-toolkit["NetApp DataOps 工具包"^]，完成以下步骤：
 
 . 通过 Pip 安装工具包。
 +
@@ -49,7 +49,7 @@ netapp_dataops_cli.py config
 
 == NGC 配置：支持中心情感分析
 
-进行设置 https://["NVIDIA NGC"^]，完成以下步骤：
+进行设置 https://ngc.nvidia.com/setup/installers/cli["NVIDIA NGC"^]，完成以下步骤：
 
 . 下载 NGC 。
 +
@@ -68,13 +68,13 @@ ngc config set
 ....
 
 
-对于不基于 Linux 的操作系统，请访问 https://["此处"^]。
+对于不基于 Linux 的操作系统，请访问 https://ngc.nvidia.com/setup/installers/cli["此处"^]。
 
 
 
 == NVIDIA Riva 服务器：支持中心情感分析
 
-进行设置 https://["NVIDIA RIVA"^]，完成以下步骤：
+进行设置 https://docs.nvidia.com/deeplearning/riva/user-guide/docs/quick-start-guide.html["NVIDIA RIVA"^]，完成以下步骤：
 
 . 从 NGC 下载 Riva 文件。
 +
@@ -84,12 +84,12 @@ ngc registry resource download-version nvidia/riva/riva_quickstart:1.4.0-beta
 . 初始化 Riva 设置（`Riva_init.sh` ）。
 . 启动 Riva 服务器（`Riva_start.sh` ）。
 . 启动 Riva 客户端（`Riva_start_client.sh` ）。
-. 在 Riva 客户端中，安装音频处理库（ https://["FFmpeg"^]）
+. 在 Riva 客户端中，安装音频处理库（ https://ffmpeg.org/download.html["FFmpeg"^]）
 +
 ....
 apt-get install ffmpeg
 ....
-. 启动 https://["Jupyter"^] 服务器
+. 启动 https://jupyter-server.readthedocs.io/en/latest/["Jupyter"^] 服务器
 . 运行 Riva 推理管道笔记本电脑。
 
 
@@ -99,14 +99,14 @@ apt-get install ffmpeg
 
 要设置 NVIDIA TAO 工具包，请完成以下步骤：
 
-. 准备并激活 https://["虚拟环境"^] 适用于 TAO 工具包。
-. 安装 https://["所需的软件包"^]。
+. 准备并激活 https://docs.python.org/3/library/venv.html["虚拟环境"^] 适用于 TAO 工具包。
+. 安装 https://docs.nvidia.com/tao/tao-toolkit/text/tao_toolkit_quick_start_guide.html["所需的软件包"^]。
 . 手动拉取训练和微调期间使用的图像。
 +
 ....
 docker pull nvcr.io/nvidia/tao/tao-toolkit-pyt:v3.21.08-py3
 ....
-. 启动 https://["Jupyter"^] 服务器
+. 启动 https://jupyter-server.readthedocs.io/en/latest/["Jupyter"^] 服务器
 . 运行 TAO 微调笔记本电脑。
 
 
@@ -114,7 +114,7 @@ docker pull nvcr.io/nvidia/tao/tao-toolkit-pyt:v3.21.08-py3
 
 == 将 TAO 模型导出到 Riva ：支持中心情感分析
 
-以使用 https://["Riva 中的 TAO 工具包模型"^]，完成以下步骤：
+以使用 https://docs.nvidia.com/tao/tao-toolkit/text/riva_tao_integration.html["Riva 中的 TAO 工具包模型"^]，完成以下步骤：
 
 . 将模型保存在 TAO 微调笔记本中。
 . 将经过 TAO 训练的型号复制到 Riva 型号目录。

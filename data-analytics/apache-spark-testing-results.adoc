@@ -79,7 +79,7 @@ link:apache-spark-major-ai,-ml,-and-dl-use-cases-and-architectures.html["先前�
 
 == 财务状况分析
 
-我们发布了 https://["TR-4910 ：《利用 NetApp AI 进行客户沟通时的情感分析》"^]、其中使用构建了一个端到端对话AI管道 https://["NetApp DataOps 工具包"^]、AFF 存储和NVIDIA DGX系统。该管道利用DataOps工具包执行批量音频信号处理、自动语音识别(Automatic Speech Recognition、As1)、传输学习和情感分析。 https://["NVIDIA Riva SDK"^]和 https://["TAO框架"^]。将情感分析用例扩展到金融服务行业、我们构建了SparkNLP工作流、加载了三个Bert模型来执行各种NLP任务、例如、命名实体识别、并在纳斯达克排名前10位的公司季度收益电话会议中获得了句子级的感受。
+我们发布了 https://docs.netapp.com/us-en/netapp-solutions/ai/ai-sent-support-center-analytics.html["TR-4910 ：《利用 NetApp AI 进行客户沟通时的情感分析》"^]、其中使用构建了一个端到端对话AI管道 https://github.com/NetApp/netapp-dataops-toolkit["NetApp DataOps 工具包"^]、AFF 存储和NVIDIA DGX系统。该管道利用DataOps工具包执行批量音频信号处理、自动语音识别(Automatic Speech Recognition、As1)、传输学习和情感分析。 https://developer.nvidia.com/riva["NVIDIA Riva SDK"^]和 https://developer.nvidia.com/tao["TAO框架"^]。将情感分析用例扩展到金融服务行业、我们构建了SparkNLP工作流、加载了三个Bert模型来执行各种NLP任务、例如、命名实体识别、并在纳斯达克排名前10位的公司季度收益电话会议中获得了句子级的感受。
 
 以下脚本`sentiment_analysis _sacp。py`使用FinBet模型处理HDFS中的脚本、并产生积极、中立和负面的情绪计数、如下表所示：
 
@@ -242,7 +242,7 @@ image:apache-spark-image12.png["Horovod Spark Workflow Runtime。"]
 
 对于旨在最大程度地提高CTR的推荐系统、您必须了解用户行为背后的复杂功能交互、这些交互可以从低顺序到高顺序进行数学计算。低顺序和高顺序功能交互对于良好的深度学习模型来说都同样重要、而不是相互影响。深度Factorization Machine (DeepFM)是一种基于面化机器的神经网络、它将面化机器结合在一起、在一个新的神经网络架构中提供建议、并进行深度学习以进行功能学习。
 
-虽然传统的面化机可以模拟成对的功能交互、将其作为功能之间潜在向量的内在产品、并可从理论上捕获高阶信息、但实际上、由于计算和存储复杂性较高、机器学习实践者通常只使用二级功能交互。Google等深度神经网络变体 https://["宽和高；深模型"^] 另一方面、通过将线性宽模型和深度模型相结合、可以在混合网络结构中学习复杂的功能交互。
+虽然传统的面化机可以模拟成对的功能交互、将其作为功能之间潜在向量的内在产品、并可从理论上捕获高阶信息、但实际上、由于计算和存储复杂性较高、机器学习实践者通常只使用二级功能交互。Google等深度神经网络变体 https://arxiv.org/abs/1606.07792["宽和高；深模型"^] 另一方面、通过将线性宽模型和深度模型相结合、可以在混合网络结构中学习复杂的功能交互。
 
 此宽深模型有两个输入、一个用于底层宽模型、另一个用于深度、后者的后半部分仍需要专家级的功能工程、因此、技术在其他领域的推广程度较低。与宽深模型不同、DeepFM可以高效地进行原始功能培训、而无需任何功能工程、因为其宽部分和深部分共享相同的输入和嵌入向量。
 
@@ -269,7 +269,7 @@ image:apache-spark-image12.png["Horovod Spark Workflow Runtime。"]
     .config("spark.driver.maxResultSize", "50gb") \
     .getOrCreate()
 ....
-在上述`SparkSession.Builder`配置中、我们还启用了 https://["Apache Arrow"^]、使用`D .parctoandas ()`方法将Spark DataFrame转换为熊猫DataFrame。
+在上述`SparkSession.Builder`配置中、我们还启用了 https://arrow.apache.org/["Apache Arrow"^]、使用`D .parctoandas ()`方法将Spark DataFrame转换为熊猫DataFrame。
 
 ....
 22/06/17 15:56:21 INFO scheduler.DAGScheduler: Job 2 finished: toPandas at /sparkusecase/DeepCTR/examples/run_classification_criteo_spark.py:96, took 627.126487 s
@@ -287,7 +287,7 @@ Testing dataset size =  9168124
 2022-06-18 07:19:20.101478: I tensorflow/core/platform/cpu_feature_guard.cc:151] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
 To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
 ....
-要从源构建TensorFlow、NetApp建议使用 https://["市场"^]。对于我们的环境、我们会在shell提示符处执行以下命令来安装`dnF`、`dnf-plugins`和azel。
+要从源构建TensorFlow、NetApp建议使用 https://bazel.build/["市场"^]。对于我们的环境、我们会在shell提示符处执行以下命令来安装`dnF`、`dnf-plugins`和azel。
 
 ....
 yum install dnf
@@ -305,9 +305,9 @@ yum update
 scl enable devtoolset-11 bash
 . /opt/rh/devtoolset-11/enable
 ....
-请注意、最后两个命令会启用`devtoolset-11`、它会使用`/opt/rg/devtoolset-11/root/usr/bin/gcc`(GCC 11.2.1)。此外、请确保您的`git`版本高于1.8.3 (RHEL 7.9随附此版本)。请参见此部分 https://["文章"^] 用于将`git`更新到2.24.1。
+请注意、最后两个命令会启用`devtoolset-11`、它会使用`/opt/rg/devtoolset-11/root/usr/bin/gcc`(GCC 11.2.1)。此外、请确保您的`git`版本高于1.8.3 (RHEL 7.9随附此版本)。请参见此部分 https://travis.media/how-to-upgrade-git-on-rhel7-and-centos7/["文章"^] 用于将`git`更新到2.24.1。
 
-我们假定您已克隆最新的TensorFlow主报告。然后、使用`workspace`文件创建`workspace`目录、以便使用AVX、AVX2和FMA从源构建TensorFlow。运行`configure`文件并指定正确的Python二进制位置。 https://["CUDA"^] 已在测试中禁用、因为我们未使用GPU。将根据您的设置生成`.bazelrc`文件。此外、我们还编辑了该文件并设置`build -def=no_hdfs_support=false`以启用HDFS支持。请参见一节中的`.bazelrc` link:apache-spark-python-scripts-for-each-major-use-case.html["《针对每个主要用例的Python脚本》、"] 有关设置和标志的完整列表。
+我们假定您已克隆最新的TensorFlow主报告。然后、使用`workspace`文件创建`workspace`目录、以便使用AVX、AVX2和FMA从源构建TensorFlow。运行`configure`文件并指定正确的Python二进制位置。 https://developer.nvidia.com/cuda-toolkit["CUDA"^] 已在测试中禁用、因为我们未使用GPU。将根据您的设置生成`.bazelrc`文件。此外、我们还编辑了该文件并设置`build -def=no_hdfs_support=false`以启用HDFS支持。请参见一节中的`.bazelrc` link:apache-spark-python-scripts-for-each-major-use-case.html["《针对每个主要用例的Python脚本》、"] 有关设置和标志的完整列表。
 
 ....
 ./configure

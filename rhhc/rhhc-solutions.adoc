@@ -1,0 +1,80 @@
+---
+sidebar: sidebar 
+permalink: rhhc/rhhc-solutions.html 
+keywords: NetApp Solutions, hybrid cloud, container workloads, containers, Red Hat OpenShift, RedHat OpenShift, VMware, ROSA, ACC, Astra Control Center, Advanced Cluster Management, ACM, Hub Cluster 
+summary:  
+---
+= 适用于Red Hat OpenShift容器工作负载的受支持NetApp混合云解决方案
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+解决方案 使用OpenShift容器平台(OCP)、OpenShift高级集群管理器(ACM)、NetApp ONTAP 、NetApp BlueXP和NetApp Asta控制中心(ACC)测试和验证迁移和集中数据保护。
+
+对于此解决方案 、NetApp会对以下情形进行测试和验证。根据以下特征、解决方案 可分为多种情形：
+
+* 内部部署
+* 云
++
+** 自行管理的OpenShift集群和自行管理的NetApp存储
+** 提供商管理的OpenShift集群和提供商管理的NetApp存储
+
+
+
+
+**我们将在未来构建更多的解决方案和用例。**
+
+
+
+== 方案1：使用ACC在内部环境中保护和迁移数据
+
+**内部：自行管理的OpenShift集群和自行管理的NetApp存储**
+
+* 使用ACC创建Snapshot副本、备份和恢复以保护数据。
+* 使用ACC对容器应用程序执行SnapMirror复制。
+
+
+
+
+=== 场景 1
+
+image:rhhc-on-premises.png[""]
+
+
+
+== 方案2：使用ACC保护数据并将其从内部环境迁移到AWS环境：
+
+**内部：自行管理的OpenShift集群和自行管理的存储** AWS云：自行管理的OpenShift集群和自行管理的存储**
+
+* 使用ACC执行备份和恢复以保护数据。
+* 使用ACC对容器应用程序执行SnapMirror复制。
+
+
+
+
+=== 场景 2
+
+image:rhhc-self-managed-aws.png[""]
+
+
+
+== 方案3：数据保护以及从内部环境迁移到AWS环境：
+
+**内部：自行管理的OpenShift集群和自行管理的存储**** AWS云：提供商管理的OpenShift集群(ROSA)和提供商管理的存储(FSxN)**
+
+* 使用BlueXP执行永久性卷复制(FSxN)。
+* 使用OpenShift GitOps重新创建应用程序元数据。
+
+
+
+
+=== 方案3.
+
+image:rhhc-rosa-with-fsxn.png[""]
+
+有关在MetroCluster 配置中使用ONTAP 时的注意事项、请参见 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-stretch/concept_considerations_when_using_ontap_in_a_mcc_configuration.html["此处"]。

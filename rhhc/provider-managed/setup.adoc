@@ -1,0 +1,79 @@
+---
+sidebar: sidebar 
+permalink: rhhc/provider-managed/setup.html 
+keywords: NetApp Solutions, redhat OpenShift, red hat OpenShift, redhat openshift container platform, ocp, openshift container platform, Advanced Cluster Management, ACM, Hub Cluster, containers, container workloads, VMware, customer managed storage, ONTAP, ROSA, ROSA clusters 
+summary:  
+---
+= 在AWS上部署和配置托管Red Hat OpenShift容器平台
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+[role="lead"]
+本节简要介绍了在AWS (ROSA)上设置托管Red Hat OpenShift集群的工作流。其中显示了Asta三端存储使用托管FSx for NetApp ONTAP (FSxN)作为存储后端来提供永久性卷。其中详细介绍了如何使用BlueXP在AWS上部署FSxN。此外、还提供了有关使用BlueXP和OpenShift GitOps (Argo CD)为ROSA集群上有状态应用程序执行数据保护和迁移活动的详细信息。
+
+下图展示了在AWS上部署并使用FSxN作为后端存储的ROSA集群。
+
+image:rhhc-rosa-with-fsxn.png[""]
+
+
+NOTE: 此解决方案 已通过在AWS中的两个VPC中使用两个ROSA集群进行验证。每个ROSA集群都使用Asta Trdent与FSxN集成。可以通过多种方法在AWS中部署ROSA集群和FSxN。此高级设置问题描述 提供了所用特定方法的文档链接。您可以在中提供的相关链接中参考其他方法 link:../rhhc-resources.html["资源部分"]。
+
+设置过程可细分为以下步骤：
+
+.安装ROSA集群
+[%collapsible]
+====
+* 创建两个VPC并在VPC之间设置VPC对等连接。
+* 请参见 link:https://docs.openshift.com/rosa/welcome/index.html["此处"] 有关安装ROSA集群的说明。
+
+
+====
+.安装FSxN
+[%collapsible]
+====
+* 从BlueXP在vPC上安装FSxN。请参见 link:https://docs.netapp.com/us-en/cloud-manager-setup-admin/index.html["此处"] 以便创建BlueXP帐户并开始使用。请参见 link:https://docs.netapp.com/us-en/cloud-manager-fsx-ontap/index.html["此处"] 用于安装FSxN。请参见 link:https://docs.netapp.com/us-en/cloud-manager-setup-admin/index.html["此处"] 用于在AWS中创建连接器以管理FSxN。
+* 使用AWS部署FSxN。请参见 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/getting-started-step1.html["此处"] 适用于使用AWS控制台进行部署。
+
+
+====
+.在ROSA集群上安装TRIDent (使用Helm图表)
+[%collapsible]
+====
+* 使用Helm图表在ROSA集群上安装三端存储。Helm图表的URL： https://netapp.github.io/trident-helm-chart[]
+* 演示视频：将FSxN与适用于ROSA集群的Asta Trident相集成
+
+
+video::rhhc-install-trident-using-helm.mp4[]
+
+NOTE: 当所有受管集群使用ApplicationSet注册到ArgoCD时、可以使用OpenShift GitOps将Asta Trident CSI部署到这些集群。
+
+image:rhhc-trident-helm.png[""]
+
+====
+.使用TRIDIent创建后端和存储类(适用于FSxN)
+[%collapsible]
+====
+* 请参见 link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-postdeployment.html["此处"] 有关创建后端和存储类的详细信息、请参见。
+* 从OpenShift控制台使用默认的三端CSI为FsxN创建存储类。请参见以下屏幕截图：
+
+
+image:rhhc-default-storage-class.png[""]
+
+====
+.使用OpenShift GitOps部署应用程序(Argo CD)
+[%collapsible]
+====
+* 在集群上安装OpenShift GitOps Operator。请参阅说明 link:https://docs.openshift.com/container-platform/4.10/cicd/gitops/installing-openshift-gitops.html["此处"]。
+* 为集群设置新的Argo CD实例。请参阅说明 link:https://docs.openshift.com/container-platform/4.10/cicd/gitops/setting-up-argocd-instance.html["此处"]。
+
+
+打开Argo CD的控制台并部署应用程序。例如、您可以使用带有Helm Chart的Argo CD部署Jenkins应用程序。创建应用程序时、系统会提供以下详细信息：Project：default cluster： https://kubernetes.default.svc[]命名空间：Jenkins Helm图表的URL： https://charts.bitnami.com/bitnami[]
+
+Helm参数：globL.storageClass：fsxn-nas
+
+====

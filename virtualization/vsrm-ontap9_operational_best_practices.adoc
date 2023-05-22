@@ -32,7 +32,7 @@ summary: 如果可能，请始终使用 ONTAP 工具配置数据存储库和卷�
 ....
 snap autodelete modify –volume -commitment try
 ....
-对于包含 SAN 数据存储库的卷，卷自动大小应设置为 `grow` ；对于 NFS 数据存储库，应设置为 `grow_shrink` 。请参见 https://["ONTAP 9 文档中心"^] 用于特定语法。
+对于包含 SAN 数据存储库的卷，卷自动大小应设置为 `grow` ；对于 NFS 数据存储库，应设置为 `grow_shrink` 。请参见 https://docs.netapp.com/ontap-9/index.jsp?topic=%2Fcom.netapp.doc.dot-cm-cmpr-910%2Fvolume__autosize.html["ONTAP 9 文档中心"^] 用于特定语法。
 
 
 
@@ -122,11 +122,11 @@ NetApp 还建议偶尔确认子系统中的应用程序功能，尤其是在重�
 
 您可能需要应对的一个问题描述是站点之间的网络差异。某些环境可能能够在主站点和灾难恢复站点使用相同的网络 IP 地址。此功能称为延伸型虚拟 LAN （ VLAN ）或延伸型网络设置。其他环境可能要求主站点使用与灾难恢复站点相对的不同网络 IP 地址（例如，在不同的 VLAN 中）。
 
-VMware 提供了多种方法来解决此问题。例如， VMware NSX-T Data Center 等网络虚拟化技术可从操作环境中将整个网络堆栈从第 2 层抽象为第 7 层，从而提供更便携的解决方案。您可以阅读有关使用 SRM 的 NSX-T 选项的更多信息 https://["此处"^]。
+VMware 提供了多种方法来解决此问题。例如， VMware NSX-T Data Center 等网络虚拟化技术可从操作环境中将整个网络堆栈从第 2 层抽象为第 7 层，从而提供更便携的解决方案。您可以阅读有关使用 SRM 的 NSX-T 选项的更多信息 https://docs.vmware.com/en/Site-Recovery-Manager/8.4/com.vmware.srm.admin.doc/GUID-89402F1B-1AFB-42CD-B7D5-9535AF32435D.html["此处"^]。
 
 通过 SRM ，您还可以在虚拟机恢复后更改其网络配置。此重新配置包括 IP 地址，网关地址和 DNS 服务器设置等设置。可以在恢复计划中 VM 的属性设置中指定恢复后应用于各个 VM 的不同网络设置。
 
-要将 SRM 配置为对多个 VM 应用不同的网络设置，而无需编辑恢复计划中每个 VM 的属性， VMware 提供了一个名为 dr-ip-customizer 的工具。有关如何使用此实用程序的信息，请参见 VMware 的文档 https://["此处"^]。
+要将 SRM 配置为对多个 VM 应用不同的网络设置，而无需编辑恢复计划中每个 VM 的属性， VMware 提供了一个名为 dr-ip-customizer 的工具。有关如何使用此实用程序的信息，请参见 VMware 的文档 https://docs.vmware.com/en/Site-Recovery-Manager/8.4/com.vmware.srm.admin.doc/GUID-2B7E2B25-2B82-4BC4-876B-2FE0A3D71B84.html["此处"^]。
 
 
 

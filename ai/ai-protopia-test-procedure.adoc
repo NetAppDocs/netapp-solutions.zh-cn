@@ -26,12 +26,12 @@ link:ai-protopia-test-configuration.html["先前：测试配置。"]
 
 * Kubectl (配置为访问现有Kubernetes集群)
 +
-** 可参见安装和配置说明 https://["此处"^]。
+** 可参见安装和配置说明 https://kubernetes.io/docs/tasks/tools/["此处"^]。
 
 
 * 适用于Kubernetes的NetApp DataOps工具包
 +
-** 可以找到安装说明 https://["此处"^]。
+** 可以找到安装说明 https://github.com/NetApp/netapp-dataops-toolkit/tree/main/netapp_dataops_k8s["此处"^]。
 
 
 
@@ -125,7 +125,7 @@ Volume successfully created and bound to PersistentVolumeClaim (PVC) 'inference-
 ....
 . 使用要执行推理的数据填充新的永久性卷。
 +
-可以通过多种方法将数据加载到PVC上。如果您的数据当前存储在与S3兼容的对象存储平台中、例如NetApp StorageGRID 或Amazon S3、则可以使用 https://["NetApp DataOps工具包S3 Data Mover功能"^]。另一种简单的方法是创建JupyterLab工作空间、然后通过JupyterLab Web界面上传文件、如""一节中的步骤3到5所述<<场景1—JupyterLab中的按需推理>>。 "
+可以通过多种方法将数据加载到PVC上。如果您的数据当前存储在与S3兼容的对象存储平台中、例如NetApp StorageGRID 或Amazon S3、则可以使用 https://github.com/NetApp/netapp-dataops-toolkit/blob/main/netapp_dataops_k8s/docs/data_movement.md["NetApp DataOps工具包S3 Data Mover功能"^]。另一种简单的方法是创建JupyterLab工作空间、然后通过JupyterLab Web界面上传文件、如""一节中的步骤3到5所述<<场景1—JupyterLab中的按需推理>>。 "
 
 . 为批处理推理任务创建Kubernetes作业。以下示例显示了一个图像检测用例的批处理推理作业。此作业会对一组映像中的每个映像执行推理、并将推理准确性指标写入到stdout。
 +
@@ -271,7 +271,7 @@ Creating PersistentVolumeClaim (PVC) 'triton-model-repo' in namespace 'inference
 PersistentVolumeClaim (PVC) 'triton-model-repo' created. Waiting for Kubernetes to bind volume to PVC.
 Volume successfully created and bound to PersistentVolumeClaim (PVC) 'triton-model-repo' in namespace 'inference'.
 ....
-. 将您的型号存储在中的新永久性卷上 https://["格式。"^] 这可由NVIDIA Triton推理服务器识别。
+. 将您的型号存储在中的新永久性卷上 https://github.com/triton-inference-server/server/blob/main/docs/user_guide/model_repository.md["格式。"^] 这可由NVIDIA Triton推理服务器识别。
 +
 可以通过多种方法将数据加载到PVC上。一种简单的方法是创建JupyterLab工作空间、然后通过JupyterLab Web界面上传文件、如中的步骤3到5所述<<场景1—JupyterLab中的按需推理>>。"
 

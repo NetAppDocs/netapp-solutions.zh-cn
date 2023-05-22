@@ -18,7 +18,7 @@ summary:
 
 在NFS上运行vSphere是内部虚拟化部署的一个广泛采用的选项、因为它可以提供强大的性能和稳定性。如果您在内部数据中心中拥有大量网络连接存储(NAS)、则应考虑在Azure中部署一个采用Azure NetApp文件数据存储库的Azure VMware解决方案 SDDC、以克服容量和性能挑战。
 
-Azure NetApp Files 基于行业领先且高度可用的NetApp ONTAP 数据管理软件构建。Microsoft Azure服务分为三类：基础服务、主流服务和专业服务。Azure NetApp Files 属于专业类别、由许多地区已部署的硬件提供支持。借助内置的高可用性(HA)、Azure NetApp Files 可以保护您的数据免受大多数中断的影响、并为您提供行业领先的SLA https://["99.99%"^] 正常运行时间。
+Azure NetApp Files 基于行业领先且高度可用的NetApp ONTAP 数据管理软件构建。Microsoft Azure服务分为三类：基础服务、主流服务和专业服务。Azure NetApp Files 属于专业类别、由许多地区已部署的硬件提供支持。借助内置的高可用性(HA)、Azure NetApp Files 可以保护您的数据免受大多数中断的影响、并为您提供行业领先的SLA https://azure.microsoft.com/support/legal/sla/netapp/v1_1/["99.99%"^] 正常运行时间。
 
 在推出Azure NetApp Files 数据存储库功能之前、对于计划托管性能和存储密集型工作负载的客户来说、横向扩展操作需要同时扩展计算和存储。
 
@@ -148,12 +148,12 @@ az extension add --name vmware
 .创建并挂载 Azure NetApp Files 卷
 [%collapsible]
 ====
-. 登录到Azure门户并访问Azure NetApp Files。使用`az provider register``-namespace Microsoft.NetApp–wait`命令验证对Azure NetApp Files 服务的访问并注册Azure NetApp Files 资源提供程序。注册后、创建一个NetApp帐户。请参见此部分 https://["链接。"^] 了解详细步骤。
+. 登录到Azure门户并访问Azure NetApp Files。使用`az provider register``-namespace Microsoft.NetApp–wait`命令验证对Azure NetApp Files 服务的访问并注册Azure NetApp Files 资源提供程序。注册后、创建一个NetApp帐户。请参见此部分 https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-create-netapp-account["链接。"^] 了解详细步骤。
 
 
 image:vmware-dr-image2.png["错误：缺少图形映像"]
 
-. 创建NetApp帐户后、使用所需的服务级别和大小设置容量池。有关详细信息、请参见此 https://["链接。"^]。
+. 创建NetApp帐户后、使用所需的服务级别和大小设置容量池。有关详细信息、请参见此 https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-set-up-capacity-pool["链接。"^]。
 
 
 image:vmware-dr-image3.png["错误：缺少图形映像"]
@@ -168,7 +168,7 @@ image:vmware-dr-image3.png["错误：缺少图形映像"]
 
 
 |===
-. 为Azure NetApp Files 配置委派子网、并在创建卷时指定此子网。有关创建委派子网的详细步骤、请参见此文档 https://["链接。"^]。
+. 为Azure NetApp Files 配置委派子网、并在创建卷时指定此子网。有关创建委派子网的详细步骤、请参见此文档 https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-delegate-subnet["链接。"^]。
 . 使用容量池刀片下的卷刀片为数据存储库添加NFS卷。
 
 
@@ -228,7 +228,7 @@ Azure NetApp Files 支持三种服务级别：标准（每 TB 16 MBps ），高�
 
 image:vmware-dr-image6.png["错误：缺少图形映像"]
 
-有关详细信息，请参见 https://["Azure NetApp Files 的服务级别"^]。
+有关详细信息，请参见 https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-service-levels["Azure NetApp Files 的服务级别"^]。
 
 请参见此部分 link:https://learn.microsoft.com/en-us/azure/azure-netapp-files/performance-benchmarks-azure-vmware-solution["Microsoft提供的链接"] 了解可在规模估算过程中使用的详细性能基准。
 

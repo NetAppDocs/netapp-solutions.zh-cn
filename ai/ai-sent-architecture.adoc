@@ -32,7 +32,7 @@ NetApp DataOps 工具包是一个 Python 库，可使开发人员，数据科学
 
 下图显示了解决方案架构。环境分为三大类：云，核心和边缘。每个类别都可能在不同的地理位置上分散。例如，云中包含的对象存储包含不同区域的存储分段中的音频文件，而核心则可能包含通过高速网络或 NetApp Cloud Sync 链接的数据中心。边缘节点表示各个人工代理的日常工作平台，在这些平台中，交互式信息板工具和麦克风可用于直观显示情绪并从与客户的对话中收集音频数据。
 
-在 GPU 加速数据中心中，企业可以使用 NVIDIA https://["Riva"^] 用于构建对话式 AI 应用程序的框架 https://["TAO 工具包"^] 使用传输 L 学习技术连接模型修剪和重新培训。这些计算应用程序和工作流由提供支持 https://["NetApp DataOps 工具包"^]，实现 ONTAP 提供的最佳数据管理功能。通过该工具包，企业数据团队可以利用相关的结构化和非结构化数据，通过快照和克隆快速构建模型的原型，以实现可追溯性，版本控制， A/B 测试，从而提供安全性，监管， 和合规性。请参见一节 link:ai-sent-design-considerations.html#storage-design["存储设计"] 有关详细信息：
+在 GPU 加速数据中心中，企业可以使用 NVIDIA https://docs.nvidia.com/deeplearning/riva/user-guide/docs/index.html["Riva"^] 用于构建对话式 AI 应用程序的框架 https://developer.nvidia.com/tao["TAO 工具包"^] 使用传输 L 学习技术连接模型修剪和重新培训。这些计算应用程序和工作流由提供支持 https://github.com/NetApp/netapp-dataops-toolkit["NetApp DataOps 工具包"^]，实现 ONTAP 提供的最佳数据管理功能。通过该工具包，企业数据团队可以利用相关的结构化和非结构化数据，通过快照和克隆快速构建模型的原型，以实现可追溯性，版本控制， A/B 测试，从而提供安全性，监管， 和合规性。请参见一节 link:ai-sent-design-considerations.html#storage-design["存储设计"] 有关详细信息：
 
 此解决方案演示了音频文件处理， NLP 模型培训，传输学习和数据管理详细步骤。生成的端到端管道生成一个情感摘要，该摘要会实时显示在人力支持代理的信息板上。
 
@@ -109,7 +109,7 @@ ONTAP 9.9 是 NetApp 推出的最新一代存储管理软件，可帮助企业�
 
 ==== NetApp Cloud Sync
 
-https://["Cloud Sync"^] 是一项 NetApp 服务，用于快速安全地同步数据，使您可以在内部 NFS 或 SMB 文件共享之间将文件传输到以下任一目标：
+https://docs.netapp.com/us-en/occm/concept_cloud_sync.html["Cloud Sync"^] 是一项 NetApp 服务，用于快速安全地同步数据，使您可以在内部 NFS 或 SMB 文件共享之间将文件传输到以下任一目标：
 
 * NetApp StorageGRID
 * NetApp ONTAP S3
@@ -128,7 +128,7 @@ Cloud Sync 可将文件快速安全地移动到您需要的位置。数据传输
 
 ==== NetApp StorageGRID
 
-StorageGRID 软件定义的对象存储套件可无缝支持公有，私有云和混合多云环境中的各种用例。借助行业领先的创新技术， NetApp StorageGRID 可存储，保护和保留非结构化数据，以供多用途使用，包括长期的自动化生命周期管理。有关详细信息，请参见 https://["NetApp StorageGRID"^] 站点
+StorageGRID 软件定义的对象存储套件可无缝支持公有，私有云和混合多云环境中的各种用例。借助行业领先的创新技术， NetApp StorageGRID 可存储，保护和保留非结构化数据，以供多用途使用，包括长期的自动化生命周期管理。有关详细信息，请参见 https://www.netapp.com/data-storage/storagegrid/documentation/["NetApp StorageGRID"^] 站点
 
 
 
@@ -243,6 +243,6 @@ image:ai-sent-image6.png["错误：缺少图形映像"]
 
 image:ai-sent-image8.png["错误：缺少图形映像"]
 
-在 TAO 工具包中，语音到文本和情感分析也使用类似的管道。主要区别在于使用了微调模型所需的标签。TAO 工具包管道从处理数据文件开始。然后是经过预先培训的型号（来自 https://["NVIDIA NGC 目录"^]）。经过微调的模型会根据其相应的性能指标进行评估，如果性能比预先训练的模型更高，则会部署到 Riva 服务器。
+在 TAO 工具包中，语音到文本和情感分析也使用类似的管道。主要区别在于使用了微调模型所需的标签。TAO 工具包管道从处理数据文件开始。然后是经过预先培训的型号（来自 https://ngc.nvidia.com/catalog["NVIDIA NGC 目录"^]）。经过微调的模型会根据其相应的性能指标进行评估，如果性能比预先训练的模型更高，则会部署到 Riva 服务器。
 
 link:ai-sent-design-considerations.html["接下来：设计注意事项"]

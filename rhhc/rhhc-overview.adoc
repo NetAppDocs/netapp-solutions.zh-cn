@@ -1,0 +1,65 @@
+---
+sidebar: sidebar 
+permalink: rhhc/rhhc-overview.html 
+keywords: NetApp Solutions, hybrid cloud, container workloads, containers, Red Hat OpenShift, RedHat OpenShift, VMware, ROSA, ACC, Astra Control Center, Advanced Cluster Management, ACM, Hub Cluster 
+summary:  
+---
+= 适用于Red Hat OpenShift容器工作负载的NetApp混合云解决方案
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== 概述
+
+NetApp发现、越来越多的客户正在利用围绕Kubnetes构建的容器和流程编排平台来打造现代化的传统企业级应用程序以及构建新应用程序。Red Hat OpenShift容器平台就是我们看到许多客户采用的一个示例。
+
+随着越来越多的客户开始在企业中采用容器、NetApp已做好充分准备、可以满足有状态应用程序的持久存储需求以及数据保护、数据安全和数据迁移等传统数据管理需求。但是、可以使用不同的策略、工具和方法来满足这些需求。
+
+**NetApp ONTAP 基于下面列出的存储选项，可为容器和部署提供安全性、数据保护、可靠性和灵活性。
+
+* 内部环境中的自行管理存储：
++
+** NetApp光纤连接存储(FAS)、NetApp全闪存FAS 阵列(AFF)、NetApp全SAN阵列(ASA)和ONTAP Select
+
+
+* 内部部署中由提供商管理的存储：
++
+** NetApp Keystone 提供存储即服务(STaaS)
+
+
+* 云中的自行管理存储：
++
+** NetApp Cloud Volumes ONTAP (CVO)可在超大容量云中提供自行管理的存储
+
+
+* 云中由提供商管理的存储：
++
+** Cloud Volumes Service for Google Cloud (CVS)、Azure NetApp Files (ANF)、Amazon FSx for NetApp ONTAP 可在超云中提供完全托管的存储
+
+
+
+
+image:rhhc-ontap-features.png[""]
+
+**NetApp BlueXP**使您能够从一个控制平台/接口管理所有存储和数据资产。
+
+您可以使用BlueXP创建和管理云存储(例如Cloud Volumes ONTAP 和Azure NetApp Files)、移动、保护和分析数据以及控制许多内部和边缘存储设备。
+
+**NetApp Asta Trident**是一款符合CSI的存储编排程序，支持快速、轻松地使用由上述各种NetApp存储选项提供支持的永久性存储。它是由NetApp维护和支持的开源软件。
+
+image:rhhc-trident-features.png[""]
+
+业务关键型容器工作负载所需的不仅仅是永久性卷。他们的数据管理要求也需要保护和迁移应用程序Kubbernetes对象。
+
+
+NOTE: 除了用户数据之外、应用程序数据还包括Kubenetes对象：以下是一些示例： - Kubenetes对象、例如Pod规格、PVC、部署、服务-自定义配置对象、例如配置映射和密钥-持久数据、例如Snapshot副本、备份、克隆-自定义资源、例如CRS和CRD
+
+**NetApp Asta Control**作为完全托管和自我管理软件提供，可提供流程编排，实现强大的应用程序数据管理。请参见 link:https://docs.netapp.com/us-en/astra-family/["Astra 文档"] 有关Asta系列产品的更多详细信息。
+
+本参考文档使用NetApp Asta Control Center验证了在RedHat OpenShift容器平台上部署的基于容器的应用程序的迁移和保护。此外、解决方案 还提供了有关部署和使用Red Hat高级集群管理(ACM)来管理容器平台的详细信息。本文档还重点介绍了使用Asta Trident CSI配置程序将NetApp存储与Red Hat OpenShift容器平台集成的详细信息。Astra Control Center部署在集线器集群上、用于管理容器应用程序及其永久性存储生命周期。最后、它还提供了一个解决方案 、用于在AWS (ROSA)中使用Amazon FSx for NetApp ONTAP (FSxN)作为永久性存储的受管Red Hat OpenShift集群上对容器工作负载进行复制、故障转移和故障恢复。

@@ -78,8 +78,8 @@ NOTE: 要还原 21 个数据库，大约需要 9 小时。此方法是针对此�
 用于将数据从内部 SQL Server 移动到 Azure NetApp Files 的其他迁移选项包括：
 
 * 断开数据和日志文件，将其复制到 Azure Blob 存储，然后将其附加到 Azure 虚拟机中的 SQL Server ，并使用从 URL 挂载的 ANF 文件共享。
-* 如果您使用的是内部部署的始终可用性组，请使用 https://["添加 Azure 副本向导"^] 在 Azure 中创建副本，然后执行故障转移。
-* 使用 SQL Server https://["事务复制"^] 要将 Azure SQL Server 实例配置为订阅者，请禁用复制并将用户指向 Azure 数据库实例。
+* 如果您使用的是内部部署的始终可用性组，请使用 https://docs.microsoft.com/en-us/previous-versions/azure/virtual-machines/windows/sqlclassic/virtual-machines-windows-classic-sql-onprem-availability["添加 Azure 副本向导"^] 在 Azure 中创建副本，然后执行故障转移。
+* 使用 SQL Server https://docs.microsoft.com/en-us/sql/relational-databases/replication/transactional/transactional-replication["事务复制"^] 要将 Azure SQL Server 实例配置为订阅者，请禁用复制并将用户指向 Azure 数据库实例。
 * 使用 Windows 导入 / 导出服务运送硬盘。
 
 
@@ -89,7 +89,7 @@ NOTE: 要还原 21 个数据库，大约需要 9 小时。此方法是针对此�
 
 备份和恢复是任何 SQL Server 部署的一个重要方面。必须具有适当的安全网，以便与 AOAG 等高可用性解决方案结合使用，从各种数据故障和丢失情形中快速恢复。可以使用 SQL Server 数据库静默工具， Azure 备份（流式）或任何第三方备份工具（例如 Commvault ）对数据库执行应用程序一致的备份，
 
-借助 Azure NetApp Files Snapshot 技术，您可以轻松创建用户数据库的时间点（ PIT ）副本，而不会影响性能或网络利用率。通过此技术，您还可以使用还原卷功能将 Snapshot 副本还原到新卷，或者将受影响的卷快速还原到创建 Snapshot 副本时的状态。与 Azure 备份提供的流式备份不同， Azure NetApp Files 快照过程非常快速高效，可以进行多个每日备份。如果在给定日期内可以创建多个 Snapshot 副本，则 RPO 和 RTO 时间可以显著缩短。要添加应用程序一致性，以便在创建 Snapshot 副本之前数据完好无损并正确地转储到磁盘，请使用 SQL Server 数据库暂停工具 (https://["SCSQLAPI 工具"^]；访问此链接需要 NetApp SSO 登录凭据）。此工具可从 PowerShell 中执行，此工具会暂停 SQL Server 数据库，进而生成应用程序一致的存储 Snapshot 副本进行备份。
+借助 Azure NetApp Files Snapshot 技术，您可以轻松创建用户数据库的时间点（ PIT ）副本，而不会影响性能或网络利用率。通过此技术，您还可以使用还原卷功能将 Snapshot 副本还原到新卷，或者将受影响的卷快速还原到创建 Snapshot 副本时的状态。与 Azure 备份提供的流式备份不同， Azure NetApp Files 快照过程非常快速高效，可以进行多个每日备份。如果在给定日期内可以创建多个 Snapshot 副本，则 RPO 和 RTO 时间可以显著缩短。要添加应用程序一致性，以便在创建 Snapshot 副本之前数据完好无损并正确地转储到磁盘，请使用 SQL Server 数据库暂停工具 (https://mysupport.netapp.com/site/tools/tool-eula/scsqlapi["SCSQLAPI 工具"^]；访问此链接需要 NetApp SSO 登录凭据）。此工具可从 PowerShell 中执行，此工具会暂停 SQL Server 数据库，进而生成应用程序一致的存储 Snapshot 副本进行备份。
 
 * 注： *
 
@@ -98,7 +98,7 @@ NOTE: 要还原 21 个数据库，大约需要 9 小时。此方法是针对此�
 * 通过将文件放置在单独的 Azure NetApp Files 卷上，将其与每个数据库隔离。
 
 
-由于 SCSQL API 的巨大限制， https://["Azure 备份"^] 用于数据保护，以满足 SLA 要求。它可以为 Azure 虚拟机和 Azure NetApp Files 中运行的 SQL Server 提供基于流的备份。Azure Backup 支持 15 分钟的 RPO ，并可频繁进行日志备份和长达一秒的 PIT 恢复。
+由于 SCSQL API 的巨大限制， https://docs.microsoft.com/en-us/azure/backup/backup-azure-sql-database["Azure 备份"^] 用于数据保护，以满足 SLA 要求。它可以为 Azure 虚拟机和 Azure NetApp Files 中运行的 SQL Server 提供基于流的备份。Azure Backup 支持 15 分钟的 RPO ，并可频繁进行日志备份和长达一秒的 PIT 恢复。
 
 
 
@@ -144,7 +144,7 @@ image:sql-srv-anf_image8.png["错误：缺少图形映像"]
 
 === 长期 Snapshot 副本归档
 
-许多组织都必须长期保留数据库文件中的快照数据，这是强制性合规性要求。虽然此 HLD" 不会使用此过程，但可以使用简单的批处理脚本轻松完成此过程 https://["AzCopy"^] 将 Snapshot 目录复制到 Azure Blob 容器。可以使用已计划的任务根据特定计划触发批处理脚本。此过程非常简单，包括以下步骤：
+许多组织都必须长期保留数据库文件中的快照数据，这是强制性合规性要求。虽然此 HLD" 不会使用此过程，但可以使用简单的批处理脚本轻松完成此过程 https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10["AzCopy"^] 将 Snapshot 目录复制到 Azure Blob 容器。可以使用已计划的任务根据特定计划触发批处理脚本。此过程非常简单，包括以下步骤：
 
 . 下载 AzCopy V10 可执行文件。没有要安装的内容，因为它是一个 `exe` 文件。
 . 在容器级别使用具有适当权限的 SAS 令牌来授权 AzCopy 。
@@ -154,7 +154,7 @@ image:sql-srv-anf_image8.png["错误：缺少图形映像"]
 * 注： *
 
 * 在批处理文件中，请确保转义 SAS 令牌中显示的 % 字符。为此，可以在 SAS 令牌字符串中的现有 % 字符旁边添加一个额外的 % 字符。
-* 。 https://["需要安全传输"^] 存储帐户的设置可确定与存储帐户的连接是否使用传输层安全（ Transport Layer Security ， TLS ）进行保护。默认情况下，此设置处于启用状态。以下批处理脚本示例以递归方式将数据从 Snapshot 副本目录复制到指定的 Blob 容器：
+* 。 https://docs.microsoft.com/en-us/azure/storage/common/storage-require-secure-transfer["需要安全传输"^] 存储帐户的设置可确定与存储帐户的连接是否使用传输层安全（ Transport Layer Security ， TLS ）进行保护。默认情况下，此设置处于启用状态。以下批处理脚本示例以递归方式将数据从 Snapshot 副本目录复制到指定的 Blob 容器：
 
 
 ....

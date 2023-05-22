@@ -78,7 +78,7 @@ VMware Cloud (在AWS中)支持使用NFS数据存储库作为补充存储、而FS
 
 . 包含VMDK和应用程序数据的Oracle数据库VM驻留在FSx上、用于ONTAP NFS数据存储库。
 . VMDK驻留在FSx上的Linux和Windows文件服务器VM、用于ONTAP NFS数据存储库。
-. Veeam需要使用特定的TCP端口在备份环境中的服务器和组件之间进行通信。在Veeam备份基础架构组件上、系统会自动创建所需的防火墙规则。有关网络端口要求的完整列表、请参阅的端口部分 https://["适用于VMware vSphere的Veeam备份和复制用户指南"]。
+. Veeam需要使用特定的TCP端口在备份环境中的服务器和组件之间进行通信。在Veeam备份基础架构组件上、系统会自动创建所需的防火墙规则。有关网络端口要求的完整列表、请参阅的端口部分 https://helpcenter.veeam.com/docs/backup/vsphere/used_ports.html?zoom_highlight=network+ports&ver=120["适用于VMware vSphere的Veeam备份和复制用户指南"]。
 
 
 ====
@@ -114,11 +114,11 @@ image::aws-vmc-veeam-00.png[解决方案 架构图]
 
 我们将通过FSx创建ONTAP 文件系统、挂载要用作备份存储库的iSCSI卷、创建和运行备份作业以及执行VM和数据库还原。
 
-有关FSx for NetApp ONTAP 的详细信息、请参见 https://["FSx for ONTAP 用户指南"^]。
+有关FSx for NetApp ONTAP 的详细信息、请参见 https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html["FSx for ONTAP 用户指南"^]。
 
-有关Veeam备份和复制的详细信息、请参见 https://["Veeam帮助中心技术文档"^] 站点
+有关Veeam备份和复制的详细信息、请参见 https://www.veeam.com/documentation-guides-datasheets.html?productId=8&version=product%3A8%2F221["Veeam帮助中心技术文档"^] 站点
 
-有关将Veeam Backup and Replication与VMware Cloud on AWS结合使用时的注意事项和限制、请参见 https://["基于AWS的VMware Cloud和基于Dell EMC支持的VMware Cloud。注意事项和限制"]。
+有关将Veeam Backup and Replication与VMware Cloud on AWS结合使用时的注意事项和限制、请参见 https://www.veeam.com/kb2414["基于AWS的VMware Cloud和基于Dell EMC支持的VMware Cloud。注意事项和限制"]。
 
 
 
@@ -128,11 +128,11 @@ Veeam代理服务器是Veeam Backup & Replication软件的一个组件、充当�
 
 在选择Veeam代理服务器设计时、请务必考虑并发任务的数量以及所需的传输模式或存储访问类型。
 
-有关代理服务器数量的规模估算及其系统要求、请参见 https://["Veeam VMware vSphere最佳实践指南"]。
+有关代理服务器数量的规模估算及其系统要求、请参见 https://bp.veeam.com/vbr/2_Design_Structures/D_Veeam_Components/D_backup_proxies/vmware_proxies.html["Veeam VMware vSphere最佳实践指南"]。
 
 Veeam Data Mover是Veeam代理服务器的一个组件、它利用传输模式从源获取VM数据并将其传输到目标。传输模式是在配置备份作业期间指定的。通过使用直接存储访问、可以提高从NFS数据存储库备份的效率。
 
-有关运输模式的详细信息、请参阅 https://["适用于VMware vSphere的Veeam备份和复制用户指南"]。
+有关运输模式的详细信息、请参阅 https://helpcenter.veeam.com/docs/backup/vsphere/transport_modes.html?ver=120["适用于VMware vSphere的Veeam备份和复制用户指南"]。
 
 在下面的步骤中、我们将介绍如何在VMware Cloud SDDC中的Windows VM上部署Veeam代理服务器。
 
@@ -214,7 +214,7 @@ image::aws-vmc-veeam-03.png[填写文件系统信息]
 NOTE: 在FSx for ONTAP 上创建iSCSI LUN是一个多步骤过程。创建卷的第一步可以在Amazon FSx控制台中完成、也可以使用NetApp ONTAP 命令行界面完成。
 
 
-NOTE: 有关使用FSx for ONTAP 的详细信息、请参见 https://["FSx for ONTAP 用户指南"^]。
+NOTE: 有关使用FSx for ONTAP 的详细信息、请参见 https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html["FSx for ONTAP 用户指南"^]。
 
 . 在NetApp ONTAP 命令行界面中、使用以下命令创建初始卷：
 +
@@ -282,7 +282,7 @@ image::aws-vmc-veeam-16.png[选择挂载服务器]
 
 === 配置Veeam备份作业
 
-应使用上一节中的备份系统信息栏创建备份作业。创建备份作业是任何存储管理员的常规任务、此处不会介绍所有步骤。有关在Veeam中创建备份作业的详细信息、请参见 https://["Veeam帮助中心技术文档"^]。
+应使用上一节中的备份系统信息栏创建备份作业。创建备份作业是任何存储管理员的常规任务、此处不会介绍所有步骤。有关在Veeam中创建备份作业的详细信息、请参见 https://www.veeam.com/documentation-guides-datasheets.html?productId=8&version=product%3A8%2F221["Veeam帮助中心技术文档"^]。
 
 在此解决方案 中、为以下项创建了单独的备份作业：
 
@@ -313,7 +313,7 @@ image::aws-vmc-veeam-18.png[长期保留策略]
 
 使用Veeam执行完全还原是执行应用程序还原的第一步。我们验证了已启动的VM的完全恢复以及所有服务均正常运行。
 
-还原服务器是任何存储管理员职责的正常组成部分、此处不会介绍所有步骤。有关在Veeam中执行完全恢复的更多完整信息、请参见 https://["Veeam帮助中心技术文档"^]。
+还原服务器是任何存储管理员职责的正常组成部分、此处不会介绍所有步骤。有关在Veeam中执行完全恢复的更多完整信息、请参见 https://www.veeam.com/documentation-guides-datasheets.html?productId=8&version=product%3A8%2F221["Veeam帮助中心技术文档"^]。
 
 
 
@@ -358,7 +358,7 @@ image::aws-vmc-veeam-24.png[监控SQL Server恢复过程]
 
 
 ====
-有关使用Veeam Explorer执行SQL Server还原操作的详细信息、请参阅中的Microsoft SQL Server一节 https://["《Veeam Explorers用户指南》"]。
+有关使用Veeam Explorer执行SQL Server还原操作的详细信息、请参阅中的Microsoft SQL Server一节 https://helpcenter.veeam.com/docs/backup/explorers/vesql_user_guide.html?ver=120["《Veeam Explorers用户指南》"]。
 
 
 
@@ -366,7 +366,7 @@ image::aws-vmc-veeam-24.png[监控SQL Server恢复过程]
 
 Veeam Explorer for Oracle数据库支持使用即时恢复执行标准Oracle数据库还原或无中断还原。它还支持发布数据库、以便快速访问、恢复Data Guard数据库以及从RMAN备份中恢复。
 
-有关使用Veeam Explorer执行Oracle数据库还原操作的详细信息、请参阅中的Oracle一节 https://["《Veeam Explorers用户指南》"]。
+有关使用Veeam Explorer执行Oracle数据库还原操作的详细信息、请参阅中的Oracle一节 https://helpcenter.veeam.com/docs/backup/explorers/veor_user_guide.html?ver=120["《Veeam Explorers用户指南》"]。
 
 .使用Veeam Explorer还原Oracle数据库
 [%collapsible]
@@ -457,7 +457,7 @@ VMware Cloud是一个功能强大的平台、用于运行业务关键型应用�
 
 要详细了解此解决方案 中提供的技术、请参阅以下追加信息。
 
-* https://["FSx for ONTAP 用户指南"^]
-* https://["Veeam帮助中心技术文档"^]
-* https://["VMware Cloud on AWS支持。注意事项和限制"]
+* https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html["FSx for ONTAP 用户指南"^]
+* https://www.veeam.com/documentation-guides-datasheets.html?productId=8&version=product%3A8%2F221["Veeam帮助中心技术文档"^]
+* https://www.veeam.com/kb2414["VMware Cloud on AWS支持。注意事项和限制"]
 

@@ -59,7 +59,9 @@ image:aws_ora_fsx_ec2_stor_13.PNG["错误：缺少图形映像"]
 
 == NFS 配置
 
-最常见的操作系统Linux具有原生 NFS功能。Oracle提供的Direct NFS (DNFS)客户端本机集成到Oracle中。Oracle支持NFSv3的时间已超过20年、而Oracle 12.1.0.2及更高版本支持NFSv4。使用NetApp自动化工具包自动部署Oracle会自动在NFSv3上配置DNFS。
+最常见的操作系统Linux具有原生 NFS功能。Oracle提供的Direct NFS (DNFS)客户端本机集成到Oracle中。Oracle支持NFSv3已超过20年。所有Oracle版本的NFSv3均支持DNFS。遵循NFSv4标准的所有操作系统均支持NFSv4。NFSv4的DNFS支持需要Oracle 12.1.0.2或更高版本。NFSv4.1需要特定的操作系统支持。有关受支持的操作系统、请参见NetApp互操作性表工具(IMT)。NFSv4.1的DNFS支持需要Oracle 19.3.0.0或更高版本。
+
+使用NetApp自动化工具包自动部署Oracle会自动在NFSv3上配置DNFS。
 
 需要考虑的其他因素：
 
@@ -79,7 +81,7 @@ image:aws_ora_fsx_ec2_nfs_01.PNG["错误：缺少图形映像"]
 
 
 
-NOTE: 在使用DNFS之前、请验证是否已安装Oracle文档1495104.1中所述的修补程序。从Oracle 12c开始、DNFS支持NFSv3、NFSv4和NFSv4.1。NetApp支持策略涵盖所有客户端的v3和v4、但在编写时、不支持将NFSv4.1与Oracle DNFS结合使用。
+NOTE: 在使用DNFS之前、请验证是否已安装Oracle文档1495104.1中所述的修补程序。NetApp针对NFSv3和NFSv4的支持列表不包括特定的操作系统。支持所有符合RFC的操作系统。在联机IMT 中搜索NFSv3或NFSv4支持时、请勿选择特定操作系统、因为不会显示任何匹配项。常规策略隐式支持所有操作系统。
 
 
 

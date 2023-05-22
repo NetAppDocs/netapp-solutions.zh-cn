@@ -22,11 +22,11 @@ link:ncvs-gc-data-plane-architecture.html["先前版本：数据平面架构。"
 
 == Google Cloud网络
 
-Google Cloud按中所述在网络级别对流量进行加密 https://["传输中加密"^] 在Google文档中。如"云卷服务架构"一节所述、Cloud Volumes Service 是通过NetApp控制的PSA生产商项目交付的。
+Google Cloud按中所述在网络级别对流量进行加密 https://cloud.google.com/security/encryption-in-transit["传输中加密"^] 在Google文档中。如"云卷服务架构"一节所述、Cloud Volumes Service 是通过NetApp控制的PSA生产商项目交付的。
 
 对于CVS-SW、生产者租户运行Google VM来提供服务。Google会自动对用户VM和Cloud Volumes Service VM之间的流量进行加密。
 
-虽然在网络层上、CVS-Performance的数据路径未完全加密、但NetApp和Google会结合使用 https://["IEEE 802.1AE加密(MAC秒)"^]， https://["封装"^] (数据加密)和受物理限制的网络、用于保护Cloud Volumes Service CVS-Performance服务类型与Google Cloud之间传输的数据。
+虽然在网络层上、CVS-Performance的数据路径未完全加密、但NetApp和Google会结合使用 https://1.ieee802.org/security/802-1ae/["IEEE 802.1AE加密(MAC秒)"^]， https://datatracker.ietf.org/doc/html/rfc2003["封装"^] (数据加密)和受物理限制的网络、用于保护Cloud Volumes Service CVS-Performance服务类型与Google Cloud之间传输的数据。
 
 
 
@@ -38,7 +38,7 @@ NFS和SMB NAS协议可在协议层提供可选的传输加密。
 
 === SMB加密
 
-https://["SMB加密"^] 为SMB数据提供端到端加密、并防止数据在不可信的网络上被窃听。您可以同时为客户端/服务器数据连接(仅适用于具有SMB3.x功能的客户端)和服务器/域控制器身份验证启用加密。
+https://docs.microsoft.com/en-us/windows-server/storage/file-server/smb-security["SMB加密"^] 为SMB数据提供端到端加密、并防止数据在不可信的网络上被窃听。您可以同时为客户端/服务器数据连接(仅适用于具有SMB3.x功能的客户端)和服务器/域控制器身份验证启用加密。
 
 启用SMB加密后、不支持加密的客户端将无法访问共享。
 
@@ -48,13 +48,13 @@ Cloud Volumes Service 支持使用RC4 HMAC、AES-128-CTS-HMAC-SHA1和AES-256-CTS
 
 === NFSv4.1 Kerberos
 
-对于NFSv4.1、CVS-Performance可提供Kerberos身份验证、如中所述 https://["RFC7530"^]。您可以按卷启用Kerberos。
+对于NFSv4.1、CVS-Performance可提供Kerberos身份验证、如中所述 https://datatracker.ietf.org/doc/html/rfc7530["RFC7530"^]。您可以按卷启用Kerberos。
 
 当前最强的Kerberos加密类型为AES-256-CTS-HMAC-SHA1。NetApp Cloud Volumes Service 支持适用于NFS的AES-256-CTS-HMAC-SHA1、AES-128-CTS-HMAC-SHA1、DES3和DES。它还支持对CIFS/SMB流量使用ARCFOUR-HMAC (RC4)、但不支持对NFS使用。
 
 Kerberos为NFS挂载提供了三种不同的安全级别、这些安全级别可以选择Kerberos安全性的强程度。
 
-根据RedHat的要求 https://["通用挂载选项"^] 文档：
+根据RedHat的要求 https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/storage_administration_guide/s1-nfs-client-config-options["通用挂载选项"^] 文档：
 
 ....
 sec=krb5 uses Kerberos V5 instead of local UNIX UIDs and GIDs to authenticate users.

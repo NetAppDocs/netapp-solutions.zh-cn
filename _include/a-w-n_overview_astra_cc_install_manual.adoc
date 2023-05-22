@@ -1,0 +1,209 @@
+= 
+:allow-uri-read: 
+
+
+. 登录到 NetApp 支持站点并下载最新版本的 NetApp Astra 控制中心。为此，您需要在 NetApp 帐户中附加许可证。下载完 tarball 后，将其传输到管理工作站。
++
+
+NOTE: 要开始获取 Astra Control 的试用许可证，请访问 https://cloud.netapp.com/astra-register["Astra 注册站点"^]。
+
+. 打开 tar ball 的包装并将工作目录更改为生成的文件夹。
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ tar -vxzf astra-control-center-21.12.60.tar.gz
+[netapp-user@rhel7 ~]$ cd astra-control-center-21.12.60
+----
+. 开始安装之前，请将 Astra Control Center 映像推送到映像注册表。您可以选择使用 Docker 或 Podman 执行此操作，此步骤将提供这两者的说明。
++
+[]
+====
+.Podman
+.. 将 ‘re名称为组织 / 命名空间 / 项目的注册表 FQDN 导出为环境变量 "gregistry" 。
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ export REGISTRY=astra-registry.apps.ocp-vmw.cie.netapp.com/netapp-astra
+----
+.. 登录到注册表。
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ podman login -u ocp-user -p password --tls-verify=false astra-registry.apps.ocp-vmw.cie.netapp.com
+----
++
+
+NOTE: 如果使用 `kubeadmin` user 登录到专用注册表，请使用 token 代替 password - `podman login -u Ocp-user -p token -tls-verify=false astra-registry.apps.ocp-vmw.cie.netapp.com` 。
+
++
+
+NOTE: 或者、您也可以创建服务帐户、分配注册表编辑器和/或注册表查看器角色(取决于您是否需要推/拉访问)、并使用服务帐户的令牌登录到注册表。
+
+.. 创建Shell脚本文件并将以下内容粘贴到其中。
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ vi push-images-to-registry.sh
+
+for astraImageFile in $(ls images/*.tar) ; do
+  # Load to local cache. And store the name of the loaded image trimming the 'Loaded images: '
+  astraImage=$(podman load --input ${astraImageFile} | sed 's/Loaded image(s): //')
+  astraImage=$(echo ${astraImage} | sed 's!localhost/!!')
+  # Tag with local image repo.
+  podman tag ${astraImage} ${REGISTRY}/${astraImage}
+  # Push to the local repo.
+  podman push ${REGISTRY}/${astraImage}
+done
+----
++
+
+NOTE: 如果您的注册表使用的是不可信的证书，请编辑 shell 脚本并对 podman 推送命令 `podman 推送 $registry/$ （ echo $astraImage ` s/`^^` ………………………………………………………………………………………………………………………………………………
+
+.. 使文件可执行
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ chmod +x push-images-to-registry.sh
+----
+.. 执行 shell 脚本。
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ ./push-images-to-registry.sh
+----
+
+
+====
++
+[]
+====
+.Docker
+.. 将 ‘re名称为组织 / 命名空间 / 项目的注册表 FQDN 导出为环境变量 "gregistry" 。
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ export REGISTRY=astra-registry.apps.ocp-vmw.cie.netapp.com/netapp-astra
+----
+.. 登录到注册表。
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ docker login -u ocp-user -p password astra-registry.apps.ocp-vmw.cie.netapp.com
+----
++
+
+NOTE: 如果您使用`kubeadmin`用户登录到专用注册表、请使用令牌而非密码-`docker login -u Ocp-user -p token astra-registry.apps.ocp-vmw.cie.netapp.com`。
+
++
+
+NOTE: 或者、您也可以创建服务帐户、分配注册表编辑器和/或注册表查看器角色(取决于您是否需要推/拉访问)、并使用服务帐户的令牌登录到注册表。
+
+.. 创建Shell脚本文件并将以下内容粘贴到其中。
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ vi push-images-to-registry.sh
+
+for astraImageFile in $(ls images/*.tar) ; do
+  # Load to local cache. And store the name of the loaded image trimming the 'Loaded images: '
+  astraImage=$(docker load --input ${astraImageFile} | sed 's/Loaded image: //')
+  astraImage=$(echo ${astraImage} | sed 's!localhost/!!')
+  # Tag with local image repo.
+  docker tag ${astraImage} ${REGISTRY}/${astraImage}
+  # Push to the local repo.
+  docker push ${REGISTRY}/${astraImage}
+done
+----
+.. 使文件可执行
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ chmod +x push-images-to-registry.sh
+----
+.. 执行 shell 脚本。
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ ./push-images-to-registry.sh
+----
+
+
+====
+
+
+. 使用非公共信任的私有映像注册表时，请将映像注册表 TLS 证书上传到 OpenShift 节点。为此，请使用 TLS 证书在 OpenShift-config 命名空间中创建一个配置映射，并将其修补到集群映像配置中以使此证书可信。
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ oc create configmap default-ingress-ca -n openshift-config --from-file=astra-registry.apps.ocp-vmw.cie.netapp.com=tls.crt
+
+[netapp-user@rhel7 ~]$ oc patch image.config.openshift.io/cluster --patch '{"spec":{"additionalTrustedCA":{"name":"default-ingress-ca"}}}' --type=merge
+----
++
+
+NOTE: 如果您使用的是包含传入操作员的默认 TLS 证书的 OpenShift 内部注册表和路由，则仍需要按照上一步将这些证书修补到路由主机名。要从入口运算符提取证书、您可以使用命令`oc extract secret/router -ca -keys=tls.crt -n OpenShift-Inuse-operator`。
+
+. 为 Astra 控制中心创建命名空间 `NetApp-Acc-operator` 。
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ oc create ns netapp-acc-operator
+
+namespace/netapp-acc-operator created
+----
+. 使用凭据创建一个密钥、以登录到`NetApp-Acc-operator`命名空间中的映像注册表。
++
+[listing]
+----
+[netapp-user@rhel7 ~]$ oc create secret docker-registry astra-registry-cred --docker-server=astra-registry.apps.ocp-vmw.cie.netapp.com --docker-username=ocp-user --docker-password=password -n netapp-acc-operator
+
+secret/astra-registry-cred created
+----
+. 使用 cluster-admin 访问权限登录到 Red Hat OpenShift GUI 控制台。
+. 从 "Perspective" 下拉列表中选择 "Administrator" 。
+. 导航到 Operators > OperatorHub 并搜索 Astra 。
++
+image:redhat_openshift_image45.JPG["OpenShift 操作员中心"]
+
+. 选择`NetApp-Acc-operator`区块、然后单击安装。
++
+image:redhat_openshift_image123.jpg["Accc 运算符图块"]
+
+. 在Install Operator屏幕上、接受所有默认参数、然后单击Install。
++
+image:redhat_openshift_image124.jpg["会计操作员详细信息"]
+
+. 等待操作员安装完成。
++
+image:redhat_openshift_image125.jpg["附件操作员等待安装"]
+
+. 操作员安装成功后、导航到单击View Operator。
++
+image:redhat_openshift_image126.jpg["附件操作员安装完成"]
+
+. 然后单击操作符中Astra Control Center图块中的Create Instance。
++
+image:redhat_openshift_image127.jpg["创建 Acc 实例"]
+
+. 填写`Create AstraControlCenter` Form字段、然后单击Create。
++
+.. 也可以编辑 Astra Control Center 实例名称。
+.. 也可以启用或禁用自动支持。建议保留自动支持功能。
+.. 输入 Astra 控制中心的 FQDN 。
+.. 输入 Astra 控制中心版本；默认情况下会显示最新版本。
+.. 输入Astra控制中心的帐户名称和管理员详细信息、例如名字、姓氏和电子邮件地址。
+.. 输入卷回收策略，默认值为 Retain 。
+.. 在映像注册表中、输入注册表的FQDN以及在将映像推送到注册表时提供的组织名称(在此示例中为`astra-registry.apps.ocp-vmw.cie.netapp.com/netapp-astra`)。
+.. 如果您使用的注册表需要进行身份验证、请在映像注册表部分输入机密名称。
+.. 为Astra控制中心资源限制配置扩展选项。
+.. 如果要将 PVC 放置在非默认存储类上，请输入存储类名称。
+.. 定义 CRD 处理首选项。
++
+image:redhat_openshift_image128.jpg["创建 Acc 实例"]
+
++
+image:redhat_openshift_image129.jpg["创建 Acc 实例"]
+
+
+
+

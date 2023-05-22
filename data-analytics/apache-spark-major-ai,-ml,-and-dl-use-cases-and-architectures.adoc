@@ -24,19 +24,19 @@ link:apache-spark-use-cases-summary.html["先前：使用情形摘要。"]
 
 以下列表列出了数据科学界在不同开发级别下采用的最受欢迎的开源NLP库：
 
-* https://["自然语言工具包(NLTK)"^]。适用于所有NLP技术的完整工具包。自21世纪初以来、该系统一直保持不变。
-* https://["文本Blob"^]。基于NLTK和模式构建的简单易用的NLP工具Python API。
-* https://["斯坦福核心NLP"^]。由斯坦福NLP集团开发的Java中的NLP服务和软件包。
-* https://["Gensim"^]。人类主题建模最初是作为一组Python脚本在捷克数字数学库项目中推出的。
-* https://["空间"^]。采用Python和Cython的端到端工业NLP工作流、并为互感器提供GPU加速。
-* https://["快速文本"^]。一个免费的轻型开源NLP库、用于由Facebook的AI Research (Ffair)实验室创建的字词学习嵌入和句子分类。
+* https://www.nltk.org/["自然语言工具包(NLTK)"^]。适用于所有NLP技术的完整工具包。自21世纪初以来、该系统一直保持不变。
+* https://textblob.readthedocs.io/en/dev/["文本Blob"^]。基于NLTK和模式构建的简单易用的NLP工具Python API。
+* https://stanfordnlp.github.io/CoreNLP/["斯坦福核心NLP"^]。由斯坦福NLP集团开发的Java中的NLP服务和软件包。
+* https://radimrehurek.com/gensim/["Gensim"^]。人类主题建模最初是作为一组Python脚本在捷克数字数学库项目中推出的。
+* https://spacy.io/["空间"^]。采用Python和Cython的端到端工业NLP工作流、并为互感器提供GPU加速。
+* https://fasttext.cc/["快速文本"^]。一个免费的轻型开源NLP库、用于由Facebook的AI Research (Ffair)实验室创建的字词学习嵌入和句子分类。
 
 
-SPARK NLP是一个统一的解决方案 、可满足所有NLP任务和要求、可为实际生产用例提供可扩展、高性能和高准确性的NLP驱动软件。它利用传输学习、在研究领域和跨行业实施最新的一流算法和模型。由于Spark不能全面支持上述库、因此、Spark NLP是基于构建的 https://["激发ML"^] 利用Spark的通用内存分布式数据处理引擎作为任务关键型生产工作流的企业级NLP库。其标注器利用基于规则的算法、机器学习和TensorFlow为深度学习实施提供支持。其中包括常见的NLP任务、包括但不限于令牌化、lemization、stemming、部分语音标记、命名实体识别、 拼写检查和情感分析。
+SPARK NLP是一个统一的解决方案 、可满足所有NLP任务和要求、可为实际生产用例提供可扩展、高性能和高准确性的NLP驱动软件。它利用传输学习、在研究领域和跨行业实施最新的一流算法和模型。由于Spark不能全面支持上述库、因此、Spark NLP是基于构建的 https://spark.apache.org/docs/latest/ml-guide.html["激发ML"^] 利用Spark的通用内存分布式数据处理引擎作为任务关键型生产工作流的企业级NLP库。其标注器利用基于规则的算法、机器学习和TensorFlow为深度学习实施提供支持。其中包括常见的NLP任务、包括但不限于令牌化、lemization、stemming、部分语音标记、命名实体识别、 拼写检查和情感分析。
 
 Transformers (Bert)提供的双向编码器表示是一种基于转换器的机器学习技术、适用于NLP。它推广了预训练和微调的概念。Bert中的转换器架构源自机器翻译、与基于神经网络(RNN)的经常性语言模型相比、该模型更好地模拟长期依赖关系。它还引入了屏蔽语言建模(Masked Language Modeling、MLM)任务、其中随机屏蔽了所有令牌的15%、模型对其进行预测、从而实现了真正的双向性。
 
-由于该领域的专业语言和缺少标记数据、财务情绪分析具有挑战性。 https://["完成"^]一种基于经过预先培训的Bert的语言模式、该语言模式已经过域调整 https://["Reuters TRC2"^]一种财务资料、并使用标记的数据( https://["金融租赁银行"^])进行财务状况分类。研究人员从新闻文章中提取了4、500句话、并使用了财务术语。然后、16名具有财务背景的专家和硕士学生将这些句子标记为肯定、中立和否定。我们构建了一个端到端Spark工作流、用于分析2016年至2020年排名前10位的纳斯达克公司收益电话记录的情绪、使用FinBeert和另外两个经过预先培训的管道( https://["金融新闻情感分析"^]， https://["说明文档DL"^])。
+由于该领域的专业语言和缺少标记数据、财务情绪分析具有挑战性。 https://nlp.johnsnowlabs.com/2021/11/03/bert_sequence_classifier_finbert_en.html["完成"^]一种基于经过预先培训的Bert的语言模式、该语言模式已经过域调整 https://trec.nist.gov/data/reuters/reuters.html["Reuters TRC2"^]一种财务资料、并使用标记的数据( https://www.researchgate.net/publication/251231364_FinancialPhraseBank-v10["金融租赁银行"^])进行财务状况分类。研究人员从新闻文章中提取了4、500句话、并使用了财务术语。然后、16名具有财务背景的专家和硕士学生将这些句子标记为肯定、中立和否定。我们构建了一个端到端Spark工作流、用于分析2016年至2020年排名前10位的纳斯达克公司收益电话记录的情绪、使用FinBeert和另外两个经过预先培训的管道( https://nlp.johnsnowlabs.com/2021/11/11/classifierdl_bertwiki_finance_sentiment_pipeline_en.html["金融新闻情感分析"^]， https://nlp.johnsnowlabs.com/2020/03/19/explain_document_dl.html["说明文档DL"^])。
 
 适用于Spark NLP的底层深度学习引擎是TensorFlow、它是一个端到端的开源机器学习平台、可轻松构建模型、随时随地进行强大的ML生产以及进行强大的研究试验。因此、在Spark `Yarn集群`模式下执行管道时、我们基本上是在集群上挂载的网络连接存储中运行分布式TensorFlow、并在一个主节点和多个辅助节点之间并行处理数据和模型。
 
@@ -44,13 +44,13 @@ Transformers (Bert)提供的双向编码器表示是一种基于转换器的机�
 
 == Horovod分布式培训
 
-使用TeraGen、TeraSort、TeraValidate和DFSIO (读写)执行与MapReduce相关的性能的核心Hadoop验证。TeraGen和TeraSort验证结果显示在中 http://["TR-3969：《适用于Hadoop的NetApp解决方案》"^] 对于E系列和AFF 的"存储分层"一节(xref)。
+使用TeraGen、TeraSort、TeraValidate和DFSIO (读写)执行与MapReduce相关的性能的核心Hadoop验证。TeraGen和TeraSort验证结果显示在中 http://www.netapp.com/us/media/tr-3969.pdf["TR-3969：《适用于Hadoop的NetApp解决方案》"^] 对于E系列和AFF 的"存储分层"一节(xref)。
 
-根据客户的要求、我们认为使用Spark进行分布式培训是各种使用情形中最重要的一个。在本文档中、我们使用了 https://["Hovorod on Spark"^] 使用NetApp全闪存FAS (AFF)存储控制器、Azure NetApp Files 和StorageGRID 验证NetApp内部部署、云原生和混合云解决方案的Spark性能。
+根据客户的要求、我们认为使用Spark进行分布式培训是各种使用情形中最重要的一个。在本文档中、我们使用了 https://horovod.readthedocs.io/en/stable/spark_include.html["Hovorod on Spark"^] 使用NetApp全闪存FAS (AFF)存储控制器、Azure NetApp Files 和StorageGRID 验证NetApp内部部署、云原生和混合云解决方案的Spark性能。
 
 Horovod on Spark软件包为Horovod提供了一个方便的包装、使在Spark集群中运行分布式训练工作负载变得简单、从而实现了一个紧密的模型设计环路、其中数据处理、模型训练和模型评估都在训练和推理数据所在的Spark中完成。
 
-在Spark上运行Horovod有两种API：一种是高级估算器API、另一种是运行API。虽然这两种方法都使用相同的底层机制来启动Horovod on Spark执行程序、但Estimator API可对数据处理、模型训练循环、模型检查点、指标收集和分布式培训进行抽象化。我们使用Horovod Spark Estimators、TensorFlow和Keras基于进行端到端数据准备和分布式培训工作流 https://["Kagle Rossmann商店销售人员"^] 竞争。
+在Spark上运行Horovod有两种API：一种是高级估算器API、另一种是运行API。虽然这两种方法都使用相同的底层机制来启动Horovod on Spark执行程序、但Estimator API可对数据处理、模型训练循环、模型检查点、指标收集和分布式培训进行抽象化。我们使用Horovod Spark Estimators、TensorFlow和Keras基于进行端到端数据准备和分布式培训工作流 https://www.kaggle.com/c/rossmann-store-sales["Kagle Rossmann商店销售人员"^] 竞争。
 
 可以在部分中找到脚本`keras_sock_horovod_rossmann_estimator.py` link:apache-spark-python-scripts-for-each-major-use-case.html["适用于每个主要用例的Python脚本。"] 它包含三个部分：
 
@@ -65,9 +65,9 @@ Horovod on Spark软件包为Horovod提供了一个方便的包装、使在Spark�
 
 == 利用Keras进行CTR预测的多员工深度学习
 
-随着 ML 平台和应用程序的最新发展，我们现在非常关注大规模学习。点击率（ CTR ）是指每 100 次在线广告曝光的平均点击次数（以百分比表示）。它已广泛用作各种行业垂直市场和用例的关键指标，包括数字营销，零售，电子商务和服务提供商。请参见我们的 https://["TR-4904 ： Azure 中的分布式培训—点击率预测"^] 有关CTR应用程序以及使用Kubernetes实施的端到端Cloud AI工作流、分布式数据ETL以及使用dask和CUDA ML的模型培训的更多详细信息。
+随着 ML 平台和应用程序的最新发展，我们现在非常关注大规模学习。点击率（ CTR ）是指每 100 次在线广告曝光的平均点击次数（以百分比表示）。它已广泛用作各种行业垂直市场和用例的关键指标，包括数字营销，零售，电子商务和服务提供商。请参见我们的 https://docs.netapp.com/us-en/netapp-solutions/ai/aks-anf_introduction.html["TR-4904 ： Azure 中的分布式培训—点击率预测"^] 有关CTR应用程序以及使用Kubernetes实施的端到端Cloud AI工作流、分布式数据ETL以及使用dask和CUDA ML的模型培训的更多详细信息。
 
-在本技术报告中、我们使用了的变体 https://["Trigeo Terabyte单击Logs dataset"^] (请参见TR-4904)、针对使用Keras的多员工分布式深度学习、使用深度和跨网(深度和跨网)模型构建Spark工作流、将其在日志丢失错误功能方面的性能与基线Spark ML物流回归模型进行比较。DCN可以 高效地捕获有界限的有效功能交互、学习高度非线性的交互、无需手动执行功能工程或全面搜索、并且计算成本较低。
+在本技术报告中、我们使用了的变体 https://labs.criteo.com/2013/12/download-terabyte-click-logs-2/["Trigeo Terabyte单击Logs dataset"^] (请参见TR-4904)、针对使用Keras的多员工分布式深度学习、使用深度和跨网(深度和跨网)模型构建Spark工作流、将其在日志丢失错误功能方面的性能与基线Spark ML物流回归模型进行比较。DCN可以 高效地捕获有界限的有效功能交互、学习高度非线性的交互、无需手动执行功能工程或全面搜索、并且计算成本较低。
 
 网络级推荐系统的数据大多是离散的、分类的、导致功能空间庞大而稀疏、这对功能探索来说是一项挑战。这样、大多数大型系统就只能使用诸如物流回归等线性模型。但是、确定常见的预测功能并同时探索未知或罕见的交叉功能是做出良好预测的关键。线性模型简单、可解释且易于扩展、但其表达能力有限。
 
@@ -75,9 +75,9 @@ Horovod on Spark软件包为Horovod提供了一个方便的包装、使在Spark�
 
 深度神经网络(DNN)有望捕获功能之间非常复杂的交互。但是、与DCN相比、它需要的参数数量几乎要多一个数量级、无法明确形成交叉功能、并且可能无法高效地了解某些类型的功能交互。跨网络可节省内存并易于实施。将交叉组件和DNN组件联合训练在一起、有效地捕获预测性功能交互、并在Criteo CTR数据集上提供一流的性能。
 
-一个型号的DCN-首先是一个嵌入层和堆栈层、然后是一个跨网络和一个并行的深度网络。然后是最后一个组合层、该层将两个网络的输出相结合。您的输入数据可以是具有稀疏和密集功能的向量。在Spark中、这两者都是如此 https://["毫升"^] 和 https://["mllib"^] 库的类型为`SparseVector`。因此、用户必须区分这两者、并在调用各自的功能和方法时要小心谨慎。在CTR预测等网络级建议系统中、输入主要是分类功能、例如`‘国家/地区=美国'`。此类功能通常编码为单热向量、例如、`‘`、1、0、…'。使用`SparseVector`的单热编码(OHEE)在处理实际数据集时非常有用、因为这些数据集的词义不断变化且不断增长。我们在中修改了示例 https://["DeepCTR"^] 要处理大型卷标、请在我们的DCN"嵌入和堆栈"层中创建嵌入载体。
+一个型号的DCN-首先是一个嵌入层和堆栈层、然后是一个跨网络和一个并行的深度网络。然后是最后一个组合层、该层将两个网络的输出相结合。您的输入数据可以是具有稀疏和密集功能的向量。在Spark中、这两者都是如此 https://spark.apache.org/docs/3.1.1/api/python/reference/api/pyspark.ml.linalg.SparseVector.html["毫升"^] 和 https://spark.apache.org/docs/3.1.1/api/python/reference/api/pyspark.mllib.linalg.SparseVector.html["mllib"^] 库的类型为`SparseVector`。因此、用户必须区分这两者、并在调用各自的功能和方法时要小心谨慎。在CTR预测等网络级建议系统中、输入主要是分类功能、例如`‘国家/地区=美国'`。此类功能通常编码为单热向量、例如、`‘`、1、0、…'。使用`SparseVector`的单热编码(OHEE)在处理实际数据集时非常有用、因为这些数据集的词义不断变化且不断增长。我们在中修改了示例 https://github.com/shenweichen/DeepCTR["DeepCTR"^] 要处理大型卷标、请在我们的DCN"嵌入和堆栈"层中创建嵌入载体。
 
-。 https://["Criteo显示广告数据集"^] 预测广告点击率。它具有13个整数功能和26个分类功能、其中每个类别的基数都很高。对于此数据集、由于输入大小较大、光泽度提高了0.001实际上是一项显著的改进。如果对大型用户群的预测准确性稍作提高、可能会导致公司收入大幅增加。该数据集包含7天内的11 GB用户日志、相当于大约4、100万条记录。我们使用Spark `dataFrame.Random拆 分()函数`随机拆分数据进行训练(80%)、交叉验证(10%)、其余10%用于测试。
+。 https://www.kaggle.com/competitions/criteo-display-ad-challenge/data["Criteo显示广告数据集"^] 预测广告点击率。它具有13个整数功能和26个分类功能、其中每个类别的基数都很高。对于此数据集、由于输入大小较大、光泽度提高了0.001实际上是一项显著的改进。如果对大型用户群的预测准确性稍作提高、可能会导致公司收入大幅增加。该数据集包含7天内的11 GB用户日志、相当于大约4、100万条记录。我们使用Spark `dataFrame.Random拆 分()函数`随机拆分数据进行训练(80%)、交叉验证(10%)、其余10%用于测试。
 
 在与Keras的TensorFlow上实施了DCN。在使用DCN-CN-CN-CN-CN-CN-CN-CN-A实施模型培训过程中、主要包含四个
 
@@ -87,7 +87,7 @@ Horovod on Spark软件包为Horovod提供了一个方便的包装、使在Spark�
 * *超参数。*我们根据对隐藏层数、隐藏层大小、初始学习速率和跨层数的网格搜索来报告结果。隐藏层的数量从2到5不等、隐藏层大小从32到1024不等。对于DCN、跨层数量为1到6。初始学习速率从0.0001调整为0.001、增量为0.0001。所有实验都在训练步骤150、000时进行了早期停止、超过此步骤后、开始发生过度安装。
 
 
-除了使用了DCN之外、我们还测试了其他常见的深度学习模型来进行CTR预测、其中包括 https://["DeepFM"^]， https://["xDeepFM"^]， https://["自动内置"^]，和 https://["DCNv2"^]。
+除了使用了DCN之外、我们还测试了其他常见的深度学习模型来进行CTR预测、其中包括 https://www.ijcai.org/proceedings/2017/0239.pdf["DeepFM"^]， https://arxiv.org/pdf/1803.05170.pdf["xDeepFM"^]， https://arxiv.org/abs/1810.11921["自动内置"^]，和 https://arxiv.org/abs/2008.13535["DCNv2"^]。
 
 
 

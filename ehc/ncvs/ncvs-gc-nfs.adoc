@@ -56,7 +56,7 @@ NOTE: 使用NFSv4.1时、root用户在NFS客户端上运行目录列出命令时
 
 在Linux中、root帐户可以访问基于Linux的文件系统中的所有命令、文件和文件夹。由于此帐户的强大功能、安全最佳实践通常要求以某种方式禁用或限制root用户。在NFS导出中、可以通过导出策略和规则以及称为根强制转换的概念在Cloud Volumes Service 中控制root用户对文件和文件夹的能力。
 
-根强制转换可确保访问NFS挂载的root用户被强制转换为匿名数字用户65534 (请参见第节<<匿名用户>>")、并且当前仅在使用CVS-Performance时可用、方法是在创建导出策略规则期间选择off作为root访问权限。如果root用户被强制转换为匿名用户、则它将无法再运行chown或 https://["setuid/setgid命令(粘滞位)"^] 对于NFS挂载中的文件或文件夹、以及root用户创建的文件或文件夹、将anon UID显示为所有者/组。此外、root用户无法修改NFSv4 ACL。但是、root用户仍可访问其没有显式权限的chmod和已删除的文件。如果要限制对root用户的文件和文件夹权限的访问、请考虑使用具有NTFS ACL的卷、创建名为`root`的Windows用户并将所需权限应用于文件或文件夹。
+根强制转换可确保访问NFS挂载的root用户被强制转换为匿名数字用户65534 (请参见第节<<匿名用户>>")、并且当前仅在使用CVS-Performance时可用、方法是在创建导出策略规则期间选择off作为root访问权限。如果root用户被强制转换为匿名用户、则它将无法再运行chown或 https://en.wikipedia.org/wiki/Setuid["setuid/setgid命令(粘滞位)"^] 对于NFS挂载中的文件或文件夹、以及root用户创建的文件或文件夹、将anon UID显示为所有者/组。此外、root用户无法修改NFSv4 ACL。但是、root用户仍可访问其没有显式权限的chmod和已删除的文件。如果要限制对root用户的文件和文件夹权限的访问、请考虑使用具有NTFS ACL的卷、创建名为`root`的Windows用户并将所需权限应用于文件或文件夹。
 
 
 
@@ -111,7 +111,7 @@ Cloud Volumes Service 同时支持模式位(例如rwx的6444、777等)和NFSv4.1
 
 这两种方法都需要使用LDAP连接进行UNIX身份管理、并填充有效的UNIX用户和组信息(请参见一节 link:ncvs-gc-other-nas-infrastructure-service-dependencies.html#ldap[""LDAP""])、并且仅适用于CVS-Performance实例。要对NFS使用NTFS安全模式卷、必须使用双协议(SMB和NFSv3)或双协议(SMB和NFSv4.1)、即使未建立SMB连接也是如此。要对NFSv3挂载使用NFSv4.1 ACL、必须选择`both (NFSv3/NFSv4.1)`作为协议类型。
 
-常规UNIX模式位提供的权限粒度级别与NTFS或NFSv4.x ACL提供的权限级别不同。下表对NFSv3模式位和NFSv4.1 ACL之间的权限粒度进行了比较。有关NFSv4.1 ACL的信息、请参见 https://["NFS4_ACL—NFSv4访问控制列表"^]。
+常规UNIX模式位提供的权限粒度级别与NTFS或NFSv4.x ACL提供的权限级别不同。下表对NFSv3模式位和NFSv4.1 ACL之间的权限粒度进行了比较。有关NFSv4.1 ACL的信息、请参见 https://linux.die.net/man/5/nfs4_acl["NFS4_ACL—NFSv4访问控制列表"^]。
 
 |===
 | NFSv3 模式位 | NFSv4.1 ACL 
@@ -139,7 +139,7 @@ Cloud Volumes Service 同时支持模式位(例如rwx的6444、777等)和NFSv4.1
 |===
 最后、根据RPC数据包限制、对于AUTH_SYS、NFS组成员资格(在NFSv3和NFSv4.x中)限制为默认最大16个。NFS Kerberos最多可提供32个组、NFSv4 ACL可通过粒度用户和组ACL (每个ACE最多1024个条目)来消除此限制。
 
-此外、Cloud Volumes Service 还提供了扩展的组支持、可将支持的最大组数扩展到32个。这需要通过LDAP连接到包含有效UNIX用户和组身份的LDAP服务器。有关配置此的详细信息、请参见 https://["创建和管理NFS卷"^] 在Google文档中。
+此外、Cloud Volumes Service 还提供了扩展的组支持、可将支持的最大组数扩展到32个。这需要通过LDAP连接到包含有效UNIX用户和组身份的LDAP服务器。有关配置此的详细信息、请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/creating-nfs-volumes?hl=en_US["创建和管理NFS卷"^] 在Google文档中。
 
 
 
@@ -220,7 +220,7 @@ NFSv4 ACL与Windows文件级ACL (NTFS ACL)不同、但具有类似的功能。�
 
 如果在设置了NFSv4.1 ACL的文件或文件夹上运行基本的`chmod`、则会保留现有用户和组ACL、但会修改默认所有者@、组@、每个人@ ACL。
 
-使用NFSv4.1 ACL的客户端可以为系统上的文件和目录设置和查看ACL。在具有ACL的目录中创建新文件或子目录时、该对象将继承ACL中已标记为相应的所有ACE http://["继承标志"^]。
+使用NFSv4.1 ACL的客户端可以为系统上的文件和目录设置和查看ACL。在具有ACL的目录中创建新文件或子目录时、该对象将继承ACL中已标记为相应的所有ACE http://linux.die.net/man/5/nfs4_acl["继承标志"^]。
 
 如果文件或目录具有NFSv4.1 ACL、则无论使用哪个协议访问文件或目录、都可以使用该ACL来控制访问。
 
@@ -238,15 +238,15 @@ NFSv4 ACL与Windows文件级ACL (NTFS ACL)不同、但具有类似的功能。�
 
 === ACE权限
 
-NFSv4.1 ACL权限使用一系列大小写字母值(例如`rxtncy`)来控制访问。有关这些字母值的详细信息、请参见 https://["如何：使用NFSv4 ACL"^]。
+NFSv4.1 ACL权限使用一系列大小写字母值(例如`rxtncy`)来控制访问。有关这些字母值的详细信息、请参见 https://www.osc.edu/book/export/html/4523["如何：使用NFSv4 ACL"^]。
 
 
 
 === 具有umask和ACL继承的NFSv4.1 ACL行为
 
-http://["NFSv4 ACL可提供ACL继承功能"^]。ACL继承是指在设置了NFSv4.1 ACL的对象下创建的文件或文件夹可以根据的配置继承ACL http://["ACL继承标志"^]。
+http://linux.die.net/man/5/nfs4_acl["NFSv4 ACL可提供ACL继承功能"^]。ACL继承是指在设置了NFSv4.1 ACL的对象下创建的文件或文件夹可以根据的配置继承ACL http://linux.die.net/man/5/nfs4_acl["ACL继承标志"^]。
 
-https://["umask"^] 用于控制在目录中创建文件和文件夹而无需管理员干预的权限级别。默认情况下、Cloud Volumes Service 允许umask覆盖继承的ACL、这是预期的行为 https://["RFC 5661"^]。
+https://man7.org/linux/man-pages/man2/umask.2.html["umask"^] 用于控制在目录中创建文件和文件夹而无需管理员干预的权限级别。默认情况下、Cloud Volumes Service 允许umask覆盖继承的ACL、这是预期的行为 https://datatracker.ietf.org/doc/html/rfc5661["RFC 5661"^]。
 
 
 
@@ -262,7 +262,7 @@ A::ldapuser@domain.netapp.com:rwatTnNcCy
 ....
 type:flags:principal:permissions
 ....
-类型`a`表示"允许"。 在这种情况下、不会设置继承标志、因为主体不是组、并且不包括继承。此外、由于ACE不是审核条目、因此无需设置审核标志。有关NFSv4.1 ACL的详细信息、请参见 http://["http://linux.die.net/man/5/nfs4_acl"^]。
+类型`a`表示"允许"。 在这种情况下、不会设置继承标志、因为主体不是组、并且不包括继承。此外、由于ACE不是审核条目、因此无需设置审核标志。有关NFSv4.1 ACL的详细信息、请参见 http://linux.die.net/man/5/nfs4_acl["http://linux.die.net/man/5/nfs4_acl"^]。
 
 如果NFSv4.1 ACL设置不正确(或者客户端和服务器无法解析名称字符串)、则ACL可能无法按预期运行、或者ACL更改可能无法应用并引发错误。
 
@@ -428,7 +428,7 @@ May 19 13:15:05 centos7 nfsidmap[17534]: nss_getpwnam: name 'nobody' does not ma
 
 如果您使用的是NFSv4.1、则会在NFS操作期间进行名称-字符串映射、如上所述。
 
-除了使用`/var/log/messages`查找具有NFSv4 ID的问题描述 之外、您还可以使用 https://["nfsidmap -l"^] 命令以查看哪些用户名已正确映射到NFSv4域。
+除了使用`/var/log/messages`查找具有NFSv4 ID的问题描述 之外、您还可以使用 https://man7.org/linux/man-pages/man5/nfsidmap.5.html["nfsidmap -l"^] 命令以查看哪些用户名已正确映射到NFSv4域。
 
 例如、这是客户端发现的用户以及Cloud Volumes Service 访问NFSv4.x挂载后命令的输出：
 

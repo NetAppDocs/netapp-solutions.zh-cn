@@ -32,7 +32,7 @@ NetApp Snapshot 集成在培训代码中，可捕获每个实验的数据状态�
 
 == AK 设置和安装
 
-要设置和安装 AKS 集群，请转至 https://["创建 AKS 集群"^]。然后，按照以下一系列步骤进行操作：
+要设置和安装 AKS 集群，请转至 https://docs.microsoft.com/azure/aks/kubernetes-walkthrough-portal["创建 AKS 集群"^]。然后，按照以下一系列步骤进行操作：
 
 . 选择节点类型（无论是系统（ CPU ）节点还是辅助（ GPU ）节点）时，请选择以下项：
 +
@@ -47,8 +47,8 @@ NOTE: 部署需要 5 – 10 分钟。
 
 
 
-. 部署完成后，单击 Connect to Cluster 。要连接到新创建的 AKS 集群，请从本地环境（笔记本电脑 /PC ）安装 Kubernetes 命令行工具。请访问 https://["安装工具"^] 以根据您的操作系统进行安装。
-. https://["在本地环境中安装 Azure CLI"^]。
+. 部署完成后，单击 Connect to Cluster 。要连接到新创建的 AKS 集群，请从本地环境（笔记本电脑 /PC ）安装 Kubernetes 命令行工具。请访问 https://kubernetes.io/docs/tasks/tools/install-kubectl/["安装工具"^] 以根据您的操作系统进行安装。
+. https://docs.microsoft.com/cli/azure/install-azure-cli["在本地环境中安装 Azure CLI"^]。
 . 要从终端访问 AKS 集群，请先输入 `az login` 并输入凭据。
 . 运行以下两个命令：
 +
@@ -103,13 +103,13 @@ Azure NetApp Files 卷将分配给应用程序集群，并在 Kubernetes 中用�
 
 == Azure NetApp Files 设置
 
-要完成 Azure NetApp Files 的设置，必须先按照中所述对其进行配置 https://["快速入门：设置 Azure NetApp Files 并创建 NFS 卷"^]。
+要完成 Azure NetApp Files 的设置，必须先按照中所述对其进行配置 https://docs.microsoft.com/azure/azure-netapp-files/azure-netapp-files-quickstart-set-up-account-create-volumes["快速入门：设置 Azure NetApp Files 并创建 NFS 卷"^]。
 
 但是，您可以省略为 Azure NetApp Files 创建 NFS 卷的步骤，因为您将通过 Trident 创建卷。在继续操作之前，请确保您已：
 
-. https://["注册 Azure NetApp Files 和 NetApp 资源提供商（通过 Azure Cloud Shell ）"^]。
-. https://["已在 Azure NetApp Files 中创建帐户"^]。
-. https://["设置容量池"^] （最低 4 TiB 标准版或高级版，具体取决于您的需求）。
+. https://docs.microsoft.com/azure/azure-netapp-files/azure-netapp-files-register["注册 Azure NetApp Files 和 NetApp 资源提供商（通过 Azure Cloud Shell ）"^]。
+. https://docs.microsoft.com/azure/azure-netapp-files/azure-netapp-files-create-netapp-account["已在 Azure NetApp Files 中创建帐户"^]。
+. https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-set-up-capacity-pool["设置容量池"^] （最低 4 TiB 标准版或高级版，具体取决于您的需求）。
 
 
 
@@ -141,7 +141,7 @@ NOTE: 保留所有非星号部分的默认设置
 . 单击添加或确定将对等添加到虚拟网络。
 
 
-有关详细信息，请访问 https://["创建，更改或删除虚拟网络对等关系"^]。
+有关详细信息，请访问 https://docs.microsoft.com/azure/virtual-network/tutorial-connect-virtual-networks-portal["创建，更改或删除虚拟网络对等关系"^]。
 
 
 
@@ -157,7 +157,7 @@ NetApp Trident 通过创建和附加永久性卷来存储培训数据集和经�
 
 要安装 Trident 软件，请完成以下步骤：
 
-. https://["首先安装 Helm"^]。
+. https://helm.sh/docs/intro/install/["首先安装 Helm"^]。
 . 下载并解压缩 Trident 21.01.1 安装程序。
 +
 ....
@@ -207,7 +207,7 @@ kubectl -n trident get pods
 ....
 cd ~
 ....
-. 克隆 https://["项目存储库"^] `lan-detect-scnan-horovod` 。
+. 克隆 https://github.com/dedmari/lane-detection-SCNN-horovod.git["项目存储库"^] `lan-detect-scnan-horovod` 。
 . 转至 `trident — config` 目录。
 +
 ....
@@ -321,7 +321,7 @@ kubectl create -f https://raw.githubusercontent.com/kubernetes-csi/external-snap
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/release-3.0/deploy/kubernetes/snapshot-controller/rbac-snapshot-controller.yaml
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/release-3.0/deploy/kubernetes/snapshot-controller/setup-snapshot-controller.yaml
 ....
-. 设置 K8s `volumesnapshotclass` ：创建卷快照之前，请先执行 https://["卷快照类"^] 必须已设置。为 Azure NetApp Files 创建卷快照类，并使用它通过 NetApp Snapshot 技术实现 ML 版本控制。create `volumesnapshotclass netapp-csI-snapclass` 并将其设置为 default `volumesnapshotclass `，如下所例：
+. 设置 K8s `volumesnapshotclass` ：创建卷快照之前，请先执行 https://netapp-trident.readthedocs.io/en/stable-v20.01/kubernetes/concepts/objects.html["卷快照类"^] 必须已设置。为 Azure NetApp Files 创建卷快照类，并使用它通过 NetApp Snapshot 技术实现 ML 版本控制。create `volumesnapshotclass netapp-csI-snapclass` 并将其设置为 default `volumesnapshotclass `，如下所例：
 +
 ....
 kubectl create -f netapp-volume-snapshot-class.yaml
@@ -351,12 +351,12 @@ image:runai-ld_image10.png["错误：缺少图形映像"]
 
 要安装 run ： ai ，请完成以下步骤：
 
-. https://["在 AKS 上安装 run ： ai 集群"^]。
+. https://docs.run.ai/Administrator/Cluster-Setup/cluster-install/["在 AKS 上安装 run ： ai 集群"^]。
 . 转至 app.runai.ai ，单击创建新项目，然后将其命名为 LAN-detection 。它将在 K8s 集群上创建一个命名空间，其开头为 `runai` - ，后跟项目名称。在这种情况下，创建的命名空间将为 runai-lane 检测。
 +
 image:runai-ld_image11.png["错误：缺少图形映像"]
 
-. https://["安装 run ： ai 命令行界面"^]。
+. https://docs.run.ai/Administrator/Cluster-Setup/cluster-install/["安装 run ： ai 命令行界面"^]。
 . 在您的终端上，使用以下命令将通道检测设置为默认运行： AI project ：
 +
 ....
@@ -740,7 +740,7 @@ image:runai-ld_image38.png["错误：缺少图形映像"]
 
 == Azure NetApp Files 服务级别
 
-您可以通过将现有卷移动到使用的另一个容量池来更改此卷的服务级别 https://["服务级别"^] 所需的卷。此卷的现有服务级别更改不需要迁移数据。它也不会影响对卷的访问。
+您可以通过将现有卷移动到使用的另一个容量池来更改此卷的服务级别 https://docs.microsoft.com/azure/azure-netapp-files/azure-netapp-files-service-levels["服务级别"^] 所需的卷。此卷的现有服务级别更改不需要迁移数据。它也不会影响对卷的访问。
 
 
 
@@ -762,9 +762,9 @@ image:runai-ld_image40.png["错误：缺少图形映像"]
 
 === 自动执行服务级别更改
 
-动态服务级别更改当前仍在公有预览中，但默认情况下不会启用。要在 Azure 订阅上启用此功能，请按照文档 " 中提供的步骤进行操作 file://["动态更改卷的服务级别"^]。 "
+动态服务级别更改当前仍在公有预览中，但默认情况下不会启用。要在 Azure 订阅上启用此功能，请按照文档 " 中提供的步骤进行操作 file:///C:\Users\crich\Downloads\•%09https:\docs.microsoft.com\azure\azure-netapp-files\dynamic-change-volume-service-level["动态更改卷的服务级别"^]。 "
 
-* 您还可以对 Azure 使用以下命令： CLI 。有关更改 Azure NetApp Files 的池大小的详细信息，请访问 https://["AZ netappfiles volume ：管理 Azure NetApp Files （ ANF ）卷资源"^]。
+* 您还可以对 Azure 使用以下命令： CLI 。有关更改 Azure NetApp Files 的池大小的详细信息，请访问 https://docs.microsoft.com/cli/azure/netappfiles/volume?view=azure-cli-latest-az_netappfiles_volume_pool_change["AZ netappfiles volume ：管理 Azure NetApp Files （ ANF ）卷资源"^]。
 +
 ....
 az netappfiles volume pool-change -g mygroup
@@ -773,7 +773,7 @@ az netappfiles volume pool-change -g mygroup
 --name myvolname
 --new-pool-resource-id mynewresourceid
 ....
-* 此处显示的 `set- aznetappfilesvolumepool` cmdlet 可更改 Azure NetApp Files 卷的池。有关更改卷池大小和 Azure PowerShell 的详细信息，请访问 https://["更改 Azure NetApp Files 卷的池"^]。
+* 此处显示的 `set- aznetappfilesvolumepool` cmdlet 可更改 Azure NetApp Files 卷的池。有关更改卷池大小和 Azure PowerShell 的详细信息，请访问 https://docs.microsoft.com/powershell/module/az.netappfiles/set-aznetappfilesvolumepool?view=azps-5.8.0["更改 Azure NetApp Files 卷的池"^]。
 +
 ....
 Set-AzNetAppFilesVolumePool
