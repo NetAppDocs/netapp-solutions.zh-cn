@@ -1,0 +1,195 @@
+---
+sidebar: sidebar 
+permalink: virtualization/vvols-overview.html 
+keywords: tr-4400, vvols, ontap, virtual volumes 
+summary:  
+---
+= TR-4400：《采用NetApp ONTAP 的VMware vSphere虚拟卷(vvol)》
+:allow-uri-read: 
+
+
+[role="lead"]
+作者：NetApp公司Chance Bingen
+
+
+
+== 为什么选择适用于vSphere的vvol？
+
+20多年来、NetApp ONTAP^®^软件一直是适用于VMware vSphere环境的领先存储解决方案 、并不断增加创新功能、以简化管理并降低成本。本文档介绍了适用于VMware vSphere虚拟卷(vvol)的ONTAP 功能、包括最新的产品信息和用例以及最佳实践和其他可简化部署和减少错误的信息。
+
+最佳实践是指南和兼容性列表等其他文档的补充。它们是根据 NetApp 工程师和客户的实验室测试和丰富的现场经验开发的。它们可能不是唯一有效或受支持的实践、但通常是最简单的解决方案、可满足大多数客户的需求。
+
+
+TIP: 本文档已进行更新、加入了vSphere 8.0 Update 1中的新vvol功能、这些功能在ONTAP 工具9.12版本中受支持。
+
+
+
+=== 虚拟卷(Virtual Volume、Virtual Volume、Virtual Volume)概述
+
+NetApp于2012年开始与VMware合作、为适用于vSphere 5的vSphere APIS for Storage AWARMIVAIVAICHUIAICHUDE(VASA )提供支持。通过早期的VASA Provider、可以在配置文件中定义存储功能、这些功能可用于在配置时筛选数据存储库、并在此后检查是否符合策略。随着时间的推移、这种情况不断发展、增加了一些新功能、以便在配置以及添加虚拟卷或vvol (其中、各个存储对象用于虚拟机文件和虚拟磁盘)方面实现更大的自动化。这些对象可以是LUN和文件、现在在vSphere 8中、NVMe namespaces.NetApp与VMware密切合作、作为2015年随vSphere 6发布的vvol的参考合作伙伴、并再次作为在vSphere 8中基于网络结构使用NVMe的vvol的设计合作伙伴。NetApp将继续增强ONTAP 以利用其最新功能。
+
+需要注意以下几个组件：
+
+|===
+
+
+| *VASA Provider* 
+
+
+| 这是一个软件组件、用于处理VMware vSphere与存储系统之间的通信。对于ONTAP 、VASA Provider在一种称为适用于VMware vSphere的ONTAP 工具(简称ONTAP 工具)的设备中运行。ONTAP 工具还包括一个vCenter插件、一个适用于VMware Site Recovery Manager的存储复制适配器(Storage Replication Adapter、SRA)以及用于构建您自己的自动化的REST API服务器。配置ONTAP 工具并将其注册到vCenter后、几乎不再需要直接与ONTAP 系统交互、因为几乎所有存储需求都可以直接在vCenter UI中进行管理、或者通过REST API自动化进行管理。 
+
+
+| *协议端点(PE)* 
+
+
+| 协议端点是ESXi主机和VMware数据存储库之间的I/O代理。ONTAP VASA Provider会自动创建这些LUN、即VVOL数据存储库中每个FlexVol^®^卷一个协议端点LUN (大小为4 MB)、或者在数据存储库中托管FlexVol 卷的存储节点上每个NFS接口(LIF)一个NFS挂载点。ESXi主机直接装载这些协议端点、而不是装载单个VVOLLUN和虚拟磁盘文件。协议端点由VASA Provider自动创建、挂载、卸载和删除、因此无需对这些端点进行管理、同时也无需管理任何必要的接口组或导出策略。 
+
+
+| *虚拟协议端点(VPE)* 
+
+
+ a| 
+vSphere 8中的新增功能是、在将基于网络结构的NVMe (NVMe-oF)与vvol结合使用时、协议端点的概念在ONTAP 中不再适用。相反、ESXi主机会在第一个虚拟机启动后自动为每个ANA组建立虚拟PE。ONTAP 会自动为数据存储库使用的每个FlexVol 卷创建ANA组。
+
+使用NVMe-oF for VVOLs的另一个优势是、VASA Provider不需要任何绑定请求。相反、ESXi主机会根据VPE在内部处理VVOl绑定功能。这样可以减少VVOV绑定风暴影响服务的机会。
+
+有关详细信息，请参见 https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-storage/GUID-23B47AAC-6A31-466C-84F9-8CF8F1CDD149.html["NVMe和虚拟卷"] 开启 https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-storage/GUID-23B47AAC-6A31-466C-84F9-8CF8F1CDD149.html["vmware.com"]
+
+
+
+| *虚拟卷数据存储库* 
+
+
+| 虚拟卷数据存储库是由VASA Provider创建和维护的VVOl容器的逻辑数据存储库表示形式。容器表示从由VASA Provider管理的存储系统配置的存储容量池。ONTAP 工具支持将多个FlexVol 卷(称为后备卷)分配给一个数据存储库、这些FlexVol数据存储库可以跨越ONTAP 集群中的多个节点、从而将具有不同功能的闪存和混合系统组合在一起。管理员可以使用配置向导或REST API创建新的FlexVol 卷、或者选择预创建的FlexVol 卷作为后备存储(如果有)。 
+
+
+| *虚拟卷(Vvol)* 
+
+
+| 虚拟卷是指存储在虚拟卷数据存储库中的实际虚拟机文件和磁盘。术语VVOL(单个)是指单个特定文件、LUN或命名空间。ONTAP 会根据数据存储库使用的协议创建NVMe命名空间、LUN或文件。Vvol有几种不同的类型；最常见的类型是配置(元数据文件)、数据(虚拟磁盘或VMDK)和交换(在启动VM时创建)。受VMware VM加密保护的Vvol的类型为其他。不应将VMware VM加密与ONTAP 卷或聚合加密相混淆。 
+|===
+
+
+=== 基于策略的管理
+
+通过VMware vSphere APIS for Storage AWARMIVAIVIAPI(VASA)、VM管理员可以轻松地使用配置VM所需的任何存储功能、而无需与其存储团队进行交互。在使用VASA之前、VM管理员可以定义VM存储策略、但必须与其存储管理员一起确定适当的数据存储库、通常使用文档或命名约定。通过使用VASA、具有适当权限的vCenter管理员可以定义一系列存储功能、然后vCenter用户可以使用这些功能来配置VM。通过在VM存储策略和数据存储库存储功能配置文件之间进行映射、vCenter可以显示兼容数据存储库列表以供选择、并支持Aria (以前称为vReise) Automation或Tanzu Kubernetes Grid等其他技术自动从分配的策略中选择存储。这种方法称为基于存储策略的管理。虽然存储功能配置文件和策略也可用于传统数据存储库、但我们在此重点关注的是虚拟卷数据存储库。
+
+有两个要素：
+
+|===
+
+
+| *存储功能配置文件(SCP)* 
+
+
+| 存储功能配置文件(SCP)是一种存储模板形式、通过该模板、vCenter管理员可以定义所需的存储功能、而无需实际了解如何在ONTAP 中管理这些功能。通过采用模板模式方法、管理员可以轻松地以一致且可预测的方式提供存储服务。SCP中介绍的功能包括性能、协议、存储效率和其他功能。具体功能因版本而异。它们是使用vCenter UI中的适用于VMware vSphere的ONTAP 工具菜单创建的。您还可以使用REST API创建SCP。它们可以通过选择各个功能手动创建、也可以从现有(传统)数据存储库中自动生成。 
+
+
+| *VM存储策略* 
+
+
+| VM存储策略在vCenter中的策略和配置文件下创建。对于虚拟卷、请使用NetApp虚拟卷存储类型提供程序中的规则创建一个规则集。ONTAP 工具提供了一种简化的方法、您只需选择SCP、而无需强制指定各个规则。 
+|===
+如上所述、使用策略有助于简化配置卷的任务。只需选择一个适当的策略、VASA Provider就会显示支持该策略的VVOs数据存储库、并将VVOV放入一个合规的FlexVol 卷中(图1)。
+
+
+
+==== 使用存储策略部署虚拟机
+
+image::vvols-image3.png[使用存储策略部署虚拟机,800,480]
+
+配置VM后、VASA Provider将继续检查合规性、并在后备卷不再符合策略时在vCenter中向VM管理员发出警报(图2)。
+
+
+
+==== 虚拟机存储策略合规性
+
+image::vvols-image4.png[虚拟机存储策略合规性,320,100]
+
+
+
+=== NetApp支持
+
+自2012年首次发布以来、NetApp ONTAP 便一直支持此VASA规范。虽然其他NetApp存储系统可能支持VASA、但本文档重点介绍当前受支持的ONTAP 9版本。
+
+
+
+==== NetApp ONTAP
+
+除了AFF 、ASA 和FAS 系统上的ONTAP 9之外、NetApp还支持ONTAP Select 上的VMware工作负载、Amazon FSx for NetApp ONTAP 与VMware Cloud on AWS、Azure NetApp Files 与Azure VMware解决方案 、Cloud Volumes Service 与Google Cloud VMware Engine以及Equinox中的NetApp私有存储。 但是、具体功能可能会因服务提供商和可用网络连接而异。此外、vSphere子系统还可以访问这些配置以及Cloud Volumes ONTAP 中存储的数据。
+
+在本报告发布时、超规模云环境仅限于传统NFS v3数据存储库、因此、Vvol仅适用于内部ONTAP 系统或提供内部系统全部功能的云连接系统、例如由全球NetApp合作伙伴和服务提供商托管的系统。
+
+_有关ONTAP 的详细信息，请参见 https://docs.netapp.com/us-en/ontap-family/["ONTAP 产品文档"]_
+
+_有关ONTAP 和VMware vSphere最佳实践的详细信息、请参见 https://docs.netapp.com/us-en/netapp-solutions/virtualization/vsphere_ontap_ontap_for_vsphere.html["TR-4597"]_
+
+
+
+=== 将ONTAP 与虚拟卷结合使用的优势
+
+VMware在2015年将VVOL支持引入到了ASA 2.0中、他们将其称为"一个集成和管理框架、为外部存储(SAN/NAS)提供了新的运营模式。" 此操作模式与ONTAP 存储相结合、可提供多种优势。
+
+
+
+==== 基于策略的管理
+
+如第1.2节所述、基于策略的管理允许使用预定义的策略配置VM、然后对其进行管理。这可以从几个方面帮助IT运营：
+
+* *加快速度。* ONTAP 工具无需vCenter管理员向存储团队开立存储配置活动的服务单。但是、vCenter和ONTAP 系统中的ONTAP 工具RBAC角色仍然允许独立的团队(例如存储团队)、或者允许同一团队通过根据需要限制对特定功能的访问来进行独立的活动。
+* *更智能的配置。*存储系统功能可通过VASAAPI公开、使配置工作流可以利用高级功能、而虚拟机管理员无需了解如何管理存储系统。
+* *配置速度更快。*单个数据存储库可支持不同的存储功能、并根据虚拟机策略自动为虚拟机选择相应的存储功能。
+* *避免出错。*存储和VM策略是提前制定的、并根据需要应用、而无需在每次配置VM时自定义存储。如果存储功能偏离定义的策略、则会发出合规警报。如前文所述、通过使用SCP、初始配置可预测且可重复、而根据SCP制定VM存储策略可确保准确放置。
+* *更好的容量管理。*通过使用VASA和ONTAP 工具、可以根据需要查看低至细小聚合级别的存储容量、并在容量开始不足时提供多层警报。
+
+
+
+
+==== 基于现代SAN的VM粒度管理
+
+使用光纤通道和iSCSI的SAN存储系统是VMware支持的第一个ESX存储系统、但它们无法从存储系统管理各个VM文件和磁盘。而是配置LUN、并由VMFS管理各个文件。这样、存储系统就很难直接管理各个VM的存储性能、克隆和保护。利用ONTAP 强大的高性能SAN功能、虚拟卷可以为使用NFS存储的客户带来已有的存储粒度。
+
+现在、借助适用于VMware vSphere 9.12及更高版本的vSphere 8和ONTAP 工具、在使用基于网络结构的NVMe的现代光纤通道SAN中、可以使用vvol对基于SCSI的传统协议所使用的相同粒度控制、从而获得更大的规模化性能。借助vSphere 8.0 Update 1、现在可以使用vvol部署完整的端到端NVMe解决方案 、而无需在虚拟机管理程序存储堆栈中进行任何I/O转换。
+
+
+
+==== 更出色的存储卸载功能
+
+虽然VAAI提供了多种卸载到存储的操作、但VASA Provider可以解决一些差距。SAN VAAI无法将VMware托管的快照卸载到存储系统。NFS VAAI可以卸载VM托管的快照、但使用存储本机快照的VM存在一些限制。由于Vvol会对虚拟机磁盘使用单个LUN、命名空间或文件、因此ONTAP 可以快速高效地克隆文件或LUN、以创建不再需要增量文件的VM粒度快照。NFS VAAI也不支持卸载热(已启动) Storage vMotion迁移的克隆操作。在将VAAI与传统NFS数据存储库结合使用时、必须关闭VM电源、以实现迁移负载分流。ONTAP 工具中的VASA Provider支持近乎即时的高效存储克隆、用于热迁移和冷迁移、还支持近乎即时的副本、以便跨卷迁移VVO尔。由于具有这些显著的存储效率优势、您可以充分利用下的虚拟卷工作负载 https://www.netapp.com/pdf.html?item=/media/8207-flyer-efficiency-guaranteepdf.pdf["效率担保"] 计划。同样、如果使用VAAI的跨卷克隆不能满足您的要求、您或许能够通过改进Vvol的复制体验来解决业务挑战。
+
+
+
+==== 常见的卷使用情形
+
+除了这些优势之外、我们还会看到VVOV存储的以下常见使用情形：
+
+* *按需配置虚拟机*
++
+** 私有云或服务提供商的IaaS。
+** 通过Aria (原vReise)套件、OpenStack等利用自动化和流程编排
+
+
+* *一流磁盘(FCD)*
++
+** VMware Tanzu Kubernetes Grid [TKG]永久性卷。
+** 通过独立的VMDK生命周期管理提供类似于Amazon EBS的服务。
+
+
+* *按需配置临时虚拟机*
++
+** 测试/开发实验室
+** 培训环境
+
+
+
+
+
+
+==== 使用卷的常见优势
+
+在充分发挥其优势时(例如在上述使用情形中)、此类卷可提供以下具体改进：
+
+* 克隆可以在一个卷内或ONTAP 集群中的多个卷之间快速创建、与启用了VAAI的传统克隆相比、这是一个优势。它们还具有高效存储的特点。卷中的克隆使用ONTAP 文件克隆、这与FlexClone^®^卷类似、仅存储源VVOL文件/LUN /命名空间中的更改。因此、可以快速创建用于生产或其他应用程序目的的长期VM、占用的空间极少、并可受益于VM级别保护(使用适用于VMware vSphere的NetApp SnapCenter 插件、VMware托管快照或VADP备份)和性能管理(使用ONTAP QoS)。
+* 在将TKG与vSphere CSI结合使用时、Vvol是理想的存储技术、可提供由vCenter管理员管理的离散存储类和容量。
+* 类似于Amazon EBS的服务可以通过FCD提供、因为顾名思义、FCD VMDK是vSphere中的一流公民、其生命周期可以独立于可能连接到的VM进行管理。
+

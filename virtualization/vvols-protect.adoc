@@ -1,0 +1,163 @@
+---
+sidebar: sidebar 
+permalink: virtualization/vvols-protect.html 
+keywords: tr-4400, vvols, ontap, virtual volumes, protect 
+summary:  
+---
+= 保护卷
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== VASA Provider高可用性
+
+NetApp VASA Provider与vCenter插件和REST API服务器(以前称为Virtual Storage Console [VSC])以及Storage Replication Adapter一起作为虚拟设备的一部分运行。如果VASA Provider不可用、则使用vvol的VM将继续运行。但是、无法创建新的vvol数据存储库、也无法创建vvol或将其绑定到vSphere。这意味着、由于vCenter无法请求创建交换vVol、因此无法启动使用vVol的VM。并且正在运行的VM无法使用vMotion迁移到其他主机、因为vvol无法绑定到新主机。
+
+VASA Provider 7.1及更高版本支持一些新功能、可确保服务在需要时可用。它包括用于监控VASA Provider和集成数据库服务的新监视程序进程。如果检测到故障、则会更新日志文件、然后自动重新启动服务。
+
+vSphere管理员必须使用与保护其他任务关键型VM免受软件、主机硬件和网络故障影响相同的可用性功能来配置进一步的保护。要使用这些功能、无需对虚拟设备进行其他配置；只需使用标准vSphere方法进行配置即可。它们已通过测试、并受NetApp支持。
+
+vSphere High Availability可轻松配置为在发生故障时在主机集群中的另一主机上重新启动虚拟机。vSphere Fault Tolvance可通过创建一个持续复制并可随时接管的二级虚拟机来提高可用性。有关这些功能的追加信息 、请参见 https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/concepts/concept_configure_high_availability_for_ontap_tools_for_vmware_vsphere.html["适用于VMware vSphere的ONTAP 工具文档(为ONTAP 工具配置高可用性)"]以及VMware vSphere文档(请在ESXi和vCenter Server下查找vSphere可用性)。
+
+ONTAP 工具VASA Provider会自动实时将vvol配置备份到托管ONTAP 系统、其中vvol信息存储在FlexVol 卷元数据中。如果ONTAP 工具设备因任何原因而不可用、您可以轻松快速地部署新设备并导入配置。有关VASA Provider恢复步骤的详细信息、请参见此知识库文章：
+
+https://kb.netapp.com/mgmt/OTV/Virtual_Storage_Console/How_to_perform_a_VASA_Provider_Disaster_Recovery_-_Resolution_Guide["如何执行VASA Provider灾难恢复—解决方案指南"]
+
+
+
+== 卷复制
+
+许多ONTAP 客户使用NetApp SnapMirror将其传统数据存储库复制到二级存储系统、然后在发生灾难时使用二级系统恢复单个VM或整个站点。在大多数情况下、客户会使用软件工具来管理此问题、例如适用于VMware vSphere的NetApp SnapCenter 插件等备份软件产品、或者使用灾难恢复解决方案 (例如VMware的Site Recovery Manager以及ONTAP 工具中的Storage Replication Adapter)。
+
+这种对软件工具的要求对于管理vols复制更为重要。虽然某些方面可以通过本机功能进行管理(例如、由VMware管理的vvol快照会卸载到使用快速、高效的文件或LUN克隆的ONTAP)、但通常需要通过业务流程来管理复制和恢复。有关vvol的元数据受ONTAP 和VASA Provider保护、但要在二级站点上使用这些元数据、需要进行额外处理。
+
+ONTAP 工具9.7.1与VMware Site Recovery Manager (SRM) 8.3版结合使用、可利用NetApp SnapMirror技术增加对灾难恢复和迁移工作流流程编排的支持。
+
+在ONTAP 工具9.7.1的SRM支持初始版本中、需要先预先创建FlexVol并启用SnapMirror保护、然后再将其用作VVO尔 数据存储库的后备卷。从ONTAP 工具9.10开始、不再需要此过程。现在、您可以向现有备份卷添加SnapMirror保护、并更新VM存储策略、以便利用与SRM集成的灾难恢复和迁移流程编排及自动化功能、实现基于策略的管理。
+
+目前、VMware SRM是NetApp支持的唯一适用于vvol的灾难恢复和迁移自动化解决方案 、ONTAP 工具将检查是否存在已向vCenter注册的SRM 8.3或更高版本服务器、然后再允许您启用vvol复制。 虽然可以利用ONTAP 工具REST API创建您自己的服务。
+
+
+
+=== 使用SRM进行的卷复制
+
+image:vvols-image17.png["使用SRM进行的卷复制、300"]
+
+
+
+== MetroCluster 支持
+
+虽然ONTAP 工具无法触发MetroCluster 切换、但它支持在统一vSphere Metro Storage Cluster (VMSC)配置中使用NetApp MetroCluster 系统作为Vvol的后备卷。MetroCluster 系统的切换将按常规方式进行。
+
+虽然NetApp SnapMirror业务连续性(SM-BC)也可用作VMSC配置的基础、但Vvol目前不支持它。
+
+有关NetApp MetroCluster 的详细信息、请参见以下指南：
+
+https://www.netapp.com/media/13481-tr4689.pdf["_TR-4689 MetroCluster IP解决方案 架构和设计_"]
+
+https://www.netapp.com/pdf.html?item=/media/13480-tr4705.pdf["_TR-4705 NetApp MetroCluster 解决方案 架构和设计_"]
+
+https://kb.vmware.com/s/article/2031038["_VMware知识库2031038 NetApp MetroCluster 的VMware vSphere支持_"]
+
+
+
+== 《vCenter Server备份概述》
+
+保护VM有多种方法、例如使用子系统内备份代理、将VM数据文件附加到备份代理或使用定义的API (如VMware VADP)。可以使用相同的机制来保护V卷、许多NetApp合作伙伴都支持VM备份、包括Vvol。
+
+如前文所述、VMware vCenter管理的快照会卸载到节省空间的快速ONTAP 文件/LUN克隆。这些快照可用于快速手动备份、但受vCenter限制、最多不超过32个快照。您可以使用vCenter根据需要创建快照和还原。
+
+从适用于VMware vSphere (SCV) 4.6的SnapCenter 插件开始、如果与ONTAP 工具9.10及更高版本结合使用、则可通过支持SnapMirror和SnapVault 复制的ONTAP FlexVol 卷快照为基于Vvol的VM添加崩溃状态一致的备份和恢复功能。每个卷最多支持1023个快照。SCV还可以使用SnapMirror和镜像存储策略在二级卷上存储更多快照、保留时间更长。
+
+vSphere 8.0支持是在SCV 4.7中引入的、它使用一个隔离的本地插件架构。vSphere 8.0U1支持已添加到SCV 4.8中、并已完全过渡到新的远程插件架构。
+
+
+
+== 适用于VMware vSphere的vvol Backup with SnapCenter 插件
+
+现在、借助NetApp SnapCenter 、您可以基于标记和/或文件夹为Vvol创建资源组、以便为基于Vvol的VM自动利用ONTAP基于FlexVol 的快照。这样、您可以定义备份和恢复服务、当VM在环境中动态配置时、这些服务将自动保护VM。
+
+适用于VMware vSphere的SnapCenter 插件部署为注册为vCenter扩展的独立设备、可通过vCenter UI或REST API进行管理、以实现备份和恢复服务自动化。
+
+
+
+=== SnapCenter 架构
+
+image:vvols-image18.png["SnapCenter 架构、300"]
+
+由于其他SnapCenter 插件在撰写本文时尚不支持虚拟卷、因此我们将在本文档中重点介绍独立部署模式。
+
+由于SnapCenter 使用ONTAP FlexVol 快照、因此vSphere不会产生任何开销、也不会像使用vCenter托管快照的传统VM那样对性能造成任何影响。此外、由于SCV的功能通过REST API公开、因此可以使用VMware Aria Automation、Ansable、Terraform等工具以及几乎任何其他能够使用标准REST API的自动化工具轻松创建自动化工作流。
+
+有关 SnapCenter REST API 的信息，请参见 https://docs.netapp.com/us-en/snapcenter/sc-automation/overview_rest_apis.html["REST API 概述"]
+
+有关适用于 VMware vSphere 的 SnapCenter 插件 REST API 的信息，请参见 https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_rest_apis_overview.html["适用于 VMware vSphere 的 SnapCenter 插件 REST API"]
+
+
+
+=== 最佳实践
+
+以下最佳实践可帮助您充分利用SnapCenter 部署。
+
+|===
+
+
+ a| 
+* SCV同时支持vCenter Server RBAC和ONTAP RBAC、并包括预定义的vCenter角色、这些角色会在注册插件时自动为您创建。您可以阅读有关支持的RBAC类型的更多信息 https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_types_of_rbac_for_snapcenter_users.html["此处。"]
++
+** 使用vCenter UI使用所述的预定义角色分配特权最低的帐户访问权限 https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_predefined_roles_packaged_with_snapcenter.html["此处"]。
+** 如果在SnapCenter 服务器中使用SCV，则必须分配_SnapCenterAdmin_角色。
+** ONTAP RBAC是指用于添加和管理SCV使用的存储系统的用户帐户。ONTAP RBAC不适用于基于虚拟卷的备份。阅读有关ONTAP RBAC和SCV的更多信息 https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_ontap_rbac_features_in_snapcenter.html["此处"]。
+
+
+
+
+
+
+ a| 
+* 使用SnapMirror将备份数据集复制到另一个系统、以创建源卷的完整副本。如前所述、您还可以使用镜像存储策略长期保留备份数据、而不受源卷快照保留设置的影响。这两种机制都支持使用这两种方法的卷。
+
+
+
+
+ a| 
+* 由于SCV还需要适用于VMware vSphere的ONTAP 工具来实现Vvol功能、因此请始终查看NetApp互操作性表工具(IMT)以了解特定版本的兼容性
+
+
+
+
+ a| 
+* 如果要将vvol复制与VMware SRM结合使用、请注意策略RPO和备份计划
+
+
+
+
+ a| 
+* 使用符合组织定义的恢复点目标(Recovery Point目标、Recovery Point目标、RPO)的保留设置设计备份策略
+
+
+
+
+ a| 
+* 在资源组上配置通知设置、以便在备份运行时收到状态通知(请参见下面的图10)
+
+
+|===
+
+
+=== 资源组通知选项
+
+image:vvols-image19.png["资源组通知选项,300"]
+
+
+
+=== 使用这些文档开始使用选择控制阀
+
+https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/index.html["了解适用于 VMware vSphere 的 SnapCenter 插件"]
+
+https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_deploy_snapcenter_plug-in_for_vmware_vsphere.html["部署适用于 VMware vSphere 的 SnapCenter 插件"]

@@ -1,0 +1,213 @@
+---
+sidebar: sidebar 
+permalink: virtualization/vvols-ontap.html 
+keywords: tr-4400, vvols, ontap 
+summary: 本文档讨论适用于 VMware vSphere 的 ONTAP 工具的产品安全性。 
+---
+= 将ONTAP 与虚拟卷结合使用
+:allow-uri-read: 
+
+
+要将VVOLS与ONTAP 结合使用、关键在于适用于VMware vSphere虚拟设备的ONTAP 工具附带的VASA Provider软件。
+
+ONTAP 工具还包括vCenter UI扩展、REST API服务器、适用于VMware Site Recovery Manager的存储复制适配器、监控和主机配置工具以及一系列可帮助您更好地管理VMware环境的报告。
+
+
+
+== 产品和文档
+
+ONTAP FlexClone许可证(随ONTAP One提供)和ONTAP 工具设备是在NetApp ONTAP 中使用所需的唯一附加产品。最新版本的ONTAP 工具作为一个在ESXi上运行的统一设备提供、可提供以前三个不同设备和服务器的功能。对于vvol、请务必将ONTAP 工具vCenter UI扩展或REST API与提供特定vvol功能的VASA Provider结合使用、作为用于vSphere中ONTAP 功能的常规管理工具和用户界面。传统数据存储库会附带SRA组件、但VMware Site Recovery Manager不会对VVO尔 使用SRA、而是在SRM 8.3及更高版本中实施新服务、从而利用VASA Provider进行VVO尔 复制。
+
+
+
+=== 使用iSCSI或FCP时、可使用ONTAP 工具VASA Provider架构
+
+image:vvols-image5.png["ONTAP 工具VASA Provider架构,240"]
+
+
+
+=== 产品安装
+
+对于全新安装、请将虚拟设备部署到vSphere环境中。当前版本的ONTAP 工具会自动将自身注册到vCenter中、并默认启用VASA Provider。除了ESXi主机和vCenter Server信息之外、您还需要设备的IP地址配置详细信息。如前文所述、VASA Provider要求您已在计划用于VVO尔 的任何ONTAP 集群上安装ONTAP FlexClone许可证。此设备具有一个内置的监视程序来确保可用性、作为最佳实践、应配置VMware高可用性功能和可选的容错功能。有关更多详细信息、请参见第4.1节。请勿将ONTAP 工具设备或vCenter Server设备(VCSAS)安装或移动到VVOl存储中、因为这样可能会阻止设备重新启动。
+
+可以使用可从NetApp 支持站点 (NSS)下载的升级ISO文件原位升级ONTAP 工具。按照《部署和设置指南》说明升级设备。
+
+要估算虚拟设备的规模并了解配置限制、请参阅以下知识库文章： https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/VSC_and_VASA_Provider/OTV%3A_Sizing_Guide_for_ONTAP_tools_for_VMware_vSphere["适用于VMware vSphere的ONTAP 工具规模估算指南"]
+
+
+
+=== 产品文档
+
+以下文档可帮助您部署ONTAP 工具。
+
+https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html["有关完整的文档库和amp；#44；请访问docs.netapp.com链接"]
+
+
+
+==== 入门
+
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/release_notes.html["发行说明"]
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/concepts/concept_virtual_storage_console_overview.html["了解适用于VMware vSphere的ONTAP 工具"]
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/qsg.html["ONTAP 工具快速入门"]
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/deploy/task_deploy_ontap_tools.html["部署 ONTAP 工具"]
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/deploy/task_upgrade_to_the_9_8_ontap_tools_for_vmware_vsphere.html["升级 ONTAP 工具"]
+
+
+
+
+==== 使用 ONTAP 工具
+
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/configure/task_provision_datastores.html["配置传统数据存储库"]
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/configure/task_provision_vvols_datastores.html["配置 VVOL 数据存储库"]
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/concepts/concept_vcenter_server_role_based_access_control_features_in_vsc_for_vmware_vsphere.html["配置基于角色的访问控制"]
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/manage/task_configure_vasa_provider_to_use_ssh_for_remote_diag_access.html["配置远程诊断"]
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/concepts/concept_configure_high_availability_for_ontap_tools_for_vmware_vsphere.html["配置高可用性"]
+
+
+
+
+==== 保护和管理数据存储库
+
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/protect/task_enable_storage_replication_adapter.html["保护传统数据存储库"] 使用SRM
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/protect/concept_configure_replication_for_vvols_datastore.html["保护基于虚拟卷的虚拟机"] 使用SRM
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/manage/task_monitor_datastores_using_the_traditional_dashboard.html["监控传统数据存储库和虚拟机"]
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/manage/task_monitor_vvols_datastores_and_virtual_machines_using_vvols_dashboard.html["监控 VVOL 数据存储库和虚拟机"]
+
+
+除了产品文档之外、还有一些可能有用的支持知识库文章。
+
+* https://kb.netapp.com/app/answers/answer_view/a_id/1031261["如何执行VASA Provider灾难恢复"]
+
+
+
+
+=== VASA Provider信息板
+
+VASA Provider包括一个信息板、其中包含各个VVO尔VM的性能和容量信息。此信息直接来自ONTAP 中有关VVOL文件 和LUN的信息、包括前5个虚拟机的延迟、IOPS、吞吐量和正常运行时间以及前5个数据存储库的延迟和IOPS。使用ONTAP 9.7或更高版本时、默认情况下会启用此功能。检索初始数据并将其显示在信息板中可能需要长达30分钟的时间。
+
+
+
+==== ONTAP 工具的虚拟卷信息板
+
+image:vvols-image6.png["ONTAP 工具、vols信息板、400"]
+
+
+
+== 最佳实践
+
+本节将收集将ONTAP 与虚拟卷结合使用的已知最佳实践以及其他信息。
+
+*限制*
+
+一般来说、ONTAP 支持VMware定义的vvol限制(请参见已发布的 https://configmax.esp.vmware.com/guest?vmwareproduct=vSphere&release=vSphere%207.0&categories=8-0["配置最大值"]）。下表汇总了ONTAP 在大小和数量方面的特定限制。请始终检查 https://hwu.netapp.com/["NetApp Hardware Universe"] 更新了有关LUN和文件数量和大小的限制。
+
+* ONTAP 虚拟卷限制*
+
+|===
+| 容量 / 功能 | SAN (SCSI或NVMe-oF) | NFS 
+
+
+| 最大卷大小 | 62 TiB* | 62 TiB* 
+
+
+| 每个FlexVol 卷的最大虚拟卷数 | 1024 | 20亿 
+
+
+| 每个ONTAP 节点的最大虚拟卷数 | 最多12 288个** | 500亿 
+
+
+| 每个ONTAP 对的最大虚拟卷数 | 最多24 576个** | 500亿 
+
+
+| 每个ONTAP 集群的最大虚拟卷数 | 最多98、304个** | 无特定集群限制 
+
+
+| 最大QoS对象数(共享策略组和单个虚拟卷服务级别) | 12、000到ONTAP 9.3；40、000到ONTAP 9.4及更高版本 |  
+|===
+* 大小限制取决于运行ONTAP 9.12.1P2及更高版本的ASA 系统或AFF 和FAS 系统。
++
+** SAN VMvol (NVMe命名库或LUN)的数量因平台而异。请始终检查 https://hwu.netapp.com/["NetApp Hardware Universe"] 更新了有关LUN和文件数量和大小的限制。
+
+
+
+
+*最佳实践*
+
+在vSphere中使用ONTAP vvol非常简单、并且遵循已发布的vSphere方法(请参见适用于您的ESXi版本的VMware文档中的在vSphere存储下使用虚拟卷)。以下是与ONTAP 结合使用时需要考虑的一些其他实践。
+
+将ONTAP 与VMware结合使用的最佳实践。
+
+|===
+
+
+| *使用适用于VMware vSphere的UI扩展或REST API的ONTAP 工具来配置vvol数据存储库*和协议端点* 
+
+
+| 虽然可以使用常规vSphere界面创建vvol数据存储库、但使用ONTAP 工具将根据需要自动创建协议端点、并根据您定义的存储功能配置文件根据ONTAP 最佳实践创建FlexVol 卷。只需右键单击主机/集群/数据中心、然后选择_ ONTAP tools_和_配置数据存储库_。您只需在向导中选择所需的卷选项即可。 
+
+
+| *切勿将ONTAP 工具设备或vCenter Server设备(VCSA)存储在其所管理的VVOLs数据存储库中。* 
+
+
+| 如果您需要重新启动设备、因为它们在重新启动期间无法重新绑定自己的虚拟卷、这可能会导致出现"鸡肉和鸡蛋的情况"。您可以将其存储在由其他ONTAP 工具和vCenter部署管理的Vvol数据存储库中。 
+
+
+| *避免在不同ONTAP 版本之间执行虚拟卷操作。* 
+
+
+| VASA Provider的各个版本中支持的存储功能(例如QoS、特性等)发生了变化、其中一些功能取决于ONTAP 版本。在ONTAP 集群中使用不同版本或在具有不同版本的集群之间移动虚拟卷可能会导致意外行为或合规性警报。 
+
+
+| *对光纤通道网络结构进行分区、然后再对其使用NVMe/FC或FCP来创建卷。* 
+
+
+| ONTAP 工具的VASA提供程序负责根据已发现的受管ESXi主机启动程序管理ONTAP 中的FCP和iSCSI igrou以及NVMe子系统。但是、它不会与光纤通道交换机集成来管理分区。必须先根据最佳实践进行分区、然后才能进行任何配置。以下是单个启动程序分区到四个ONTAP系统的示例：
+
+单个启动程序分区：
+
+image:vvols-image7.gif["具有四个节点的单个启动程序分区、400"]
+
+有关更多最佳实践、请参见以下文档：
+
+https://www.netapp.com/media/10680-tr4080.pdf["_TR-4080：《现代SAN ONTAP 9_最佳实践》"]
+
+https://www.netapp.com/pdf.html?item=/media/10681-tr4684.pdf["_TR-4684使用NVMe-oF实施和配置现代SAN"] 
+
+
+| *根据需要规划您的后备FlexVol。* 
+
+
+| 最好向您的ONTAP 数据存储库添加多个后备卷、以便在集群中分布工作负载、支持不同的策略选项或增加允许的LUN或文件数量。但是、如果需要最大的存储效率、请将所有备份卷放在一个聚合上。或者、如果需要最大的克隆性能、则可以考虑使用一个FlexVol 卷、并将模板或内容库保留在同一个卷中。VASA Provider会将许多VVOLs存储操作(包括迁移、克隆和快照)卸载到ONTAP。如果在一个FlexVol 卷中执行此操作、则会使用节省空间的文件克隆、并且这些克隆几乎可以即时使用。在FlexVol 卷之间执行此操作时、这些副本可以快速可用并使用实时重复数据删除和数据压缩、但只有在使用后台重复数据删除和数据压缩的卷上运行后台作业后、才能最大程度地恢复存储效率。根据源和目标、某些效率可能会降级。 
+
+
+| *保持存储功能配置文件(SCP)简单。* 
+
+
+| 通过将功能设置为任何、避免指定不需要的功能。这样可以最大程度地减少选择或创建FlexVol 卷时出现的问题。例如、在VASA Provider 7.1及更早版本中、如果将数据压缩保留在默认SCP设置为No、则会尝试禁用数据压缩、即使在AFF 系统上也是如此。 
+
+
+| *使用默认的SCP作为示例模板来创建您自己的模板。* 
+
+
+| 随附的SRP适用于大多数通用用途、但您的要求可能有所不同。
+
+*请考虑使用最大IOPS来控制未知或测试VM。* 
+
+
+| 最大IOPS首次在VASA Provider 7.1中推出、可用于将未知工作负载的IOPS限制为特定VVOR、以避免对其他更关键的工作负载产生影响。有关性能管理的详细信息、请参见表4。
+
+*确保您具有足够的数据Lifs。* 
+
+
+| 每个HA对的每个节点至少创建两个生命周期。根据您的工作负载、可能需要更多资源。 
+
+
+| *遵循所有协议最佳实践。* 
+
+
+| 请参见NetApp和VMware针对您选择的协议提供的其他最佳实践指南。一般而言，除了上述情况外，没有任何其他变化。
+
+使用基于NFS v3的Vvol的网络配置示例：
+
+image:vvols-image8.png["使用基于NFS v3、500的vvol进行网络配置"] 
+|===
