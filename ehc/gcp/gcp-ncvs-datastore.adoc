@@ -1,0 +1,77 @@
+---
+sidebar: sidebar 
+permalink: ehc/gcp/gcp-ncvs-datastore.html 
+keywords: gcp, gcve, cvs, nfs, supplemental, datastore, vcenter, vmware 
+summary: 客户可以使用NFS补充数据存储库和NetApp云卷服务扩展Google Cloud VMware Engine上的存储容量。 
+---
+= Google Cloud VMware引擎使用NetApp云卷服务补充NFS数据存储库
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+
+
+== 概述
+
+作者：NetApp公司Suresh ThopPay
+
+如果客户需要在其Google Cloud VMware Engine (GCVe)环境中增加存储容量、则可以使用NetApp云卷服务挂载为补充NFS数据存储库。
+通过将数据存储在NetApp云卷服务上、客户可以在不同区域之间进行复制、以防止灾难。
+
+image:gcp_ncvs_ds01.png["GCVe上的NetApp云卷服务NFS数据存储库"]
+
+
+
+== 从NetApp CVS在GCVE)上挂载NFS数据存储库的部署步骤
+
+.配置CVS性能卷
+[%collapsible]
+====
+NetApp云卷服务卷可以通过进行配置
+link:https://cloud.google.com/architecture/partners/netapp-cloud-volumes/workflow["使用Google Cloud Console"]
+link:https://docs.netapp.com/us-en/cloud-manager-cloud-volumes-service-gcp/task-create-volumes.html["使用NetApp BlueXP门户或API"]
+
+====
+.将该CVS卷标记为不可删除
+[%collapsible]
+====
+为了避免在VM运行期间意外删除卷、请确保将此卷标记为不可删除、如下面的屏幕截图所示。
+image:gcp_ncvs_ds02.png["NetApp CVS不可删除选项"]
+有关详细信息、请参见 link:https://cloud.google.com/architecture/partners/netapp-cloud-volumes/creating-nfs-volumes#creating_an_nfs_volume["正在创建NFS卷"] 文档。
+
+====
+.确保NetApp CVS租户VPC在GCVA上存在专用连接。
+[%collapsible]
+====
+要挂载NFS数据存储库、GCVA和NetApp CVS项目之间应存在专用连接。
+有关详细信息、请参见 link:https://cloud.google.com/vmware-engine/docs/networking/howto-setup-private-service-access["如何设置专用服务访问"]
+
+====
+.挂载NFS数据存储库
+[%collapsible]
+====
+有关如何在GCVE)上挂载NFS数据存储库的说明，请参阅 link:https://cloud.google.com/vmware-engine/docs/vmware-ecosystem/howto-cloud-volumes-service-datastores["如何使用NetApp CVS创建NFS数据存储库"]
+
+
+NOTE: 由于vSphere主机由Google管理、因此您无权安装NFS vSphere API for Array Integration (VAAI) vSphere安装包(VIB)。
+如果您需要虚拟卷(VVOl)支持、请告知我们。
+如果要使用巨型帧，请参阅 link:https://cloud.google.com/vpc/docs/mtu["GCP上支持的最大MTU大小"]
+
+====
+
+
+== 借助NetApp云卷服务实现节省
+
+要详细了解NetApp云卷服务可为您的GCVe存储需求节省的空间、请查看 link:https://bluexp.netapp.com/gcve-cvs/roi["NetApp ROI计算器"]
+
+
+
+== 参考链接
+
+* link:https://cloud.google.com/blog/products/compute/how-to-use-netapp-cvs-as-datastores-with-vmware-engine["Google博客—如何使用NetApp CVS作为Google Cloud VMware Engine的数据存储库"]
+* link:https://www.netapp.com/blog/cloud-volumes-service-google-cloud-vmware-engine/["NetApp博客—将存储丰富的应用程序迁移到Google Cloud的更好方法"]
+
