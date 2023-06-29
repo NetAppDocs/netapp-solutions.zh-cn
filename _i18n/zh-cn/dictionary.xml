@@ -12226,7 +12226,6 @@
   <block id="5a749fcdd97cee211c5fea00babe8691" category="paragraph">为了获得最佳性能并防止出现性能问题、请将控制TCP插槽表的内核参数调整为128。</block>
   <block id="dcd7ebfa96f217f8d20c58a185a48531" category="list-text">下表提供了适用于Linux NFSv3 -单个实例的建议NFS挂载选项。</block>
   <block id="4780ee7b64d0ec83e06977206e8a35b5" category="paragraph"><block ref="4780ee7b64d0ec83e06977206e8a35b5" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="4492ef7005cdef278b0b767179a1ecb9" category="admonition">在使用DNFS之前、请验证是否已安装Oracle文档1495104.1中所述的修补程序。从Oracle 12c开始、DNFS支持NFSv3、NFSv4和NFSv4.1。NetApp支持策略涵盖所有客户端的v3和v4、但在编写时、不支持将NFSv4.1与Oracle DNFS结合使用。</block>
   <block id="2fe1fc26875d6d38f4b15a3a03d498fb" category="paragraph">如解决方案 架构所示、HA基于存储级别复制构建。因此、Oracle的启动和可用性取决于计算和存储的启动和恢复速度。请参见以下主要因素：</block>
   <block id="137bc4c57a9561d086601728a3db1a90" category="list-text">准备好备用计算实例、并通过向两个主机进行Ansible并行更新与主实例同步。</block>
   <block id="d653e9032c9904901af96f496db98a3e" category="list-text">从主系统复制二进制卷以供备用、这样您就不需要在最后一分钟安装Oracle并确定需要安装和修补的内容。</block>
@@ -19318,4 +19317,121 @@
   <block id="d95d4cfa2b3fc19757cbb653dedde17d" category="paragraph">在AWS中、FSx for NetApp ONTAP (FSxN)可以部署在单个可用性区域(AZ)或多个可用性区域(AZ)中。对于需要高可用性的生产工作负载、与单个AZ相比、多可用性可提供分区级容错、并具有更好的NVMe读取缓存。有关详细信息、请查看 <block ref="e4c9b635745c064746324939979ac3ba" category="inline-link-macro-rx"></block>。
 为了节省灾难恢复站点的成本、可以使用一个AZ FSx ONTAP。
 <block ref="d945e872f3d86016e69cb70542c0cc6a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="37e3bd7a04a12d6d16389a7dc22d774d" category="summary">解决方案提供了有关快速恢复和克隆部署到AWS EC2计算实例并在FSx ONTAP上使用NFS挂载的Oracle VLDB的概述和详细信息、用于暂存待机数据文件副本、以便通过RMAN不断地进行增量合并。</block>
+  <block id="64f97bbd42c9b6469781d976c191546b" category="doc">TR-4973：《在AWS FSx ONTAP上使用增量合并快速恢复和克隆Oracle VLDB》</block>
+  <block id="a84ee4fe6800b14e1fd53326196750bc" category="paragraph">使用Oracle Recovery Manager (RMAN)备份工具在Oracle中恢复超大型数据库(VLDB)可能是一项极具挑战性的任务。发生故障时从备份介质还原数据库的过程可能会非常耗时、从而会延迟数据库恢复、并可能显著影响服务级别协议(Service Level Agreement、SLA)。但是、从10g开始、Oracle引入了RMAN功能、允许用户在DB服务器主机上的其他磁盘存储上创建Oracle数据库数据文件的暂存映像副本。这些映像副本可以每天使用RMAN进行增量更新。如果发生故障、数据库管理员(Database Administrator、DBA)可以快速将Oracle数据库从故障介质切换到映像副本、而无需进行完整的数据库介质恢复。结果是SLA得到了大幅改进、尽管成本是所需数据库存储的两倍。</block>
+  <block id="177658bcb07f8fd6c738b1a97efaf173" category="paragraph">如果您热衷于VLDB的SLA、并考虑将Oracle数据库迁移到AWS等公共云、则可以使用AWS FSx ONTAP等资源设置类似的数据库保护结构来暂存备用数据库映像副本。在本文档中、我们将演示如何从AWS FSx ONTAP配置和导出NFS文件系统、以挂载到Oracle数据库服务器上、从而暂存备用数据库副本、以便在主存储发生故障时快速恢复。</block>
+  <block id="05b4b318195ab79f80fbe6580b2e69e1" category="paragraph">更好的是、我们还会介绍如何利用NetApp FlexClone为同一暂存NFS文件系统创建一份副本、以用于其他使用情形、例如使用此备用数据库映像副本建立开发或测试Oracle环境、而无需额外的存储投资。</block>
+  <block id="84ab5c2cbea62bfae267ddfcc8e16749" category="list-text">通过AWS FSx ONTAP存储上的NFS挂载点上的RMAN执行Oracle VLDB映像副本增量合并。</block>
+  <block id="805ef53e3765a75fb2ee210066e9298e" category="list-text">发生故障时、通过切换到FSx ONTAP存储上的数据库映像副本快速恢复Oracle VLDB。</block>
+  <block id="3b5601d0dfed112b4d701ea7222195d0" category="list-text">克隆FSx ONTAP NFS文件系统卷、用于存储Oracle VLDB映像副本、以便为其他使用情形建立另一个数据库实例。</block>
+  <block id="2513056d37fad5d51b1b7e5067126d74" category="list-text">在AWS中通过RMAN设置Oracle VLDB映像副本增量合并以加快数据库恢复的数据库提供商。</block>
+  <block id="ce3231fc55ffa9da7d06a7bf71808aaf" category="list-text">一名数据库解决方案架构师、负责在AWS公共云中测试Oracle工作负载。</block>
+  <block id="1fd08bfacb23a868822b5aa42dc89a45" category="list-text">负责管理部署到AWS FSx ONTAP存储的Oracle数据库的存储管理员。</block>
+  <block id="0ba3984693a0095424864d883f786d47" category="list-text">希望在AWS FSX/EC2环境中设置Oracle数据库的应用程序所有者。</block>
+  <block id="6aa71922f1bb725cfd6b590fdc90b3bc" category="paragraph">此解决方案的测试和验证是在AWS FSx ONTAP和EC2环境中执行的、此环境可能与最终部署环境不匹配。有关详细信息，请参见一节 <block ref="8ea96e516bccf9a47ca2d74131eb7519" category="inline-xref-macro-rx"></block>。</block>
+  <block id="4d1cde643f467fc80a436e88c5524a5a" category="image-alt">此图详细展示了使用FSxN在AWS公有云中实施的Oracle VLDB增量合并。</block>
+  <block id="b9d28943555d6006f17f4fe05f964039" category="list-text">*用于RMAN增量合并的Oracle VLDB存储布局。*在我们的测试和验证中、用于Oracle增量备份和合并的NFS卷是从一个FSx文件系统中分配的、该文件系统的吞吐量为4Gbps、原始SSD IOPS为160000、容量限制为192 TiB。对于超过阈值的部署、可以将多个FSx文件系统与多个NFS挂载点并行连接、以提供更高的容量。</block>
+  <block id="9d662dbb0e0bb83274ad069971f2189b" category="list-text">*使用RMAN增量合并的Oracle可恢复性。* RMAN增量备份和合并通常根据RTO和RPO目标以用户定义的频率执行。如果主数据存储和/或归档日志完全丢失、则可能会发生数据丢失。Oracle数据库可以恢复到FSx数据库备份映像副本中提供的最后一次增量备份。为了最大限度地减少数据丢失、可以在FSx NFS挂载点上设置Oracle闪存恢复区域、并将归档日志与数据库映像副本一起备份到FSx NFS挂载。</block>
+  <block id="6848d8d3126dc1284b4005ec1fce94d8" category="list-text">*在FSx NFS文件系统之外运行Oracle VLDB。*与用于数据库备份的其他批量存储不同、AWS FSx ONTAP是一款支持云的生产级存储、可提供高级别的性能和存储效率。一旦Oracle VLDB从主存储切换到FSx ONTAP NFS文件系统上的映像副本、在解决主存储故障的同时、数据库性能可以保持较高水平。您可以放心地知道、主存储故障不会影响用户应用程序体验。</block>
+  <block id="ec7cebb9325ac3cb6f40aefad20e03bd" category="list-text">*适用于其他使用情形的FlexClone NFS卷的Oracle VLDB映像副本。* AWS FSx ONTAP FlexClone可为同一个NFS数据卷提供可写的共享副本。因此、它们可用于许多其他使用情形、同时仍可保持暂存Oracle VLDB映像副本的完整性、即使Oracle数据库已切换也是如此。这样可以大幅减少VLDB存储占用空间、从而显著节省存储成本。NetApp建议在数据库从主存储切换到数据库映像副本时尽量减少FlexClone活动、以便将Oracle性能保持在较高水平。</block>
+  <block id="e02cfd91d47eca501c65adf66254d387" category="list-text">*EC2计算实例。*在这些测试和验证中，我们使用AWS EC2 T2.xlea占用 空间实例作为Oracle数据库计算实例。NetApp建议在生产部署中使用M5类型的EC2实例作为Oracle的计算实例、因为它已针对数据库工作负载进行了优化。您需要根据实际工作负载要求根据vCPU数量和RAM量适当调整EC2实例的大小。</block>
+  <block id="dbb60fc24045befe2579b82399376e53" category="list-text">*DNFS配置。* DNFS内置在Oracle内核中、众所周知、在将Oracle部署到NFS存储时、它可以显著提高Oracle数据库性能。DNFS打包到Oracle二进制文件中、但默认情况下不启用。对于NFS上的任何Oracle数据库部署、都应启用此功能。对于VLDB的多FSx文件系统部署、应正确配置指向不同FSx NFS文件系统的DNFS多路径。</block>
+  <block id="674b2923f5f187bec3e7e8410e0b215b" category="paragraph">我们假定您已在VPC中的AWS EC2环境中部署Oracle VLDB。如果您需要有关在AWS中部署Oracle的帮助、请参阅以下技术报告以获取帮助。</block>
+  <block id="31a24635ce69dd426c0b029c4fcdc98d" category="inline-link-macro">基于EC2和FSx的Oracle数据库部署最佳实践</block>
+  <block id="b03e58dfabab0447bab001f326e6a595" category="list-text"><block ref="b03e58dfabab0447bab001f326e6a595" category="inline-link-macro-rx"></block></block>
+  <block id="b667d29e77263bc81c5be8e70e7e2a49" category="list-text"><block ref="b667d29e77263bc81c5be8e70e7e2a49" category="inline-link-macro-rx"></block></block>
+  <block id="ecd21491d14a4e28b3455daf967f0d92" category="list-text"><block ref="ecd21491d14a4e28b3455daf967f0d92" category="inline-link-macro-rx"></block></block>
+  <block id="dac14712639b383d9fbc2ddd7e8fa676" category="paragraph">您的Oracle VLDB可以在FSx ONTAP上运行、也可以在AWS EC2生态系统中的任何其他可选存储上运行。下一节将分步介绍如何设置RMAN增量合并到Oracle VLDB的映像副本、该副本暂存在AWS FSx ONTAP存储的NFS挂载中。</block>
+  <block id="e662355029a2dd517af0a229f7df7092" category="list-text">从AWS EC2控制台中、部署Amazon FSx for ONTAP存储HA集群、以托管用于存储Oracle数据库备用映像副本的NFS卷。如果您不熟悉FSX存储的部署、请参见相关文档 <block ref="17d8b312d287f0afd6f44b3f25c4f20b" category="inline-link-macro-rx"></block> 了解分步说明。</block>
+  <block id="3445b7a1a574c2ac22f90caa85f25371" category="list-text">可以使用以下Terraform自动化工具包执行步骤2和步骤3、该工具包会创建一个名为的EC2实例<block ref="460dc55b5ffb0266f2c889b06ee73344" prefix=" " category="inline-code"></block> 和名为的FSX文件系统<block ref="8cbb7b3050d3c3aa08a529f429bc4555" prefix=" " category="inline-code"></block>。执行前、请仔细阅读该说明并根据您的环境更改变量。您可以根据自己的部署要求轻松修改此模板。</block>
+  <block id="669ff3f2ba7dca6171b6cc4738349f3f" category="section-title">配置和导出要挂载到EC2数据库实例主机的NFS卷</block>
+  <block id="beef8e24f1fb09f50fd25f29a0576680" category="paragraph">在此演示中、我们将展示如何通过命令行配置NFS卷、方法是以fsxadmin用户身份通过FSx集群管理IP以ssh登录到FSx集群。或者、也可以使用AWS FSx控制台分配卷。如果设置了多个FSx文件系统以适应数据库大小、请在其他FSx文件系统上重复上述过程。</block>
+  <block id="2a1085209859c9d5c2d99b39ef5f9808" category="list-text">首先、以fsxadmin用户身份通过SSH登录到FSx集群、通过命令行界面配置NFS卷。更改为FSx集群管理IP地址、此地址可从AWS FSx ONTAP UI控制台检索。</block>
+  <block id="09d6e7935025f34dae85044f7e4870bf" category="list-text">创建与主存储大小相同的NFS卷、用于存储主Oracle VLDB数据库数据文件映像副本。</block>
+  <block id="7df4f92cb03e6715a6c7d330de46b589" category="list-text">或者、也可以从AWS FSx控制台UI中使用以下选项配置此卷：存储效率<block ref="00d23a76e43b46dae9ec7aa9dcbebb32" prefix=" " category="inline-code"></block>，安全模式<block ref="6ec1bd1ea6a5d67a63b20c8f6172bddd" prefix=" " category="inline-code"></block> 、Snapshot策略<block ref="6adf97f83acf6453d4a6a4b1070f3754" prefix=" " category="inline-code"></block>和存储层<block ref="e564cced6db6df25023e6429cf11a291" prefix=" " category="inline-code"></block> 如下所示。</block>
+  <block id="a33ce44212488cbdb886d0cb26238cd8" category="list-text">为Oracle数据库创建一个具有每日计划和30天保留期限的自定义快照策略。您应根据快照频率和保留时间窗口的具体需求调整策略。</block>
+  <block id="f50e19cf713434ce45c0e967a937c4b1" category="paragraph">将策略应用于配置的NFS卷以进行RMAN增量备份和合并。</block>
+  <block id="4c4801c905895fc73c76eb48803356bd" category="list-text">以EC2-user身份登录到EC2实例并创建目录/nfsfsxn。为其他FSx文件系统创建其他挂载点目录。</block>
+  <block id="96da60d19f53d464b46b18235e488b0c" category="list-text">将FSx ONTAP NFS卷挂载到EC2数据库实例主机。更改为FSx虚拟服务器NFS lf地址。可以从FSx ONTAP UI控制台检索NFS lf地址。</block>
+  <block id="41fbd60dc26462d8127dea9ccd97bc7c" category="list-text">将挂载点所有权更改为oracle：oisntall、根据需要更改为Oracle用户名和主组。</block>
+  <block id="e672188e115cfc49668faf09236fa9a3" category="section-title">将Oracle RMAN增量合并设置为FSx上的映像副本</block>
+  <block id="ab8554776d6b4fb55fd0e03cf7f1cbd5" category="paragraph">RMAN增量合并会在每个增量备份/合并间隔持续更新暂存数据库数据文件映像副本。数据库备份的映像副本将与您执行增量备份/合并的频率相同。因此、在确定RMAN增量备份和合并的频率时、应考虑数据库性能、RTO和RPO目标。</block>
+  <block id="e5ac82720d85625fdd4172bd3616e3c3" category="list-text">以Oracle用户身份登录到主数据库服务器EC2实例</block>
+  <block id="8d0e6d4de61925d1916712bf22df2fb6" category="list-text">在挂载点/nfsfsxn下创建oracopy目录、用于存储Oracle闪存恢复区域的Oracle数据文件映像副本和归档日志目录。</block>
+  <block id="7cb2cebcba99e754681eceeb65a95142" category="list-text">通过sqlplus登录到Oracle数据库、启用块更改跟踪以加快增量备份、如果Oracle闪存恢复区域当前位于主存储上、则将其更改为FSxN挂载。这样、RMAN默认控制文件/spfile自动备份和归档日志便可备份到FSxN NFS挂载以进行恢复。</block>
+  <block id="92a7748d0f82560bbce2ab900cd1955b" category="paragraph">从sqlplus提示符处、执行以下命令。</block>
+  <block id="4dd8e34c47ee1899b1fd445ff9555012" category="list-text">创建RMAN备份和增量合并脚本。该脚本会为并行RMAN备份和合并分配多个通道。首次执行将生成初始完整基线映像副本。在完整运行中、它会首先清除保留窗口之外的过时备份、以保持暂存区域干净。然后、它会在合并和备份之前切换当前日志文件。增量备份会在合并后进行、以便数据库映像副本会在当前数据库状态后经过一个备份/合并周期。可以反转合并和备份顺序、以便根据用户的偏好加快恢复速度。RMAN脚本可以集成到一个简单的shell脚本中、以便从主数据库服务器上的crontab执行。确保在RMAN设置中打开控制文件自动备份。</block>
+  <block id="ae93d326cc9f712fe006ea475309937c" category="list-text">在EC2数据库服务器上、以Oracle用户身份本地登录到RMAN、无论是否具有RMAN目录。在此演示中、我们不会连接到RMAN目录。</block>
+  <block id="ac32c637aa72dbf6f583c6230b41da8e" category="list-text">从RMAN提示符处、执行该脚本。首次执行时创建基线数据库映像副本、后续执行时合并并增量更新基线映像副本。下面介绍了如何执行该脚本以及典型输出。设置通道数、使其与主机上的CPU核匹配。</block>
+  <block id="e4c4b8650bec8cf96029a44dde1880ef" category="list-text">在备份后列出数据库映像副本、以观察是否已在FSx ONTAP NFS挂载点中创建数据库映像副本。</block>
+  <block id="c924bb54c35d27877a31088ac19cfa72" category="list-text">通过Oracle RMAN命令提示符报告架构、以观察当前活动数据库数据文件是否位于主存储ASM +数据磁盘组中。</block>
+  <block id="3ce3b6eb52bdc641409f7139da0754cb" category="list-text">验证从操作系统NFS挂载点复制的数据库映像。</block>
+  <block id="7d929a2c11ebdbe1a109452e9ed6387a" category="paragraph">至此、Oracle数据库备用映像副本备份和合并的设置完成。</block>
+  <block id="4a2b45de7eb73f732fa6bff62fc81d22" category="section-title">将Oracle数据库切换到映像副本、以便快速恢复</block>
+  <block id="e4524be5d2f6b10f07de14a0c1ab6d71" category="paragraph">如果因主存储问题描述发生故障(例如数据丢失或损坏)、则可以快速将数据库切换到FSx ONTAP NFS挂载上的映像副本、并将其恢复到当前状态、而无需还原数据库。消除介质还原可显著加快VLDB的数据库恢复速度。此使用情形假定数据库主机实例完好无损、并且数据库控制文件、归档日志和当前日志均可用于恢复。</block>
+  <block id="537cc866e4f73e1c941f5c4d2ddab8b2" category="list-text">在切换之前、以Oracle用户身份登录到EC2数据库服务器主机并创建测试表。</block>
+  <block id="61bbc132a3f6fe227d32c6a35bc77915" category="list-text">通过关闭中止数据库、然后在挂载阶段启动Oracle来模拟故障。</block>
+  <block id="c4ab260ce247b7761c38125aef5a7e31" category="list-text">作为Oracle用户、通过RMAN连接到Oracle数据库、以切换要复制的数据库。</block>
+  <block id="3ea66d969bd94f4cf208dd0bf63840e1" category="list-text">恢复并打开数据库、使其从上次增量备份恢复到最新状态。</block>
+  <block id="271cb3a5612f55b3fb8130a4467d73ec" category="list-text">在恢复后从sqlplus检查数据库结构、观察所有数据库数据文件(控制、临时和当前日志文件除外)现在都已切换到FSx ONTAP NFS文件系统上的副本。</block>
+  <block id="5466bef4632a6a1715d3679bc62c300d" category="list-text">从SQL plus中、检查切换到复制之前插入的测试表的内容</block>
+  <block id="dd4adbd87c36bf460c0ab4343599cf3c" category="list-text">您可以在FSx NFS挂载中长时间运行Oracle数据库、而不会影响性能、因为FSx ONTAP是可提供高性能的冗余生产级存储。修复主存储问题描述后、您可以通过反转增量备份合并过程并将停机时间降至最低来回滚到该主存储LUN。</block>
+  <block id="f433e16f47f57d938354f88fa762d7a7" category="section-title">从映像副本到不同EC2数据库实例主机的Oracle数据库恢复</block>
+  <block id="d837ec95ded842996742a097ccc57d23" category="paragraph">如果主存储和EC2数据库实例主机均丢失、则无法从原始服务器执行恢复。幸运的是、冗余FSxN NFS文件系统上仍有Oracle数据库备份映像副本。您可以快速配置另一个相同的EC2数据库实例、并通过NFS轻松地将VLDB的映像副本挂载到新的EC2数据库主机中以运行恢复。在本节中、我们将演示执行此操作的分步过程。</block>
+  <block id="4ffffb6fe23c2e148c9e989b623bc6b2" category="list-text">插入一行以测试我们之前为Oracle数据库还原到备用主机验证创建的表。</block>
+  <block id="bb7d83c51bce8526639605fc1576a291" category="list-text">以Oracle用户身份运行RMAN增量备份并合并、以将事务转储到FSxN NFS挂载上的备份集。</block>
+  <block id="ca8b6e06f9a38563ab902a368af242c6" category="list-text">关闭主EC2数据库实例主机、以模拟存储和数据库服务器主机的完全故障。</block>
+  <block id="6a82ba490c8bb40b71afe1f76748f174" category="list-text">通过AWS EC2控制台访问操作系统和版本相同的新EC2数据库实例主机ora_02。使用与主EC2数据库服务器主机相同的修补程序和Oracle预安装RPM配置操作系统内核、并向主机添加交换空间。使用纯软件选项在主EC2数据库服务器主机中安装相同版本和修补程序的Oracle。这些任务可通过以下链接中提供的NetApp自动化工具包自动执行。</block>
+  <block id="484b6792dca4a6754db8dc27e6c6ba0d" category="inline-link-macro">na_oracle19c_dDeploy</block>
+  <block id="733387d95f4085ab891cbb1cd722240c" category="paragraph">工具包： <block ref="f2b9e8cd57c74518bbd4e9f055c1e730" category="inline-link-macro-rx"></block>
+文档： <block ref="65f846fe90697736cfc063f6ee7e5776" category="inline-link-macro-rx"></block></block>
+  <block id="64aaea95ae37c9da88e6fab3b2d78189" category="list-text">配置Oracle环境的方式与主EC2数据库实例主机ora_01类似、例如oratab、oraInst.loc和Oracle用户.bash_profile。最好将这些文件备份到FSxN NFS挂载点。</block>
+  <block id="ae1a606cf666a9deb60f32d915ac36d4" category="list-text">FSxN NFS挂载上的Oracle数据库备份映像副本存储在跨越AWS可用性区域的FSx集群上、以实现冗余、高可用性和高性能。只要网络连接可访问、NFS文件系统就可以轻松挂载到新服务器上。以下过程会将Oracle VLDB备份的映像副本挂载到新配置的EC2数据库实例主机以进行恢复。</block>
+  <block id="22e76ff31f397dc2b31e0c2a97aafc91" category="paragraph">以EC2用户身份创建挂载点。</block>
+  <block id="aa0a89a579500af6cf1c8d39a6150685" category="paragraph">以EC2用户身份挂载用于存储Oracle VLDB备份映像副本的NFS卷。</block>
+  <block id="e480c1e101855c22c20b280c036543fd" category="list-text">验证FSxN NFS挂载点上的Oracle数据库备份映像副本。</block>
+  <block id="d2ced018319ceeba05f1f26995e1ee7f" category="list-text">验证FSxN NFS挂载上可用于恢复的Oracle归档日志、并记下最后一个日志文件日志顺序编号。在本例中、此值为175。我们的恢复点最高为日志顺序编号176。</block>
+  <block id="15766642bf6adac1b2dcc3fe7efe97db" category="list-text">作为Oracle用户、将oracle_home变量设置为新EC2实例数据库主机ora_02上的当前Oracle安装、将oracle_sid设置为主Oracle实例SID。在此示例中、此值为db1。</block>
+  <block id="f1e64da01cd4df308ca514431dae3f5c" category="list-text">以Oracle用户身份、在$oracle_HOME/dbs目录中创建一个通用Oracle init文件、并配置适当的管理目录。最重要的是、拥有Oracle<block ref="54205e08f5455705eb7a595f7e4f620f" prefix=" " category="inline-code"></block> 指向主Oracle VLDB实例中定义的FSxN NFS挂载路径。 <block ref="54205e08f5455705eb7a595f7e4f620f" prefix=" " category="inline-code"></block> 第节介绍了配置<block ref="e672188e115cfc49668faf09236fa9a3" prefix=" " category="inline-code"></block>。将Oracle控制文件设置为FSx ONTAP NFS文件系统。</block>
+  <block id="6951e3b7844ae5d3e60eb5dcb338c299" category="paragraph">包含以下示例条目：</block>
+  <block id="a3d440ae8cc0248159d37338aaf28ec4" category="paragraph">如果出现差异、应将上述init文件替换为从主Oracle数据库服务器还原的备份init文件。</block>
+  <block id="6cdcdb33b7ec2edec91d323d0fe81c36" category="list-text">以Oracle用户身份启动RMAN、以便在新的EC2数据库实例主机上运行Oracle恢复。</block>
+  <block id="69c8d3164b4eabc17a7068af76e859ab" category="list-text">设置数据库ID。数据库ID可从FSx NFS挂载点上映像副本的Oracle文件名中检索。</block>
+  <block id="4929814f4c8b867309967d003f3472fb" category="list-text">从自动备份还原控制文件。如果启用了Oracle控制文件和spfile自动备份、则它们会在每个增量备份和合并周期中进行备份。如果有多个副本可用、则会还原最新备份。</block>
+  <block id="cb4aafdbf8cfce9ea979b084999b9458" category="list-text">将init文件从spfile还原到/tmp文件夹、以便稍后更新参数文件以与主数据库实例匹配。</block>
+  <block id="39f6eca6a7de81a70cddffc68c8e17e0" category="list-text">挂载控制文件并验证数据库备份映像副本。</block>
+  <block id="b036aee1d02945292a171a824ce2cc7f" category="list-text">切换要复制的数据库、以便在不还原数据库的情况下运行恢复。</block>
+  <block id="74f753e2cf1db0c619e10ea98cdba3a4" category="list-text">在闪存恢复区域运行Oracle恢复、直到最后一个可用归档日志为止。</block>
+  <block id="b32650e2f9aad58631cbaa769519a580" category="admonition">要加快恢复速度、请使用recovery _parlism参数启用并行会话、或者在恢复命令中指定并行程度以进行数据库恢复：<block ref="72ba82e38f6375ed705cba8b43d4cf0f" prefix=" " category="inline-code"></block>。通常、并行度应等于主机上的CPU核数。</block>
+  <block id="977b95efac611dc3eeaed06aba204c87" category="list-text">退出RMAN、以Oracle用户身份通过sqlplus登录到Oracle、以便在恢复不完整后打开数据库并重置日志。</block>
+  <block id="6ceae78bd89e5df86bc8e81f7407b7de" category="list-text">验证是否已将数据库还原到主数据库出现故障之前已插入行的新主机。</block>
+  <block id="e2f16f903230132f70121566f6a55067" category="list-text">其他恢复后任务</block>
+  <block id="8072a970f6aaf76f553af23ebfef337d" category="paragraph">这样、Oracle VLDB数据库便可从FSxN NFS文件系统上的备份映像副本恢复到新的EC2数据库实例主机。</block>
+  <block id="4737b996f5816f2a4f5834d13933c08f" category="section-title">克隆Oracle备用映像副本、以供其他使用情形使用</block>
+  <block id="b316f3e1185d0474dbb0d60722fed440" category="paragraph">使用AWS FSx ONTAP暂存Oracle VLDB映像副本的另一个优势是、可以通过FlexCloned将其用于其他许多用途、而额外的存储投资极少。在以下用例中、我们将演示如何在FSx ONTAP上为其他Oracle用例(如开发、UAT等)创建暂存NFS卷的快照和克隆</block>
+  <block id="53e8ce069d201591aa4267856420d737" category="list-text">首先、我们会在之前创建的同一测试表中插入一行。</block>
+  <block id="9a10cae3a2084b172991773f39bcaa66" category="list-text">创建RMAN备份并合并到FSx ONTAP数据库映像副本、以便事务将捕获到FSx NFS挂载上的备份集中、但在恢复克隆的数据库之前不会合并到副本中。</block>
+  <block id="3f29a9686f355189b274a638b5f7b4e2" category="list-text">以fsxadmin用户身份通过ssh登录到FSx集群、以观察由计划备份策略Oracle创建的快照、并创建一次性快照、以使其包含我们在步骤1中执行的事务。</block>
+  <block id="f47ed0566abed1014329d477596692e1" category="list-text">从一次性快照克隆、用于在备用EC2 Oracle主机上建立新的DB1克隆实例。您可以选择从卷ora_01_copy的任何可用每日快照克隆。</block>
+  <block id="d674010d79c4ca8b1548eb14dc15db19" category="list-text">关闭克隆卷的Snapshot策略、因为它会继承父卷的Snapshot策略、除非您要保护克隆的卷、否则请将其保留为独立卷。</block>
+  <block id="2d5a0399afe0ebbc20ccc537e1691ac1" category="list-text">登录到一个新的EC2 Linux实例、此实例已预安装Oracle软件、并且版本和修补程序级别与主Oracle EC2实例相同、然后挂载克隆的卷。</block>
+  <block id="1955f680df8fadf63d4bd9e5ce9ddf0d" category="list-text">验证FSx NFS挂载上的数据库增量备份集、映像副本和可用归档日志。</block>
+  <block id="b4f1ff50bc44cf0fa23d91e3daaecc7a" category="list-text">现在、恢复过程类似于以前在发生故障后恢复到新EC2数据库实例的用例—将Oracle环境(oratab、$oracle_home、$oracle_sid)设置为与主生产实例匹配、 创建一个init文件、其中包含db_recovery文件_dest和db_recovery文件_dest、该文件指向FSx NFS挂载上的闪存恢复目录。然后、通过lanuch RMAN运行恢复。以下是命令步骤和输出。</block>
+  <block id="31ef8f0e18e31ab3c319011fa3085595" category="list-text">使用Oracle nid实用程序重命名克隆的数据库实例并更改数据库ID。数据库实例需要处于状态<block ref="19822b1b15d9eefc54c07ab49f87b100" prefix=" " category="inline-code"></block> 以执行命令。</block>
+  <block id="deae90bf8a8075e066b36ab46839b972" category="list-text">在oratab、init文件中将Oracle数据库环境配置更改为新的数据库名称或实例ID、并创建与新实例ID匹配的必要管理目录。然后，使用resetlogs"选项启动实例。</block>
+  <block id="539484c3a56c32c91eebd8b6c6dd0c01" category="paragraph">这样、就可以在开发、UAT或任何其他使用情形下、通过FSx NFS挂载上的暂存数据库副本克隆新的Oracle实例。可以从同一暂存映像副本克隆多个Oracle实例。</block>
+  <block id="b122ab6bc46093e4e498238b2da87899" category="admonition">遇到错误时<block ref="db9915ff14e5c2a62fbc300de8219575" prefix=" " category="inline-code"></block> 在将数据库切换为副本时、请检查与主生产数据库匹配的数据库配置。如果需要、请使用RMAN命令重置此转存方式、使其与主服务器匹配<block ref="762ac7c31f911d73b6a11960c393c6ad" prefix=" " category="inline-code"></block>。</block>
+  <block id="420087855d0829aebf7985f8b037c0f5" category="list-text">RMAN：合并增量备份策略(文档ID 745798.1)</block>
+  <block id="cebc42ddf70311bb702156ffc928e04f" category="inline-link-macro"><block ref="cebc42ddf70311bb702156ffc928e04f" category="inline-link-rx"></block></block>
+  <block id="fb535d4ffc04924a6c6853e4c44cdf5e" category="paragraph"><block ref="fb535d4ffc04924a6c6853e4c44cdf5e" category="inline-link-macro-rx"></block></block>
+  <block id="0c10dedf45d356e3143692b00bf17a78" category="list-text">RMAN备份和恢复用户指南</block>
+  <block id="067d09ddb20edd1de533097e38987388" category="inline-link-macro"><block ref="067d09ddb20edd1de533097e38987388" category="inline-link-rx"></block></block>
+  <block id="475010ac362493ac8aa5ebd15ee454e5" category="paragraph"><block ref="475010ac362493ac8aa5ebd15ee454e5" category="inline-link-macro-rx"></block></block>
+  <block id="455ed42b897e59b7476b1f41b16fa943" category="cell">2023年9月6日</block>
+  <block id="9c1fbb26b0f6ad48efeff242923d1570" category="cell">新增TR-4973：《在AWS FSx ONTAP上使用增量合并快速恢复和克隆Oracle VLDB》</block>
+  <block id="0623403e61b2d6dd08cf57fdc3dc8789" category="sidebar">在AWS FSx ONTAP上通过增量合并快速恢复和克隆Oracle VLDB</block>
+  <block id="26340070db5e3907487c23df7dcd4ddc" category="sidebar">适用于数据库的SnapCenter</block>
+  <block id="37a8ebbbcf603230c17a02eb0e2dac13" category="sidebar">使用SnapCenter服务执行Oracle备份、还原和克隆—AWS</block>
+  <block id="7fa7ffa04f68e2d66ac6bd8166d8ca35" category="sidebar">使用AWS FSx ONTAP快速恢复和克隆Oracle VLDB</block>
 </blocks>
