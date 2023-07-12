@@ -19343,4 +19343,61 @@
   <block id="b4aaa3fbc0d85cfa527c7cb7f59187fd" category="paragraph">使用适用于NetApp ONTAP 的Amazon FSX在AWS EC2上部署SQL Server</block>
   <block id="7dbe34f3fef2db9f333edc2d7f26f092" category="inline-link-macro">在NetApp TV上观看</block>
   <block id="2dd4d779ad3660fdc971965df3e63860" category="paragraph"><block ref="2dd4d779ad3660fdc971965df3e63860" category="inline-link-macro-rx"></block></block>
+  <block id="63e74751c1fcdeccfc1f7a594bfb8e24" category="section-title">AWS FSxN中的Apache Kafka</block>
+  <block id="29144a8d530212e5210d98eceae62106" category="paragraph">网络文件系统(Network File System、NFS)是一种广泛用于存储大量数据的网络文件系统。在大多数企业中、数据越来越多地由Apache Kafka等流式应用程序生成。这些工作负载需要可扩展性、低延迟以及具有现代存储功能的强大数据采集架构。要实现实时分析并提供可指导行动的洞察力、需要一个设计完善且性能高的基础架构。</block>
+  <block id="3f967133c1559360b8fdb37917d76e3b" category="paragraph">Kafka的设计支持POSIX兼容文件系统、并依靠文件系统来处理文件操作、但在NFS3文件系统上存储数据时、Kafka代理NFS客户端对文件操作的解释可能与XFS或ext4等本地文件系统不同。一个常见的示例是NFS愚蠢的重命名、该重命名导致Kafka代理在扩展集群和重新分配分区时失败。为了应对这一挑战、NetApp对开源Linux NFS客户端进行了更新、对RHEL8.7和RHEL9.1中的内容进行了一般更改、并从当前FSx for ONTAP版本ONTAP 9.12.1开始受支持。</block>
+  <block id="e4aeaeded85f5a0caa3b8435a8093058" category="paragraph">Amazon FSx for NetApp ONTAP可在云中提供一个完全托管、可扩展且高性能的NFS文件系统。FSx for NetApp上的Kafka数据可以进行扩展、以处理大量数据并确保容错。NFS可为关键和敏感数据集提供集中式存储管理和数据保护。</block>
+  <block id="02246e3778487a8335fd843bc4aa31a8" category="paragraph">通过这些增强功能、AWS客户可以在AWS计算服务上运行Kafka工作负载时利用FSx for ONTAP。这些优势包括：
+*降低CPU利用率以缩短I/O等待时间
+* Kafka代理恢复时间更快
+*可靠性和效率
+*可扩展性和性能
+*多可用性区域可用性
+*数据保护</block>
+  <block id="dbbb6154410adc71c037ae9540ba853e" category="section-title">AWS FSxN中的性能概述和验证</block>
+  <block id="e98812b1f0bd6a95aa5099abee7c0586" category="paragraph">在NetApp NFS上挂载存储层的Kafka集群在AWS FSxN中进行了性能基准测试。以下各节将介绍这些基准测试示例。</block>
+  <block id="caa7651f81acf102ab8d80e41b42b30f" category="section-title">AWS FSxN中的Kafka (主动被动)</block>
+  <block id="7e2b4f28323666c1b230658b0f4cf0d4" category="paragraph">采用AWS FSxN的Kafka集群已通过AWS云中的性能基准测试。以下各节将介绍此基准测试。</block>
+  <block id="5358ad9d33df7a4ba170a28ba93f5a14" category="paragraph">下表显示了使用AWS FSxN的Kafka集群的环境配置。</block>
+  <block id="038790391c3f6a420beaed7bca0eb306" category="cell">AWS FSxN</block>
+  <block id="2c43c131f9dbd6c6f7e53fae2c631bab" category="cell">具有4GB/秒吞吐量和160000 IPS的主动被动实例</block>
+  <block id="15689de1e8c8e9df3d3a505fc1cc508a" category="section-title">NetApp FSxN设置</block>
+  <block id="15e09b09a424c129f640d4d8bf8a57fb" category="list-text">在初始测试中、我们为NetApp ONTAP文件系统创建了一个FSx、其IOPS为2 TB、吞吐量为400、每秒2 GB。</block>
+  <block id="0723b0eb6313719dea73d580daba9812" category="list-text">在FSx for NetApp ONTAP中、测试区域(US-East-1)中2 GB/秒吞吐量文件系统可实现的最大IOPS为80、000 IOPS。FSx for NetApp ONTAP文件系统的总最大IOPS为160、000次IOPS、需要部署4 GB/秒吞吐量才能达到此目的、我们将在本文档后面进行演示</block>
+  <block id="9919bc442a9a9f2d8d7fc1de906af09a" category="paragraph">有关FSx "crea-File-system"的详细命令行语法、请参见：<block ref="6dfaa72a4db79e3cd69acb6bd09e3928" category="inline-link-rx"></block>
+例如、您可以指定特定的KMS密钥、而不是在未指定KMS密钥时使用的默认FSx主密钥。</block>
+  <block id="a11fdad778ae8db20df33a7105f25d61" category="list-text">在按如下所示描述文件系统后、等待JSON返回中的"LifeCycle (生命周期)"状态更改为"Available (可用)"：</block>
+  <block id="bd4800c6b066706993280a489b3c1efc" category="list-text">fsxadmin的密码是首次创建文件系统时配置的密码。</block>
+  <block id="60d53fd06e4b6c504e7525da9dd9e960" category="list-text">通过fsxadmin登录到FsxN以验证凭据</block>
+  <block id="aa843ceeced5cab33e1975e4b24bc034" category="list-text">在FSxN上创建Storage Virtual Machine</block>
+  <block id="c067fa16a6a6be12f2e2a0ce711ea081" category="list-text">通过SSH连接到新创建的FSx for NetApp ONTAP文件系统、然后使用以下示例命令在Storage Virtual Machine中创建卷、同样、我们会为此验证创建6个卷。根据我们的验证、保留默认成分卷(8个)或更少的成分卷可以提高Kafka的性能。</block>
+  <block id="1fe8082897bcfbb9ee581ea0eb414b55" category="list-text">将卷的大小扩展到2 TB、然后挂载到接合路径上。</block>
+  <block id="b99f4a484fbac55e4f5cfb75ab0ece88" category="list-text">我们将FSxN吞吐量从2 GB/秒扩展到4 GB/秒、并将IOPS扩展到160000</block>
+  <block id="dc9ae5e2a4f056e820a82eac9514fb2c" category="paragraph">有关FSx "update-file-system"的详细命令行语法、请参见：
+<block ref="f3196344ef0cf3de8d956a0736aba68b" category="inline-link-rx"></block></block>
+  <block id="3fb5c18262c8a073095e4d565e517cbe" category="list-text">FSxN卷使用nconnect和默认选项挂载在kafkar代理中</block>
+  <block id="eadd57f60c0f2d488d9abad2d2c90410" category="inline-image-macro">此图显示了基于FSxN的Kafka集群的架构。</block>
+  <block id="fc5366ca7693dfbf0d27e605f38150d1" category="paragraph"><block ref="fc5366ca7693dfbf0d27e605f38150d1" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="16203081c08c46b57d034098ddad1707" category="list-text">计算。我们使用了一个三节点Kafka集群、其中一个三节点Zookeer集合运行在专用服务器上。每个代理都有六个NFS挂载点、指向FSxN实例上的六个卷。</block>
+  <block id="447931d0542671d1817df0b8bdc35ff4" category="list-text">监控。我们将两个节点用于Prometheus-Grafana组合。为了生成工作负载、我们使用了一个单独的三节点集群、该集群可能会生成此Kafka集群并将其占用。</block>
+  <block id="33bb274c8f0f88ce86b14f072d149260" category="list-text">存储。我们使用的是装载了六个1 TB卷的FSxN。然后、该卷会通过NFS挂载导出到Kafka代理。</block>
+  <block id="c06018aab55e4fa9ef871b34b2cf7897" category="section-title">OpenMessage基准测试配置。</block>
+  <block id="90bdac7d782d430afae34ade3de71547" category="paragraph">我们使用的配置与NetApp云卷ONTAP相同、其详细信息如下所示-
+<block ref="6134638458f4b728e1bf1e106663272c" category="inline-link-rx"></block></block>
+  <block id="79f0e8e2c892a7ffb6c02f9be47fd6f5" category="list-text">按照上述规范、我们使用terraform和Ans得 来配置Kafka集群。Terraform用于使用适用于Kafka集群的AWS实例构建基础架构、而Ans可 在这些实例上构建Kafka集群。</block>
+  <block id="74751dc90af7ed6cd33e91134b59f098" category="paragraph">对于Kafka复制因子1和FSxN：</block>
+  <block id="477397883986e4a6ef0944db3f171a9a" category="list-text">Sync驱动程序一致生成的总吞吐量：~ 3218 Mbps、峰值性能(~ 3352 Mbps)。</block>
+  <block id="526cf61e40ed54cf3e36bc48e608fe6a" category="list-text">吞吐量驱动程序一致生成的总吞吐量：~ 3639 Mbps、峰值性能(~ 3908 Mbps)。</block>
+  <block id="e7e5847dcc7a7e35914f5073abcdef2c" category="paragraph">对于复制因子为3且FSxN的Kafka：</block>
+  <block id="1d0957e5fc4340aeed631639b2076501" category="list-text">Sync驱动程序一致生成的总吞吐量：~ 1252 Mbps、峰值性能(~ 1382 Mbps)。</block>
+  <block id="e18b6be6753e1c55e4474648e1073e75" category="list-text">吞吐量驱动程序一致生成的总吞吐量：~ 1218 MBps、峰值性能(以~ 1328 MBps为单位)。</block>
+  <block id="49d5fc1dfe926a49be3fe6cf6181e2d5" category="paragraph">在Kafka复制因子3中、对FSxN执行读取和写入操作三次；在Kafka复制因子1中、对FSxN执行读取和写入操作一次、因此、在这两种验证中、我们都能够达到最大吞吐量4 GB/秒。</block>
+  <block id="5d4902b750979a6daa75a334daf3b4dd" category="inline-image-macro">此图显示了Kafka与RF1和RF3的性能</block>
+  <block id="67731dd79a61f656bfde458fade09eb2" category="paragraph"><block ref="67731dd79a61f656bfde458fade09eb2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d7b7649bb7a53117242ecfeb58fc74d1" category="paragraph">下图显示了Kafka复制因子3的2 GB/秒FSxn和4 GB/秒性能。复制因子3会对FSxN存储执行三次读取和写入操作。吞吐量驱动程序的总速率为881 MB/秒、在2 GB/秒的FSxN文件系统上执行读取和写入Kafka操作的速率约为2.64 GB/秒、吞吐量驱动程序的总速率为1328 MB/秒、执行读取和写入Kafka操作的速率约为3.98 GB/秒。Kafka的性能呈线性增长、可根据FSxN吞吐量进行扩展。</block>
+  <block id="a7ddac9765853f96e59270871b8a3925" category="inline-image-macro">此图显示了2 GB/秒和4 GB/秒的横向扩展性能。</block>
+  <block id="94043e4666620e8e09ceedcb705c7951" category="paragraph"><block ref="94043e4666620e8e09ceedcb705c7951" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="537010d3e62b0585eeff4338a8b7247d" category="paragraph">下图显示了EC2实例与FSxN之间的性能(Kafka复制因子：3)</block>
+  <block id="d5e31e558823422acd821d826cc2d30e" category="inline-image-macro">此图显示了RF3中EC2与FSxN的性能比较。</block>
+  <block id="6800ca66a2adebbbdc5a76b6efd0b0a8" category="paragraph"><block ref="6800ca66a2adebbbdc5a76b6efd0b0a8" category="inline-image-macro-rx" type="image"></block></block>
 </blocks>
