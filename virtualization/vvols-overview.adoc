@@ -30,25 +30,17 @@ NetApp于2012年开始与VMware合作、为适用于vSphere 5的vSphere APIS for
 
 需要注意以下几个组件：
 
+[cols="20%, 80%"]
 |===
 
 
-| *VASA Provider* 
+| *VASA Provider* | 这是一个软件组件、用于处理VMware vSphere与存储系统之间的通信。对于ONTAP 、VASA Provider在一种称为适用于VMware vSphere的ONTAP 工具(简称ONTAP 工具)的设备中运行。ONTAP 工具还包括一个vCenter插件、一个适用于VMware Site Recovery Manager的存储复制适配器(Storage Replication Adapter、SRA)以及用于构建您自己的自动化的REST API服务器。配置ONTAP 工具并将其注册到vCenter后、几乎不再需要直接与ONTAP 系统交互、因为几乎所有存储需求都可以直接在vCenter UI中进行管理、或者通过REST API自动化进行管理。 
 
 
-| 这是一个软件组件、用于处理VMware vSphere与存储系统之间的通信。对于ONTAP 、VASA Provider在一种称为适用于VMware vSphere的ONTAP 工具(简称ONTAP 工具)的设备中运行。ONTAP 工具还包括一个vCenter插件、一个适用于VMware Site Recovery Manager的存储复制适配器(Storage Replication Adapter、SRA)以及用于构建您自己的自动化的REST API服务器。配置ONTAP 工具并将其注册到vCenter后、几乎不再需要直接与ONTAP 系统交互、因为几乎所有存储需求都可以直接在vCenter UI中进行管理、或者通过REST API自动化进行管理。 
+| *协议端点(PE)* | 协议端点是ESXi主机和VMware数据存储库之间的I/O代理。ONTAP VASA Provider会自动创建这些LUN、即VVOL数据存储库中每个FlexVol^®^卷一个协议端点LUN (大小为4 MB)、或者在数据存储库中托管FlexVol 卷的存储节点上每个NFS接口(LIF)一个NFS挂载点。ESXi主机直接装载这些协议端点、而不是装载单个VVOLLUN和虚拟磁盘文件。协议端点由VASA Provider自动创建、挂载、卸载和删除、因此无需对这些端点进行管理、同时也无需管理任何必要的接口组或导出策略。 
 
 
-| *协议端点(PE)* 
-
-
-| 协议端点是ESXi主机和VMware数据存储库之间的I/O代理。ONTAP VASA Provider会自动创建这些LUN、即VVOL数据存储库中每个FlexVol^®^卷一个协议端点LUN (大小为4 MB)、或者在数据存储库中托管FlexVol 卷的存储节点上每个NFS接口(LIF)一个NFS挂载点。ESXi主机直接装载这些协议端点、而不是装载单个VVOLLUN和虚拟磁盘文件。协议端点由VASA Provider自动创建、挂载、卸载和删除、因此无需对这些端点进行管理、同时也无需管理任何必要的接口组或导出策略。 
-
-
-| *虚拟协议端点(VPE)* 
-
-
- a| 
+| *虚拟协议端点(VPE)*  a| 
 vSphere 8中的新增功能是、在将基于网络结构的NVMe (NVMe-oF)与vvol结合使用时、协议端点的概念在ONTAP 中不再适用。相反、ESXi主机会在第一个虚拟机启动后自动为每个ANA组建立虚拟PE。ONTAP 会自动为数据存储库使用的每个FlexVol 卷创建ANA组。
 
 使用NVMe-oF for VVOLs的另一个优势是、VASA Provider不需要任何绑定请求。相反、ESXi主机会根据VPE在内部处理VVOl绑定功能。这样可以减少VVOV绑定风暴影响服务的机会。
@@ -57,16 +49,10 @@ vSphere 8中的新增功能是、在将基于网络结构的NVMe (NVMe-oF)与vvo
 
 
 
-| *虚拟卷数据存储库* 
+| *虚拟卷数据存储库* | 虚拟卷数据存储库是由VASA Provider创建和维护的VVOl容器的逻辑数据存储库表示形式。容器表示从由VASA Provider管理的存储系统配置的存储容量池。ONTAP 工具支持将多个FlexVol 卷(称为后备卷)分配给一个数据存储库、这些FlexVol数据存储库可以跨越ONTAP 集群中的多个节点、从而将具有不同功能的闪存和混合系统组合在一起。管理员可以使用配置向导或REST API创建新的FlexVol 卷、或者选择预创建的FlexVol 卷作为后备存储(如果有)。 
 
 
-| 虚拟卷数据存储库是由VASA Provider创建和维护的VVOl容器的逻辑数据存储库表示形式。容器表示从由VASA Provider管理的存储系统配置的存储容量池。ONTAP 工具支持将多个FlexVol 卷(称为后备卷)分配给一个数据存储库、这些FlexVol数据存储库可以跨越ONTAP 集群中的多个节点、从而将具有不同功能的闪存和混合系统组合在一起。管理员可以使用配置向导或REST API创建新的FlexVol 卷、或者选择预创建的FlexVol 卷作为后备存储(如果有)。 
-
-
-| *虚拟卷(Vvol)* 
-
-
-| 虚拟卷是指存储在虚拟卷数据存储库中的实际虚拟机文件和磁盘。术语VVOL(单个)是指单个特定文件、LUN或命名空间。ONTAP 会根据数据存储库使用的协议创建NVMe命名空间、LUN或文件。Vvol有几种不同的类型；最常见的类型是配置(元数据文件)、数据(虚拟磁盘或VMDK)和交换(在启动VM时创建)。受VMware VM加密保护的Vvol的类型为其他。不应将VMware VM加密与ONTAP 卷或聚合加密相混淆。 
+| *虚拟卷(Vvol)* | 虚拟卷是指存储在虚拟卷数据存储库中的实际虚拟机文件和磁盘。术语VVOL(单个)是指单个特定文件、LUN或命名空间。ONTAP 会根据数据存储库使用的协议创建NVMe命名空间、LUN或文件。Vvol有几种不同的类型；最常见的类型是配置(元数据文件)、数据(虚拟磁盘或VMDK)和交换(在启动VM时创建)。受VMware VM加密保护的Vvol的类型为其他。不应将VMware VM加密与ONTAP 卷或聚合加密相混淆。 
 |===
 
 
@@ -76,19 +62,14 @@ vSphere 8中的新增功能是、在将基于网络结构的NVMe (NVMe-oF)与vvo
 
 有两个要素：
 
+[cols="20%, 80%"]
 |===
 
 
-| *存储功能配置文件(SCP)* 
+| *存储功能配置文件(SCP)* | 存储功能配置文件(SCP)是一种存储模板形式、通过该模板、vCenter管理员可以定义所需的存储功能、而无需实际了解如何在ONTAP 中管理这些功能。通过采用模板模式方法、管理员可以轻松地以一致且可预测的方式提供存储服务。SCP中介绍的功能包括性能、协议、存储效率和其他功能。具体功能因版本而异。它们是使用vCenter UI中的适用于VMware vSphere的ONTAP 工具菜单创建的。您还可以使用REST API创建SCP。它们可以通过选择各个功能手动创建、也可以从现有(传统)数据存储库中自动生成。 
 
 
-| 存储功能配置文件(SCP)是一种存储模板形式、通过该模板、vCenter管理员可以定义所需的存储功能、而无需实际了解如何在ONTAP 中管理这些功能。通过采用模板模式方法、管理员可以轻松地以一致且可预测的方式提供存储服务。SCP中介绍的功能包括性能、协议、存储效率和其他功能。具体功能因版本而异。它们是使用vCenter UI中的适用于VMware vSphere的ONTAP 工具菜单创建的。您还可以使用REST API创建SCP。它们可以通过选择各个功能手动创建、也可以从现有(传统)数据存储库中自动生成。 
-
-
-| *VM存储策略* 
-
-
-| VM存储策略在vCenter中的策略和配置文件下创建。对于虚拟卷、请使用NetApp虚拟卷存储类型提供程序中的规则创建一个规则集。ONTAP 工具提供了一种简化的方法、您只需选择SCP、而无需强制指定各个规则。 
+| *VM存储策略* | VM存储策略在vCenter中的策略和配置文件下创建。对于虚拟卷、请使用NetApp虚拟卷存储类型提供程序中的规则创建一个规则集。ONTAP 工具提供了一种简化的方法、您只需选择SCP、而无需强制指定各个规则。 
 |===
 如上所述、使用策略有助于简化配置卷的任务。只需选择一个适当的策略、VASA Provider就会显示支持该策略的VVOs数据存储库、并将VVOV放入一个合规的FlexVol 卷中(图1)。
 

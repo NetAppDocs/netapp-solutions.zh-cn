@@ -72,7 +72,10 @@ summary:
 ====
 使用FSX ONTAP 、采购存储是最简单的任务、可通过更新文件系统来执行。这种简单的过程可以根据需要动态优化成本和性能、有助于平衡SQL工作负载、同时也是精简配置的有力推动因素。FSX ONTAP 精简配置旨在为运行SQL Server的EC2实例提供比文件系统中配置的更多逻辑存储。写入数据时、存储空间会动态分配给每个卷或LUN、而不是预先分配空间。在大多数配置中、当卷或LUN中的数据被删除(并且未被任何Snapshot副本保留)时、可用空间也会释放回。下表提供了用于动态分配存储的配置设置。
 
+[cols="40%, 60%"]
 |===
+
+
 | 正在设置 ... | Configuration 
 
 
@@ -304,6 +307,7 @@ NetApp SnapCenter 是适用于第1层企业级应用程序的下一代数据保�
 ====
 下表列出了在Microsoft Windows Server上安装SnapCenter 服务器和插件的最低要求。
 
+[cols="50%, 50%"]
 |===
 | 组件 | 要求 
 
@@ -345,6 +349,7 @@ NetApp SnapCenter 是适用于第1层企业级应用程序的下一代数据保�
 
 
 |===
+有关详细信息、请参见 link:https://docs.netapp.com/us-en/snapcenter/install/reference_space_and_sizing_requirements.html["空间和规模估算要求"]。
 有关详细信息、请参见 link:https://docs.netapp.com/us-en/snapcenter/install/reference_space_and_sizing_requirements.html["空间和规模估算要求"]。
 
 有关版本兼容性、请参见 https://mysupport.netapp.com/matrix/["NetApp 互操作性表工具"^]。
@@ -434,6 +439,8 @@ image:sql-awsec2-image18.png["错误：缺少图形映像"]
 将数据库和日志文件放置在FSX ONTAP LUN上后、可以使用SnapCenter 备份数据库。以下过程用于创建完整备份。
 
 |===
+
+
 | 最佳实践 
 
 
@@ -467,6 +474,8 @@ image:sql-awsec2-image23.png["错误：缺少图形映像"]
 
 
 |===
+
+
 | 最佳实践 
 
 
@@ -515,6 +524,8 @@ NetApp还建议对数据库数量进行分组、而不是为每个数据库或�
 除了完整备份之外、NetApp还建议您为关键数据库配置事务日志备份。确保数据库属性设置为完全恢复模式。
 
 |===
+
+
 | 最佳实践 
 
 
@@ -580,7 +591,7 @@ image:sql-awsec2-image27.png["错误：缺少图形映像"]
 ====
 要了解有关此过程的更多信息、请观看以下视频：
 
-
+video::27f28284-433d-4273-8748-b01200fb3cd7[panopto,width=360]
 
 
 == 附录
