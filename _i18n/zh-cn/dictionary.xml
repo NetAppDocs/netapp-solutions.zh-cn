@@ -584,7 +584,6 @@
   <block id="87f6ff6bf74013e1dfe6df49a1cf1986" category="list-text">编辑 backendName ， managementLIF ， dataLIF ， SVM ，用户名， 和密码值。</block>
   <block id="00d6947fd6a153943286b857dcd0f339" category="admonition">此文件中定义了一个名为 `FSType` 的可选字段。可以在 NFS 后端删除此行。</block>
   <block id="648bdcd0b9a0f83d7b068dbed3c21c07" category="doc">设计注意事项</block>
-  <block id="c2ffe02d76c4f089648f1647b43e4ee5" category="section-title">最佳实践</block>
   <block id="2d52bcd2e896c32a66c9fe10fed38e0f" category="inline-link-macro">接下来：硬件和软件要求</block>
   <block id="254f642527b45bc260048e30704edb39" category="doc">Configuration</block>
   <block id="44b1200b793638d4a3aebd1bee591e12" category="paragraph">对于任何多租户解决方案，任何用户都无法访问比所需更多的集群资源。因此，要在多租户配置中配置的整个资源集将在集群管理员，存储管理员和处理每个项目的开发人员之间进行划分。</block>
@@ -2933,7 +2932,6 @@
   <block id="5b68b81817d64cfa84c65e2e185efe97" category="cell">NetApp HCI H615C</block>
   <block id="c36af9ab64be0b8bd4d5097f58b8a5ba" category="cell">2 个 24C Intel Xeon Gold 6282 @2.1 GHz 。1.5 TB RAM 。</block>
   <block id="825c03a9f78635bec804883dde1bd6bf" category="paragraph">下表包含用于此验证的软件。</block>
-  <block id="f5bf48aa40cad7891eb709fcf1fde128" category="cell">产品</block>
   <block id="f80ee94fe4a9c10f8d85e442e7521687" category="cell">NetApp VDS 5.4</block>
   <block id="bb15f84d3b96a9b33719b8a71bc62207" category="cell">VM 模板 Windows 2019 1809</block>
   <block id="f6a3c0d463e2ae697b02a9893e2062a3" category="cell">适用于 RDSH 的服务器操作系统</block>
@@ -4244,7 +4242,6 @@
   <block id="58c0b55a67f4331cc49b073a7183e06c" category="paragraph">一个虚拟机不能在多个 SRM 阵列上拥有虚拟机磁盘（ Virtual Machine Disk ， VMDK ）或 RDM 数据，原因如下：</block>
   <block id="880aeda0b58c0b30120b6319ae5f3beb" category="list-text">SRM 只能识别 SVM ，而不能识别单个物理控制器。</block>
   <block id="6f55124e085dbeb640e4cb8ad2c97905" category="list-text">SVM 可以控制跨越集群中多个节点的 LUN 和卷。</block>
-  <block id="39d9903201320a83d45d3b36d512f051" category="cell">最佳实践</block>
   <block id="d86019fe4ba86b184ac71cf24a22f0c6" category="cell">要确定可支持性，请牢记以下规则：要使用 SRM 和 NetApp SRA 保护 VM ， VM 的所有部分都必须仅位于一个 SVM 上。此规则适用于受保护站点和恢复站点。</block>
   <block id="2e4472d35f80aa8b7eca52ae3dd43dc6" category="section-title">支持的 SnapMirror 布局</block>
   <block id="d070ad9d8397892aa7f317cbb9046661" category="paragraph">下图显示了 SRM 和 SRA 支持的 SnapMirror 关系布局方案。复制卷中的每个 VM 在每个站点上仅拥有一个 SRM 阵列（ SVM ）上的数据。</block>
@@ -7753,7 +7750,6 @@
   <block id="b3d3877bc96752ae50a409c72597d47a" category="list-text">密码最短期限设置为 24 小时。</block>
   <block id="fb0bdec50022a37424a405b53da7c9c8" category="list-text">已禁用密码字段的自动完成。</block>
   <block id="3a04f054be8ad983ea82fd5079519810" category="list-text">ONTAP 工具使用 SHA256 哈希对所有存储的凭据信息进行加密。</block>
-  <block id="62783f5d69cb5d3cb22b077c1d2b8777" category="cell">2021年11月</block>
   <block id="7e936a7640e03dad09e0b76d68277d56" category="summary">我们使用 NetApp StorageGRID 设置对生产和消费工作负载执行了三到四个节点的分层存储测试。</block>
   <block id="3c2fe55c24192bbec6d6d3aede570213" category="doc">性能测试与可扩展性</block>
   <block id="4e6097966a711c7acf606365a2925b64" category="list-text">当存储节点数量增加时，完成生产和消费模式操作所需的时间呈线性下降趋势。</block>
@@ -15732,7 +15728,6 @@
   <block id="2c87609dbbc3630573c64e271de8207d" category="list-text">所有凭据信息均使用SHA256哈希进行存储。</block>
   <block id="0f1a6fa0a65f9d5c3c4a16b070104d7a" category="list-text">*基本操作系统映像。*本产品随附Debian基础操作系统、用于OVA、但访问受限且Shell访问已禁用。这样可以减少攻击占用空间。每个SnapCenter 版本基础操作系统都会更新最新的安全修补程序、以最大限度地提高安全性。</block>
   <block id="83cd5867ba912e517fa1100299fd1cf3" category="paragraph">NetApp针对适用于VMware vSphere设备的SnapCenter 插件开发软件功能和安全修补程序、然后将其作为捆绑软件平台发布给客户。由于这些设备包括特定的Linux子操作系统依赖关系以及我们的专有软件、因此NetApp建议您不要更改子操作系统、因为这很可能会影响NetApp设备。这可能会影响NetApp支持此设备的能力。NetApp建议测试和部署我们最新的设备代码版本、因为发布这些代码版本是为了修补任何与安全相关的问题。</block>
-  <block id="e50e258ecc9eaa88d6c653c3a24cb319" category="cell">2022 年 3 月</block>
   <block id="3107c066ea7eeb48bd5f87594a08fd7a" category="paragraph">&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;HEAD我们对使用不同存储策略的SSD和SAS驱动器的NetApp AFF 存储控制器和E系列存储控制器上的Hadoop存储分层进行了验证。采用AF-A800的Spark集群具有四个计算辅助节点、而采用E系列的集群则具有八个。这主要是为了比较固态驱动器(SSD)与硬盘驱动器(HDD)的性能。</block>
   <block id="dba657bcaa661bcf5461e260c00e4f06" category="paragraph">我们对使用不同存储策略的SSD和SAS驱动器的NetApp AFF 存储控制器和E系列存储控制器上的Hadoop存储分层进行了验证。采用AF-A800的Spark集群具有四个计算辅助节点、而采用E系列的集群则具有八个。我们这样做的主要目的是将固态驱动器与硬盘驱动器磁盘的性能进行比较。&gt;&gt;&gt;&gt;&gt;a51c9ddf73ca69e1120ce05edc7b0b9607b96eae.</block>
   <block id="f14f651fb8150de92c527d88344df494" category="list-text">使用TeraSort、SSD配置的1 TB数据排序速度比NL-SAS配置快1138.36倍。此外、SSD配置使用的计算节点数为计算节点数的一半、磁盘驱动器数的一半(总共24个SSD驱动器)。因此、每个驱动器的速度大约是NL-SAS配置的三倍。&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; 标题</block>
@@ -18717,16 +18712,13 @@
   <block id="b1c94ca2fbc3e78fc30069c8d0f01680" category="cell">全部</block>
   <block id="7778bddb1c205e9f74d08bd30be0aca3" category="cell">对于7.2及更高版本的AFF 为必填项。</block>
   <block id="221baf8ad30299306e725e4fb395bf34" category="cell">* 重复数据删除 *</block>
-  <block id="6868f879256c802b106616a006671848" category="cell">M andatory for AFF in 7.2及更高版本。</block>
   <block id="504897d4a6b59afadffd3cf9e5d3ea85" category="cell">* 加密 *</block>
   <block id="95fddd53c531d6efe15e3ac7ace1d9eb" category="cell">7.2及更高版本</block>
-  <block id="b3870ec121aeafa2e7ca8cb3894c0e3a" category="cell">选择/创建加密的FlexVol 卷。需要ONTAP 许可证。</block>
   <block id="e2dcc78cf70dac34550234c95443ac37" category="cell">* 最大 IOPS*</block>
   <block id="b78a981cc40fc4e66208bf5ee6d1a1eb" category="cell">&lt;number&gt;</block>
   <block id="130b32bc15d3fbe6d2e80ecda94135cc" category="cell">7.1及更高版本、但存在差异</block>
   <block id="5ff4c1b30dc8d55d9b71c982001cf299" category="cell">在7.2及更高版本的QoS策略组下列出。有关详细信息、请参见表4。</block>
   <block id="993c56850c1da5de36e798b0c5a72513" category="cell">*个人设置*</block>
-  <block id="8485fa08bf8c556b7b2275349d11eb05" category="cell">A FF、FAS</block>
   <block id="c0acd03e8ba6b951b8c6dff3e95b9560" category="cell">FAS 还包括其他非AF系统、例如ONTAP Select。AFF 包括ASA。</block>
   <block id="dce365633ffb688b7532470dfaf4e118" category="cell">*协议*</block>
   <block id="7cff0b96b4a6467ea880f49dd365a81f" category="cell">NFS、NFS 4.1、iSCSI、FCP、NVMe/FC、 任何</block>
@@ -18738,7 +18730,6 @@
   <block id="4b370bcc260aa96e343bbb24d3af2cc5" category="cell">在7.1及更早版本中称为精简配置、该配置也允许使用任何值。在7.2中称为空间预留。所有版本均默认为精简。</block>
   <block id="40e2e283d064264dd51846580adb367d" category="cell">* 分层策略 *</block>
   <block id="06b815f81a7e7aceb1489e3888fb9534" category="cell">任意、无、快照、自动</block>
-  <block id="c60bb16bd5fbc2fc75d9e8e9be1699ab" category="cell">用于FabricPool^®^–需要AFF 或ASA 以及ONTAP 9.4或更高版本。除非使用NetApp StorageGRID 等内部部署S3解决方案 、否则建议仅使用Snapshot。</block>
   <block id="ffb0d092d584c15937dfacd5be3c684a" category="section-title">正在创建存储功能配置文件</block>
   <block id="ad0b6bb809400347fc4806f18385015c" category="paragraph">NetApp VASA Provider附带了多个预定义的SCP。可以使用vCenter UI手动创建新的SCP、也可以使用REST API通过自动化方式创建新的SCP。通过在新配置文件中指定功能、克隆现有配置文件或从现有传统数据存储库自动生成配置文件。可使用ONTAP 工具下的菜单来完成此操作。使用_Storage Capability Profiles _创建或克隆配置文件、使用_Storage Mapping_自动生成配置文件。</block>
   <block id="62351556db3b0f6f13da226ca3e2df24" category="section-title">ONTAP 工具9.10及更高版本的存储功能</block>
@@ -18835,64 +18826,20 @@
   <block id="9b7ad553354519b31ec860eef39e5f6b" category="paragraph">* ONTAP 虚拟卷限制*</block>
   <block id="6231ad61105cd983d3f0042762d3233d" category="cell">SAN (SCSI或NVMe-oF)</block>
   <block id="75d4e7871261a858356a58d682ab71de" category="cell">最大卷大小</block>
-  <block id="9cfd7100738cee4daf7acd5e01d31e14" category="cell">62 TiB*</block>
   <block id="9a728251ad1e90577975ae9395374772" category="cell">每个FlexVol 卷的最大虚拟卷数</block>
   <block id="46ba990c143630f55072434a6ea958c0" category="cell">20亿</block>
   <block id="cdbcf58620f0b4b0bbf3291386a99407" category="cell">每个ONTAP 节点的最大虚拟卷数</block>
-  <block id="342264031889898ec1a553b4dd58d98c" category="cell">最多12 288个**</block>
   <block id="659e5faa0bdb08327ba0719230e95be2" category="cell">500亿</block>
   <block id="43b49f27d93c6f55f54a68e8983d5479" category="cell">每个ONTAP 对的最大虚拟卷数</block>
-  <block id="3941694d19c2d1fc406f055ab62cb9eb" category="cell">最多24 576个**</block>
   <block id="d6b3e65f296fd23975dd6f1a915c4b22" category="cell">每个ONTAP 集群的最大虚拟卷数</block>
-  <block id="2702ff8627a3990fc940d6f53463925e" category="cell">最多98、304个**</block>
   <block id="4f0c25d6c688cf50460d11fecaa97fa8" category="cell">无特定集群限制</block>
   <block id="855ecc47bb0d239e1fdf6fee84e24c75" category="cell">最大QoS对象数(共享策略组和单个虚拟卷服务级别)</block>
   <block id="26890bd9dcb27c05f1ab5bcc859501b8" category="cell">12、000到ONTAP 9.3；40、000到ONTAP 9.4及更高版本</block>
-  <block id="0e38f856cb713ce9eea79fa1c6b7dc32" category="list-text">大小限制取决于运行ONTAP 9.12.1P2及更高版本的ASA 系统或AFF 和FAS 系统。</block>
-  <block id="f8758506ff3ae8b97990466a5bb13853" category="list-text">SAN VMvol (NVMe命名库或LUN)的数量因平台而异。请始终检查<block ref="bf137fbaca3418d969a7cbbc6acb278c" category="inline-link-rx"></block> 更新了有关LUN和文件数量和大小的限制。</block>
   <block id="304d5a3dcf64bf05141ead00f7ec768a" category="paragraph">*最佳实践*</block>
   <block id="72e0ee397942f7233122887584f94b8b" category="paragraph">在vSphere中使用ONTAP vvol非常简单、并且遵循已发布的vSphere方法(请参见适用于您的ESXi版本的VMware文档中的在vSphere存储下使用虚拟卷)。以下是与ONTAP 结合使用时需要考虑的一些其他实践。</block>
-  <block id="d7c0472e9975808c3f2c3ea3a1cdd812" category="paragraph">将ONTAP 与VMware结合使用的最佳实践。</block>
-  <block id="83583580d98b69cb8317f9b285f3c8df" category="cell">*使用适用于VMware vSphere的UI扩展或REST API的ONTAP 工具来配置vvol数据存储库*和协议端点*</block>
-  <block id="3ebd332a1490a9e2cafd1bbb29808091" category="cell">虽然可以使用常规vSphere界面创建vvol数据存储库、但使用ONTAP 工具将根据需要自动创建协议端点、并根据您定义的存储功能配置文件根据ONTAP 最佳实践创建FlexVol 卷。只需右键单击主机/集群/数据中心、然后选择_ ONTAP tools_和_配置数据存储库_。您只需在向导中选择所需的卷选项即可。</block>
-  <block id="e8d5f9dc0bff953a9e59755813c7e8bf" category="cell">*切勿将ONTAP 工具设备或vCenter Server设备(VCSA)存储在其所管理的VVOLs数据存储库中。*</block>
-  <block id="fbc95da978eb6294df217c47365b22fb" category="cell">如果您需要重新启动设备、因为它们在重新启动期间无法重新绑定自己的虚拟卷、这可能会导致出现"鸡肉和鸡蛋的情况"。您可以将其存储在由其他ONTAP 工具和vCenter部署管理的Vvol数据存储库中。</block>
-  <block id="ab8d352870fb5334773c7177d3d5dcd1" category="cell">*避免在不同ONTAP 版本之间执行虚拟卷操作。*</block>
-  <block id="8b2bcef781b7e1f6d64739147d50aae7" category="cell">VASA Provider的各个版本中支持的存储功能(例如QoS、特性等)发生了变化、其中一些功能取决于ONTAP 版本。在ONTAP 集群中使用不同版本或在具有不同版本的集群之间移动虚拟卷可能会导致意外行为或合规性警报。</block>
-  <block id="b2da0eca57c759eff034e6fe26f153e6" category="cell">*对光纤通道网络结构进行分区、然后再对其使用NVMe/FC或FCP来创建卷。*</block>
   <block id="cd7bf0e1e61341c1aa3fa23401af8a27" category="inline-image-macro">具有四个节点的单个启动程序分区、400</block>
   <block id="51591d05b7e084ba8e5ae7f63172177e" category="inline-link">_TR-4080：《现代SAN ONTAP 9_最佳实践》</block>
   <block id="c1723e6a0e1d3dd28232b33e0cb6e61d" category="inline-link">_TR-4684使用NVMe-oF实施和配置现代SAN</block>
-  <block id="4b5ff74178a605e346f59d7147112bfc" category="cell">ONTAP 工具的VASA提供程序负责根据已发现的受管ESXi主机启动程序管理ONTAP 中的FCP和iSCSI igrou以及NVMe子系统。但是、它不会与光纤通道交换机集成来管理分区。必须先根据最佳实践进行分区、然后才能进行任何配置。以下是单个启动程序分区到四个ONTAP系统的示例：
-
-单个启动程序分区：
-
-<block ref="17ccf64e30cb518fd7ca87ce752ad738" category="inline-image-macro-rx" type="image"></block>
-
-有关更多最佳实践、请参见以下文档：
-
-<block ref="29fe20047de6ed3a64321e7515bc8890" category="inline-link-rx"></block>
-
-<block ref="0c9a1714909f45c6f60c5e87c8627327" category="inline-link-rx"></block></block>
-  <block id="9a36c8f0464a7ffce114044f1859c7ff" category="cell">*根据需要规划您的后备FlexVol。*</block>
-  <block id="03d2e894fa9a05efefa4e8d6b2008a19" category="cell">最好向您的ONTAP 数据存储库添加多个后备卷、以便在集群中分布工作负载、支持不同的策略选项或增加允许的LUN或文件数量。但是、如果需要最大的存储效率、请将所有备份卷放在一个聚合上。或者、如果需要最大的克隆性能、则可以考虑使用一个FlexVol 卷、并将模板或内容库保留在同一个卷中。VASA Provider会将许多VVOLs存储操作(包括迁移、克隆和快照)卸载到ONTAP。如果在一个FlexVol 卷中执行此操作、则会使用节省空间的文件克隆、并且这些克隆几乎可以即时使用。在FlexVol 卷之间执行此操作时、这些副本可以快速可用并使用实时重复数据删除和数据压缩、但只有在使用后台重复数据删除和数据压缩的卷上运行后台作业后、才能最大程度地恢复存储效率。根据源和目标、某些效率可能会降级。</block>
-  <block id="80b15469535d95a1690f308427545c7e" category="cell">*保持存储功能配置文件(SCP)简单。*</block>
-  <block id="aa43415b7c2c6514c4b26c5de12142f0" category="cell">通过将功能设置为任何、避免指定不需要的功能。这样可以最大程度地减少选择或创建FlexVol 卷时出现的问题。例如、在VASA Provider 7.1及更早版本中、如果将数据压缩保留在默认SCP设置为No、则会尝试禁用数据压缩、即使在AFF 系统上也是如此。</block>
-  <block id="5a6d5fdddf6fbd82f1952b532b03c9ef" category="cell">*使用默认的SCP作为示例模板来创建您自己的模板。*</block>
-  <block id="9ab96500ef87d6c0457f87322f3b0d05" category="cell">随附的SRP适用于大多数通用用途、但您的要求可能有所不同。
-
-*请考虑使用最大IOPS来控制未知或测试VM。*</block>
-  <block id="c0905f7932cce129e5491ca16a6f00a8" category="cell">最大IOPS首次在VASA Provider 7.1中推出、可用于将未知工作负载的IOPS限制为特定VVOR、以避免对其他更关键的工作负载产生影响。有关性能管理的详细信息、请参见表4。
-
-*确保您具有足够的数据Lifs。*</block>
-  <block id="f5a3607cd11e645cf22997a47fc7a5d5" category="cell">每个HA对的每个节点至少创建两个生命周期。根据您的工作负载、可能需要更多资源。</block>
-  <block id="ee3cbda1c3c4a14ae024478c7ada6d11" category="cell">*遵循所有协议最佳实践。*</block>
-  <block id="6a2c1ac1da51eca0c1a65afffab8dfab" category="inline-image-macro">使用基于NFS v3、500的vvol进行网络配置</block>
-  <block id="c7d19c3dfdd9f4afb1b19f39e1efd7a0" category="cell">请参见NetApp和VMware针对您选择的协议提供的其他最佳实践指南。一般而言，除了上述情况外，没有任何其他变化。
-
-使用基于NFS v3的Vvol的网络配置示例：
-
-<block ref="53b4e37aeeb9aaf52da56528778439d6" category="inline-image-macro-rx" type="image"></block></block>
   <block id="7e7040600922b2a78715f856613a3c08" category="doc">保护卷</block>
   <block id="de92c927f248723e4668aec459709995" category="section-title">VASA Provider高可用性</block>
   <block id="f4d4cb8868f07cad16bd7de7e36c5201" category="paragraph">NetApp VASA Provider与vCenter插件和REST API服务器(以前称为Virtual Storage Console [VSC])以及Storage Replication Adapter一起作为虚拟设备的一部分运行。如果VASA Provider不可用、则使用vvol的VM将继续运行。但是、无法创建新的vvol数据存储库、也无法创建vvol或将其绑定到vSphere。这意味着、由于vCenter无法请求创建交换vVol、因此无法启动使用vVol的VM。并且正在运行的VM无法使用vMotion迁移到其他主机、因为vvol无法绑定到新主机。</block>
@@ -18984,10 +18931,6 @@
   <block id="0be3366e739971ddaa9bc935c736579e" category="section-title">基于策略的管理</block>
   <block id="067a0f759e08dcc21ea50aaa1e92da40" category="paragraph">通过VMware vSphere APIS for Storage AWARMIVAIVIAPI(VASA)、VM管理员可以轻松地使用配置VM所需的任何存储功能、而无需与其存储团队进行交互。在使用VASA之前、VM管理员可以定义VM存储策略、但必须与其存储管理员一起确定适当的数据存储库、通常使用文档或命名约定。通过使用VASA、具有适当权限的vCenter管理员可以定义一系列存储功能、然后vCenter用户可以使用这些功能来配置VM。通过在VM存储策略和数据存储库存储功能配置文件之间进行映射、vCenter可以显示兼容数据存储库列表以供选择、并支持Aria (以前称为vReise) Automation或Tanzu Kubernetes Grid等其他技术自动从分配的策略中选择存储。这种方法称为基于存储策略的管理。虽然存储功能配置文件和策略也可用于传统数据存储库、但我们在此重点关注的是虚拟卷数据存储库。</block>
   <block id="631bdc7de6608fd57c3fa0b397c3c26f" category="paragraph">有两个要素：</block>
-  <block id="a156a7f38a3727ce705b5466eb11e0bf" category="cell">*存储功能配置文件(SCP)*</block>
-  <block id="43a258e66ca875fa9c5d3e35e06ba2b7" category="cell">存储功能配置文件(SCP)是一种存储模板形式、通过该模板、vCenter管理员可以定义所需的存储功能、而无需实际了解如何在ONTAP 中管理这些功能。通过采用模板模式方法、管理员可以轻松地以一致且可预测的方式提供存储服务。SCP中介绍的功能包括性能、协议、存储效率和其他功能。具体功能因版本而异。它们是使用vCenter UI中的适用于VMware vSphere的ONTAP 工具菜单创建的。您还可以使用REST API创建SCP。它们可以通过选择各个功能手动创建、也可以从现有(传统)数据存储库中自动生成。</block>
-  <block id="8f50a0757d99fe5dd0df8d19478d4921" category="cell">*VM存储策略*</block>
-  <block id="f99c5cf9298b040025bd3dfe966cb86e" category="cell">VM存储策略在vCenter中的策略和配置文件下创建。对于虚拟卷、请使用NetApp虚拟卷存储类型提供程序中的规则创建一个规则集。ONTAP 工具提供了一种简化的方法、您只需选择SCP、而无需强制指定各个规则。</block>
   <block id="5dda8b04866334dc92ee08001b15701a" category="paragraph">如上所述、使用策略有助于简化配置卷的任务。只需选择一个适当的策略、VASA Provider就会显示支持该策略的VVOs数据存储库、并将VVOV放入一个合规的FlexVol 卷中(图1)。</block>
   <block id="2ce0d6ec59cca7e0b6e0bdc389301e63" category="section-title">使用存储策略部署虚拟机</block>
   <block id="e0795f8b847058e171dec5a519757ece" category="image-alt">使用存储策略部署虚拟机</block>
@@ -19178,9 +19121,6 @@
   <block id="f97944acc5aaa9b4b0adb546cdbf3563" category="paragraph">本文档介绍了用于保护适用于VMware vSphere 9.X的ONTAP工具免受产品环境中现有威胁和新出现威胁的技术。</block>
   <block id="1965d168d69f3aaabc31c5eb077df0ca" category="doc">WP-7355：《适用于VMware vSphere的SnapCenter插件—产品安全性》</block>
   <block id="644bb3494646d0ef4823567ae39ae761" category="paragraph">本文档介绍了用于保护适用于VMware vSphere 4.X的NetApp SnapCenter插件免受产品环境中现有威胁和新出现威胁的技术。</block>
-  <block id="8f4aa12da484f4f9dd891a8442f18542" category="cell">1.0.1版</block>
-  <block id="411d690288852abddc39378b2989bfda" category="cell">2023年6月</block>
-  <block id="59c0e7f986426f0f712126b456b4eb2a" category="cell">少量的格式和品牌编辑。</block>
   <block id="d95d4cfa2b3fc19757cbb653dedde17d" category="paragraph">在AWS中、FSx for NetApp ONTAP (FSxN)可以部署在单个可用性区域(AZ)或多个可用性区域(AZ)中。对于需要高可用性的生产工作负载、与单个AZ相比、多可用性可提供分区级容错、并具有更好的NVMe读取缓存。有关详细信息、请查看 <block ref="e4c9b635745c064746324939979ac3ba" category="inline-link-macro-rx"></block>。
 为了节省灾难恢复站点的成本、可以使用一个AZ FSx ONTAP。
 <block ref="d945e872f3d86016e69cb70542c0cc6a" category="inline-image-macro-rx" type="image"></block></block>
@@ -19301,8 +19241,6 @@
   <block id="26340070db5e3907487c23df7dcd4ddc" category="sidebar">适用于数据库的SnapCenter</block>
   <block id="37a8ebbbcf603230c17a02eb0e2dac13" category="sidebar">使用SnapCenter服务执行Oracle备份、还原和克隆—AWS</block>
   <block id="7fa7ffa04f68e2d66ac6bd8166d8ca35" category="sidebar">使用AWS FSx ONTAP快速恢复和克隆Oracle VLDB</block>
-  <block id="20cb410071ca8d069418df5daa3b2617" category="paragraph">有关设置SnapCenter 和复制数据的分步说明示例、请参见<block ref="06275778c7333bddf485b7069aff5016" category="inline-link-rx"></block>
-有关设置SnapCenter 和复制数据的分步说明示例、请参见<block ref="06275778c7333bddf485b7069aff5016" category="inline-link-rx"></block></block>
   <block id="d7b54624d819bcd713a8bade6dc96b79" category="paragraph">在Anthos 1.14集群上部署三端存储</block>
   <block id="eb31a7776d93779742d99cf1d8e165d4" category="doc">虚拟化视频和演示</block>
   <block id="7dfeac309946b61a62a7a65944ad0acb" category="paragraph">请参见 <block ref="3db733da05bd3e3967dc04592cc322a8" category="inline-link-macro-rx"></block> 用于**复制、备份和恢复**选项。</block>
@@ -19332,8 +19270,6 @@
   <block id="6800ca66a2adebbbdc5a76b6efd0b0a8" category="paragraph"><block ref="6800ca66a2adebbbdc5a76b6efd0b0a8" category="inline-image-macro-rx" type="image"></block></block>
   <block id="0b05c2120fe0b40027db89aa85227b95" category="cell">2023年7月14日</block>
   <block id="ac317965fba0e8fd0be4f0af1ef1f7d6" category="cell">更新TR-4947：《使用NetApp NFS存储的Apache Kafka工作负载》(包括AWS FSxN)</block>
-  <block id="46a23ec855bc77294247d5b63fce3ba7" category="paragraph">要了解有关此过程的更多信息、请随时观看以下视频：
-要了解有关此过程的更多信息、请随时观看以下视频：</block>
   <block id="cc090bcb755694ec2b8ab2fa1beb2258" category="inline-link-macro">3-2-1使用SnapCenter插件和适用于VM的BlueXP备份和恢复为VMware提供数据保护</block>
   <block id="6845b59b08e758d1f76493bad3a906c7" category="list-text"><block ref="6845b59b08e758d1f76493bad3a906c7" category="inline-link-macro-rx"></block></block>
   <block id="66b9f9c0bde1599e448251ccc5fa8591" category="inline-link-macro">NetApp和VMware—前所未有的出色</block>
@@ -19342,8 +19278,6 @@
   <block id="718b7fcd61673194858446821c8dea31" category="list-text"><block ref="718b7fcd61673194858446821c8dea31" category="inline-link-macro-rx"></block></block>
   <block id="c6960ae743737cb2431e58eb8f3f4c8c" category="inline-link-macro">vSphere上的Kubnetes (第2部分)</block>
   <block id="6f01eedbaa404894cc11e49fa3f62506" category="list-text"><block ref="6f01eedbaa404894cc11e49fa3f62506" category="inline-link-macro-rx"></block></block>
-  <block id="7e070ddc3eb99185899abdf70d76d7fd" category="admonition">这些演示是使用TKG 1.3.1版和Astra Control Center 21.12版录制的技术预览版。有关受支持的官方版本、请参见支持列表。
-注意：这些演示是使用TKG 1.3.1版和Astra Control Center 21.12版录制的技术预览版。有关受支持的官方版本、请参见支持列表。</block>
   <block id="4075bbf4578ffc77ff6b5286e539aafc" category="cell">8.01.</block>
   <block id="1a3a2b5e6c52142797bb5c00594e2a3c" category="cell">23.04.</block>
   <block id="6d7f176a0fc1f875832f44d7e99c669e" category="paragraph"><block ref="6d7f176a0fc1f875832f44d7e99c669e" category="inline-image-macro-rx" type="image"></block></block>
@@ -19354,10 +19288,6 @@
   <block id="bfbf5b1dfe74d3c210d9bff256a2d37d" category="video-title"> 借助适用于NetApp ONTAP 的Amazon FSX、基于AWS的VMware Cloud可节省TCO</block>
   <block id="f14bcb2fca0b787c927519fa290c9276" category="video-title"> 采用Cloud Volumes ONTAP 、SnapCenter 和Jetstream的Azure VMware解决方案 灾难恢复</block>
   <block id="517ef02b70647f930adac5d5e8a518a2" category="paragraph">[下划线]#*使用Astra Control Center*#进行灾难恢复</block>
-  <block id="a665cc68d0592e6ceaf6663fa7e859ec" category="paragraph">有关详细信息、请参见 <block ref="904c80f66e5056357fd992ed854be90e" category="inline-link-macro-rx"></block>。
-有关详细信息、请参见 <block ref="904c80f66e5056357fd992ed854be90e" category="inline-link-macro-rx"></block>。</block>
-  <block id="410842bedcb028e7fa2b16b6f7ecb30a" category="paragraph">第 1 部分：入门，要求，自动化详细信息和初始 AWX/ 塔式配置
-第 1 部分：入门，要求，自动化详细信息和初始 AWX/ 塔式配置</block>
   <block id="a513ccac96294c17623435e7ea5fdf5b" category="doc">AWS FSx for NetApp ONTAP中的性能概述和验证</block>
   <block id="a5f3ee5e211d0871f420cf5a36bebe83" category="inline-link-macro">上一页：AWS中的性能概述和验证—Cloud Volume ONTAP。</block>
   <block id="47cb5f9b8f7ccfebd7c510120879da7c" category="paragraph"><block ref="47cb5f9b8f7ccfebd7c510120879da7c" category="inline-link-macro-rx"></block></block>
@@ -19412,4 +19342,310 @@ FSxadmin是创建时FSx for NetApp ONTAP文件系统的默认管理员帐户。f
   <block id="19ae8131d6f70ff609fd60ac98b46986" category="section-title">视频演示的一个例子</block>
   <block id="d7fd58c27a131209e8f320d109b293cc" category="sidebar">AWS中的性能概述和验证—Cloud Volume ONTAP</block>
   <block id="3f2906298c684e48c8e4b47425c2cf34" category="sidebar">AWS中的性能概述和验证—FSxN NetApp ONTAP</block>
+  <block id="9682ccea75ba1a582dd9ea16fe998427" category="paragraph">要了解有关此过程的更多信息、请随时观看以下视频：</block>
+  <block id="c39fe43977e2c690fe3f545e74b066be" category="doc">3-2-1使用SnapCenter插件和适用于VM的BlueXP备份和恢复为VMware提供数据保护</block>
+  <block id="73d726d10be1ea38417dcb3b42dbce61" category="paragraph">3-2-1备份策略是行业认可的数据保护方法、可提供全面的方法来保护有价值的数据。  此策略非常可靠、可确保即使发生意外灾难、仍有可用数据的副本。</block>
+  <block id="509fafef5caf053ccaadfb4cc21d6d1e" category="paragraph">该战略由三条基本规则组成：</block>
+  <block id="c59e6a73bffbd424d174a45535073085" category="list-text">至少保留三份数据副本。这样可以确保即使一个副本丢失或损坏、您仍至少有两个剩余副本可供回退。</block>
+  <block id="3523fd69b600ce77f8d1bca567d238a8" category="list-text">将两个备份副本存储在不同的存储介质或设备上。多样化的存储介质有助于防止设备或介质特定的故障。如果一个设备损坏或一种介质发生故障、另一个备份副本不受影响。</block>
+  <block id="28293b551463a96414b8b221ea51d2a4" category="list-text">最后、确保至少有一个备份副本位于异地。异地存储可防止发生火灾或洪水等本地灾难、这些灾难可能会导致现场副本不可用。</block>
+  <block id="652bf9c1cb169825b57e6e7e9bce3bfe" category="paragraph">本解决方案文档介绍解决方案了使用适用于VMware vSphere的SnapCenter插件(SCV)为内部虚拟机创建主备份和二级备份的3-2-1备份、以及使用BlueXP备份和恢复为虚拟机将数据副本备份到云存储或StorageGRID。</block>
+  <block id="d45fada9eb7a8910240cceebfb467b7f" category="list-text">使用适用于VMware vSphere的SnapCenter插件备份和还原内部虚拟机和数据存储库。</block>
+  <block id="cdff43c972e7e0887564442e31301617" category="list-text">备份和还原ONTAP集群上托管的内部虚拟机和数据存储库、并使用适用于虚拟机的BlueXP备份和恢复功能备份到对象存储。</block>
+  <block id="3fa5ba71652fad9133d2c14b46d4643b" category="section-title">NetApp ONTAP数据存储</block>
+  <block id="5db39070b53880f580957857f0ef2232" category="paragraph">ONTAP是NetApp行业领先的存储解决方案、无论您是通过SAN还是NAS协议访问、它都能提供统一存储。3-2-1备份策略可确保内部数据在多种介质类型上受到保护、NetApp提供的平台从高速闪存到低成本介质不等。</block>
+  <block id="2f62861d2a5e5fb79aa4172b030338eb" category="image-alt">ONTAP数据存储</block>
+  <block id="6b81bed24ba6625c8f9c67f67504860b" category="inline-link">NetApp数据存储</block>
+  <block id="db9f5d48e49eef57b9f1326c98fe2c3a" category="paragraph">有关NetApp所有硬件平台的详细信息、请查看<block ref="c34bf72c5a8854a98b9e0f11814bb981" category="inline-link-rx"></block>。</block>
+  <block id="1107fdf7c893cd3cc0b42fe985ddcc81" category="paragraph">适用于VMware vSphere的SnapCenter插件是一款数据保护产品、与VMware vSphere紧密集成、可轻松管理虚拟机的备份和还原。作为解决方案的一部分、SnapMirror提供了一种快速可靠的方法、可在二级ONTAP存储集群上为虚拟机数据创建第二个不可变化的备份副本。采用此架构后、可以轻松地从主备份位置或二级备份位置启动虚拟机还原操作。</block>
+  <block id="a6b184ab39b134eab2c079a8be61a931" category="paragraph">SCV使用OVA文件部署为Linux虚拟设备。现在、此插件将使用远程插件
+架构。远程插件在vCenter Server外部运行、并托管在SCV虚拟设备上。</block>
+  <block id="8c3d0c00ea667e3e0723e5cdc6473a09" category="inline-link">适用于 VMware vSphere 的 SnapCenter 插件文档</block>
+  <block id="727c896d5f97fa0b914653e81a4004ae" category="paragraph">有关选择控制阀的详细信息，参见<block ref="245718e19f61bc6ffd537e61a8d903cc" category="inline-link-rx"></block>。</block>
+  <block id="b6e8ba95aa7220434ae393716a0bf9d6" category="section-title">适用于虚拟机的BlueXP备份和恢复</block>
+  <block id="4f577581972081fe4f346ed9fa5a8ef3" category="paragraph">BlueXP备份和恢复是一款基于云的数据管理工具、可为内部和云环境中的各种备份和恢复操作提供单一控制平台。NetApp BlueXP备份和恢复套件的一部分是一项与适用于VMware vSphere的SnapCenter插件(内部)集成的功能、用于将数据副本扩展到云中的对象存储。这样可以为来自主存储备份或二级存储备份的异地数据创建第三个副本。通过BlueXP备份和恢复、您可以轻松设置存储策略、以便从这两个内置位置中的任何一个位置传输数据副本。</block>
+  <block id="f8f023e5c60168abd6ba94cb0aa6a8e7" category="paragraph">在BlueXP备份和恢复中选择主备份和二级备份作为源将导致实施以下两种拓扑之一：</block>
+  <block id="167f8e4f22387317bf771adbbf4d57b5" category="paragraph">*扇出拓扑*—适用于VMware vSphere的SnapCenter插件启动备份时，会立即创建本地快照。然后、SCV启动SnapMirror操作、将最新的快照复制到二级ONTAP集群。在BlueXP备份和恢复中、策略会将主ONTAP集群指定为要传输到所选云提供商中的对象存储的数据Snapshot副本的源。</block>
+  <block id="6a9a440af38ad6d846f8627b26ead457" category="image-alt">扇出拓扑</block>
+  <block id="81d79c86c069e3ae594d83caf7125000" category="paragraph">*级联拓扑*–使用SCV创建主数据副本和二级数据副本与上述扇出拓扑相同。但是、这一次在BlueXP备份和恢复中创建一个策略、指定对象存储备份将源自二级ONTAP集群。</block>
+  <block id="33d67182b13ad638b65acf71a1aa76a6" category="image-alt">级联拓扑</block>
+  <block id="0db613f591f5c0374778e6a61b91eaf0" category="paragraph">BlueXP备份和恢复可以为内部ONTAP快照创建备份副本、并将其备份到AWS Glacie、Azure Blb和GCP归档存储。</block>
+  <block id="f2bc28d75682808c368d801d60058bdb" category="inline-link">StorageGRID登录页面</block>
+  <block id="ed5c83fe833f279aa143145882d6ee92" category="paragraph">此外、您还可以使用NetApp StorageGRID作为对象存储备份目标。有关StorageGRID的详细信息、请参阅<block ref="91b9d2909092a1a1573b8d4ec4f61279" category="inline-link-rx"></block>。</block>
+  <block id="3633716d35b3ea5361a4fa4a42501702" category="paragraph">此列表提供了配置此解决方案以及从SCV和BlueXP备份和恢复执行备份和恢复操作所需的高级步骤：</block>
+  <block id="163a7b0980d4119c657b0e0692a44075" category="list-text">在要用于主数据副本和二级数据副本的ONTAP集群之间配置SnapMirror关系。</block>
+  <block id="467ff501370e8e59c449bc28908972fa" category="list-text">配置适用于VMware vSphere的SnapCenter插件。</block>
+  <block id="3c1fdff568fdec856cfa61307b6fb382" category="list-text">添加存储系统</block>
+  <block id="0a4a3719bc7519d1162060e0f0e08f8a" category="list-text">创建备份策略</block>
+  <block id="020a36deb114af1bb518c70d5975e940" category="list-text">创建资源组</block>
+  <block id="2fff8be5fc844ef3714da61ac825a784" category="list-text">运行备份优先备份作业</block>
+  <block id="d2e7af1a008f2d266baa6964ec83ec90" category="list-text">为虚拟机配置BlueXP备份和恢复</block>
+  <block id="ddf0d84991cb06158f6eca119f5aa89c" category="list-text">添加工作环境</block>
+  <block id="00bb17e4689d02ead6add58fb47a2cb7" category="list-text">发现SCV和vCenter设备</block>
+  <block id="cc1fa2ce00018956ccb6c745af1b7161" category="list-text">激活备份</block>
+  <block id="5f56644222973cb771d4bc0cdb2494f1" category="list-text">使用SCV从主存储和二级存储还原虚拟机。</block>
+  <block id="29eee2e7da81f7b38ac9c51c18b164c0" category="list-text">使用BlueXP备份和还原从对象存储还原虚拟机。</block>
+  <block id="10a2ab5ad14a0568e5f24184a3de0c84" category="paragraph">此解决方案的目的是演示对在VMware vSphere中运行且位于由NetApp ONTAP托管的NFS数据存储库上的虚拟机的数据保护。此解决方案 假定已配置以下组件并可供使用：</block>
+  <block id="eeb794f9274b58305465e4fa7b8ecb19" category="list-text">使用NFS或VMFS数据存储库连接到VMware vSphere的ONTAP存储集群。支持NFS和VMFS数据存储库。此解决方案使用了NFS数据存储库。</block>
+  <block id="cec64789cb22c92bd3e83e152c7462b1" category="list-text">为用于NFS数据存储库的卷建立SnapMirror关系的二级ONTAP存储集群。</block>
+  <block id="1a192383caece8526c650ea10ec56244" category="list-text">为用于对象存储备份的云提供程序安装了BlueXP连接器。</block>
+  <block id="8b2d5235ad2094129ec911a569dd15b9" category="list-text">要备份的虚拟机位于主ONTAP存储集群上的NFS数据存储库中。</block>
+  <block id="6ec76887b4a3a1aed8cf56c378426950" category="list-text">BlueXP连接器和内部ONTAP存储集群管理接口之间的网络连接。</block>
+  <block id="88a4f5f2a88a34308791c2b2bae6bc53" category="list-text">BlueXP连接器和内部SCV设备VM之间以及BlueXP连接器和vCenter之间的网络连接。</block>
+  <block id="14502956de0b18aac2e67512bf39e746" category="list-text">内部ONTAP集群间LUN和对象存储服务之间的网络连接。</block>
+  <block id="f4df2638179ad69f631687a593408fb1" category="inline-link">配置 DNS 以进行主机名解析</block>
+  <block id="5eead32ad2eb390a7a2be60277c27914" category="list-text">在主和二级ONTAP存储集群上为管理SVM配置了DNS。有关详细信息、请参见<block ref="07c761163331a05d2a34d62a1e39df8f" category="inline-link-rx"></block>。</block>
+  <block id="7ed1d0ce67ee86ec3e3522819949c9c6" category="paragraph">此解决方案 的测试/验证是在可能与最终部署环境匹配或可能不匹配的实验室中执行的。</block>
+  <block id="dff3ea20bab3486b4778fbae4dfd6d20" category="paragraph">在本解决方案中、我们详细说明了如何部署和验证解决方案、该利用适用于VMware vSphere的SnapCenter插件以及BlueXP备份和恢复功能、在内部数据中心的VMware vSphere集群中执行Windows和Linux虚拟机的备份和恢复。此设置中的虚拟机存储在ONTAP A300存储集群托管的NFS数据存储库中。此外、一个单独的ONTAP A300存储集群可用作使用SnapMirror复制的卷的二级目标。此外、Amazon Web Services和Azure Blb上托管的对象存储也用作数据第三个副本的目标。</block>
+  <block id="3598805e9e62ee54d3f84340785c25f3" category="paragraph">我们将继续为SCV管理的备份的二级副本创建SnapMirror关系、并在SCV和BlueXP备份和恢复中配置备份作业。</block>
+  <block id="2046eeb71e1e38497f5d706ddd361ac6" category="paragraph">有关适用于VMware vSphere的SnapCenter插件的详细信息、请参见<block ref="245718e19f61bc6ffd537e61a8d903cc" category="inline-link-rx"></block>。</block>
+  <block id="c756b6b1ba6b752239a8d49eda5ad2a4" category="inline-link">BlueXP备份和恢复文档</block>
+  <block id="6f89c1575d847917cac76d8e5703913d" category="paragraph">有关BlueXP备份和恢复的详细信息、请参阅<block ref="f913b694a1f9d667c4a8fd38d834b075" category="inline-link-rx"></block>。</block>
+  <block id="49ff278b23e1b2a48f41c26059993a78" category="section-title">在ONTAP集群之间建立SnapMirror关系</block>
+  <block id="913a4fc9e4dd2b3ae4e143f1654897a6" category="paragraph">适用于VMware vSphere的SnapCenter插件使用ONTAP SnapMirror技术管理将二级SnapMirror和/或SnapVault副本传输到二级ONTAP集群的过程。</block>
+  <block id="a8c8e1c43cc229715b454d8fa5870c7c" category="paragraph">选择控制阀备份策略可以选择使用SnapMirror或SnapVault关系。主要区别在于、使用SnapMirror选项时、在策略中为备份配置的保留计划在主位置和二级位置将相同。SnapVault专为归档而设计、使用此选项时、可以通过SnapMirror关系为二级ONTAP存储集群上的Snapshot副本建立单独的保留计划。</block>
+  <block id="4cb7bc8b80ea6dad6b32452e211210f0" category="paragraph">可以在BlueXP中自动执行许多步骤来设置SnapMirror关系、也可以使用System Manager和ONTAP命令行界面来设置SnapMirror关系。下面将讨论所有这些方法。</block>
+  <block id="ef2376e2d99283ddc3b8c4802978ddbd" category="section-title">与BlueXP建立SnapMirror关系</block>
+  <block id="f8d9e61c93c3e0e3bf563a4116f49d98" category="paragraph">必须从BlueXP Web控制台完成以下步骤：</block>
+  <block id="d24e7c83eb605dbec3784d9614f113b5" category="example-title">主和二级ONTAP存储系统的复制设置</block>
+  <block id="49f6d5194173a4f2c65fe97e7137f8f0" category="paragraph">首先登录到BlueXP Web控制台并导航到Canvas。</block>
+  <block id="3c0f6ff9fcfb31caedb1d772b584ba4b" category="list-text">将源(主) ONTAP存储系统拖放到目标(二级) ONTAP存储系统上。</block>
+  <block id="fb8e05d47d62709ef79a3548c465824b" category="image-alt">拖放存储系统</block>
+  <block id="0b2f572176c0750f020444a06975efe5" category="list-text">从显示的菜单中选择*复制*。</block>
+  <block id="4113739f808592642c550c5fe54ec592" category="image-alt">选择复制</block>
+  <block id="e5f6d5cc562fe22168422e7aa9cc375e" category="list-text">在*目标对等设置*页面上、选择要用于存储系统之间连接的目标集群间Lifs。</block>
+  <block id="236b5c3a30fbbc54d60376d51df3532d" category="image-alt">选择集群间的"Lif"</block>
+  <block id="e8f6c047788f58d67e54dec98696fb0c" category="list-text">在*目标卷名称*页面上、首先选择源卷、然后填写目标卷名称并选择目标SVM和聚合。单击“*下一步*”继续。</block>
+  <block id="645921f02f2dac5fa2d2e303540e32f8" category="image-alt">选择源卷</block>
+  <block id="3b76070fa2cc56c5fcbd663652f98016" category="image-alt">目标卷详细信息</block>
+  <block id="7a3ae81d2cdd1f20c1e0ab2cf2e5e7f1" category="list-text">选择进行复制的最大传输速率。</block>
+  <block id="8030f0a596dd92c4e1ab83a92fcb2cf4" category="image-alt">最大传输速率</block>
+  <block id="9aaa08ac7ae790464209fbbb75c1beaa" category="list-text">选择用于确定二级备份的保留计划的策略。此策略可以事先创建(请参见下面的*创建快照保留策略*步骤中的手动过程)，也可以在创建后根据需要进行更改。</block>
+  <block id="88a94fe3ed96529f26274615154db705" category="image-alt">选择保留策略</block>
+  <block id="db5c66004f1ed1f27553c6c860000ff1" category="list-text">最后，查看所有信息，然后单击*go *按钮开始复制设置过程。</block>
+  <block id="47bffa5ab95e0811d3f30876e2606f2a" category="image-alt">查看并继续</block>
+  <block id="d5eac7a731f52e4a649eab3e1c912c67" category="section-title">使用System Manager和ONTAP命令行界面建立SnapMirror关系</block>
+  <block id="b3601aca3588268c73b133d8b499b359" category="paragraph">可以使用System Manager或ONTAP命令行界面完成建立SnapMirror关系所需的所有步骤。下一节提供了这两种方法的详细信息：</block>
+  <block id="0398b97023ab8d66a2cebc9778ec3ad7" category="paragraph">对于源和目标ONTAP集群、您可以从System Manager或命令行界面检索集群间LIF信息。</block>
+  <block id="d27bd36691209e1564205c3f1caf62d7" category="list-text">要使用命令行界面检索集群间IP地址、请运行以下命令：</block>
+  <block id="c2fab493a5ab05eccf4bcde8e480dfa2" category="example-title">在ONTAP集群之间建立集群对等关系</block>
+  <block id="f91c80d884d806d9bf4fce9df02f1af0" category="list-text">使用在目标ONTAP集群上设置对等关系<block ref="9b5825a8b104756a9fc62c8432005be0" prefix=" " category="inline-code"></block> 命令：出现提示时、输入一个唯一的密码短语、稍后在源集群上使用该密码短语以完成创建过程。</block>
+  <block id="4ab68f29d4e8a5aa87841709184e59f3" category="list-text">输入用于在目标ONTAP集群上建立对等集群关系的密码短语。</block>
+  <block id="fcc33672123bea59be1df35a432d2a6b" category="list-text">输入目标ONTAP集群的集群间LIF IP地址。</block>
+  <block id="37f976523440bb8ebeb1a9c230d4295d" category="list-text">使用以下命令验证目标ONTAP集群的集群对等关系的状态：</block>
+  <block id="26e326671f9e973061f4f87c8f4f45a7" category="paragraph">要在ONTAP上创建目标卷、以便接收源卷的Snapshot副本、请在目标ONTAP集群上运行以下命令：</block>
+  <block id="0e2ee67851678bd7ea95e7e35dcc70ae" category="paragraph">要在源卷和目标卷之间创建SnapMirror关系、请在目标ONTAP集群上运行以下命令：</block>
+  <block id="a9f63a791ce3894dceda58722183fb0b" category="paragraph">要创建卷、请在目标ONTAP集群上运行以下命令：</block>
+  <block id="1ca34645e71e527c9cbf105d533617d8" category="section-title">配置适用于VMware vSphere的SnapCenter插件</block>
+  <block id="4aaaa261348faebbaa0d92e42a350d57" category="paragraph">安装后、可从vCenter Server设备管理界面访问适用于VMware vSphere的SnapCenter插件。SCV将管理装载到ESXi主机且包含Windows和Linux VM的NFS数据存储库的备份。</block>
+  <block id="820a69c65133a14dbbca6b21c7e990db" category="inline-link">数据保护工作流</block>
+  <block id="1dca79d6b8350fa7277bf35fb51ba16a" category="paragraph">查看<block ref="b578afc15a11f99c74dc0f315c68211a" category="inline-link-rx"></block> 有关配置备份所涉及步骤的详细信息，请参阅选择控制阀文档的一节。</block>
+  <block id="efd902c16f7cfb85502b744cd19da31f" category="paragraph">要配置虚拟机和数据存储库的备份、需要从插件界面完成以下步骤。</block>
+  <block id="d807e49c227b080d4f5049bffc321a2e" category="example-title">Discovery ONTAP存储系统</block>
+  <block id="bc22e247a11953d8b03cd9e4f5b6c197" category="paragraph">发现要用于主备份和二级备份的ONTAP存储集群。</block>
+  <block id="07ed7524efc06d460431631e976b61f9" category="list-text">在适用于VMware vSphere的SnapCenter插件中，导航到左侧菜单中的*存储系统*，然后单击*Add*按钮。</block>
+  <block id="87d2b5d50a3f94d38a8b567627e0fb58" category="image-alt">存储系统</block>
+  <block id="52a6c0a49725eb4c01d8f71114a3f6e7" category="list-text">填写主ONTAP存储系统的凭据和平台类型，然后单击*Add*。</block>
+  <block id="5a2a64756df08f9a9f424f03b33920fd" category="image-alt">添加存储系统</block>
+  <block id="3d4893d15cb60bbc0186353b685f573e" category="list-text">对二级ONTAP存储系统重复此操作步骤。</block>
+  <block id="2f7eef9ddf88248dd690f4a6ecc31f72" category="example-title">创建选择控制阀备份策略</block>
+  <block id="43eae0dcccb66d4da1d0796e1c585c2b" category="paragraph">策略用于为SCV管理的备份指定保留期限、频率和复制选项。</block>
+  <block id="8e76505b54822d8003db9695ebc8dded" category="inline-link">为 VM 和数据存储库创建备份策略</block>
+  <block id="b098f73dbbbba5e35da3c1680d8b2531" category="paragraph">查看<block ref="17aa01733a94bdbfd1ea488a2255eeb4" category="inline-link-rx"></block> 有关详细信息、请参见文档中的第节。</block>
+  <block id="97ecece1c0de6ff609f5ac95922948a1" category="paragraph">要创建备份策略、请完成以下步骤：</block>
+  <block id="d65e07f581d9e8a768d928ee53e6af96" category="list-text">在适用于VMware vSphere的SnapCenter插件中、导航到左侧菜单中的*策略*、然后单击*创建*按钮。</block>
+  <block id="9e476387322a5c250893cf9c5c4ce78c" category="image-alt">策略</block>
+  <block id="3287abe20108fcae946deb6260cf8563" category="list-text">指定策略名称、保留期限、频率和复制选项以及快照标签。</block>
+  <block id="663b8460da445a8bdcdacd5586794a5a" category="image-alt">创建策略</block>
+  <block id="288f9e0d4ace01e5bcd057f2b9aa9cbd" category="admonition">在SnapCenter插件中创建策略时、您将看到SnapMirror和SnapVault的选项。如果选择SnapMirror、则主快照和二级快照在策略中指定的保留计划将相同。如果选择SnapVault、则二级快照的保留计划将基于通过SnapMirror关系实施的单独计划。如果您希望二级备份的保留期限更长、则此功能非常有用。</block>
+  <block id="85ddc39126e35d4b51b71eda88f1079e" category="admonition">Snapshot标签非常有用、因为它们可用于为复制到二级ONTAP集群的SnapVault副本制定具有特定保留期限的策略。如果将SCV与BlueXP备份和还原结合使用、则Snapshot标签字段必须为空、或者[Underline]#Match#是BlueXP备份策略中指定的标签。</block>
+  <block id="9a9dafcee3fdb0dbad8b58495e0676e8" category="list-text">对所需的每个策略重复操作步骤。例如、为每日、每周和每月备份分别设置策略。</block>
+  <block id="b9c3c294e7e2345ef69743b4899f43f0" category="paragraph">资源组包含要包含在备份作业中的数据存储库和虚拟机、以及关联的策略和备份计划。</block>
+  <block id="91157a1c630ebb8dfa5964bc5c596222" category="paragraph">查看<block ref="1100db64f963d9605fc8b4bac46beeaa" category="inline-link-rx"></block> 有关详细信息、请参见文档中的第节。</block>
+  <block id="973ed29ddeed8a98e42472c954429af8" category="paragraph">要创建资源组，请完成以下步骤。</block>
+  <block id="4154a97279f97cd0f19c397b26678640" category="list-text">在适用于VMware vSphere的SnapCenter插件中、导航到左侧菜单中的*资源组*、然后单击*创建*按钮。</block>
+  <block id="46146f5a761be19d6f64a61bb0785507" category="list-text">在创建资源组向导中、输入组的名称和问题描述以及接收通知所需的信息。单击“*下一步*”</block>
+  <block id="d448e41a78a0a01dc94ae71b6d13635a" category="list-text">在下一页上、选择要包含在备份作业中的数据存储库和虚拟机、然后单击*下一步*。</block>
+  <block id="3a7784760afa67457011aa1be4248493" category="image-alt">选择数据存储库和虚拟机</block>
+  <block id="306006354b17f98ebc352f2ccabe1b8c" category="admonition">您可以选择特定虚拟机或整个数据存储库。无论选择哪种方式、都会备份整个卷(和数据存储库)、因为备份是通过为底层卷创建快照来完成的。在大多数情况下、最简单的方法是选择整个数据存储库。但是、如果要在还原时限制可用VM的列表、则只能选择一部分VM进行备份。</block>
+  <block id="10e47b32ebff05d654d6c620c43c81d8" category="list-text">为VMDK位于多个数据存储库上的VM选择跨数据存储库选项、然后单击*下一步*。</block>
+  <block id="6b933c0b04e021dd664c8a6c4d7cdee0" category="image-alt">跨数据存储库</block>
+  <block id="b18bd79c84b4f3e6ead32a02f410c9d0" category="admonition">BlueXP备份和恢复目前不支持使用跨多个数据存储库的VMDK备份VM。</block>
+  <block id="9e70c3d4b1cb5df581462a740d4763a0" category="list-text">在下一页中，选择要与资源组关联的策略，然后单击*Next*。</block>
+  <block id="cb5934fee2416cd37a43827ca131db09" category="image-alt">资源组策略</block>
+  <block id="24e08063677b3f167cebf7ff704c5c4e" category="admonition">使用BlueXP备份和恢复将SCV管理的快照备份到对象存储时、每个资源组只能与一个策略相关联。</block>
+  <block id="743bb6ade55395c48403a8fb1fbe308e" category="list-text">选择一个计划、以确定备份的运行时间。单击“*下一步*”。</block>
+  <block id="65ac639efbb86b722b74780e19ce0861" category="list-text">最后，查看摘要页，然后在*Finish (完成)*上完成资源组的创建。</block>
+  <block id="41e16971a21fc160e688d85314e4a9c2" category="example-title">运行备份作业</block>
+  <block id="220c04f39bef382d5a0b1ed04f0d3cdd" category="paragraph">在最后一步中、运行备份作业并监控其进度。必须在SCV中至少成功完成一个备份作业、然后才能从BlueXP备份和恢复中发现资源。</block>
+  <block id="e35955bf0accfd03e4d43701a216978c" category="list-text">在适用于VMware vSphere的SnapCenter插件中、导航到左侧菜单中的*资源组*。</block>
+  <block id="0f984890023fbeb2a4f8723c1e495f2c" category="list-text">要启动备份作业，请选择所需的资源组，然后单击*立即运行*按钮。</block>
+  <block id="1375a3914da8c67b1fcc8cf00d7fba6d" category="list-text">要监控备份作业，请导航至左侧菜单中的*Dashboard。在*近期工作活动*下，单击工作ID号以监视工作进度。</block>
+  <block id="d8d2bc1b59b89418a5362bbf6a7d5ab4" category="image-alt">监控作业进度</block>
+  <block id="094e2089ce7608674cadf42d6de48d97" category="section-title">在BlueXP备份和恢复中配置对象存储备份</block>
+  <block id="b051972c09e4af66c724bccd4f127c1c" category="paragraph">要使BlueXP有效管理数据基础架构、需要事先安装Connector。Connector执行发现资源和管理数据操作所涉及的操作。</block>
+  <block id="e6e80588e9fe7cf89218fea44300f7ca" category="inline-link">了解连接器</block>
+  <block id="f785cb009d0e900109fd140553b30bea" category="paragraph">有关BlueXP Connector的详细信息、请参阅<block ref="87d489963d63aa007d917db7d08b189d" category="inline-link-rx"></block> BlueXP文档中的。</block>
+  <block id="118ef4c7f068ef80971593a1b0f6c1f7" category="paragraph">为正在使用的云提供程序安装连接器后、可以从Canvas中查看对象存储的图形表示。</block>
+  <block id="0f28b2dc8792829266318c92e522f520" category="paragraph">要将BlueXP备份和恢复配置为备份由内部SCV管理的数据、请完成以下步骤：</block>
+  <block id="4471d745c7b622fbd04b1e5c54f7144d" category="example-title">将工作环境添加到画布中</block>
+  <block id="13c030d92e30cb905d69a9a387410d73" category="paragraph">第一步是将内部ONTAP存储系统添加到BlueXP</block>
+  <block id="f55260bbdb99e04d3e13ace23b35a6b5" category="list-text">从“画布”中选择*添加工作环境*开始。</block>
+  <block id="d3d22c95b6f4d89140142ab07f028c50" category="list-text">从所选位置中选择*内部*，然后单击*发现*按钮。</block>
+  <block id="f044344db90a471e01add0279640a8d3" category="image-alt">选择内部部署</block>
+  <block id="61736da00191bcc5290a543d27b3f881" category="list-text">填写ONTAP存储系统的凭据，然后单击*Discover (发现)*按钮以添加工作环境。</block>
+  <block id="989f626b77cb057aef86b227753fe6d6" category="image-alt">添加存储系统凭据</block>
+  <block id="10c85a28ec77f1067105a32fcee05b7f" category="example-title">了解内部SCV设备和vCenter</block>
+  <block id="d7c03e191da724f2dee3aefd6723b5ac" category="paragraph">要发现内部数据存储库和虚拟机资源、请添加SCV数据代理的信息以及vCenter管理设备的凭据。</block>
+  <block id="45d6ffc5f5563975f6953d269cffc5b6" category="list-text">从BlueXP左侧菜单中选择*保护&gt;备份和恢复&gt;虚拟机*</block>
+  <block id="929323ed0978848a31f6a8388e01971c" category="image-alt">选择虚拟机</block>
+  <block id="b894330fc5c0772b978a804a636d8561" category="list-text">从虚拟机主屏幕访问*设置*下拉菜单并选择*适用于VMware vSphere的SnapCenter插件*。</block>
+  <block id="faa24cbcb63ad75d1b2f9379a73db850" category="image-alt">设置下拉菜单</block>
+  <block id="b96d255021b81b24e083afa488bc0489" category="list-text">单击*注册*按钮、然后输入SnapCenter插件设备的IP地址和端口号以及vCenter管理设备的用户名和密码。单击*注册*按钮开始发现过程。</block>
+  <block id="13e581610c39d0064e2906d4de05ff41" category="image-alt">输入SCV和vCenter信息</block>
+  <block id="0940589132d32822a14d679e07d78a50" category="list-text">可以通过作业监控选项卡监控作业进度。</block>
+  <block id="7d9a11a5beab7a458383c2bbf93ca7f5" category="image-alt">查看作业进度</block>
+  <block id="62f91073f50f8916da58763b4f46c0b7" category="list-text">发现完成后、您将能够查看所有已发现的SCV设备中的数据存储库和虚拟机。
+ +
+图像：：bxp-SCV hyby-23.png[查看可用资源]</block>
+  <block id="7167e63096bdf4d22f90370aa9574ce9" category="example-title">创建BlueXP备份和还原策略</block>
+  <block id="465bbc0896511246f9f765c89f55e975" category="paragraph">在适用于虚拟机的BlueXP备份和恢复中、创建策略以指定保留期限、备份源和归档策略。</block>
+  <block id="9fe2f95002b4b4815d52173b68bf9862" category="inline-link">创建一个策略以备份数据存储库</block>
+  <block id="86bc3e584348c8421ec3567a22142b57" category="paragraph">有关创建策略的详细信息、请参见<block ref="80982186ff4a093ef0d5c383d66626f1" category="inline-link-rx"></block>。</block>
+  <block id="8b91c4c18527ee91c2c399b04a87600c" category="list-text">从虚拟机的BlueXP备份和恢复主页中、访问*设置*下拉菜单并选择*策略*。</block>
+  <block id="6f6ac8531dfacb86c47a059017038eb1" category="list-text">单击*创建策略*以访问*为混合备份创建策略*窗口。</block>
+  <block id="f04e98350e411695587e6669af53c1db" category="list-text">为策略添加名称</block>
+  <block id="b39cfffbe3df23dc25f156f4056c93b3" category="list-text">选择所需的保留期限</block>
+  <block id="fa5dfe52e5710546ca90135f95d55455" category="list-text">选择是从内部ONTAP主存储系统还是从二级存储系统获取备份</block>
+  <block id="b0cc94428f0fb0b61c7819be1f33212d" category="list-text">(可选)指定备份分层到归档存储的时间期限、以节省更多成本。</block>
+  <block id="aad49551351256549bb40d89b7e44dc6" category="image-alt">创建备份策略</block>
+  <block id="7044e2220a94c55283a8ae5b7a036a34" category="admonition">此处输入的SnapMirror标签用于标识要应用此策略的备份。标签名称必须与相应的内部SCV策略中的标签名称匹配。</block>
+  <block id="6c302d6f69fc91f2572712f003676d83" category="list-text">单击*创建*以完成策略创建。</block>
+  <block id="b376eb1d1a81946ce7cc5b483b394614" category="example-title">将数据存储库备份到Amazon Web Services</block>
+  <block id="0683dcf442cdbe8d60b5c07d40f32d46" category="paragraph">最后一步是为各个数据存储库和虚拟机激活数据保护。以下步骤概述了如何激活备份到AWS。</block>
+  <block id="1d5ad62b9217b4a3f085f517534f40bb" category="inline-link">将数据存储库备份到Amazon Web Services</block>
+  <block id="aaa6437baaeb74798cea1dbc99d2449d" category="paragraph">有关详细信息、请参见<block ref="1515dd2e0ceefc55442eaf374717c8c0" category="inline-link-rx"></block>。</block>
+  <block id="ea304a58f425305bd76d96e195240e41" category="list-text">从虚拟机的BlueXP备份和恢复主页中，访问要备份的数据存储库的设置下拉列表，然后选择*Activate Backup*。</block>
+  <block id="addf19ca5aa2245b4311a5fda42a2a57" category="image-alt">激活备份</block>
+  <block id="2d2feec53ea251226e3bc25b8f966325" category="list-text">分配要用于数据保护操作的策略，然后单击*Next*。</block>
+  <block id="7b849f66aa18fbe76b4de3ccd94e7fa5" category="image-alt">分配策略</block>
+  <block id="3557d184dd5b120a15f7f255a53dbd75" category="list-text">如果先前已发现数据存储库和工作环境，则会在“*添加工作环境”页面上显示带有复选标记的数据存储库和工作环境。如果以前未发现工作环境、您可以在此处添加它。单击“*下一步*”继续。</block>
+  <block id="ebaf068fe62ec21456569fffa6d9a5d5" category="image-alt">添加工作环境</block>
+  <block id="7f2d0b4262c191ebde406cac19a62ead" category="list-text">在*选择提供商*页面上单击AWS、然后单击*下一步*按钮继续。</block>
+  <block id="1ae27ac8ad91f0165c176c34dd34e81c" category="image-alt">选择云提供商</block>
+  <block id="4a3b64136cb6a2eb55f7b2dd685d6a24" category="list-text">填写AWS的提供商专用凭据信息、包括要使用的AWS访问密钥和机密密钥、区域和归档层。此外、请为内部ONTAP存储系统选择ONTAP IP空间。单击“*下一步*”。</block>
+  <block id="e701699f2a50f7406e33ed8381ef2dab" category="image-alt">提供云提供凭据</block>
+  <block id="3a27bf198d7aaec4b69fdd91a21db0f3" category="list-text">最后，查看备份作业详细信息，然后单击*Activate Backup*按钮以启动数据存储库的数据保护。</block>
+  <block id="a87637f111ffdb2fa219abf2e190e471" category="image-alt">查看并激活</block>
+  <block id="799321d74f0d57d43edc67a54c1ef707" category="admonition">此时、数据传输可能不会立即开始。BlueXP备份和恢复每小时扫描一次任何未完成的快照、然后将其传输到对象存储。</block>
+  <block id="a0d35efe3991e429a3bc58db5b630996" category="section-title">在数据丢失的情况下还原虚拟机</block>
+  <block id="1cc4cdfb25de99e21c56bd2f0c899a83" category="paragraph">确保数据安全只是全面数据保护的一个方面。在发生数据丢失或勒索软件攻击时、能够从任何位置快速还原数据同样至关重要。此功能对于保持无缝业务运营和满足恢复点目标至关重要。</block>
+  <block id="acdac876b9032f5b222cf73fc7456ce3" category="paragraph">NetApp提供高度适应性的3-2-1策略、可对主存储、二级存储和对象存储位置的保留计划进行自定义控制。此策略可以灵活地根据特定需求定制数据保护方法。</block>
+  <block id="ecbeffc5d7f9792e6cd466bdf664edb5" category="paragraph">本节简要介绍了从适用于VMware vSphere的SnapCenter插件和适用于虚拟机的BlueXP备份和恢复执行数据还原的过程。</block>
+  <block id="e418db144eab640511d76294a7f2c7a2" category="section-title">从适用于VMware vSphere的SnapCenter插件还原虚拟机</block>
+  <block id="0b156eb7ae06ec8e963e1dd7bed83e94" category="inline-link">从备份还原 VM</block>
+  <block id="6685bca68d0a1fe5d6c289520a21e10a" category="paragraph">对于此解决方案虚拟机、已还原到原始位置和备用位置。本解决方案不会涵盖选择控制阀数据恢复能力的所有方面。有关选择控制阀所能提供的所有深度信息，参见<block ref="a56bca9fd4ed3fad8a28404cdf47ba7c" category="inline-link-rx"></block> 在产品文档中。</block>
+  <block id="6f29ea0e6c61288be960099421f0a3df" category="example-title">从选择控制阀恢复虚拟机</block>
+  <block id="20661d8811797af8d51dbeb80ec719d4" category="paragraph">要从主存储或二级存储还原虚拟机、请完成以下步骤。</block>
+  <block id="0755ca01e2074d93355fac3527849bda" category="list-text">从vCenter Client导航到*清单&gt;存储*、然后单击包含要还原的虚拟机的数据存储库。</block>
+  <block id="a2e775a3f0622c2ac41b01a1518491ec" category="list-text">从*配置*选项卡单击*备份*以访问可用备份列表。</block>
+  <block id="4b06c2a993e34e13053091a3156b989b" category="image-alt">访问备份列表</block>
+  <block id="774ee85fec7142248cfc405505b8721c" category="list-text">单击备份以访问VM列表、然后选择要还原的VM。单击*Restore*。</block>
+  <block id="86633a603862e6f7597927afc76269c1" category="image-alt">选择要还原的虚拟机</block>
+  <block id="7d2920de3c39b0742f3c5187193c6845" category="list-text">在还原向导中、选择还原整个虚拟机或特定VMDK。选择此选项可安装到原始位置或备用位置、并在还原后提供虚拟机名称和目标数据存储库。单击 * 下一步 * 。</block>
+  <block id="319ab9dcd1d0bfb14d7f15b99c4db3a1" category="image-alt">提供还原详细信息</block>
+  <block id="e47c862d8ff848e62e3e7d6e57c16d18" category="list-text">选择从主存储位置或二级存储位置进行备份。</block>
+  <block id="d87670b3add7f5b6a740edfe8b8e91aa" category="image-alt">选择主卷或二级卷</block>
+  <block id="d0a57165744947d2a15e0465f96c7224" category="list-text">最后、查看备份作业的摘要、然后单击完成开始还原过程。</block>
+  <block id="d8d9151889f2e5c47ace43970e545363" category="section-title">从虚拟机的BlueXP备份和恢复还原虚拟机</block>
+  <block id="c6c605b662ef94c68391b5451e95455d" category="paragraph">通过对虚拟机进行BlueXP备份和恢复、可以将虚拟机还原到其原始位置。还原功能可通过BlueXP Web控制台访问。</block>
+  <block id="ffa1e37a2c6478ff157a0a7d25a607e9" category="inline-link">从云中还原虚拟机数据</block>
+  <block id="94b974f7ab5ca99392d1041601e87897" category="paragraph">有关详细信息、请参见<block ref="238147c8f6c3fb89d6b3eb28f713b9cf" category="inline-link-rx"></block>。</block>
+  <block id="51dac82a8b88ae2579c7783d71b88447" category="example-title">从BlueXP备份和恢复还原虚拟机</block>
+  <block id="d2b7af1fe2cbeff098166770c3666278" category="paragraph">要从BlueXP备份和恢复还原虚拟机、请完成以下步骤。</block>
+  <block id="37f8e514cc85f6be4997337d7410cb05" category="list-text">导航到*保护&gt;备份和恢复&gt;虚拟机*，然后单击虚拟机以查看可还原的虚拟机列表。</block>
+  <block id="9f9a3f0d1822c0693db87fb0974c34c6" category="image-alt">VM的访问列表</block>
+  <block id="90bb4dee875f9363dcee31bed57c0031" category="list-text">访问要还原的虚拟机的设置下拉菜单、然后选择</block>
+  <block id="355082f6d43128519c5fe802a5c338f9" category="image-alt">选择Restore from settings (从设置还原)</block>
+  <block id="dfe88d81f64a71a9cf846c70051b7dea" category="list-text">选择要从中进行还原的备份，然后单击*Next*。</block>
+  <block id="6750403de8a1789347829725f5135c88" category="image-alt">选择备份</block>
+  <block id="2f9f8f44452ee2f60602403d0ac6c097" category="list-text">查看备份作业的摘要，然后单击*Restore*以启动恢复过程。</block>
+  <block id="f53f4a113807a68a2f782e05b8e0a70e" category="list-text">通过*作业监控*选项卡监控恢复作业的进度。</block>
+  <block id="081875fb99dedbd0c048ca990a597eb3" category="image-alt">从作业监控选项卡查看还原</block>
+  <block id="4eabedc19022ae64ee6fb8cf3eb22d25" category="paragraph">通过适用于VMware vSphere的SnapCenter插件和适用于虚拟机的BlueXP备份和恢复实施3-2-1备份策略后、可提供强大、可靠且经济高效的解决方案来实现数据保护。此策略不仅可以确保数据冗余和可访问性、还可以灵活地从任何位置以及内部ONTAP存储系统和基于云的对象存储还原数据。</block>
+  <block id="d85d2913422ca9221fd9749107f26b98" category="paragraph">本文档中提供的用例重点介绍经验证的数据保护技术、这些技术重点介绍了NetApp、VMware和领先云提供商之间的集成。适用于VMware vSphere的SnapCenter插件可与VMware vSphere无缝集成、从而可以高效地集中管理数据保护操作。这种集成简化了虚拟机的备份和恢复流程、从而可以在VMware生态系统中轻松地计划、监控和灵活地执行还原操作。适用于虚拟机的BlueXP备份和恢复通过将虚拟机数据安全地通过空中映射备份到基于云的对象存储、提供3-2-1中的一(1)个备份。直观的界面和逻辑工作流为关键数据的长期归档提供了一个安全平台。</block>
+  <block id="2d3786cce4bbee81c9852997cc1bef39" category="list-text"><block ref="2d3786cce4bbee81c9852997cc1bef39" category="inline-link-rx"></block></block>
+  <block id="eeb8e055593f1709925a03e2ebb13265" category="inline-link">BlueXP文档</block>
+  <block id="97672c1115415f474694aeff39263665" category="list-text"><block ref="97672c1115415f474694aeff39263665" category="inline-link-rx"></block></block>
+  <block id="0fc2ee38d3f3fcee9b5d5d0bad287f93" category="paragraph">有关设置SnapCenter 和复制数据的分步说明示例、请参见<block ref="06275778c7333bddf485b7069aff5016" category="inline-link-rx"></block></block>
+  <block id="2558c618cb338262f6026774a894d746" category="doc">借助NetApp SnapCenter和Veeam复制实现应用程序一致的灾难恢复</block>
+  <block id="7ae213afecb4593469214acec6ce5979" category="paragraph">许多客户都在为VMware vSphere上托管的应用程序VM寻找有效的灾难恢复解决方案。其中许多企业使用现有备份解决方案在灾难期间执行恢复。
+解决方案多次增加了RTO、但并未达到他们的期望。为了减少RPO和RTO、只要具有适当权限的网络连接和环境可用、即使从内部复制到GCVE)也可以使用Veeam VM复制。
+注意：Veeam VM Replication不会保护与VM子系统连接的存储设备、例如子系统VM中的iSCSI或NFS挂载。需要单独保护这些数据。</block>
+  <block id="d80d0a117c54407b1f6f425ffae47614" category="paragraph">为了实现SQL VM的应用程序一致复制并减少RTO、我们使用SnapCenter来编排SQL数据库和日志卷的SnapMirror操作。</block>
+  <block id="17219d098d65f47282273cb90d58dcb0" category="inline-image-macro">Application VM复制架构</block>
+  <block id="85a0251ddf0da4488f77abf2784ccfdb" category="paragraph"><block ref="85a0251ddf0da4488f77abf2784ccfdb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d26b5935fc58111f2d8db9c078c08af6" category="list-text">在适当的订阅和虚拟网络中使用BlueXP为Cloud Volumes ONTAP配置正确的实例大小。</block>
+  <block id="534253a0a05c40a27f9df1dfb786d936" category="list-text">发生灾难事件时、请使用BlueXP中断SnapMirror关系、并使用Veeam触发虚拟机故障转移。</block>
+  <block id="8064e6b40ef12da2c44763dcfe735ae8" category="paragraph">有关设置SnapCenter 和复制数据的分步说明示例、请参见<block ref="68793c30d3c5e8a024de6c79bc478fe1" category="inline-link-rx"></block></block>
+  <block id="8ad16dd1937de1e5fc2efa0668887d8b" category="video-title">查看使用SnapCenter保护SQL VM的情况</block>
+  <block id="b76e26ed981d5f491522c965efa7c46b" category="paragraph">可以将适用于NFS数据存储库的NetApp云卷服务以及适用于SQL的Cloud Volumes ONTAP数据库和日志部署到任何VPC、并且GCVe应与该VPC建立专用连接、以便挂载NFS数据存储库并使VM连接到iSCSI LUN。</block>
+  <block id="989c086533ca63f7888fce83e4a46a4a" category="inline-link-macro">使用Veeam Replication进行迁移</block>
+  <block id="4bff962e3835ed7a5df1cbab1f33f819" category="paragraph">根据部署场景、需要部署的Veeam备份服务器、备份存储库和备份代理。在此使用情形下、无需为Veeam部署对象存储、也不需要横向扩展存储库。
+<block ref="fe81875323ba8244cd35f234258570cc" category="inline-link-rx"></block>
+有关追加信息、请参见 <block ref="57b6bba9f472c9c5faf92f0cbcc6ff10" category="inline-link-macro-rx"></block></block>
+  <block id="c28fedc2a43517971c6f09573d0875cd" category="paragraph">内部vCenter和GCVE vCenter都需要向Veeam注册。<block ref="92166da7fd4418ef19e64644a99fe5e2" category="inline-link-rx"></block> 在向导的子系统处理步骤中、选择禁用应用程序处理、因为我们将利用SnapCenter 进行应用程序感知型备份和恢复。</block>
+  <block id="f02831926b719e575a346f87ac04a87e" category="admonition">这些演示是使用TKG 1.3.1版和Astra Control Center 21.12版录制的技术预览版。有关受支持的官方版本、请参见支持列表。</block>
+  <block id="eb86f482301303a1c0f2f5219289a73c" category="cell">（可选）指示是否将公有 IP 地址与实例关联。如果未提供，则关联将根据子网的配置完成。</block>
+  <block id="9ab6a00284d7ebb54d5f9d12872dc18a" category="paragraph">*最佳实践*</block>
+  <block id="f41f4fb73a6ebba7903a766dae193696" category="list-text">*存储功能配置文件(SCP)*
+存储功能配置文件(SCP)是一种存储模板形式、通过该模板、vCenter管理员可以定义所需的存储功能、而无需实际了解如何在ONTAP 中管理这些功能。通过采用模板模式方法、管理员可以轻松地以一致且可预测的方式提供存储服务。SCP中介绍的功能包括性能、协议、存储效率和其他功能。具体功能因版本而异。它们是使用vCenter UI中的适用于VMware vSphere的ONTAP 工具菜单创建的。您还可以使用REST API创建SCP。它们可以通过选择各个功能手动创建、也可以从现有(传统)数据存储库中自动生成。</block>
+  <block id="26381dca13404433a30c7de66b1e1e0f" category="list-text">*VM存储策略*
+VM存储策略在vCenter中的策略和配置文件下创建。对于虚拟卷、请使用NetApp虚拟卷存储类型提供程序中的规则创建一个规则集。ONTAP 工具提供了一种简化的方法、您只需选择SCP、而无需强制指定各个规则。</block>
+  <block id="5830cf44f34691888c4db3ac7cff6584" category="cell">62 TiB^1^</block>
+  <block id="4fc5020fcda60dc223f7150144c9e40d" category="cell">高达12、288^2^</block>
+  <block id="cc8d9043b2f8ef2c55249db34d5a858a" category="cell">^24576^ 2 μ m</block>
+  <block id="74b9b754740ed0f3c75110131a35dbc3" category="cell">最高98、304^2^</block>
+  <block id="759cd10d46c57c0931eef0307e7ed6b5" category="paragraph">注意
+^1^大小限制、具体取决于运行ONTAP 9.12.1P2及更高版本的ASA系统或AFF和FAS系统。</block>
+  <block id="1f880aceda886303c39ae064ddc5903b" category="paragraph">^2^ SAN SVML (NVMe命名库或LUN)的数量因平台而异。请始终检查<block ref="bf137fbaca3418d969a7cbbc6acb278c" category="inline-link-rx"></block> 更新了有关LUN和文件数量和大小的限制。</block>
+  <block id="54e3bd3e701c4cc7ece20910b9f62e0b" category="paragraph">*将ONTAP与VMware结合使用的最佳实践*</block>
+  <block id="a71094bebb40f34e1e835e24d407c542" category="list-text">*使用适用于VMware vSphere的UI扩展或REST API的ONTAP 工具来配置vvol数据存储库*和协议端点*
+虽然可以使用常规vSphere界面创建vvol数据存储库、但使用ONTAP 工具将根据需要自动创建协议端点、并根据您定义的存储功能配置文件根据ONTAP 最佳实践创建FlexVol 卷。只需右键单击主机/集群/数据中心、然后选择_ ONTAP tools_和_配置数据存储库_。您只需在向导中选择所需的卷选项即可。</block>
+  <block id="9e9b67d31288ec0f0531a239ca62f38c" category="list-text">*切勿将ONTAP 工具设备或vCenter Server设备(VCSA)存储在其所管理的VVOLs数据存储库中。*
+如果您需要重新启动设备、因为它们在重新启动期间无法重新绑定自己的虚拟卷、这可能会导致出现"鸡肉和鸡蛋的情况"。您可以将其存储在由其他ONTAP 工具和vCenter部署管理的Vvol数据存储库中。</block>
+  <block id="8e639c8a5a02c4a74cd3ba280c3e709f" category="list-text">*避免在不同ONTAP 版本之间执行虚拟卷操作。*
+VASA Provider的各个版本中支持的存储功能(例如QoS、特性等)发生了变化、其中一些功能取决于ONTAP 版本。在ONTAP 集群中使用不同版本或在具有不同版本的集群之间移动虚拟卷可能会导致意外行为或合规性警报。</block>
+  <block id="4843f0b5178acdaedaf1b4ac7a668455" category="list-text">*对光纤通道网络结构进行分区、然后再对其使用NVMe/FC或FCP来创建卷。*
+ONTAP 工具的VASA提供程序负责根据已发现的受管ESXi主机启动程序管理ONTAP 中的FCP和iSCSI igrou以及NVMe子系统。但是、它不会与光纤通道交换机集成来管理分区。必须先根据最佳实践进行分区、然后才能进行任何配置。以下是单个启动程序分区到四个ONTAP系统的示例：</block>
+  <block id="6b14e3f4a37881185acf7a766f8f6272" category="paragraph">单个启动程序分区：</block>
+  <block id="17ccf64e30cb518fd7ca87ce752ad738" category="paragraph"><block ref="17ccf64e30cb518fd7ca87ce752ad738" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="58b5cd2a94730c2e044c14891f1e0e87" category="paragraph">有关更多最佳实践、请参见以下文档：</block>
+  <block id="29fe20047de6ed3a64321e7515bc8890" category="paragraph"><block ref="29fe20047de6ed3a64321e7515bc8890" category="inline-link-rx"></block></block>
+  <block id="0c9a1714909f45c6f60c5e87c8627327" category="paragraph"><block ref="0c9a1714909f45c6f60c5e87c8627327" category="inline-link-rx"></block></block>
+  <block id="20c534f5c1f54f370e02bad46a56efe2" category="list-text">*根据需要规划您的后备FlexVol。*
+最好向您的ONTAP 数据存储库添加多个后备卷、以便在集群中分布工作负载、支持不同的策略选项或增加允许的LUN或文件数量。但是、如果需要最大的存储效率、请将所有备份卷放在一个聚合上。或者、如果需要最大的克隆性能、则可以考虑使用一个FlexVol 卷、并将模板或内容库保留在同一个卷中。VASA Provider会将许多VVOLs存储操作(包括迁移、克隆和快照)卸载到ONTAP。如果在一个FlexVol 卷中执行此操作、则会使用节省空间的文件克隆、并且这些克隆几乎可以即时使用。在FlexVol 卷之间执行此操作时、这些副本可以快速可用并使用实时重复数据删除和数据压缩、但只有在使用后台重复数据删除和数据压缩的卷上运行后台作业后、才能最大程度地恢复存储效率。根据源和目标、某些效率可能会降级。</block>
+  <block id="dddbbc3dae3cafbaae32fa87eed984c8" category="list-text">*保持存储功能配置文件(SCP)简单。*
+通过将功能设置为任何、避免指定不需要的功能。这样可以最大程度地减少选择或创建FlexVol 卷时出现的问题。例如、在VASA Provider 7.1及更早版本中、如果将数据压缩保留在默认SCP设置为No、则会尝试禁用数据压缩、即使在AFF 系统上也是如此。</block>
+  <block id="e64fb4a2ff65e8250ce77cc5db39caac" category="list-text">*使用默认的SCP作为示例模板来创建您自己的模板。*
+随附的SRP适用于大多数通用用途、但您的要求可能有所不同。</block>
+  <block id="d4442e423b708a344742336ebcfcd8db" category="list-text">*请考虑使用最大IOPS来控制未知或测试VM。*
+最大IOPS首次在VASA Provider 7.1中推出、可用于将未知工作负载的IOPS限制为特定VVOR、以避免对其他更关键的工作负载产生影响。有关性能管理的详细信息、请参见表4。</block>
+  <block id="bdbd10905a1446f944699405bca52654" category="list-text">*确保您具有足够的数据Lifs。*
+每个HA对的每个节点至少创建两个生命周期。根据您的工作负载、可能需要更多资源。</block>
+  <block id="0c04fb585a85675569ca59c1ca71bc66" category="list-text">*遵循所有协议最佳实践。*
+请参见NetApp和VMware针对您选择的协议提供的其他最佳实践指南。一般而言，除了上述情况外，没有任何其他变化。</block>
+  <block id="d08f0a80d0a2e4bda0cde66988be70dc" category="paragraph">使用基于NFS v3的Vvol的网络配置示例：</block>
+  <block id="d5f915a620ac1956aec015cbfe5bcf55" category="inline-image-macro">"使用基于NFS v3的Vvol进行网络配置"、500</block>
+  <block id="2abfda4c082f0c550b9e417f7cb513cc" category="paragraph"><block ref="2abfda4c082f0c550b9e417f7cb513cc" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="edf706f6f0b923c558772ff0198f4b06" category="cell">选择或创建加密的FlexVol卷。需要ONTAP 许可证。</block>
+  <block id="05a6d73e93691ec100ece661e61eb132" category="cell">AFF、FAS</block>
+  <block id="21e7444a6d67fc247ec1c4679a650031" category="cell">用于FabricPool；需要使用AFF或ASA以及ONTAP 9.4或更高版本。除非使用NetApp StorageGRID 等内部部署S3解决方案 、否则建议仅使用Snapshot。</block>
+  <block id="1c472a7f2f4380895c82bc2ed43d727b" category="paragraph">*最佳实践*</block>
+  <block id="aac915d3befc8db9d5b3a3dee5c7a58a" category="paragraph">有关详细信息、请参见 <block ref="904c80f66e5056357fd992ed854be90e" category="inline-link-macro-rx"></block>。</block>
+  <block id="ab81e47672e89830ec16c581f44cb23c" category="paragraph">第 1 部分：入门，要求，自动化详细信息和初始 AWX/ 塔式配置</block>
+  <block id="deb10517653c255364175796ace3553f" category="cell">产品</block>
+  <block id="ede1cce9f240fed5ecc4264bd699cee1" category="sidebar">BlueXP备份和恢复</block>
+  <block id="fb62fbf89ea149f795c0e8c9d524188d" category="sidebar">BlueXP备份和恢复</block>
+  <block id="7f65285e967e5d62effe7b87198351bc" category="sidebar">适用于VM的BlueXP备份和恢复</block>
 </blocks>

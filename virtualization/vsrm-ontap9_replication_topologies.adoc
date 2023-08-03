@@ -24,12 +24,11 @@ summary: 在 ONTAP 9 中，集群管理员可以看到集群的物理组件，�
 * SVM 可以控制跨越集群中多个节点的 LUN 和卷。
 
 
-|===
-| 最佳实践 
+*最佳实践*
+
+. 要确定可支持性，请牢记以下规则：要使用 SRM 和 NetApp SRA 保护 VM ， VM 的所有部分都必须仅位于一个 SVM 上。此规则适用于受保护站点和恢复站点。
 
 
-| 要确定可支持性，请牢记以下规则：要使用 SRM 和 NetApp SRA 保护 VM ， VM 的所有部分都必须仅位于一个 SVM 上。此规则适用于受保护站点和恢复站点。 
-|===
 
 
 == 支持的 SnapMirror 布局
@@ -93,12 +92,11 @@ SnapVault 是为 ONTAP 8.2 从头开始重建的。虽然以前的 Data ONTAP 7-
 
 有关适用于 ONTAP 9 的 SnapMirror 和 SnapVault 的最新信息，请参见 https://www.netapp.com/media/17229-tr4015.pdf?v=127202175503P["TR-4015 《适用于 ONTAP 9 的 SnapMirror 配置最佳实践指南》。"^]
 
-|===
-| 最佳实践 
+*最佳实践*
+
+. 如果在同一环境中使用 SnapVault 和 SRM ， NetApp 建议使用 SnapMirror 到 SnapVault 级联配置，其中通常会从灾难恢复站点的 SnapMirror 目标执行 SnapVault 备份。发生灾难时，此配置会使主站点无法访问。通过将 SnapVault 目标保留在恢复站点上，可以在故障转移后重新配置 SnapVault 备份，以便在恢复站点上运行时可以继续执行 SnapVault 备份。
 
 
-| 如果在同一环境中使用 SnapVault 和 SRM ， NetApp 建议使用 SnapMirror 到 SnapVault 级联配置，其中通常会从灾难恢复站点的 SnapMirror 目标执行 SnapVault 备份。发生灾难时，此配置会使主站点无法访问。通过将 SnapVault 目标保留在恢复站点上，可以在故障转移后重新配置 SnapVault 备份，以便在恢复站点上运行时可以继续执行 SnapVault 备份。 
-|===
 在 VMware 环境中，每个数据存储库都有一个通用唯一标识符（ UUID ），每个 VM 都有一个唯一的受管对象 ID （ MOID ）。在故障转移或故障恢复期间， SRM 不会维护这些 ID 。由于 SRM 在故障转移期间不会维护数据存储库 UUID 和 VM MOID ，因此，在 SRM 故障转移后，必须重新配置依赖这些 ID 的所有应用程序。例如， NetApp Active IQ Unified Manager 可将 SnapVault 复制与 vSphere 环境进行协调。
 
 下图显示了 SnapMirror 到 SnapVault 的级联配置。如果 SnapVault 目标位于灾难恢复站点或不受主站点中断影响的三级站点上，则可以重新配置环境，以便在故障转移后继续备份。
@@ -125,9 +123,7 @@ qtree 是一种特殊目录，可用于为 NAS 应用文件系统配额。ONTAP 
 
 VMware SRM 和 NetApp SRA 支持在一个站点使用 FC 协议，而在另一个站点使用 iSCSI 协议。但是，不支持在同一 ESXi 主机或同一集群中的不同主机中混合使用 FC 连接的数据存储库和 iSCSI 连接的数据存储库。SRM 不支持此配置，因为在 SRM 故障转移或测试故障转移期间， SRM 会在请求中包括 ESXi 主机中的所有 FC 和 iSCSI 启动程序。
 
-|===
-| 最佳实践 
+*最佳实践*
 
+. SRM 和 SRA 支持在受保护站点和恢复站点之间混合使用 FC 和 iSCSI 协议。但是，每个站点只能配置一个 FC 或 iSCSI 协议，而不能在同一站点上同时配置这两个协议。如果要求在同一站点同时配置 FC 和 iSCSI 协议， NetApp 建议某些主机使用 iSCSI ，而其他主机使用 FC 。在这种情况下， NetApp 还建议设置 SRM 资源映射，以便将 VM 配置为故障转移到一组主机或另一组主机。
 
-| SRM 和 SRA 支持在受保护站点和恢复站点之间混合使用 FC 和 iSCSI 协议。但是，每个站点只能配置一个 FC 或 iSCSI 协议，而不能在同一站点上同时配置这两个协议。如果要求在同一站点同时配置 FC 和 iSCSI 协议， NetApp 建议某些主机使用 iSCSI ，而其他主机使用 FC 。在这种情况下， NetApp 还建议设置 SRM 资源映射，以便将 VM 配置为故障转移到一组主机或另一组主机。 
-|===

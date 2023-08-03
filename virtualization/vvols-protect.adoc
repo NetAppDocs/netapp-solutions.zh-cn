@@ -104,50 +104,20 @@ image:vvols-image18.png["SnapCenter 架构、300"]
 
 以下最佳实践可帮助您充分利用SnapCenter 部署。
 
-|===
-
-
- a| 
-* SCV同时支持vCenter Server RBAC和ONTAP RBAC、并包括预定义的vCenter角色、这些角色会在注册插件时自动为您创建。您可以阅读有关支持的RBAC类型的更多信息 https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_types_of_rbac_for_snapcenter_users.html["此处。"]
+. SCV同时支持vCenter Server RBAC和ONTAP RBAC、并包括预定义的vCenter角色、这些角色会在注册插件时自动为您创建。您可以阅读有关支持的RBAC类型的更多信息 https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_types_of_rbac_for_snapcenter_users.html["此处。"]
 +
 ** 使用vCenter UI使用所述的预定义角色分配特权最低的帐户访问权限 https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_predefined_roles_packaged_with_snapcenter.html["此处"]。
 ** 如果在SnapCenter 服务器中使用SCV，则必须分配_SnapCenterAdmin_角色。
 ** ONTAP RBAC是指用于添加和管理SCV使用的存储系统的用户帐户。ONTAP RBAC不适用于基于虚拟卷的备份。阅读有关ONTAP RBAC和SCV的更多信息 https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_ontap_rbac_features_in_snapcenter.html["此处"]。
 
 
+. 使用SnapMirror将备份数据集复制到另一个系统、以创建源卷的完整副本。如前所述、您还可以使用镜像存储策略长期保留备份数据、而不受源卷快照保留设置的影响。这两种机制都支持使用这两种方法的卷。
+. 由于SCV还需要适用于VMware vSphere的ONTAP 工具来实现Vvol功能、因此请始终查看NetApp互操作性表工具(IMT)以了解特定版本的兼容性
+. 如果要将vvol复制与VMware SRM结合使用、请注意策略RPO和备份计划
+. 使用符合组织定义的恢复点目标(Recovery Point目标、Recovery Point目标、RPO)的保留设置设计备份策略
+. 在资源组上配置通知设置、以便在备份运行时收到状态通知(请参见下面的图10)
 
 
-
-
- a| 
-* 使用SnapMirror将备份数据集复制到另一个系统、以创建源卷的完整副本。如前所述、您还可以使用镜像存储策略长期保留备份数据、而不受源卷快照保留设置的影响。这两种机制都支持使用这两种方法的卷。
-
-
-
-
- a| 
-* 由于SCV还需要适用于VMware vSphere的ONTAP 工具来实现Vvol功能、因此请始终查看NetApp互操作性表工具(IMT)以了解特定版本的兼容性
-
-
-
-
- a| 
-* 如果要将vvol复制与VMware SRM结合使用、请注意策略RPO和备份计划
-
-
-
-
- a| 
-* 使用符合组织定义的恢复点目标(Recovery Point目标、Recovery Point目标、RPO)的保留设置设计备份策略
-
-
-
-
- a| 
-* 在资源组上配置通知设置、以便在备份运行时收到状态通知(请参见下面的图10)
-
-
-|===
 
 
 === 资源组通知选项
