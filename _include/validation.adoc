@@ -11,6 +11,8 @@
 
 === 验证 Oracle 安装
 
+. 以Oracle用户身份登录到Oracle服务器并执行以下命令：
+
 
 [source, cli]
 ----
@@ -18,6 +20,8 @@ ps -ef | grep ora
 ----
 
 NOTE: 如果安装按预期完成且 Oracle 数据库已启动，则此列表将列出 Oracle 进程
+
+. 登录到数据库以检查数据库配置设置以及使用以下命令集创建的PDB。
 
 
 [source, cli]
@@ -68,6 +72,8 @@ SVRname 名称 NFSVERSION ----------- ----------------- --------- 172.21.126.200
 ----
 This confirms that dNFS is working properly.
 ----
+. 使用以下命令通过侦听器连接到数据库以检查Oracle侦听器配置。更改为相应的侦听器端口和数据库服务名称。
+
 
 [source, cli]
 ----

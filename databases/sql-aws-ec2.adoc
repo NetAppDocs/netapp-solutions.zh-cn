@@ -144,15 +144,18 @@ NOTE: 对于任务关键型应用程序(例如SQL Server)、必须仔细考虑�
 
 . 打开Amazon FSX控制台、网址为 https://console.aws.amazon.com/fsx/[]
 . 使用创建方法下的标准创建选项为NetApp ONTAP 文件系统创建Amazon FSX。这样、您可以定义FSxadmin和vsadmin凭据。
-+
+
+
 image:sql-awsec2-image1.png["错误：缺少图形映像"]
 
 . 指定fsxadmin的密码。
-+
+
+
 image:sql-awsec2-image2.png["错误：缺少图形映像"]
 
 . 指定SVM的密码。
-+
+
+
 image:sql-awsec2-image3.png["错误：缺少图形映像"]
 
 . 按照中列出的步骤创建卷 https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/creating-volumes.html["在适用于NetApp ONTAP 的FSX上创建卷"^]。
@@ -167,7 +170,8 @@ image:sql-awsec2-image3.png["错误：缺少图形映像"]
 
 
 . 使用以下SSH命令创建卷：
-+
+
+
 ....
 Vol create -vserver svm001 -volume vol_awssqlprod01_data -aggregate aggr1 -size 800GB -state online -tiering-policy snapshot-only -percent-snapshot-space 0 -autosize-mode grow -snapshot-policy none -security-style ntfs -aggregate aggr1
 volume modify -vserver svm001 -volume vol_awssqlprod01_data -fractional-reserve 0
@@ -175,81 +179,87 @@ volume modify -vserver svm001 -volume vol_awssqlprod01_data -space-mgmt-try-firs
 volume snapshot autodelete modify -vserver svm001 -volume vol_awssqlprod01_data -delete-order oldest_first
 ....
 . 在Windows Server中使用提升的权限使用PowerShell启动iSCSI服务。
-+
+
+
 ....
 Start-service -Name msiscsi
 Set-Service -Name msiscsi -StartupType Automatic
 ....
 . 在Windows Server中使用提升的权限使用PowerShell安装Multipath-IO。
-+
+
+
 ....
  Install-WindowsFeature -name Multipath-IO -Restart
 ....
 . 在Windows Server中使用提升的权限查找具有PowerShell的Windows启动程序名称。
-+
+
+
 ....
 Get-InitiatorPort | select NodeAddress
 ....
-+
 image:sql-awsec2-image4.png["错误：缺少图形映像"]
 
 . 使用putty连接到Storage Virtual Machine (SVM)并创建iGroup。
-+
+
+
 ....
 igroup create -igroup igrp_ws2019sql1 -protocol iscsi -ostype windows -initiator iqn.1991-05.com.microsoft:ws2019-sql1.contoso.net
 ....
 . 使用以下SSH命令创建LUN：
-+
+
+
 ....
 lun create -path /vol/vol_awssqlprod01_data/lun_awssqlprod01_data -size 700GB -ostype windows_2008 -space-reserve enabled -space-allocation enabled lun create -path /vol/vol_awssqlprod01_log/lun_awssqlprod01_log -size 100GB -ostype windows_2008 -space-reserve enabled -space-allocation enabled
 ....
-+
 image:sql-awsec2-image5.png["错误：缺少图形映像"]
 
 . 要使用操作系统分区方案实现I/O对齐、请使用windows_2008作为建议的LUN类型。请参见 https://docs.netapp.com/us-en/ontap/san-admin/io-misalignments-properly-aligned-luns-concept.html["此处"^] 适用于追加信息 。
 . 使用以下SSH命令将igroup映射到刚刚创建的LUN。
-+
+
+
 ....
 lun show
 lun map -path /vol/vol_awssqlprod01_data/lun_awssqlprod01_data -igroup igrp_awssqlprod01lun map -path /vol/vol_awssqlprod01_log/lun_awssqlprod01_log -igroup igrp_awssqlprod01
 ....
-+
 image:sql-awsec2-image6.png["错误：缺少图形映像"]
 
 . 对于使用Windows故障转移集群的共享磁盘、请运行SSH命令将同一个LUN映射到属于Windows故障转移集群中所有服务器的igroup。
 . 将Windows Server连接到具有iSCSI目标的SVM。从AWS门户查找目标IP地址。
-+
+
+
 image:sql-awsec2-image7.png["错误：缺少图形映像"]
 
 . 从服务器管理器和工具菜单中、选择iSCSI启动程序。选择发现选项卡、然后选择发现门户。提供上一步中的iSCSI IP地址、然后选择高级。从本地适配器中、选择Microsoft iSCSI启动程序。从启动程序IP中、选择服务器的IP。然后选择确定以关闭所有窗口。
-+
+
+
 image:sql-awsec2-image8.png["错误：缺少图形映像"]
 
 . 对SVM中的第二个iSCSI IP重复步骤12。
 . 选择*目标*选项卡、选择*连接*、然后选择*启用多路径*。
-+
+
+
 image:sql-awsec2-image9.png["错误：缺少图形映像"]
 
 . 为了获得最佳性能、请添加更多会话；NetApp建议创建五个iSCSI会话。选择*属性*>*添加会话*>*高级*并重复步骤12。
-+
+
+
 ....
 $TargetPortals = ('10.2.1.167', '10.2.2.12')
 foreach ($TargetPortal in $TargetPortals) {New-IscsiTargetPortal -TargetPortalAddress $TargetPortal}
 ....
-+
 image:sql-awsec2-image10.png["错误：缺少图形映像"]
 
 +
 *最佳实践*
 
 +
-** 为每个目标接口配置五个iSCSI会话以获得最佳性能。
-** 配置轮循策略以获得最佳整体iSCSI性能。
-** 格式化LUN时、请确保分区的分配单元大小设置为64K
-
+*为每个目标接口配置五个iSCSI会话以获得最佳性能。
+*配置循环策略以获得最佳的整体iSCSI性能。
+*格式化LUN时、请确保分区的分配单元大小设置为64K
 
 . 运行以下PowerShell命令以确保iSCSI会话保持不变。
-+
+
+
 ....
 $targets = Get-IscsiTarget
 foreach ($target in $targets)
@@ -257,28 +267,26 @@ foreach ($target in $targets)
 Connect-IscsiTarget -IsMultipathEnabled $true -NodeAddress $target.NodeAddress -IsPersistent $true
 }
 ....
-+
 image:sql-awsec2-image11.png["错误：缺少图形映像"]
 
 . 使用以下PowerShell命令初始化磁盘。
-+
+
+
 ....
 $disks = Get-Disk | where PartitionStyle -eq raw
 foreach ($disk in $disks) {Initialize-Disk $disk.Number}
 ....
-+
 image:sql-awsec2-image12.png["错误：缺少图形映像"]
 
 . 使用PowerShell运行创建分区和格式化磁盘命令。
-+
+
+
 ....
 New-Partition -DiskNumber 1 -DriveLetter F -UseMaximumSize
 Format-Volume -DriveLetter F -FileSystem NTFS -AllocationUnitSize 65536
 New-Partition -DiskNumber 2 -DriveLetter G -UseMaximumSize
 Format-Volume -DriveLetter G -FileSystem NTFS -AllocationUnitSize 65536
 ....
-
-
 您可以使用附录B中的PowerShell脚本自动创建卷和LUN也可以使用SnapCenter 创建LUN。
 
 ====
@@ -379,18 +387,19 @@ NOTE: 创建新数据库时、Microsoft建议为数据和日志指定单独的�
 安装SnapCenter 后、请完成以下步骤进行设置。
 
 . 要设置凭据、请选择*设置*>*新增*、然后输入凭据信息。
-+
+
+
 image:sql-awsec2-image14.png["错误：缺少图形映像"]
 
 . 通过选择存储系统>新建并为ONTAP 存储信息提供适当的FSX来添加存储系统。
-+
+
+
 image:sql-awsec2-image15.png["错误：缺少图形映像"]
 
 . 通过选择*主机*>*添加*来添加主机、然后提供主机信息。SnapCenter 会自动安装Windows和SQL Server插件。此过程可能需要一些时间。
-+
+
+
 image:sql-awsec2-image16.png["错误：缺少图形映像"]
-
-
 
 安装完所有插件后、您必须配置日志目录。这是事务日志备份所在的位置。您可以通过选择主机并选择配置日志目录来配置日志目录。
 
@@ -428,28 +437,31 @@ image:sql-awsec2-image18.png["错误：缺少图形映像"]
 * 使用资源组进行备份配置、以优化Snapshot以及要管理的作业数。
 +
 .. 选择*资源*、然后选择左上角下拉菜单中的* Microsoft SQL Server *。选择*刷新资源*。
-+
+
+
+
+
 image:sql-awsec2-image19.png["错误：缺少图形映像"]
 
-.. 选择要备份的数据库、然后选择*下一步*和(*+)以添加策略(如果尚未创建策略)。按照*新SQL Server备份策略*创建新策略。
-+
+. 选择要备份的数据库，然后选择*Next*和(**)以添加策略(如果尚未创建)。按照*新SQL Server备份策略*创建新策略。
+
+
 image:sql-awsec2-image20.png["错误：缺少图形映像"]
 
-.. 如有必要、选择验证服务器。此服务器是SnapCenter 在创建完整备份后运行DBCC CHECKDB的服务器。单击*下一步*进行通知、然后选择*摘要*进行查看。查看后、单击*完成*。
-+
+. 如有必要、选择验证服务器。此服务器是SnapCenter 在创建完整备份后运行DBCC CHECKDB的服务器。单击*下一步*进行通知、然后选择*摘要*进行查看。查看后、单击*完成*。
+
+
 image:sql-awsec2-image21.png["错误：缺少图形映像"]
 
-.. 单击*立即备份*以测试备份。在弹出窗口中、选择*备份*。
-+
+. 单击*立即备份*以测试备份。在弹出窗口中、选择*备份*。
+
+
 image:sql-awsec2-image22.png["错误：缺少图形映像"]
 
-.. 选择*监控*以验证备份是否已完成。
-+
+. 选择*监控*以验证备份是否已完成。
+
+
 image:sql-awsec2-image23.png["错误：缺少图形映像"]
-
-
-
-
 
 *最佳实践*
 
@@ -466,16 +478,16 @@ image:sql-awsec2-image23.png["错误：缺少图形映像"]
 要使用SnapCenter 将单个数据库还原到特定时间点或最短时间、请完成以下步骤。
 
 . 选择资源、然后选择要还原的数据库。
-+
+
+
 image:sql-awsec2-image24.png["错误：缺少图形映像"]
 
 . 选择需要从中还原数据库的备份名称、然后选择还原。
 . 按照*还原*弹出窗口还原数据库。
 . 选择*监控*以验证还原过程是否成功。
-+
+
+
 image:sql-awsec2-image25.png["错误：缺少图形映像"]
-
-
 
 ====
 .包含大量大小不一的数据库的实例的注意事项
@@ -543,21 +555,22 @@ NetApp还建议对数据库数量进行分组、而不是为每个数据库或�
 . 选择资源>查看实例、然后选择刷新资源。
 . 选择资源、然后选择要克隆的数据库。
 . 选择要克隆的备份名称、然后选择克隆。
-+
+
+
 image:sql-awsec2-image26.png["错误：缺少图形映像"]
 
 . 按照"从备份克隆"说明、在EC2上提供新的SQL Server实例和实例名称、完成克隆过程。
 . 选择Monitor以确保克隆已完成。
-+
+
+
 image:sql-awsec2-image27.png["错误：缺少图形映像"]
-
-
 
 =====
 ====
 要了解有关此过程的更多信息、请观看以下视频：
 
-video::27f28284-433d-4273-8748-b01200fb3cd7[panopto,width=360]
+.将数据库克隆到EC2上运行的新SQL Server实例中
+video::27f28284-433d-4273-8748-b01200fb3cd7[panopto]
 
 
 == 附录
@@ -581,7 +594,8 @@ video::27f28284-433d-4273-8748-b01200fb3cd7[panopto,width=360]
 * `_EnableMPIO.ps1`
 
 
-....
+[source, shell]
+----
 Function Install_MPIO_ssh {
     $hostname = $env:COMPUTERNAME
     $hostname = $hostname.Replace('-','_')
@@ -604,10 +618,12 @@ Function Install_MPIO_ssh {
 }
 Install_MPIO_ssh
 Remove-Item -Path $MyInvocation.MyCommand.Source
-....
+----
 * `_CreateDisks.ps1`
 
 
+[listing]
+----
 ....
 #Enable MPIO and Start iSCSI Service
 Function PrepISCSI {
@@ -687,6 +703,7 @@ Create_Partition_Format_Disks
 UnregisterTask
 Remove-Item -Path $MyInvocation.MyCommand.Source
 ....
+----
 运行文件 `EnableMPIO.ps1` 首先、第二个脚本会在服务器重新启动后自动执行。由于对SVM的凭据访问、可以在执行这些PowerShell脚本后将其删除。
 
 ====
@@ -695,31 +712,36 @@ Remove-Item -Path $MyInvocation.MyCommand.Source
 == 从何处查找追加信息
 
 * 适用于 NetApp ONTAP 的 Amazon FSX
-+
+
+
 https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html["https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html"^]
 
 * 适用于NetApp ONTAP 的FSX入门
-+
+
+
 https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/getting-started.html["https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/getting-started.html"^]
 
 * SnapCenter 界面概述
-+
+
+
 https://www.youtube.com/watch?v=lVEBF4kV6Ag&t=0s["https://www.youtube.com/watch?v=lVEBF4kV6Ag&t=0s"^]
 
 * 浏览SnapCenter 导航窗格选项
-+
+
+
 https://www.youtube.com/watch?v=_lDKt-koySQ["https://www.youtube.com/watch?v=_lDKt-koySQ"^]
 
 * 设置适用于SQL Server的SnapCenter 4.0插件
-+
+
+
 https://www.youtube.com/watch?v=MopbUFSdHKE["https://www.youtube.com/watch?v=MopbUFSdHKE"^]
 
 * 如何使用带有SQL Server插件的SnapCenter 备份和还原数据库
-+
+
+
 https://www.youtube.com/watch?v=K343qPD5_Ys["https://www.youtube.com/watch?v=K343qPD5_Ys"^]
 
 * 如何使用带有SQL Server插件的SnapCenter 克隆数据库
-+
+
+
 https://www.youtube.com/watch?v=ogEc4DkGv1E["https://www.youtube.com/watch?v=ogEc4DkGv1E"^]
-
-

@@ -48,45 +48,50 @@ NOTE: 适用于 NetApp ONTAP 的 Amazon FSx 和基于 AWS 的 VMware Cloud 必�
 
 . 打开 link:https://console.aws.amazon.com/fsx/["Amazon FSX 控制台"] 并选择创建文件系统以启动文件系统创建向导。
 . 在选择文件系统类型页面上，选择适用于 NetApp ONTAP 的 Amazon FSx ，然后选择下一步。此时将显示创建文件系统页面。
-+
+
+
 image:aws-fsx-guest-1.png[""]
 
 . 在网络部分中，对于虚拟私有云（ Virtual Private Cloud ， VPC ），选择适当的 VPC 和首选子网以及路由表。在这种情况下，将从下拉列表中选择 vmcfsx2.vPC 。
-+
+
+
 image:aws-fsx-guest-2.png[""]
 
 . 对于创建方法，请选择标准创建。您也可以选择 " 快速创建 " ，但本文档使用 " 标准创建 " 选项。
-+
+
+
 image:aws-fsx-guest-3.png[""]
 
 . 在网络部分中，对于虚拟私有云（ Virtual Private Cloud ， VPC ），选择适当的 VPC 和首选子网以及路由表。在这种情况下，将从下拉列表中选择 vmcfsx2.vPC 。
-+
+
+
 image:aws-fsx-guest-4.png[""]
 
-+
 
 NOTE: 在网络部分中，对于虚拟私有云（ Virtual Private Cloud ， VPC ），选择适当的 VPC 和首选子网以及路由表。在这种情况下，将从下拉列表中选择 vmcfsx2.vPC 。
 
 . 在安全性和加密部分中，对于加密密钥，选择用于保护文件系统空闲数据的 AWS 密钥管理服务（ AWS KMS ）加密密钥。对于文件系统管理密码，输入 fsxadmin 用户的安全密码。
-+
+
+
 image:aws-fsx-guest-5.png[""]
 
 . 在虚拟机中，并指定与 vsadmin 结合使用的密码，以便使用 REST API 或 CLI 管理 ONTAP 。如果未指定密码，则可以使用 fsxadmin 用户来管理 SVM 。在 Active Directory 部分中，确保将 Active Directory 加入 SVM 以配置 SMB 共享。在默认 Storage Virtual Machine 配置部分中，在此验证中提供存储的名称， SMB 共享使用自管理的 Active Directory 域进行配置。
-+
+
+
 image:aws-fsx-guest-6.png[""]
 
 . 在默认卷配置部分中，指定卷名称和大小。这是一个 NFS 卷。对于存储效率，请选择启用以启用 ONTAP 存储效率功能（数据压缩，重复数据删除和数据缩减），或者选择禁用以禁用这些功能。
-+
+
+
 image:aws-fsx-guest-7.png[""]
 
 . 查看创建文件系统页面上显示的文件系统配置。
 . 单击创建文件系统。
-+
+
+
 image:aws-fsx-guest-8.png[""]
 image:aws-fsx-guest-9.png[""]
 image:aws-fsx-guest-10.png[""]
-
-
 
 有关更多详细信息，请参见 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/getting-started.html["适用于 NetApp ONTAP 的 Amazon FSX 入门"]。
 
@@ -117,16 +122,17 @@ image:aws-fsx-guest-11.png[""]
 . 将适用于 NetApp ONTAP NFS 的 Amazon FSX 卷挂载到上一步创建的目录中。
 +
  sudo mount -t nfs nfsvers=4.1,198.19.254.239:/nfsdemovol01 /fsx/nfsdemovol01
-+
+
+
 image:aws-fsx-guest-20.png[""]
 
 . 执行后，运行 df 命令以验证挂载。
-+
+
+
 image:aws-fsx-guest-21.png[""]
 
-
-
-video::c3befe1b-4f32-4839-a031-b01200fb6d60[panopto,width=360]
+.在 Linux 客户端上挂载 FSX ONTAP 卷
+video::c3befe1b-4f32-4839-a031-b01200fb6d60[panopto]
 ====
 .将 FSX ONTAP 卷连接到 Microsoft Windows 客户端
 [%collapsible]
@@ -136,35 +142,36 @@ video::c3befe1b-4f32-4839-a031-b01200fb6d60[panopto,width=360]
 . 打开 " 开始 " 菜单，然后使用以管理员身份运行来运行 fsmgmt.msc 。这样将打开共享文件夹 GUI 工具。
 . 单击操作 > 所有任务，然后选择连接到另一台计算机。
 . 对于另一台计算机，输入 Storage Virtual Machine （ SVM ）的 DNS 名称。例如，在此示例中使用了 FSXSMBTESTING01.FSXTESTING.local 。
-+
+
+
 
 NOTE: TP 可在 Amazon FSX 控制台上找到 SVM 的 DNS 名称，选择 Storage Virtual Machine ，选择 SVM ，然后向下滚动到端点以查找 SMB DNS 名称。单击确定。Amazon FSX 文件系统将显示在共享文件夹列表中。
 
-+
 image:aws-fsx-guest-22.png[""]
 
 . 在共享文件夹工具中，选择左窗格中的共享以查看 Amazon FSX 文件系统的活动共享。
-+
+
+
 image:aws-fsx-guest-23.png[""]
 
 . 现在，选择一个新共享并完成创建共享文件夹向导。
-+
+
+
 image:aws-fsx-guest-24.png[""]
 image:aws-fsx-guest-25.png[""]
 
-+
 要了解有关在 Amazon FSX 文件系统上创建和管理 SMB 共享的详细信息，请参见 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/create-smb-shares.html["创建 SMB 共享"]。
 
 . 建立连接后，可以连接 SMB 共享并将其用于应用程序数据。为此，请复制共享路径并使用映射网络驱动器选项将卷挂载到 AWS SDDC 上在 VMware Cloud 上运行的虚拟机上。
-+
+
+
 image:aws-fsx-guest-26.png[""]
-
-
 
 ====
 .使用 iSCSI 将适用于 NetApp ONTAP LUN 的 FSX 连接到主机
 [%collapsible]
 ====
+.使用 iSCSI 将适用于 NetApp ONTAP LUN 的 FSX 连接到主机
 video::0d03e040-634f-4086-8cb5-b01200fb8515[panopto]
 FSX 的 iSCSI 流量通过上一节提供的路由遍历 VMware Transit Connect/AWS Transit Gateway 。要在适用于 NetApp ONTAP 的 Amazon FSX 中配置 LUN ，请按照找到的文档进行操作 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/supported-fsx-clients.html["此处"]。
 
@@ -180,11 +187,13 @@ FSX 的 iSCSI 流量通过上一节提供的路由遍历 VMware Transit Connect/
 . 按照规模估算输出所示，使用所需大小创建 LUN 。
 +
  FsxId040eacc5d0ac31017::> lun create -vserver vmcfsxval2svm -volume nimfsxscsivol -lun nimofsxlun01 -size 5gb -ostype windows -space-reserve enabled
-+
+
+
 在此示例中，我们创建了一个大小为 5G （ 5368709120 ）的 LUN 。
 
 . 创建必要的 igroup 以控制哪些主机可以访问特定 LUN 。
-+
+
+
 [listing]
 ----
 FsxId040eacc5d0ac31017::> igroup create -vserver vmcfsxval2svm -igroup winIG -protocol iscsi -ostype windows -initiator iqn.1991-05.com.microsoft:vmcdc01.fsxtesting.local
@@ -203,11 +212,11 @@ vmcfsxval2svm
 
           winIG        iscsi    windows  iqn.1991-05.com.microsoft:vmcdc01.fsxtesting.local
 ----
-+
 此时将显示两个条目。
 
 . 使用以下命令将 LUN 映射到 igroup ：
-+
+
+
 [listing]
 ----
 FsxId040eacc5d0ac31017::> lun map -vserver vmcfsxval2svm -path /vol/nimfsxscsivol/nimofsxlun01 -igroup winIG
@@ -226,29 +235,24 @@ vmcfsxval2svm
 
           /vol/nimfsxscsivol/nimofsxlun01 online  mapped   windows       5GB
 ----
-+
 此时将显示两个条目。
 
 . 将新配置的 LUN 连接到 Windows VM ：
-+
+
+
 要将新 LUN 连接到 AWS SDDC 上 VMware 云上的 Windows 主机，请完成以下步骤：
 
-+
-.. RDP 到 AWS SDDC 上 VMware Cloud 上托管的 Windows VM 。
-.. 导航到服务器管理器 > 信息板 > 工具 > iSCSI 启动程序以打开 iSCSI 启动程序属性对话框。
-.. 在发现选项卡中，单击发现门户或添加门户，然后输入 iSCSI 目标端口的 IP 地址。
-.. 从目标选项卡中，选择已发现的目标，然后单击登录或连接。
-.. 选择启用多路径，然后选择 " 计算机启动时自动还原此连接 " 或 " 将此连接添加到收藏目标列表 " 。单击高级。
-+
+. RDP 到 AWS SDDC 上 VMware Cloud 上托管的 Windows VM 。
+. 导航到服务器管理器 > 信息板 > 工具 > iSCSI 启动程序以打开 iSCSI 启动程序属性对话框。
+. 在发现选项卡中，单击发现门户或添加门户，然后输入 iSCSI 目标端口的 IP 地址。
+. 从目标选项卡中，选择已发现的目标，然后单击登录或连接。
+. 选择启用多路径，然后选择 " 计算机启动时自动还原此连接 " 或 " 将此连接添加到收藏目标列表 " 。单击高级。
+
+
 
 NOTE: Windows 主机必须与集群中的每个节点建立 iSCSI 连接。原生 DSM 会选择要使用的最佳路径。
 
-+
 image:aws-fsx-guest-30.png[""]
-
-
-
-
 
 Storage Virtual Machine （ SVM ）上的 LUN 在 Windows 主机中显示为磁盘。主机不会自动发现添加的任何新磁盘。通过完成以下步骤触发手动重新扫描以发现磁盘：
 
@@ -256,20 +260,18 @@ Storage Virtual Machine （ SVM ）上的 LUN 在 Windows 主机中显示为磁�
 . 在导航树中展开存储节点。
 . 单击磁盘管理。
 . 单击操作 > 重新扫描磁盘。
-+
+
+
 image:aws-fsx-guest-31.png[""]
-
-
 
 当新 LUN 首次由 Windows 主机访问时，它没有分区或文件系统。通过完成以下步骤初始化 LUN ，并可选择使用文件系统格式化 LUN ：
 
 . 启动 Windows 磁盘管理。
 . 右键单击 LUN ，然后选择所需的磁盘或分区类型。
 . 按照向导中的说明进行操作。在此示例中，驱动器 F ：已挂载。
-+
+
+
 image:aws-fsx-guest-32.png[""]
-
-
 
 ====
 
@@ -299,86 +301,100 @@ Cloud Volumes ONTAP 是行业领先的云数据管理解决方案 、基于NetAp
 NOTE: 使用 link:https://cloud.netapp.com/cvo-sizer["Cloud Volumes ONTAP 规模估算工具"] 以准确估算 Cloud Volumes ONTAP 实例的大小。此外，还可以监控内部性能，以用作 Cloud Volumes ONTAP 规模估算器中的输入。
 
 . 登录到 NetApp Cloud Central ；此时将显示 Fabric View 屏幕。找到 Cloud Volumes ONTAP 选项卡，然后选择转到 Cloud Manager 。登录后，将显示 " 画布 " 屏幕。
-+
+
+
 image:aws-cvo-guest-1.png[""]
 
 . 在 Cloud Manager 主页上，单击添加工作环境，然后选择 AWS 作为云以及系统配置的类型。
-+
+
+
 image:aws-cvo-guest-2.png[""]
 
 . 提供要创建的环境的详细信息，包括环境名称和管理员凭据。单击 Continue （继续）。
-+
+
+
 image:aws-cvo-guest-3.png[""]
 
 . 为 Cloud Volumes ONTAP 部署选择附加服务，包括云数据感知，云备份和 Cloud Insights 。单击 Continue （继续）。
-+
+
+
 image:aws-cvo-guest-4.png[""]
 
 . 在 HA 部署模式页面上，选择多个可用性区域配置。
-+
+
+
 image:aws-cvo-guest-5.png[""]
 
 . 在区域和 VPC 页面上，输入网络信息，然后单击继续。
-+
+
+
 image:aws-cvo-guest-6.png[""]
 
 . 在“ Connectivity and SSH Authentication ”（连接和 SSH 身份验证）页上、为 HA 对和调解器选择连接方法。
-+
+
+
 image:aws-cvo-guest-7.png[""]
 
 . 指定浮动 IP 地址，然后单击继续。
-+
+
+
 image:aws-cvo-guest-8.png[""]
 
 . 选择适当的路由表以包含指向浮动 IP 地址的路由，然后单击继续。
-+
+
+
 image:aws-cvo-guest-9.png[""]
 
 . 在数据加密页面上，选择 AWS 管理的加密。
-+
+
+
 image:aws-cvo-guest-10.png[""]
 
 . 选择许可证选项：按需购买或自带许可证以使用现有许可证。在此示例中，将使用按需购买选项。
-+
+
+
 image:aws-cvo-guest-11.png[""]
 
 . 根据要在 AWS SDDC 上的 VMware 云上运行的 VM 上部署的工作负载类型，在多个预配置的软件包之间进行选择。
-+
+
+
 image:aws-cvo-guest-12.png[""]
 
 . 在审核和批准页面上，查看并确认所做的选择。要创建 Cloud Volumes ONTAP 实例，请单击执行。
-+
+
+
 image:aws-cvo-guest-13.png[""]
 
 . 配置 Cloud Volumes ONTAP 后，它将在 " 画布 " 页面的工作环境中列出。
-+
+
+
 image:aws-cvo-guest-14.png[""]
-
-
 
 ====
 .SMB 卷的其他配置
 [%collapsible]
 ====
 . 准备好工作环境后，请确保为 CIFS 服务器配置了适当的 DNS 和 Active Directory 配置参数。要创建 SMB 卷，必须执行此步骤。
-+
+
+
 image:aws-cvo-guest-20.png[""]
 
 . 选择要创建卷的 CVO 实例，然后单击创建卷选项。选择适当的大小， Cloud Manager 选择包含的聚合或使用高级分配机制将其放置在特定聚合上。在此演示中，选择 SMB 作为协议。
-+
+
+
 image:aws-cvo-guest-21.png[""]
 
 . 配置卷后，此卷将显示在卷窗格下。由于已配置 CIFS 共享，因此您应向用户或组授予对文件和文件夹的权限，并验证这些用户是否可以访问此共享并创建文件。
-+
+
+
 image:aws-cvo-guest-22.png[""]
 
 . 创建卷后，使用 mount 命令从 AWS SDDC 主机中 VMware Cloud 上运行的虚拟机连接到共享。
 . 复制以下路径并使用映射网络驱动器选项将卷挂载到 AWS SDDC 中 VMware Cloud 上运行的虚拟机上。
-+
+
+
 image:aws-cvo-guest-23.png[""]
 image:aws-cvo-guest-24.png[""]
-
-
 
 ====
 .将 LUN 连接到主机
@@ -388,7 +404,8 @@ image:aws-cvo-guest-24.png[""]
 
 . 在 Cloud Manager 的 " 画布 " 页面上，双击 Cloud Volumes ONTAP 工作环境以创建和管理卷。
 . 单击添加卷 > 新建卷，选择 iSCSI ，然后单击创建启动程序组。单击 Continue （继续）。
-+
+
+
 image:aws-cvo-guest-30.png[""]
 image:aws-cvo-guest-31.png[""]
 
@@ -407,7 +424,7 @@ image:aws-cvo-guest-31.png[""]
 
 NOTE: Windows 主机必须与集群中的每个节点建立 iSCSI 连接。原生 DSM 会选择要使用的最佳路径。
 
-+image:aws-cvo-guest-32.png[""]
+image:aws-cvo-guest-32.png[""]
 
 SVM 中的 LUN 在 Windows 主机中显示为磁盘。主机不会自动发现添加的任何新磁盘。通过完成以下步骤触发手动重新扫描以发现磁盘：
 

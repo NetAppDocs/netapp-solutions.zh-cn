@@ -83,7 +83,8 @@ image:anfd-hcx-image1.png["此图显示了此解决方案 中使用的高级架�
 . 登录到Azure门户并访问Azure VMware解决方案 私有云。
 . 选择适当的私有云并访问附加项。可通过导航到*管理>加载项*来完成此操作。
 . 在HCX工作负载移动性部分中、单击*开始使用*。
-+
+
+
 image:anfd-hcx-image2.png["HCX工作负载移动部分的屏幕截图。"]
 
 . 选择*我同意条款和条件*选项、然后单击*启用并部署*。
@@ -106,31 +107,31 @@ image:anfd-hcx-image3.png["完成\"HCX Workload移动性\"部分的屏幕截图�
 要在内部vCenter Server中下载并安装HCX Connector、请完成以下步骤：
 
 . 从Azure门户中、转到Azure VMware解决方案 、选择私有云、然后使用HCX选择*管理>加载项>迁移*、并复制HCX Cloud Manager门户以下载OVA文件。
-+
+
+
 
 NOTE: 使用默认CloudAdmin用户凭据访问HCX门户。
 
-+
 image:anfd-hcx-image4.png["用于下载HCX OVA文件的Azure门户的屏幕截图。"]
 
 . 使用jumphost通过mailto：cloudadmin@vsphere.local[ cloudadmin@vsphere.local^]访问HCX门户后、导航到*管理>系统更新*、然后单击*请求下载链接*。
-+
+
+
 
 NOTE: 下载或复制到OVA的链接并将其粘贴到浏览器中、以开始下载要部署在内部vCenter Server上的VMware HCX Connector OVA文件。
 
-+
 image:anfd-hcx-image5.png["错误：OVA下载链接的屏幕截图。"]
 
 . 下载OVA后、使用*部署OVF模板*选项将其部署到内部VMware vSphere环境中。
-+
+
+
 image:anfd-hcx-image6.png["错误：用于选择正确OVA模板的屏幕截图。"]
 
 . 输入OVA部署所需的所有信息、单击*下一步*、然后单击*完成*以部署VMware HCX连接器OVA。
-+
+
+
 
 NOTE: 手动启动虚拟设备。
-
-
 
 有关分步说明、请参见 https://docs.vmware.com/en/VMware-HCX/services/user-guide/GUID-BFD7E194-CFE5-4259-B74B-991B26A51758.html["《VMware HCX用户指南》"^]。
 
@@ -142,20 +143,22 @@ NOTE: 手动启动虚拟设备。
 
 . 从Azure门户中、转到Azure VMware解决方案 、选择私有云、然后选择*管理>加载项>使用HCX*迁移。
 . 在*使用HCX密钥与内部环境连接*下、单击*添加*并复制激活密钥。
-+
+
+
 image:anfd-hcx-image7.png["添加HCX密钥的屏幕截图。"]
 
-+
 
 NOTE: 部署的每个内部HCX连接器都需要一个单独的密钥。
 
 . 登录到内部部署的VMware HCX Manager、网址为 https://hcxmanagerIP:9443["https://hcxmanagerIP:9443"^] 使用管理员凭据。
-+
+
+
 
 NOTE: 使用在OVA部署期间定义的密码。
 
 . 在许可中、输入从步骤3复制的密钥、然后单击*激活*。
-+
+
+
 
 NOTE: 内部HCX连接器应可访问Internet。
 
@@ -163,25 +166,25 @@ NOTE: 内部HCX连接器应可访问Internet。
 . 在*系统名称*下、更新名称并单击*继续*。
 . 单击*是、继续*。
 . 在*连接vCenter *下、提供vCenter Server的完全限定域名(FQDN)或IP地址以及相应的凭据、然后单击*继续*。
-+
+
+
 
 NOTE: 使用FQDN以避免稍后出现连接问题。
 
 . 在*配置SSA/PSC*下、提供平台服务控制器的FQDN或IP地址、然后单击*继续*。
-+
+
+
 
 NOTE: 输入VMware vCenter Server FQDN或IP地址。
 
 . 验证输入的信息是否正确、然后单击*重新启动*。
 . 服务重新启动后、vCenter Server将在显示的页面上显示为绿色。vCenter Server和SSO都必须具有适当的配置参数、这些参数应与上一页相同。
-+
+
+
 
 NOTE: 此过程大约需要10到20分钟、并且需要将此插件添加到vCenter Server中。
 
-+
 image:anfd-hcx-image8.png["显示已完成过程的屏幕截图。"]
-
-
 
 ====
 .第4步：将内部VMware HCX Connector与Azure VMware解决方案 HCX Cloud Manager配对
@@ -190,27 +193,28 @@ image:anfd-hcx-image8.png["显示已完成过程的屏幕截图。"]
 在内部部署和Azure VMware解决方案 中安装HCX Connector后、通过添加配对来配置适用于Azure VMware解决方案 私有云的内部部署VMware HCX Connector。要配置站点配对、请完成以下步骤：
 
 . 要在内部vCenter环境和Azure VMware解决方案 SDDC之间创建站点对、请登录到内部vCenter Server并访问新的HCX vSphere Web Client插件。
-+
+
+
 image:anfd-hcx-image9.png["HCX vSphere Web Client插件的屏幕截图。"]
 
 . 在基础架构下、单击*添加站点配对*。
-+
+
+
 
 NOTE: 输入Azure VMware解决方案 HCX Cloud Manager URL或IP地址以及CloudAdmin角色访问私有云的凭据。
 
-+
 image:anfd-hcx-image10.png["CloudAdmin角色的URL或IP地址和凭据屏幕截图。"]
 
 . 单击 * 连接 * 。
-+
+
+
 
 NOTE: VMware HCX Connector必须能够通过端口443路由到HCX Cloud Manager IP。
 
 . 创建配对后、新配置的站点配对将显示在HCX信息板上。
-+
+
+
 image:anfd-hcx-image11.png["HCX信息板上已完成过程的屏幕截图。"]
-
-
 
 ====
 .第5步：配置网络配置文件、计算配置文件和服务网格
@@ -219,39 +223,37 @@ image:anfd-hcx-image11.png["HCX信息板上已完成过程的屏幕截图。"]
 VMware HCX互连服务设备可通过Internet以及与目标站点的专用连接提供复制和基于vMotion的迁移功能。互连可提供加密、流量工程和VM移动性。要创建互连服务设备、请完成以下步骤：
 
 . 在基础架构下、选择*互连>多站点服务网格>计算配置文件>创建计算配置文件*。
-+
+
+
 
 NOTE: 计算配置文件定义了部署参数、包括部署的设备以及HCL服务可访问的VMware数据中心的哪个部分。
 
-+
 image:anfd-hcx-image12.png["vSphere客户端互连页面的屏幕截图。"]
 
 . 创建计算配置文件后、通过选择*多站点服务网格>网络配置文件>创建网络配置文件*来创建网络配置文件。
-+
+
+
 网络配置文件定义了HCX用于其虚拟设备的IP地址和网络范围。
 
-+
 
 NOTE: 此步骤需要两个或更多IP地址。这些IP地址将从管理网络分配给互连设备。
 
-+
 image:anfd-hcx-image13.png["向vSphere客户端互连页面添加IP地址的屏幕截图。"]
 
 . 此时、已成功创建计算和网络配置文件。
 . 在*互连*选项中选择*服务网格*选项卡以创建服务网格、然后选择内部和Azure SDDC站点。
 . 服务网格用于指定本地和远程计算和网络配置文件对。
-+
+
+
 
 NOTE: 在此过程中、源站点和目标站点都会部署并自动配置HCX设备、以便创建安全的传输网络结构。
 
-+
 image:anfd-hcx-image14.png["vSphere客户端互连页面上的服务网格选项卡的屏幕截图。"]
 
 . 这是配置的最后一步。完成部署大约需要30分钟。配置服务网格后、环境便已准备就绪、可以成功创建IPsec通道来迁移工作负载VM。
-+
+
+
 image:anfd-hcx-image15.png["vSphere Client互连页面上已完成过程的屏幕截图。"]
-
-
 
 ====
 .第6步：迁移工作负载
@@ -268,41 +270,44 @@ image:anfd-hcx-image15.png["vSphere Client互连页面上已完成过程的屏�
 要启动批量VM迁移、请完成以下步骤：
 
 . 访问*服务>迁移*下的*迁移*选项卡。
-+
+
+
 image:anfd-hcx-image16.png["vSphere客户端中的迁移部分的屏幕截图。"]
 
 . 在*远程站点连接*下、选择远程站点连接并选择源和目标。在此示例中、目标为Azure VMware解决方案 SDDC HCX端点。
 . 单击*选择要迁移的虚拟机*。此操作将列出所有内部VM。根据match：value表达式选择VM、然后单击*添加*。
 . 在*传输和放置*部分中、更新必填字段(*集群*、*存储*、*目标*和*网络*)、包括迁移配置文件、然后单击*验证*。
-+
+
+
 image:anfd-hcx-image17.png["vSphere客户端的传输和放置部分的屏幕截图。"]
 
 . 验证检查完成后、单击*执行*以启动迁移。
-+
+
+
 image:anfd-hcx-image18.png["启动迁移的屏幕截图。"]
 
-+
 
 NOTE: 在此迁移期间、会在目标vCenter中的指定Azure NetApp Files 数据存储库上创建一个占位磁盘、以便将源VM磁盘的数据复制到占位磁盘。系统会触发HBR以与目标完全同步、在基线完成后、将根据恢复点目标(RPO)周期执行增量同步。完整/增量同步完成后、除非设置了特定计划、否则会自动触发切换。
 
 . 迁移完成后、通过访问目标SDDC vCenter来验证相同的。
-+
+
+
 image:anfd-hcx-image19.png["错误：缺少图形映像"]
-
-
 
 有关各种迁移选项以及如何使用HCX将工作负载从内部迁移到Azure VMware解决方案 的其他详细信息、请参见 https://docs.vmware.com/en/VMware-HCX/4.4/hcx-user-guide/GUID-14D48C15-3D75-485B-850F-C5FCB96B5637.html["《VMware HCX用户指南》"^]。
 
 要了解有关此过程的更多信息、请随时观看以下视频：
 
-video::255640f5-4dff-438c-8d50-b01200f017d1[panopto,width=360]
+.使用HCX迁移工作负载
+video::255640f5-4dff-438c-8d50-b01200f017d1[panopto]
 下面是HCX vMotion选项的屏幕截图。
 
 image:anfd-hcx-image20.png["错误：缺少图形映像"]
 
 要了解有关此过程的更多信息、请随时观看以下视频：
 
-video::986bb505-6f3d-4a5a-b016-b01200f03f18[panopto,width=360]
+.HCX vMotion
+video::986bb505-6f3d-4a5a-b016-b01200f03f18[panopto]
 
 NOTE: 确保有足够的带宽来处理迁移。
 
@@ -334,15 +339,16 @@ NOTE: 目标ANF数据存储库应具有足够的空间来处理迁移。
 要了解有关本文档中所述信息的更多信息，请访问以下网站链接：
 
 * Azure VMware解决方案 文档
-+
+
+
 https://docs.microsoft.com/en-us/azure/azure-vmware/["https://docs.microsoft.com/en-us/azure/azure-vmware/"^]
 
 * Azure NetApp Files 文档
-+
+
+
 https://docs.microsoft.com/en-us/azure/azure-netapp-files/["https://docs.microsoft.com/en-us/azure/azure-netapp-files/"^]
 
 * 《VMware HCX用户指南》
-+
+
+
 https://docs.vmware.com/en/VMware-HCX/4.4/hcx-user-guide/GUID-BFD7E194-CFE5-4259-B74B-991B26A51758.html["https://docs.vmware.com/en/VMware-HCX/4.4/hcx-user-guide/GUID-BFD7E194-CFE5-4259-B74B-991B26A51758.html"^]
-
-
