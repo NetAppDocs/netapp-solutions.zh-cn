@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: databases/snapctr_svcs_ora.html 
 keywords: Oracle, Database, SnapCenter, SnapShot, FlexClone, BlueXP, Database Backup, Database Restore, Database Clone 
-summary: 解决方案 提供了有关使用BlueXP控制台使用NetApp SnapCenter SaaS进行Oracle数据库备份、还原和克隆的概述和详细信息。 
+summary: 解决方案提供了有关使用NetApp SnapCenter SaaS在Azure云中使用BlueXP控制台进行Oracle数据库备份、还原和克隆的概述和详细信息。 
 ---
-= TR-4964：《使用SnapCenter 服务备份、还原和克隆Oracle数据库》
+= TR-4964：《使用SnapCenter服务执行Oracle数据库备份、还原和克隆—AWS》
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -13,6 +13,7 @@ summary: 解决方案 提供了有关使用BlueXP控制台使用NetApp SnapCente
 :imagesdir: ./../media/
 
 
+[role="lead"]
 NetApp公司Allen Cao、Niyaz Mohamed
 
 
@@ -60,19 +61,21 @@ image::snapctr_svcs_architecture.png[此图详细展示了BlueXP控制台中适�
 
 === 硬件和软件组件
 
+* 硬件 *
+
 [cols="33%, 33%, 33%"]
 |===
 
 
-| 3^ | * 硬件 * | FSX ONTAP 存储 
+| FSX ONTAP 存储 | AWS提供的当前版本 | 一个FSX HA集群位于同一VPC和可用性区域中 
 
 
-| AWS提供的当前版本 | 一个FSX HA集群位于同一VPC和可用性区域中 | 用于计算的EC2实例 
+| 用于计算的EC2实例 | t2.xlarge/4vCPU/16G | 两个EC2 t2 xlarge EC2实例、一个用作主数据库服务器、另一个用作克隆数据库服务器 
+|===
+*软件*
 
-
-| t2.xlarge/4vCPU/16G | 两个EC2 t2 xlarge EC2实例、一个用作主数据库服务器、另一个用作克隆数据库服务器
-
-3^ | *软件* 
+[cols="33%, 33%, 33%"]
+|===
 
 
 | RedHat Linux | rhel-8.6.0_hvm-20220503-x86_64-2-Hourly2-gp2 | 已部署RedHat订阅以进行测试 
@@ -94,10 +97,10 @@ image::snapctr_svcs_architecture.png[此图详细展示了BlueXP控制台中适�
 === 部署注意事项的关键因素
 
 * *连接器应与数据库和FSX部署在同一VPC中。*如果可能、应将连接器部署在同一AWS VPC中、以便能够连接到FSX存储和EC2计算实例。
-* *为SnapCenter 连接器创建的AWS IAM策略。*详细的SnapCenter 服务文档中提供了JSON格式的策略。使用BlueXP控制台启动连接器部署时、系统会提示您设置前提条件。应将此策略分配给拥有此连接器的AWS用户帐户。
-* * AWS帐户访问密钥和在AWS帐户中创建的SSH密钥对。* SSH密钥对分配给EC2-user、用于登录到连接器主机、然后将数据库插件部署到EC2 DB服务器主机。访问密钥可授予配置所需连接器的权限。
-* *已添加到BlueXP控制台设置中的凭据。*要将适用于ONTAP 的Amazon FSX添加到BlueXP工作环境、可在BlueXP控制台中设置一个凭据、用于授予从BluXP控制台访问适用于ONTAP 的Amazon FSX的权限。
-* 部署到EC2数据库实例主机的* SnapCenter 插件。* SnapCenter 服务执行由SnapCenter 插件在EC2数据库实例主机上执行的API调用。您必须在设置服务之前部署它。
+* *为SnapCenter 连接器创建的AWS IAM策略。*详细的SnapCenter 服务文档中提供了JSON格式的策略。使用BlueXP控制台启动连接器部署时、系统还会提示您设置前提条件、并以JSON格式提供所需权限的详细信息。应将此策略分配给拥有此连接器的AWS用户帐户。
+* * AWS帐户访问密钥和在AWS帐户中创建的SSH密钥对。* SSH密钥对分配给EC2-user、用于登录到连接器主机、然后将数据库插件部署到EC2 DB服务器主机。访问密钥授予使用上述IAM策略配置所需连接器的权限。
+* *添加到BlueXP控制台设置的凭据。*要将Amazon FSx for ONTAP添加到BlueXP工作环境中、需要在BlueXP控制台设置中设置一个凭据、用于授予BlueXP访问Amazon FSx for ONTAP的权限。
+* *EC2数据库实例主机上安装了java-11-OpenJDK。* SnapCenter服务安装需要Java版本11。在尝试部署插件之前、需要将其安装在应用程序主机上。
 
 
 
@@ -123,9 +126,9 @@ video::4b0fd212-7641-46b8-9e55-b01200f9383a[panopto]
 部署需要满足以下前提条件。
 
 . EC2实例上的主Oracle数据库服务器、其中Oracle数据库已完全部署且正在运行。
-. 部署在托管上述数据库的AWS中的Amazon FSX for ONTAP 集群。
-. EC2实例上的一个可选数据库服务器、可用于测试将Oracle数据库克隆到备用主机的情况、以便为开发/测试工作负载或任何需要完整Oracle生产数据库数据集的用例提供支持。
-. 如果您需要帮助以满足在Amazon FSX for ONTAP 和EC2计算实例上部署Oracle数据库的上述前提条件、请参见 link:aws_ora_fsx_ec2_iscsi_asm.html["使用iSCSI/ASM在AWS FSX/EC2中部署和保护Oracle数据库"^]。
+. AWS中部署的Amazon FSx for ONTAP集群、用于托管上述数据库卷。
+. EC2实例上的一个可选数据库服务器、可用于测试将Oracle数据库克隆到备用主机的操作、以支持开发/测试工作负载或任何需要生产Oracle数据库的完整数据集的使用情形。
+. 如果您需要帮助以满足在Amazon FSX for ONTAP 和EC2计算实例上部署Oracle数据库的上述前提条件、请参见 link:aws_ora_fsx_ec2_iscsi_asm.html["使用iSCSI/ASM在AWS FSX/EC2中部署和保护Oracle数据库"^] 或白皮书 link:aws_ora_fsx_ec2_deploy_intro.html["基于EC2和FSx的Oracle数据库部署最佳实践"^]
 
 
 ====
@@ -136,14 +139,14 @@ video::4b0fd212-7641-46b8-9e55-b01200f9383a[panopto]
 [%collapsible]
 ====
 . 使用链接 link:https://console.bluexp.netapp.com/["NetApp BlueXP"] 注册访问BlueXP控制台。
-. 要设置BlueXP来管理AWS云资源、例如Amazon FSX for ONTAP 、您应已设置AWS帐户。然后、您可以登录到AWS帐户、创建一个IAM策略、以便为AWS帐户授予SnapCenter 服务访问权限、以便用于连接器部署。
-
-
+. 登录到您的AWS帐户以创建具有适当权限的IAM策略、并将该策略分配给要用于BlueXP Connector部署的AWS帐户。
++
 image:snapctr_svcs_connector_01-policy.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
-此策略应配置一个JSON字符串、此字符串在启动连接器配置时可用、系统会提示您已创建IAM策略并将其授予用于连接器部署的AWS帐户。
++
+应使用NetApp文档中提供的JSON字符串配置此策略。启动连接器配置并提示您分配前提条件权限时、也可以从页面中检索JSON字符串。
 
-. 此外、您还需要AWS VPC、AWS帐户的密钥和机密、EC2访问的SSH密钥、安全组等、以便于配置连接器。
+. 此外、您还需要准备好AWS VPC、子网、安全组、AWS用户帐户访问密钥和密码、EC2用户的SSH密钥等、以便进行连接器配置。
 
 
 ====
@@ -154,8 +157,7 @@ image:snapctr_svcs_connector_01-policy.png["在图形用户界面中显示此步
 [%collapsible]
 ====
 . 登录到BlueXP控制台。对于共享帐户、最佳做法是通过单击*帐户*>*管理帐户*>*工作空间*来创建单个工作空间以添加新工作空间。
-
-
++
 image:snapctr_svcs_connector_02-wspace.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 单击*添加连接器*以启动连接器配置工作流。
@@ -173,9 +175,8 @@ image:snapctr_svcs_connector_04-aws.png["在图形用户界面中显示此步骤
 
 image:snapctr_svcs_connector_05-remind.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
-. 输入AWS帐户身份验证访问密钥和机密密钥。
-
-
+. 使用*访问密钥*和*机密密钥*输入您的AWS帐户身份验证。
++
 image:snapctr_svcs_connector_06-auth.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 为连接器实例命名、然后在*详细信息*下选择*创建角色*。
@@ -183,14 +184,12 @@ image:snapctr_svcs_connector_06-auth.png["在图形用户界面中显示此步�
 
 image:snapctr_svcs_connector_07-details.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
-. 使用正确的VPC、子网和SSH密钥对配置网络连接、以便进行EC2访问。
-
-
+. 使用正确的* VPC*、*子网*和SSH *密钥对*配置网络连接以访问连接器。
++
 image:snapctr_svcs_connector_08-network.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
-. 设置连接器的安全组。
-
-
+. 设置连接器的*Security Group*。
++
 image:snapctr_svcs_connector_09-security.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 查看摘要页面、然后单击*添加*以开始创建连接器。完成部署通常需要大约10分钟。完成后、此连接器实例将显示在AWS EC2信息板中。
@@ -198,7 +197,43 @@ image:snapctr_svcs_connector_09-security.png["在图形用户界面中显示此�
 
 image:snapctr_svcs_connector_10-review.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
-. 部署连接器后、按照以下说明以EC2-user身份使用SSH密钥登录到连接器EC2主机以安装SnapCenter 插件： link:https://docs.netapp.com/us-en/cloud-manager-backup-restore/task-add-host-discover-oracle-databases.html#deploy-the-plug-in-using-script-and-add-host-from-ui-using-manual-option["使用脚本部署插件、并使用手动选项从UI添加主机"^]。
+====
+
+
+=== 在BlueXP for AWS资源访问中定义凭据
+
+[%collapsible]
+====
+. 首先、从AWS EC2控制台、在*身份和访问管理(IAM)*菜单*角色*和*创建角色*中创建角色、以启动角色创建工作流。
++
+image:snapctr_svcs_credential_01-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 在*选择可信实体*页面中、选择* AWS account*、*另一个AWS account*、然后粘贴BlueXP帐户ID、该ID可从BlueXP控制台检索。
++
+image:snapctr_svcs_credential_02-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 按FSx筛选权限策略并将*权限策略*添加到角色。
++
+image:snapctr_svcs_credential_03-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 在“*角色详细信息*”页中，为角色命名，添加一个问题描述，然后单击*Create Role*。
++
+image:snapctr_svcs_credential_04-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 返回BlueXP控制台、单击控制台右上角的设置图标以打开*帐户凭据*页面、然后单击*添加凭据*以启动凭据配置工作流。
++
+image:snapctr_svcs_credential_05-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 选择凭据位置为-*Amazon Web Services - BlueXP*。
++
+image:snapctr_svcs_credential_06-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 使用正确的*角色ARN*定义AWS凭据、可从上述步骤1中创建的AWS IAM角色检索这些凭据。BlueXP *帐户ID*、用于在步骤1中创建AWS IAM角色。
++
+image:snapctr_svcs_credential_07-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 审查和*Add*。
+image:snapctr_svcs_credential_08-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 
 ====
@@ -208,7 +243,7 @@ image:snapctr_svcs_connector_10-review.png["在图形用户界面中显示此步
 
 [%collapsible]
 ====
-部署此连接器后、现在可以使用以下操作步骤 设置SnapCenter 服务：
+部署连接器并添加凭据后、现在可以使用以下操作步骤设置SnapCenter服务：
 
 . 在*我的工作环境*中、单击*添加工作环境*以发现AWS中部署的FSX。
 
@@ -225,9 +260,8 @@ image:snapctr_svcs_setup_02.png["在图形用户界面中显示此步骤的屏�
 
 image:snapctr_svcs_setup_03.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
-. 选择为BlueXP提供管理适用于ONTAP 的FSX所需权限的凭据。如果您尚未添加凭据、则可以从BlueXP控制台右上角的*设置*菜单中添加此凭据。
-
-
+. 选择您在上一节中创建的*凭据名称*、为BlueXP授予管理FSx for ONTAP所需的权限。如果您尚未添加凭据、则可以从BlueXP控制台右上角的*设置*菜单中添加此凭据。
++
 image:snapctr_svcs_setup_04.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 选择部署了Amazon FSX for ONTAP 的AWS区域、选择托管Oracle数据库的FSX集群、然后单击添加。
@@ -265,15 +299,23 @@ image:snapctr_svcs_setup_10.png["在图形用户界面中显示此步骤的屏�
 
 image:snapctr_svcs_setup_13.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
-. 提供Oracle EC2实例主机详细信息以添加主机。选中此复选框以确认主机上已安装适用于Oracle的插件、因为您需要在配置此连接器后部署此插件。
+. 填写AWS EC2 Oracle应用程序主机详细信息。选择*使用SSH*作为*主机安装类型*进行一步插件安装和数据库发现。然后，单击*添加SSH专用密钥*。
++
+image:snapctr_svcs_setup_14.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
+. 粘贴数据库EC2主机的EC2用户SSH密钥，然后单击*Valid验证*继续。
++
+image:snapctr_svcs_setup_14-1.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
-image:snapctr_svcs_setup_16.png["在图形用户界面中显示此步骤的屏幕截图。"]
+. 系统将提示您*验证指纹*以继续。
++
+image:snapctr_svcs_setup_14-2.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
-. 发现Oracle EC2主机并将其添加到*应用程序*中、该主机上的任何数据库也会被发现并显示在页面上。数据库*保护状态*显示为*未受保护*。
-
-
+. 单击*下一步*以安装Oracle数据库插件并在EC2主机上发现Oracle数据库。发现的数据库将添加到*Applications*中。数据库*Protection Status*在最初发现时显示为*unprototed"(未受保护)。
++
 image:snapctr_svcs_setup_17.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+
 
 至此、适用于Oracle的SnapCenter 服务的初始设置完成。本文档接下来的三节将介绍Oracle数据库备份、还原和克隆操作。
 

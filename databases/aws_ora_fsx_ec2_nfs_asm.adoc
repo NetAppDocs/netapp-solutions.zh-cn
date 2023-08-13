@@ -58,20 +58,21 @@ image::aws_ora_fsx_ec2_nfs_asm_architecture.png[此图详细展示了AWS公共�
 
 === 硬件和软件组件
 
+* 硬件 *
+
 [cols="33%, 33%, 33%"]
 |===
-
-
-3+| * 硬件 * 
 
 
 | FSX ONTAP 存储 | AWS提供的当前版本 | 一个FSX HA集群位于同一VPC和可用性区域中 
 
 
 | 用于计算的EC2实例 | t2.xlarge/4vCPU/16G | 两个EC2 t2 xlarge EC2实例、一个用作主数据库服务器、另一个用作克隆数据库服务器 
+|===
+*软件*
 
-
-3+| *软件* 
+[cols="33%, 33%, 33%"]
+|===
 
 
 | RedHat Linux | rhel-8.6.0_hvm-20220503-x86_64-2-Hourly2-gp2 | 已部署RedHat订阅以进行测试 
@@ -898,7 +899,7 @@ NetApp将随Ansible发布一个完全自动化的解决方案 部署工具包、
 
 == 使用SnapCenter 服务备份、还原和克隆Oracle数据库
 
-请参见 link:snapctr_svcs_ora.html["适用于Oracle的SnapCenter 服务"^] 有关使用NetApp BlueXP控制台备份、还原和克隆Oracle数据库的详细信息。
+目前、只有传统的SnapCenter服务器UI工具(请参见)才支持使用NFS和ASM存储选项的Oracle数据库 link:hybrid_dbops_snapcenter_usecases.html["采用 SnapCenter 的混合云数据库解决方案"^] 有关使用NetApp SnapCenter UI工具进行Oracle数据库备份、还原和克隆的详细信息。
 
 
 

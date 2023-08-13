@@ -17289,7 +17289,6 @@
   <block id="ee622e67d0075e37fff43bbf337e98b2" category="inline-link-macro"><block ref="ee622e67d0075e37fff43bbf337e98b2" category="inline-link-rx"></block></block>
   <block id="2d94d091f5afb89e4f1aab002cef14a3" category="paragraph"><block ref="2d94d091f5afb89e4f1aab002cef14a3" category="inline-link-macro-rx"></block></block>
   <block id="6845898fa7e9ec1fa3b8934d8e91b0c1" category="summary">解决方案 提供了有关使用BlueXP控制台使用NetApp SnapCenter SaaS进行Oracle数据库备份、还原和克隆的概述和详细信息。</block>
-  <block id="9caa022ffa5eb0757a1a86c936148e7f" category="doc">TR-4964：《使用SnapCenter 服务备份、还原和克隆Oracle数据库》</block>
   <block id="8ae5c33b293249b4befae60cdc1d6364" category="paragraph">SnapCenter 服务是一款SaaS版本的经典SnapCenter 数据库管理UI工具、可通过NetApp BlueXP云管理控制台访问。它是NetApp云备份和数据保护产品不可或缺的一部分、适用于在NetApp云存储上运行的Oracle和HANA等数据库。这种基于SaaS的服务简化了传统的SnapCenter 独立服务器部署、该部署通常需要在Windows域环境中运行的Windows服务器。</block>
   <block id="05530a14144f96daea2a6f96bb61b38b" category="paragraph">在本文档中、我们将演示如何设置SnapCenter 服务来备份、还原和克隆部署到Amazon FSX for ONTAP 存储和EC2计算实例的Oracle数据库。虽然设置和使用起来要简单得多、但SnapCenter 服务可提供传统SnapCenter UI工具中提供的主要功能。</block>
   <block id="d47397f53e6c7682397a8f8688daddcc" category="list-text">为Amazon FSX for ONTAP 中托管的Oracle数据库执行数据库备份和快照</block>
@@ -17303,10 +17302,6 @@
   <block id="a9bed64bc676f536e10a189728888614" category="image-alt">此图详细展示了BlueXP控制台中适用于应用程序的Cloud Backup、包括其管理的UI、连接器和资源。</block>
   <block id="ccd967b78d046cba29272c0823500e3f" category="paragraph">此图详细展示了BlueXP控制台中适用于应用程序的Cloud Backup、包括UI、连接器及其管理的资源。</block>
   <block id="86fae68c14c723bf36942c2c83e8a847" category="list-text">*连接器应与数据库和FSX部署在同一VPC中。*如果可能、应将连接器部署在同一AWS VPC中、以便能够连接到FSX存储和EC2计算实例。</block>
-  <block id="f4c5cbc76886ee4d3b06a979e007f04c" category="list-text">*为SnapCenter 连接器创建的AWS IAM策略。*详细的SnapCenter 服务文档中提供了JSON格式的策略。使用BlueXP控制台启动连接器部署时、系统会提示您设置前提条件。应将此策略分配给拥有此连接器的AWS用户帐户。</block>
-  <block id="9a4e5feb06bb2dae4e8b115b6528fb7d" category="list-text">* AWS帐户访问密钥和在AWS帐户中创建的SSH密钥对。* SSH密钥对分配给EC2-user、用于登录到连接器主机、然后将数据库插件部署到EC2 DB服务器主机。访问密钥可授予配置所需连接器的权限。</block>
-  <block id="e59f5f07f322e64b80fa8264dd4389e7" category="list-text">*已添加到BlueXP控制台设置中的凭据。*要将适用于ONTAP 的Amazon FSX添加到BlueXP工作环境、可在BlueXP控制台中设置一个凭据、用于授予从BluXP控制台访问适用于ONTAP 的Amazon FSX的权限。</block>
-  <block id="7d3fac201e712c335b848cf4411e68e0" category="list-text">部署到EC2数据库实例主机的* SnapCenter 插件。* SnapCenter 服务执行由SnapCenter 插件在EC2数据库实例主机上执行的API调用。您必须在设置服务之前部署它。</block>
   <block id="16d04337973f389d2f7da86eac115afd" category="paragraph">我们提供了大量的NetApp文档、范围更广、可帮助您保护云原生应用程序数据。本文档的目标是提供有关使用SnapCenter 控制台部署ONTAP 服务的分步过程、以保护部署到Amazon FSX for和EC2计算实例中的Oracle数据库。本文档将填写一些可能在一般说明中缺少的详细信息。</block>
   <block id="20c4c0cc24d7fc086bd9c72220d4827f" category="paragraph">要开始使用、请完成以下步骤：</block>
   <block id="eb5668f5c3459c84cc715cf197e7c91a" category="inline-link-macro">保护您的Cloud原生 应用程序数据</block>
@@ -17314,20 +17309,13 @@
   <block id="f2f7f5c9af8a75d22b9aca95d23faad9" category="list-text">观看以下视频演练。</block>
   <block id="80478dbd4349cfca50f458d912a95795" category="section-title">部署SnapCenter 服务的前提条件</block>
   <block id="ee260886ab2b6b27905543032620ac6f" category="list-text">EC2实例上的主Oracle数据库服务器、其中Oracle数据库已完全部署且正在运行。</block>
-  <block id="d7ab5019b6e4c888e46cb145fb2d5fc4" category="list-text">部署在托管上述数据库的AWS中的Amazon FSX for ONTAP 集群。</block>
-  <block id="0191527f1e188e7a6d18289a5ac9c936" category="list-text">EC2实例上的一个可选数据库服务器、可用于测试将Oracle数据库克隆到备用主机的情况、以便为开发/测试工作负载或任何需要完整Oracle生产数据库数据集的用例提供支持。</block>
   <block id="ab12a73272bb7f9d19f02c65ce057f61" category="inline-link-macro">使用iSCSI/ASM在AWS FSX/EC2中部署和保护Oracle数据库</block>
-  <block id="58580b46e10b35944b7405415499a369" category="list-text">如果您需要帮助以满足在Amazon FSX for ONTAP 和EC2计算实例上部署Oracle数据库的上述前提条件、请参见 <block ref="84dfb8b43ed6d356540ab11fdb4b0e89" category="inline-link-macro-rx"></block>。</block>
   <block id="b8b1139d652a0eeb20f8d04852ac0ff4" category="section-title">加入BlueXP准备阶段</block>
   <block id="1273c8a63109161e6fd1f18d6998523f" category="inline-link-macro">NetApp BlueXP</block>
   <block id="87d337785ad5798c5ccb41300628991a" category="list-text">使用链接 <block ref="f796c57cbc184209dde3e35268bc382f" category="inline-link-macro-rx"></block> 注册访问BlueXP控制台。</block>
-  <block id="398c495b453cb83c96b3fd0cda544bd5" category="list-text">要设置BlueXP来管理AWS云资源、例如Amazon FSX for ONTAP 、您应已设置AWS帐户。然后、您可以登录到AWS帐户、创建一个IAM策略、以便为AWS帐户授予SnapCenter 服务访问权限、以便用于连接器部署。</block>
   <block id="ead8f2b206d64f3dc022b5aff7ebf5ef" category="inline-image-macro">在图形用户界面中显示此步骤的屏幕截图。</block>
   <block id="f6d580bf790e26134ef61bf9d6fe18fe" category="paragraph"><block ref="f6d580bf790e26134ef61bf9d6fe18fe" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="72c085381ac33d4812eff61d168042a4" category="paragraph">此策略应配置一个JSON字符串、此字符串在启动连接器配置时可用、系统会提示您已创建IAM策略并将其授予用于连接器部署的AWS帐户。</block>
-  <block id="a54002868f2640fbd1fc4f9adc7d9df8" category="list-text">此外、您还需要AWS VPC、AWS帐户的密钥和机密、EC2访问的SSH密钥、安全组等、以便于配置连接器。</block>
   <block id="43e23d889dea00cd09a68857a66540a2" category="section-title">为SnapCenter 服务部署连接器</block>
-  <block id="6e557be0e45c40d783bbd8866f9a399d" category="list-text">登录到BlueXP控制台。对于共享帐户、最佳做法是通过单击*帐户*&gt;*管理帐户*&gt;*工作空间*来创建单个工作空间以添加新工作空间。</block>
   <block id="ff983eb1cf4195dbceed01ba6d95f4bd" category="paragraph"><block ref="ff983eb1cf4195dbceed01ba6d95f4bd" category="inline-image-macro-rx" type="image"></block></block>
   <block id="c47cec29fcf0d8e782f2c91ad12914b4" category="list-text">单击*添加连接器*以启动连接器配置工作流。</block>
   <block id="06daec2780fc4a5c0089241439b6abc4" category="paragraph"><block ref="06daec2780fc4a5c0089241439b6abc4" category="inline-image-macro-rx" type="image"></block></block>
@@ -17335,27 +17323,20 @@
   <block id="8087e08b633357d4802bcc914799e1e0" category="paragraph"><block ref="8087e08b633357d4802bcc914799e1e0" category="inline-image-macro-rx" type="image"></block></block>
   <block id="06a5177c61e31798acfdd25d766ef121" category="list-text">如果您已在AWS帐户中设置了*权限*、*身份验证*和*网络*步骤、请跳过这些步骤。如果没有、则必须先配置这些组件、然后再继续。您还可以从此处检索上一节中引用的AWS策略的权限"<block ref="2204dd011c923b13eaa19e758c798231" category="inline-xref-macro-rx"></block>。 "</block>
   <block id="79463376ddcde3119f1d61ab3e8ace01" category="paragraph"><block ref="79463376ddcde3119f1d61ab3e8ace01" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="d3aa90e294a5c6f1393c075c038193c2" category="list-text">输入AWS帐户身份验证访问密钥和机密密钥。</block>
   <block id="6a45e1d81bff2e550eac67a6a5fa7cbf" category="paragraph"><block ref="6a45e1d81bff2e550eac67a6a5fa7cbf" category="inline-image-macro-rx" type="image"></block></block>
   <block id="712e596a90ac38ed31c6d4d55347a559" category="list-text">为连接器实例命名、然后在*详细信息*下选择*创建角色*。</block>
   <block id="98c5e6a562ea83f6e395b91667156df3" category="paragraph"><block ref="98c5e6a562ea83f6e395b91667156df3" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="a195a46dbd792968c9fcafd533a33b51" category="list-text">使用正确的VPC、子网和SSH密钥对配置网络连接、以便进行EC2访问。</block>
   <block id="fde599fe1b1ccfb7275d4e17f0b4fc17" category="paragraph"><block ref="fde599fe1b1ccfb7275d4e17f0b4fc17" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="1509007123cad8688bdef6b265c409ce" category="list-text">设置连接器的安全组。</block>
   <block id="e3d2711238be85fe0acd7b353cb0571c" category="paragraph"><block ref="e3d2711238be85fe0acd7b353cb0571c" category="inline-image-macro-rx" type="image"></block></block>
   <block id="f067570884442aa68da666583a8530cc" category="list-text">查看摘要页面、然后单击*添加*以开始创建连接器。完成部署通常需要大约10分钟。完成后、此连接器实例将显示在AWS EC2信息板中。</block>
   <block id="165138d0d406e2c17d45e777fc26ebc5" category="paragraph"><block ref="165138d0d406e2c17d45e777fc26ebc5" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="96e8e4df8b3ca0b4eec3a79081f69a5f" category="inline-link-macro">使用脚本部署插件、并使用手动选项从UI添加主机</block>
-  <block id="bb7fc4f6e011b0abf2d72151ba43d448" category="list-text">部署连接器后、按照以下说明以EC2-user身份使用SSH密钥登录到连接器EC2主机以安装SnapCenter 插件： <block ref="4d36f47e6f1b893c6ddd7262bda1c9b4" category="inline-link-macro-rx"></block>。</block>
   <block id="bb46d1e3b94fe670b59ad65582cc45d9" category="section-title">SnapCenter 服务设置</block>
-  <block id="c874496d8de4031470108dc34d998d2c" category="paragraph">部署此连接器后、现在可以使用以下操作步骤 设置SnapCenter 服务：</block>
   <block id="3ecf7d7cbb172543fe0f740496cfb9b0" category="list-text">在*我的工作环境*中、单击*添加工作环境*以发现AWS中部署的FSX。</block>
   <block id="537b713708147506a182f9e62348c997" category="paragraph"><block ref="537b713708147506a182f9e62348c997" category="inline-image-macro-rx" type="image"></block></block>
   <block id="4daeb16c1a9b1a0d173181068ef06541" category="list-text">选择* Amazon Web Services*作为位置。</block>
   <block id="25949fd8842fc6d4e2a3d0e74bbc18d9" category="paragraph"><block ref="25949fd8842fc6d4e2a3d0e74bbc18d9" category="inline-image-macro-rx" type="image"></block></block>
   <block id="beb3aca877ee917cc965b653f4f954c2" category="list-text">单击*适用于ONTAP 的Amazon FSx *旁边的*发现现有*。</block>
   <block id="669e7983bcf1791e42789eb5557823c1" category="paragraph"><block ref="669e7983bcf1791e42789eb5557823c1" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="818214abd1c968ef46c7d7ffea09d9cf" category="list-text">选择为BlueXP提供管理适用于ONTAP 的FSX所需权限的凭据。如果您尚未添加凭据、则可以从BlueXP控制台右上角的*设置*菜单中添加此凭据。</block>
   <block id="2dd86f2e91e85ccea46f244108988758" category="paragraph"><block ref="2dd86f2e91e85ccea46f244108988758" category="inline-image-macro-rx" type="image"></block></block>
   <block id="1c90af5467bb4ade93f516a477fab6ce" category="list-text">选择部署了Amazon FSX for ONTAP 的AWS区域、选择托管Oracle数据库的FSX集群、然后单击添加。</block>
   <block id="39accbdb3a3b52363e35c6bd0a5768d8" category="paragraph"><block ref="39accbdb3a3b52363e35c6bd0a5768d8" category="inline-image-macro-rx" type="image"></block></block>
@@ -17371,9 +17352,6 @@
   <block id="4645a6f0abb4aa3edf2172708fd672e0" category="paragraph"><block ref="4645a6f0abb4aa3edf2172708fd672e0" category="inline-image-macro-rx" type="image"></block></block>
   <block id="bfcedcc06ce70b69b0c25371a7b68359" category="list-text">选择* Oracle *作为应用程序类型。</block>
   <block id="d90ff0259aa21df9ff992d15f1efcbd2" category="paragraph"><block ref="d90ff0259aa21df9ff992d15f1efcbd2" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="6cbdf0cef43778a4cfb3432da64609c7" category="list-text">提供Oracle EC2实例主机详细信息以添加主机。选中此复选框以确认主机上已安装适用于Oracle的插件、因为您需要在配置此连接器后部署此插件。</block>
-  <block id="932a85fd3682f29ed640be5455be6e1d" category="paragraph"><block ref="932a85fd3682f29ed640be5455be6e1d" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="99674e4e12f2b87ea13d459f88886121" category="list-text">发现Oracle EC2主机并将其添加到*应用程序*中、该主机上的任何数据库也会被发现并显示在页面上。数据库*保护状态*显示为*未受保护*。</block>
   <block id="a91f39c3d22fe697afbaa8e861c6f1e1" category="paragraph"><block ref="a91f39c3d22fe697afbaa8e861c6f1e1" category="inline-image-macro-rx" type="image"></block></block>
   <block id="9958dec2bab238d2e917ab477e6687a5" category="paragraph">至此、适用于Oracle的SnapCenter 服务的初始设置完成。本文档接下来的三节将介绍Oracle数据库备份、还原和克隆操作。</block>
   <block id="7f7c0dda9cb78e17432e91abc3c9a290" category="section-title">Oracle数据库备份</block>
@@ -19636,10 +19614,6 @@ ONTAP 工具的VASA提供程序负责根据已发现的受管ESXi主机启动程
   <block id="ca9312842450cb1907f68cbfe9e7ebdd" category="list-text">通过传递正确的标记和ONTAP集群用户名来运行ONTAP操作手册。根据提示填写ONTAP集群的密码、然后填写vsadmin。</block>
   <block id="27dddea37ed0de0ca5959c367057ba57" category="list-text">运行Linux操作手册以执行Linux部署部分。输入admin ssh密码和sudo密码。</block>
   <block id="1c71909fca063bf285ff220dab00cfa1" category="list-text">运行Oracle操作手册以执行Oracle部署部分。输入admin ssh密码和sudo密码。</block>
-  <block id="ae3e02c14eb0bd7dc27d63de85a8ffd7" category="cell">3^</block>
-  <block id="e0b1a973244e7e3c60d62153f2d530ae" category="cell">两个EC2 t2 xlarge EC2实例、一个用作主数据库服务器、另一个用作克隆数据库服务器
-
-3^</block>
   <block id="5cf04a9bbc1dcc2fadd56ff48a750287" category="video-title">自动PostgreSQL部署和保护</block>
   <block id="7bb2d8deceb07f4e39dcbf5735eeb48b" category="paragraph">+
 *最佳实践*</block>
@@ -19694,4 +19668,204 @@ ONTAP 工具的VASA提供程序负责根据已发现的受管ESXi主机启动程
   <block id="dd38f906b37d412de7d1c1dcf4cbf31c" category="paragraph"><block ref="dd38f906b37d412de7d1c1dcf4cbf31c" category="inline-link-macro-rx"></block></block>
   <block id="8acb58cbd50ef1b468a020ee0bd351d3" category="inline-link-macro"><block ref="8acb58cbd50ef1b468a020ee0bd351d3" category="inline-link-rx"></block></block>
   <block id="2352c4e1f4d0024ade0869e00e6243f4" category="paragraph"><block ref="2352c4e1f4d0024ade0869e00e6243f4" category="inline-link-macro-rx"></block></block>
+  <block id="8c50876b06b14b8a5e8c337f00bb2b87" category="cell">2023年8月2日</block>
+  <block id="3c7f4710cafa0529d89c1ce0485a2ecb" category="cell">新增TR-4977：《使用SnapCenter服务执行Oracle数据库备份、还原和克隆—Azure》</block>
+  <block id="9c0f90b4b7da40bb1953c2b5fff23b93" category="paragraph">目前、只有传统的SnapCenter服务器UI工具(请参见)才支持使用NFS和ASM存储选项的Oracle数据库 <block ref="b57a10e031bd9978114f200c41cc97b5" category="inline-link-macro-rx"></block> 有关使用NetApp SnapCenter UI工具进行Oracle数据库备份、还原和克隆的详细信息。</block>
+  <block id="4a2b9d3fbf0ce23b647509fb31e70cde" category="doc">TR-4977：《使用SnapCenter服务进行Oracle数据库备份、还原和克隆—Azure》</block>
+  <block id="63260fe4291efeee8bde616a2f5684d4" category="paragraph">SnapCenter 服务是一款SaaS版本的经典SnapCenter 数据库管理UI工具、可通过NetApp BlueXP云管理控制台访问。它是NetApp云备份和数据保护产品不可或缺的一部分、适用于在Azure NetApp Files上运行的Oracle和HANA等数据库。这种基于SaaS的服务简化了传统的SnapCenter 独立服务器部署、该部署通常需要在Windows域环境中运行的Windows服务器。</block>
+  <block id="29f3642491ac9aeb7b665ce66bb22367" category="paragraph">在本文档中、我们将演示如何设置SnapCenter服务来备份、还原和克隆部署在Azure NetApp Files卷和Azure计算实例上的Oracle数据库。使用基于Web的BlueXP用户界面、可以非常轻松地为部署在Azure NetApp Files上的Oracle数据库设置数据保护。</block>
+  <block id="e9077c444a6fe7487b79ae7f79962528" category="list-text">使用Azure NetApp Files和Azure VM中托管的Oracle数据库的快照进行数据库备份</block>
+  <block id="3c0389598fef1a83350821d4fdeef712" category="list-text">为开发、测试环境或其他使用情形快速克隆主数据库</block>
+  <block id="d187540921045cfa569cefc03bc2d168" category="list-text">负责管理在Azure NetApp Files存储上运行的Oracle数据库的数据库管理员</block>
+  <block id="bd1e27892a57409e18119bb2e541f4b1" category="list-text">对在Azure中测试Oracle数据库备份、还原和克隆感兴趣的解决方案架构师</block>
+  <block id="42f6ca06d2c7da03707222828f8997d0" category="list-text">支持和管理Azure NetApp Files存储的存储管理员</block>
+  <block id="94afe08a60e7f6e3a5a129eb73659899" category="list-text">拥有部署到Azure NetApp Files存储和Azure VM的应用程序的应用程序所有者</block>
+  <block id="3b29347d447c562ac8402016757938d0" category="paragraph">此解决方案的测试和验证是在可能与最终部署环境不匹配的实验室环境中执行的。有关详细信息，请参见一节 <block ref="8ea96e516bccf9a47ca2d74131eb7519" category="inline-xref-macro-rx"></block>。</block>
+  <block id="55ee60e84e278b25241f6d746cda7b4c" category="cell">Azure NetApp Files存储</block>
+  <block id="2b5527ea942b29b10a9a691160f3137b" category="cell">高级服务级别</block>
+  <block id="d8e8e079bcd8fa97afc26513da9e1110" category="cell">自动QoS类型、以及测试中的4 TB存储容量</block>
+  <block id="4c791dd8c709f803e2c279029455d4da" category="cell">用于计算的Azure实例</block>
+  <block id="19acc071e88e4f4be6d6d2745aacfcdb" category="cell">标准B4ms (4个vCPU、16 GiB内存)</block>
+  <block id="d82c3df85e2512cdff298dd446d58313" category="cell">已部署两个实例、一个用作主数据库服务器、另一个用作克隆数据库服务器</block>
+  <block id="985045c742c1926df0960f2e40377fde" category="cell">Red Hat Enterprise Linux 8.7 (LVM)- x64 Gen2</block>
+  <block id="ca6c2c8fbdec80fdc9c7b41d5742dec2" category="cell">版本v2.5-0-2822</block>
+  <block id="d22bbe9a49e393259ebd1a700f02c6fb" category="cell">代理版本v2.5-0-2822</block>
+  <block id="f6b9199115e06b52287c2e656c7170b7" category="list-text">*连接器应部署在与数据库和Azure NetApp Files相同的虚拟网络/子网中。*如果可能、连接器应部署在相同的Azure虚拟网络和资源组中、以便能够连接到Azure NetApp Files存储和Azure计算实例。</block>
+  <block id="4275ae61422c34253a59329bd20a0449" category="inline-link-macro">设置Azure权限</block>
+  <block id="a2c89159a457c3034a118e2f5ec42ea8" category="list-text">*Azure用户帐户或Active Directory服务原则是在SnapCenter Connector的Azure门户上创建的。*部署BlueXP Connector需要特定的权限才能创建和配置虚拟机及其他计算资源、配置网络以及访问Azure订阅。此外、它还需要稍后创建角色的权限、以及Connector运行所需的权限。在Azure中创建具有权限的自定义角色、并分配给用户帐户或服务原则。有关详细信息、请查看以下链接：<block ref="b49637e40777f5433f5c24dbb998f3cf" category="inline-link-macro-rx"></block>。</block>
+  <block id="448ffe9dc9c373b8324c69a8af97c086" category="list-text">*在Azure资源组中创建的ssh密钥对。*将ssh密钥对分配给Azure VM用户以登录到连接器主机、同时分配给数据库VM主机以部署和执行插件。BlueXP控制台UI使用ssh密钥将SnapCenter服务插件部署到数据库主机、以便执行一步式插件安装和应用程序主机数据库发现。</block>
+  <block id="68c6f0e24ad67438a9793997e4148b4a" category="list-text">*添加到BlueXP控制台设置的凭据。*要将Azure NetApp Files存储添加到BlueXP工作环境中、需要在BlueXP控制台设置中设置一个用于授予从BlueXP控制台访问Azure NetApp Files的权限的凭据。</block>
+  <block id="7076747996fba0bd3dae4b26df9e5b81" category="list-text">*java-11-OpenJDK安装在Azure VM数据库实例主机上。* SnapCenter服务安装需要Java版本11。在尝试部署插件之前、需要将其安装在应用程序主机上。</block>
+  <block id="c9643c7018a32634bcea72e6f9a9b01c" category="paragraph">我们提供了大量的NetApp文档、范围更广、可帮助您保护云原生应用程序数据。本文档的目标是提供有关使用BlueXP控制台部署SnapCenter服务的分步过程、以保护部署在Azure NetApp Files存储和Azure计算实例上的Oracle数据库。</block>
+  <block id="e0abdcfd046a2653a1bda2dca7115e7a" category="list-text">阅读一般说明 <block ref="ac041fb7031b2bcbcb203adcabf84a4f" category="inline-link-macro-rx"></block> 以及与Oracle和Azure NetApp Files相关的章节。</block>
+  <block id="ce953d67aae97c7fc7524432a6090e33" category="list-text">观看以下视频演示</block>
+  <block id="1aa4f0058fb883a083f057768fa6878f" category="list-text">Azure VM实例上已完全部署并运行Oracle数据库的主Oracle数据库服务器。</block>
+  <block id="9c1e7cfdc38dedc2e99c928ece55f763" category="list-text">部署在Azure中的Azure NetApp Files存储服务容量池、其容量可满足硬件组件部分中列出的数据库存储需求。</block>
+  <block id="400fbf8e332fd888d81e51801a0c2cc4" category="list-text">Azure VM实例上的二级数据库服务器、可用于测试将Oracle数据库克隆到备用主机的操作、以支持开发/测试工作负载或任何需要完整生产Oracle数据库数据集的使用情形。</block>
+  <block id="7aed6dd72c89d5402fa728857da45811" category="list-text">有关在Azure NetApp Files和Azure计算实例上部署适用于Oracle的追加信息数据库的信息、请参见 <block ref="f374c29aef481aab5d73c8e634ca15a8" category="inline-link-macro-rx"></block>。</block>
+  <block id="b6ae4eb3df8e4641d8de2566803478d7" category="list-text">在Azure门户中创建Azure用户帐户或Active Directory服务原则、并为Azure Connector部署授予角色权限。</block>
+  <block id="81ec66aa59e6b366dbe7a76be739caf3" category="list-text">要设置BlueXP以管理Azure资源、请添加一个BlueXP凭据、其中包含BlueXP可用于向Azure Active Directory (应用程序客户端ID)进行身份验证的Active Directory服务主体的详细信息(客户端机密)、 和您的组织的Active Directory ID (租户ID)。</block>
+  <block id="15c84c91cca87e33136482d747da05a0" category="list-text">您还需要Azure虚拟网络、资源组、安全组、用于VM访问的SSH密钥等、以便为连接器配置和数据库插件安装做好准备。</block>
+  <block id="ab08177e4206526be72dbdc84ee2ea8e" category="list-text">登录到BlueXP控制台。</block>
+  <block id="8932d8756a027f5dc1721f3219cd98cc" category="paragraph"><block ref="8932d8756a027f5dc1721f3219cd98cc" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b68454c1eb2120854c603f290cc17fda" category="list-text">单击*Connecter*下拉箭头和*Add Connecter*以启动连接器配置工作流。</block>
+  <block id="70cfa5e11acf34981ffdc54c850479d9" category="paragraph"><block ref="70cfa5e11acf34981ffdc54c850479d9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e810044bd3b9f9b02ca265b4d3eebe93" category="list-text">选择您的云提供商(此处为*Microsoft AzAzure *)。</block>
+  <block id="3f21caad7a2d3c7fa9d1c33646bde52e" category="paragraph"><block ref="3f21caad7a2d3c7fa9d1c33646bde52e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="047b152c8199802dac7e7e1ed26059ed" category="list-text">如果您已在Azure帐户中设置了*权限*、*身份验证*和*网络连接*步骤、请跳过这些步骤。如果没有、则必须先配置这些组件、然后再继续。从此处、您还可以检索上一节"<block ref="2204dd011c923b13eaa19e758c798231" category="inline-xref-macro-rx"></block>。 "</block>
+  <block id="8d3e5754272a221e50fc2ccbbb7743f6" category="paragraph"><block ref="8d3e5754272a221e50fc2ccbbb7743f6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e5bb415e11f78e565d29b6276832d292" category="list-text">单击*跳到部署*以配置连接器*虚拟机身份验证*。添加您在登录到BlueXP期间在Azure资源组中创建的SSH密钥对、为连接器操作系统身份验证做准备。</block>
+  <block id="a07c68ca2ab99f1b76268c5a5aba9312" category="paragraph"><block ref="a07c68ca2ab99f1b76268c5a5aba9312" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7d5895de98f1a29d1e51aec000e336a8" category="list-text">提供连接器实例的名称，选择*Create/*并接受*Details*下的默认*Role Name*，然后选择Azure帐户的订阅。</block>
+  <block id="122e8f677469e7d8cb0a298e5e1854ec" category="paragraph"><block ref="122e8f677469e7d8cb0a298e5e1854ec" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6f92ddd8d0b54f5b5292875e85830a9e" category="list-text">使用正确的*vNet*、*Subnet*配置网络，并禁用*Public IP*，但确保连接器在Azure环境中可以访问Internet。</block>
+  <block id="a14bd4bf8d6a711c8f271d13d4cdc750" category="paragraph"><block ref="a14bd4bf8d6a711c8f271d13d4cdc750" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="46eaff1ae08db28efc06b6f93a0d936f" category="list-text">为允许HTTP、HTTPS和SSH访问的连接器配置*安全组*。</block>
+  <block id="b3b2b257db3bcb29e03f067df9124991" category="paragraph"><block ref="b3b2b257db3bcb29e03f067df9124991" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="83b7e5528d645d061628677d96552818" category="list-text">查看摘要页面、然后单击*添加*以开始创建连接器。完成部署通常需要大约10分钟。完成后、连接器实例VM将显示在Azure门户中。</block>
+  <block id="6cdc962db7f4b3a37ce10e89250ddd8d" category="paragraph"><block ref="6cdc962db7f4b3a37ce10e89250ddd8d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="055717b8b2a845f9fe90ecae965b1feb" category="list-text">部署连接器后，新创建的连接器将显示在*Connecter*下拉列表中。</block>
+  <block id="cbcab82e2838e0aef0a8eb0171ced986" category="paragraph"><block ref="cbcab82e2838e0aef0a8eb0171ced986" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e8de7e309885d21366a248cc336a9b9f" category="section-title">在BlueXP中定义用于Azure资源访问的凭据</block>
+  <block id="c60c5069d027433cec0a8d7858d4cf82" category="list-text">单击BlueXP控制台右上角的设置图标以打开*帐户凭据*页面，单击*添加凭据*以启动凭据配置工作流。</block>
+  <block id="e0100832f337c0b4314cbfff09001007" category="paragraph"><block ref="e0100832f337c0b4314cbfff09001007" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="92a4163561d0ead1f38efbf8eb4b7404" category="list-text">选择凭据位置为-* Microsoft Azure - BlueXP*。</block>
+  <block id="030c494696b17baa2b9c4af5c4b4c728" category="paragraph"><block ref="030c494696b17baa2b9c4af5c4b4c728" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a7fd310fb0430315594373f0dfbb1417" category="list-text">使用正确的*客户端机密*、*客户端ID*和*租户ID*定义Azure凭据、这些凭据应在先前的BlueXP注册过程中收集。</block>
+  <block id="f1ca379f5b9cad20b641ad5e3b55dbfe" category="paragraph"><block ref="f1ca379f5b9cad20b641ad5e3b55dbfe" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3142506aef795962e0d228e0323722c2" category="list-text">审查和*Add*。
+<block ref="0f44ddbc6a68386befab1ef58bd4e216" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="dc1342cac9ac383b1ff6cb703abef64e" category="list-text">您可能还需要将*商城订阅*与凭证相关联。
+<block ref="dc738b078203d3ae2c3076032bc00c99" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="515410530ff315add6baa9b8fec25661" category="paragraph">配置Azure凭据后、现在可以按照以下过程设置SnapCenter服务：</block>
+  <block id="dda049d95317fa5a13b47acbe45fde94" category="list-text">返回"画布"页面、从*我的工作环境*中单击*添加工作环境*以发现在Azure中部署的Azure NetApp Files。</block>
+  <block id="43f02e4067dfce17c2cca62c84f3e481" category="list-text">选择*Microsoft AzAzure *作为位置，然后单击*Discover。</block>
+  <block id="1d16024298749f39bbf187cd337339cb" category="paragraph"><block ref="1d16024298749f39bbf187cd337339cb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="81999498d9ff326372c05514e6c0f430" category="list-text">命名*工作环境*并选择在上一节中创建的*身份凭证名称*，然后单击*继续*。</block>
+  <block id="e30c6b0c24a17d12ab1c013db75fb3ce" category="paragraph"><block ref="e30c6b0c24a17d12ab1c013db75fb3ce" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="bc2004ebba5da01423dc17da06b98ec5" category="list-text">BlueXP控制台返回到*我的工作环境*、并且从Azure发现的Azure NetApp Files现在显示在*Canvapp*上。</block>
+  <block id="c74a9856f843e7d31354966790c3afc6" category="paragraph"><block ref="c74a9856f843e7d31354966790c3afc6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="adc19ffc08c8bfc67e1ce0cfd3eaee91" category="list-text">单击*Oracle*图标，然后单击*Enter Azure NetApp Files Working Environment *以查看存储中部署的Azure NetApp Files数据库卷。</block>
+  <block id="52aed58fdd0ecaa02996f5ca0989e1e9" category="paragraph"><block ref="52aed58fdd0ecaa02996f5ca0989e1e9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="506872ca506c6f8cd2efe994167fbc72" category="paragraph"><block ref="506872ca506c6f8cd2efe994167fbc72" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="36dc7b8a2114311837911cf5ad0176ac" category="paragraph"><block ref="36dc7b8a2114311837911cf5ad0176ac" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="627521257f072e1e0bb18ed662aab17a" category="list-text">选择*Oracle*作为应用程序类型，单击*Next*打开主机详细信息页面。</block>
+  <block id="b4ae20600d43eb61740d59e0c0c3a25b" category="paragraph"><block ref="b4ae20600d43eb61740d59e0c0c3a25b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0c26490521d58cef4fc131db2e81a94e" category="list-text">选择*使用SSH*并提供Oracle Azure VM详细信息、例如* IP地址*、*连接器*、Azure VM管理*用户名*、例如azureuser。单击*添加SSH专用密钥*以粘贴用于部署Oracle Azure VM的SSH密钥对。系统还会提示您确认指纹。</block>
+  <block id="70c4bbbfbd02a546af8d59b9f0774915" category="paragraph"><block ref="ceff11557c22636c1a3ff9ea6d62118a" category="inline-image-macro-rx" type="image"></block>
+<block ref="f1ba0b94657fa36dbec85cf179630e65" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c6e130fb96d37b0095d24d5358f21e4b" category="list-text">转到下一个*配置*页面、在Oracle Azure VM上设置sudoer访问。</block>
+  <block id="06b715a47e154b01f9731e530169f9f8" category="paragraph"><block ref="06b715a47e154b01f9731e530169f9f8" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7ee8d75911c779ac7019740198b8f107" category="list-text">查看并单击*发现应用程序*，在Oracle Azure虚拟机上安装插件，并在虚拟机上发现Oracle数据库。</block>
+  <block id="b9fd5b1cf81576e7aa2a5bd91c9a9169" category="paragraph"><block ref="b9fd5b1cf81576e7aa2a5bd91c9a9169" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8e32c1f544cd9b2d6fdfd7c81e67e8d4" category="list-text">在Azure VM上发现的Oracle数据库将添加到*应用程序*中，并且*应用程序*页面列出了环境中的主机和Oracle数据库数量。数据库*Protection Status*最初显示为*unprototes*。</block>
+  <block id="3b2cdbd4de59d6d82c9a11c7365b8b03" category="paragraph"><block ref="3b2cdbd4de59d6d82c9a11c7365b8b03" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="91992eeb76f243096a177a51576aa930" category="list-text">我们在Azure VM中测试的Oracle数据库配置了三个卷、聚合总存储约为1.6 TiB。这提供了有关此大小数据库的快照备份、还原和克隆的时间的上下文。</block>
+  <block id="5a3f2aba9cdc20567fc4f7d91f0f39d2" category="list-text">要保护数据库，请单击数据库*Protection Status*旁边的三个圆点，然后单击*Assign Policy*以查看可应用于Oracle数据库的默认预加载或用户定义的数据库保护策略。在*Settings*-*Policies*下，您可以选择使用自定义的备份频率和备份数据保留窗口创建自己的策略。</block>
+  <block id="1f8dacdcb10994d391a25bf92e9bac2d" category="paragraph"><block ref="1f8dacdcb10994d391a25bf92e9bac2d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b87d60fc36851d813026dccde8a103ae" category="list-text">如果对策略配置满意，则可以*Assign*您选择的策略来保护数据库。</block>
+  <block id="19edb7e4d3f3b23e4da194d556e91abc" category="paragraph"><block ref="19edb7e4d3f3b23e4da194d556e91abc" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="31db12a4d1827bab87af3a7cf14c8c46" category="list-text">应用此策略后、数据库保护状态将更改为*受保护*、并带有绿色复选标记。BlueXP会根据定义的计划执行快照备份。此外，还可以从三点下拉菜单中选择*按需备份*，如下所示。</block>
+  <block id="3cfd18a5e97090ab9d4ebe1a94b2ea2e" category="paragraph"><block ref="3cfd18a5e97090ab9d4ebe1a94b2ea2e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b344283baf9e89aa98e1a9aa97568974" category="list-text">在*Job Monitoring*选项卡中，可以查看备份作业详细信息。我们的测试结果显示、备份大约1.6 TiB的Oracle数据库大约需要4分钟。</block>
+  <block id="f26f1f69b0291754b398f8186d9ba3c0" category="paragraph"><block ref="f26f1f69b0291754b398f8186d9ba3c0" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="99abbb4565ab40d4f0845ba2bb23b66e" category="list-text">从三点下拉菜单*查看详细信息*中，您可以查看从快照备份创建的备份集。</block>
+  <block id="5a46b20a51f7ec511ae0fdc9f54493f7" category="paragraph"><block ref="5a46b20a51f7ec511ae0fdc9f54493f7" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c00d75f1dfb37464bcc7247839c2b868" category="list-text">数据库备份详细信息包括*备份名称*、*备份类型*、*scn*、*RMAN目录*和*备份时间*。备份集分别为数据卷和日志卷提供应用程序一致的快照。日志卷快照会在数据库数据卷快照之后发生。如果要在备份列表中查找特定备份、可以应用筛选器。</block>
+  <block id="66b90d3952854f78616a55c6dc820df8" category="paragraph"><block ref="66b90d3952854f78616a55c6dc820df8" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="da619d6941ecdd2c7e548d9654a841ef" category="list-text">对于数据库恢复，请单击要在*Applications*中恢复的特定数据库的三点下拉菜单，然后单击*Restore*以启动数据库恢复和恢复工作流。</block>
+  <block id="0503201e96685d972f44b140bfc1d508" category="paragraph"><block ref="0503201e96685d972f44b140bfc1d508" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7a6466f8754f254181618465d6d07095" category="list-text">按时间戳选择您的*还原点*。列表中的每个时间戳表示一个可用的数据库备份集。</block>
+  <block id="aee3bb5d1934a654336a54ea88b07326" category="paragraph"><block ref="aee3bb5d1934a654336a54ea88b07326" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a8bc1a0adc65e8e1943672063a060cff" category="list-text">为Oracle数据库选择*将位置*还原到*原始位置*、以便进行原位还原和恢复。</block>
+  <block id="1ee481fc2cca360695dacb7cb814322c" category="paragraph"><block ref="1ee481fc2cca360695dacb7cb814322c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2ac50fae413c6d5e5094eae408e73538" category="list-text">定义*恢复范围*和*恢复范围*。所有日志均表示完整恢复为最新状态、包括当前日志。</block>
+  <block id="816fff95db7430c8ac9fdf325a133e4a" category="paragraph"><block ref="816fff95db7430c8ac9fdf325a133e4a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8ac2cb8dff52fa25ab3c4179d23af060" category="list-text">查看和*Restore*以启动数据库还原和恢复。</block>
+  <block id="45af5bba74ad48d476b1821859e1948a" category="paragraph"><block ref="45af5bba74ad48d476b1821859e1948a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="93c57cdfffd8f5678e2781396b8052ee" category="list-text">在*作业监控*选项卡中，我们发现运行完整数据库恢复和最新数据恢复需要2分钟的时间。</block>
+  <block id="8114840696eab95c3787c9354e82681c" category="paragraph"><block ref="8114840696eab95c3787c9354e82681c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="10f67c792b4c3a171ec4459316640f04" category="paragraph">数据库克隆过程与还原类似、但也适用于预先安装和配置了相同Oracle软件堆栈的备用Azure VM。</block>
+  <block id="0a726ae819aa445c83a06d6c6b45248d" category="admonition">确保Azure NetApp文件存储有足够的容量来容纳与要克隆的主数据库大小相同的克隆数据库。备用Azure虚拟机已添加到*应用程序*中。</block>
+  <block id="78984c1b4316df6a6010d6cb1420883b" category="list-text">单击要在*Applications*中克隆的特定数据库的三点下拉菜单，然后单击*Restore*以启动克隆工作流。</block>
+  <block id="9ad51a7fad933e89ae8f0294c3cb49fc" category="paragraph"><block ref="9ad51a7fad933e89ae8f0294c3cb49fc" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c81741abd46b5657b1b137ad6b08c60d" category="list-text">选择*还原点*并选中*还原到备用位置*。</block>
+  <block id="e4a902420d19e31eccc7d91419c6d691" category="paragraph"><block ref="e4a902420d19e31eccc7d91419c6d691" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="821f3d32c228cdb4c83894cf7f22f5bc" category="list-text">在下一个*Configuration*页面中，将备用*Host*、新数据库*SID*和*Oracle Home*设置为在备用Azure虚拟机上配置。</block>
+  <block id="da09170eabb9431dcd4c904a4315d274" category="paragraph"><block ref="da09170eabb9431dcd4c904a4315d274" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="76241d79c5d5f01636b403e2ed5ec804" category="list-text">Review *General页显示了克隆数据库的详细信息，如SID、备用主机、数据文件位置、恢复范围等</block>
+  <block id="95a6f17bf147c091dff88da2fafaa9b9" category="paragraph"><block ref="95a6f17bf147c091dff88da2fafaa9b9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="43b6971c27d0d503f52ec88935ec1382" category="list-text">Review *Database parameters*(查看*Database parameters*)页显示了克隆的数据库配置的详细信息以及一些数据库参数设置。</block>
+  <block id="1f91f781805a086a17864fc8d45a859f" category="paragraph"><block ref="1f91f781805a086a17864fc8d45a859f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="62dc32438ca73d555756784b39f074d2" category="list-text">通过*作业监控*选项卡监控克隆作业状态，我们发现克隆1.6 TiB Oracle数据库需要8分钟。</block>
+  <block id="ab1f0cef09be60a75bba293bbeed266b" category="paragraph"><block ref="ab1f0cef09be60a75bba293bbeed266b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d3c33cefae6ca0544ea18f72546fa955" category="list-text">在BlueXP *应用程序*页面中验证克隆的数据库、该页面显示克隆的数据库已立即注册到BlueXP中。</block>
+  <block id="1a5aeaba4f086d0b20e1477e27770819" category="paragraph"><block ref="1a5aeaba4f086d0b20e1477e27770819" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c63639ec48ac9f3ed5e3bd19cb501647" category="list-text">验证Oracle Azure VM上显示克隆数据库按预期运行的克隆数据库。</block>
+  <block id="5031207ab257cb06924bd0e19462b61c" category="paragraph"><block ref="5031207ab257cb06924bd0e19462b61c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="dc555bae6dace1d6d3b409d213670af3" category="paragraph">至此、我们完成了使用NetApp BlueXP控制台和SnapCenter服务在Azure中进行Oracle数据库备份、还原和克隆的演示。</block>
+  <block id="855ff2118de8410b364ef10dd2bb08cf" category="inline-link-macro"><block ref="855ff2118de8410b364ef10dd2bb08cf" category="inline-link-rx"></block></block>
+  <block id="cbadf086d67897b3b1aaeecf728b288c" category="paragraph"><block ref="cbadf086d67897b3b1aaeecf728b288c" category="inline-link-macro-rx"></block></block>
+  <block id="27e1212a42107cfc0301ede49e34c2b6" category="list-text">开始使用Azure</block>
+  <block id="1835dca082bed53483a7a062cc1bc8d0" category="inline-link-macro"><block ref="1835dca082bed53483a7a062cc1bc8d0" category="inline-link-rx"></block></block>
+  <block id="a35f1c37303f15b458dc1914b868ff3f" category="paragraph"><block ref="a35f1c37303f15b458dc1914b868ff3f" category="inline-link-macro-rx"></block></block>
+  <block id="200ceef64376fb4963e417594c2660f0" category="summary">解决方案提供了有关使用NetApp SnapCenter SaaS在Azure云中使用BlueXP控制台进行Oracle数据库备份、还原和克隆的概述和详细信息。</block>
+  <block id="698740e9ee6a7bf04119b53400b8b9a7" category="doc">TR-4964：《使用SnapCenter服务执行Oracle数据库备份、还原和克隆—AWS》</block>
+  <block id="6f4cd1b0523380b825fa78ec70975a14" category="cell">两个EC2 t2 xlarge EC2实例、一个用作主数据库服务器、另一个用作克隆数据库服务器</block>
+  <block id="56427e5f1c1f5700ead6c9a9bce7060b" category="list-text">*为SnapCenter 连接器创建的AWS IAM策略。*详细的SnapCenter 服务文档中提供了JSON格式的策略。使用BlueXP控制台启动连接器部署时、系统还会提示您设置前提条件、并以JSON格式提供所需权限的详细信息。应将此策略分配给拥有此连接器的AWS用户帐户。</block>
+  <block id="0c28eaf31a69bb7791a4813ad2b0bcad" category="list-text">* AWS帐户访问密钥和在AWS帐户中创建的SSH密钥对。* SSH密钥对分配给EC2-user、用于登录到连接器主机、然后将数据库插件部署到EC2 DB服务器主机。访问密钥授予使用上述IAM策略配置所需连接器的权限。</block>
+  <block id="335e5cb00aff2c78312972d158d4b579" category="list-text">*添加到BlueXP控制台设置的凭据。*要将Amazon FSx for ONTAP添加到BlueXP工作环境中、需要在BlueXP控制台设置中设置一个凭据、用于授予BlueXP访问Amazon FSx for ONTAP的权限。</block>
+  <block id="74a16f5a2cb515e5359c279dfe53d615" category="list-text">*EC2数据库实例主机上安装了java-11-OpenJDK。* SnapCenter服务安装需要Java版本11。在尝试部署插件之前、需要将其安装在应用程序主机上。</block>
+  <block id="b16d85e1d11f85dc031a4dba6341172b" category="list-text">AWS中部署的Amazon FSx for ONTAP集群、用于托管上述数据库卷。</block>
+  <block id="d15621373250f7778b58f1a57646d590" category="list-text">EC2实例上的一个可选数据库服务器、可用于测试将Oracle数据库克隆到备用主机的操作、以支持开发/测试工作负载或任何需要生产Oracle数据库的完整数据集的使用情形。</block>
+  <block id="c138896742fc6fda756e11167ed75f14" category="list-text">如果您需要帮助以满足在Amazon FSX for ONTAP 和EC2计算实例上部署Oracle数据库的上述前提条件、请参见 <block ref="84dfb8b43ed6d356540ab11fdb4b0e89" category="inline-link-macro-rx"></block> 或白皮书 <block ref="028ff281fd359dd1a824cb2ca4b97f33" category="inline-link-macro-rx"></block></block>
+  <block id="905649aa82828b72c7609e32261b6541" category="list-text">登录到您的AWS帐户以创建具有适当权限的IAM策略、并将该策略分配给要用于BlueXP Connector部署的AWS帐户。</block>
+  <block id="2f43b4d90aacd2dff66dbba89df8d3e8" category="paragraph">应使用NetApp文档中提供的JSON字符串配置此策略。启动连接器配置并提示您分配前提条件权限时、也可以从页面中检索JSON字符串。</block>
+  <block id="8a93a46df85bf33efa5d5200b6c4ce06" category="list-text">此外、您还需要准备好AWS VPC、子网、安全组、AWS用户帐户访问密钥和密码、EC2用户的SSH密钥等、以便进行连接器配置。</block>
+  <block id="04592f11c82d99f55bd84f8036b45389" category="list-text">登录到BlueXP控制台。对于共享帐户、最佳做法是通过单击*帐户*&gt;*管理帐户*&gt;*工作空间*来创建单个工作空间以添加新工作空间。</block>
+  <block id="dfaeef102040345b1180ea94f2b0c2ff" category="list-text">使用*访问密钥*和*机密密钥*输入您的AWS帐户身份验证。</block>
+  <block id="a8f366d09f3fd92a0239f6862ee9d35e" category="list-text">使用正确的* VPC*、*子网*和SSH *密钥对*配置网络连接以访问连接器。</block>
+  <block id="2e132860f3a8d1cbe124a67c4b5d67cc" category="list-text">设置连接器的*Security Group*。</block>
+  <block id="74be0e1339ee168e43642c78894f516c" category="section-title">在BlueXP for AWS资源访问中定义凭据</block>
+  <block id="e0d8224cb04f8209c7dd255259abe722" category="list-text">首先、从AWS EC2控制台、在*身份和访问管理(IAM)*菜单*角色*和*创建角色*中创建角色、以启动角色创建工作流。</block>
+  <block id="aa5bbfe691ae80f3fbec564c34575332" category="paragraph"><block ref="aa5bbfe691ae80f3fbec564c34575332" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b3f70a9b0bcfff938be5c9b967baac38" category="list-text">在*选择可信实体*页面中、选择* AWS account*、*另一个AWS account*、然后粘贴BlueXP帐户ID、该ID可从BlueXP控制台检索。</block>
+  <block id="a9e01f9cc502485335e3850b8251f9ec" category="paragraph"><block ref="a9e01f9cc502485335e3850b8251f9ec" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c29f350fe0ef034c8595e5a9732939b3" category="list-text">按FSx筛选权限策略并将*权限策略*添加到角色。</block>
+  <block id="9153cee2ecbf0805cafee7397d59641c" category="paragraph"><block ref="9153cee2ecbf0805cafee7397d59641c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="61a7a81a82f0f1d0520b066c19c3e2a1" category="list-text">在“*角色详细信息*”页中，为角色命名，添加一个问题描述，然后单击*Create Role*。</block>
+  <block id="d49ba55824dd5ad889fac0ad43d63df4" category="paragraph"><block ref="d49ba55824dd5ad889fac0ad43d63df4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="21b7150d8525df111105dbb7e805e729" category="list-text">返回BlueXP控制台、单击控制台右上角的设置图标以打开*帐户凭据*页面、然后单击*添加凭据*以启动凭据配置工作流。</block>
+  <block id="3cbfa2d74d3c41a34f366b3168220af8" category="paragraph"><block ref="3cbfa2d74d3c41a34f366b3168220af8" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e555a0fd2fff62a47775a52b4b58f3b1" category="list-text">选择凭据位置为-*Amazon Web Services - BlueXP*。</block>
+  <block id="9902d257190975d93f06203e0d3a538f" category="paragraph"><block ref="9902d257190975d93f06203e0d3a538f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2dc9db68323ce54999aefadc7fa6b9bf" category="list-text">使用正确的*角色ARN*定义AWS凭据、可从上述步骤1中创建的AWS IAM角色检索这些凭据。BlueXP *帐户ID*、用于在步骤1中创建AWS IAM角色。</block>
+  <block id="0c9ef4cba18bfbfed8d15c0af1a01564" category="paragraph"><block ref="0c9ef4cba18bfbfed8d15c0af1a01564" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9cd441745f9ee370e5941b13ab2fb091" category="list-text">审查和*Add*。
+<block ref="500cfd6ba279fd74e1c36ecb39daa157" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4f3b4caea09bcee5fb52b1e6e4756a63" category="paragraph">部署连接器并添加凭据后、现在可以使用以下操作步骤设置SnapCenter服务：</block>
+  <block id="20aa78b57c1494d5482d7e3d1684845b" category="list-text">选择您在上一节中创建的*凭据名称*、为BlueXP授予管理FSx for ONTAP所需的权限。如果您尚未添加凭据、则可以从BlueXP控制台右上角的*设置*菜单中添加此凭据。</block>
+  <block id="c6ce8aeb69282423f1e8709e9bece6ce" category="list-text">填写AWS EC2 Oracle应用程序主机详细信息。选择*使用SSH*作为*主机安装类型*进行一步插件安装和数据库发现。然后，单击*添加SSH专用密钥*。</block>
+  <block id="64066a5a6ff28b6e3783cce928287f90" category="paragraph"><block ref="64066a5a6ff28b6e3783cce928287f90" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="ea41a89df50cac84ab851e6f7730c00d" category="list-text">粘贴数据库EC2主机的EC2用户SSH密钥，然后单击*Valid验证*继续。</block>
+  <block id="c75d185690ad385defb985932722de31" category="paragraph"><block ref="c75d185690ad385defb985932722de31" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a70359387fcaa0512296895fb4f6a4ae" category="list-text">系统将提示您*验证指纹*以继续。</block>
+  <block id="e36c0283d568f55714770a9abddff851" category="paragraph"><block ref="e36c0283d568f55714770a9abddff851" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="032b4254e4889aa8b7e197feb31cbc5a" category="list-text">单击*下一步*以安装Oracle数据库插件并在EC2主机上发现Oracle数据库。发现的数据库将添加到*Applications*中。数据库*Protection Status*在最初发现时显示为*unprototed"(未受保护)。</block>
+  <block id="09e95b77ffe81fe465a83ba99efad5c8" category="paragraph"><block ref="09e95b77ffe81fe465a83ba99efad5c8" category="inline-link-rx"></block></block>
+  <block id="7aa531e9acfe2b98e34d2c92fe9846ff" category="paragraph"><block ref="7aa531e9acfe2b98e34d2c92fe9846ff" category="inline-link-rx"></block></block>
+  <block id="d7f1fbcf9ce4e42f705add574d262b2c" category="paragraph"><block ref="d7f1fbcf9ce4e42f705add574d262b2c" category="inline-link-rx"></block></block>
+  <block id="fc248f74f5e36542f7f5627b8610e9a3" category="paragraph"><block ref="fc248f74f5e36542f7f5627b8610e9a3" category="inline-link-rx"></block></block>
+  <block id="4256ba2717898f27d78e0bc44bb0f939" category="paragraph">通知文件提供有关 NetApp 软件中使用的第三方版权和许可证的信息。
+——
+永久链接：legal-notices.html
+侧栏：侧栏
+关键字：
+摘要：
+——</block>
+  <block id="6a2c1ac1da51eca0c1a65afffab8dfab" category="inline-image-macro">使用基于NFS v3、500的vvol进行网络配置</block>
+  <block id="53b4e37aeeb9aaf52da56528778439d6" category="paragraph"><block ref="53b4e37aeeb9aaf52da56528778439d6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="db9e9ec215ebe0fc52fb46e84cda4d6e" category="sidebar">使用SnapCenter服务执行Oracle备份、还原和克隆—Azure</block>
+  <block id="8a708dc28e6881f4ca61b1dac86fb745" category="sidebar">适用于Oracle的BlueXP SaaS—Azure</block>
+  <block id="72fabf1add0034062f091db87a4723b3" category="sidebar">适用于Oracle的BlueXP SaaS—AWS</block>
 </blocks>

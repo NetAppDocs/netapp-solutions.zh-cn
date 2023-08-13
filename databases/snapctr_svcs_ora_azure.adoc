@@ -1,0 +1,438 @@
+---
+sidebar: sidebar 
+permalink: databases/snapctr_svcs_ora_azure.html 
+keywords: Oracle, Database, SnapCenter, SnapShot, FlexClone, BlueXP, Database Backup, Database Restore, Database Clone 
+summary: 解决方案 提供了有关使用BlueXP控制台使用NetApp SnapCenter SaaS进行Oracle数据库备份、还原和克隆的概述和详细信息。 
+---
+= TR-4977：《使用SnapCenter服务进行Oracle数据库备份、还原和克隆—Azure》
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+NetApp公司Allen Cao、Niyaz Mohamed
+
+
+
+== 目的
+
+SnapCenter 服务是一款SaaS版本的经典SnapCenter 数据库管理UI工具、可通过NetApp BlueXP云管理控制台访问。它是NetApp云备份和数据保护产品不可或缺的一部分、适用于在Azure NetApp Files上运行的Oracle和HANA等数据库。这种基于SaaS的服务简化了传统的SnapCenter 独立服务器部署、该部署通常需要在Windows域环境中运行的Windows服务器。
+
+在本文档中、我们将演示如何设置SnapCenter服务来备份、还原和克隆部署在Azure NetApp Files卷和Azure计算实例上的Oracle数据库。使用基于Web的BlueXP用户界面、可以非常轻松地为部署在Azure NetApp Files上的Oracle数据库设置数据保护。
+
+此解决方案 可解决以下使用情形：
+
+* 使用Azure NetApp Files和Azure VM中托管的Oracle数据库的快照进行数据库备份
+* 发生故障时恢复Oracle数据库
+* 为开发、测试环境或其他使用情形快速克隆主数据库
+
+
+
+
+== audience
+
+本解决方案 面向以下受众：
+
+* 负责管理在Azure NetApp Files存储上运行的Oracle数据库的数据库管理员
+* 对在Azure中测试Oracle数据库备份、还原和克隆感兴趣的解决方案架构师
+* 支持和管理Azure NetApp Files存储的存储管理员
+* 拥有部署到Azure NetApp Files存储和Azure VM的应用程序的应用程序所有者
+
+
+
+
+== 解决方案 测试和验证环境
+
+此解决方案的测试和验证是在可能与最终部署环境不匹配的实验室环境中执行的。有关详细信息，请参见一节 <<Key Factors for Deployment Consideration>>。
+
+
+
+=== 架构
+
+image::snapctr_svcs_azure_architect.png[此图详细展示了BlueXP控制台中适用于应用程序的Cloud Backup、包括其管理的UI、连接器和资源。]
+
+此图详细展示了BlueXP控制台中适用于应用程序的Cloud Backup、包括UI、连接器及其管理的资源。
+
+
+
+=== 硬件和软件组件
+
+|===
+
+
+3+| * 硬件 * 
+
+
+| Azure NetApp Files存储 | 高级服务级别 | 自动QoS类型、以及测试中的4 TB存储容量 
+
+
+| 用于计算的Azure实例 | 标准B4ms (4个vCPU、16 GiB内存) | 已部署两个实例、一个用作主数据库服务器、另一个用作克隆数据库服务器 
+
+
+3+| *软件* 
+
+
+| RedHat Linux | Red Hat Enterprise Linux 8.7 (LVM)- x64 Gen2 | 已部署RedHat订阅以进行测试 
+
+
+| Oracle 数据库 | 版本19.18 | 已应用RU修补程序p34765931_190000_Linux-x86-64.zip 
+
+
+| Oracle OPatch | 版本12.2.0.1.36 | 最新修补程序p6880880_190000_Linux-x86-64.zip 
+
+
+| SnapCenter 服务 | 版本v2.5-0-2822 | 代理版本v2.5-0-2822 
+|===
+
+
+=== 部署注意事项的关键因素
+
+* *连接器应部署在与数据库和Azure NetApp Files相同的虚拟网络/子网中。*如果可能、连接器应部署在相同的Azure虚拟网络和资源组中、以便能够连接到Azure NetApp Files存储和Azure计算实例。
+* *Azure用户帐户或Active Directory服务原则是在SnapCenter Connector的Azure门户上创建的。*部署BlueXP Connector需要特定的权限才能创建和配置虚拟机及其他计算资源、配置网络以及访问Azure订阅。此外、它还需要稍后创建角色的权限、以及Connector运行所需的权限。在Azure中创建具有权限的自定义角色、并分配给用户帐户或服务原则。有关详细信息、请查看以下链接：link:https://docs.netapp.com/us-en/bluexp-setup-admin/task-set-up-permissions-azure.html#set-up-permissions-to-create-the-connector-from-bluexp["设置Azure权限"^]。
+* *在Azure资源组中创建的ssh密钥对。*将ssh密钥对分配给Azure VM用户以登录到连接器主机、同时分配给数据库VM主机以部署和执行插件。BlueXP控制台UI使用ssh密钥将SnapCenter服务插件部署到数据库主机、以便执行一步式插件安装和应用程序主机数据库发现。
+* *添加到BlueXP控制台设置的凭据。*要将Azure NetApp Files存储添加到BlueXP工作环境中、需要在BlueXP控制台设置中设置一个用于授予从BlueXP控制台访问Azure NetApp Files的权限的凭据。
+* *java-11-OpenJDK安装在Azure VM数据库实例主机上。* SnapCenter服务安装需要Java版本11。在尝试部署插件之前、需要将其安装在应用程序主机上。
+
+
+
+
+== 解决方案 部署
+
+我们提供了大量的NetApp文档、范围更广、可帮助您保护云原生应用程序数据。本文档的目标是提供有关使用BlueXP控制台部署SnapCenter服务的分步过程、以保护部署在Azure NetApp Files存储和Azure计算实例上的Oracle数据库。
+
+要开始使用、请完成以下步骤：
+
+* 阅读一般说明 link:https://docs.netapp.com/us-en/cloud-manager-backup-restore/concept-protect-cloud-app-data-to-cloud.html#architecture["保护您的Cloud原生 应用程序数据"^] 以及与Oracle和Azure NetApp Files相关的章节。
+* 观看以下视频演示
++
+
+
+
+
+
+=== 部署SnapCenter 服务的前提条件
+
+[%collapsible]
+====
+部署需要满足以下前提条件。
+
+. Azure VM实例上已完全部署并运行Oracle数据库的主Oracle数据库服务器。
+. 部署在Azure中的Azure NetApp Files存储服务容量池、其容量可满足硬件组件部分中列出的数据库存储需求。
+. Azure VM实例上的二级数据库服务器、可用于测试将Oracle数据库克隆到备用主机的操作、以支持开发/测试工作负载或任何需要完整生产Oracle数据库数据集的使用情形。
+. 有关在Azure NetApp Files和Azure计算实例上部署适用于Oracle的追加信息数据库的信息、请参见 link:azure_ora_nfile_usercase.html["Azure NetApp Files 上的Oracle数据库部署和保护"^]。
+
+
+====
+
+
+=== 加入BlueXP准备阶段
+
+[%collapsible]
+====
+. 使用链接 link:https://console.bluexp.netapp.com/["NetApp BlueXP"] 注册访问BlueXP控制台。
+. 在Azure门户中创建Azure用户帐户或Active Directory服务原则、并为Azure Connector部署授予角色权限。
+. 要设置BlueXP以管理Azure资源、请添加一个BlueXP凭据、其中包含BlueXP可用于向Azure Active Directory (应用程序客户端ID)进行身份验证的Active Directory服务主体的详细信息(客户端机密)、 和您的组织的Active Directory ID (租户ID)。
+. 您还需要Azure虚拟网络、资源组、安全组、用于VM访问的SSH密钥等、以便为连接器配置和数据库插件安装做好准备。
+
+
+====
+
+
+=== 为SnapCenter 服务部署连接器
+
+[%collapsible]
+====
+. 登录到BlueXP控制台。
++
+image:snapctr_svcs_connector_02-canvas.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 单击*Connecter*下拉箭头和*Add Connecter*以启动连接器配置工作流。
++
+image:snapctr_svcs_connector_03-addc.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 选择您的云提供商(此处为*Microsoft AzAzure *)。
++
+image:snapctr_svcs_connector_04-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 如果您已在Azure帐户中设置了*权限*、*身份验证*和*网络连接*步骤、请跳过这些步骤。如果没有、则必须先配置这些组件、然后再继续。从此处、您还可以检索上一节"<<加入BlueXP准备阶段>>。 "
++
+image:snapctr_svcs_connector_05-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 单击*跳到部署*以配置连接器*虚拟机身份验证*。添加您在登录到BlueXP期间在Azure资源组中创建的SSH密钥对、为连接器操作系统身份验证做准备。
++
+image:snapctr_svcs_connector_06-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 提供连接器实例的名称，选择*Create/*并接受*Details*下的默认*Role Name*，然后选择Azure帐户的订阅。
++
+image:snapctr_svcs_connector_07-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 使用正确的*vNet*、*Subnet*配置网络，并禁用*Public IP*，但确保连接器在Azure环境中可以访问Internet。
++
+image:snapctr_svcs_connector_08-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 为允许HTTP、HTTPS和SSH访问的连接器配置*安全组*。
++
+image:snapctr_svcs_connector_09-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 查看摘要页面、然后单击*添加*以开始创建连接器。完成部署通常需要大约10分钟。完成后、连接器实例VM将显示在Azure门户中。
++
+image:snapctr_svcs_connector_10-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 部署连接器后，新创建的连接器将显示在*Connecter*下拉列表中。
++
+image:snapctr_svcs_connector_11-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+
+
+====
+
+
+=== 在BlueXP中定义用于Azure资源访问的凭据
+
+[%collapsible]
+====
+. 单击BlueXP控制台右上角的设置图标以打开*帐户凭据*页面，单击*添加凭据*以启动凭据配置工作流。
++
+image:snapctr_svcs_credential_01-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 选择凭据位置为-* Microsoft Azure - BlueXP*。
++
+image:snapctr_svcs_credential_02-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 使用正确的*客户端机密*、*客户端ID*和*租户ID*定义Azure凭据、这些凭据应在先前的BlueXP注册过程中收集。
++
+image:snapctr_svcs_credential_03-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 审查和*Add*。
+image:snapctr_svcs_credential_04-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+. 您可能还需要将*商城订阅*与凭证相关联。
+image:snapctr_svcs_credential_05-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+
+====
+
+
+=== SnapCenter 服务设置
+
+[%collapsible]
+====
+配置Azure凭据后、现在可以按照以下过程设置SnapCenter服务：
+
+. 返回"画布"页面、从*我的工作环境*中单击*添加工作环境*以发现在Azure中部署的Azure NetApp Files。
++
+image:snapctr_svcs_connector_11-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 选择*Microsoft AzAzure *作为位置，然后单击*Discover。
++
+image:snapctr_svcs_setup_02-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 命名*工作环境*并选择在上一节中创建的*身份凭证名称*，然后单击*继续*。
++
+image:snapctr_svcs_setup_03-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. BlueXP控制台返回到*我的工作环境*、并且从Azure发现的Azure NetApp Files现在显示在*Canvapp*上。
++
+image:snapctr_svcs_setup_04-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 单击*Oracle*图标，然后单击*Enter Azure NetApp Files Working Environment *以查看存储中部署的Azure NetApp Files数据库卷。
++
+image:snapctr_svcs_setup_05-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 从控制台的左侧边栏中、将鼠标悬停在保护图标上、然后单击*保护*>*应用程序*以打开应用程序启动页面。单击*发现应用程序*。
++
+image:snapctr_svcs_setup_09-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 选择*云原生*作为应用程序源类型。
++
+image:snapctr_svcs_setup_10-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 选择*Oracle*作为应用程序类型，单击*Next*打开主机详细信息页面。
++
+image:snapctr_svcs_setup_13-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 选择*使用SSH*并提供Oracle Azure VM详细信息、例如* IP地址*、*连接器*、Azure VM管理*用户名*、例如azureuser。单击*添加SSH专用密钥*以粘贴用于部署Oracle Azure VM的SSH密钥对。系统还会提示您确认指纹。
++
+image:snapctr_svcs_setup_15-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+image:snapctr_svcs_setup_16-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 转到下一个*配置*页面、在Oracle Azure VM上设置sudoer访问。
++
+image:snapctr_svcs_setup_17-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 查看并单击*发现应用程序*，在Oracle Azure虚拟机上安装插件，并在虚拟机上发现Oracle数据库。
++
+image:snapctr_svcs_setup_18-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 在Azure VM上发现的Oracle数据库将添加到*应用程序*中，并且*应用程序*页面列出了环境中的主机和Oracle数据库数量。数据库*Protection Status*最初显示为*unprototes*。
++
+image:snapctr_svcs_setup_19-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+
+
+至此、适用于Oracle的SnapCenter 服务的初始设置完成。本文档接下来的三节将介绍Oracle数据库备份、还原和克隆操作。
+
+====
+
+
+=== Oracle数据库备份
+
+[%collapsible]
+====
+. 我们在Azure VM中测试的Oracle数据库配置了三个卷、聚合总存储约为1.6 TiB。这提供了有关此大小数据库的快照备份、还原和克隆的时间的上下文。
+
+
+....
+[oracle@acao-ora01 ~]$ df -h
+Filesystem                 Size  Used Avail Use% Mounted on
+devtmpfs                   7.9G     0  7.9G   0% /dev
+tmpfs                      7.9G     0  7.9G   0% /dev/shm
+tmpfs                      7.9G   17M  7.9G   1% /run
+tmpfs                      7.9G     0  7.9G   0% /sys/fs/cgroup
+/dev/mapper/rootvg-rootlv   40G   23G   15G  62% /
+/dev/mapper/rootvg-usrlv   9.8G  1.6G  7.7G  18% /usr
+/dev/sda2                  496M  115M  381M  24% /boot
+/dev/mapper/rootvg-varlv   7.9G  787M  6.7G  11% /var
+/dev/mapper/rootvg-homelv  976M  323M  586M  36% /home
+/dev/mapper/rootvg-optlv   2.0G  9.6M  1.8G   1% /opt
+/dev/mapper/rootvg-tmplv   2.0G   22M  1.8G   2% /tmp
+/dev/sda1                  500M  6.8M  493M   2% /boot/efi
+172.30.136.68:/ora01-u01   100G   23G   78G  23% /u01
+172.30.136.68:/ora01-u03   500G  117G  384G  24% /u03
+172.30.136.68:/ora01-u02  1000G  804G  197G  81% /u02
+tmpfs                      1.6G     0  1.6G   0% /run/user/1000
+[oracle@acao-ora01 ~]$
+....
+. 要保护数据库，请单击数据库*Protection Status*旁边的三个圆点，然后单击*Assign Policy*以查看可应用于Oracle数据库的默认预加载或用户定义的数据库保护策略。在*Settings*-*Policies*下，您可以选择使用自定义的备份频率和备份数据保留窗口创建自己的策略。
++
+image:snapctr_svcs_bkup_01-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 如果对策略配置满意，则可以*Assign*您选择的策略来保护数据库。
++
+image:snapctr_svcs_bkup_02-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 应用此策略后、数据库保护状态将更改为*受保护*、并带有绿色复选标记。BlueXP会根据定义的计划执行快照备份。此外，还可以从三点下拉菜单中选择*按需备份*，如下所示。
++
+image:snapctr_svcs_bkup_03-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 在*Job Monitoring*选项卡中，可以查看备份作业详细信息。我们的测试结果显示、备份大约1.6 TiB的Oracle数据库大约需要4分钟。
++
+image:snapctr_svcs_bkup_04-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 从三点下拉菜单*查看详细信息*中，您可以查看从快照备份创建的备份集。
++
+image:snapctr_svcs_bkup_05-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 数据库备份详细信息包括*备份名称*、*备份类型*、*scn*、*RMAN目录*和*备份时间*。备份集分别为数据卷和日志卷提供应用程序一致的快照。日志卷快照会在数据库数据卷快照之后发生。如果要在备份列表中查找特定备份、可以应用筛选器。
++
+image:snapctr_svcs_bkup_06-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+
+
+====
+
+
+=== Oracle数据库还原和恢复
+
+[%collapsible]
+====
+. 对于数据库恢复，请单击要在*Applications*中恢复的特定数据库的三点下拉菜单，然后单击*Restore*以启动数据库恢复和恢复工作流。
++
+image:snapctr_svcs_restore_01-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 按时间戳选择您的*还原点*。列表中的每个时间戳表示一个可用的数据库备份集。
++
+image:snapctr_svcs_restore_02-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 为Oracle数据库选择*将位置*还原到*原始位置*、以便进行原位还原和恢复。
++
+image:snapctr_svcs_restore_03-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 定义*恢复范围*和*恢复范围*。所有日志均表示完整恢复为最新状态、包括当前日志。
++
+image:snapctr_svcs_restore_04-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 查看和*Restore*以启动数据库还原和恢复。
++
+image:snapctr_svcs_restore_05-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 在*作业监控*选项卡中，我们发现运行完整数据库恢复和最新数据恢复需要2分钟的时间。
++
+image:snapctr_svcs_restore_06-azure.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+
+
+====
+
+
+=== Oracle数据库克隆
+
+[%collapsible]
+====
+数据库克隆过程与还原类似、但也适用于预先安装和配置了相同Oracle软件堆栈的备用Azure VM。
+
+
+NOTE: 确保Azure NetApp文件存储有足够的容量来容纳与要克隆的主数据库大小相同的克隆数据库。备用Azure虚拟机已添加到*应用程序*中。
+
+. 单击要在*Applications*中克隆的特定数据库的三点下拉菜单，然后单击*Restore*以启动克隆工作流。
++
+image:snapctr_svcs_restore_01-azure.png["错误：缺少图形映像"]
+
+. 选择*还原点*并选中*还原到备用位置*。
++
+image:snapctr_svcs_clone_01-azure.png["错误：缺少图形映像"]
+
+. 在下一个*Configuration*页面中，将备用*Host*、新数据库*SID*和*Oracle Home*设置为在备用Azure虚拟机上配置。
++
+image:snapctr_svcs_clone_02-azure.png["错误：缺少图形映像"]
+
+. Review *General页显示了克隆数据库的详细信息，如SID、备用主机、数据文件位置、恢复范围等
++
+image:snapctr_svcs_clone_03-azure.png["错误：缺少图形映像"]
+
+. Review *Database parameters*(查看*Database parameters*)页显示了克隆的数据库配置的详细信息以及一些数据库参数设置。
++
+image:snapctr_svcs_clone_04-azure.png["错误：缺少图形映像"]
+
+. 通过*作业监控*选项卡监控克隆作业状态，我们发现克隆1.6 TiB Oracle数据库需要8分钟。
++
+image:snapctr_svcs_clone_05-azure.png["错误：缺少图形映像"]
+
+. 在BlueXP *应用程序*页面中验证克隆的数据库、该页面显示克隆的数据库已立即注册到BlueXP中。
++
+image:snapctr_svcs_clone_06-azure.png["错误：缺少图形映像"]
+
+. 验证Oracle Azure VM上显示克隆数据库按预期运行的克隆数据库。
++
+image:snapctr_svcs_clone_07-azure.png["错误：缺少图形映像"]
+
+
+
+至此、我们完成了使用NetApp BlueXP控制台和SnapCenter服务在Azure中进行Oracle数据库备份、还原和克隆的演示。
+
+====
+
+
+== 追加信息
+
+要了解有关本文档中所述信息的更多信息，请查看以下文档和 / 或网站：
+
+* 设置和管理BlueXP
++
+link:https://docs.netapp.com/us-en/cloud-manager-setup-admin/index.htmll["https://docs.netapp.com/us-en/cloud-manager-setup-admin/index.html"^]
+
+* Cloud Backup 文档
++
+link:https://docs.netapp.com/us-en/cloud-manager-backup-restore/index.html["https://docs.netapp.com/us-en/cloud-manager-backup-restore/index.html"^]
+
+* Azure NetApp Files
++
+link:https://azure.microsoft.com/en-us/products/netapp["https://azure.microsoft.com/en-us/products/netapp"^]
+
+* 开始使用Azure
++
+link:https://azure.microsoft.com/en-us/get-started/["https://azure.microsoft.com/en-us/get-started/"^]
+
+
