@@ -16,15 +16,15 @@ summary: RHV 是一个企业级虚拟数据中心平台，运行在 Red Hat Ente
 [role="lead"]
 Red Hat 虚拟化（ RHV ）是一个企业级虚拟数据中心平台，运行在 Red Hat Enterprise Linux （ RHEL ）上，并使用 KVM 虚拟机管理程序。
 
-有关 RHV 的详细信息，请参见 https://www.redhat.com/en/technologies/virtualization/enterprise-virtualization["Red Hat 虚拟化网站"^]。
+有关 RHV 的详细信息，请参见 link:https://www.redhat.com/en/technologies/virtualization/enterprise-virtualization["Red Hat 虚拟化网站"^]。
 
 RHV 具有以下功能：
 
-* * 集中管理 VM 和主机。 * 在部署中， RHV 管理器作为物理机或虚拟机（ VM ）运行，并提供一个基于 Web 的图形用户界面，用于从中央界面管理解决方案。
-* * 自托管引擎。 * 为最大程度地降低硬件要求， RHV 允许将 RHV Manager （ RHV-M ）部署为运行子虚拟机的主机上的 VM 。
-* * 高可用性。 * 为避免在主机发生故障时发生中断，可以通过 RHV 配置虚拟机以实现高可用性。高可用性 VM 可通过故障恢复策略在集群级别进行控制。
-* * 高可扩展性。 * 一个 RHV 集群最多可以包含 200 个虚拟机管理程序主机，从而支持大型 VM 的需求，从而托管资源耗用的企业级工作负载。
-* * 增强的安全性。 * RHV 继承了 RHV 的功能，安全虚拟化（ sVirt ）和安全增强型 Linux （ SELinux ）技术被 RHV 用于提高主机和 VM 的安全性和增强性能。这些功能的主要优势是对虚拟机及其相关资源进行逻辑隔离。
+* *集中管理虚拟机和主机* RHV管理器在部署中作为物理机或虚拟机(VM)运行、并提供基于Web的图形用户界面、用于从中央界面管理解决方案。
+* *自托管引擎*为了最大限度地降低硬件要求，RHV允许将RHV Manager (RHV-M)部署为运行子VM的同一主机上的VM。
+* *高可用性*为了避免主机发生故障时发生中断，RHV允许将虚拟机配置为高可用性。高可用性 VM 可通过故障恢复策略在集群级别进行控制。
+* *高可扩展性*一个RHV集群最多可包含200台虚拟机管理程序主机、使IT能够满足大型VM的需求、从而托管资源要求较高的企业级工作负载。
+* *从RHV、安全虚拟化(sVirt)和安全增强Linux (SELinux)技术继承的增强安全性*被RHV用于提高主机和VM的安全性和强化。这些功能的主要优势是对虚拟机及其相关资源进行逻辑隔离。
 
 
 image:redhat_openshift_image3.png["错误：缺少图形映像"]
@@ -41,6 +41,7 @@ NetApp 解决方案上的 Red Hat OpenShift 使用两个数据交换机提供 25
 
 RHV 上的 Red Hat OpenShift 旨在通过使用虚拟局域网（ VLAN ）在逻辑上隔离不同用途的网络流量。此配置可以进行扩展，以满足客户需求，或者为特定网络服务提供进一步隔离。下表列出了在 NetApp 验证解决方案时实施解决方案所需的 VLAN 。
 
+[cols="40%, 40%, 20%"]
 |===
 | VLAN | 目的 | VLAN ID 
 
@@ -94,7 +95,7 @@ RHV 上的 Red Hat OpenShift 旨在通过使用虚拟局域网（ VLAN ）在逻
 
 为参数定义的条件可以是强制实施，也可以是软强制实施。强制实施可确保关联组中的 VM 始终严格遵循正负关联性，而不考虑外部条件。软强制实施可确保在可行的情况下为关联组中的 VM 设置更高的首选项，以遵循正或负关联性。在本文档所述的两个或三个虚拟机管理程序配置中，建议使用软关联性设置。在大型集群中，硬关联可以正确分布 OpenShift 节点。
 
-要配置相关性组，请参见 https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.4/html/virtual_machine_management_guide/sect-affinity_groups["Red Hat 6.11 。关联性组文档"^]。
+要配置相关性组，请参见 link:https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.4/html/virtual_machine_management_guide/sect-affinity_groups["Red Hat 6.11 。关联性组文档"^]。
 
 
 
@@ -102,6 +103,6 @@ RHV 上的 Red Hat OpenShift 旨在通过使用虚拟局域网（ VLAN ）在逻
 
 IPI 可通过本文档前面讨论的交互式向导轻松部署 OpenShift 集群。但是，在集群部署过程中，可能需要更改某些默认值。
 
-在这些情况下，您无需立即部署集群即可运行和执行向导任务。而是会创建一个配置文件，以便稍后从该文件部署集群。如果要更改任何 IPI 默认值，或者要在环境中部署多个相同的集群以用于多租户等其他用途，则此功能非常有用。有关为 OpenShift 创建自定义安装配置的详细信息，请参见 https://docs.openshift.com/container-platform/4.4/installing/installing_rhv/installing-rhv-customizations.html["Red Hat OpenShift 通过自定义在 RHV 上安装集群"^]。
+在这些情况下，您无需立即部署集群即可运行和执行向导任务。而是会创建一个配置文件，以便稍后从该文件部署集群。如果要更改任何 IPI 默认值，或者要在环境中部署多个相同的集群以用于多租户等其他用途，则此功能非常有用。有关为 OpenShift 创建自定义安装配置的详细信息，请参见 link:https://docs.openshift.com/container-platform/4.4/installing/installing_rhv/installing-rhv-customizations.html["Red Hat OpenShift 通过自定义在 RHV 上安装集群"^]。
 
 link:rh-os-n_overview_netapp.html["接下来： NetApp 存储概述。"]
