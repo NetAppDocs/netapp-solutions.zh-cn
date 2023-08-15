@@ -109,7 +109,7 @@ NOTE: 在编写本文档时，来宾存储是唯一可用的选项。随着NFS�
 === 需要记住的要点
 
 * 在混合存储模型中，将第 1 层或高优先级工作负载放置在 vSAN 数据存储库上，以满足任何特定延迟要求，因为它们是主机本身的一部分且位于邻近位置。对事务处理延迟可接受的任何工作负载 VM 使用来宾机制。
-* 使用 NetApp SnapMirror ® 技术将工作负载数据从内部 ONTAP 系统复制到 Cloud Volumes ONTAP 或 Amazon FSx for NetApp ONTAP ，以便使用块级机制轻松迁移。这不适用于 Azure NetApp Files 和 Cloud Volumes 服务。要将数据迁移到 Azure NetApp Files 或云卷服务，请根据所使用的文件协议使用 NetApp XCP ， Cloud Sync ， rysnc 或 Robocopy 。
+* 使用 NetApp SnapMirror ® 技术将工作负载数据从内部 ONTAP 系统复制到 Cloud Volumes ONTAP 或 Amazon FSx for NetApp ONTAP ，以便使用块级机制轻松迁移。这不适用于 Azure NetApp Files 和 Cloud Volumes 服务。要将数据迁移到Azure NetApp Files或Cloud Volumes Services、请根据使用的文件协议使用NetApp XCP、BlueXP复制和同步、rysnc或Robocopy。
 * 测试显示，从相应 SDDC 访问存储时会出现 2 到 4 毫秒的额外延迟。在映射存储时，将此额外延迟考虑到应用程序要求。
 * 要在测试故障转移和实际故障转移期间挂载来宾连接的存储，请确保重新配置 iSCSI 启动程序，更新 SMB 共享的 DNS 以及在 fstab 中更新 NFS 挂载点。
 * 确保已在 VM 中正确配置来宾系统内 Microsoft 多路径 I/O （ MPIO ），防火墙和磁盘超时注册表设置。

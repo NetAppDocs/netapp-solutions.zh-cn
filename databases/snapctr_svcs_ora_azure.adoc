@@ -52,27 +52,29 @@ SnapCenter 服务是一款SaaS版本的经典SnapCenter 数据库管理UI工具�
 
 === 架构
 
-image::snapctr_svcs_azure_architect.png[此图详细展示了BlueXP控制台中适用于应用程序的Cloud Backup、包括其管理的UI、连接器和资源。]
+image::snapctr_svcs_azure_architect.png[此图详细展示了BlueXP控制台中应用程序的BlueXP备份和恢复、包括其管理的UI、连接器和资源。]
 
-此图详细展示了BlueXP控制台中适用于应用程序的Cloud Backup、包括UI、连接器及其管理的资源。
+此图详细展示了BlueXP控制台中应用程序的BlueXP备份和恢复、包括用户界面、连接器及其管理的资源。
 
 
 
 === 硬件和软件组件
 
+* 硬件 *
+
+[cols="30%, 30%, 40%"]
 |===
-
-
-3+| * 硬件 * 
 
 
 | Azure NetApp Files存储 | 高级服务级别 | 自动QoS类型、以及测试中的4 TB存储容量 
 
 
 | 用于计算的Azure实例 | 标准B4ms (4个vCPU、16 GiB内存) | 已部署两个实例、一个用作主数据库服务器、另一个用作克隆数据库服务器 
+|===
+*软件*
 
-
-3+| *软件* 
+[cols="30%, 30%, 40%"]
+|===
 
 
 | RedHat Linux | Red Hat Enterprise Linux 8.7 (LVM)- x64 Gen2 | 已部署RedHat订阅以进行测试 
@@ -108,7 +110,8 @@ image::snapctr_svcs_azure_architect.png[此图详细展示了BlueXP控制台中�
 * 阅读一般说明 link:https://docs.netapp.com/us-en/cloud-manager-backup-restore/concept-protect-cloud-app-data-to-cloud.html#architecture["保护您的Cloud原生 应用程序数据"^] 以及与Oracle和Azure NetApp Files相关的章节。
 * 观看以下视频演示
 +
-
+.Oracle和ANF部署视频
+video::48adf2d8-3f5e-4ab3-b25c-b04a014635ac[panopto]
 
 
 
@@ -423,7 +426,7 @@ image:snapctr_svcs_clone_07-azure.png["错误：缺少图形映像"]
 +
 link:https://docs.netapp.com/us-en/cloud-manager-setup-admin/index.htmll["https://docs.netapp.com/us-en/cloud-manager-setup-admin/index.html"^]
 
-* Cloud Backup 文档
+* BlueXP备份和恢复文档
 +
 link:https://docs.netapp.com/us-en/cloud-manager-backup-restore/index.html["https://docs.netapp.com/us-en/cloud-manager-backup-restore/index.html"^]
 

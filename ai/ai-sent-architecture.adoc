@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: ai/ai-sent-architecture.html 
-keywords: technology, architectural diagram, hardware requirements, NVIDIA RIVA, NVIDIA TAO Toolkit, Flash storage system, Cloud Sync 
+keywords: technology, architectural diagram, hardware requirements, NVIDIA RIVA, NVIDIA TAO Toolkit, Flash storage system, BlueXP Copy and Sync 
 summary: 此支持中心解决方案的架构以 NVIDIA 的预构建工具和 NetApp DataOps 工具包为核心。NVIDIA 的工具可用于使用预构建的型号和管道快速部署高性能 AI 解决方案。NetApp DataOps 工具包可简化各种数据管理任务，以加快开发速度。 
 ---
 = 架构
@@ -30,7 +30,7 @@ NetApp DataOps 工具包是一个 Python 库，可使开发人员，数据科学
 
 == 架构图
 
-下图显示了解决方案架构。环境分为三大类：云，核心和边缘。每个类别都可能在不同的地理位置上分散。例如，云中包含的对象存储包含不同区域的存储分段中的音频文件，而核心则可能包含通过高速网络或 NetApp Cloud Sync 链接的数据中心。边缘节点表示各个人工代理的日常工作平台，在这些平台中，交互式信息板工具和麦克风可用于直观显示情绪并从与客户的对话中收集音频数据。
+下图显示了解决方案架构。环境分为三大类：云，核心和边缘。每个类别都可能在不同的地理位置上分散。例如、云包含的对象存储在不同区域的分段中包含音频文件、而核心可能包含通过高速网络或NetApp BlueXP复制和同步链接的数据中心。边缘节点表示各个人工代理的日常工作平台，在这些平台中，交互式信息板工具和麦克风可用于直观显示情绪并从与客户的对话中收集音频数据。
 
 在 GPU 加速数据中心中，企业可以使用 NVIDIA https://docs.nvidia.com/deeplearning/riva/user-guide/docs/index.html["Riva"^] 用于构建对话式 AI 应用程序的框架 https://developer.nvidia.com/tao["TAO 工具包"^] 使用传输 L 学习技术连接模型修剪和重新培训。这些计算应用程序和工作流由提供支持 https://github.com/NetApp/netapp-dataops-toolkit["NetApp DataOps 工具包"^]，实现 ONTAP 提供的最佳数据管理功能。通过该工具包，企业数据团队可以利用相关的结构化和非结构化数据，通过快照和克隆快速构建模型的原型，以实现可追溯性，版本控制， A/B 测试，从而提供安全性，监管， 和合规性。请参见一节 link:ai-sent-design-considerations.html#storage-design["存储设计"] 有关详细信息：
 
@@ -107,9 +107,9 @@ ONTAP 9.9 是 NetApp 推出的最新一代存储管理软件，可帮助企业�
 
 
 
-==== NetApp Cloud Sync
+==== NetApp BlueXP复制和同步
 
-https://docs.netapp.com/us-en/occm/concept_cloud_sync.html["Cloud Sync"^] 是一项 NetApp 服务，用于快速安全地同步数据，使您可以在内部 NFS 或 SMB 文件共享之间将文件传输到以下任一目标：
+https://docs.netapp.com/us-en/occm/concept_cloud_sync.html["BlueXP复制和同步"^] 是一项 NetApp 服务，用于快速安全地同步数据，使您可以在内部 NFS 或 SMB 文件共享之间将文件传输到以下任一目标：
 
 * NetApp StorageGRID
 * NetApp ONTAP S3
@@ -122,7 +122,7 @@ https://docs.netapp.com/us-en/occm/concept_cloud_sync.html["Cloud Sync"^] 是一
 * IBM 云对象存储
 
 
-Cloud Sync 可将文件快速安全地移动到您需要的位置。数据传输完成后，即可在源和目标上完全使用。Cloud Sync 会根据您预定义的计划持续同步数据，并仅移动增量，从而最大限度地减少在数据复制上花费的时间和金钱。Cloud Sync 是一款软件即服务（ SaaS ）工具，易于设置和使用。由 Cloud Sync 触发的数据传输由数据代理执行。您可以在 AWS ， Azure ， Google 云平台或内部部署 Cloud Sync 数据代理。
+BlueXP复制和同步功能可将文件快速安全地移动到您需要的位置。数据传输完成后，即可在源和目标上完全使用。BlueXP复制和同步功能会根据预定义的计划持续同步数据、仅移动增量、从而最大限度地减少数据复制所需的时间和资金。BlueXP Copy and Sync是一款软件即服务(SaaS)工具、易于设置和使用。由BlueXP复制和同步触发的数据传输由数据代理执行。您可以在AWS、Azure、Google Cloud Platform或内部部署BlueXP Copy and Sync数据代理。
 
 
 
