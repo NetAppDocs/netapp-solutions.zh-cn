@@ -34,7 +34,7 @@ image:vvols-image5.png["ONTAP 工具VASA Provider架构,240"]
 
 === 产品安装
 
-对于全新安装、请将虚拟设备部署到vSphere环境中。当前版本的ONTAP 工具会自动将自身注册到vCenter中、并默认启用VASA Provider。除了ESXi主机和vCenter Server信息之外、您还需要设备的IP地址配置详细信息。如前文所述、VASA Provider要求您已在计划用于VVO尔 的任何ONTAP 集群上安装ONTAP FlexClone许可证。此设备具有一个内置的监视程序来确保可用性、作为最佳实践、应配置VMware高可用性功能和可选的容错功能。有关更多详细信息、请参见第4.1节。请勿将ONTAP 工具设备或vCenter Server设备(VCSAS)安装或移动到VVOl存储中、因为这样可能会阻止设备重新启动。
+对于全新安装、请将虚拟设备部署到vSphere环境中。当前版本的ONTAP 工具会自动将自身注册到vCenter中、并默认启用VASA Provider。除了ESXi主机和vCenter Server信息之外、您还需要设备的IP地址配置详细信息。如前文所述、VASA Provider要求您已在计划用于VVO尔 的任何ONTAP 集群上安装ONTAP FlexClone许可证。此设备具有一个内置的监视程序来确保可用性、作为最佳实践、应配置VMware高可用性功能和可选的容错功能。请勿将ONTAP 工具设备或vCenter Server设备(VCSAS)安装或移动到VVOl存储中、因为这样可能会阻止设备重新启动。
 
 可以使用可从NetApp 支持站点 (NSS)下载的升级ISO文件原位升级ONTAP 工具。按照《部署和设置指南》说明升级设备。
 
@@ -170,7 +170,7 @@ https://www.netapp.com/pdf.html?item=/media/10681-tr4684.pdf["_TR-4684使用NVMe
 . *使用默认的SCP作为示例模板来创建您自己的模板。*
 随附的SRP适用于大多数通用用途、但您的要求可能有所不同。
 . *请考虑使用最大IOPS来控制未知或测试VM。*
-最大IOPS首次在VASA Provider 7.1中推出、可用于将未知工作负载的IOPS限制为特定VVOR、以避免对其他更关键的工作负载产生影响。有关性能管理的详细信息、请参见表4。
+最大IOPS首次在VASA Provider 7.1中推出、可用于将未知工作负载的IOPS限制为特定VVOR、以避免对其他更关键的工作负载产生影响。
 . *确保您具有足够的数据Lifs。*
 每个HA对的每个节点至少创建两个生命周期。根据您的工作负载、可能需要更多资源。
 . *遵循所有协议最佳实践。*
