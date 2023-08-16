@@ -16829,7 +16829,6 @@
   <block id="c31fea06105fe5260bb879284c6181e0" category="list-text">更新<block ref="9733772c7c0780d4ef7a6a8d6a9dbd7d" prefix=" " category="inline-code"></block> 到Kafka卷、如下所示：</block>
   <block id="8be4a12c21ef3f52e24811e4ffe0d444" category="summary">此页面介绍了有关监控AWS FSxN以及根据阈值自动调整大小的自动化操作。</block>
   <block id="cd2c2a58f3cb485687fd1f77834654e5" category="doc">使用AWS Lambda功能进行ONTAP 监控和自动调整大小的FSX</block>
-  <block id="1ebfeec31c440a4fac484932940c73b1" category="paragraph">作者：Dhruv Tyagi、Niyaz Mohamed</block>
   <block id="77b2a3f373c1bcab9cefd635e81303eb" category="section-title">概述：通过AWS Lambda功能监控和自动调整适用于ONTAP 的FSX的大小</block>
   <block id="88f21a3befc798942cec953cec96af16" category="paragraph">FSX for ONTAP 是AWS上提供的第一方企业级云存储服务、可提供基于常见NetApp ONTAP 文件系统构建的高度可靠、可扩展、高性能和功能丰富的文件存储。</block>
   <block id="8799f4655655a26ca808c044ad467a88" category="paragraph">解决方案 提供了以下功能：</block>
@@ -16851,7 +16850,6 @@
   <block id="974bba02716a5e7c8414499dd06bbb62" category="example-title">第1步：克隆GitHub存储库</block>
   <block id="3233c0d0dc9395d6085fb8167fdd8393" category="paragraph">在本地系统上克隆GitHub存储库：</block>
   <block id="06df343d3a431a2f511aa7fef58e4a23" category="paragraph">导航到AWS控制台&gt;*参数存储*、然后单击*创建参数*。</block>
-  <block id="faec730272cd4b39d377b89835a6a82c" category="paragraph">单击*创建参数*。</block>
   <block id="1cefa861aa6d9ba408841133e7325545" category="inline-image-macro">此图显示了AWS控制台上的SSM参数创建窗口。</block>
   <block id="a19e362ed1a0d7ca174a7abf2c59853a" category="paragraph"><block ref="a19e362ed1a0d7ca174a7abf2c59853a" category="inline-image-macro-rx" type="image"></block></block>
   <block id="bcd5fa3fbab9dadf361d9eba36b8382c" category="paragraph">导航到AWS控制台&gt;*简单电子邮件服务(SES)*、然后单击*创建身份*。</block>
@@ -16868,10 +16866,8 @@
   <block id="38752522b6aecd6cdf7355a1cdaa38ad" category="inline-image-macro">此图显示了AWS Lambda功能控制台上的添加层按钮。</block>
   <block id="cc07bde473345c3ce0ae0c8fc7097fdc" category="paragraph"><block ref="cc07bde473345c3ce0ae0c8fc7097fdc" category="inline-image-macro-rx" type="image"></block></block>
   <block id="cc8034a8cc3761841b945895d5bb5e74" category="list-text">单击*层源*下的*创建新层*</block>
-  <block id="2be5f6c30358de16d6c4b531db0541b0" category="list-text">创建2个层—1个用于请求、1个用于参数化子、然后上传*请求.zip *和*参数化子.zip文件。选择* Python 3.9*作为兼容运行时、然后单击*创建*。</block>
   <block id="44dec222c0e2e40e9770472e89813d69" category="inline-image-macro">此图显示了AWS控制台上的创建新层窗口。</block>
   <block id="1a144f1799018bb0e4a3aff87c3ae15f" category="paragraph"><block ref="1a144f1799018bb0e4a3aff87c3ae15f" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="2b67d38577d56792dd4197d29c7c25fd" category="list-text">导航回AWS Lambda *添加层*&gt;*自定义层*、然后依次添加参数子和请求层。</block>
   <block id="018f803496bf51d7eca913d543f61cdc" category="inline-image-macro">此图显示了AWS Lambda功能控制台上的添加层窗口。</block>
   <block id="74aec608a6fed03dea60e0a7998ac4c6" category="paragraph"><block ref="74aec608a6fed03dea60e0a7998ac4c6" category="inline-image-macro-rx" type="image"></block></block>
   <block id="6dcc7aaf4ab69d9f33228c8aca077bf7" category="inline-image-macro">此图显示了AWS Lambda功能控制台上添加的层。</block>
@@ -17322,7 +17318,6 @@
   <block id="5215f5ee52e78e416520bfecaf294472" category="paragraph">按照一系列步骤完成此解决方案 的自动部署：</block>
   <block id="6436b05fc0216b37135d2a66a585e96f" category="example-title">第2步：设置AWS S3存储分段</block>
   <block id="7d54d293b4849834117fc9160feb6cbc" category="list-text">导航到AWS控制台&gt;*。s3*并单击*创建存储分段*。使用默认设置创建存储分段。</block>
-  <block id="040d8a375b4543c424d11036c6faa0d7" category="list-text">进入存储分段后、单击*上传*&gt;*添加文件*、然后从系统上克隆的GitHub存储库中选择*配置式.zip*和*请求式.zip*。</block>
   <block id="66b09b43432fbb9814d51e48e9a98ade" category="inline-image-macro">此图显示了正在上传zip文件的S3窗口</block>
   <block id="0f71a8c9bb8a785323461956bf9e217a" category="paragraph"><block ref="0f71a8c9bb8a785323461956bf9e217a" category="inline-image-macro-rx" type="image"></block></block>
   <block id="6ea6ef5eae0a05760ec8bf19495d8645" category="example-title">第3步：AWS SES SMTP设置(如果无法访问Internet、则需要此设置)</block>
@@ -20039,4 +20034,15 @@ Astra Control -单击用户图标并单击API访问时、请访问API文档下�
   <block id="70539c7020df05e5f8568b6f518f56ac" category="list-text">*请考虑使用最大IOPS来控制未知或测试VM。*
 最大IOPS首次在VASA Provider 7.1中推出、可用于将未知工作负载的IOPS限制为特定VVOR、以避免对其他更关键的工作负载产生影响。</block>
   <block id="4bc626ee63de2acf979b765422f8952a" category="list-text">* ONTAP工具9.12增加了对ONTAP的SnapMirror快速重新同步功能的支持。*这样、可以快速重新同步镜像、而不必在处理后重新计算存储效率节省量。默认情况下不使用此功能、但可以在传统重新同步用时过长或超时的大规模环境中启用此功能。</block>
+  <block id="e2345fd4c052d288390c6f86c2c4789f" category="list-text">能够在一个VPC中监控多个FSx for ONTAP文件系统</block>
+  <block id="6c50e35e9c06dfe13c154919340f20e3" category="admonition">涵盖适用于ONTAP文件系统的单个FSx。</block>
+  <block id="e1ce9d5c8ac3567da4228f49df78e5b0" category="list-text">进入存储分段后、单击*上传*&gt;*添加文件*、然后从系统上克隆的GitHub存储库中选择*实用程序.zip。</block>
+  <block id="e796877161cfa3af2876f4bc473b909a" category="admonition">支持在一个VPC中监控多个FSx for ONTAP文件系统。</block>
+  <block id="05da5a25aeee329a7caf8be6493209f7" category="paragraph">单击*创建参数*。
+对要监控的所有FSx for ONTAP文件系统重复上述步骤。</block>
+  <block id="4a86a06630441d1655597fa23dc66379" category="list-text">创建图层并上传*Utilities．zip*文件。选择* Python 3.9*作为兼容运行时、然后单击*创建*。</block>
+  <block id="2c53df99d2ac43dfed0bb27c1189a72a" category="list-text">导航回AWS Lamba*Add Layer*&gt;*Custom Layers*并添加实用程序层。</block>
+  <block id="6c51cd5dc46c2931b78f7f79a5f41525" category="cell">*fsxList*</block>
+  <block id="9659e450f8ee0db6cba199aa524306d2" category="cell">(必需)列出要监控的所有FSx for ONTAP文件系统。
+将所有文件系统包括在列表中以进行监控和自动调整大小。</block>
 </blocks>

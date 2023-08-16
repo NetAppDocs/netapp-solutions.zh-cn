@@ -13,9 +13,6 @@ summary: 此页面介绍了有关监控AWS FSxN以及根据阈值自动调整大
 :imagesdir: ./../media/
 
 
-[role="lead"]
-作者：Dhruv Tyagi、Niyaz Mohamed
-
 
 
 == 概述：通过AWS Lambda功能监控和自动调整适用于ONTAP 的FSX的大小
@@ -43,6 +40,7 @@ FSX for ONTAP 是AWS上提供的第一方企业级云存储服务、可提供基
 * 能够定期监控检查
 * 可以使用解决方案 访问互联网、也可以不访问互联网
 * 可以手动部署或使用AWS CloudFormation模板进行部署
+* 能够在一个VPC中监控多个FSx for ONTAP文件系统
 
 
 ====
@@ -77,6 +75,9 @@ image:fsxn-monitoring-resizing-architecture.png["此图显示了此解决方案 
 
 === 自动化部署
 
+
+NOTE: 涵盖适用于ONTAP文件系统的单个FSx。
+
 [%collapsible]
 ====
 按照一系列步骤完成此解决方案 的自动部署：
@@ -95,7 +96,7 @@ git clone https://github.com/NetApp-Automation/fsxn-monitoring-auto-resizing.git
 [%collapsible]
 =====
 . 导航到AWS控制台>*。s3*并单击*创建存储分段*。使用默认设置创建存储分段。
-. 进入存储分段后、单击*上传*>*添加文件*、然后从系统上克隆的GitHub存储库中选择*配置式.zip*和*请求式.zip*。
+. 进入存储分段后、单击*上传*>*添加文件*、然后从系统上克隆的GitHub存储库中选择*实用程序.zip。
 +
 image:fsxn-monitoring-resizing-s3-upload-zip-files.png["此图显示了正在上传zip文件的S3窗口"]
 
@@ -169,6 +170,9 @@ image:fsxn-monitoring-resizing-email-2.png["此图显示了通知可用时收到
 
 === 手动部署
 
+
+NOTE: 支持在一个VPC中监控多个FSx for ONTAP文件系统。
+
 [%collapsible]
 ====
 按照一系列步骤完成此解决方案 的手动部署：
@@ -211,6 +215,7 @@ KMS key source: My current account
 Value: <Enter the password for "fsxadmin" user configured on FSx for ONTAP>
 ----
 单击*创建参数*。
+对要监控的所有FSx for ONTAP文件系统重复上述步骤。
 
 image:fsxn-monitoring-resizing-ssm-parameter.png["此图显示了AWS控制台上的SSM参数创建窗口。"]
 
@@ -297,11 +302,11 @@ image:fsxn-monitoring-resizing-lambda-creation-2.png["此图显示了AWS控制�
 image:fsxn-monitoring-resizing-add-layer-button.png["此图显示了AWS Lambda功能控制台上的添加层按钮。"]
 
 . 单击*层源*下的*创建新层*
-. 创建2个层—1个用于请求、1个用于参数化子、然后上传*请求.zip *和*参数化子.zip文件。选择* Python 3.9*作为兼容运行时、然后单击*创建*。
+. 创建图层并上传*Utilities．zip*文件。选择* Python 3.9*作为兼容运行时、然后单击*创建*。
 +
 image:fsxn-monitoring-resizing-create-layer-paramiko.png["此图显示了AWS控制台上的创建新层窗口。"]
 
-. 导航回AWS Lambda *添加层*>*自定义层*、然后依次添加参数子和请求层。
+. 导航回AWS Lamba*Add Layer*>*Custom Layers*并添加实用程序层。
 +
 image:fsxn-monitoring-resizing-add-layer-window.png["此图显示了AWS Lambda功能控制台上的添加层窗口。"]
 
@@ -325,6 +330,10 @@ image:fsxn-monitoring-resizing-layers-added.png["此图显示了AWS Lambda功能
 | * 名称 * | * 类型 * | * 问题描述 * 
 
 
+| *fsxList* | 列表 | (必需)列出要监控的所有FSx for ONTAP文件系统。
+将所有文件系统包括在列表中以进行监控和自动调整大小。 
+
+
 | * fsxMgmtIp* | string | (必需)从AWS上的ONTAP 的FSX控制台输入"管理端点- IP地址"。 
 
 
@@ -335,12 +344,6 @@ image:fsxn-monitoring-resizing-layers-added.png["此图显示了AWS Lambda功能
 
 
 | *调整大小阈值* | 整型 | (必需)输入0-100之间的阈值百分比。此阈值将用于测量存储容量、卷和LUN的使用量、如果超过此阈值的任何使用量百分比增加、则会发生调整大小活动。 
-
-
-| *发件人电子邮件* | string | (必需)输入在SES上注册的电子邮件ID、lambda功能将使用该ID发送与监控和调整大小相关的通知警报。 
-
-
-| *收件人电子邮件* | string | (必需)输入要接收警报通知的电子邮件ID。 
 
 
 | * FSx_password_SSM_parameter* | string | (必需)输入在AWS参数存储中用于存储"fsxadmin"密码的路径名称。 
@@ -365,6 +368,12 @@ image:fsxn-monitoring-resizing-layers-added.png["此图显示了AWS Lambda功能
 
 
 | *SMT_password_SSM_parameter* | string | (可选)如果"internet_access"变量设置为False、请输入AWS参数存储中用于存储SMTP密码的路径名称。 
+
+
+| *发件人电子邮件* | string | (必需)输入在SES上注册的电子邮件ID、lambda功能将使用该ID发送与监控和调整大小相关的通知警报。 
+
+
+| *收件人电子邮件* | string | (必需)输入要接收警报通知的电子邮件ID。 
 |===
 +
 image:fsxn-monitoring-resizing-lambda-code.png["此图显示了AWS Lambda功能控制台上的lambda代码。"]
