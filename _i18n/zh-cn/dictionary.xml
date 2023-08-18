@@ -17137,8 +17137,6 @@
   <block id="7f7c0dda9cb78e17432e91abc3c9a290" category="section-title">Oracle数据库备份</block>
   <block id="d243d925299e4128a453e9d54b57e25d" category="list-text">单击数据库*保护状态*旁边的三点、然后单击*策略*以查看可应用于保护Oracle数据库的默认预加载数据库保护策略。</block>
   <block id="f5ec19f9ff10edc4aa6fc1c116c6b23e" category="paragraph"><block ref="f5ec19f9ff10edc4aa6fc1c116c6b23e" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="5b95d24dbc11f9b34c6cf18b07dcf3f7" category="list-text">您还可以使用自定义的备份频率和备份数据保留窗口创建自己的策略。</block>
-  <block id="dd06e85eab955d6e3843bf0f5c71961c" category="paragraph"><block ref="dd06e85eab955d6e3843bf0f5c71961c" category="inline-image-macro-rx" type="image"></block></block>
   <block id="44fa14fc437558bfdfce0d0ac643d1e2" category="list-text">如果您对策略配置满意、则可以分配所选的策略来保护数据库。</block>
   <block id="2bf8224a90f863c821d826f3501d5c0a" category="paragraph"><block ref="2bf8224a90f863c821d826f3501d5c0a" category="inline-image-macro-rx" type="image"></block></block>
   <block id="4861abebdaa3d58ada4e621adac79010" category="list-text">选择要分配给数据库的策略。</block>
@@ -19631,8 +19629,6 @@ ONTAP 工具的VASA提供程序负责根据已发现的受管ESXi主机启动程
   <block id="b3b0def4125e36860cf290ad9d17bd6f" category="cell">重新设计了虚拟化(VMware)登录页面</block>
   <block id="83669449150d17df292a91b9fdab8c54" category="paragraph">这可确认DNFS运行正常。</block>
   <block id="9f4dc1f81d694d1c48953880d5be0ea7" category="paragraph">这样可以确认Oracle侦听器工作正常。</block>
-  <block id="407034034e33f0c944e2363079ff42c9" category="list-text">审查和*Add*。</block>
-  <block id="500cfd6ba279fd74e1c36ecb39daa157" category="paragraph"><block ref="500cfd6ba279fd74e1c36ecb39daa157" category="inline-image-macro-rx" type="image"></block></block>
   <block id="724dafd81685ec54ccc23dfddf773250" category="doc">VMware Cloud中的Veeam备份和还原、采用Amazon FSx for ONTAP</block>
   <block id="631ad0ec67fe557296ad8ea61548e391" category="doc">适用于Google Cloud的NetApp解决方案VMware引擎(GCVe)</block>
   <block id="c034310b7a5e84163a9aa84d973faeae" category="paragraph">详细了解NetApp为Google云平台(GCP) Google Cloud VMware Engine (GCVe)带来的功能—从作为子系统连接存储设备或补充NFS数据存储库的NetApp、到迁移工作流、扩展/扩充到云、备份/还原和灾难恢复。</block>
@@ -20045,4 +20041,166 @@ Astra Control -单击用户图标并单击API访问时、请访问API文档下�
   <block id="6c51cd5dc46c2931b78f7f79a5f41525" category="cell">*fsxList*</block>
   <block id="9659e450f8ee0db6cba199aa524306d2" category="cell">(必需)列出要监控的所有FSx for ONTAP文件系统。
 将所有文件系统包括在列表中以进行监控和自动调整大小。</block>
+  <block id="eb9bdfa4e36f09f9fc14822772fd03c6" category="cell">2023年8月17日</block>
+  <block id="6b60406f1591d6e6f410379e23bb66fc" category="cell">新增：使用Veeam复制和Azure NetApp Files数据存储库将灾难恢复到Azure VMware解决方案</block>
+  <block id="4ac0795b239c621e30488feee37cd924" category="cell">新增：使用Veeam Replication和FSx for ONTAP将灾难恢复到AWS上的VMware Cloud</block>
+  <block id="6699f0b12dd7880e3402d432df6f07cf" category="list-text">您还可以使用自定义的备份频率和备份数据保留窗口创建自己的策略。
+ +
+<block ref="dd06e85eab955d6e3843bf0f5c71961c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6f5eabf158a313cd86718b14d7379554" category="doc">使用Veeam Replication和FSx for ONTAP将灾难恢复到AWS上的VMware Cloud</block>
+  <block id="1c7f3ee47ba78414fc5951b765102df8" category="paragraph">作者：Niyaz Mohamed - NetApp解决方案工程部</block>
+  <block id="501ba669548ce3779a3fa0daa4d05d2e" category="paragraph">Amazon FSx for NetApp ONTAP与AWS上的VMware Cloud集成是一个AWS管理的外部NFS数据存储库、该数据存储库基于NetApp的ONTAP文件系统构建、可以连接到SDDC中的集群。它为客户提供了灵活的高性能虚拟化存储基础架构、该基础架构可独立于计算资源进行扩展。</block>
+  <block id="8d32c17198f035ec3b269fb5631ef163" category="paragraph">对于希望将基于AWS SDDC的VMware Cloud用作灾难恢复目标的客户、可以使用FSx for ONTAP数据存储库通过任何经过验证的第三方从内部复制数据、此类解决方案可提供VM复制功能。通过添加FSx for ONTAP数据存储库、与在AWS SDDC上使用大量ESXi主机来容纳存储相比、它将实现成本优化的部署。</block>
+  <block id="85d66a1f83ad134e81e04accccdd8b95" category="paragraph">此方法还有助于客户在VMC中使用试点轻型集群以及FSx for ONTAP数据存储库来托管VM副本。通过妥善地对复制计划进行故障转移、也可以将同一过程作为一个迁移选项扩展到AWS上的VMware Cloud。</block>
+  <block id="9df44c920b4720a345f05a068b84efa1" category="section-title">问题陈述</block>
+  <block id="949a0f887fad51addf7c4295467a3363" category="paragraph">本文档介绍如何使用FSx for ONTAP数据存储库以及Veeam备份和复制功能为内部VMware VM设置灾难恢复、并将其恢复到AWS上的VMware Cloud。</block>
+  <block id="50155550d9bbed487f13452c08f8f2fb" category="paragraph">Veeam Backup &amp; Replication支持通过现场和远程复制实现灾难恢复(Disaster Recovery、DR)。复制虚拟机时、Veeam Backup &amp; Replication会在AWS SDDC集群上的目标VMware Cloud上以本机VMware vSphere格式创建VM的精确副本、并使该副本与原始VM保持同步。</block>
+  <block id="33b5264a4351b1b7762143a9bf84b40e" category="paragraph">复制可提供最佳恢复时间目标(Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time  此复制机制可确保在发生灾难事件时、工作负载可以在AWS SDDC上的VMware Cloud中快速启动。Veeam Backup &amp; Replication软件还可以优化流量传输、以便通过WAN和慢速连接进行复制。此外、它还会筛选出重复的数据块、将数据块置零、交换文件和排除的VM子操作系统文件、并压缩副本流量。</block>
+  <block id="061c19aee3598a5e1e84366569d9a9d5" category="paragraph">为了防止复制作业占用整个网络带宽、可以设置WAN加速器和网络限制规则。Veeam Backup &amp; Replication中的复制过程由作业驱动、这意味着复制是通过配置复制作业来执行的。如果发生灾难事件、则可以通过故障转移到VM副本来触发故障转移以恢复VM。</block>
+  <block id="b34a5dc49f68a6e6f3c9676bbf85c1fb" category="paragraph">执行故障转移时、复制的虚拟机将接管原始虚拟机的角色。可以将故障转移到副本的最新状态或任何已知正常的还原点。这样便可根据需要进行勒索软件恢复或隔离测试。在Veeam Backup &amp; Replication中、故障转移和故障恢复是临时的中间步骤、应进一步完成。Veeam Backup &amp; Replication提供了多种选项来处理不同的灾难恢复场景。</block>
+  <block id="2a7995115f1adfd13812d825105a9d5e" category="inline-image-macro">使用Veeam Replication和FSx ONTAP for VMC的灾难恢复场景示意图</block>
+  <block id="75b80e5b227adf21fbe0eaa9bffec77b" category="paragraph"><block ref="75b80e5b227adf21fbe0eaa9bffec77b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4b25bcde8acd7bf7195e65b64a228dbd" category="section-title">高级步骤</block>
+  <block id="44ea8c7a84c9828862a8017837aae869" category="list-text">Veeam Backup and Replication软件正在具有适当网络连接的内部环境中运行。</block>
+  <block id="24eadee43b19443ef6eaf749c93ada65" category="inline-link-macro">《VMware Cloud on AWS与Amazon FSx for NetApp ONTAP集成部署指南》</block>
+  <block id="4c6bc51fdb2364d02402eccf92c13dea" category="list-text">配置基于AWS的VMware Cloud、请参见VMware Cloud Tech Zone文章 <block ref="1f8b61b6658537d6130e81edfa2294f0" category="inline-link-macro-rx"></block> 要进行部署、请将基于AWS SDDC的VMware Cloud和适用于ONTAP的FSx配置为NFS数据存储库。(采用最低配置设置的指示灯环境可用于灾难恢复。发生意外事件时、VM将故障转移到此集群、并且可以添加其他节点)。</block>
+  <block id="9121ad86c235165aa76a9e7664f75769" category="list-text">设置复制作业以使用Veeam Backup and Replication创建VM副本。</block>
+  <block id="d49d8ad9dc8563c65436285afb482e25" category="list-text">创建故障转移计划并执行故障转移。</block>
+  <block id="bb019a34acaf81adf99aa88e527764c3" category="list-text">灾难事件完成且主站点启动后、切换回生产VM。</block>
+  <block id="49e72789e700343829d1695723b54270" category="section-title">将Veeam VM复制到适用于ONTAP数据存储库的VMC和FSx的前提条件</block>
+  <block id="f14f08bbfe652b7cf1ab9215e23dfdc1" category="list-text">确保Veeam Backup &amp; Replication备份VM已连接到源vCenter以及AWS SDDC集群上的目标VMware云。</block>
+  <block id="ec15ccec83c734abd29881602b5c768e" category="list-text">备份服务器必须能够解析短名称并连接到源和目标vCenter。</block>
+  <block id="a5179499cee8ba59f97055fa68da8820" category="list-text">适用于ONTAP数据存储库的目标FSx必须具有足够的可用空间来存储已复制VM的VMDK</block>
+  <block id="5c80d87c98b08990213aee3acac0a321" category="paragraph">对于追加信息、请参阅介绍的"注意事项和限制" <block ref="977fe0a3b86df54ae9f9a8dd61faa76b" category="inline-link-macro-rx"></block>。</block>
+  <block id="993d529a07110176d7d72ab5d5af093a" category="example-title">第1步：复制VM</block>
+  <block id="d205d55eab8cd05ff190d0a23cbbfeb7" category="paragraph">Veeam Backup &amp; Replication利用VMware vSphere快照功能、在复制期间、Veeam Backup &amp; Replication会请求VMware vSphere创建VM快照。VM快照是VM的时间点副本、其中包括虚拟磁盘、系统状态、配置等。Veeam Backup &amp; Replication使用快照作为复制数据源。</block>
+  <block id="784e56a097e1eaccffe9afb87233eff3" category="paragraph">要复制VM、请执行以下步骤：</block>
+  <block id="edd31ffe043b93ef4024aaaf3e5a8524" category="list-text">打开Veeam Backup &amp; Replication Console。</block>
+  <block id="03af88a217678b7f07d983a3b5c03613" category="list-text">在主页视图中、选择复制作业&gt;虚拟机&gt; VMware vSphere。</block>
+  <block id="3e594428ea9099aaae648d986ac81faf" category="list-text">指定作业名称并选中相应的高级控制复选框。单击下一步。</block>
+  <block id="afe442695c8ee44f675f7794d4c97053" category="list-text">如果内部和AWS之间的连接带宽受限、请选中副本传播复选框。</block>
+  <block id="1888ae9625eded9ca29e7ca87fe9733c" category="list-text">如果AWS SDDC上VMware Cloud上的区块与内部站点网络不匹配、请选中网络重新映射(适用于具有不同网络的AWS VMC站点)复选框。</block>
+  <block id="31f6374c35cb2fa25717f6884c40e6a6" category="list-text">如果内部生产站点中的IP地址方案与AWS VMC站点中的方案不同、请选中"副 本重新IP (适用于具有不同IP地址方案的灾难恢复站点)"复选框。</block>
+  <block id="ae2672285827de509edb4db52a02d6e3" category="image-alt">灾难恢复Veeam FSx版本2</block>
+  <block id="556cf5110145daf2fba4bc968bb7864a" category="list-text">在*虚拟机*步骤中、选择需要复制到连接到AWS SDDC上的VMware Cloud的FSx for ONTAP数据存储库的VM。可以将虚拟机放置在vSAN上、以填满可用的vSAN数据存储库容量。在指示灯集群中、3节点集群的可用容量将受到限制。其余数据可以复制到FSx for ONTAP数据存储库。单击*Add*，然后在*Add Object*窗口中选择所需的VM或VM容器，然后单击*Add*。单击 * 下一步 * 。</block>
+  <block id="60197ac329ac2bdfa2a759151b633ef7" category="image-alt">灾难恢复Veeam FSx版本3</block>
+  <block id="78d44c549bf4580265b074f62a08c336" category="list-text">之后、选择目标作为AWS SDDC上的VMware Cloud集群/主机、并为VM副本选择相应的资源池、VM文件夹和FSx for ONTAP数据存储库。然后单击*Next*。</block>
+  <block id="a8c62ed6c05f7d8663334c97f63604c6" category="image-alt">灾难恢复Veeam FSx版本4</block>
+  <block id="e317d4d8b17eb36ec4fe84d6afc71518" category="list-text">在下一步中、根据需要创建源虚拟网络与目标虚拟网络之间的映射。</block>
+  <block id="2e6db4bf3a79f2f6d81af7f22223bb10" category="image-alt">灾难恢复Veeam FSx版本5</block>
+  <block id="9d8d1e4dac4c516dff3a62fb6203292a" category="list-text">在*作业设置*步骤中，指定要存储VM副本元数据、保留策略等的备份存储库。</block>
+  <block id="94f075983ad6c929e4e7c18969136933" category="list-text">在“*数据传输*”步骤中更新*Source*和*Target*代理服务器，保留“*自动*选择”(默认)并保持“*直接*”选项处于选中状态，然后单击“*下一步*”。</block>
+  <block id="6e19577434fdad5d228724e2575abb14" category="list-text">在*Guest Processing*步骤中，根据需要选择*Enable application-aware processing*选项。单击 * 下一步 * 。</block>
+  <block id="536d32f40b20d0eff12974e4e02ffcd1" category="image-alt">灾难恢复Veeam FSx版本6</block>
+  <block id="31f25d9eb456f1c3856b3aaa7ac66284" category="list-text">选择复制计划以定期运行复制作业。</block>
+  <block id="85acb3fd553925ca5594ac206510b541" category="list-text">在向导的*摘要*步骤中，查看复制作业的详细信息。要在关闭向导后立即启动作业，请选中*单击完成时运行作业*复选框，否则不要选中该复选框。然后单击*完成*关闭向导。</block>
+  <block id="9bfee1ff24f4b68f7aee7ac89111d540" category="image-alt">灾难恢复Veeam FSx版本7</block>
+  <block id="f0200cb3935a7313f3ef29f4a492f201" category="paragraph">复制作业启动后、目标VMC SDDC集群/主机上将填充具有指定后缀的VM。</block>
+  <block id="209ff66e79bfb1189e9733a9dca1e6e0" category="image-alt">灾难恢复Veeam FSx版本8</block>
+  <block id="511688229c64cdf2013961353600f055" category="inline-link-macro">复制的工作原理</block>
+  <block id="f97f53a446a12f9247bd0d8ddb52d90f" category="paragraph">有关追加信息for Veeam复制的信息、请参见 <block ref="370148c443ae2740936f568bfafc0697" category="inline-link-macro-rx"></block>。</block>
+  <block id="3989dbda55e5994d81cc7be99090b046" category="example-title">第2步：创建故障转移计划</block>
+  <block id="785949070ac82b292a8a4a262c1a9d0d" category="paragraph">初始复制或传播完成后、创建故障转移计划。故障转移计划有助于逐个或以组的形式自动对相关VM执行故障转移。故障转移计划是VM处理顺序(包括启动延迟)的蓝图。故障转移计划还有助于确保关键的相关VM已在运行。</block>
+  <block id="f6cb62505ff59f9be3d2eed758045e7c" category="paragraph">要创建计划、请导航到名为副本的新子部分、然后选择故障转移计划。选择适当的VM。Veeam Backup &amp; Replication将查找最接近此时间点的还原点、并使用它们启动VM副本。</block>
+  <block id="66274a35bd97bbdbfc622fff7dc94bf1" category="admonition">只有在初始复制完成且虚拟机副本处于就绪状态时、才能添加故障转移计划。</block>
+  <block id="9a7efe362b8a177d7ab1055a8f00542e" category="admonition">在运行故障转移计划时、最多可同时启动10个VM。</block>
+  <block id="2257a13c987dbd8e8fdb4254ce87c484" category="admonition">在故障转移过程中、源VM不会关闭。</block>
+  <block id="90aa43668642f9181c5efdb6d91e4715" category="paragraph">要创建*故障转移计划*，请执行以下操作：</block>
+  <block id="a2d5b9a9f78bc14f3bbfbd56930bdf9f" category="list-text">在主页视图中，选择*故障转移计划&gt; VMware vSphere。</block>
+  <block id="6a97d4b122cb3965e695238325e70f33" category="list-text">接下来、提供计划的名称和问题描述。可以根据需要添加故障转移前和故障转移后脚本。例如、在启动复制的VM之前、请运行一个脚本来关闭VM。</block>
+  <block id="704448f837fc30edc2114bc707f95712" category="image-alt">灾难恢复Veeam FSx版本9</block>
+  <block id="00bd643bdbbe144ec5dfb4599443f059" category="list-text">将VM添加到计划中、并修改VM启动顺序和启动延迟、以满足应用程序依赖关系。</block>
+  <block id="85dc60a4af6e02fee599da9eba368615" category="image-alt">灾难恢复Veeam FSx版本10</block>
+  <block id="3e8f113173585d78b92dd70174cd91cc" category="inline-link-macro">正在创建复制作业</block>
+  <block id="5c9ff597b8cb52ffef2567f24a8aae9a" category="paragraph">有关用于创建复制作业的追加信息、请参见 <block ref="b1d5f8714c42bc721d71228ca5e35b6e" category="inline-link-macro-rx"></block>。</block>
+  <block id="293144611629d6cc94c702d011f5a2d8" category="example-title">第3步：运行故障转移计划</block>
+  <block id="65a7331d58e18809f6d15ce33481d180" category="paragraph">在故障转移期间、生产站点中的源VM将切换到灾难恢复站点上的副本。在故障转移过程中、Veeam Backup &amp; Replication会将VM副本还原到所需的还原点、并将所有I/O活动从源VM移至其副本。不仅可以在发生灾难时使用副本、还可以用于模拟灾难恢复演练。在模拟故障转移期间、源VM将保持运行状态。执行完所有必要的测试后、您可以撤消故障转移并恢复正常操作。</block>
+  <block id="4e52c750629d38d6aecaa69ec8f794e4" category="admonition">确保网络分段到位、以避免灾难恢复期间发生IP冲突。</block>
+  <block id="b1271f5c2ea92c4ca8c53c9c66f50591" category="paragraph">要启动故障转移计划，只需单击*故障转移计划*选项卡，然后右键单击故障转移计划。选择 * 开始 * 。此操作将使用虚拟机副本的最新还原点进行故障转移。要故障转移到VM副本的特定还原点，请选择*Start to *。</block>
+  <block id="3e609eb250503e790c2b5fa8589c48a2" category="image-alt">灾难恢复Veeam FSx image11</block>
+  <block id="c1bca813c1347e67b132f7e385eb0664" category="image-alt">DR Veeam FSx版本12</block>
+  <block id="d9797fdfa2491d34215fb9140928426e" category="paragraph">VM副本的状态将从"准备就绪"更改为"故障转移"、VM将在AWS SDDC集群/主机上的目标VMware Cloud上启动。</block>
+  <block id="244bb5a075f7df8eb313aa1d6a7ce598" category="image-alt">灾难恢复Veeam FSx版本13.</block>
+  <block id="c8e9b5ccb82328f905dee6894f80834d" category="paragraph">故障转移完成后、VM的状态将更改为"故障转移"。</block>
+  <block id="3be25b5b1d3dc8fe5b3246919fd0bee4" category="image-alt">DR Veeam FSx版本14.</block>
+  <block id="9e67460f82d9b308772657d1a2daccc9" category="admonition">Veeam Backup &amp; Replication会停止源VM的所有复制活动、直到其副本恢复到就绪状态为止。</block>
+  <block id="e8cca7809eb17548363976cacfed95be" category="inline-link-macro">故障转移计划</block>
+  <block id="4b9c003e6686a802635fb5c283db510a" category="paragraph">有关故障转移计划的详细信息、请参见 <block ref="435a73aa82873f69571502d4748c7127" category="inline-link-macro-rx"></block>。</block>
+  <block id="628166e6094d0c9a6c4ea5d252539462" category="example-title">第4步：故障恢复到生产站点</block>
+  <block id="b978e1007a24181478dc9ed0152ce12b" category="paragraph">当故障转移计划正在运行时、它会被视为一个中间步骤、需要根据需要最终确定。选项包括：</block>
+  <block id="3f4242397e66ae78b2876c3cbff41b5f" category="list-text">*故障恢复到生产环境*-切换回原始虚拟机并将虚拟机副本运行期间发生的所有更改传输至原始虚拟机。</block>
+  <block id="d9691eef72172401bf04e0d0cd7eb8cd" category="admonition">执行故障恢复时、只会传输更改、但不会发布更改。如果原始虚拟机未按预期工作，请选择*commit failback*(确认原始虚拟机按预期工作后)或*Undo failback*(撤消故障恢复)返回到虚拟机副本。</block>
+  <block id="3934cd279f2d01ea48ad9e4b8eaee8b4" category="list-text">*撤消故障转移*-切换回原始虚拟机并放弃在虚拟机副本运行期间对其所做的所有更改。</block>
+  <block id="426ee4e6b737d7828fe456e99dbd621a" category="list-text">*永久故障转移*-从原始虚拟机永久切换到虚拟机副本，并将此副本用作原始虚拟机。</block>
+  <block id="fe36f35529273c9b101a0543cf03dd87" category="paragraph">在此演示中、我们选择了故障恢复到生产环境。在向导的目标步骤中选择了故障恢复到原始虚拟机、并启用了"Power On VM after Restoring"(还原后启动虚拟机)复选框。</block>
+  <block id="14e2f5e1f9e7f5357ebc003b263a0c0c" category="image-alt">灾难恢复Veeam FSx版本15</block>
+  <block id="29cc55d9d68642bd37c04337d39f1a4b" category="image-alt">DR Veeam FSx版本16</block>
+  <block id="714856dcc4c91fcad24b886c57d5c46c" category="paragraph">提交故障恢复是完成故障恢复操作的方法之一。提交故障恢复后、它会确认发送到故障恢复虚拟机(生产虚拟机)的更改是否按预期工作。完成提交操作后、Veeam Backup &amp; Replication将恢复生产虚拟机的复制活动。</block>
+  <block id="66db3443252ac1f1bb51225678cf9fec" category="inline-link-macro">故障转移和故障恢复以进行复制</block>
+  <block id="015bce5a4812adccdfa92e8b621ebd37" category="paragraph">有关故障恢复过程的详细信息、请参见的Veeam文档 <block ref="2fe83b3b49bb24ca51cb130a80074249" category="inline-link-macro-rx"></block>。</block>
+  <block id="f9aa14f8dbae63ab1e9c35e31dc0064c" category="image-alt">DR Veeam FSx版本17.</block>
+  <block id="e51ba58ce1c64e49f879f5153aeacca7" category="image-alt">DR Veeam FSx版本18.</block>
+  <block id="a21a44cf82d6eb52f15b3729c30bfb2c" category="paragraph">成功故障恢复到生产环境后、所有VM都会还原回原始生产站点。</block>
+  <block id="7a80e2ee5643994830a90a5ac5f53586" category="image-alt">DR Veeam FSx版本19</block>
+  <block id="39e7e9b6f4e41b5212b15ba7161858d4" category="paragraph">借助FSx for ONTAP数据存储库功能、Veeam或任何经过验证的第三方工具可以使用Pilot Light集群提供低成本的DR解决方案、而无需在集群中建立大量主机来容纳VM副本。这样可以提供一个功能强大的解决方案来处理定制的自定义灾难恢复计划、还可以重复使用内部现有备份产品来满足灾难恢复需求、从而通过在内部部署现有灾难恢复数据中心实现基于云的灾难恢复。发生灾难时、只需单击一个按钮、即可按计划进行故障转移或故障转移、并决定激活灾难恢复站点。</block>
+  <block id="adffa5bb52f4ed1c0073d89b64041d71" category="doc">使用Veeam复制和Azure NetApp Files数据存储库将灾难恢复到Azure VMware解决方案</block>
+  <block id="010a10de55332bfa0a32f2f2198ca0f6" category="paragraph">Azure NetApp Files (ANF)数据存储库可将存储与计算分离、并为任何组织提供将其工作负载迁移到云所需的灵活性。它为客户提供了灵活的高性能存储基础架构、可独立于计算资源进行扩展。Azure NetApp Files数据存储库可简化并优化Azure VMware解决方案(AVS)作为内部VMware环境灾难恢复站点的部署。</block>
+  <block id="27ff2fba796b1a135c821bebde57714e" category="paragraph">可以使用基于Azure NetApp Files (ANF)卷的NFS数据存储库通过任何经过验证的第三方解决方案从内部复制数据、从而提供VM复制功能。通过添加Azure NetApp Files数据存储库、与构建具有大量ESXi主机来容纳存储的Azure VMware解决方案SDDC相比、它可以实现成本优化部署。这种方法称为“导向灯组”。试点轻型集群是一种最低的AVS主机配置(3个AVS节点)以及Azure NetApp Files数据存储库容量。</block>
+  <block id="9657e55eafabb07d3c2debfd73ab4288" category="paragraph">其目标是维护一个具有所有核心组件的低成本基础架构、以处理故障转移。如果确实发生故障转移、试点轻型集群可以横向扩展并配置更多AVS主机。一旦完成故障转移并恢复正常操作、试点指示灯集群就可以向下扩展到低成本的操作模式。</block>
+  <block id="3e88666ad5d556e5bee6eca9c3ddbc75" category="section-title">本文档的目的</block>
+  <block id="a6854aebe8c8832db1c8563cd11a44f5" category="paragraph">本文介绍如何将Azure NetApp Files数据存储库与Veeam备份和复制结合使用、以便使用Veeam VM复制软件功能为内部VMware VM设置灾难恢复(AVS)。</block>
+  <block id="2fb41bffd2477facda1d2681c9641a1f" category="paragraph">Veeam Backup &amp; Replication是一款适用于虚拟环境的备份和复制应用程序。在复制虚拟机时、Veeam Backup &amp; Replication会从AVS上进行复制、该软件将在目标AVS SDDC集群上以本机VMware vSphere格式创建VM的精确副本。  Veeam Backup &amp; Replication将使副本与原始虚拟机保持同步。复制可提供最佳恢复时间目标(Recovery Time客观、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标)、因为灾难恢复站点上已挂载VM副本、并且处于随时可启动的状态。</block>
+  <block id="bddd776551bb214ff9dadbe3874cc9d0" category="paragraph">此复制机制可确保在发生灾难事件时、工作负载可以在AVS SDDC中快速启动。Veeam Backup &amp; Replication软件还可以优化流量传输、以便通过WAN和慢速连接进行复制。此外、它还会筛选出重复的数据块、零数据块、交换文件和"排除的VM子操作系统文件"。软件还将压缩副本流量。为了防止复制作业占用整个网络带宽、可以使用WAN加速器和网络限制规则。</block>
+  <block id="cff5258042f5114d5b376f988cde25d9" category="paragraph">Veeam Backup &amp; Replication中的复制过程由作业驱动、这意味着复制是通过配置复制作业来执行的。如果发生灾难事件、则可以通过故障转移到VM副本来触发故障转移以恢复VM。执行故障转移时、复制的虚拟机将接管原始虚拟机的角色。可以将故障转移到副本的最新状态或任何已知正常的还原点。这样便可根据需要进行勒索软件恢复或隔离测试。Veeam Backup &amp; Replication提供了多种选项来处理不同的灾难恢复场景。</block>
+  <block id="2706485f2f5236750f230d4b7b8577d3" category="paragraph"><block ref="2706485f2f5236750f230d4b7b8577d3" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="11125bccaa8c05735ba7d61bf1c112a2" category="list-text">Veeam Backup and Replication软件在具有适当网络连接的内部环境中运行。</block>
+  <block id="a90917331ad0dfe22bf2f6e320ada7e8" category="inline-link-macro">部署Azure VMware解决方案(AVS)</block>
+  <block id="3c0662627244f5aa8e96db2d19bc585a" category="inline-link-macro">连接Azure NetApp Files数据存储库</block>
+  <block id="10a59745bff87c3581d7c750a33dd98f" category="list-text"><block ref="b7be33ad4eac6e2c71a992893b8f0a51" category="inline-link-macro-rx"></block> 私有云和 <block ref="06c837c7a128e07c5da3f9b77fcfa784" category="inline-link-macro-rx"></block> Azure VMware解决方案主机。</block>
+  <block id="2571355c63dfc349de5476a18859e958" category="paragraph">采用最低配置设置的指示灯环境可用于灾难恢复。发生意外事件时、VM将故障转移到此集群、并且可以添加其他节点)。</block>
+  <block id="4e96e68e3baa8424ecca3492d417670d" category="list-text">设置复制作业以使用Veeam Backup and Replication创建VM副本。</block>
+  <block id="82fcee0e3d2b18bbe4614a5469ba280e" category="section-title">Veeam VM复制到AVS和ANF数据存储库的前提条件</block>
+  <block id="fb56d19b352fa7bb5c92ab39795843b8" category="list-text">确保Veeam Backup &amp; Replication备份VM已连接到源和目标AVS SDDC集群。</block>
+  <block id="516aad87cdd7498668675470bd1a6e9f" category="list-text">目标Azure NetApp Files数据存储库必须具有足够的可用空间来存储已复制VM的VMDK。</block>
+  <block id="0d77cb2e0ae4ea54038c34e65976bfcd" category="paragraph">Veeam Backup &amp; Replication利用VMware vSphere快照功能/在复制期间、Veeam Backup &amp; Replication会请求VMware vSphere创建VM快照。VM快照是VM的时间点副本、其中包括虚拟磁盘、系统状态、配置和元数据。Veeam Backup &amp; Replication使用快照作为复制数据源。</block>
+  <block id="bfbd500aa1e28d6d310392995e835a7a" category="list-text">在主页视图中。右键单击作业节点、然后选择复制作业&gt;虚拟机。</block>
+  <block id="26cd1b48aa9f6296b7b62aad8dcf20ac" category="list-text">如果内部和Azure之间的连接带宽受限、请选中"副本传播"复选框。
+*如果Azure VMware解决方案SDDC上的分段与内部站点网络不匹配、请选中"网络重新映射(适用于具有不同网络的AVS SDDC站点)"复选框。</block>
+  <block id="2a21b1a7e725fac09d71e71ed8bd88ed" category="list-text">如果内部生产站点中的IP地址方案与目标AVS站点中的方案不同、请选中"副 本重新IP (适用于IP地址方案不同的灾难恢复站点)"复选框。</block>
+  <block id="4897882992af74b1405bd15b8ee68c96" category="paragraph"><block ref="4897882992af74b1405bd15b8ee68c96" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="eb58f14b8c2887fcf0d846ce599bf64c" category="list-text">在*Virtual* Machines*步骤中，选择要复制到连接到Azure VMware解决方案SDDC的Azure NetApp Files数据存储库的VM。可以将虚拟机放置在vSAN上、以填满可用的vSAN数据存储库容量。在指示灯集群中、3节点集群的可用容量将受到限制。其余数据可以轻松放置在Azure NetApp Files数据存储库中、以便恢复VM、并可扩展集群以满足CPU/内存要求。单击*Add*，然后在*Add Object*窗口中选择所需的VM或VM容器，然后单击*Add*。单击 * 下一步 * 。</block>
+  <block id="aae0b47e0672d77f64a05b160878908a" category="paragraph"><block ref="aae0b47e0672d77f64a05b160878908a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="251b55d8fd9c283e24d59180aa8d5c01" category="list-text">之后、选择目标作为Azure VMware解决方案SDDC集群/主机、并为VM副本选择相应的资源池、VM文件夹和FSx for ONTAP数据存储库。然后单击 * 下一步 * 。</block>
+  <block id="5026b667d9da5df854ce833ff13c6347" category="paragraph"><block ref="5026b667d9da5df854ce833ff13c6347" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7a18e505fd8e40c3f58f636f46cf4cab" category="paragraph"><block ref="7a18e505fd8e40c3f58f636f46cf4cab" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="11611c13aa7aaf4496d44cc701fdbc37" category="paragraph"><block ref="11611c13aa7aaf4496d44cc701fdbc37" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8bf0a50f87b8beec8d9b2bb97dc96505" category="paragraph"><block ref="8bf0a50f87b8beec8d9b2bb97dc96505" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6c8f2a2a732536226d20f6e907b272d7" category="paragraph"><block ref="6c8f2a2a732536226d20f6e907b272d7" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="21e6918b052bad28f76658ff8ad532ff" category="paragraph">复制作业启动后、目标AVS SDDC集群/主机上将填充具有指定后缀的VM。</block>
+  <block id="aaa8104b2cad128084193b0c0d41c5a7" category="paragraph"><block ref="aaa8104b2cad128084193b0c0d41c5a7" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a8e8cc1b6e9f29ef294db0eb69359d35" category="paragraph">有关追加信息for Veeam复制的信息、请参见 <block ref="370148c443ae2740936f568bfafc0697" category="inline-link-macro-rx"></block></block>
+  <block id="966be1c217c36e4b9365942c31c8d734" category="paragraph">要创建计划，请导航到名为*RELIG副 本*的新子部分，然后选择*Failover Plan*。选择适当的VM。Veeam Backup &amp; Replication将查找最接近此时间点的还原点、并使用它们启动VM副本。</block>
+  <block id="8ec7e47f124ff75e7f16f8c4e28b071f" category="admonition">在运行故障转移计划时、最多可同时启动10个VM</block>
+  <block id="ea606296d0241925d3908b71295397d4" category="admonition">在故障转移过程中、源VM不会关闭</block>
+  <block id="54cfc181913d73f0e94b41eb7ef8b4e5" category="list-text">在主页视图中。右键单击副本节点、然后选择故障转移计划&gt;故障转移计划&gt; VMware vSphere。</block>
+  <block id="9a9a4f3269744ba765003944b5959f67" category="paragraph"><block ref="9a9a4f3269744ba765003944b5959f67" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d953bc1e2c9d57399c513a44c4549cdd" category="list-text">接下来、提供计划的名称和问题描述。可以根据需要添加故障转移前和故障转移后脚本。例如、在启动复制的VM之前、请运行一个脚本来关闭VM。</block>
+  <block id="5104408584186e0e89a77a2f81f6ef27" category="paragraph"><block ref="5104408584186e0e89a77a2f81f6ef27" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8bd35bdf8a5c79e358d7e2274886eba5" category="paragraph"><block ref="8bd35bdf8a5c79e358d7e2274886eba5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5899fddf615852ba6e64ca7a86149a0b" category="admonition">确保已建立网络分段、以避免故障转移期间发生IP冲突。</block>
+  <block id="51f61136debd24def2541ea3e12887e4" category="paragraph">要启动故障转移计划，只需单击*故障转移计划*选项卡，然后右键单击您的故障转移计划。选择**开始*。此操作将使用虚拟机副本的最新还原点进行故障转移。要故障转移到VM副本的特定还原点，请选择*Start to *。</block>
+  <block id="876afb7259a6c985f277d39d0b34cbaa" category="paragraph"><block ref="876afb7259a6c985f277d39d0b34cbaa" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1914fa31cf9e93978faa9502f985425e" category="paragraph"><block ref="1914fa31cf9e93978faa9502f985425e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1a5503ceba4e0cebbb476f43ed91d171" category="paragraph">VM副本的状态将从"准备就绪"更改为"故障转移"、VM将在目标Azure VMware解决方案(AVS) SDDC集群/主机上启动。</block>
+  <block id="5366765c0c588b8f9416f2fc6d7d53d0" category="paragraph"><block ref="5366765c0c588b8f9416f2fc6d7d53d0" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4cc3f1716d930994b8f3f59bd3ef0c43" category="paragraph"><block ref="4cc3f1716d930994b8f3f59bd3ef0c43" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f4f57625c42b55101b3a8db061e665f7" category="paragraph">有关故障转移计划的详细信息、请参见 <block ref="435a73aa82873f69571502d4748c7127" category="inline-link-macro-rx"></block>。</block>
+  <block id="4687b6eb9a72698468a588103f76433f" category="admonition">执行故障恢复时、只会传输更改、但不会发布更改。选择*Commit failback*(确认原始虚拟机按预期工作后)或Undo failback (撤消故障恢复)以返回到虚拟机副本(如果原始虚拟机未按预期工作)。</block>
+  <block id="24c20c4538b3d0bd361577418d724325" category="paragraph"><block ref="24c20c4538b3d0bd361577418d724325" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="90d5a7e78b08fc7e822a235880b058f7" category="paragraph"><block ref="90d5a7e78b08fc7e822a235880b058f7" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="03d30751eabac8bfd33ff9b7c8568473" category="paragraph"><block ref="03d30751eabac8bfd33ff9b7c8568473" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d5b9a5229bcbf847fe6cbe19fa2f400c" category="paragraph"><block ref="d5b9a5229bcbf847fe6cbe19fa2f400c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="caf8b775aa69a5ba386520c85bf77ca0" category="paragraph"><block ref="caf8b775aa69a5ba386520c85bf77ca0" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4d47a618f27fda5779a63d84527053b2" category="paragraph"><block ref="4d47a618f27fda5779a63d84527053b2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="ae40ac16df59df85ba7c1891e1d4fc9c" category="paragraph">借助Azure NetApp Files数据存储库功能、Veeam或任何经过验证的第三方工具可以利用试点轻型集群来提供低成本的灾难恢复解决方案、而不是仅仅通过建立大型集群来容纳VM副本。这样可以高效地处理定制的自定义灾难恢复计划、并重复使用内部现有备份产品进行灾难恢复、从而通过退出内部灾难恢复数据中心实现基于云的灾难恢复。如果发生灾难、可以通过单击按钮进行故障转移、如果发生灾难、则可以自动进行故障转移。</block>
 </blocks>

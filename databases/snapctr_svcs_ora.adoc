@@ -235,38 +235,6 @@ image:snapctr_svcs_credential_07-aws.png["在图形用户界面中显示此步�
 
 . 审查和*Add*。
 image:snapctr_svcs_credential_08-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
-. 首先、从AWS EC2控制台、在*身份和访问管理(IAM)*菜单*角色*和*创建角色*中创建角色、以启动角色创建工作流。
-+
-image:snapctr_svcs_credential_01-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
-
-. 在*选择可信实体*页面中、选择* AWS account*、*另一个AWS account*、然后粘贴BlueXP帐户ID、该ID可从BlueXP控制台检索。
-+
-image:snapctr_svcs_credential_02-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
-
-. 按FSx筛选权限策略并将*权限策略*添加到角色。
-+
-image:snapctr_svcs_credential_03-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
-
-. 在“*角色详细信息*”页中，为角色命名，添加一个问题描述，然后单击*Create Role*。
-+
-image:snapctr_svcs_credential_04-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
-
-. 返回BlueXP控制台、单击控制台右上角的设置图标以打开*帐户凭据*页面、然后单击*添加凭据*以启动凭据配置工作流。
-+
-image:snapctr_svcs_credential_05-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
-
-. 选择凭据位置为-*Amazon Web Services - BlueXP*。
-+
-image:snapctr_svcs_credential_06-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
-
-. 使用正确的*角色ARN*定义AWS凭据、可从上述步骤1中创建的AWS IAM角色检索这些凭据。BlueXP *帐户ID*、用于在步骤1中创建AWS IAM角色。
-+
-image:snapctr_svcs_credential_07-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
-
-. 审查和*Add*。
-+
-image:snapctr_svcs_credential_08-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
-
 
 
 ====
@@ -279,18 +247,15 @@ image:snapctr_svcs_credential_08-aws.png["在图形用户界面中显示此步�
 部署连接器并添加凭据后、现在可以使用以下操作步骤设置SnapCenter服务：
 
 . 在*我的工作环境*中、单击*添加工作环境*以发现AWS中部署的FSX。
-
-
++
 image:snapctr_svcs_setup_01.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 选择* Amazon Web Services*作为位置。
-
-
++
 image:snapctr_svcs_setup_02.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 单击*适用于ONTAP 的Amazon FSx *旁边的*发现现有*。
-
-
++
 image:snapctr_svcs_setup_03.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 选择您在上一节中创建的*凭据名称*、为BlueXP授予管理FSx for ONTAP所需的权限。如果您尚未添加凭据、则可以从BlueXP控制台右上角的*设置*菜单中添加此凭据。
@@ -298,38 +263,31 @@ image:snapctr_svcs_setup_03.png["在图形用户界面中显示此步骤的屏�
 image:snapctr_svcs_setup_04.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 选择部署了Amazon FSX for ONTAP 的AWS区域、选择托管Oracle数据库的FSX集群、然后单击添加。
-
-
++
 image:snapctr_svcs_setup_05.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 此时、发现的Amazon FSX for ONTAP 实例将显示在工作环境中。
-
-
++
 image:snapctr_svcs_setup_06.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 您可以使用fsxadmin帐户凭据登录到FSX集群。
-
-
++
 image:snapctr_svcs_setup_07.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 登录到Amazon FSX for ONTAP 后、请查看数据库存储信息(例如数据库卷)。
-
-
++
 image:snapctr_svcs_setup_08.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 从控制台的左侧边栏中、将鼠标悬停在保护图标上、然后单击*保护*>*应用程序*以打开应用程序启动页面。单击*发现应用程序*。
-
-
++
 image:snapctr_svcs_setup_09.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 选择*云原生*作为应用程序源类型。
-
-
++
 image:snapctr_svcs_setup_10.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 选择* Oracle *作为应用程序类型。
-
-
++
 image:snapctr_svcs_setup_13.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 填写AWS EC2 Oracle应用程序主机详细信息。选择*使用SSH*作为*主机安装类型*进行一步插件安装和数据库发现。然后，单击*添加SSH专用密钥*。
@@ -360,39 +318,33 @@ image:snapctr_svcs_setup_17.png["在图形用户界面中显示此步骤的屏�
 [%collapsible]
 ====
 . 单击数据库*保护状态*旁边的三点、然后单击*策略*以查看可应用于保护Oracle数据库的默认预加载数据库保护策略。
-
-
++
 image:snapctr_svcs_bkup_01.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 您还可以使用自定义的备份频率和备份数据保留窗口创建自己的策略。
-
-
+ +
 image:snapctr_svcs_bkup_02.png["在图形用户界面中显示此步骤的屏幕截图。"]
-
 . 如果您对策略配置满意、则可以分配所选的策略来保护数据库。
-
-
++
 image:snapctr_svcs_bkup_03.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 选择要分配给数据库的策略。
-
-
++
 image:snapctr_svcs_bkup_04.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 应用此策略后、数据库保护状态将更改为*受保护*、并带有绿色复选标记。
-
-
++
 image:snapctr_svcs_bkup_05.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 数据库备份按预定义的计划运行。您还可以运行一次性按需备份、如下所示。
-
-
++
 image:snapctr_svcs_bkup_06.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 可以通过单击菜单列表中的*查看详细信息*来查看数据库备份详细信息。其中包括备份名称、备份类型、SCN和备份日期。备份集涵盖数据卷和日志卷的快照。日志卷快照会在数据库卷快照之后立即发生。如果要在长列表中查找特定备份、则可以应用筛选器。
-
-
++
 image:snapctr_svcs_bkup_07.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+
 
 ====
 
@@ -402,26 +354,25 @@ image:snapctr_svcs_bkup_07.png["在图形用户界面中显示此步骤的屏幕
 [%collapsible]
 ====
 . 对于数据库还原、请按SCN或备份时间选择合适的备份。单击数据库数据备份中的三个点、然后单击*还原*以启动数据库还原和恢复。
-
-
++
 image:snapctr_svcs_restore_01.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 选择还原设置。如果您确定备份后物理数据库结构中没有任何变化(例如添加数据文件或磁盘组)、则可以使用*强制原位还原*选项、该选项通常速度更快。否则、请勿选中此框。
-
-
++
 image:snapctr_svcs_restore_02.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 查看并启动数据库还原和恢复。
-
-
++
 image:snapctr_svcs_restore_03.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 在*作业监控*选项卡中、您可以查看恢复作业的状态以及运行期间的任何详细信息。
-
-
++
 image:snapctr_svcs_restore_05.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
++
 image:snapctr_svcs_restore_04.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+
 
 ====
 
@@ -433,36 +384,33 @@ image:snapctr_svcs_restore_04.png["在图形用户界面中显示此步骤的屏
 要克隆数据库、请从同一数据库备份详细信息页面启动克隆工作流。
 
 . 选择正确的数据库备份副本、单击三点以查看菜单、然后选择*克隆*选项。
-
-
++
 image:snapctr_svcs_clone_02.png["错误：缺少图形映像"]
 
 . 如果不需要更改任何克隆的数据库参数、请选择*基本*选项。
-
-
++
 image:snapctr_svcs_clone_03.png["错误：缺少图形映像"]
 
 . 或者、也可以选择*规格文件*、这样您可以选择下载当前的init文件并进行更改、然后将其上传到作业。
-
-
++
 image:snapctr_svcs_clone_03_1.png["错误：缺少图形映像"]
 
 . 查看并启动作业。
-
-
++
 image:snapctr_svcs_clone_04.png["错误：缺少图形映像"]
 
 . 从*作业监控*选项卡监控克隆作业状态。
-
-
++
 image:snapctr_svcs_clone_07-status.png["错误：缺少图形映像"]
 
 . 验证EC2实例主机上的克隆数据库。
-
-
++
 image:snapctr_svcs_clone_08-crs.png["错误：缺少图形映像"]
 
++
 image:snapctr_svcs_clone_08-db.png["错误：缺少图形映像"]
+
+
 
 ====
 

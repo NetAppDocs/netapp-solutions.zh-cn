@@ -1,0 +1,228 @@
+---
+sidebar: sidebar 
+permalink: ehc/aws/veeam-fsxn-dr-to-vmc.html 
+keywords: disaster recovery, vmc, vmware cloud, aws, amazon web services, fsxn, fsx for ontap, fsx for netapp ontap, disaster recovery, dr, veeam, replication 
+summary:  
+---
+= 使用Veeam Replication和FSx for ONTAP将灾难恢复到AWS上的VMware Cloud
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../../media/
+
+
+[role="lead"]
+作者：Niyaz Mohamed - NetApp解决方案工程部
+
+
+
+== 概述
+
+Amazon FSx for NetApp ONTAP与AWS上的VMware Cloud集成是一个AWS管理的外部NFS数据存储库、该数据存储库基于NetApp的ONTAP文件系统构建、可以连接到SDDC中的集群。它为客户提供了灵活的高性能虚拟化存储基础架构、该基础架构可独立于计算资源进行扩展。
+
+对于希望将基于AWS SDDC的VMware Cloud用作灾难恢复目标的客户、可以使用FSx for ONTAP数据存储库通过任何经过验证的第三方从内部复制数据、此类解决方案可提供VM复制功能。通过添加FSx for ONTAP数据存储库、与在AWS SDDC上使用大量ESXi主机来容纳存储相比、它将实现成本优化的部署。
+
+此方法还有助于客户在VMC中使用试点轻型集群以及FSx for ONTAP数据存储库来托管VM副本。通过妥善地对复制计划进行故障转移、也可以将同一过程作为一个迁移选项扩展到AWS上的VMware Cloud。
+
+
+
+== 问题陈述
+
+本文档介绍如何使用FSx for ONTAP数据存储库以及Veeam备份和复制功能为内部VMware VM设置灾难恢复、并将其恢复到AWS上的VMware Cloud。
+
+Veeam Backup & Replication支持通过现场和远程复制实现灾难恢复(Disaster Recovery、DR)。复制虚拟机时、Veeam Backup & Replication会在AWS SDDC集群上的目标VMware Cloud上以本机VMware vSphere格式创建VM的精确副本、并使该副本与原始VM保持同步。
+
+复制可提供最佳恢复时间目标(Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time  此复制机制可确保在发生灾难事件时、工作负载可以在AWS SDDC上的VMware Cloud中快速启动。Veeam Backup & Replication软件还可以优化流量传输、以便通过WAN和慢速连接进行复制。此外、它还会筛选出重复的数据块、将数据块置零、交换文件和排除的VM子操作系统文件、并压缩副本流量。
+
+为了防止复制作业占用整个网络带宽、可以设置WAN加速器和网络限制规则。Veeam Backup & Replication中的复制过程由作业驱动、这意味着复制是通过配置复制作业来执行的。如果发生灾难事件、则可以通过故障转移到VM副本来触发故障转移以恢复VM。
+
+执行故障转移时、复制的虚拟机将接管原始虚拟机的角色。可以将故障转移到副本的最新状态或任何已知正常的还原点。这样便可根据需要进行勒索软件恢复或隔离测试。在Veeam Backup & Replication中、故障转移和故障恢复是临时的中间步骤、应进一步完成。Veeam Backup & Replication提供了多种选项来处理不同的灾难恢复场景。
+
+image:dr-veeam-fsx-image1.png["使用Veeam Replication和FSx ONTAP for VMC的灾难恢复场景示意图"]
+
+
+
+== 解决方案 部署
+
+
+
+=== 高级步骤
+
+. Veeam Backup and Replication软件正在具有适当网络连接的内部环境中运行。
+. 配置基于AWS的VMware Cloud、请参见VMware Cloud Tech Zone文章 link:https://vmc.techzone.vmware.com/fsx-guide["《VMware Cloud on AWS与Amazon FSx for NetApp ONTAP集成部署指南》"] 要进行部署、请将基于AWS SDDC的VMware Cloud和适用于ONTAP的FSx配置为NFS数据存储库。(采用最低配置设置的指示灯环境可用于灾难恢复。发生意外事件时、VM将故障转移到此集群、并且可以添加其他节点)。
+. 设置复制作业以使用Veeam Backup and Replication创建VM副本。
+. 创建故障转移计划并执行故障转移。
+. 灾难事件完成且主站点启动后、切换回生产VM。
+
+
+
+
+=== 将Veeam VM复制到适用于ONTAP数据存储库的VMC和FSx的前提条件
+
+. 确保Veeam Backup & Replication备份VM已连接到源vCenter以及AWS SDDC集群上的目标VMware云。
+. 备份服务器必须能够解析短名称并连接到源和目标vCenter。
+. 适用于ONTAP数据存储库的目标FSx必须具有足够的可用空间来存储已复制VM的VMDK
+
+
+对于追加信息、请参阅介绍的"注意事项和限制" link:https://helpcenter.veeam.com/docs/backup/vsphere/replica_limitations.html?ver=120["此处"]。
+
+
+
+=== 部署详细信息
+
+.第1步：复制VM
+[%collapsible]
+====
+Veeam Backup & Replication利用VMware vSphere快照功能、在复制期间、Veeam Backup & Replication会请求VMware vSphere创建VM快照。VM快照是VM的时间点副本、其中包括虚拟磁盘、系统状态、配置等。Veeam Backup & Replication使用快照作为复制数据源。
+
+要复制VM、请执行以下步骤：
+
+. 打开Veeam Backup & Replication Console。
+. 在主页视图中、选择复制作业>虚拟机> VMware vSphere。
+. 指定作业名称并选中相应的高级控制复选框。单击下一步。
++
+** 如果内部和AWS之间的连接带宽受限、请选中副本传播复选框。
+** 如果AWS SDDC上VMware Cloud上的区块与内部站点网络不匹配、请选中网络重新映射(适用于具有不同网络的AWS VMC站点)复选框。
+** 如果内部生产站点中的IP地址方案与AWS VMC站点中的方案不同、请选中"副 本重新IP (适用于具有不同IP地址方案的灾难恢复站点)"复选框。
++
+image::dr-veeam-fsx-image2.png[灾难恢复Veeam FSx版本2]
+
+
+
+. 在*虚拟机*步骤中、选择需要复制到连接到AWS SDDC上的VMware Cloud的FSx for ONTAP数据存储库的VM。可以将虚拟机放置在vSAN上、以填满可用的vSAN数据存储库容量。在指示灯集群中、3节点集群的可用容量将受到限制。其余数据可以复制到FSx for ONTAP数据存储库。单击*Add*，然后在*Add Object*窗口中选择所需的VM或VM容器，然后单击*Add*。单击 * 下一步 * 。
++
+image::dr-veeam-fsx-image3.png[灾难恢复Veeam FSx版本3]
+
+. 之后、选择目标作为AWS SDDC上的VMware Cloud集群/主机、并为VM副本选择相应的资源池、VM文件夹和FSx for ONTAP数据存储库。然后单击*Next*。
++
+image::dr-veeam-fsx-image4.png[灾难恢复Veeam FSx版本4]
+
+. 在下一步中、根据需要创建源虚拟网络与目标虚拟网络之间的映射。
++
+image::dr-veeam-fsx-image5.png[灾难恢复Veeam FSx版本5]
+
+. 在*作业设置*步骤中，指定要存储VM副本元数据、保留策略等的备份存储库。
+. 在“*数据传输*”步骤中更新*Source*和*Target*代理服务器，保留“*自动*选择”(默认)并保持“*直接*”选项处于选中状态，然后单击“*下一步*”。
+. 在*Guest Processing*步骤中，根据需要选择*Enable application-aware processing*选项。单击 * 下一步 * 。
++
+image::dr-veeam-fsx-image6.png[灾难恢复Veeam FSx版本6]
+
+. 选择复制计划以定期运行复制作业。
+. 在向导的*摘要*步骤中，查看复制作业的详细信息。要在关闭向导后立即启动作业，请选中*单击完成时运行作业*复选框，否则不要选中该复选框。然后单击*完成*关闭向导。
++
+image::dr-veeam-fsx-image7.png[灾难恢复Veeam FSx版本7]
+
+
+
+复制作业启动后、目标VMC SDDC集群/主机上将填充具有指定后缀的VM。
+
+image::dr-veeam-fsx-image8.png[灾难恢复Veeam FSx版本8]
+
+有关追加信息for Veeam复制的信息、请参见 link:https://helpcenter.veeam.com/docs/backup/vsphere/replication_process.html?ver=120["复制的工作原理"]。
+
+====
+.第2步：创建故障转移计划
+[%collapsible]
+====
+初始复制或传播完成后、创建故障转移计划。故障转移计划有助于逐个或以组的形式自动对相关VM执行故障转移。故障转移计划是VM处理顺序(包括启动延迟)的蓝图。故障转移计划还有助于确保关键的相关VM已在运行。
+
+要创建计划、请导航到名为副本的新子部分、然后选择故障转移计划。选择适当的VM。Veeam Backup & Replication将查找最接近此时间点的还原点、并使用它们启动VM副本。
+
+
+NOTE: 只有在初始复制完成且虚拟机副本处于就绪状态时、才能添加故障转移计划。
+
+
+NOTE: 在运行故障转移计划时、最多可同时启动10个VM。
+
+
+NOTE: 在故障转移过程中、源VM不会关闭。
+
+要创建*故障转移计划*，请执行以下操作：
+
+. 在主页视图中，选择*故障转移计划> VMware vSphere。
+. 接下来、提供计划的名称和问题描述。可以根据需要添加故障转移前和故障转移后脚本。例如、在启动复制的VM之前、请运行一个脚本来关闭VM。
++
+image::dr-veeam-fsx-image9.png[灾难恢复Veeam FSx版本9]
+
+. 将VM添加到计划中、并修改VM启动顺序和启动延迟、以满足应用程序依赖关系。
++
+image::dr-veeam-fsx-image10.png[灾难恢复Veeam FSx版本10]
+
+
+
+有关用于创建复制作业的追加信息、请参见 link:https://helpcenter.veeam.com/docs/backup/vsphere/replica_job.html?ver=120["正在创建复制作业"]。
+
+====
+.第3步：运行故障转移计划
+[%collapsible]
+====
+在故障转移期间、生产站点中的源VM将切换到灾难恢复站点上的副本。在故障转移过程中、Veeam Backup & Replication会将VM副本还原到所需的还原点、并将所有I/O活动从源VM移至其副本。不仅可以在发生灾难时使用副本、还可以用于模拟灾难恢复演练。在模拟故障转移期间、源VM将保持运行状态。执行完所有必要的测试后、您可以撤消故障转移并恢复正常操作。
+
+
+NOTE: 确保网络分段到位、以避免灾难恢复期间发生IP冲突。
+
+要启动故障转移计划，只需单击*故障转移计划*选项卡，然后右键单击故障转移计划。选择 * 开始 * 。此操作将使用虚拟机副本的最新还原点进行故障转移。要故障转移到VM副本的特定还原点，请选择*Start to *。
+
+image::dr-veeam-fsx-image11.png[灾难恢复Veeam FSx image11]
+
+image::dr-veeam-fsx-image12.png[DR Veeam FSx版本12]
+
+VM副本的状态将从"准备就绪"更改为"故障转移"、VM将在AWS SDDC集群/主机上的目标VMware Cloud上启动。
+
+image::dr-veeam-fsx-image13.png[灾难恢复Veeam FSx版本13.]
+
+故障转移完成后、VM的状态将更改为"故障转移"。
+
+image::dr-veeam-fsx-image14.png[DR Veeam FSx版本14.]
+
+
+NOTE: Veeam Backup & Replication会停止源VM的所有复制活动、直到其副本恢复到就绪状态为止。
+
+有关故障转移计划的详细信息、请参见 link:https://helpcenter.veeam.com/docs/backup/vsphere/failover_plan.html?ver=120["故障转移计划"]。
+
+====
+.第4步：故障恢复到生产站点
+[%collapsible]
+====
+当故障转移计划正在运行时、它会被视为一个中间步骤、需要根据需要最终确定。选项包括：
+
+* *故障恢复到生产环境*-切换回原始虚拟机并将虚拟机副本运行期间发生的所有更改传输至原始虚拟机。
+
+
+
+NOTE: 执行故障恢复时、只会传输更改、但不会发布更改。如果原始虚拟机未按预期工作，请选择*commit failback*(确认原始虚拟机按预期工作后)或*Undo failback*(撤消故障恢复)返回到虚拟机副本。
+
+* *撤消故障转移*-切换回原始虚拟机并放弃在虚拟机副本运行期间对其所做的所有更改。
+* *永久故障转移*-从原始虚拟机永久切换到虚拟机副本，并将此副本用作原始虚拟机。
+
+
+在此演示中、我们选择了故障恢复到生产环境。在向导的目标步骤中选择了故障恢复到原始虚拟机、并启用了"Power On VM after Restoring"(还原后启动虚拟机)复选框。
+
+image::dr-veeam-fsx-image15.png[灾难恢复Veeam FSx版本15]
+
+image::dr-veeam-fsx-image16.png[DR Veeam FSx版本16]
+
+提交故障恢复是完成故障恢复操作的方法之一。提交故障恢复后、它会确认发送到故障恢复虚拟机(生产虚拟机)的更改是否按预期工作。完成提交操作后、Veeam Backup & Replication将恢复生产虚拟机的复制活动。
+
+有关故障恢复过程的详细信息、请参见的Veeam文档 link:https://helpcenter.veeam.com/docs/backup/vsphere/failover_failback.html?ver=120["故障转移和故障恢复以进行复制"]。
+
+image::dr-veeam-fsx-image17.png[DR Veeam FSx版本17.]
+
+image::dr-veeam-fsx-image18.png[DR Veeam FSx版本18.]
+
+成功故障恢复到生产环境后、所有VM都会还原回原始生产站点。
+
+image::dr-veeam-fsx-image19.png[DR Veeam FSx版本19]
+
+====
+
+
+== 结论
+
+借助FSx for ONTAP数据存储库功能、Veeam或任何经过验证的第三方工具可以使用Pilot Light集群提供低成本的DR解决方案、而无需在集群中建立大量主机来容纳VM副本。这样可以提供一个功能强大的解决方案来处理定制的自定义灾难恢复计划、还可以重复使用内部现有备份产品来满足灾难恢复需求、从而通过在内部部署现有灾难恢复数据中心实现基于云的灾难恢复。发生灾难时、只需单击一个按钮、即可按计划进行故障转移或故障转移、并决定激活灾难恢复站点。
+
+要了解有关此过程的更多信息、请随时观看详细的演练视频。
+
+video::15fed205-8614-4ef7-b2d0-b061015e925a[panopto,width=Video walkthrough of the solution]
