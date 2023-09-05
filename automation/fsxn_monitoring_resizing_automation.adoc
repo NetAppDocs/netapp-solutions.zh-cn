@@ -17,9 +17,9 @@ summary: 此页面介绍了有关监控AWS FSxN以及根据阈值自动调整大
 
 == 概述：通过AWS Lambda功能监控和自动调整适用于ONTAP 的FSX的大小
 
-FSX for ONTAP 是AWS上提供的第一方企业级云存储服务、可提供基于常见NetApp ONTAP 文件系统构建的高度可靠、可扩展、高性能和功能丰富的文件存储。
+FSx for ONTAP是AWS上提供的第一方企业级云存储服务、可提供基于流行的NetApp ONTAP文件系统构建的高度可靠、可扩展、高性能和功能丰富的文件存储。
 
-适用于ONTAP 的FSX可提供无缝的部署和管理体验。无需具备存储专业知识即可开始使用。为了简化监控、可以使用AWS兰达功能(根据阈值自动调整总存储容量、卷大小或LUN大小的大小)。本文档提供了一个分步指南、用于创建一个自动设置、以便定期监控ONTAP 的FSX、在超过用户指定的阈值时发出通知并调整大小、并将调整大小活动通知给管理员。
+适用于ONTAP 的FSX可提供无缝的部署和管理体验。无需具备存储专业知识即可开始使用。为了简化监控、可以使用AWS兰达功能(根据阈值自动调整总存储容量、卷大小或LUN大小的大小)。  本文档提供了创建自动设置的分步指南、该设置会定期监控FSx for ONTAP、在超过用户指定的阈值时发出通知并调整大小、以及向管理员通知调整大小活动。
 
 .功能
 [%collapsible]
@@ -34,8 +34,8 @@ FSX for ONTAP 是AWS上提供的第一方企业级云存储服务、可提供基
 
 
 * 能够在违反用户定义的阈值时调整上述任意值的大小
-* 通过电子邮件接收使用情况警告和调整大小通知的警报机制
-* 可以删除低于用户定义阈值的快照
+* 通过电子邮件接收使用情况警告和大小调整通知的警报机制
+* 可以删除早于用户定义阈值的快照
 * 能够获取关联的FlexClone卷和快照列表
 * 能够定期监控检查
 * 可以使用解决方案 访问互联网、也可以不访问互联网
@@ -59,9 +59,9 @@ FSX for ONTAP 是AWS上提供的第一方企业级云存储服务、可提供基
 [%collapsible]
 ====
 * AWS Lambda功能可通过API调用FSX for ONTAP 、以检索和更新存储容量、卷和LUN的大小。
-* "fsxadmin"密码作为安全字符串存储在AWS SSM参数存储中、以增加安全层。
+* "fsxadmin"密码以安全字符串形式存储在AWS SSM参数存储中、用于增加一层安全保护。
 * AWS SES (简单电子邮件服务)用于在发生调整大小事件时通知最终用户。
-* 如果在无法访问Internet的VPC中部署解决方案 、则会对适用于AWS SSM、FSx和SES的VPC端点进行设置、使Lamb达 能够通过AWS内部网络访问这些服务。
+* 如果在无法访问Internet的VPC中部署解决方案、则会对适用于AWS SSM、FSx和SES的VPC端点进行设置、使Lamb达 能够通过AWS内部网络访问这些服务。
 
 
 image:fsxn-monitoring-resizing-architecture.png["此图显示了此解决方案 中使用的高级架构。"]
@@ -106,10 +106,10 @@ image:fsxn-monitoring-resizing-s3-upload-zip-files.png["此图显示了正在上
 .第3步：AWS SES SMTP设置(如果无法访问Internet、则需要此设置)
 [%collapsible]
 =====
-如果您要在不访问Internet的情况下部署解决方案 、请执行此步骤(注意：由于正在设置VPC端点、因此会增加相关成本。)
+如果要在不访问Internet的情况下部署解决方案、请执行此步骤(注意：要设置的VPC端点会增加相关成本。)
 
-. 导航到AWS控制台>*AWS Simple Email Service (SES)*> SMTP Settings，然后单击*Create SMTP crederations*
-. 输入IAM用户名或将其保留为默认值、然后单击创建。保存用户名和密码以供将来使用。
+. 导航到AWS控制台>*AWS Simple Email Service (SES)*>*SMTP Settings*，然后单击*Create SMTP credcredcredcredENTs*
+. 输入IAM用户名或将其保留为默认值，然后单击*Create User*。保存*SMTP用户名*和*SMTP密码*以供将来使用。
 +
 
 NOTE: 如果SES SMTP设置已到位、请跳过此步骤。
@@ -190,7 +190,7 @@ git clone https://github.com/NetApp-Automation/fsxn-monitoring-auto-resizing.git
 .第2步：AWS SES SMTP设置(如果无法访问Internet、则需要此设置)
 [%collapsible]
 =====
-如果您要在不访问Internet的情况下部署解决方案 、请执行此步骤(注意：由于正在设置VPC端点、因此会增加相关成本。)
+如果要在不访问Internet的情况下部署解决方案、请执行此步骤(注意：要设置的VPC端点会增加相关成本。)
 
 . 导航到AWS控制台>*AWS Simple Email Service (SES)*> SMTP Settings，然后单击*Create SMTP crederations*
 . 输入IAM用户名或将其保留为默认值、然后单击创建。保存用户名和密码以供将来使用。
@@ -243,7 +243,7 @@ image:fsxn-monitoring-resizing-ses.png["此图显示了AWS控制台上的SES身�
 [%collapsible]
 =====
 
-NOTE: 只有在部署时不能访问Internet时才需要。由于VPC端点的原因、还会产生额外的成本。
+NOTE: 只有在部署时不能访问Internet时才需要。与VPC端点相关的额外成本。
 
 . 导航到AWS控制台>* VPC*>*端点*并单击*创建端点*并输入以下详细信息：
 +
@@ -266,14 +266,14 @@ image:fsxn-monitoring-resizing-vpc-endpoint-create-1.png["此图显示了VPC端�
 +
 image:fsxn-monitoring-resizing-vpc-endpoint-create-2.png["此图显示了VPC端点创建窗口"]
 
-. 按照相同的过程创建SES和SSM VPC端点。除将<region> 分别对应于*com.aws.mas.smp.smNT*和*com.惊奇aws.smssm*的服务外，所有参数均与上述相同<region>。
+. 按照相同的过程创建SES和SSM VPC端点。除将<region>分别对应于*com.惊奇aws.smp.smNT*和*com.惊奇aws.smssm*<region>的服务外，所有参数均与上述相同。
 
 
 =====
 .第6步：创建和设置AWS Lamb编制 函数
 [%collapsible]
 =====
-. 导航到AWS控制台>* AWS Lambda"、然后单击与FSX for ONTAP 位于同一区域的*创建功能*
+. 导航到AWS控制台>* AWS Lambx*>*功能*、然后单击FSx for ONTAP所在区域的*创建功能*
 . 使用默认的*从头开始*作者并更新以下字段：
 +
 [listing]
@@ -285,7 +285,7 @@ Permissions: Select "Create a new role with basic Lambda permissions"
 Advanced Settings:
   Enable VPC: Checked
     VPC: <Choose either the same VPC as FSx for ONTAP or a VPC that can access both FSx for ONTAP and the internet via a private subnet>
-    Subnets: <Choose 2 private subnets which have NAT gateway attached pointing to public subnets with internet gateway and subnets that have internet access>
+    Subnets: <Choose 2 private subnets that have NAT gateway attached pointing to public subnets with internet gateway and subnets that have internet access>
     Security Group: <Choose a Security Group>
 ----
 +
@@ -297,7 +297,7 @@ image:fsxn-monitoring-resizing-lambda-creation-1.png["此图显示了AWS控制�
 +
 image:fsxn-monitoring-resizing-lambda-creation-2.png["此图显示了AWS控制台上的Lambda创建窗口。"]
 
-. 向下滚动到新创建的Lambda函数的*层*部分、然后单击*添加层*。
+. 导航到新创建的Lamba函数>向下滚动到*图层*部分，然后单击*添加图层*。
 +
 image:fsxn-monitoring-resizing-add-layer-button.png["此图显示了AWS Lambda功能控制台上的添加层按钮。"]
 
@@ -306,14 +306,14 @@ image:fsxn-monitoring-resizing-add-layer-button.png["此图显示了AWS Lambda�
 +
 image:fsxn-monitoring-resizing-create-layer-paramiko.png["此图显示了AWS控制台上的创建新层窗口。"]
 
-. 导航回AWS Lamba*Add Layer*>*Custom Layers*并添加实用程序层。
+. 导航回AWS Lamb另 一个函数>*添加图层*>*自定义图层*并添加实用程序图层。
 +
 image:fsxn-monitoring-resizing-add-layer-window.png["此图显示了AWS Lambda功能控制台上的添加层窗口。"]
 
 +
 image:fsxn-monitoring-resizing-layers-added.png["此图显示了AWS Lambda功能控制台上添加的层。"]
 
-. 导航到Lambda函数的*配置*选项卡、然后单击*常规配置*下的*编辑*。将超时更改为* 5分钟*、然后单击保存。
+. 导航到Lambda函数的*配置*选项卡、然后单击*常规配置*下的*编辑*。将超时更改为*5分钟*，然后单击*Save*。
 . 导航到Lambda函数的*权限*选项卡、然后单击分配的角色。在角色的权限选项卡中、单击*添加权限*>*创建实时策略*。
 +
 .. 单击JSON选项卡、然后从GitHub repo粘贴文件policy.json的内容。
@@ -349,7 +349,7 @@ image:fsxn-monitoring-resizing-layers-added.png["此图显示了AWS Lambda功能
 | * FSx_password_SSM_parameter* | string | (必需)输入在AWS参数存储中用于存储"fsxadmin"密码的路径名称。 
 
 
-| *警告通知* | 池 | (必需)将此变量设置为True、以便在存储容量/卷/LUN使用量超过75%但小于阈值时接收通知。 
+| *警告通知* | 池 | (必需)将此变量设置为True、以便在存储容量/卷/LUN使用量超过75%但小于阈值时收到通知。 
 
 
 | *启用_snapshot_deletion* | 池 | (必需)将此变量设置为True、以便为早于"snapshot_age_threshold_in_days"中指定值的快照启用卷级快照删除。 
@@ -378,7 +378,7 @@ image:fsxn-monitoring-resizing-layers-added.png["此图显示了AWS Lambda功能
 +
 image:fsxn-monitoring-resizing-lambda-code.png["此图显示了AWS Lambda功能控制台上的lambda代码。"]
 
-. 单击*测试*、创建一个空测试事件、然后运行测试并检查脚本是否运行正常。
+. 单击*Test*，创建一个包含空JSON对象的测试事件，然后通过单击*Invoke *来运行测试，以检查脚本是否运行正常。
 . 成功测试后、导航到*配置*>*触发器*>*添加触发器*。
 +
 [listing]
@@ -403,4 +403,4 @@ image:fsxn-monitoring-resizing-eventbridge.png["此图显示了AWS Lambda功能�
 
 == 结论
 
-借助提供的解决方案 、可以轻松设置监控解决方案 、以便定期监控ONTAP 存储的FSX、根据用户指定的阈值调整其大小并提供警报机制。这样、使用和监控适用于ONTAP 的FSX的过程就可以无缝地让管理员腾出时间专注于业务关键型活动、同时存储在需要时自动增长。
+借助提供的解决方案、可以轻松设置监控、该监控解决方案会定期监控FSx for ONTAP存储、根据用户指定的阈值调整其值并提供警报机制。这样、使用和监控适用于ONTAP 的FSX的过程就可以无缝地让管理员腾出时间专注于业务关键型活动、同时存储在需要时自动增长。
