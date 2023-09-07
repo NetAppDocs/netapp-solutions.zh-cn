@@ -9498,7 +9498,6 @@
   <block id="72170ff3a9ca936d7855297f0bbd1eeb" category="cell">（必需）要使用的实例类型，具体取决于您选择的许可证类型： Explore ： `Standard_DS3_v2` ， Standard ： `Standard_DS4_v2 ， Standard_DS13_v2 ， Standard_L8s_v2` ， Premium ： `Standard_DS5_v2` ， `standard_DS14_v2` ， BYOL ：为 PayGo 定义的所有实例类型。有关更多受支持的实例类型，请参见《 Cloud Volumes ONTAP 发行说明》。默认值为 `Standard_DS4_v2` 。</block>
   <block id="b515d8e49b6ef626aa91dbd970708132" category="cell">（必需）要使用的许可证类型。对于单个节点：`azure-cot-explore-paygo ， azure-cot-standard-paygo ， azure-cot-premy-paygo ， azure-cot-premy-BYOL ， capacity-paygo` 。HA ：`azure-ha-cot-standard-paygo ， azure-ha-cot-premy-paygo ， azure-ha-cot-premy-BYOL ， ha-capacity-paygo` 。默认值为 `azure-cot-standard-paygo` 。在选择 Bring your own License type capacity-based 或 Freemium 后，请对 HA 使用 `capacity-paygo` 或 `ha-capacity-paygo` 。在选择 Bring Your Own License type Node-Based 后，请使用 `azure-cot-premy-BYOL` 或 `azure-ha-cot-premy-BYOL` for HA 。</block>
   <block id="728aafab2377ad85ce4ae3f6a4b3dd33" category="cell">（必需）实例的安全组 ID ，可以提供多个安全组，并以 " ， " 分隔。</block>
-  <block id="fbd9a83d6df239351ac0498cbaa58065" category="paragraph">本解决方案 介绍了使用 Terraform 模块在 AWS （ CVO 单节点， CVO HA 和 FSX ONTAP ）和 Azure （ CVO 单节点， CVO HA 和 ANF ）上自动部署云卷的过程。可在中找到此代码<block ref="d07ec9f91b2ccc52b0d628a1b144c1d8" category="inline-link-rx"></block></block>
   <block id="0db20ddc31a427cc02802395aa53db7f" category="cell">（必需）以 TB 为单位提及的容量池大小。</block>
   <block id="c47acd947f63c78f7729c5c176778d53" category="paragraph">启用了数据保护的单个 ANF 卷的 Terraform 变量。</block>
   <block id="ca7ce11916c29a2c94b4fd33dc0b6313" category="paragraph">本节包含用于在 Azure 上部署 / 配置单节点 CVO （ Cloud Volumes ONTAP ）的各种 Terraform 配置文件。</block>
@@ -15431,10 +15430,7 @@
   <block id="20606e28a0d567be1dabd5cf50a2dc3b" category="section-title">附录</block>
   <block id="16dfbb688028526582ec31ab802b9589" category="example-title">附录A：用于云形成模板的YAML文件</block>
   <block id="4c76ae47de51751cc57a4033d14f2f2a" category="paragraph">以下.yaml文件可与AWS控制台中的云构成模板结合使用。</block>
-  <block id="76f249edcff2b74fcc17020455372f1b" category="inline-link"><block ref="76f249edcff2b74fcc17020455372f1b" category="inline-link-rx"></block></block>
-  <block id="57ea11aec1064892e5db378204f829c4" category="list-text"><block ref="57ea11aec1064892e5db378204f829c4" category="inline-link-rx"></block></block>
   <block id="f6d8279768d195862ae69a3df8dd51ab" category="inline-link">此GitHub链接</block>
-  <block id="4d39c6875a330594fc8521c48cadd7f6" category="paragraph">要使用PowerShell自动创建iSCSI LUN并安装NetApp SnapCenter 、请从克隆此repo<block ref="445e758235a70998ddfcd1531f3ae35b" category="inline-link-rx"></block>。</block>
   <block id="00867e5f5ae22280c11a2626b65e657b" category="example-title">附录B：用于配置卷和LUN的PowerShell脚本</block>
   <block id="0826ee2b94a579e02e80bfcdf26c5648" category="paragraph">以下脚本用于配置卷和LUN、并根据上述说明设置iSCSI。有两个PowerShell脚本：</block>
   <block id="81e24f41fbaff249c9819985065173e3" category="list-text"><block ref="2a9a99327bbfb47d37ee76307e959506" prefix="" category="inline-code"></block></block>
@@ -19775,19 +19771,6 @@ Astra Control -单击用户图标并单击API访问时、请访问API文档下�
   <block id="90a3396e8967bc372a59a701f133c2c1" category="inline-link-macro">灾难恢复流程编排程序—AWS</block>
   <block id="81bc896ca904bd682e11ffe1d5abf3d8" category="inline-link-macro">灾难恢复流程编排程序—Azure</block>
   <block id="6049d00b73dc4321e44f8849d8742ed7" category="inline-link-macro">使用SnapCenter部署适用于VMware vSphere的VMware插件</block>
-  <block id="63e272055a89a3194aa50eafdd05ffd5" category="paragraph">下面是一些可与VMware A拨 集成的其他资源。
-<block ref="dda17c7c890517ceeb30661fbdc5a21b" category="inline-link-macro-rx"></block>
-<block ref="95499a321602fd640851edb11cd0652b" category="inline-link-macro-rx"></block>
-<block ref="d60c12aedc8c0da5f4e1be13c4dc721b" category="inline-link-macro-rx"></block>
-<block ref="358a5bcd9bbface85de25c9415f0fe82" category="inline-link-macro-rx"></block>
-<block ref="5fc05f965f5c74950011cf97e1927c78" category="inline-link-macro-rx"></block>
-<block ref="375a308e38a72a52f57edf008a10609d" category="inline-link-macro-rx"></block>
-<block ref="0bc03b693cc088995a6238c26e595281" category="inline-link-macro-rx"></block>
-<block ref="3ac5a2677e3f6fe8f5869b429b93acff" category="inline-link-macro-rx"></block>
-<block ref="56daa806549cf76d44eec0ef69c5d6c2" category="inline-link-macro-rx"></block>
-<block ref="ec71f6e51d9c1ee1ea4460e13b624df0" category="inline-link-macro-rx"></block>
-<block ref="89505d87a2c92f122bfb4f697f10a1ed" category="inline-link-macro-rx"></block>
-<block ref="8acf1898e88961a998bf3a52f78fdb3a" category="inline-link-macro-rx"></block></block>
   <block id="03c47bd2899cb12e9401f463f8d3eee0" category="paragraph">VMware ARA通过实时了解管理员的基础架构来协助管理员执行与操作相关的任务。适用于NetApp FAS/AFA的VMware AFA管理包是一款适用于VMware AFA操作的嵌入式适配器。这种集成可提供有关基础架构的分析和最新信息、帮助您在出现问题时或可能出现的问题更快地发现。</block>
   <block id="c41833aa6cc278fcc92faa8cca4c82e6" category="inline-link-macro">VMware A活动 产品页面</block>
   <block id="a99a8e803ccceb46d9ab18ad17c534d1" category="list-text"><block ref="a99a8e803ccceb46d9ab18ad17c534d1" category="inline-link-macro-rx"></block></block>
@@ -20205,4 +20188,21 @@ Astra Control -单击用户图标并单击API访问时、请访问API文档下�
   <block id="740343954e72caba682c972de1bc4459" category="cell">(必需)将此变量设置为True、以便在存储容量/卷/LUN使用量超过75%但小于阈值时收到通知。</block>
   <block id="8a5fe4432309ce27193ef047eaf8b7ea" category="list-text">单击*Test*，创建一个包含空JSON对象的测试事件，然后通过单击*Invoke *来运行测试，以检查脚本是否运行正常。</block>
   <block id="0551dbffe30f51dd77e5f8b4a0dfb8e6" category="paragraph">借助提供的解决方案、可以轻松设置监控、该监控解决方案会定期监控FSx for ONTAP存储、根据用户指定的阈值调整其值并提供警报机制。这样、使用和监控适用于ONTAP 的FSX的过程就可以无缝地让管理员腾出时间专注于业务关键型活动、同时存储在需要时自动增长。</block>
+  <block id="c9ac504cc0f9e496d5b4468f0abe1266" category="paragraph">下面是一些可与VMware A拨 集成的其他资源。
+<block ref="dda17c7c890517ceeb30661fbdc5a21b" category="inline-link-macro-rx"></block>
+<block ref="95499a321602fd640851edb11cd0652b" category="inline-link-macro-rx"></block>
+<block ref="d60c12aedc8c0da5f4e1be13c4dc721b" category="inline-link-macro-rx"></block>
+<block ref="358a5bcd9bbface85de25c9415f0fe82" category="inline-link-macro-rx"></block>
+<block ref="5fc05f965f5c74950011cf97e1927c78" category="inline-link-macro-rx"></block>
+<block ref="375a308e38a72a52f57edf008a10609d" category="inline-link-macro-rx"></block>
+<block ref="0bc03b693cc088995a6238c26e595281" category="inline-link-macro-rx"></block>
+<block ref="3ac5a2677e3f6fe8f5869b429b93acff" category="inline-link-macro-rx"></block>
+<block ref="56daa806549cf76d44eec0ef69c5d6c2" category="inline-link-macro-rx"></block>
+<block ref="8365bd165718cb0c985697761d0f7bd4" category="inline-link-macro-rx"></block>
+<block ref="42c2925dafd34b5edd17bc78e2f6cfce" category="inline-link-macro-rx"></block>
+<block ref="8acf1898e88961a998bf3a52f78fdb3a" category="inline-link-macro-rx"></block></block>
+  <block id="4955754540a3275b8091953009e5babc" category="paragraph">本解决方案 介绍了使用 Terraform 模块在 AWS （ CVO 单节点， CVO HA 和 FSX ONTAP ）和 Azure （ CVO 单节点， CVO HA 和 ANF ）上自动部署云卷的过程。可在中找到此代码<block ref="443c555d04d240afc4ca748e75f63754" category="inline-link-rx"></block></block>
+  <block id="af5a37a09e4cee2968d7fd03f421a0a2" category="inline-link"><block ref="af5a37a09e4cee2968d7fd03f421a0a2" category="inline-link-rx"></block></block>
+  <block id="681814eb62cc26ee1c660bd58a9ce6eb" category="list-text"><block ref="681814eb62cc26ee1c660bd58a9ce6eb" category="inline-link-rx"></block></block>
+  <block id="275e63e9a49f296c063604ee4db5723e" category="paragraph">要使用PowerShell自动创建iSCSI LUN并安装NetApp SnapCenter 、请从克隆此repo<block ref="a4dae7a3e0d905f7a66835dd216b7b06" category="inline-link-rx"></block>。</block>
 </blocks>
