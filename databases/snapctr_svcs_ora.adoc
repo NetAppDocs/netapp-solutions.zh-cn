@@ -129,7 +129,6 @@ video::4b0fd212-7641-46b8-9e55-b01200f9383a[panopto]
 . AWS中部署的Amazon FSx for ONTAP集群、用于托管上述数据库卷。
 . EC2实例上的一个可选数据库服务器、可用于测试将Oracle数据库克隆到备用主机的操作、以支持开发/测试工作负载或任何需要生产Oracle数据库的完整数据集的使用情形。
 . 如果您需要帮助以满足在Amazon FSX for ONTAP 和EC2计算实例上部署Oracle数据库的上述前提条件、请参见 link:aws_ora_fsx_ec2_iscsi_asm.html["使用iSCSI/ASM在AWS FSX/EC2中部署和保护Oracle数据库"^] 或白皮书 link:aws_ora_fsx_ec2_deploy_intro.html["基于EC2和FSx的Oracle数据库部署最佳实践"^]
-. 如果您需要帮助以满足在Amazon FSX for ONTAP 和EC2计算实例上部署Oracle数据库的上述前提条件、请参见 link:aws_ora_fsx_ec2_iscsi_asm.html["使用iSCSI/ASM在AWS FSX/EC2中部署和保护Oracle数据库"^] 或白皮书 link:aws_ora_fsx_ec2_deploy_intro.html["基于EC2和FSx的Oracle数据库部署最佳实践"^]
 
 
 ====
@@ -197,6 +196,45 @@ image:snapctr_svcs_connector_09-security.png["在图形用户界面中显示此�
 
 
 image:snapctr_svcs_connector_10-review.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+====
+
+
+=== 在BlueXP for AWS资源访问中定义凭据
+
+[%collapsible]
+====
+. 首先、从AWS EC2控制台、在*身份和访问管理(IAM)*菜单*角色*和*创建角色*中创建角色、以启动角色创建工作流。
++
+image:snapctr_svcs_credential_01-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 在*选择可信实体*页面中、选择* AWS account*、*另一个AWS account*、然后粘贴BlueXP帐户ID、该ID可从BlueXP控制台检索。
++
+image:snapctr_svcs_credential_02-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 按FSx筛选权限策略并将*权限策略*添加到角色。
++
+image:snapctr_svcs_credential_03-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 在“*角色详细信息*”页中，为角色命名，添加一个问题描述，然后单击*Create Role*。
++
+image:snapctr_svcs_credential_04-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 返回BlueXP控制台、单击控制台右上角的设置图标以打开*帐户凭据*页面、然后单击*添加凭据*以启动凭据配置工作流。
++
+image:snapctr_svcs_credential_05-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 选择凭据位置为-*Amazon Web Services - BlueXP*。
++
+image:snapctr_svcs_credential_06-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 使用正确的*角色ARN*定义AWS凭据、可从上述步骤1中创建的AWS IAM角色检索这些凭据。BlueXP *帐户ID*、用于在步骤1中创建AWS IAM角色。
++
+image:snapctr_svcs_credential_07-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
+. 审查和*Add*。
+image:snapctr_svcs_credential_08-aws.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
 
 ====
 
@@ -333,8 +371,10 @@ image:snapctr_svcs_setup_17.png["在图形用户界面中显示此步骤的屏�
 image:snapctr_svcs_bkup_01.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 您还可以使用自定义的备份频率和备份数据保留窗口创建自己的策略。
- +
+
+
 image:snapctr_svcs_bkup_02.png["在图形用户界面中显示此步骤的屏幕截图。"]
+
 . 如果您对策略配置满意、则可以分配所选的策略来保护数据库。
 
 
@@ -427,6 +467,8 @@ image:snapctr_svcs_clone_07-status.png["错误：缺少图形映像"]
 
 
 image:snapctr_svcs_clone_08-crs.png["错误：缺少图形映像"]
+
+image:snapctr_svcs_clone_08-db.png["错误：缺少图形映像"]
 
 ====
 
