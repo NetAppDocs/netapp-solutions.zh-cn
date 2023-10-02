@@ -1,0 +1,175 @@
+---
+sidebar: sidebar 
+permalink: databases/automation_ora_migration.html 
+keywords: Oracle, AWS, FSx ONTAP, Database Migration, Oracle 19c, 
+summary: 解决方案提供了一个基于Ans得 的自动化工具包、用于通过PDB重新定位和最大可用性方法迁移Oracle数据库。迁移可以是内部环境和云作为源或目标的任意组合 
+---
+= 自动化Oracle迁移
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+NetApp解决方案工程团队
+
+
+
+== 目的
+
+此工具包可利用FSx ONTAP存储和EC2计算实例作为目标基础架构、自动将Oracle数据库从内部迁移到AWS云。假定客户已在CDB/PDB模型中部署了内部Oracle数据库。该工具包允许客户使用Oracle PDB重新定位操作步骤(具有最大可用性选项)从Oracle主机上的容器数据库重新定位命名PDB。这意味着、任何内部存储阵列上的源PDB都会重新定位到新容器数据库、而服务中断量极小。Oracle重新定位操作步骤将在数据库联机时移动Oracle数据文件。之后、当所有数据文件迁移到AWS云时、它会在切换时将用户会话从内部重新路由到重新定位的数据库服务。突出显示的技术是经验证的Oracle PDB热克隆方法。
+
+此解决方案 可解决以下使用情形：
+
+* 在内部源数据库服务器上创建迁移用户并授予所需权限。
+* 在源PDB处于联机状态时、将PDB从内部CDB重新定位到云中的目标CDB、直到切换为止。
+
+
+
+
+== audience
+
+此解决方案 适用于以下人员：
+
+* 将Oracle数据库从内部环境迁移到AWS云的数据库管理人员。
+* 一名数据库解决方案架构师、对从内部环境向AWS云迁移Oracle数据库感兴趣。
+* 负责管理支持Oracle数据库的AWS FSx ONTAP存储的存储管理员。
+* 喜欢将Oracle数据库从内部环境迁移到AWS云的应用程序所有者。
+
+
+
+
+== 许可证
+
+访问、下载、安装或使用此GitHub存储库中的内容即表示您同意中列出的许可条款 link:https://github.com/NetApp/na_ora_hadr_failover_resync/blob/master/LICENSE.TXT["许可证文件"^]。
+
+
+NOTE: 在使用此GitHub存储库中的内容制作和/或共享任何衍生作品方面存在一些限制。在使用内容之前、请确保您已阅读许可条款。如果您不同意所有条款、请勿访问、下载或使用此存储库中的内容。
+
+
+
+== 解决方案 部署
+
+
+
+=== 部署的前提条件
+
+[%collapsible]
+====
+部署需要满足以下前提条件。
+
+....
+Ansible v.2.10 and higher
+ONTAP collection 21.19.1
+Python 3
+Python libraries:
+  netapp-lib
+  xmltodict
+  jmespath
+....
+....
+Source Oracle CDB with PDBs on-premises
+Target Oracle CDB in AWS hosted on FSx and EC2 instance
+Source and target CDB on same version and with same options installed
+....
+....
+Network connectivity
+  Ansible controller to source CDB
+  Ansible controller to target CDB
+  Source CDB to target CDB on Oracle listener port (typical 1521)
+....
+====
+
+
+=== 下载此工具包
+
+[%collapsible]
+====
+[source, cli]
+----
+git clone https://github.com/NetApp/na_ora_aws_migration.git
+----
+====
+
+
+=== 主机变量配置
+
+[%collapsible]
+====
+主机变量在名为｛｛host_name｝｝.yml的host_vars目录中定义。其中包括一个示例主机变量文件host_name.yml、用于演示典型配置。以下是主要注意事项：
+
+....
+Source Oracle CDB - define host specific variables for the on-prem CDB
+  ansible_host: IP address of source database server host
+  source_oracle_sid: source Oracle CDB instance ID
+  source_pdb_name: source PDB name to migrate to cloud
+  source_file_directory: file directory of source PDB data files
+  target_file_directory: file directory of migrated PDB data files
+....
+....
+Target Oracle CDB - define host specific variables for the target CDB including some variables for on-prem CDB
+  ansible_host: IP address of target database server host
+  target_oracle_sid: target Oracle CDB instance ID
+  target_pdb_name: target PDB name to be migrated to cloud (for max availability option, the source and target PDB name must be the same)
+  source_oracle_sid: source Oracle CDB instance ID
+  source_pdb_name: source PDB name to be migrated to cloud
+  source_port: source Oracle CDB listener port
+  source_oracle_domain: source Oracle database domain name
+  source_file_directory: file directory of source PDB data files
+  target_file_directory: file directory of migrated PDB data files
+....
+====
+
+
+=== 数据库服务器主机文件配置
+
+[%collapsible]
+====
+默认情况下、AWS EC2实例使用IP地址命名主机。如果您在hosts文件中对Ansv可 使用不同的名称、请在/etc/hosts文件中为源服务器和目标服务器设置主机命名解析。下面是一个示例。
+
+....
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+172.30.15.96 source_db_server
+172.30.15.107 target_db_server
+....
+====
+
+
+=== 执行操作手册-按顺序执行
+
+[%collapsible]
+====
+. 安装Ands负责 控制器的前提条件。
++
+[source, cli]
+----
+ansible-playbook -i hosts requirements.yml
+----
++
+[source, cli]
+----
+ansible-galaxy collection install -r collections/requirements.yml --force
+----
+. 对内部服务器执行迁移前任务—假设管理员是ssh用户、可使用sudo权限连接到内部Oracle主机。
++
+[source, cli]
+----
+ansible-playbook -i hosts ora_pdb_relocate.yml -u admin -k -K -t ora_pdb_relo_onprem
+----
+. 在AWS EC2实例中执行Oracle PDB从内置CDB到目标CDB的重新定位—假设EC2数据库实例连接为ec2-user、而使用EC2-user ssh密钥对执行db1.pm。
++
+[source, cli]
+----
+ansible-playbook -i hosts ora_pdb_relocate.yml -u ec2-user --private-key db1.pem -t ora_pdb_relo_primary
+----
+
+
+====
+
+
+== 从何处查找追加信息
+
+要了解有关NetApp 解决方案 自动化的详细信息、请查看以下网站 link:https://docs.netapp.com/us-en/netapp-solutions/automation/automation_introduction.html["NetApp 解决方案自动化"^]
