@@ -1,0 +1,77 @@
+---
+sidebar: sidebar 
+permalink: ai/ddlnexus_expose_netapp_vols.html 
+keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, Hybrid, Hybrid Cloud, Hybrid Multicloud, Cloud, AWS, Amazon, Amazon Web Services, FSx for NetApp ONTAP, FSx, NetApp ONTAP, FlexCache, SnapMirror, BlueXP 
+summary: 采用Domino数据实验室和NetApp的混合多云MLOps—将现有NetApp卷公开给Domino 
+---
+= 将现有NetApp卷公开给Domino
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:ddlnexus_initial_setup.html["上一步：初始设置。"]
+
+[role="lead"]
+本节介绍向Domino MLOps平台公开现有NetApp ONTAP NFS卷所需执行的任务。这些步骤同样适用于内部和AWS。
+
+
+
+== 为什么要将NetApp ONTAP卷公开给Domino？
+
+将NetApp卷与Domino结合使用具有以下优势：
+
+* 您可以利用NetApp ONTAP的横向扩展功能对超大型数据集执行工作负载。
+* 您可以跨多个计算节点执行工作负载、而无需将数据复制到各个节点。
+* 您可以利用NetApp的混合多云数据移动和同步功能跨多个数据中心和/或云访问数据。
+* 您希望能够在其他数据中心或云中快速轻松地创建数据缓存。
+
+
+
+
+== 公开Asta Trident未配置的现有NFS卷
+
+如果现有的NetApp ONTAP NFS卷不是由Astra Trident配置的、请按照本小节中概述的步骤进行操作。
+
+
+
+=== 在Kubbernetes中创建PV和PVC
+
+
+NOTE: 对于内部部署卷、请在内部Kubbernetes集群中创建PV和PVC。对于Amazon FSx for NetApp ONTAP卷、在Amazon EKS中创建PV和PVC。
+
+首先、您必须在Kubbernetes集群中创建永久性卷(PV)和永久性卷请求(PVC)。要创建PV和PVC、请使用 link:https://docs.dominodatalab.com/en/latest/admin_guide/4cdae9/set-up-kubernetes-pv-and-pvc/#_nfs_pvpvc_example["NFS PV/PVC示例"] 并更新这些值以反映您的环境。请务必为指定正确的值 `namespace`， `nfs.path`，和 `nfs.server` 字段。此外、我们建议为您的PV和PVC提供唯一名称、以表示相应ONTAP NFS卷上存储的数据的性质。例如、如果卷包含制造缺陷的图像、您可以将PV命名为 `pv-mfg-defect-images`和PVC、 `pvc-mfg-defect-images`。
+
+
+
+=== 在Domino中注册外部数据卷
+
+接下来、您必须在Domino中注册外部数据卷。要注册外部数据卷、请参见 link:https://docs.dominodatalab.com/en/latest/admin_guide/9c3564/register-external-data-volumes/["说明"] 在Domino管理指南中。注册卷时、请务必从"卷类型"下拉菜单中选择"NFS"。选择"NFS"后、您应在"可用卷"列表中看到您的PVC。
+
+image:ddlnexus_image3.png["错误：缺少图形映像"]
+
+
+
+== 公开Asta Trident配置的现有卷
+
+如果现有卷是由Asta Trident配置的、请按照本小节中概述的步骤进行操作。
+
+
+
+=== 编辑现有PVC
+
+如果您的卷是由Asta Trident配置的、则您已经拥有与您的卷对应的永久性卷请求(PVC)。要将此卷公开给Domino、必须编辑PVC并将以下标签添加到中的标签列表中 `metadata.labels` 字段：
+
+....
+"dominodatalab.com/external-data-volume": "Generic"
+....
+
+
+=== 在Domino中注册外部数据卷
+
+接下来、您必须在Domino中注册外部数据卷。要注册外部数据卷、请参见 link:https://docs.dominodatalab.com/en/latest/admin_guide/9c3564/register-external-data-volumes/["说明"] 在Domino管理指南中。注册卷时、请务必从"卷类型"下拉菜单中选择"通用"。选择"通用"后、您应在"可用卷"列表中看到您的PVC。
+
+link:ddlnexus_access_data_hybrid.html["接下来：跨不同环境访问相同数据。"]

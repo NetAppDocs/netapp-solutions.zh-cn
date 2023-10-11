@@ -1,0 +1,138 @@
+---
+sidebar: sidebar 
+permalink: ai/ddlnexus_access_data_hybrid.html 
+keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, Hybrid, Hybrid Cloud, Hybrid Multicloud, Cloud, AWS, Amazon, Amazon Web Services, FSx for NetApp ONTAP, FSx, NetApp ONTAP, FlexCache, SnapMirror, BlueXP 
+summary: 采用Domino数据实验室和NetApp的混合多云MLOps—跨不同环境访问相同数据 
+---
+= 在不同环境中访问相同的数据
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:ddlnexus_expose_netapp_vols.html["上一步：将现有NetApp卷公开给Domino。"]
+
+[role="lead"]
+本节介绍在不同计算环境中访问相同数据所需执行的任务。在Domino MLOps平台中、计算环境称为"数据平面"。 如果您的数据驻留在一个数据平面中的NetApp卷上、但您需要在另一个数据平面中访问该数据、请按照本节中所述的任务进行操作。这种情形通常称为"突发"、如果目标环境为云、则称为"云突发"。 处理有限或超额预订的计算资源时、通常需要此功能。例如、如果您的内部计算集群订阅过量、您可能希望将工作负载计划到云、以便立即启动。
+
+对于访问位于不同数据平面中的NetApp卷、建议使用两种方法。这些选项将在下面的小节中进行概述。根据您的特定要求、选择其中一个选项。下表介绍了这两个选项的优点和缺点。
+
+|===
+| 选项 | 优势 | 缺点 
+
+
+| 选项1 -缓存 | -工作流更简单
+-能够根据需要缓存一部分数据
+-能够将数据写回源
+-没有要管理的远程副本 | -随着缓存水合、初始数据访问延迟会增加。 
+
+
+| 选项2 -镜像 | -源卷的完整副本
+-缓存融合不会增加延迟(镜像操作完成后) | -必须等待镜像操作完成、然后才能访问数据
+-必须管理远程副本
+-无法回写源 
+|===
+
+
+== 选项1 -为驻留在其他数据平面中的卷创建缓存
+
+使用 link:https://docs.netapp.com/us-en/ontap/flexcache/accelerate-data-access-concept.html["NetApp FlexCache 技术"]，则可以为驻留在其他数据平面中的NetApp卷创建缓存。例如、如果您的内部数据平面中有一个NetApp卷、而您需要在AWS数据平面中访问该卷、则可以在AWS中为该卷创建缓存。本节概述了为驻留在其他数据平面中的NetApp卷创建缓存所需执行的任务。
+
+
+
+=== 在目标环境中创建FlexCache卷
+
+
+NOTE: 如果目标环境是您的内部数据中心、则需要在内部ONTAP系统上创建FlexCache卷。如果目标环境为AWS、则需要在Amazon FSx for NetApp ONTAP实例上创建FlexCache卷。
+
+首先、必须在目标环境中创建FlexCache卷。
+
+建议使用BlueXP创建FlexCache卷。要使用BlueXP创建FlexCache卷、请按照中所述的说明进行操作 link:https://docs.netapp.com/us-en/bluexp-volume-caching/["BlueXP卷缓存文档"]。
+
+如果您不想使用BlueXP、则可以使用ONTAP系统管理器或ONTAP命令行界面创建FlexCache卷。要使用System Manager创建FlexCache卷、请参阅中概述的说明 link:https://docs.netapp.com/us-en/ontap/task_nas_flexcache.html["ONTAP 文档"]。要使用ONTAP命令行界面创建FlexCache卷、请参阅中概述的说明 link:https://docs.netapp.com/us-en/ontap/flexcache/index.html["ONTAP 文档"]。
+
+如果要自动执行此过程、可以使用 link:https://docs.netapp.com/us-en/bluexp-automation/["BlueXP API"]， link:https://devnet.netapp.com/restapi.php["ONTAP REST API"]或 link:https://docs.ansible.com/ansible/latest/collections/netapp/ontap/index.html["ONTAP的"Ans征选""]。
+
+
+NOTE: System Manager在Amazon FSx for NetApp ONTAP中不可用。
+
+
+
+=== 将FlexCache卷公开给Domino
+
+接下来、必须将FlexCache卷公开给Domino MLOps平台。要向Domino公开FlexCache卷、请按照的"公开未由Astra Trident配置的现有NFS卷"子部分中所述的说明进行操作 link:ddlnexus_expose_netapp_vols.html[""向Domino公开现有NetApp卷"部分"] 解决方案。
+
+现在、您可以在目标数据平面中启动作业和工作空间时挂载FlexCache卷、如以下屏幕截图所示。
+
+
+
+==== 创建FlexCache卷之前
+
+image:ddlnexus_image4.png["错误：缺少图形映像"]
+
+
+
+==== 将FlexCache卷公开给Domino之后
+
+image:ddlnexus_image5.png["错误：缺少图形映像"]
+
+
+
+== 选项2 -备份驻留在其他数据平面中的卷
+
+使用 link:https://www.netapp.com/cyber-resilience/data-protection/data-backup-recovery/snapmirror-data-replication/["NetApp SnapMirror数据复制技术"]，则可以创建驻留在其他数据平面中的NetApp卷的副本。例如、如果您的内部数据平面中有一个NetApp卷、而您需要在AWS数据平面中访问该卷、则可以在AWS中创建该卷的副本。本节概述了为驻留在其他数据平面中的NetApp卷创建副本所需执行的任务。
+
+
+
+=== 创建 SnapMirror 关系
+
+首先、必须在源卷与目标环境中的新目标卷之间创建SnapMirror关系。请注意、目标卷将在创建SnapMirror关系的过程中创建。
+
+建议使用BlueXP创建SnapMirror关系。要使用BlueXP创建SnapMirror关系、请按照中所述的说明进行操作 link:https://docs.netapp.com/us-en/bluexp-replication/["BlueXP复制文档"]。
+
+如果您不想使用BlueXP、则可以使用ONTAP系统管理器或ONTAP命令行界面创建SnapMirror关系。要创建与System Manager的SnapMirror关系、请参阅中概述的说明 link:https://docs.netapp.com/us-en/ontap/task_dp_configure_mirror.html["ONTAP 文档"]。要使用ONTAP命令行界面创建SnapMirror关系、请参阅中概述的说明 link:https://docs.netapp.com/us-en/ontap/data-protection/snapmirror-replication-workflow-concept.html["ONTAP 文档"]。
+
+如果要自动执行此过程、可以使用 link:https://docs.netapp.com/us-en/bluexp-automation/["BlueXP API"]， link:https://devnet.netapp.com/restapi.php["ONTAP REST API"]或 link:https://docs.ansible.com/ansible/latest/collections/netapp/ontap/index.html["ONTAP的"Ans征选""]。
+
+
+NOTE: System Manager在Amazon FSx for NetApp ONTAP中不可用。
+
+
+
+=== 中断 SnapMirror 关系
+
+接下来、您必须中断SnapMirror关系、才能激活目标卷以进行数据访问。请等待初始复制完成、然后再执行此步骤。
+
+
+NOTE: 您可以通过在BlueXP、ONTAP系统管理器或ONTAP命令行界面中检查镜像状态来确定复制是否已完成。复制完成后、镜像状态将为"snapMirrored"。
+
+建议使用BlueXP中断SnapMirror关系。要中断与BlueXP的SnapMirror关系、请按照中所述的说明进行操作 link:https://docs.netapp.com/us-en/bluexp-replication/task-managing-replication.html["BlueXP复制文档"]。
+
+如果您不想使用BlueXP、则可以使用ONTAP系统管理器或ONTAP命令行界面中断SnapMirror关系。要中断与System Manager的SnapMirror关系、请参阅中概述的说明 link:https://docs.netapp.com/us-en/ontap/task_dp_serve_data_from_destination.html["ONTAP 文档"]。要中断与ONTAP命令行界面的SnapMirror关系、请参阅中概述的说明 link:https://docs.netapp.com/us-en/ontap/data-protection/make-destination-volume-writeable-task.html["ONTAP 文档"]。
+
+如果要自动执行此过程、可以使用 link:https://docs.netapp.com/us-en/bluexp-automation/["BlueXP API"]， link:https://devnet.netapp.com/restapi.php["ONTAP REST API"]或 link:https://docs.ansible.com/ansible/latest/collections/netapp/ontap/index.html["ONTAP的"Ans征选""]。
+
+
+
+=== 向Domino公开目标卷
+
+接下来、您必须将目标卷公开给Domino MLOps平台。要向Domino公开目标卷、请按照的"公开未由Astra Trident配置的现有NFS卷"子部分中所述的说明进行操作 link:ddlnexus_expose_netapp_vols.html[""向Domino公开现有NetApp卷"部分"] 解决方案。
+
+现在、您可以在目标数据平面中启动作业和工作空间时挂载目标卷、如以下屏幕截图所示。
+
+
+
+==== 创建SnapMirror关系之前
+
+image:ddlnexus_image4.png["错误：缺少图形映像"]
+
+
+
+==== 向Domino公开目标卷之后
+
+image:ddlnexus_image5.png["错误：缺少图形映像"]
+
+link:ddlnexus_additional_information.html["下一步：追加信息。"]

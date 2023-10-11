@@ -1,0 +1,44 @@
+---
+sidebar: sidebar 
+permalink: ai/ddlnexus_architecture.html 
+keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, Hybrid, Hybrid Cloud, Hybrid Multicloud, Cloud, AWS, Amazon, Amazon Web Services, FSx for NetApp ONTAP, FSx, NetApp ONTAP, FlexCache, SnapMirror, BlueXP 
+summary: 采用Domino数据实验室和NetApp的混合多云MLOps—架构 
+---
+= 架构
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:ddlnexus_technology_overview.html["先前版本：技术概述。"]
+
+[role="lead"]
+此解决方案将Domino Nexus的混合多云工作负载计划功能与NetApp数据服务相结合、创建统一的混合云MLOps平台。有关详细信息、请参见下表。
+
+|===
+| 组件 | Name | environment 
+
+
+| MLOps控制平台 | link:https://domino.ai/platform/nexus["采用Domino Nexus的Domino企业级AI平台"] | AWS 
+
+
+| MLOps平台计算环境 | link:https://docs.dominodatalab.com/en/latest/admin_guide/5781ea/data-planes/["Domino Nexus数据平面"] | AWS、内部数据中心 
+
+
+| 内部计算平台 | link:https://kubernetes.io["Kubernetes"] 使用 link:https://docs.netapp.com/us-en/trident/index.html["NetApp Astra Trident"] | 内部数据中心 
+
+
+| 云计算平台 | link:https://aws.amazon.com/eks/["Amazon Elelic Kubelnetes Service (EKS)"] 使用 link:https://docs.netapp.com/us-en/trident/index.html["NetApp Astra Trident"] | AWS 
+
+
+| 内部数据平台 | link:https://www.netapp.com/data-storage/["NetApp存储设备"] 由提供支持 link:https://www.netapp.com/data-management/ontap-data-management-software/["NetApp ONTAP"] | 内部数据中心 
+
+
+| 云数据平台 | link:https://aws.amazon.com/fsx/netapp-ontap/["适用于 NetApp ONTAP 的 Amazon FSX"] | AWS 
+|===
+image:ddlnexus_image1.png["错误：缺少图形映像"]
+
+link:ddlnexus_initial_setup.html["下一步：初始设置。"]
