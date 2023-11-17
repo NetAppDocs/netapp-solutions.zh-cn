@@ -6856,7 +6856,6 @@
   <block id="2c755351ada495582a6d9015943de077" category="summary">在此使用情形中，客户要求在同一数据中心和远程位置快速高效地基于包含大量分析数据以用于 DevTest 和报告目的的现有 Hadoop 集群构建新的 Hadoop/Spark 集群。</block>
   <block id="acb2dd720b2161405c8cb1ca6035618b" category="doc">用例 3 ：对现有 Hadoop 数据启用 DevTest</block>
   <block id="aeab228f25b5fbe0b00f83117579246e" category="inline-link-macro">先前版本：用例 2 —从云备份和灾难恢复到内部环境。</block>
-  <block id="cf44ed74ea7e07a8e4478e43d9537e07" category="paragraph"><block ref="cf44ed74ea7e07a8e4478e43d9537e07" category="inline-link-macro-rx"></block></block>
   <block id="54861efdd06fc309e1c9a420feff98eb" category="section-title">场景</block>
   <block id="4e19c1aafa6d3711ae619f7e1621a61e" category="paragraph">在这种情况下，多个 Spark 或 Hadoop 集群是通过在内部以及灾难恢复位置实施大型 Hadoop 数据湖而构建的。</block>
   <block id="5f5e12d29ffccf33e8cb5a30f4d2fe8c" category="section-title">要求和挑战</block>
@@ -6868,12 +6867,9 @@
   <block id="49b21ad0d38942f635877e7bbc5d7a1e" category="section-title">解决方案</block>
   <block id="6442ec446d11bbd47497299e0ffceed5" category="paragraph">FlexClone 技术用于问题解答上述要求。FlexClone 技术是 Snapshot 副本的读 / 写副本。它会从父 Snapshot 副本数据读取数据，并且只会为新的 / 修改的块占用额外空间。速度快，节省空间。</block>
   <block id="51a22383ed7ac5a70a455d81a9bad789" category="paragraph">首先，使用 NetApp 一致性组创建现有集群的 Snapshot 副本。</block>
-  <block id="4b481b20e942087b64c5bb7b07d9dca9" category="paragraph">NetApp System Manager 或存储管理员提示符中的 Snapshot 副本。一致性组 Snapshot 副本是应用程序一致的组 Snapshot 副本， FlexClone 卷是根据一致性组 Snapshot 副本创建的。值得一提的是， FlexClone 卷会继承父卷的 NFS 导出策略。创建 Snapshot 副本后，必须安装一个新的 Hadoop 集群以用于 DevTest 和报告目的，如下图所示。原位分析模块通过原位分析模块用户和 NFS 数据的组授权从新 Hadoop 集群访问克隆的 NFS 卷。</block>
-  <block id="4c490dfedbcc5a021b8a4c823e337d41" category="paragraph">要获得正确的访问权限，新集群必须具有在原位分析模块用户和组配置中配置的用户的相同 UID 和 GUID 。</block>
   <block id="6ee7e035a9c46bb26ee76c40aa671148" category="paragraph">此图显示了用于 DevTest 的 Hadoop 集群。</block>
   <block id="4157075925c8c1518cc71d1d0abab403" category="paragraph"><block ref="4157075925c8c1518cc71d1d0abab403" category="inline-image-macro-rx" type="image"></block></block>
   <block id="e10ad11fd299ee6f161f17d772a78a48" category="inline-link-macro">接下来：用例 4 —数据保护和多云连接。</block>
-  <block id="8109e574f349ced8f667b9389c9189a4" category="paragraph"><block ref="8109e574f349ced8f667b9389c9189a4" category="inline-link-macro-rx"></block></block>
   <block id="a64b3943d4911d301243b8ac8779ba53" category="summary">本节概述了 NetApp 为满足各种 Hadoop 数据保护要求而提供的使用情形和解决方案。</block>
   <block id="23496143e5ca83c13eb4d953786abdcd" category="inline-link-macro">先前：用例 5 —加快分析工作负载的速度。</block>
   <block id="09b7371b2ae3168a3c54b30e4966e86e" category="paragraph"><block ref="09b7371b2ae3168a3c54b30e4966e86e" category="inline-link-macro-rx"></block></block>
@@ -6897,8 +6893,6 @@
   <block id="143ece864a38e1c8267bd8318d458955" category="inline-link"><block ref="143ece864a38e1c8267bd8318d458955" category="inline-link-rx"></block></block>
   <block id="b890b67174812331efb42656a186fa42" category="paragraph"><block ref="b890b67174812331efb42656a186fa42" category="inline-link-rx"></block></block>
   <block id="49d7c87b66a2b688ec65b1a4fe9b5ddc" category="list-text">NetApp 原位分析模块</block>
-  <block id="1d669c79bffe95dd384dffb8309a0d40" category="inline-link"><block ref="1d669c79bffe95dd384dffb8309a0d40" category="inline-link-rx"></block></block>
-  <block id="fde1cd76fa73f8065aeb8a97c77b40ec" category="paragraph"><block ref="fde1cd76fa73f8065aeb8a97c77b40ec" category="inline-link-rx"></block></block>
   <block id="0407c27180c9b019e644e8ad4c6a9324" category="section-title">致谢</block>
   <block id="c4f052e8512b2541f8154dd256a529d6" category="list-text">NetApp ANZ 维多利亚地区销售代表 Paul Burland</block>
   <block id="5d14432aa90b3b3ebfa87b98a1844edb" category="list-text">NetApp 业务开发经理 Hoseb Dermanilian</block>
@@ -6916,7 +6910,6 @@
   <block id="4783ab1f0401dc9c24cc9afa6dc5823e" category="list-text">NetApp 备份解决方案创建的备份可以在本地构建于数据中心的 Hadoop 集群中使用，也可以在远程站点的灾难恢复位置运行的 Hadoop 集群中使用。</block>
   <block id="1dbc869d2df036d4d6e732e9c680ab6b" category="list-text">建议的解决方案必须经济高效。</block>
   <block id="7405e6ba4b630f11b88a7976325a95e4" category="list-text">建议的解决方案必须减少备份期间对当前正在运行的生产分析作业的性能影响。</block>
-  <block id="e3d4f6860e578b28733c41c2c852f821" category="section-title">客户的现有备份解决方案</block>
   <block id="f350f804f84a5bf788cd78cd4aae7eab" category="paragraph">下图显示了原始 Hadoop 原生备份解决方案。</block>
   <block id="2975218bd3c71a4ac4eac95d3529a9cb" category="paragraph"><block ref="2975218bd3c71a4ac4eac95d3529a9cb" category="inline-image-macro-rx" type="image"></block></block>
   <block id="76b8e496c38192b97fdfa6cae2ba2bb4" category="paragraph">生产数据通过中间备份集群保护到磁带：</block>
@@ -6933,7 +6926,6 @@
   <block id="1b4d2bf420e7f05ecb82ecf2197ab810" category="section-title">备份解决方案</block>
   <block id="6d977e36854ae6439cbc4fe8e0c1b227" category="paragraph">根据这些挑战和要求，并考虑到现有备份系统，建议了三种可能的备份解决方案。以下各小节分别介绍了这三种不同的备份解决方案，分别标记为解决方案 A 到解决方案 C</block>
   <block id="c5a6c012dc14dc7f9d2fa0df0ccb0cdf" category="section-title">解决方案 A</block>
-  <block id="8ee7b0fbb95cf5b1c98578a7ef03b9eb" category="paragraph">解决方案 A 会将原位分析模块添加到备份 Hadoop 集群中，从而可以对 NetApp NFS 存储系统进行二级备份，从而消除了磁带需求，如下图所示。</block>
   <block id="411ee6c684ee720eff303771433e41d6" category="paragraph"><block ref="411ee6c684ee720eff303771433e41d6" category="inline-image-macro-rx" type="image"></block></block>
   <block id="2813f022c034c63ad3d6efeeb503eb70" category="paragraph">解决方案 A 的详细任务包括：</block>
   <block id="0406c5ca05cfb5f7a0c02971c3962460" category="list-text">生产 Hadoop 集群的 HDFS 中包含需要保护的客户分析数据。</block>
@@ -6941,7 +6933,6 @@
   <block id="b3f54540429c806b8cf0080fd78b34bc" category="list-text">运行 `hadoop distcp – update – diff &lt;hdfs1&gt; &lt;hdfs2&gt;` 命令，保护 Hadoop 生产数据，使其从生产集群 HDFS 传输到备份集群 HDFS 。</block>
   <block id="2de4833848a0b94bd672bdf9bc60d4aa" category="admonition">Hadoop 快照用于保护数据从生产环境传输到备份 Hadoop 集群。</block>
   <block id="79ef8fc2c565c69b33f5918c3a0bdd9a" category="list-text">NetApp ONTAP 存储控制器可提供一个 NFS 导出卷，该卷会配置到备份 Hadoop 集群。</block>
-  <block id="b0e42779d51b21a745cae08f938ec60a" category="list-text">通过利用 MapReduce 和多个映射程序运行 `Hadoop distcp` 命令，可以使用原位分析模块保护分析数据，使其从 Hadoop 集群备份到 NFS 。</block>
   <block id="738997de22c6371f563f69e1bb57b6e5" category="paragraph">将数据存储在 NetApp 存储系统的 NFS 中后，将使用 NetApp Snapshot ， SnapRestore 和 FlexClone 技术根据需要备份，还原和复制 Hadoop 数据。</block>
   <block id="0bd252182290e872b264ad65d369637f" category="admonition">使用 SnapMirror 技术，可以将 Hadoop 数据保护到云端以及灾难恢复位置。</block>
   <block id="4a1b9aaeaa6487c6df7072326cf3798e" category="paragraph">解决方案 A 的优势包括：</block>
@@ -6956,11 +6947,9 @@
   <block id="0628ac302dce6afb9d95a6b8ebd0d013" category="paragraph">由于解决方案 A 的简单性，成本和整体性能，客户最近部署了它。</block>
   <block id="7a3ba8b554aec9832f399bff2ba17c74" category="paragraph">在此解决方案中，可以使用 ONTAP 中的 SAN 磁盘，而不是 JBOD 。此选项会将备份集群存储负载卸载到 ONTAP ；但是，缺点是需要 SAN 网络结构交换机。</block>
   <block id="501a1b4ce382e8e2da0089aded30d11e" category="section-title">解决方案 B</block>
-  <block id="304af2b0b47890c7db8f6097978fdede" category="paragraph">解决方案 B 将原位分析模块添加到生产 Hadoop 集群中，这样就无需备份 Hadoop 集群，如下图所示。</block>
   <block id="303388aba87d7dcff207a6cd098b0cfe" category="paragraph"><block ref="303388aba87d7dcff207a6cd098b0cfe" category="inline-image-macro-rx" type="image"></block></block>
   <block id="8ca30c628556726e2038c5df9689fd91" category="paragraph">解决方案 B 的详细任务包括：</block>
   <block id="e493f6dc701d2253466d5705af2e5bb1" category="list-text">NetApp ONTAP 存储控制器可为生产 Hadoop 集群配置 NFS 导出。</block>
-  <block id="3c321f811c173c1f133bdcc77fc81a33" category="paragraph">Hadoop 原生 `Hadoop distcp` 命令可通过原位分析模块保护从生产集群 HDFS 到 NFS 的 Hadoop 数据。</block>
   <block id="665cfb3949b836c368d9be47d34bcbba" category="list-text">将数据存储在 NetApp 存储系统的 NFS 中后，将使用 Snapshot ， SnapRestore 和 FlexClone 技术根据需要备份，还原和复制 Hadoop 数据。</block>
   <block id="4f1aeb2a94e89562b7bef27c368ed9cc" category="paragraph">解决方案 B 的优势包括：</block>
   <block id="748dc25f775dc78e1da24328f753d1e1" category="list-text">生产集群针对备份解决方案进行了少许修改，从而简化了实施并降低了额外的基础架构成本。</block>
@@ -6979,11 +6968,9 @@
   <block id="f499d7fd731eb2bb1efe6c4069efcb47" category="paragraph">解决方案 C 的优势包括：</block>
   <block id="abe0be0b8deb695793caa75a1dcfc4b3" category="list-text">可以使用 Snapshot 技术创建节省空间的备份。</block>
   <block id="5788267ffe4023e91b333de591766cca" category="inline-link-macro">接下来：用例 2 —从云到内部环境的备份和灾难恢复。</block>
-  <block id="1619284091911820ebd1407554fb6da7" category="paragraph"><block ref="1619284091911820ebd1407554fb6da7" category="inline-link-macro-rx"></block></block>
   <block id="9d9b3c1914053d9ff102d01b77ab40a9" category="summary">此使用情形基于广播客户，该客户需要将基于云的分析数据备份到其内部数据中心。</block>
   <block id="0abf694ae9fa8ac43b805ba39a10d143" category="doc">用例 2 ：从云到内部环境的备份和灾难恢复</block>
   <block id="d05b5b5452aa966fcd3c8947a172f44a" category="inline-link-macro">先前：用例 1 —备份 Hadoop 数据。</block>
-  <block id="d6b3b64a2054103914910c4432cc9e18" category="paragraph"><block ref="d6b3b64a2054103914910c4432cc9e18" category="inline-link-macro-rx"></block></block>
   <block id="733d8d14fe9ffb98d02b33079e3d3db2" category="paragraph">此使用情形基于广播客户，该客户需要将基于云的分析数据备份到其内部数据中心，如下图所示。</block>
   <block id="063e138ba69a95a99bd2f908b540e210" category="paragraph"><block ref="063e138ba69a95a99bd2f908b540e210" category="inline-image-macro-rx" type="image"></block></block>
   <block id="26fea23389e404e4cb8cf9be2c100cbd" category="paragraph">在这种情况下， IoT 传感器数据会载入云中，并使用 AWS 中的开源 Apache Spark 集群进行分析。需要将处理后的数据从云备份到内部环境。</block>
@@ -6992,15 +6979,12 @@
   <block id="848b66ad8aca524142404de79ce64c73" category="list-text">可以在不同条件下灵活地将数据从云传输到内部环境，例如按需，瞬时以及在集群负载较低的情况下。</block>
   <block id="4d8011e28e4ef4359ca7c169e7797091" category="paragraph">客户使用 AWS Elastic Block Store （ EBS ）作为其 Spark 集群 HDFS 存储，通过 Kafka 从远程传感器接收和载入数据。因此， HDFS 存储充当备份数据的源。</block>
   <block id="e55d60f6f17896ce9b53a0ef23e23413" category="paragraph">为了满足这些要求， NetApp ONTAP 云部署在 AWS 中，并创建一个 NFS 共享作为 Spark 或 Hadoop 集群的备份目标。</block>
-  <block id="c260f0b6bfdb6eff1473aafbf5bd075a" category="paragraph">创建 NFS 共享后，将利用原位分析模块将数据从 HDFS EBS 存储复制到 ONTAP NFS 共享。数据驻留在 ONTAP 云的 NFS 中后，可以根据需要使用 SnapMirror 技术将数据从云镜像到内部存储，从而实现安全高效的方式。</block>
   <block id="aecad7c5bdfba92aa6cd945a9045c37f" category="paragraph">此图显示了从云到内部解决方案的备份和灾难恢复。</block>
   <block id="94c7a6b63152038de5e8b2763cdef06c" category="paragraph"><block ref="94c7a6b63152038de5e8b2763cdef06c" category="inline-image-macro-rx" type="image"></block></block>
   <block id="bbd6a10b63926b84e9a28da6d4214925" category="inline-link-macro">下一步：用例 3 —对现有 Hadoop 数据启用 DevTest 。</block>
-  <block id="e0f915fb1893e398d54abc6f9d00ca57" category="paragraph"><block ref="e0f915fb1893e398d54abc6f9d00ca57" category="inline-link-macro-rx"></block></block>
   <block id="69efde21ccf40f1dda4d665f81bacefe" category="summary">在这种情况下，一家大型金融服务和投资银行的分析平台使用 NetApp NFS 存储解决方案进行了现代化改造，从而显著改进了资产管理和定量业务部门的投资风险和衍生产品分析。</block>
   <block id="0158648474e8dffab94ca58af2257b92" category="doc">用例 5 ：加快分析工作负载的速度</block>
   <block id="c8ea1eda8e0ac121148ac86dee9649a7" category="inline-link-macro">先前版本：用例 4 —数据保护和多云连接。</block>
-  <block id="87fb2a1eb3f12014af6e5dd36ba66e5e" category="paragraph"><block ref="87fb2a1eb3f12014af6e5dd36ba66e5e" category="inline-link-macro-rx"></block></block>
   <block id="24b0e878b8196875cd088397ac8312a9" category="paragraph">在客户的现有环境中，用于分析平台的 Hadoop 基础架构利用了 Hadoop 服务器的内部存储。由于 JBOD 环境的专有性，组织内的许多内部客户无法利用其蒙特卡罗量化模型，这种模拟依赖于重复的实时数据样本。无法以最佳方式了解市场波动的不确定性影响，这对量化资产管理业务单位不利。</block>
   <block id="788ab145281501314f18747a0ab1eaea" category="paragraph">该银行的量化业务部门需要一种高效的预测方法来实现准确，及时的预测。为此，该团队认识到需要对基础架构进行现代化改造，减少现有 I/O 等待时间并提高 Hadoop 和 Spark 等分析应用程序的性能，以便高效模拟投资模型，衡量潜在收益并分析风险。</block>
   <block id="5ff37557b096819452a25d129a312360" category="paragraph">客户的现有 Spark 解决方案具有 JBOD 。然后，利用 NetApp ONTAP ， NetApp StorageGRID 和从 MinIO 网关到 NFS ，减少了银行的量化财务团队对评估潜在收益和风险的投资模型进行模拟和分析的 I/O 等待时间。此图显示了采用 NetApp 存储的 Spark 解决方案。</block>
@@ -7020,7 +7004,6 @@
   <block id="fa7dcae8e4f7d8ecc191c3ce8547a53a" category="summary">此使用情形适用于负责为客户的大数据分析数据提供多云连接的云服务合作伙伴。</block>
   <block id="2268700ee8bd2216d594273e566b0cc9" category="doc">用例 4 ：数据保护和多云连接</block>
   <block id="2c8eccdfa6390b1d09b2527f7d7d2cc5" category="inline-link-macro">先前版本：用例 3 —对现有 Hadoop 数据启用 DevTest 。</block>
-  <block id="fda5cc5b496f5f7aa6de18740227bc15" category="paragraph"><block ref="fda5cc5b496f5f7aa6de18740227bc15" category="inline-link-macro-rx"></block></block>
   <block id="3cec8f6cf1ce867e7f73dd5132b7fbf3" category="paragraph">在这种情况下，在 AWS 中从不同来源接收的物联网数据存储在 NPS 的中央位置。NPS 存储连接到 AWS 和 Azure 中的 Spark 或 Hadoop 集群，从而支持在多个云中运行的大数据分析应用程序访问相同的数据。</block>
   <block id="bed6436414550585ccb4ac4c67a449a3" category="list-text">客户希望使用多个云对相同数据运行分析作业。</block>
   <block id="6af3e1f448b2a56e9bd0fbbd43b31bc8" category="list-text">必须通过不同的传感器和中心从内部和云等不同来源接收数据。</block>
@@ -7028,22 +7011,18 @@
   <block id="b320f1b1ab6d0a21e40ee3d444669645" category="list-text">主要挑战是构建一个经济高效的解决方案，以便在内部和不同云之间提供混合分析服务。</block>
   <block id="0d4b3cfa555ff36cd92fb4e36fb69fbf" category="paragraph">此图显示了数据保护和多云连接解决方案。</block>
   <block id="faaf8e6278dc7a68fd1dd98dfe7f525a" category="paragraph"><block ref="faaf8e6278dc7a68fd1dd98dfe7f525a" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="14c23633f1ab374f4c801386847ba2f8" category="paragraph">如上图所示，来自传感器的数据会通过 Kafka 流式传输并输入到 AWS Spark 集群中。数据存储在 NPS 中的 NFS 共享中， NPS 位于 Equinix 数据中心内的云提供商之外。由于 NetApp NPS 分别通过 Direct Connect 和 Express Route 连接连接到 Amazon AWS 和 Microsoft Azure ，因此客户可以利用原位分析模块从 Amazon 和 AWS 分析集群访问数据。这种方法解决了跨多个超大规模云提供商进行云分析的问题。</block>
   <block id="4089db0b43263b1f59a9c2db909edf6e" category="paragraph">因此，由于内部和 NPS 存储均运行 ONTAP 软件，因此 SnapMirror 可以将 NPS 数据镜像到内部集群，从而在内部和多个云之间提供混合云分析。</block>
   <block id="d446808fb03b5fae4f2e518cbc7d767f" category="paragraph">为了获得最佳性能， NetApp 通常建议使用多个网络接口和直接连接 / 快速路由从云实例访问数据。</block>
   <block id="1ef541fe0fa79d247c0f1751629bb504" category="inline-link-macro">接下来：用例 5 —加快分析工作负载的速度。</block>
-  <block id="7dfabd0b120fe0403ff107668db4094a" category="paragraph"><block ref="7dfabd0b120fe0403ff107668db4094a" category="inline-link-macro-rx"></block></block>
   <block id="f9fe6a27dc7f13d26e9416153b950597" category="summary">本节将简要介绍数据保护使用情形的问题描述，这是本白皮书的重点内容。其余部分将详细介绍每个使用情形，例如客户问题（场景），要求和挑战以及解决方案。</block>
   <block id="6a15e1dac7cc5c330a1da84c32b3ff2e" category="doc">Hadoop 数据保护用例概述</block>
   <block id="d161097dc6596d3807b21a5635856d71" category="inline-link-macro">先前版本： Hadoop 数据保护和 NetApp 。</block>
   <block id="1a5df0b83f496dc00b4a331caac0d5cd" category="paragraph"><block ref="1a5df0b83f496dc00b4a331caac0d5cd" category="inline-link-macro-rx"></block></block>
-  <block id="385dae214dc9bab52698dc7cd42632ad" category="paragraph">在这种使用情形中，原位分析模块帮助一家大型金融机构将备份时间从 24 小时以上缩短到几小时以内。</block>
   <block id="06b83cb579d9aaf1f26d8c4284a5a42e" category="paragraph">一家大型广播公司利用 NetApp 提供支持的 Data Fabric 作为组件，根据不同的数据传输模式（例如按需，即时， 或基于 Hadoop/Spark 集群负载。</block>
   <block id="da17b6db6e3e50f66b5bcaee1d74f8b1" category="paragraph">NetApp 解决方案帮助在线音乐分销商在不同的分支中快速构建多个节省空间的 Hadoop 集群，以便使用计划的策略创建报告并运行每日 DevTest 任务。</block>
   <block id="90fc62f886a8c33032d4db8b79ec5814" category="paragraph">一家大型服务提供商使用由 NetApp 提供支持的 Data Fabric ，从不同的云实例为其客户提供多云分析。</block>
   <block id="67f07a55567ecfc26b3c7b54823a43ee" category="paragraph">最大的金融服务和投资银行之一使用 NetApp 网络连接存储解决方案来缩短 I/O 等待时间并加快其量化金融分析平台的运行速度。</block>
   <block id="2afe208a471bf6c54f0ccc97f4c6508d" category="inline-link-macro">下一步：用例 1 —备份 Hadoop 数据。</block>
-  <block id="aac250a096aacf9aed26ebbd137818da" category="paragraph"><block ref="aac250a096aacf9aed26ebbd137818da" category="inline-link-macro-rx"></block></block>
   <block id="5e524f38cae9a99f3ebbaf012df2894e" category="summary">由 NetApp 提供支持的 Data Fabric 可简化并集成云环境和内部环境中的数据管理，以加速数字化转型。由 NetApp 提供支持的 Data Fabric 可提供一致且集成的数据管理服务和应用程序（组件），以实现数据可见性和洞察力，数据访问和控制以及数据保护和安全。</block>
   <block id="3c2db15f0fee10b08496ec1701f104d8" category="doc">NetApp 为大数据架构提供支持的 Data Fabric</block>
   <block id="32e0d2b797e6706a73e8146d103572c7" category="inline-link-macro">上一步：解决方案概述。</block>
@@ -7064,7 +7043,6 @@
   <block id="0da79db0a9974fc0002f744165467752" category="list-text">简化和自动化</block>
   <block id="5d5b69e7e19270db49a42eb4e96be2ee" category="paragraph">本文档涵盖九个使用情形中的两个（及其解决方案）：</block>
   <block id="7adb8b5c573e74594feeb2f74e1ffc96" category="section-title">NetApp NFS 直接访问</block>
-  <block id="233060aa11b5715000c000e94576cca9" category="paragraph">NetApp NFS 直接访问（以前称为 NetApp 原位分析模块）（如下图所示）允许客户在不移动或复制数据的情况下，对现有或新的 NFSv3 或 NFSv4 数据运行大数据分析作业。它可以防止多个数据副本，并且无需将数据与源进行同步。例如，在金融领域，将数据从一个位置移动到另一个位置必须履行法律义务，这不是一项容易的任务。在这种情况下， NetApp NFS 直接访问会分析其原始位置的财务数据。另一个主要优势是，使用 NetApp NFS 直接访问可通过使用原生 Hadoop 命令简化对 Hadoop 数据的保护，并利用 NetApp 丰富的数据管理产品组合支持数据保护工作流。</block>
   <block id="96e1e6bac181280c42ba5de56a8ef4c2" category="paragraph"><block ref="96e1e6bac181280c42ba5de56a8ef4c2" category="inline-image-macro-rx" type="image"></block></block>
   <block id="aa47c768dc0f007b4606d394be4330c3" category="paragraph">NetApp NFS 直接访问为 Hadoop/Spark 集群提供了两种部署选项：</block>
   <block id="cc7514a5b2b35641026a81211ae7fe9a" category="list-text">默认情况下， Hadoop/Spark 集群使用 Hadoop 分布式文件系统（ HDFS ）进行数据存储和默认文件系统。NetApp NFS 直接访问可以将默认 HDFS 替换为 NFS 存储作为默认文件系统，从而对 NFS 数据执行直接分析操作。</block>
@@ -20814,4 +20792,25 @@ VMware ESXi 8.0.2、22380479</block>
   <block id="7b3d5a145c3f76308664a64408c99eaa" category="sidebar">NetApp和VMware Sovereign Cloud</block>
   <block id="c3b79b7f428245629a780a6384a8a1a9" category="sidebar">主权云概述</block>
   <block id="c35913dc4f441893df75bf6ebf7ce3c0" category="sidebar">NetApp的用例</block>
+  <block id="d38f3643bd3997174f5d6644116e5e9a" category="paragraph"><block ref="d38f3643bd3997174f5d6644116e5e9a" category="inline-link-macro-rx"></block></block>
+  <block id="3c0f76e2d6fa82b2004270ec86f39aa7" category="paragraph">创建NFS共享后、将数据从HDFS EBS存储复制到ONTAP NFS共享中。数据驻留在 ONTAP 云的 NFS 中后，可以根据需要使用 SnapMirror 技术将数据从云镜像到内部存储，从而实现安全高效的方式。</block>
+  <block id="98df49b2e6372c3767f0c1f42d0009dc" category="paragraph"><block ref="98df49b2e6372c3767f0c1f42d0009dc" category="inline-link-macro-rx"></block></block>
+  <block id="a443e971c77259f92abfeb3191e66bd5" category="paragraph">借助NetApp NFS、客户可以对现有或新的NFSv3或NFSv4数据运行大数据分析作业、而无需移动或复制数据。它可以防止多个数据副本，并且无需将数据与源进行同步。例如，在金融领域，将数据从一个位置移动到另一个位置必须履行法律义务，这不是一项容易的任务。在这种情况下， NetApp NFS 直接访问会分析其原始位置的财务数据。另一个主要优势是，使用 NetApp NFS 直接访问可通过使用原生 Hadoop 命令简化对 Hadoop 数据的保护，并利用 NetApp 丰富的数据管理产品组合支持数据保护工作流。</block>
+  <block id="586cdbbdcb83b20b6b077b1756061b9e" category="paragraph"><block ref="586cdbbdcb83b20b6b077b1756061b9e" category="inline-link-macro-rx"></block></block>
+  <block id="ff0e15997f709c232408a5055738df05" category="paragraph">NetApp System Manager 或存储管理员提示符中的 Snapshot 副本。一致性组 Snapshot 副本是应用程序一致的组 Snapshot 副本， FlexClone 卷是根据一致性组 Snapshot 副本创建的。值得一提的是， FlexClone 卷会继承父卷的 NFS 导出策略。创建 Snapshot 副本后，必须安装一个新的 Hadoop 集群以用于 DevTest 和报告目的，如下图所示。从新Hadoop集群克隆的NFS卷可访问NFS数据。</block>
+  <block id="9e21d7c099e0bc8885c64b89b02d50a1" category="paragraph"><block ref="9e21d7c099e0bc8885c64b89b02d50a1" category="inline-link-macro-rx"></block></block>
+  <block id="6f2c5dcd0294b9c34430b1de4713c06d" category="paragraph">在此使用情形中、NetApp NFS卷帮助一家大型金融机构将备份时间从超过24小时缩短到几小时以内。</block>
+  <block id="ac65786db8d85610c786dc38dfc9f30b" category="paragraph"><block ref="ac65786db8d85610c786dc38dfc9f30b" category="inline-link-macro-rx"></block></block>
+  <block id="d35c13377a59cb905b9e8f5af7acd749" category="paragraph"><block ref="d35c13377a59cb905b9e8f5af7acd749" category="inline-link-macro-rx"></block></block>
+  <block id="4ea48e5206de42785842cb864377766c" category="paragraph">如上图所示，来自传感器的数据会通过 Kafka 流式传输并输入到 AWS Spark 集群中。数据存储在 NPS 中的 NFS 共享中， NPS 位于 Equinix 数据中心内的云提供商之外。由于NetApp NPS分别通过Direct Connect和Express Route连接到Amazon AWS和Microsoft Azure、因此客户可以从Amazon和AWS分析集群访问NFS数据。这种方法解决了跨多个超大规模云提供商进行云分析的问题。</block>
+  <block id="ae0333da858ae3d330139b64c325a8d3" category="paragraph"><block ref="ae0333da858ae3d330139b64c325a8d3" category="inline-link-macro-rx"></block></block>
+  <block id="fb784db76f57bc935639ba5340089d77" category="cell">2023年11月</block>
+  <block id="11ec45d75a4ad726423d44fadee3074a" category="cell">已删除NIPAM详细信息</block>
+  <block id="ca9bf18599094e54193c13e68260f4a1" category="section-title">客户的现有备份解决方案</block>
+  <block id="bc98837ed486c01d428d23d0c3a83d6a" category="paragraph">在解决方案A中、备份Hadoop集群会将二级备份发送到NetApp NFS存储系统、从而无需使用磁带、如下图所示。</block>
+  <block id="1b449b0ea4a324dc81f41259db2c13e9" category="list-text">运行<block ref="e23fdb1dae75e2830274d92fdf2535ed" prefix=" " category="inline-code"></block> 命令利用Mapreduce"和多个映射程序、可以保护分析数据从Hadoop集群备份到NFS。</block>
+  <block id="099eafc2208317136c2902383d7b0755" category="paragraph">解决方案B会将NFS卷添加到生产Hadoop集群中、从而无需备份Hadoop集群、如下图所示。</block>
+  <block id="b8c0e409f361575b0a2787968f3e6737" category="paragraph">Hadoop本机<block ref="4ac6e29f0a48949098d034a028773150" prefix=" " category="inline-code"></block> 命令可保护Hadoop数据从生产集群HDFS到NFS。</block>
+  <block id="ab821c44d2b1a92bc280e555feb84ca2" category="paragraph"><block ref="ab821c44d2b1a92bc280e555feb84ca2" category="inline-link-macro-rx"></block></block>
+  <block id="968e83b8bdfb55c739336bf82b8badf1" category="paragraph"><block ref="968e83b8bdfb55c739336bf82b8badf1" category="inline-link-macro-rx"></block></block>
 </blocks>

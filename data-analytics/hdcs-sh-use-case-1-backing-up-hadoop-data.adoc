@@ -1,6 +1,6 @@
 ---
 sidebar: sidebar 
-permalink: data-analytics/hdcs-sh-use-case-1--backing-up-hadoop-data.html 
+permalink: data-analytics/hdcs-sh-use-case-1-backing-up-hadoop-data.html 
 keywords: use case 2, Hadoop repository, dr, disaster recovery 
 summary: 在这种情况下，客户拥有一个大型内部 Hadoop 存储库，并希望对其进行备份以实现灾难恢复。但是，客户当前的备份解决方案成本高昂，并且备份时间过长，超过 24 小时。 
 ---
@@ -76,7 +76,7 @@ image:hdcs-sh-image5.png["错误：缺少图形映像"]
 
 === 解决方案 A
 
-解决方案 A 会将原位分析模块添加到备份 Hadoop 集群中，从而可以对 NetApp NFS 存储系统进行二级备份，从而消除了磁带需求，如下图所示。
+在解决方案A中、备份Hadoop集群会将二级备份发送到NetApp NFS存储系统、从而无需使用磁带、如下图所示。
 
 image:hdcs-sh-image6.png["错误：缺少图形映像"]
 
@@ -91,7 +91,7 @@ image:hdcs-sh-image6.png["错误：缺少图形映像"]
 NOTE: Hadoop 快照用于保护数据从生产环境传输到备份 Hadoop 集群。
 
 * NetApp ONTAP 存储控制器可提供一个 NFS 导出卷，该卷会配置到备份 Hadoop 集群。
-* 通过利用 MapReduce 和多个映射程序运行 `Hadoop distcp` 命令，可以使用原位分析模块保护分析数据，使其从 Hadoop 集群备份到 NFS 。
+* 运行 `Hadoop distcp` 命令利用Mapreduce"和多个映射程序、可以保护分析数据从Hadoop集群备份到NFS。
 +
 将数据存储在 NetApp 存储系统的 NFS 中后，将使用 NetApp Snapshot ， SnapRestore 和 FlexClone 技术根据需要备份，还原和复制 Hadoop 数据。
 
@@ -121,7 +121,7 @@ NOTE: 使用 SnapMirror 技术，可以将 Hadoop 数据保护到云端以及灾
 
 === 解决方案 B
 
-解决方案 B 将原位分析模块添加到生产 Hadoop 集群中，这样就无需备份 Hadoop 集群，如下图所示。
+解决方案B会将NFS卷添加到生产Hadoop集群中、从而无需备份Hadoop集群、如下图所示。
 
 image:hdcs-sh-image7.png["错误：缺少图形映像"]
 
@@ -129,7 +129,7 @@ image:hdcs-sh-image7.png["错误：缺少图形映像"]
 
 * NetApp ONTAP 存储控制器可为生产 Hadoop 集群配置 NFS 导出。
 +
-Hadoop 原生 `Hadoop distcp` 命令可通过原位分析模块保护从生产集群 HDFS 到 NFS 的 Hadoop 数据。
+Hadoop本机 `hadoop distcp` 命令可保护Hadoop数据从生产集群HDFS到NFS。
 
 * 将数据存储在 NetApp 存储系统的 NFS 中后，将使用 Snapshot ， SnapRestore 和 FlexClone 技术根据需要备份，还原和复制 Hadoop 数据。
 
@@ -168,4 +168,4 @@ NOTE: 无论数据大小如何， Snapshot 技术均可在数秒内完成备份�
 * 支持通过 NetApp 工具实现企业管理功能。
 
 
-link:hdcs-sh-use-case-2--backup-and-disaster-recovery-from-the-cloud-to-on-premises.html["接下来：用例 2 —从云到内部环境的备份和灾难恢复。"]
+link:hdcs-sh-use-case-2-backup-and-disaster-recovery-from-the-cloud-to-on-premises.html["接下来：用例 2 —从云到内部环境的备份和灾难恢复。"]
