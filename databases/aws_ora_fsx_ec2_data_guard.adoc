@@ -4,7 +4,7 @@ permalink: databases/aws_ora_fsx_ec2_data_guard.html
 keywords: Oracle, AWS, FSx ONTAP, FSx, Database, Oracle 19c, Data Guard 
 summary: 解决方案提供了使用AWS FSx ONTAP作为备用站点Oracle数据库存储来配置Oracle Data Guard的概述和详细信息、以降低AWS中Oracle Data Guard HA/DR解决方案的许可和运营成本。 
 ---
-= TR-4981：《借助AWS FSx ONTAP主动降低数据防护成本》
+= TR-4981：《借助Amazon FSx ONTAP降低Oracle Active Data Guard成本》
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -21,11 +21,11 @@ NetApp公司Allen Cao、Niyaz Mohamed
 
 Oracle Data Guard可确保主数据库和备用数据库复制配置中企业数据的高可用性、数据保护和灾难恢复。Oracle Active Data Guard使用户能够在从主数据库到备用数据库的数据复制处于活动状态时访问备用数据库。Data Guard是Oracle数据库企业版的一项功能。它不需要单独的许可。另一方面、Active Data Guard是Oracle数据库企业版选件、因此需要单独的许可。在Active Data Guard设置中、多个备用数据库可以从主数据库接收数据复制。但是、每个附加备用数据库都需要Active Data Guard许可证以及与主数据库大小相同的额外存储。运营成本会迅速增加。
 
-如果您希望降低Oracle数据库运营成本、并计划在AWS中设置Active Data Guard、则应考虑另一种选择。使用数据防护从主数据库复制到AWS FSx ONTAP存储上的单个物理备用数据库、而不是Active Data Guard。随后、可以克隆此备用数据库的多个副本并打开以进行读/写访问、以满足许多其他使用情形的需要、例如报告、开发、测试等 最终结果有效地提供了Active Data Guard的功能、同时消除了Active Data Guard许可证、并为每个额外的备用数据库节省了额外的存储成本。在本文档中、我们将演示如何在AWS中使用现有主数据库设置Oracle Data Guard、并将物理备用数据库放置在AWS FSx ONTAP存储上。备用数据库通过Snapshot进行备份、并根据需要进行克隆、以便进行读/写访问。
+如果您希望降低Oracle数据库运营成本、并计划在AWS中设置Active Data Guard、则应考虑另一种选择。使用Data Guard将数据从主数据库复制到Amazon FSx ONTAP存储上的单个物理备用数据库、而不是Active Data Guard。随后、可以克隆此备用数据库的多个副本并打开以进行读/写访问、以满足许多其他使用情形的需要、例如报告、开发、测试等 最终结果有效地提供了Active Data Guard的功能、同时消除了Active Data Guard许可证、并为每个额外的备用数据库节省了额外的存储成本。在本文档中、我们将演示如何在AWS中使用现有主数据库设置Oracle Data Guard、并将物理备用数据库放置在Amazon FSx ONTAP存储上。备用数据库通过Snapshot进行备份、并根据需要进行克隆、以便进行读/写访问。
 
 此解决方案 可解决以下使用情形：
 
-* 在AWS中任何存储上的主数据库与AWS FSx ONTAP存储上的备用数据库之间建立Oracle Data Guard。
+* 在AWS中任何存储上的主数据库与Amazon FSx ONTAP存储上的备用数据库之间建立Oracle Data Guard。
 * 在关闭以进行数据复制的情况下克隆备用数据库、以满足报告、开发、测试等使用情形的要求
 
 

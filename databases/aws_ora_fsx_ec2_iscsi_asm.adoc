@@ -19,7 +19,7 @@ NetApp公司Allen Cao、Niyaz Mohamed
 
 == 目的
 
-ASM (自动存储管理)是一种受欢迎的Oracle存储卷管理器、广泛应用于许多Oracle安装。这也是Oracle建议的存储管理解决方案。它提供了传统卷管理器和文件系统的替代方案。自Oracle 11g以来、ASM已随网格基础架构打包、而不是数据库打包在一起。因此、要在不使用RAC的情况下使用Oracle ASM进行存储管理、您必须在独立服务器中安装Oracle网格基础架构、也称为Oracle Restart。这样做确实会在以其他方式简化Oracle数据库部署过程中增加更多的复杂性。但是、顾名思义、在重新启动模式下部署Oracle时、任何出现故障的Oracle服务都会在主机重新启动后重新启动、而无需用户干预、从而提供一定程度的高可用性或HA功能。
+ASM (Automatic Storage Management、自动存储管理)是许多Oracle安装中常用的Oracle存储卷管理器。这也是Oracle建议的存储管理解决方案。它提供了传统卷管理器和文件系统的替代方案。自Oracle 11g版以来、ASM一直采用网格基础架构而非数据库打包。因此、要在不使用RAC的情况下使用Oracle ASM进行存储管理、您必须在独立服务器中安装Oracle网格基础架构、也称为Oracle Restart。这样做无疑会增加Oracle数据库部署的复杂性。但是、顾名思义、在以重新启动模式部署Oracle时、出现故障的Oracle服务会由网格基础架构自动重新启动、或者在主机重新启动后无需用户干预、从而提供一定程度的高可用性或HA功能。
 
 在本文档中、我们将演示如何在使用EC2计算实例的Amazon FSX for ONTAP 存储环境中部署采用iSCSI协议的Oracle数据库和Oracle ASM。我们还演示了如何通过NetApp BlueXP控制台使用NetApp SnapCenter 服务来备份、还原和克隆Oracle数据库、以便在AWS公共云中进行开发/测试或其他存储效率数据库操作用例。
 
@@ -96,7 +96,7 @@ image::aws_ora_fsx_ec2_iscsi_asm_architecture.png[此图详细展示了AWS公共
 * * FSX存储HA集群单区域或多区域部署。*在这些测试和验证中、我们在一个AWS可用性区域中部署了一个FSX HA集群。对于生产部署、NetApp建议在两个不同的可用性区域中部署一个FSX HA对。FSX HA集群始终配置在一个HA对中、该HA对在一对主动-被动文件系统中进行同步镜像、以提供存储级别的冗余。多区域部署可在单个AWS区域发生故障时进一步提高高可用性。
 * * FSX存储集群规模估算。*适用于ONTAP 存储文件系统的Amazon FSX可提供高达160、000个原始SSD IOPS、高达4 Gbps吞吐量以及最大192 TiB容量。但是、您可以根据部署时的实际要求、根据已配置的IOPS、吞吐量和存储限制(最小1、024 GiB)来调整集群的大小。可以动态调整容量、而不会影响应用程序可用性。
 * * Oracle数据和日志布局。*在测试和验证中、我们分别为数据和日志部署了两个ASM磁盘组。在+data ASM磁盘组中、我们在一个数据卷中配置了四个LUN。在+logs ASM磁盘组中、我们在一个日志卷中配置了两个LUN。通常、在适用于ONTAP 的Amazon FSX卷中部署多个LUN可提高性能。
-* * iSCSI配置。* EC2实例数据库服务器使用iSCSI协议连接到FSX存储。EC2实例通常使用一个网络接口或ENI进行部署。单个NIC接口可同时传输iSCSI和应用程序流量。通过仔细分析Oracle AWR报告来衡量Oracle数据库预览I/O吞吐量要求非常重要、这样才能选择既能满足应用程序流量需求又能满足iSCSI流量吞吐量需求的正确EC2计算实例。NetApp还建议为正确配置多路径的两个FSX iSCSI端点分配四个iSCSI连接。
+* * iSCSI配置。* EC2实例数据库服务器使用iSCSI协议连接到FSX存储。EC2实例通常使用一个网络接口或ENI进行部署。单个NIC接口可同时传输iSCSI和应用程序流量。请务必通过仔细分析Oracle AWR报告来衡量Oracle数据库峰值I/O吞吐量需求、以便选择既满足应用程序流量吞吐量要求又符合iSCSI流量吞吐量要求的正确EC2计算实例。NetApp还建议为正确配置多路径的两个FSX iSCSI端点分配四个iSCSI连接。
 * *要为创建的每个Oracle ASM磁盘组使用的Oracle ASM冗余级别。*由于FSX已在FSX集群级别镜像存储、因此应使用外部冗余、这意味着该选项不允许Oracle ASM镜像磁盘组的内容。
 * *数据库备份。* NetApp提供SaaS版本的SnapCenter 软件服务、用于在云中备份、还原和克隆数据库、该服务可通过NetApp BlueXP控制台UI访问。NetApp建议实施此类服务、以实现快速(不到一分钟)的快照备份、快速(几分钟)的数据库还原和数据库克隆。
 
@@ -250,7 +250,7 @@ systemctl start iscsid
 ....
 cat /etc/iscsi/initiatorname.iscsi
 ....
-. 添加要用于ASM sysasm组的ASM组
+. 添加要用于ASM sysASM组的ASM组。
 +
 ....
 groupadd asm
@@ -259,6 +259,12 @@ groupadd asm
 +
 ....
 usermod -a -G asm oracle
+....
+. 停止并禁用处于活动状态的Linux防火墙。
++
+....
+systemctl stop firewalld
+systemctl disable firewalld
 ....
 . 重新启动EC2实例。
 
@@ -738,7 +744,7 @@ unset ORACLE_BASE
 . 以Oracle用户身份登录到EC2实例、然后在中提取修补程序 `/tmp/archive` 文件夹。
 +
 ....
-unzip p34762026_190000_Linux-x86-64.zip
+unzip /tmp/archive/p34762026_190000_Linux-x86-64.zip -d /tmp/archive
 ....
 . 从Grid home /u01/app/oracle/product/19.0.0/grid中、以Oracle用户身份启动 `gridSetup.sh` 用于网格基础架构安装。
 +
@@ -889,6 +895,8 @@ templateName=General_Purpose.dbc
 sysPassword="yourPWD"
 systemPassword="yourPWD"
 dbsnmpPassword="yourPWD"
+datafileDestination=+DATA
+recoveryAreaDestination=+LOGS
 storageType=ASM
 diskGroupName=DATA
 characterSet=AL32UTF8
@@ -1022,12 +1030,12 @@ SQL> show pdbs
          5 DB1_PDB3                       READ WRITE NO
 SQL>
 ....
-. 将数据库恢复位置设置为+logs磁盘组。
+. 将数据库恢复目标大小设置为+logs.磁盘组大小。
 +
 ....
+
 alter system set db_recovery_file_dest_size = 80G scope=both;
 
-alter system set db_recovery_file_dest = '+LOGS' scope=both;
 ....
 . 使用sqlplus登录到数据库并启用归档日志模式。
 +

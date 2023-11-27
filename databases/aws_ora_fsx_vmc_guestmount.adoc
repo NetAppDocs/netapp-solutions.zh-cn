@@ -1,0 +1,1911 @@
+---
+sidebar: sidebar 
+permalink: databases/aws_ora_fsx_vmc_guestmount.html 
+keywords: Database, Oracle, AWS, FSx ONTAP, VMC, VMware 
+summary: 解决方案提供了有关在AWS中的VMware Cloud中部署和保护Oracle的概述和详细信息、其中、FSx ONTAP作为主数据库存储、Oracle数据库使用ASM作为卷管理器在独立重新启动时进行配置。 
+---
+= TR-4979：《在AWS上的VMware Cloud中使用子系统装载的FSx ONTAP简化自管理Oracle》
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+NetApp公司Allen Cao、Niyaz Mohamed
+
+
+
+== 目的
+
+几十年来、企业一直在私有数据中心运行基于VMware的Oracle。AWS上的VMware Cloud (VMC)提供了一个按钮式解决方案、可将VMware的企业级软件定义的数据中心(Software-定义 的数据中心、SDDC)软件引入AWS云的专用弹性裸机基础架构。AWS FSx ONTAP为VMC SDDC和Data Fabric提供高级存储、使客户能够在基于vSphere®的私有云、公共云和混合云环境中运行Oracle等业务关键型应用程序、并优化对AWS服务的访问。无论是现有的Oracle工作负载还是新的Oracle工作负载、AWS上的VMC都可以在VMware上提供熟悉、简化且自行管理的Oracle环境、并可享受AWS云的所有优势、同时将所有平台管理和优化工作推迟到VMware。
+
+本文档演示了如何在使用Amazon FSx ONTAP作为主数据库存储的VMC环境中部署和保护Oracle数据库。Oracle数据库可以作为直接VM子系统装载的LUN或NFS装载的VMware VMDK数据存储库磁盘部署到FSx存储上的VMC中。本技术报告重点介绍如何将Oracle数据库部署为使用iSCSI协议和Oracle ASM的VMC集群中的VM的直接子系统装载FSx存储。此外、我们还演示了如何使用NetApp SnapCenter UI工具备份、还原和克隆Oracle数据库以用于开发或测试、或者在AWS上的VMC中使用其他使用情形来实现高效存储数据库操作。
+
+此解决方案 可解决以下使用情形：
+
+* 在AWS上的VMC中部署Oracle数据库、并将Amazon FSx ONTAP用作主数据库存储
+* 使用NetApp SnapCenter工具在AWS上的VMC中备份和还原Oracle数据库
+* 使用NetApp SnapCenter工具在AWS上的VMC中为开发/测试或其他使用情形创建Oracle数据库克隆
+
+
+
+
+== audience
+
+此解决方案 适用于以下人员：
+
+* 希望使用Amazon FSx ONTAP在AWS上的VMC中部署Oracle的数据库开发人员
+* 希望在AWS云上的VMC中测试Oracle工作负载的数据库解决方案架构师
+* 希望使用Amazon FSx ONTAP部署和管理部署到AWS上VMC的Oracle数据库的存储管理员
+* 希望在AWS云上的VMC中建立Oracle数据库的应用程序所有者
+
+
+
+
+== 解决方案 测试和验证环境
+
+此解决方案的测试和验证是在AWS上使用VMC的实验室环境中执行的、该环境可能与最终部署环境不匹配。有关详细信息，请参见一节 <<Key Factors for Deployment Consideration>>。
+
+
+
+=== 架构
+
+image::aws_ora_fsx_vmc_architecture.png[此图详细展示了AWS公共云中使用iSCSI和ASM的Oracle部署配置。]
+
+
+
+=== 硬件和软件组件
+
+[cols="33%, 33%, 33%"]
+|===
+
+
+3+| * 硬件 * 
+
+
+| FSX ONTAP 存储 | AWS提供的当前版本 | 一个FSx ONTAP HA集群与VMC位于同一VPC和可用性区域 
+
+
+| VMC SDDC集群 | Amazon EC2 i3.金属单节点/Intel Xeon E5-2686 CPU、36核/512G RAM | 10.37 TB vSAN存储 
+
+
+3+| *软件* 
+
+
+| RedHat Linux | rell-8.6、4.18.0-372.9.1.el8.x86_64内核 | 已部署RedHat订阅以进行测试 
+
+
+| Windows服务器 | 2022标准版、10.0.20348内部版本20348 | 托管SnapCenter服务器 
+
+
+| Oracle网格基础架构 | 版本19.18 | 已应用RU修补程序p34762026_190000_Linux-x86-64.zip 
+
+
+| Oracle 数据库 | 版本19.18 | 已应用RU修补程序p34765931_190000_Linux-x86-64.zip 
+
+
+| Oracle OPatch | 版本12.2.0.1.36 | 最新修补程序p6880880_190000_Linux-x86-64.zip 
+
+
+| SnapCenter 服务器 | 版本4.9P1 | 工作组部署 
+
+
+| 适用于VM的BlueXP备份和恢复 | 1.0版 | 部署为一个ova vSphere插件虚拟机 
+
+
+| VMware vSphere | 8.0.1.00300版 | VMware Tools、版本：11365 - Linux、1352 - Windows 
+
+
+| 打开JDK | 版本java-1.8.0-OpenJDK.x86_64 | DB VM上的SnapCenter插件要求 
+|===
+
+
+=== 在AWS上的VMC中配置Oracle数据库
+
+[cols="33%, 33%, 33%"]
+|===
+
+
+3+|  
+
+
+| * 服务器 * | * 数据库 * | *DB存储* 
+
+
+| ORA_01 | cdb1 (cdb1_pdb1、cdb1_pdb2、cdb1_pdb3) | FSx ONTAP上的VMDK数据存储库 
+
+
+| ORA_01 | cdb2 (cdb2_pdb) | FSx ONTAP上的VMDK数据存储库 
+
+
+| ORA_02 | cdb3 (cdb3_pdb1、cdb3_pdb2、cdb3_pdb3) | 直接子系统装载FSx ONTAP 
+
+
+| ORA_02 | cdb4 (cdb4_pdb) | 直接子系统装载FSx ONTAP 
+|===
+
+
+=== 部署注意事项的关键因素
+
+* *FSx到VMC的连接。*当您在AWS上的VMware Cloud上部署SDDC时、它会在AWS帐户和专用于您的组织的VPC中创建、并由VMware进行管理。您还必须将SDDC连接到属于您的AWS帐户、称为客户AWS帐户。此连接允许SDDC访问属于您的客户帐户的AWS服务。FSx for ONTAP是在您的客户帐户中部署的一项AWS服务。将VMC SDDC连接到您的客户帐户后、VMC SDDC中的VM便可使用FSx存储来直接挂载子系统。
+* * FSX存储HA集群单区域或多区域部署。*在这些测试和验证中、我们在一个AWS可用性区域中部署了一个FSX HA集群。NetApp还建议在同一可用性区域中部署适用于NetApp ONTAP的FSx和基于AWS的VMware Cloud、以提高性能并避免可用性区域之间的数据传输费用。
+* * FSX存储集群规模估算。*适用于ONTAP 存储文件系统的Amazon FSX可提供高达160、000个原始SSD IOPS、高达4 Gbps吞吐量以及最大192 TiB容量。但是、您可以根据部署时的实际要求、根据已配置的IOPS、吞吐量和存储限制(最小1、024 GiB)来调整集群的大小。可以动态调整容量、而不会影响应用程序可用性。
+* * Oracle数据和日志布局。*在测试和验证中、我们分别为数据和日志部署了两个ASM磁盘组。在+data ASM磁盘组中、我们在一个数据卷中配置了四个LUN。在+logs ASM磁盘组中、我们在一个日志卷中配置了两个LUN。通常、在一个Amazon FSx for ONTAP卷中部署多个LUN可提高性能。
+* *iSCSI配置。* VMC SDDC中的数据库VM使用iSCSI协议连接到FSx存储。通过仔细分析Oracle AWR报告来确定应用程序和iSCSI流量吞吐量要求、衡量Oracle数据库峰值I/O吞吐量要求非常重要。NetApp还建议为正确配置多路径的两个FSX iSCSI端点分配四个iSCSI连接。
+* *要用于创建的每个Oracle ASM磁盘组的Oracle ASM冗余级别。*由于FSx ONTAP已在FSx集群级别镜像存储、因此应使用外部冗余、这意味着此选项不允许Oracle ASM镜像磁盘组的内容。
+* *数据库备份。* NetApp提供了一个SnapCenter软件套件、可通过用户友好的用户界面进行数据库备份、还原和克隆。NetApp建议实施此类管理工具、以实现快速(不到一分钟)的快照备份、快速(几分钟)的数据库还原和数据库克隆。
+
+
+
+
+== 解决方案 部署
+
+以下各节提供了在AWS上的VMC中将Oracle 19c部署ONTAP到单节点中的数据库VM的分步过程使用Oracle ASM作为数据库卷管理器重新启动配置。
+
+
+
+=== 部署的前提条件
+
+[%collapsible]
+====
+部署需要满足以下前提条件。
+
+. 我们创建了一个使用VMware Cloud on AWS的软件定义的数据中心(Software-definated Data Center、SDDC)。有关如何在VMC中创建SDDC的详细说明、请参见VMware文档 link:https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws.getting-started/GUID-3D741363-F66A-4CF9-80EA-AA2866D1834E.html["在AWS上开始使用VMware Cloud"^]
+. 已设置AWS帐户、并已在您的AWS帐户中创建必要的VPC和网段。AWS帐户已链接到您的VMC SDDC。
+. 从AWS EC2控制台中、部署适用于ONTAP存储HA集群的Amazon FSx以托管Oracle数据库卷。如果您不熟悉FSX存储的部署、请参见相关文档 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/creating-file-systems.html["为ONTAP 文件系统创建FSX"^] 了解分步说明。
+. 可以使用以下Terraform自动化工具包执行上述步骤、该工具包可创建一个EC2实例、作为通过SSH和FSx文件系统进行VMC访问时的SDDC的跳转主机。在执行前、请仔细阅读说明并根据您的环境更改变量。
++
+....
+git clone https://github.com/NetApp-Automation/na_aws_fsx_ec2_deploy.git
+....
+. 在AWS上的VMware SDDC中构建VM、用于托管要在VMC中部署的Oracle环境。在我们的演示中、我们构建了两个Linux VM作为Oracle数据库服务器、一个Windows服务器用于SnapCenter服务器、一个可选的Linux服务器作为可选的控制器、用于根据需要自动安装或配置Oracle。下面是用于解决方案验证的实验室环境的快照。
++
+image:aws_ora_fsx_vmc_vm_08.png["显示VMC SDDC测试环境的屏幕截图。"]
+
+. 此外、NetApp还提供了多个自动化工具包、以便在适用时运行Oracle部署和配置。请参见 link:https://docs.netapp.com/us-en/netapp-solutions/databases/index.html["DB自动化工具包"^] 有关详细信息 ...
+
+
+
+NOTE: 确保已在Oracle VM根卷中至少分配50G、以便有足够的空间来暂存Oracle安装文件。
+
+====
+
+
+=== DB VM内核配置
+
+[%collapsible]
+====
+在配置了前提条件的情况下、以管理员用户身份通过SSH登录到Oracle VM、并使用sudo向root用户配置Linux内核以进行Oracle安装。Oracle安装文件可以暂存到AWS S3存储分段中、然后传输到VM。
+
+. 创建暂存目录 `/tmp/archive` 文件夹并设置 `777` 权限。
++
+[source, cli]
+----
+mkdir /tmp/archive
+----
++
+[source, cli]
+----
+chmod 777 /tmp/archive
+----
+. 将Oracle二进制安装文件和其他所需的rpm文件下载并暂存到 `/tmp/archive` 目录。
++
+请参见以下要在中说明的安装文件列表 `/tmp/archive` 在DB VM上。
+
++
+....
+
+[admin@ora_02 ~]$ ls -l /tmp/archive/
+total 10539364
+-rw-rw-r--. 1 admin  admin         19112 Oct  4 17:04 compat-libcap1-1.10-7.el7.x86_64.rpm
+-rw-rw-r--. 1 admin  admin    3059705302 Oct  4 17:10 LINUX.X64_193000_db_home.zip
+-rw-rw-r--. 1 admin  admin    2889184573 Oct  4 17:11 LINUX.X64_193000_grid_home.zip
+-rw-rw-r--. 1 admin  admin        589145 Oct  4 17:04 netapp_linux_unified_host_utilities-7-1.x86_64.rpm
+-rw-rw-r--. 1 admin  admin         31828 Oct  4 17:04 oracle-database-preinstall-19c-1.0-2.el8.x86_64.rpm
+-rw-rw-r--. 1 admin  admin    2872741741 Oct  4 17:12 p34762026_190000_Linux-x86-64.zip
+-rw-rw-r--. 1 admin  admin    1843577895 Oct  4 17:13 p34765931_190000_Linux-x86-64.zip
+-rw-rw-r--. 1 admin  admin     124347218 Oct  4 17:13 p6880880_190000_Linux-x86-64.zip
+-rw-rw-r--. 1 admin  admin        257136 Oct  4 17:04 policycoreutils-python-utils-2.9-9.el8.noarch.rpm
+[admin@ora_02 ~]$
+
+....
+. 安装Oracle 19c预安装RPM、以满足大多数内核配置要求。
++
+[source, cli]
+----
+yum install /tmp/archive/oracle-database-preinstall-19c-1.0-2.el8.x86_64.rpm
+----
+. 下载并安装缺少的 `compat-libcap1` 在Linux 8中。
++
+[source, cli]
+----
+yum install /tmp/archive/compat-libcap1-1.10-7.el7.x86_64.rpm
+----
+. 从NetApp下载并安装NetApp主机实用程序。
++
+[source, cli]
+----
+yum install /tmp/archive/netapp_linux_unified_host_utilities-7-1.x86_64.rpm
+----
+. 安装 `policycoreutils-python-utils`。
++
+[source, cli]
+----
+yum install /tmp/archive/policycoreutils-python-utils-2.9-9.el8.noarch.rpm
+----
+. 安装Open JDK 1.8版。
++
+[source, cli]
+----
+yum install java-1.8.0-openjdk.x86_64
+----
+. 安装iSCSI启动程序实用程序。
++
+[source, cli]
+----
+yum install iscsi-initiator-utils
+----
+. 安装sg3_utils。
++
+[source, cli]
+----
+yum install sg3_utils
+----
+. 安装device-maper-Multipath。
++
+[source, cli]
+----
+yum install device-mapper-multipath
+----
+. 在当前系统中禁用透明页面。
++
+[source, cli]
+----
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+----
++
+[source, cli]
+----
+echo never > /sys/kernel/mm/transparent_hugepage/defrag
+----
+. 在中添加以下行 `/etc/rc.local` 以禁用 `transparent_hugepage` 重新启动后。
++
+[source, cli]
+----
+vi /etc/rc.local
+----
++
+....
+  # Disable transparent hugepages
+          if test -f /sys/kernel/mm/transparent_hugepage/enabled; then
+            echo never > /sys/kernel/mm/transparent_hugepage/enabled
+          fi
+          if test -f /sys/kernel/mm/transparent_hugepage/defrag; then
+            echo never > /sys/kernel/mm/transparent_hugepage/defrag
+          fi
+....
+. 通过更改禁用SELinux `SELINUX=enforcing` to `SELINUX=disabled`。要使更改生效、必须重新启动主机。
++
+[source, cli]
+----
+vi /etc/sysconfig/selinux
+----
+. 将以下行添加到 `limit.conf` 设置文件描述符限制和堆栈大小。
++
+[source, cli]
+----
+vi /etc/security/limits.conf
+----
++
+....
+
+*               hard    nofile          65536
+*               soft    stack           10240
+....
+. 如果没有按照以下说明配置交换空间、请向DB VM添加交换空间： link:https://aws.amazon.com/premiumsupport/knowledge-center/ec2-memory-swap-file/["如何使用交换文件分配内存以用作Amazon EC2实例中的交换空间？"^] 要添加的确切空间量取决于RAM大小、最高可达16G。
+. 更改 `node.session.timeo.replacement_timeout` 在中 `iscsi.conf` 配置文件的时间从120秒到5秒不等。
++
+[source, cli]
+----
+vi /etc/iscsi/iscsid.conf
+----
+. 在EC2实例上启用并启动iSCSI服务。
++
+[source, cli]
+----
+systemctl enable iscsid
+----
++
+[source, cli]
+----
+systemctl start iscsid
+----
+. 检索要用于数据库LUN映射的iSCSI启动程序地址。
++
+[source, cli]
+----
+cat /etc/iscsi/initiatorname.iscsi
+----
+. 为ASM管理用户(Oracle)添加ASM组。
++
+[source, cli]
+----
+groupadd asmadmin
+----
++
+[source, cli]
+----
+groupadd asmdba
+----
++
+[source, cli]
+----
+groupadd asmoper
+----
+. 修改Oracle用户以将ASM组添加为辅助组(Oracle用户应在安装Oracle预安装RPM后创建)。
++
+[source, cli]
+----
+usermod -a -G asmadmin oracle
+----
++
+[source, cli]
+----
+usermod -a -G asmdba oracle
+----
++
+[source, cli]
+----
+usermod -a -G asmoper oracle
+----
+. 如果Linux防火墙处于活动状态、请停止并禁用它。
++
+[source, cli]
+----
+systemctl stop firewalld
+----
++
+[source, cli]
+----
+systemctl disable firewalld
+----
+. 通过取消注释为管理员用户启用无密码sudo `# %wheel  ALL=(ALL)       NOPASSWD: ALL` 行。更改文件权限以进行编辑。
++
+[source, cli]
+----
+chmod 640 /etc/sudoers
+----
++
+[source, cli]
+----
+vi /etc/sudoers
+----
++
+[source, cli]
+----
+chmod 440 /etc/sudoers
+----
+. 重新启动EC2实例。
+
+
+====
+
+
+=== 配置FSx ONTAP LUN并将其映射到数据库虚拟机
+
+[%collapsible]
+====
+通过ssh和FSx集群管理IP以fsxadmin用户身份从命令行登录到FSx集群、以配置三个卷。在卷中创建LUN以托管Oracle数据库二进制文件、数据文件和日志文件。
+
+. 以fsxadmin用户身份通过SSH登录到FSX集群。
++
+[source, cli]
+----
+ssh fsxadmin@10.49.0.74
+----
+. 执行以下命令为Oracle二进制文件创建卷。
++
+[source, cli]
+----
+vol create -volume ora_02_biny -aggregate aggr1 -size 50G -state online  -type RW -snapshot-policy none -tiering-policy snapshot-only
+----
+. 执行以下命令为Oracle数据创建卷。
++
+[source, cli]
+----
+vol create -volume ora_02_data -aggregate aggr1 -size 100G -state online  -type RW -snapshot-policy none -tiering-policy snapshot-only
+----
+. 执行以下命令为Oracle日志创建卷。
++
+[source, cli]
+----
+vol create -volume ora_02_logs -aggregate aggr1 -size 100G -state online  -type RW -snapshot-policy none -tiering-policy snapshot-only
+----
+. 验证已创建的卷。
++
+[source, cli]
+----
+vol show ora*
+----
++
+命令的输出：
+
++
+....
+FsxId0c00cec8dad373fd1::> vol show ora*
+Vserver   Volume       Aggregate    State      Type       Size  Available Used%
+--------- ------------ ------------ ---------- ---- ---------- ---------- -----
+nim       ora_02_biny  aggr1        online     RW         50GB    22.98GB   51%
+nim       ora_02_data  aggr1        online     RW        100GB    18.53GB   80%
+nim       ora_02_logs  aggr1        online     RW         50GB     7.98GB   83%
+....
+. 在数据库二进制卷中创建二进制LUN。
++
+[source, cli]
+----
+lun create -path /vol/ora_02_biny/ora_02_biny_01 -size 40G -ostype linux
+----
+. 在数据库数据卷中创建数据LUN。
++
+[source, cli]
+----
+lun create -path /vol/ora_02_data/ora_02_data_01 -size 20G -ostype linux
+----
++
+[source, cli]
+----
+lun create -path /vol/ora_02_data/ora_02_data_02 -size 20G -ostype linux
+----
++
+[source, cli]
+----
+lun create -path /vol/ora_02_data/ora_02_data_03 -size 20G -ostype linux
+----
++
+[source, cli]
+----
+lun create -path /vol/ora_02_data/ora_02_data_04 -size 20G -ostype linux
+----
+. 在数据库日志卷中创建日志LUN。
++
+[source, cli]
+----
+lun create -path /vol/ora_02_logs/ora_02_logs_01 -size 40G -ostype linux
+----
++
+[source, cli]
+----
+lun create -path /vol/ora_02_logs/ora_02_logs_02 -size 40G -ostype linux
+----
+. 使用从上述EC2内核配置的步骤14中检索到的启动程序为EC2实例创建一个igroup。
++
+[source, cli]
+----
+igroup create -igroup ora_02 -protocol iscsi -ostype linux -initiator iqn.1994-05.com.redhat:f65fed7641c2
+----
+. 将LUN映射到上述创建的igroup。为每个附加LUN依次增加LUN ID。
++
+[source, cli]
+----
+lun map -path /vol/ora_02_biny/ora_02_biny_01 -igroup ora_02 -vserver svm_ora -lun-id 0
+lun map -path /vol/ora_02_data/ora_02_data_01 -igroup ora_02 -vserver svm_ora -lun-id 1
+lun map -path /vol/ora_02_data/ora_02_data_02 -igroup ora_02 -vserver svm_ora -lun-id 2
+lun map -path /vol/ora_02_data/ora_02_data_03 -igroup ora_02 -vserver svm_ora -lun-id 3
+lun map -path /vol/ora_02_data/ora_02_data_04 -igroup ora_02 -vserver svm_ora -lun-id 4
+lun map -path /vol/ora_02_logs/ora_02_logs_01 -igroup ora_02 -vserver svm_ora -lun-id 5
+lun map -path /vol/ora_02_logs/ora_02_logs_02 -igroup ora_02 -vserver svm_ora -lun-id 6
+----
+. 验证LUN映射。
++
+[source, cli]
+----
+mapping show
+----
++
+这将返回：
+
++
+....
+FsxId0c00cec8dad373fd1::> mapping show
+  (lun mapping show)
+Vserver    Path                                      Igroup   LUN ID  Protocol
+---------- ----------------------------------------  -------  ------  --------
+nim        /vol/ora_02_biny/ora_02_u01_01            ora_02        0  iscsi
+nim        /vol/ora_02_data/ora_02_u02_01            ora_02        1  iscsi
+nim        /vol/ora_02_data/ora_02_u02_02            ora_02        2  iscsi
+nim        /vol/ora_02_data/ora_02_u02_03            ora_02        3  iscsi
+nim        /vol/ora_02_data/ora_02_u02_04            ora_02        4  iscsi
+nim        /vol/ora_02_logs/ora_02_u03_01            ora_02        5  iscsi
+nim        /vol/ora_02_logs/ora_02_u03_02            ora_02        6  iscsi
+....
+
+
+====
+
+
+=== DB VM存储配置
+
+[%collapsible]
+====
+现在、导入并设置FSx ONTAP存储、用于在VMC数据库VM上安装Oracle网格基础架构和数据库。
+
+. 从Windows跳转服务器使用Putty以管理员用户身份通过SSH登录到数据库VM。
+. 使用任一SVM iSCSI IP地址发现FSX iSCSI端点。更改特定于环境的门户地址。
++
+[source, cli]
+----
+sudo iscsiadm iscsiadm --mode discovery --op update --type sendtargets --portal 10.49.0.12
+----
+. 登录到每个目标以建立iSCSI会话。
++
+[source, cli]
+----
+sudo iscsiadm --mode node -l all
+----
++
+命令的预期输出为：
+
++
+....
+[ec2-user@ip-172-30-15-58 ~]$ sudo iscsiadm --mode node -l all
+Logging in to [iface: default, target: iqn.1992-08.com.netapp:sn.1f795e65c74911edb785affbf0a2b26e:vs.3, portal: 10.49.0.12,3260]
+Logging in to [iface: default, target: iqn.1992-08.com.netapp:sn.1f795e65c74911edb785affbf0a2b26e:vs.3, portal: 10.49.0.186,3260]
+Login to [iface: default, target: iqn.1992-08.com.netapp:sn.1f795e65c74911edb785affbf0a2b26e:vs.3, portal: 10.49.0.12,3260] successful.
+Login to [iface: default, target: iqn.1992-08.com.netapp:sn.1f795e65c74911edb785affbf0a2b26e:vs.3, portal: 10.49.0.186,3260] successful.
+....
+. 查看并验证活动iSCSI会话的列表。
++
+[source, cli]
+----
+sudo iscsiadm --mode session
+----
++
+返回iSCSI会话。
+
++
+....
+[ec2-user@ip-172-30-15-58 ~]$ sudo iscsiadm --mode session
+tcp: [1] 10.49.0.186:3260,1028 iqn.1992-08.com.netapp:sn.545a38bf06ac11ee8503e395ab90d704:vs.3 (non-flash)
+tcp: [2] 10.49.0.12:3260,1029 iqn.1992-08.com.netapp:sn.545a38bf06ac11ee8503e395ab90d704:vs.3 (non-flash)
+....
+. 验证LUN是否已导入到主机中。
++
+[source, cli]
+----
+sudo sanlun lun show
+----
++
+此操作将从FSX返回Oracle LUN的列表。
+
++
+....
+
+[admin@ora_02 ~]$ sudo sanlun lun show
+controller(7mode/E-Series)/                                                  device          host                  lun
+vserver(cDOT/FlashRay)        lun-pathname                                   filename        adapter    protocol   size    product
+-------------------------------------------------------------------------------------------------------------------------------
+nim                           /vol/ora_02_logs/ora_02_u03_02                 /dev/sdo        host34     iSCSI      20g     cDOT
+nim                           /vol/ora_02_logs/ora_02_u03_01                 /dev/sdn        host34     iSCSI      20g     cDOT
+nim                           /vol/ora_02_data/ora_02_u02_04                 /dev/sdm        host34     iSCSI      20g     cDOT
+nim                           /vol/ora_02_data/ora_02_u02_03                 /dev/sdl        host34     iSCSI      20g     cDOT
+nim                           /vol/ora_02_data/ora_02_u02_02                 /dev/sdk        host34     iSCSI      20g     cDOT
+nim                           /vol/ora_02_data/ora_02_u02_01                 /dev/sdj        host34     iSCSI      20g     cDOT
+nim                           /vol/ora_02_biny/ora_02_u01_01                 /dev/sdi        host34     iSCSI      40g     cDOT
+nim                           /vol/ora_02_logs/ora_02_u03_02                 /dev/sdh        host33     iSCSI      20g     cDOT
+nim                           /vol/ora_02_logs/ora_02_u03_01                 /dev/sdg        host33     iSCSI      20g     cDOT
+nim                           /vol/ora_02_data/ora_02_u02_04                 /dev/sdf        host33     iSCSI      20g     cDOT
+nim                           /vol/ora_02_data/ora_02_u02_03                 /dev/sde        host33     iSCSI      20g     cDOT
+nim                           /vol/ora_02_data/ora_02_u02_02                 /dev/sdd        host33     iSCSI      20g     cDOT
+nim                           /vol/ora_02_data/ora_02_u02_01                 /dev/sdc        host33     iSCSI      20g     cDOT
+nim                           /vol/ora_02_biny/ora_02_u01_01                 /dev/sdb        host33     iSCSI      40g     cDOT
+
+....
+. 配置 `multipath.conf` 包含以下默认条目和黑名单条目的文件。
++
+[source, cli]
+----
+sudo vi /etc/multipath.conf
+----
++
+添加以下条目：
+
++
+....
+defaults {
+    find_multipaths yes
+    user_friendly_names yes
+}
+
+blacklist {
+    devnode "^(ram|raw|loop|fd|md|dm-|sr|scd|st)[0-9]*"
+    devnode "^hd[a-z]"
+    devnode "^cciss.*"
+}
+....
+. 启动多路径服务。
++
+[source, cli]
+----
+sudo systemctl start multipathd
+----
++
+现在、多路径设备将显示在中 `/dev/mapper` 目录。
+
++
+....
+[ec2-user@ip-172-30-15-58 ~]$ ls -l /dev/mapper
+total 0
+lrwxrwxrwx 1 root root       7 Mar 21 20:13 3600a09806c574235472455534e68512d -> ../dm-0
+lrwxrwxrwx 1 root root       7 Mar 21 20:13 3600a09806c574235472455534e685141 -> ../dm-1
+lrwxrwxrwx 1 root root       7 Mar 21 20:13 3600a09806c574235472455534e685142 -> ../dm-2
+lrwxrwxrwx 1 root root       7 Mar 21 20:13 3600a09806c574235472455534e685143 -> ../dm-3
+lrwxrwxrwx 1 root root       7 Mar 21 20:13 3600a09806c574235472455534e685144 -> ../dm-4
+lrwxrwxrwx 1 root root       7 Mar 21 20:13 3600a09806c574235472455534e685145 -> ../dm-5
+lrwxrwxrwx 1 root root       7 Mar 21 20:13 3600a09806c574235472455534e685146 -> ../dm-6
+crw------- 1 root root 10, 236 Mar 21 18:19 control
+....
+. 以fsxadmin用户身份通过SSH登录到FSx ONTAP集群、以检索以6c574xxx...开头的每个LUN的串行十六进制编号、十六进制编号以3600a0980开头、即AWS供应商ID。
++
+[source, cli]
+----
+lun show -fields serial-hex
+----
++
+并返回如下内容：
+
++
+....
+FsxId02ad7bf3476b741df::> lun show -fields serial-hex
+vserver path                            serial-hex
+------- ------------------------------- ------------------------
+svm_ora /vol/ora_02_biny/ora_02_biny_01 6c574235472455534e68512d
+svm_ora /vol/ora_02_data/ora_02_data_01 6c574235472455534e685141
+svm_ora /vol/ora_02_data/ora_02_data_02 6c574235472455534e685142
+svm_ora /vol/ora_02_data/ora_02_data_03 6c574235472455534e685143
+svm_ora /vol/ora_02_data/ora_02_data_04 6c574235472455534e685144
+svm_ora /vol/ora_02_logs/ora_02_logs_01 6c574235472455534e685145
+svm_ora /vol/ora_02_logs/ora_02_logs_02 6c574235472455534e685146
+7 entries were displayed.
+....
+. 更新 `/dev/multipath.conf` 文件、用于为多路径设备添加用户友好名称。
++
+[source, cli]
+----
+sudo vi /etc/multipath.conf
+----
++
+包含以下条目：
+
++
+....
+multipaths {
+        multipath {
+                wwid            3600a09806c574235472455534e68512d
+                alias           ora_02_biny_01
+        }
+        multipath {
+                wwid            3600a09806c574235472455534e685141
+                alias           ora_02_data_01
+        }
+        multipath {
+                wwid            3600a09806c574235472455534e685142
+                alias           ora_02_data_02
+        }
+        multipath {
+                wwid            3600a09806c574235472455534e685143
+                alias           ora_02_data_03
+        }
+        multipath {
+                wwid            3600a09806c574235472455534e685144
+                alias           ora_02_data_04
+        }
+        multipath {
+                wwid            3600a09806c574235472455534e685145
+                alias           ora_02_logs_01
+        }
+        multipath {
+                wwid            3600a09806c574235472455534e685146
+                alias           ora_02_logs_02
+        }
+}
+....
+. 重新启动多路径服务以验证下的设备 `/dev/mapper` 已更改为LUN名称与串行十六进制ID。
++
+[source, cli]
+----
+sudo systemctl restart multipathd
+----
++
+检查 `/dev/mapper` 返回如下内容：
+
++
+....
+[ec2-user@ip-172-30-15-58 ~]$ ls -l /dev/mapper
+total 0
+crw------- 1 root root 10, 236 Mar 21 18:19 control
+lrwxrwxrwx 1 root root       7 Mar 21 20:41 ora_02_biny_01 -> ../dm-0
+lrwxrwxrwx 1 root root       7 Mar 21 20:41 ora_02_data_01 -> ../dm-1
+lrwxrwxrwx 1 root root       7 Mar 21 20:41 ora_02_data_02 -> ../dm-2
+lrwxrwxrwx 1 root root       7 Mar 21 20:41 ora_02_data_03 -> ../dm-3
+lrwxrwxrwx 1 root root       7 Mar 21 20:41 ora_02_data_04 -> ../dm-4
+lrwxrwxrwx 1 root root       7 Mar 21 20:41 ora_02_logs_01 -> ../dm-5
+lrwxrwxrwx 1 root root       7 Mar 21 20:41 ora_02_logs_02 -> ../dm-6
+....
+. 使用一个主分区对二进制LUN进行分区。
++
+[source, cli]
+----
+sudo fdisk /dev/mapper/ora_02_biny_01
+----
+. 使用XFS文件系统格式化分区的二进制LUN。
++
+[source, cli]
+----
+sudo mkfs.xfs /dev/mapper/ora_02_biny_01p1
+----
+. 将二进制LUN挂载到 `/u01`。
++
+[source, cli]
+----
+sudo mkdir /u01
+----
++
+[source, cli]
+----
+sudo mount -t xfs /dev/mapper/ora_02_biny_01p1 /u01
+----
+. 更改 `/u01` Oracle用户及其关联主组的挂载点所有权。
++
+[source, cli]
+----
+sudo chown oracle:oinstall /u01
+----
+. 查找二进制LUN的UUI。
++
+[source, cli]
+----
+sudo blkid /dev/mapper/ora_02_biny_01p1
+----
+. 将挂载点添加到 `/etc/fstab`。
++
+[source, cli]
+----
+sudo vi /etc/fstab
+----
++
+添加以下行。
+
++
+....
+UUID=d89fb1c9-4f89-4de4-b4d9-17754036d11d       /u01    xfs     defaults,nofail 0       2
+....
+. 以root用户身份为Oracle设备添加udev规则。
++
+[source, cli]
+----
+vi /etc/udev/rules.d/99-oracle-asmdevices.rules
+----
++
+包括以下条目：
+
++
+....
+ENV{DM_NAME}=="ora*", GROUP:="oinstall", OWNER:="oracle", MODE:="660"
+....
+. 以root用户身份重新加载udev规则。
++
+[source, cli]
+----
+udevadm control --reload-rules
+----
+. 以root用户身份触发udev规则。
++
+[source, cli]
+----
+udevadm trigger
+----
+. 以root用户身份重新加载multipathd。
++
+[source, cli]
+----
+systemctl restart multipathd
+----
+. 重新启动EC2实例主机。
+
+
+====
+
+
+=== Oracle网格基础架构安装
+
+[%collapsible]
+====
+. 以管理员用户身份通过SSH登录到DB VM、并通过取消注释启用密码身份验证 `PasswordAuthentication yes` 然后进行注释 `PasswordAuthentication no`。
++
+[source, cli]
+----
+sudo vi /etc/ssh/sshd_config
+----
+. 重新启动sshd服务。
++
+[source, cli]
+----
+sudo systemctl restart sshd
+----
+. 重置Oracle用户密码。
++
+[source, cli]
+----
+sudo passwd oracle
+----
+. 以Oracle Restart软件所有者用户(Oracle)身份登录。按如下所示创建Oracle目录：
++
+[source, cli]
+----
+mkdir -p /u01/app/oracle
+----
++
+[source, cli]
+----
+mkdir -p /u01/app/oraInventory
+----
+. 更改目录权限设置。
++
+[source, cli]
+----
+chmod -R 775 /u01/app
+----
+. 创建网格主目录并进行更改。
++
+[source, cli]
+----
+mkdir -p /u01/app/oracle/product/19.0.0/grid
+----
++
+[source, cli]
+----
+cd /u01/app/oracle/product/19.0.0/grid
+----
+. 解压缩网格安装文件。
++
+[source, cli]
+----
+unzip -q /tmp/archive/LINUX.X64_193000_grid_home.zip
+----
+. 从网格主页中、删除 `OPatch` 目录。
++
+[source, cli]
+----
+rm -rf OPatch
+----
+. 从网格主页解压缩 `p6880880_190000_Linux-x86-64.zip`。
++
+[source, cli]
+----
+unzip -q /tmp/archive/p6880880_190000_Linux-x86-64.zip
+----
+. 从网格主页修改 `cv/admin/cvu_config`、取消注释并替换 `CV_ASSUME_DISTID=OEL5` 使用 `CV_ASSUME_DISTID=OL7`。
++
+[source, cli]
+----
+vi cv/admin/cvu_config
+----
+. 准备 `gridsetup.rsp` 文件以进行静默安装、并将rsp文件置于中 `/tmp/archive` 目录。rsp文件应使用以下信息涵盖A、B和G部分：
++
+....
+INVENTORY_LOCATION=/u01/app/oraInventory
+oracle.install.option=HA_CONFIG
+ORACLE_BASE=/u01/app/oracle
+oracle.install.asm.OSDBA=asmdba
+oracle.install.asm.OSOPER=asmoper
+oracle.install.asm.OSASM=asmadmin
+oracle.install.asm.SYSASMPassword="SetPWD"
+oracle.install.asm.diskGroup.name=DATA
+oracle.install.asm.diskGroup.redundancy=EXTERNAL
+oracle.install.asm.diskGroup.AUSize=4
+oracle.install.asm.diskGroup.disks=/dev/mapper/ora_02_data_01,/dev/mapper/ora_02_data_02,/dev/mapper/ora_02_data_03,/dev/mapper/ora_02_data_04
+oracle.install.asm.diskGroup.diskDiscoveryString=/dev/mapper/*
+oracle.install.asm.monitorPassword="SetPWD"
+oracle.install.asm.configureAFD=true
+....
+. 以root用户身份登录到EC2实例并进行设置 `ORACLE_HOME` 和 `ORACLE_BASE`。
++
+[source, cli]
+----
+export ORACLE_HOME=/u01/app/oracle/product/19.0.0/
+----
++
+[source, cli]
+----
+export ORACLE_BASE=/tmp
+----
++
+[source, cli]
+----
+cd /u01/app/oracle/product/19.0.0/grid/bin
+----
+. 初始化磁盘设备以与Oracle ASM筛选器驱动程序结合使用。
++
+[source, cli]
+----
+ ./asmcmd afd_label DATA01 /dev/mapper/ora_02_data_01 --init
+----
++
+[source, cli]
+----
+ ./asmcmd afd_label DATA02 /dev/mapper/ora_02_data_02 --init
+----
++
+[source, cli]
+----
+ ./asmcmd afd_label DATA03 /dev/mapper/ora_02_data_03 --init
+----
++
+[source, cli]
+----
+ ./asmcmd afd_label DATA04 /dev/mapper/ora_02_data_04 --init
+----
++
+[source, cli]
+----
+ ./asmcmd afd_label LOGS01 /dev/mapper/ora_02_logs_01 --init
+----
++
+[source, cli]
+----
+ ./asmcmd afd_label LOGS02 /dev/mapper/ora_02_logs_02 --init
+----
+. 安装 `cvuqdisk-1.0.10-1.rpm`。
++
+[source, cli]
+----
+rpm -ivh /u01/app/oracle/product/19.0.0/grid/cv/rpm/cvuqdisk-1.0.10-1.rpm
+----
+. 未设置 `$ORACLE_BASE`。
++
+[source, cli]
+----
+unset ORACLE_BASE
+----
+. 以Oracle用户身份登录到EC2实例、然后在中提取修补程序 `/tmp/archive` 文件夹。
++
+[source, cli]
+----
+unzip -q /tmp/archive/p34762026_190000_Linux-x86-64.zip -d /tmp/archive
+----
+. 从Grid home /u01/app/oracle/product/19.0.0/grid中、以Oracle用户身份启动 `gridSetup.sh` 用于网格基础架构安装。
++
+[source, cli]
+----
+ ./gridSetup.sh -applyRU /tmp/archive/34762026/ -silent -responseFile /tmp/archive/gridsetup.rsp
+----
+. 以root用户身份执行以下脚本：
++
+[source, cli]
+----
+/u01/app/oraInventory/orainstRoot.sh
+----
++
+[source, cli]
+----
+/u01/app/oracle/product/19.0.0/grid/root.sh
+----
+. 以root用户身份重新加载multipathd。
++
+[source, cli]
+----
+systemctl restart multipathd
+----
+. 以Oracle用户身份执行以下命令以完成配置：
++
+[source, cli]
+----
+/u01/app/oracle/product/19.0.0/grid/gridSetup.sh -executeConfigTools -responseFile /tmp/archive/gridsetup.rsp -silent
+----
+. 以Oracle用户身份创建日志磁盘组。
++
+[source, cli]
+----
+bin/asmca -silent -sysAsmPassword 'yourPWD' -asmsnmpPassword 'yourPWD' -createDiskGroup -diskGroupName LOGS -disk 'AFD:LOGS*' -redundancy EXTERNAL -au_size 4
+----
+. 以Oracle用户身份、在安装配置后验证网格服务。
++
+[source, cli]
+----
+bin/crsctl stat res -t
+----
++
+....
+[oracle@ora_02 grid]$ bin/crsctl stat res -t
+--------------------------------------------------------------------------------
+Name           Target  State        Server                   State details
+--------------------------------------------------------------------------------
+Local Resources
+--------------------------------------------------------------------------------
+ora.DATA.dg
+               ONLINE  ONLINE       ora_02                   STABLE
+ora.LISTENER.lsnr
+               ONLINE  INTERMEDIATE ora_02                   Not All Endpoints Re
+                                                             gistered,STABLE
+ora.LOGS.dg
+               ONLINE  ONLINE       ora_02                   STABLE
+ora.asm
+               ONLINE  ONLINE       ora_02                   Started,STABLE
+ora.ons
+               OFFLINE OFFLINE      ora_02                   STABLE
+--------------------------------------------------------------------------------
+Cluster Resources
+--------------------------------------------------------------------------------
+ora.cssd
+      1        ONLINE  ONLINE       ora_02                   STABLE
+ora.diskmon
+      1        OFFLINE OFFLINE                               STABLE
+ora.driver.afd
+      1        ONLINE  ONLINE       ora_02                   STABLE
+ora.evmd
+      1        ONLINE  ONLINE       ora_02                   STABLE
+--------------------------------------------------------------------------------
+....
+. Valiate ASM筛选器驱动程序状态。
++
+....
+
+[oracle@ora_02 grid]$ export ORACLE_HOME=/u01/app/oracle/product/19.0.0/grid
+[oracle@ora_02 grid]$ export ORACLE_SID=+ASM
+[oracle@ora_02 grid]$ export PATH=$PATH:$ORACLE_HOME/bin
+[oracle@ora_02 grid]$ asmcmd
+ASMCMD> lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  N         512             512   4096  4194304     81920    81780                0           81780              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     40960    40852                0           40852              0             N  LOGS/
+ASMCMD> afd_state
+ASMCMD-9526: The AFD state is 'LOADED' and filtering is 'ENABLED' on host 'ora_02'
+ASMCMD> exit
+[oracle@ora_02 grid]$
+
+....
+. 验证HA服务状态。
++
+....
+
+[oracle@ora_02 bin]$ ./crsctl check has
+CRS-4638: Oracle High Availability Services is online
+
+....
+
+
+====
+
+
+=== Oracle数据库安装
+
+[%collapsible]
+====
+. 以Oracle用户身份登录并取消设置 `$ORACLE_HOME` 和 `$ORACLE_SID` 如果已设置。
++
+[source, cli]
+----
+unset ORACLE_HOME
+----
++
+[source, cli]
+----
+unset ORACLE_SID
+----
+. 创建Oracle DB主目录并将其更改为该目录。
++
+[source, cli]
+----
+mkdir /u01/app/oracle/product/19.0.0/cdb3
+----
++
+[source, cli]
+----
+cd /u01/app/oracle/product/19.0.0/cdb3
+----
+. 解压缩Oracle数据库安装文件。
++
+[source, cli]
+----
+unzip -q /tmp/archive/LINUX.X64_193000_db_home.zip
+----
+. 从数据库主目录中、删除 `OPatch` 目录。
++
+[source, cli]
+----
+rm -rf OPatch
+----
+. 从DB主目录中、解压缩 `p6880880_190000_Linux-x86-64.zip`。
++
+[source, cli]
+----
+unzip -q /tmp/archive/p6880880_190000_Linux-x86-64.zip
+----
+. 在数据库主页中、修改 `cv/admin/cvu_config` 并取消注释并替换 `CV_ASSUME_DISTID=OEL5` 使用 `CV_ASSUME_DISTID=OL7`。
++
+[source, cli]
+----
+vi cv/admin/cvu_config
+----
+. 从 `/tmp/archive` 目录中、解压缩DB 19.18 RU修补程序。
++
+[source, cli]
+----
+unzip -q /tmp/archive/p34765931_190000_Linux-x86-64.zip -d /tmp/archive
+----
+. 在中准备DB静默安装rsp文件 `/tmp/archive/dbinstall.rsp` 具有以下值的目录：
++
+....
+oracle.install.option=INSTALL_DB_SWONLY
+UNIX_GROUP_NAME=oinstall
+INVENTORY_LOCATION=/u01/app/oraInventory
+ORACLE_HOME=/u01/app/oracle/product/19.0.0/cdb3
+ORACLE_BASE=/u01/app/oracle
+oracle.install.db.InstallEdition=EE
+oracle.install.db.OSDBA_GROUP=dba
+oracle.install.db.OSOPER_GROUP=oper
+oracle.install.db.OSBACKUPDBA_GROUP=oper
+oracle.install.db.OSDGDBA_GROUP=dba
+oracle.install.db.OSKMDBA_GROUP=dba
+oracle.install.db.OSRACDBA_GROUP=dba
+oracle.install.db.rootconfig.executeRootScript=false
+....
+. 从cdb3 home /u01/app/oracle/product/19.0.0/cdb3中、执行无提示纯软件DB安装。
++
+[source, cli]
+----
+ ./runInstaller -applyRU /tmp/archive/34765931/ -silent -ignorePrereqFailure -responseFile /tmp/archive/dbinstall.rsp
+----
+. 以root用户身份运行 `root.sh` 在纯软件安装后执行脚本。
++
+[source, cli]
+----
+/u01/app/oracle/product/19.0.0/db1/root.sh
+----
+. 以Oracle用户身份创建 `dbca.rsp` 包含以下条目的文件：
++
+....
+gdbName=cdb3.demo.netapp.com
+sid=cdb3
+createAsContainerDatabase=true
+numberOfPDBs=3
+pdbName=cdb3_pdb
+useLocalUndoForPDBs=true
+pdbAdminPassword="yourPWD"
+templateName=General_Purpose.dbc
+sysPassword="yourPWD"
+systemPassword="yourPWD"
+dbsnmpPassword="yourPWD"
+datafileDestination=+DATA
+recoveryAreaDestination=+LOGS
+storageType=ASM
+diskGroupName=DATA
+characterSet=AL32UTF8
+nationalCharacterSet=AL16UTF16
+listeners=LISTENER
+databaseType=MULTIPURPOSE
+automaticMemoryManagement=false
+totalMemory=8192
+....
+. 以Oracle用户身份、使用dbca启动数据库创建。
++
+[source, cli]
+----
+bin/dbca -silent -createDatabase -responseFile /tmp/archive/dbca.rsp
+----
++
+输出：
+
+
+
+....
+
+Prepare for db operation
+7% complete
+Registering database with Oracle Restart
+11% complete
+Copying database files
+33% complete
+Creating and starting Oracle instance
+35% complete
+38% complete
+42% complete
+45% complete
+48% complete
+Completing Database Creation
+53% complete
+55% complete
+56% complete
+Creating Pluggable Databases
+60% complete
+64% complete
+69% complete
+78% complete
+Executing Post Configuration Actions
+100% complete
+Database creation complete. For details check the logfiles at:
+ /u01/app/oracle/cfgtoollogs/dbca/cdb3.
+Database Information:
+Global Database Name:cdb3.vmc.netapp.com
+System Identifier(SID):cdb3
+Look at the log file "/u01/app/oracle/cfgtoollogs/dbca/cdb3/cdb3.log" for further details.
+
+....
+. 重复步骤2中的相同过程、使用一个PDB在单独的oracle_home /u01/app/oracle/product/19.0.0/cdb4中创建容器数据库cdb4。
+. 作为Oracle用户、请在创建数据库后验证Oracle Restart HA服务、确认所有数据库(cdb3、cdb4)均已向HA服务注册。
++
+[source, cli]
+----
+/u01/app/oracle/product/19.0.0/grid/crsctl stat res -t
+----
++
+输出：
+
++
+....
+
+[oracle@ora_02 bin]$ ./crsctl stat res -t
+--------------------------------------------------------------------------------
+Name           Target  State        Server                   State details
+--------------------------------------------------------------------------------
+Local Resources
+--------------------------------------------------------------------------------
+ora.DATA.dg
+               ONLINE  ONLINE       ora_02                   STABLE
+ora.LISTENER.lsnr
+               ONLINE  INTERMEDIATE ora_02                   Not All Endpoints Re
+                                                             gistered,STABLE
+ora.LOGS.dg
+               ONLINE  ONLINE       ora_02                   STABLE
+ora.asm
+               ONLINE  ONLINE       ora_02                   Started,STABLE
+ora.ons
+               OFFLINE OFFLINE      ora_02                   STABLE
+--------------------------------------------------------------------------------
+Cluster Resources
+--------------------------------------------------------------------------------
+ora.cdb3.db
+      1        ONLINE  ONLINE       ora_02                   Open,HOME=/u01/app/o
+                                                             racle/product/19.0.0
+                                                             /cdb3,STABLE
+ora.cdb4.db
+      1        ONLINE  ONLINE       ora_02                   Open,HOME=/u01/app/o
+                                                             racle/product/19.0.0
+                                                             /cdb4,STABLE
+ora.cssd
+      1        ONLINE  ONLINE       ora_02                   STABLE
+ora.diskmon
+      1        OFFLINE OFFLINE                               STABLE
+ora.driver.afd
+      1        ONLINE  ONLINE       ora_02                   STABLE
+ora.evmd
+      1        ONLINE  ONLINE       ora_02                   STABLE
+--------------------------------------------------------------------------------
+....
+. 设置Oracle用户 `.bash_profile`。
++
+[source, cli]
+----
+vi ~/.bash_profile
+----
++
+添加以下条目：
+
++
+....
+
+export ORACLE_HOME=/u01/app/oracle/product/19.0.0/db3
+export ORACLE_SID=db3
+export PATH=$PATH:$ORACLE_HOME/bin
+alias asm='export ORACLE_HOME=/u01/app/oracle/product/19.0.0/grid;export ORACLE_SID=+ASM;export PATH=$PATH:$ORACLE_HOME/bin'
+alias cdb3='export ORACLE_HOME=/u01/app/oracle/product/19.0.0/cdb3;export ORACLE_SID=cdb3;export PATH=$PATH:$ORACLE_HOME/bin'
+alias cdb4='export ORACLE_HOME=/u01/app/oracle/product/19.0.0/cdb4;export ORACLE_SID=cdb4;export PATH=$PATH:$ORACLE_HOME/bin'
+
+....
+. 验证为cdb3创建的CDB/PDB。
++
+[source, cli]
+----
+cdb3
+----
++
+....
+
+[oracle@ora_02 ~]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Mon Oct 9 08:19:20 2023
+Version 19.18.0.0.0
+
+Copyright (c) 1982, 2022, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.18.0.0.0
+
+SQL> select name, open_mode from v$database;
+
+NAME      OPEN_MODE
+--------- --------------------
+CDB3      READ WRITE
+
+SQL> show pdbs
+
+    CON_ID CON_NAME                       OPEN MODE  RESTRICTED
+---------- ------------------------------ ---------- ----------
+         2 PDB$SEED                       READ ONLY  NO
+         3 CDB3_PDB1                      READ WRITE NO
+         4 CDB3_PDB2                      READ WRITE NO
+         5 CDB3_PDB3                      READ WRITE NO
+SQL>
+
+SQL> select name from v$datafile;
+
+NAME
+--------------------------------------------------------------------------------
++DATA/CDB3/DATAFILE/system.257.1149420273
++DATA/CDB3/DATAFILE/sysaux.258.1149420317
++DATA/CDB3/DATAFILE/undotbs1.259.1149420343
++DATA/CDB3/86B637B62FE07A65E053F706E80A27CA/DATAFILE/system.266.1149421085
++DATA/CDB3/86B637B62FE07A65E053F706E80A27CA/DATAFILE/sysaux.267.1149421085
++DATA/CDB3/DATAFILE/users.260.1149420343
++DATA/CDB3/86B637B62FE07A65E053F706E80A27CA/DATAFILE/undotbs1.268.1149421085
++DATA/CDB3/06FB206DF15ADEE8E065025056B66295/DATAFILE/system.272.1149422017
++DATA/CDB3/06FB206DF15ADEE8E065025056B66295/DATAFILE/sysaux.273.1149422017
++DATA/CDB3/06FB206DF15ADEE8E065025056B66295/DATAFILE/undotbs1.271.1149422017
++DATA/CDB3/06FB206DF15ADEE8E065025056B66295/DATAFILE/users.275.1149422033
+
+NAME
+--------------------------------------------------------------------------------
++DATA/CDB3/06FB21766256DF9AE065025056B66295/DATAFILE/system.277.1149422033
++DATA/CDB3/06FB21766256DF9AE065025056B66295/DATAFILE/sysaux.278.1149422033
++DATA/CDB3/06FB21766256DF9AE065025056B66295/DATAFILE/undotbs1.276.1149422033
++DATA/CDB3/06FB21766256DF9AE065025056B66295/DATAFILE/users.280.1149422049
++DATA/CDB3/06FB22629AC1DFD7E065025056B66295/DATAFILE/system.282.1149422049
++DATA/CDB3/06FB22629AC1DFD7E065025056B66295/DATAFILE/sysaux.283.1149422049
++DATA/CDB3/06FB22629AC1DFD7E065025056B66295/DATAFILE/undotbs1.281.1149422049
++DATA/CDB3/06FB22629AC1DFD7E065025056B66295/DATAFILE/users.285.1149422063
+
+19 rows selected.
+
+SQL>
+
+....
+. 验证为cdb4创建的CDB/PDB。
++
+[source, cli]
+----
+cdb4
+----
++
+....
+
+[oracle@ora_02 ~]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Mon Oct 9 08:20:26 2023
+Version 19.18.0.0.0
+
+Copyright (c) 1982, 2022, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.18.0.0.0
+
+SQL> select name, open_mode from v$database;
+
+NAME      OPEN_MODE
+--------- --------------------
+CDB4      READ WRITE
+
+SQL> show pdbs
+
+    CON_ID CON_NAME                       OPEN MODE  RESTRICTED
+---------- ------------------------------ ---------- ----------
+         2 PDB$SEED                       READ ONLY  NO
+         3 CDB4_PDB                       READ WRITE NO
+SQL>
+
+SQL> select name from v$datafile;
+
+NAME
+--------------------------------------------------------------------------------
++DATA/CDB4/DATAFILE/system.286.1149424943
++DATA/CDB4/DATAFILE/sysaux.287.1149424989
++DATA/CDB4/DATAFILE/undotbs1.288.1149425015
++DATA/CDB4/86B637B62FE07A65E053F706E80A27CA/DATAFILE/system.295.1149425765
++DATA/CDB4/86B637B62FE07A65E053F706E80A27CA/DATAFILE/sysaux.296.1149425765
++DATA/CDB4/DATAFILE/users.289.1149425015
++DATA/CDB4/86B637B62FE07A65E053F706E80A27CA/DATAFILE/undotbs1.297.1149425765
++DATA/CDB4/06FC3070D5E12C23E065025056B66295/DATAFILE/system.301.1149426581
++DATA/CDB4/06FC3070D5E12C23E065025056B66295/DATAFILE/sysaux.302.1149426581
++DATA/CDB4/06FC3070D5E12C23E065025056B66295/DATAFILE/undotbs1.300.1149426581
++DATA/CDB4/06FC3070D5E12C23E065025056B66295/DATAFILE/users.304.1149426597
+
+11 rows selected.
+
+....
+. 使用sqlplus以sysdba身份登录到每个cdb、并将两个CDBS的数据库恢复目标大小设置为+logs磁盘组大小。
++
+[source, cli]
+----
+alter system set db_recovery_file_dest_size = 40G scope=both;
+----
+. 使用sqlplus以sysdba身份登录到每个cdb、并使用以下命令集按顺序启用归档日志模式。
++
+[source, cli]
+----
+sqlplus /as sysdba
+----
++
+[source, cli]
+----
+shutdown immediate;
+----
++
+[source, cli]
+----
+startup mount;
+----
++
+[source, cli]
+----
+alter database archivelog;
+----
++
+[source, cli]
+----
+alter database open;
+----
+
+
+至此、在适用于ONTAP存储的Amazon FSx和VMC DB VM上完成了Oracle 19c 19.18版重新启动部署。如果需要、NetApp建议将Oracle控制文件和联机日志文件重新定位到+logs磁盘组。
+
+====
+
+
+=== 使用SnapCenter进行Oracle备份、还原和克隆
+
+
+
+==== SnapCenter设置
+
+[%collapsible]
+====
+SnapCenter依靠数据库VM上的主机端插件来执行应用程序感知型数据保护管理活动。有关适用于Oracle的NetApp SnapCenter插件的详细信息、请参见此文档 link:https://docs.netapp.com/us-en/snapcenter/protect-sco/concept_what_you_can_do_with_the_snapcenter_plug_in_for_oracle_database.html["您可以使用适用于 Oracle 数据库的插件执行什么操作"^]。下面简要介绍了为Oracle数据库备份、恢复和克隆设置SnapCenter的步骤。
+
+. 从NetApp 支持站点 下载最新版本的SnapCenter软件： link:https://mysupport.netapp.com/site/downloads["NetApp 支持下载"^]。
+. 以管理员身份从安装最新的Java JDK link:https://www.java.com/en/["获取适用于桌面应用程序的Java"^] 在SnapCenter服务器Windows主机上。
++
+
+NOTE: 如果Windows服务器部署在域环境中、请将域用户添加到SnapCenter服务器本地管理员组、然后使用域用户运行SnapCenter安装。
+
+. 以安装用户身份通过HTTPS端口8846登录到SnapCenter UI、以配置适用于Oracle的SnapCenter。
+. 更新 `Hypervisor Settings` 在全局设置中。
++
+image:aws_ora_fsx_vmc_snapctr_01.png["显示SnapCenter配置的屏幕截图。"]
+
+. 创建Oracle数据库备份策略。理想情况下、请创建一个单独的归档日志备份策略、以便更频繁地进行备份、从而最大限度地减少发生故障时的数据丢失。
++
+image:aws_ora_fsx_vmc_snapctr_02.png["显示SnapCenter配置的屏幕截图。"]
+
+. 添加数据库服务器 `Credential` 用于通过SnapCenter访问DB VM。此凭据在Linux VM上应具有sudo权限、在Windows VM上应具有管理员权限。
++
+image:aws_ora_fsx_vmc_snapctr_03.png["显示SnapCenter配置的屏幕截图。"]
+
+. 将FSx ONTAP存储集群添加到 `Storage Systems` 使用集群管理IP并通过fsxadmin用户ID进行身份验证。
++
+image:aws_ora_fsx_vmc_snapctr_04.png["显示SnapCenter配置的屏幕截图。"]
+
+. 将VMC中的Oracle数据库VM添加到 `Hosts` 使用上一步中创建的服务器凭据6.
++
+image:aws_ora_fsx_vmc_snapctr_05.png["显示SnapCenter配置的屏幕截图。"]
+
+
+
+
+NOTE: 确保SnapCenter服务器名称可解析为数据库VM中的IP地址、而DB VM名称可解析为SnapCenter服务器中的IP地址。
+
+====
+
+
+==== 数据库备份
+
+[%collapsible]
+====
+与基于RMAN的传统方法相比、SnapCenter利用FSx ONTAP卷快照加快数据库备份、还原或克隆速度。由于数据库在创建快照之前处于Oracle备份模式、因此这些快照是应用程序一致的。
+
+. 从 `Resources` 选项卡中、将虚拟机添加到SnapCenter后、系统会自动发现虚拟机上的任何数据库。最初、数据库状态显示为 `Not protected`。
++
+image:aws_ora_fsx_vmc_snapctr_06.png["显示SnapCenter配置的屏幕截图。"]
+
+. 创建一个资源组、以按逻辑分组(如DB VM等)备份数据库 在此示例中、我们创建了一个ora_02_data组、用于对VM ora_02上的所有数据库执行完整的联机数据库备份。资源组ora_02_log仅在VM上执行归档日志备份。创建资源组还会定义执行备份的计划。
++
+image:aws_ora_fsx_vmc_snapctr_07.png["显示SnapCenter配置的屏幕截图。"]
+
+. 单击也可以手动触发资源组备份 `Back up Now` 并使用资源组中定义的策略执行备份。
++
+image:aws_ora_fsx_vmc_snapctr_08.png["显示SnapCenter配置的屏幕截图。"]
+
+. 可通过监控备份作业 `Monitor` 选项卡、单击正在运行的作业。
++
+image:aws_ora_fsx_vmc_snapctr_09.png["显示SnapCenter配置的屏幕截图。"]
+
+. 成功备份后、数据库状态将显示作业状态和最近的备份时间。
++
+image:aws_ora_fsx_vmc_snapctr_10.png["显示SnapCenter配置的屏幕截图。"]
+
+. 单击数据库以查看每个数据库的备份集。
++
+image:aws_ora_fsx_vmc_snapctr_11.png["显示SnapCenter配置的屏幕截图。"]
+
+
+
+====
+
+
+==== 数据库恢复
+
+[%collapsible]
+====
+SnapCenter为Oracle数据库提供了许多从快照备份还原和恢复选项。在本示例中、我们展示了一个时间点还原、用于恢复因错误而丢弃的表。在VM ora_02上、两个数据库cdb3和cdb4共享相同的+data和+logs.磁盘组。一个数据库的数据库还原不会影响另一个数据库的可用性。
+
+. 首先、创建一个测试表并在表中插入一行、以验证时间点恢复。
++
+....
+
+[oracle@ora_02 ~]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Fri Oct 6 14:15:21 2023
+Version 19.18.0.0.0
+
+Copyright (c) 1982, 2022, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.18.0.0.0
+
+SQL> select name, open_mode from v$database;
+
+NAME      OPEN_MODE
+--------- --------------------
+CDB3      READ WRITE
+
+SQL> show pdbs
+
+    CON_ID CON_NAME                       OPEN MODE  RESTRICTED
+---------- ------------------------------ ---------- ----------
+         2 PDB$SEED                       READ ONLY  NO
+         3 CDB3_PDB1                      READ WRITE NO
+         4 CDB3_PDB2                      READ WRITE NO
+         5 CDB3_PDB3                      READ WRITE NO
+SQL>
+
+
+SQL> alter session set container=cdb3_pdb1;
+
+Session altered.
+
+SQL> create table test (id integer, dt timestamp, event varchar(100));
+
+Table created.
+
+SQL> insert into test values(1, sysdate, 'test oracle recovery on guest mounted fsx storage to VMC guest vm ora_02');
+
+1 row created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select * from test;
+
+        ID
+----------
+DT
+---------------------------------------------------------------------------
+EVENT
+--------------------------------------------------------------------------------
+         1
+06-OCT-23 03.18.24.000000 PM
+test oracle recovery on guest mounted fsx storage to VMC guest vm ora_02
+
+
+SQL> select current_timestamp from dual;
+
+CURRENT_TIMESTAMP
+---------------------------------------------------------------------------
+06-OCT-23 03.18.53.996678 PM -07:00
+
+....
+. 我们从SnapCenter运行手动快照备份。然后丢弃该表。
++
+....
+
+SQL> drop table test;
+
+Table dropped.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select current_timestamp from dual;
+
+CURRENT_TIMESTAMP
+---------------------------------------------------------------------------
+06-OCT-23 03.26.30.169456 PM -07:00
+
+SQL> select * from test;
+select * from test
+              *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+....
+. 从上一步创建的备份集中、记下日志备份的scn编号。单击 `Restore` 启动还原-恢复工作流。
++
+image:aws_ora_fsx_vmc_snapctr_12.png["显示SnapCenter配置的屏幕截图。"]
+
+. 选择还原范围。
++
+image:aws_ora_fsx_vmc_snapctr_13.png["显示SnapCenter配置的屏幕截图。"]
+
+. 选择从上次完整数据库备份到日志scn的恢复范围。
++
+image:aws_ora_fsx_vmc_snapctr_14.png["显示SnapCenter配置的屏幕截图。"]
+
+. 指定要运行的任何可选预处理脚本。
++
+image:aws_ora_fsx_vmc_snapctr_15.png["显示SnapCenter配置的屏幕截图。"]
+
+. 指定要运行的任何可选后处理脚本。
++
+image:aws_ora_fsx_vmc_snapctr_16.png["显示SnapCenter配置的屏幕截图。"]
+
+. 根据需要发送作业报告。
++
+image:aws_ora_fsx_vmc_snapctr_17.png["显示SnapCenter配置的屏幕截图。"]
+
+. 查看摘要、然后单击 `Finish` 启动还原和恢复。
++
+image:aws_ora_fsx_vmc_snapctr_18.png["显示SnapCenter配置的屏幕截图。"]
+
+. 通过Oracle Restart网格控件、我们可以观察到、在恢复cdb3时、cdb4处于联机和可用状态。
++
+image:aws_ora_fsx_vmc_snapctr_19.png["显示SnapCenter配置的屏幕截图。"]
+
+. from `Monitor` 选项卡中、打开作业以查看详细信息。
++
+image:aws_ora_fsx_vmc_snapctr_20.png["显示SnapCenter配置的屏幕截图。"]
+
+. 从DB VM ora_02中、验证在成功恢复后是否已恢复丢弃的表。
++
+....
+
+[oracle@ora_02 bin]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Fri Oct 6 17:01:28 2023
+Version 19.18.0.0.0
+
+Copyright (c) 1982, 2022, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.18.0.0.0
+
+SQL> select name, open_mode from v$database;
+
+NAME      OPEN_MODE
+--------- --------------------
+CDB3      READ WRITE
+
+SQL> show pdbs
+
+    CON_ID CON_NAME                       OPEN MODE  RESTRICTED
+---------- ------------------------------ ---------- ----------
+         2 PDB$SEED                       READ ONLY  NO
+         3 CDB3_PDB1                      READ WRITE NO
+         4 CDB3_PDB2                      READ WRITE NO
+         5 CDB3_PDB3                      READ WRITE NO
+SQL> alter session set container=CDB3_PDB1;
+
+Session altered.
+
+SQL> select * from test;
+
+        ID
+----------
+DT
+---------------------------------------------------------------------------
+EVENT
+--------------------------------------------------------------------------------
+         1
+06-OCT-23 03.18.24.000000 PM
+test oracle recovery on guest mounted fsx storage to VMC guest vm ora_02
+
+
+SQL> select current_timestamp from dual;
+
+CURRENT_TIMESTAMP
+---------------------------------------------------------------------------
+06-OCT-23 05.02.20.382702 PM -07:00
+
+SQL>
+
+....
+
+
+====
+
+
+==== 数据库克隆
+
+[%collapsible]
+====
+在此示例中、使用相同的备份集克隆不同oracle_home中同一VM上的数据库。如果需要、这些过程同样适用于将数据库从备份克隆到VMC中的单独虚拟机。
+
+. 打开数据库cdb3备份列表。从所选的数据备份中、单击 `Clone` 用于启动数据库克隆工作流的按钮。
++
+image:aws_ora_fsx_vmc_snapctr_21.png["显示SnapCenter配置的屏幕截图。"]
+
+. 将克隆数据库命名为SID。
++
+image:aws_ora_fsx_vmc_snapctr_22.png["显示SnapCenter配置的屏幕截图。"]
+
+. 在VMC中选择一个VM作为目标数据库主机。主机上应已安装和配置相同版本的Oracle。
++
+image:aws_ora_fsx_vmc_snapctr_23.png["显示SnapCenter配置的屏幕截图。"]
+
+. 在目标主机上选择正确的oracle_home、用户和组。保留默认凭据。
++
+image:aws_ora_fsx_vmc_snapctr_24.png["显示SnapCenter配置的屏幕截图。"]
+
+. 更改克隆数据库参数以满足克隆数据库的配置或资源要求。
++
+image:aws_ora_fsx_vmc_snapctr_25.png["显示SnapCenter配置的屏幕截图。"]
+
+. 选择恢复范围。 `Until Cancel` 将克隆恢复到备份集中最后一个可用日志文件。
++
+image:aws_ora_fsx_vmc_snapctr_26.png["显示SnapCenter配置的屏幕截图。"]
+
+. 查看摘要并启动克隆作业。
++
+image:aws_ora_fsx_vmc_snapctr_27.png["显示SnapCenter配置的屏幕截图。"]
+
+. 通过监控克隆作业的执行情况 `Monitor` 选项卡。
++
+image:aws_ora_fsx_vmc_snapctr_28.png["显示SnapCenter配置的屏幕截图。"]
+
+. 克隆的数据库会立即注册到SnapCenter中。
++
+image:aws_ora_fsx_vmc_snapctr_29.png["显示SnapCenter配置的屏幕截图。"]
+
+. 从DB VM ora_02中、克隆的数据库也会注册到Oracle Restart网格控件中、而丢弃的测试表会恢复到克隆的数据库cdb3tst中、如下所示。
++
+....
+
+[oracle@ora_02 ~]$ /u01/app/oracle/product/19.0.0/grid/bin/crsctl stat res -t
+--------------------------------------------------------------------------------
+Name           Target  State        Server                   State details
+--------------------------------------------------------------------------------
+Local Resources
+--------------------------------------------------------------------------------
+ora.DATA.dg
+               ONLINE  ONLINE       ora_02                   STABLE
+ora.LISTENER.lsnr
+               ONLINE  INTERMEDIATE ora_02                   Not All Endpoints Re
+                                                             gistered,STABLE
+ora.LOGS.dg
+               ONLINE  ONLINE       ora_02                   STABLE
+ora.SC_2090922_CDB3TST.dg
+               ONLINE  ONLINE       ora_02                   STABLE
+ora.asm
+               ONLINE  ONLINE       ora_02                   Started,STABLE
+ora.ons
+               OFFLINE OFFLINE      ora_02                   STABLE
+--------------------------------------------------------------------------------
+Cluster Resources
+--------------------------------------------------------------------------------
+ora.cdb3.db
+      1        ONLINE  ONLINE       ora_02                   Open,HOME=/u01/app/o
+                                                             racle/product/19.0.0
+                                                             /cdb3,STABLE
+ora.cdb3tst.db
+      1        ONLINE  ONLINE       ora_02                   Open,HOME=/u01/app/o
+                                                             racle/product/19.0.0
+                                                             /cdb4,STABLE
+ora.cdb4.db
+      1        ONLINE  ONLINE       ora_02                   Open,HOME=/u01/app/o
+                                                             racle/product/19.0.0
+                                                             /cdb4,STABLE
+ora.cssd
+      1        ONLINE  ONLINE       ora_02                   STABLE
+ora.diskmon
+      1        OFFLINE OFFLINE                               STABLE
+ora.driver.afd
+      1        ONLINE  ONLINE       ora_02                   STABLE
+ora.evmd
+      1        ONLINE  ONLINE       ora_02                   STABLE
+--------------------------------------------------------------------------------
+
+[oracle@ora_02 ~]$ export ORACLE_HOME=/u01/app/oracle/product/19.0.0/cdb4
+[oracle@ora_02 ~]$ export ORACLE_SID=cdb3tst
+[oracle@ora_02 ~]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Sat Oct 7 08:04:51 2023
+Version 19.18.0.0.0
+
+Copyright (c) 1982, 2022, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.18.0.0.0
+
+SQL> select name, open_mode from v$database;
+
+NAME      OPEN_MODE
+--------- --------------------
+CDB3TST   READ WRITE
+
+SQL> show pdbs
+
+    CON_ID CON_NAME                       OPEN MODE  RESTRICTED
+---------- ------------------------------ ---------- ----------
+         2 PDB$SEED                       READ ONLY  NO
+         3 CDB3_PDB1                      READ WRITE NO
+         4 CDB3_PDB2                      READ WRITE NO
+         5 CDB3_PDB3                      READ WRITE NO
+SQL> alter session set container=CDB3_PDB1;
+
+Session altered.
+
+SQL> select * from test;
+
+        ID
+----------
+DT
+---------------------------------------------------------------------------
+EVENT
+--------------------------------------------------------------------------------
+         1
+06-OCT-23 03.18.24.000000 PM
+test oracle recovery on guest mounted fsx storage to VMC guest vm ora_02
+
+
+SQL>
+
+....
+
+
+至此、我们完成了在AWS上的VMC SDDC中对Oracle数据库进行SnapCenter备份、还原和克隆的演示。
+
+====
+
+
+== 从何处查找追加信息
+
+要了解有关本文档中所述信息的更多信息，请查看以下文档和 / 或网站：
+
+* VMware Cloud on AWS文档
++
+link:https://docs.vmware.com/en/VMware-Cloud-on-AWS/index.html["https://docs.vmware.com/en/VMware-Cloud-on-AWS/index.html"^]
+
+* 在安装新数据库的情况下为独立服务器安装Oracle网格基础架构
++
+link:https://docs.oracle.com/en/database/oracle/oracle-database/19/ladbi/installing-oracle-grid-infrastructure-for-a-standalone-server-with-a-new-database-installation.html#GUID-0B1CEE8C-C893-46AA-8A6A-7B5FAAEC72B3["https://docs.oracle.com/en/database/oracle/oracle-database/19/ladbi/installing-oracle-grid-infrastructure-for-a-standalone-server-with-a-new-database-installation.html#GUID-0B1CEE8C-C893-46AA-8A6A-7B5FAAEC72B3"^]
+
+* 使用响应文件安装和配置Oracle数据库
++
+link:https://docs.oracle.com/en/database/oracle/oracle-database/19/ladbi/installing-and-configuring-oracle-database-using-response-files.html#GUID-D53355E9-E901-4224-9A2A-B882070EDDF7["https://docs.oracle.com/en/database/oracle/oracle-database/19/ladbi/installing-and-configuring-oracle-database-using-response-files.html#GUID-D53355E9-E901-4224-9A2A-B882070EDDF7"^]
+
+* 适用于 NetApp ONTAP 的 Amazon FSX
++
+link:https://aws.amazon.com/fsx/netapp-ontap/["https://aws.amazon.com/fsx/netapp-ontap/"^]
+
+

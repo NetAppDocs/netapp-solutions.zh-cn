@@ -15165,8 +15165,6 @@
   <block id="3603e14740d8edd319e72186341cb0af" category="cell">2022年6月12日</block>
   <block id="48461fa824ae344e0934144c7523c3f6" category="cell">添加了7个视频、用于在混合云中使用Amazon FSX存储实现Oracle数据库现代化</block>
   <block id="954a2b08ded0ca2c881930f5ebeee24a" category="example-title">人工智能(AI)和现代数据分析</block>
-  <block id="672d7bebe35b300386767050d4222453" category="paragraph">【下划线】#*在AWS和FSX*中使用混合云实现Oracle现代化的视频</block>
-  <block id="deb1d0bb3f3f4ef0121635c0f832a3bf" category="video-title">第1部分—用例和解决方案 架构</block>
   <block id="369b9aec1beb25441dc7c7fb46bc0fc6" category="video-title">第2a部分—使用具有最大可用性的自动PDB重新定位将数据库从内部迁移到AWS</block>
   <block id="2edb94ef9695015c5cd01fec59bcc782" category="video-title">第2b部分—使用BlueXP控制台通过SnapMirror将数据库从内部迁移到AWS</block>
   <block id="59fa2b2110d3350efd262bd841c10975" category="video-title">第3部分—自动化数据库HA/DR复制设置、故障转移、重新同步</block>
@@ -16910,7 +16908,6 @@
   <block id="11a64b78983fb952ba99933c98fc56df" category="list-text">* FSX存储HA集群单区域或多区域部署。*在这些测试和验证中、我们在一个AWS可用性区域中部署了一个FSX HA集群。对于生产部署、NetApp建议在两个不同的可用性区域中部署一个FSX HA对。FSX HA集群始终配置在一个HA对中、该HA对在一对主动-被动文件系统中进行同步镜像、以提供存储级别的冗余。多区域部署可在单个AWS区域发生故障时进一步提高高可用性。</block>
   <block id="660a107d1d4a80542a6c11d9a1ed2db4" category="list-text">* FSX存储集群规模估算。*适用于ONTAP 存储文件系统的Amazon FSX可提供高达160、000个原始SSD IOPS、高达4 Gbps吞吐量以及最大192 TiB容量。但是、您可以根据部署时的实际要求、根据已配置的IOPS、吞吐量和存储限制(最小1、024 GiB)来调整集群的大小。可以动态调整容量、而不会影响应用程序可用性。</block>
   <block id="0907de49479565aae7dd2f8a84ef2915" category="list-text">* Oracle数据和日志布局。*在测试和验证中、我们分别为数据和日志部署了两个ASM磁盘组。在+data ASM磁盘组中、我们在一个数据卷中配置了四个LUN。在+logs ASM磁盘组中、我们在一个日志卷中配置了两个LUN。通常、在适用于ONTAP 的Amazon FSX卷中部署多个LUN可提高性能。</block>
-  <block id="511a515ed4428c1ca16462485a26f4fc" category="list-text">* iSCSI配置。* EC2实例数据库服务器使用iSCSI协议连接到FSX存储。EC2实例通常使用一个网络接口或ENI进行部署。单个NIC接口可同时传输iSCSI和应用程序流量。通过仔细分析Oracle AWR报告来衡量Oracle数据库预览I/O吞吐量要求非常重要、这样才能选择既能满足应用程序流量需求又能满足iSCSI流量吞吐量需求的正确EC2计算实例。NetApp还建议为正确配置多路径的两个FSX iSCSI端点分配四个iSCSI连接。</block>
   <block id="db1de135a2e3ba870a8f80ce78d2d05e" category="list-text">*要为创建的每个Oracle ASM磁盘组使用的Oracle ASM冗余级别。*由于FSX已在FSX集群级别镜像存储、因此应使用外部冗余、这意味着该选项不允许Oracle ASM镜像磁盘组的内容。</block>
   <block id="e35fd1c687443b2da6a609bba53616b4" category="list-text">*数据库备份。* NetApp提供SaaS版本的SnapCenter 软件服务、用于在云中备份、还原和克隆数据库、该服务可通过NetApp BlueXP控制台UI访问。NetApp建议实施此类服务、以实现快速(不到一分钟)的快照备份、快速(几分钟)的数据库还原和数据库克隆。</block>
   <block id="77e4d80ae2f4257081e17476b146608a" category="section-title">解决方案 部署</block>
@@ -17019,7 +17016,6 @@
   <block id="05472424b7ce7bd118009f6cde3a0614" category="list-text">设置Oracle用户<block ref="9e0037ad71166970bde5f910189cc94a" prefix=" " category="inline-code"></block>。</block>
   <block id="cadaa91ab9001028d3a153b4325f10a5" category="list-text">添加以下条目：</block>
   <block id="ab5f5bab123b3441fc9c838b46ff1150" category="list-text">验证已创建的CDB/PDB。</block>
-  <block id="561a4d93b7f68977bd06286fa019a254" category="list-text">将数据库恢复位置设置为+logs磁盘组。</block>
   <block id="a0b58d032d36bf0801e5ca3a2aa515d9" category="list-text">使用sqlplus登录到数据库并启用归档日志模式。</block>
   <block id="0a31d377857a1d2e24f8e85950a44aac" category="paragraph">至此、在适用于ONTAP 和EC2计算实例的Amazon FSX上完成Oracle 19c版本19.18重新启动部署。如果需要、NetApp建议将Oracle控制文件和联机日志文件重新定位到+logs磁盘组。</block>
   <block id="4d3617697efd9a8201cb07f5e610e306" category="section-title">自动化部署选项</block>
@@ -20322,10 +20318,7 @@ Astra Control -单击用户图标并单击API访问时、请访问API文档下�
   <block id="665aea4799536e845b4d19fc4b3e4ee9" category="list-text">在故障转移测试后运行重新同步—在复制模式下重新建立数据库卷SnapMirror关系。</block>
   <block id="13b6326e5a684ad1d8a9de13b31a2069" category="paragraph">要了解有关NetApp 解决方案 自动化的详细信息、请查看以下网站 <block ref="03bbd03f7d2552fa2076b42f86a04360" category="inline-link-macro-rx"></block></block>
   <block id="784f4d9bc2efa477eafb911859744478" category="summary">解决方案提供了使用AWS FSx ONTAP作为备用站点Oracle数据库存储来配置Oracle Data Guard的概述和详细信息、以降低AWS中Oracle Data Guard HA/DR解决方案的许可和运营成本。</block>
-  <block id="73d3c98d13bcd463c30008dec3df8482" category="doc">TR-4981：《借助AWS FSx ONTAP主动降低数据防护成本》</block>
   <block id="f9ca3bf31876c6185710d49eac400cfe" category="paragraph">Oracle Data Guard可确保主数据库和备用数据库复制配置中企业数据的高可用性、数据保护和灾难恢复。Oracle Active Data Guard使用户能够在从主数据库到备用数据库的数据复制处于活动状态时访问备用数据库。Data Guard是Oracle数据库企业版的一项功能。它不需要单独的许可。另一方面、Active Data Guard是Oracle数据库企业版选件、因此需要单独的许可。在Active Data Guard设置中、多个备用数据库可以从主数据库接收数据复制。但是、每个附加备用数据库都需要Active Data Guard许可证以及与主数据库大小相同的额外存储。运营成本会迅速增加。</block>
-  <block id="9b5cb00e4268739e8f2781c020ad2477" category="paragraph">如果您希望降低Oracle数据库运营成本、并计划在AWS中设置Active Data Guard、则应考虑另一种选择。使用数据防护从主数据库复制到AWS FSx ONTAP存储上的单个物理备用数据库、而不是Active Data Guard。随后、可以克隆此备用数据库的多个副本并打开以进行读/写访问、以满足许多其他使用情形的需要、例如报告、开发、测试等 最终结果有效地提供了Active Data Guard的功能、同时消除了Active Data Guard许可证、并为每个额外的备用数据库节省了额外的存储成本。在本文档中、我们将演示如何在AWS中使用现有主数据库设置Oracle Data Guard、并将物理备用数据库放置在AWS FSx ONTAP存储上。备用数据库通过Snapshot进行备份、并根据需要进行克隆、以便进行读/写访问。</block>
-  <block id="ca7c3105dcf9272dbe41727059afe721" category="list-text">在AWS中任何存储上的主数据库与AWS FSx ONTAP存储上的备用数据库之间建立Oracle Data Guard。</block>
   <block id="1373f5f0167ef176e393747ff34f4b37" category="list-text">在关闭以进行数据复制的情况下克隆备用数据库、以满足报告、开发、测试等使用情形的要求</block>
   <block id="b7224dd0f37ea7dba810e399e48f1e1f" category="list-text">在AWS中设置Oracle Active Data Guard以实现高可用性、数据保护和灾难恢复的数据库管理人员。</block>
   <block id="550c8c85ffce2de3188f9704c188de3c" category="list-text">对AWS云中的Oracle Active Data Guard配置感兴趣的数据库解决方案架构师。</block>
@@ -20461,7 +20454,6 @@ Astra Control -单击用户图标并单击API访问时、请访问API文档下�
   <block id="17f070e48ce0935f57d600652c3c8f21" category="list-text">完成后、运行销毁以删除资源</block>
   <block id="839a5e9d346e3ac874bc8e301897bdc6" category="list-text">从网格主页解压缩<block ref="63628571f2dfaeb6f0a0a676290e6e82" prefix=" " category="inline-code"></block>。</block>
   <block id="f2be6b31ed6989aef561023d439a1cd3" category="list-text">从DB主目录中、解压缩<block ref="63628571f2dfaeb6f0a0a676290e6e82" prefix=" " category="inline-code"></block>。</block>
-  <block id="d8355ab14e57998a605424192bd16757" category="sidebar">借助AWS FSx ONTAP主动降低数据防护成本</block>
   <block id="9d816887d40a5251f5427d7cacd2c573" category="sidebar">Microsoft SQL Server与ONTAP最佳实践指南</block>
   <block id="a778c2474db5f0263c74583332c37399" category="sidebar">基于NetApp ONTAP的MySQL数据库</block>
   <block id="ca2e1a380482fd9930ca46613b332f65" category="sidebar">DB自动化工具包</block>
@@ -20811,4 +20803,203 @@ VMware ESXi 8.0.2、22380479</block>
   <block id="968e83b8bdfb55c739336bf82b8badf1" category="paragraph"><block ref="968e83b8bdfb55c739336bf82b8badf1" category="inline-link-macro-rx"></block></block>
   <block id="15089057e7e1dcee019d35458b18ed72" category="inline-link-macro">NetApp公告</block>
   <block id="17e2ffe7ea16377a3383f963821c7e4d" category="list-text"><block ref="17e2ffe7ea16377a3383f963821c7e4d" category="inline-link-macro-rx"></block></block>
+  <block id="5a7ba809855186bf7ed82cff9d5e1cdf" category="summary">解决方案提供了有关在AWS中的VMware Cloud中部署和保护Oracle的概述和详细信息、其中、FSx ONTAP作为主数据库存储、Oracle数据库使用ASM作为卷管理器在独立重新启动时进行配置。</block>
+  <block id="b8215f5d072996ac99e525e329cdc570" category="doc">TR-4979：《在AWS上的VMware Cloud中使用子系统装载的FSx ONTAP简化自管理Oracle》</block>
+  <block id="57f6567867e5c3b757fdb3bee9c7654f" category="paragraph">几十年来、企业一直在私有数据中心运行基于VMware的Oracle。AWS上的VMware Cloud (VMC)提供了一个按钮式解决方案、可将VMware的企业级软件定义的数据中心(Software-定义 的数据中心、SDDC)软件引入AWS云的专用弹性裸机基础架构。AWS FSx ONTAP为VMC SDDC和Data Fabric提供高级存储、使客户能够在基于vSphere®的私有云、公共云和混合云环境中运行Oracle等业务关键型应用程序、并优化对AWS服务的访问。无论是现有的Oracle工作负载还是新的Oracle工作负载、AWS上的VMC都可以在VMware上提供熟悉、简化且自行管理的Oracle环境、并可享受AWS云的所有优势、同时将所有平台管理和优化工作推迟到VMware。</block>
+  <block id="e73bc10aceb8a9e7c4ac45f0d1d0da5b" category="paragraph">本文档演示了如何在使用Amazon FSx ONTAP作为主数据库存储的VMC环境中部署和保护Oracle数据库。Oracle数据库可以作为直接VM子系统装载的LUN或NFS装载的VMware VMDK数据存储库磁盘部署到FSx存储上的VMC中。本技术报告重点介绍如何将Oracle数据库部署为使用iSCSI协议和Oracle ASM的VMC集群中的VM的直接子系统装载FSx存储。此外、我们还演示了如何使用NetApp SnapCenter UI工具备份、还原和克隆Oracle数据库以用于开发或测试、或者在AWS上的VMC中使用其他使用情形来实现高效存储数据库操作。</block>
+  <block id="1bcbe40dab06a9681d7e0fcf5e561941" category="list-text">在AWS上的VMC中部署Oracle数据库、并将Amazon FSx ONTAP用作主数据库存储</block>
+  <block id="8652360c0a7d6cf650f303d3611a363c" category="list-text">使用NetApp SnapCenter工具在AWS上的VMC中备份和还原Oracle数据库</block>
+  <block id="cf30ea590ca185afdd551e920e4fade2" category="list-text">使用NetApp SnapCenter工具在AWS上的VMC中为开发/测试或其他使用情形创建Oracle数据库克隆</block>
+  <block id="ef8cc3b3b7c4616678cc6819452f021a" category="list-text">希望使用Amazon FSx ONTAP在AWS上的VMC中部署Oracle的数据库开发人员</block>
+  <block id="796c3d4a6179f628784371e4fb7fa9d9" category="list-text">希望在AWS云上的VMC中测试Oracle工作负载的数据库解决方案架构师</block>
+  <block id="cb94ba9e822edf8670a9aedebc0852c1" category="list-text">希望使用Amazon FSx ONTAP部署和管理部署到AWS上VMC的Oracle数据库的存储管理员</block>
+  <block id="b2777eda52c529f2b03fa9eced1c9680" category="list-text">希望在AWS云上的VMC中建立Oracle数据库的应用程序所有者</block>
+  <block id="d172135745ee569873f61bcd3531f83e" category="paragraph">此解决方案的测试和验证是在AWS上使用VMC的实验室环境中执行的、该环境可能与最终部署环境不匹配。有关详细信息，请参见一节 <block ref="8ea96e516bccf9a47ca2d74131eb7519" category="inline-xref-macro-rx"></block>。</block>
+  <block id="968ee2170dde4e5744b413462ee41e35" category="cell">一个FSx ONTAP HA集群与VMC位于同一VPC和可用性区域</block>
+  <block id="a19ad08a54b29b409555bf1681f098ee" category="cell">VMC SDDC集群</block>
+  <block id="cad01e8ce0c8a902e41beab182a6fe81" category="cell">Amazon EC2 i3.金属单节点/Intel Xeon E5-2686 CPU、36核/512G RAM</block>
+  <block id="392bcaf841ff67a89aefe2473cff840b" category="cell">10.37 TB vSAN存储</block>
+  <block id="1c212a485e9ad2c1762d607a18b009c7" category="cell">rell-8.6、4.18.0-372.9.1.el8.x86_64内核</block>
+  <block id="95a90af1d5b68afaa24b9f917e25e4ec" category="cell">Windows服务器</block>
+  <block id="42d321198a77603330bc430ffb26bda9" category="cell">2022标准版、10.0.20348内部版本20348</block>
+  <block id="815500b6cb0b06f1db60bc89ea48ae53" category="cell">托管SnapCenter服务器</block>
+  <block id="53a1507a1f45d24e7525d19279ab1ce7" category="cell">版本4.9P1</block>
+  <block id="72867dcacfff3a93a471e5f8c9489599" category="cell">工作组部署</block>
+  <block id="2d2a0d505d952b5fcde17cab075157a3" category="cell">1.0版</block>
+  <block id="af6552ad45cff98ac3271a6c92ff6d19" category="cell">部署为一个ova vSphere插件虚拟机</block>
+  <block id="6644cd5d665b50522c19c606bd2b1bde" category="cell">8.0.1.00300版</block>
+  <block id="128d81403c72151caa28f9cb8909d048" category="cell">VMware Tools、版本：11365 - Linux、1352 - Windows</block>
+  <block id="8ae78dca8fef9243be9f1089e2a97fb7" category="cell">打开JDK</block>
+  <block id="3848bc77489b71d744f003ab713f7429" category="cell">版本java-1.8.0-OpenJDK.x86_64</block>
+  <block id="3782cc74a007a1871c7229f0fc16f9f4" category="cell">DB VM上的SnapCenter插件要求</block>
+  <block id="f7c55f54e2022628f07d7e62a55eec78" category="section-title">在AWS上的VMC中配置Oracle数据库</block>
+  <block id="40142fee915d9c636c34c1581018dfaa" category="cell">* 服务器 *</block>
+  <block id="0086e85e653acc061fd4d7315e2fa26d" category="cell">*DB存储*</block>
+  <block id="460dc55b5ffb0266f2c889b06ee73344" category="cell">ORA_01</block>
+  <block id="84e8b41cc4a43202bd012704510bd6b6" category="cell">cdb1 (cdb1_pdb1、cdb1_pdb2、cdb1_pdb3)</block>
+  <block id="f1566e01e42cd3da5d95437ef837891d" category="cell">FSx ONTAP上的VMDK数据存储库</block>
+  <block id="3e17b19d4466b08c46121ab170ec8b1d" category="cell">cdb2 (cdb2_pdb)</block>
+  <block id="57fd581683176a30051cde40522ddce1" category="cell">ORA_02</block>
+  <block id="be2e4558b7d000c11b6d37e9ed3f40c8" category="cell">cdb3 (cdb3_pdb1、cdb3_pdb2、cdb3_pdb3)</block>
+  <block id="127cba96fa239f4b6e7834fe0c898c23" category="cell">直接子系统装载FSx ONTAP</block>
+  <block id="9b7c2c624034bf5c8ad48b5e15db2c29" category="cell">cdb4 (cdb4_pdb)</block>
+  <block id="6f65a6cc41917509aec67dd6572235ca" category="list-text">*FSx到VMC的连接。*当您在AWS上的VMware Cloud上部署SDDC时、它会在AWS帐户和专用于您的组织的VPC中创建、并由VMware进行管理。您还必须将SDDC连接到属于您的AWS帐户、称为客户AWS帐户。此连接允许SDDC访问属于您的客户帐户的AWS服务。FSx for ONTAP是在您的客户帐户中部署的一项AWS服务。将VMC SDDC连接到您的客户帐户后、VMC SDDC中的VM便可使用FSx存储来直接挂载子系统。</block>
+  <block id="d646cd02ef2e3f2e443a3c7efd88d346" category="list-text">* FSX存储HA集群单区域或多区域部署。*在这些测试和验证中、我们在一个AWS可用性区域中部署了一个FSX HA集群。NetApp还建议在同一可用性区域中部署适用于NetApp ONTAP的FSx和基于AWS的VMware Cloud、以提高性能并避免可用性区域之间的数据传输费用。</block>
+  <block id="1a38c6d0981634333a342ef435e9fcb4" category="list-text">* FSX存储集群规模估算。*适用于ONTAP 存储文件系统的Amazon FSX可提供高达160、000个原始SSD IOPS、高达4 Gbps吞吐量以及最大192 TiB容量。但是、您可以根据部署时的实际要求、根据已配置的IOPS、吞吐量和存储限制(最小1、024 GiB)来调整集群的大小。可以动态调整容量、而不会影响应用程序可用性。</block>
+  <block id="3952b027a479110ef8d51b7631000bf0" category="list-text">* Oracle数据和日志布局。*在测试和验证中、我们分别为数据和日志部署了两个ASM磁盘组。在+data ASM磁盘组中、我们在一个数据卷中配置了四个LUN。在+logs ASM磁盘组中、我们在一个日志卷中配置了两个LUN。通常、在一个Amazon FSx for ONTAP卷中部署多个LUN可提高性能。</block>
+  <block id="10fd1c6c748022c4eac81e0e7815e3c9" category="list-text">*iSCSI配置。* VMC SDDC中的数据库VM使用iSCSI协议连接到FSx存储。通过仔细分析Oracle AWR报告来确定应用程序和iSCSI流量吞吐量要求、衡量Oracle数据库峰值I/O吞吐量要求非常重要。NetApp还建议为正确配置多路径的两个FSX iSCSI端点分配四个iSCSI连接。</block>
+  <block id="5fa486195592a222708baf1d0d84b596" category="list-text">*要用于创建的每个Oracle ASM磁盘组的Oracle ASM冗余级别。*由于FSx ONTAP已在FSx集群级别镜像存储、因此应使用外部冗余、这意味着此选项不允许Oracle ASM镜像磁盘组的内容。</block>
+  <block id="5b9eec312e4891b17065381671c7234b" category="list-text">*数据库备份。* NetApp提供了一个SnapCenter软件套件、可通过用户友好的用户界面进行数据库备份、还原和克隆。NetApp建议实施此类管理工具、以实现快速(不到一分钟)的快照备份、快速(几分钟)的数据库还原和数据库克隆。</block>
+  <block id="f02a238998ba2723f4626a5994f00464" category="paragraph">以下各节提供了在AWS上的VMC中将Oracle 19c部署ONTAP到单节点中的数据库VM的分步过程使用Oracle ASM作为数据库卷管理器重新启动配置。</block>
+  <block id="3ebe73caee30b8d941aa7da02afb494d" category="list-text">我们创建了一个使用VMware Cloud on AWS的软件定义的数据中心(Software-definated Data Center、SDDC)。有关如何在VMC中创建SDDC的详细说明、请参见VMware文档 <block ref="8f2441f58c4fdf4959e58cb9afc7d8c0" category="inline-link-macro-rx"></block></block>
+  <block id="8be484f960dc0192a878263a8ac3c41d" category="list-text">已设置AWS帐户、并已在您的AWS帐户中创建必要的VPC和网段。AWS帐户已链接到您的VMC SDDC。</block>
+  <block id="1bbb79d8429a5f56d5bcc3e4783976a9" category="list-text">从AWS EC2控制台中、部署适用于ONTAP存储HA集群的Amazon FSx以托管Oracle数据库卷。如果您不熟悉FSX存储的部署、请参见相关文档 <block ref="17d8b312d287f0afd6f44b3f25c4f20b" category="inline-link-macro-rx"></block> 了解分步说明。</block>
+  <block id="c7480d38cc7c53dd45b4135ac24c2e50" category="list-text">可以使用以下Terraform自动化工具包执行上述步骤、该工具包可创建一个EC2实例、作为通过SSH和FSx文件系统进行VMC访问时的SDDC的跳转主机。在执行前、请仔细阅读说明并根据您的环境更改变量。</block>
+  <block id="ab75bf4284ff33ce0dff4b433e5cc77f" category="list-text">在AWS上的VMware SDDC中构建VM、用于托管要在VMC中部署的Oracle环境。在我们的演示中、我们构建了两个Linux VM作为Oracle数据库服务器、一个Windows服务器用于SnapCenter服务器、一个可选的Linux服务器作为可选的控制器、用于根据需要自动安装或配置Oracle。下面是用于解决方案验证的实验室环境的快照。</block>
+  <block id="0ca3188ea78762727379ffff3db432b9" category="inline-image-macro">显示VMC SDDC测试环境的屏幕截图。</block>
+  <block id="abb7f3bb8704666f8428401b2a2aea9b" category="paragraph"><block ref="abb7f3bb8704666f8428401b2a2aea9b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f0f02fd8431ed2c0ed849e4a2cc644c9" category="list-text">此外、NetApp还提供了多个自动化工具包、以便在适用时运行Oracle部署和配置。请参见 <block ref="b0afda18826eac248fb3694e4dd33826" category="inline-link-macro-rx"></block> 有关详细信息 ...</block>
+  <block id="d50fb02d2ad265b4dc8ea5d6a329f52c" category="admonition">确保已在Oracle VM根卷中至少分配50G、以便有足够的空间来暂存Oracle安装文件。</block>
+  <block id="7b73a23b90df52ef2a02ef00b5200773" category="section-title">DB VM内核配置</block>
+  <block id="9144d3423aec7a4a79da57105f06a978" category="paragraph">在配置了前提条件的情况下、以管理员用户身份通过SSH登录到Oracle VM、并使用sudo向root用户配置Linux内核以进行Oracle安装。Oracle安装文件可以暂存到AWS S3存储分段中、然后传输到VM。</block>
+  <block id="5fa261bdb9bdacac6f1656fc0febc8c5" category="paragraph">请参见以下要在中说明的安装文件列表<block ref="d66a510d21988f96fd9c018f6843c729" prefix=" " category="inline-code"></block> 在DB VM上。</block>
+  <block id="3f09cc7324f8c1244747932eaf3dc3ce" category="list-text">安装<block ref="c8dff58175a7ddfedf00d77953ef42dd" prefix=" " category="inline-code"></block>。</block>
+  <block id="9b044ccb441d52e3c435f781b8c3488d" category="list-text">安装sg3_utils。</block>
+  <block id="6e92674c0bf485348ed8c0cc3f038b5f" category="list-text">安装device-maper-Multipath。</block>
+  <block id="5d1e157d7edb057e0d33d878529ef182" category="list-text">在中添加以下行<block ref="08561da4afe8299be4016c92bfe83435" prefix=" " category="inline-code"></block> 以禁用<block ref="d78ade61a64b6a278ed6278e7cfd91f3" prefix=" " category="inline-code"></block> 重新启动后。</block>
+  <block id="b9104e6156e755e4d417f51a5619e651" category="list-text">将以下行添加到<block ref="8b5eec1c5f63341b700263cc37cbae02" prefix=" " category="inline-code"></block> 设置文件描述符限制和堆栈大小。</block>
+  <block id="258d4c0ff1dcaaa41c50d5706b27500e" category="list-text">如果没有按照以下说明配置交换空间、请向DB VM添加交换空间： <block ref="53c9867a131506eab4afe1a1678bb974" category="inline-link-macro-rx"></block> 要添加的确切空间量取决于RAM大小、最高可达16G。</block>
+  <block id="554a8b968dbbeb452b0d18a4f8d31077" category="list-text">为ASM管理用户(Oracle)添加ASM组。</block>
+  <block id="d979e8c8a06dddf190cfc1c00bdbb48b" category="list-text">修改Oracle用户以将ASM组添加为辅助组(Oracle用户应在安装Oracle预安装RPM后创建)。</block>
+  <block id="25cbc423fe11e7d196553da546d785d1" category="list-text">如果Linux防火墙处于活动状态、请停止并禁用它。</block>
+  <block id="1ee999f15fe9c423eb377e0090aad2bf" category="list-text">通过取消注释为管理员用户启用无密码sudo<block ref="1cb32f4855eb0834d64969fe24edd26d" prefix=" " category="inline-code"></block> 行。更改文件权限以进行编辑。</block>
+  <block id="e05fc5da4fb01e91a42e8baab993c77f" category="section-title">配置FSx ONTAP LUN并将其映射到数据库虚拟机</block>
+  <block id="20767a279b850aa7f1bcaef1c31a5834" category="paragraph">通过ssh和FSx集群管理IP以fsxadmin用户身份从命令行登录到FSx集群、以配置三个卷。在卷中创建LUN以托管Oracle数据库二进制文件、数据文件和日志文件。</block>
+  <block id="a4d17921e42af0c865a419c2383fc24e" category="list-text">验证已创建的卷。</block>
+  <block id="fe34db0a054599cd0a406e3502d0ef5c" category="paragraph">命令的输出：</block>
+  <block id="907146434a35238d633ca6753dd9c615" category="list-text">将LUN映射到上述创建的igroup。为每个附加LUN依次增加LUN ID。</block>
+  <block id="223bac04448ebaf5c7f63e60fcdb0498" category="section-title">DB VM存储配置</block>
+  <block id="a50ba1970162deb2e69ba6ac5cd43b03" category="paragraph">现在、导入并设置FSx ONTAP存储、用于在VMC数据库VM上安装Oracle网格基础架构和数据库。</block>
+  <block id="25129372dcdad77bdf8f853444a467a1" category="list-text">从Windows跳转服务器使用Putty以管理员用户身份通过SSH登录到数据库VM。</block>
+  <block id="159ce09d3368d57420a832ccbf7ef199" category="list-text">使用任一SVM iSCSI IP地址发现FSX iSCSI端点。更改特定于环境的门户地址。</block>
+  <block id="669ffba4950ab12059582a3c3fa10940" category="list-text">以fsxadmin用户身份通过SSH登录到FSx ONTAP集群、以检索以6c574xxx...开头的每个LUN的串行十六进制编号、十六进制编号以3600a0980开头、即AWS供应商ID。</block>
+  <block id="c44eb19dc7906a6753272e8a1de9b1cb" category="list-text">更改<block ref="a8946fa5f211c5345e3610710e471cb4" prefix=" " category="inline-code"></block> Oracle用户及其关联主组的挂载点所有权。</block>
+  <block id="ebf44954c543813531faf671e318bdc9" category="list-text">以管理员用户身份通过SSH登录到DB VM、并通过取消注释启用密码身份验证<block ref="cd94e87e5216cd088acdc4de0e9c30f1" prefix=" " category="inline-code"></block> 然后进行注释<block ref="f18918133cfc22e041baab71b051c41f" prefix=" " category="inline-code"></block>。</block>
+  <block id="d36d86c204f6126a4742f3c17a52b50a" category="list-text">准备<block ref="77d9f4d56c58834c8dacf6d0cb94e085" prefix=" " category="inline-code"></block> 文件以进行静默安装、并将rsp文件置于中<block ref="d66a510d21988f96fd9c018f6843c729" prefix=" " category="inline-code"></block> 目录。rsp文件应使用以下信息涵盖A、B和G部分：</block>
+  <block id="9bd3ed1deb734d02d4b9004adb88c1ed" category="list-text">初始化磁盘设备以与Oracle ASM筛选器驱动程序结合使用。</block>
+  <block id="f0c1c255ad4ee079686c5de8b56372a2" category="list-text">验证HA服务状态。</block>
+  <block id="d4d4203c3b64386ed31cefd3e527f1fc" category="list-text">创建Oracle DB主目录并将其更改为该目录。</block>
+  <block id="51fbc23284cfef48739fa117053b0496" category="list-text">在数据库主页中、修改<block ref="ef8657f0a0a00af93ba7f1c8885339ca" prefix=" " category="inline-code"></block> 并取消注释并替换<block ref="bb7738211dd8eb3dbadf4cc63ae8eb8a" prefix=" " category="inline-code"></block> 使用<block ref="b2affc1a941fe7e5e65933911250249c" prefix=" " category="inline-code"></block>。</block>
+  <block id="900c7011e47a25c71c72d7baa3d4786b" category="list-text">从cdb3 home /u01/app/oracle/product/19.0.0/cdb3中、执行无提示纯软件DB安装。</block>
+  <block id="77ca17b9b0d011a8a9693dea585ec113" category="list-text">以root用户身份运行<block ref="08030ad08b2b991d61b424afd8828758" prefix=" " category="inline-code"></block> 在纯软件安装后执行脚本。</block>
+  <block id="c4cf035e92613b739d2fdb8f3f864b6e" category="list-text">以Oracle用户身份创建<block ref="c170c347c737b82ad62c48db1f7bff3c" prefix=" " category="inline-code"></block> 包含以下条目的文件：</block>
+  <block id="29362c5952e8a273a25c1d86fc91d838" category="list-text">以Oracle用户身份、使用dbca启动数据库创建。</block>
+  <block id="5483ea94e6740cb9506d49c7b420197b" category="paragraph">输出：</block>
+  <block id="519ad91eddb5ee99b4c197b4172c79cf" category="list-text">重复步骤2中的相同过程、使用一个PDB在单独的oracle_home /u01/app/oracle/product/19.0.0/cdb4中创建容器数据库cdb4。</block>
+  <block id="3a3a87b9aff1fff5afe3fd3a13cf4bec" category="list-text">作为Oracle用户、请在创建数据库后验证Oracle Restart HA服务、确认所有数据库(cdb3、cdb4)均已向HA服务注册。</block>
+  <block id="1d891a18ce35238aed4ee18804d6c368" category="list-text">验证为cdb3创建的CDB/PDB。</block>
+  <block id="2fa6ba00439ae530528e2071b0cae3b6" category="list-text">验证为cdb4创建的CDB/PDB。</block>
+  <block id="7f1463c4022e8bf5ef77ee7b4272d57e" category="list-text">使用sqlplus以sysdba身份登录到每个cdb、并将两个CDBS的数据库恢复目标大小设置为+logs磁盘组大小。</block>
+  <block id="d2dff87fed5b165c0917439bd2348ee6" category="list-text">使用sqlplus以sysdba身份登录到每个cdb、并使用以下命令集按顺序启用归档日志模式。</block>
+  <block id="f2b57195a1baf4f2ad2f33b948c0307c" category="paragraph">至此、在适用于ONTAP存储的Amazon FSx和VMC DB VM上完成了Oracle 19c 19.18版重新启动部署。如果需要、NetApp建议将Oracle控制文件和联机日志文件重新定位到+logs磁盘组。</block>
+  <block id="d372b360dda93a1ed98b047b474a8d14" category="section-title">使用SnapCenter进行Oracle备份、还原和克隆</block>
+  <block id="d4c868638655b6a0f05ff19eb2dc90b3" category="section-title">SnapCenter设置</block>
+  <block id="43b9d4da02f11505dff89d05efea04c6" category="inline-link-macro">您可以使用适用于 Oracle 数据库的插件执行什么操作</block>
+  <block id="c6dd5b1c74dacee8c5ea6ea24ec47c61" category="paragraph">SnapCenter依靠数据库VM上的主机端插件来执行应用程序感知型数据保护管理活动。有关适用于Oracle的NetApp SnapCenter插件的详细信息、请参见此文档 <block ref="7a6b1ddf3a0731d31936d6522df7c6ca" category="inline-link-macro-rx"></block>。下面简要介绍了为Oracle数据库备份、恢复和克隆设置SnapCenter的步骤。</block>
+  <block id="68f9ff06ec00760816a8852081d652a9" category="inline-link-macro">NetApp 支持下载</block>
+  <block id="9f3f125ee631455138d3f4f0e7e3eab6" category="list-text">从NetApp 支持站点 下载最新版本的SnapCenter软件： <block ref="3cca19c7256555824970f142627f53d3" category="inline-link-macro-rx"></block>。</block>
+  <block id="4e26d4a1dcc35c4e1d2dfd9c3b78e535" category="inline-link-macro">获取适用于桌面应用程序的Java</block>
+  <block id="a6e522693361323d4999a459b325b038" category="list-text">以管理员身份从安装最新的Java JDK <block ref="1a0bb7a886be273015991771cf1b1190" category="inline-link-macro-rx"></block> 在SnapCenter服务器Windows主机上。</block>
+  <block id="02e32891e3de53a22cecc990dca68e55" category="admonition">如果Windows服务器部署在域环境中、请将域用户添加到SnapCenter服务器本地管理员组、然后使用域用户运行SnapCenter安装。</block>
+  <block id="d71146f6c986dedfe7a80892a16bf95a" category="list-text">以安装用户身份通过HTTPS端口8846登录到SnapCenter UI、以配置适用于Oracle的SnapCenter。</block>
+  <block id="ce9b8e01e17b619f7f8a43211a1ffd57" category="list-text">更新<block ref="6b2d6702a0358e8df43b31cf0890a30f" prefix=" " category="inline-code"></block> 在全局设置中。</block>
+  <block id="10f89a6808c7ca8a60e377ea9537da91" category="inline-image-macro">显示SnapCenter配置的屏幕截图。</block>
+  <block id="85672e90c98085f57c2ae3c44917712f" category="paragraph"><block ref="85672e90c98085f57c2ae3c44917712f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0c933eebaf80d285dfac08fec41a6a6b" category="list-text">创建Oracle数据库备份策略。理想情况下、请创建一个单独的归档日志备份策略、以便更频繁地进行备份、从而最大限度地减少发生故障时的数据丢失。</block>
+  <block id="b7807a41275760e1b78e468d71930135" category="paragraph"><block ref="b7807a41275760e1b78e468d71930135" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="638c0eb2b08e7f1a3e5f520754df2492" category="list-text">添加数据库服务器<block ref="03bc142e6422dbb9b288ad2cabee08c7" prefix=" " category="inline-code"></block> 用于通过SnapCenter访问DB VM。此凭据在Linux VM上应具有sudo权限、在Windows VM上应具有管理员权限。</block>
+  <block id="5e17eda957603128db38ebd2ac85c948" category="paragraph"><block ref="5e17eda957603128db38ebd2ac85c948" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="bd00724bb50c560f784951b9675078a9" category="list-text">将FSx ONTAP存储集群添加到<block ref="5c6ab1284b6b7a5a7102854a969c99be" prefix=" " category="inline-code"></block> 使用集群管理IP并通过fsxadmin用户ID进行身份验证。</block>
+  <block id="06266ddd982682fde812804c954be4b8" category="paragraph"><block ref="06266ddd982682fde812804c954be4b8" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="026ec4d6f3dd2407e2e1278ccc1eb4de" category="list-text">将VMC中的Oracle数据库VM添加到<block ref="8124579383e90243e4b06323d2b37f8d" prefix=" " category="inline-code"></block> 使用上一步中创建的服务器凭据6.</block>
+  <block id="7ea1ad2a56d7a348316923a11db03d9c" category="paragraph"><block ref="7ea1ad2a56d7a348316923a11db03d9c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="363544b94b5ce99f22af62c11cdfb685" category="admonition">确保SnapCenter服务器名称可解析为数据库VM中的IP地址、而DB VM名称可解析为SnapCenter服务器中的IP地址。</block>
+  <block id="025cf2f18f2e268b39a9e3b95afe5c03" category="section-title">数据库备份</block>
+  <block id="569cda6ea25c5dbb40dbe351743ff809" category="paragraph">与基于RMAN的传统方法相比、SnapCenter利用FSx ONTAP卷快照加快数据库备份、还原或克隆速度。由于数据库在创建快照之前处于Oracle备份模式、因此这些快照是应用程序一致的。</block>
+  <block id="edf9da3decc598bb9b93dc595dfb701a" category="list-text">从<block ref="ddcf50c29294d4414f3f7c1bbc892cb5" prefix=" " category="inline-code"></block> 选项卡中、将虚拟机添加到SnapCenter后、系统会自动发现虚拟机上的任何数据库。最初、数据库状态显示为<block ref="4aa6066b3ed6d1b995450c6c7ad4a3d8" prefix=" " category="inline-code"></block>。</block>
+  <block id="893edc75ba61b6ca745222f511c30ed8" category="paragraph"><block ref="893edc75ba61b6ca745222f511c30ed8" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0a671953c31e073dfa8b0ed9da13f596" category="list-text">创建一个资源组、以按逻辑分组(如DB VM等)备份数据库 在此示例中、我们创建了一个ora_02_data组、用于对VM ora_02上的所有数据库执行完整的联机数据库备份。资源组ora_02_log仅在VM上执行归档日志备份。创建资源组还会定义执行备份的计划。</block>
+  <block id="3e3cb6db0e0d4246d80184678b59bd99" category="paragraph"><block ref="3e3cb6db0e0d4246d80184678b59bd99" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7b0d69d2347240232ff1724962274d17" category="list-text">单击也可以手动触发资源组备份<block ref="9af892ad254c844922acba8e89078d6d" prefix=" " category="inline-code"></block> 并使用资源组中定义的策略执行备份。</block>
+  <block id="b1a4ac3cb7410f99fdf1e929fd2afa03" category="paragraph"><block ref="b1a4ac3cb7410f99fdf1e929fd2afa03" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3ddf172cecda6c976fecf4c27819e241" category="list-text">可通过监控备份作业<block ref="d2986ac8cb6bd55892099c1ffd6b1f6f" prefix=" " category="inline-code"></block> 选项卡、单击正在运行的作业。</block>
+  <block id="b65cfc1d7fcd04e8f7f332746d62c572" category="paragraph"><block ref="b65cfc1d7fcd04e8f7f332746d62c572" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d972f47eb27d37493fd1b73f1c799699" category="list-text">成功备份后、数据库状态将显示作业状态和最近的备份时间。</block>
+  <block id="24b01304b08e51fed8808b76ee6398c9" category="paragraph"><block ref="24b01304b08e51fed8808b76ee6398c9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1b29d7776717c0a002b1cfb23bba6ede" category="list-text">单击数据库以查看每个数据库的备份集。</block>
+  <block id="4e28c2a57d60b499cdcc00a0f61b4827" category="paragraph"><block ref="4e28c2a57d60b499cdcc00a0f61b4827" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="381a4da48b283cb83eaca25d4d82a5a0" category="section-title">数据库恢复</block>
+  <block id="5586b3dfa8d7aaa4771cba0c795dcc1c" category="paragraph">SnapCenter为Oracle数据库提供了许多从快照备份还原和恢复选项。在本示例中、我们展示了一个时间点还原、用于恢复因错误而丢弃的表。在VM ora_02上、两个数据库cdb3和cdb4共享相同的+data和+logs.磁盘组。一个数据库的数据库还原不会影响另一个数据库的可用性。</block>
+  <block id="7cc816f478b8fdfd718bae0b9383c204" category="list-text">首先、创建一个测试表并在表中插入一行、以验证时间点恢复。</block>
+  <block id="10196ada2a83568ea4b23ac007abb3e1" category="list-text">我们从SnapCenter运行手动快照备份。然后丢弃该表。</block>
+  <block id="5ab664c5c8573a6f098f67e573077ddb" category="list-text">从上一步创建的备份集中、记下日志备份的scn编号。单击<block ref="2bd339d85ee3b33e513359ce781b60cc" prefix=" " category="inline-code"></block> 启动还原-恢复工作流。</block>
+  <block id="315fed8f89b8c5b338500179379cc429" category="paragraph"><block ref="315fed8f89b8c5b338500179379cc429" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c4d348e917d1812ea79e94ee7799918a" category="list-text">选择还原范围。</block>
+  <block id="87db3e581fdf19b9ceda3b0023586483" category="paragraph"><block ref="87db3e581fdf19b9ceda3b0023586483" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8d1ae3afc2dfbd2dfa9b6aa0b4557161" category="list-text">选择从上次完整数据库备份到日志scn的恢复范围。</block>
+  <block id="5f7100fc833c9e13756fe1addbc1f2e1" category="paragraph"><block ref="5f7100fc833c9e13756fe1addbc1f2e1" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c70ff881ea5d29e3a88b724e098e9d66" category="list-text">指定要运行的任何可选预处理脚本。</block>
+  <block id="05078f6add244d809c383bed45780fd7" category="paragraph"><block ref="05078f6add244d809c383bed45780fd7" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="81bc29b1b95871e6d5d7d76b917a005a" category="list-text">指定要运行的任何可选后处理脚本。</block>
+  <block id="424f45782efa369bd2e988482819cd44" category="paragraph"><block ref="424f45782efa369bd2e988482819cd44" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="550a7e596b298565d43b08bbdc9e9502" category="list-text">根据需要发送作业报告。</block>
+  <block id="daa0299e8620585899d0f25f2eb0321d" category="paragraph"><block ref="daa0299e8620585899d0f25f2eb0321d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9c30b39b40cf957f005a8d97554cb792" category="list-text">查看摘要、然后单击<block ref="a20ddccbb6f808ec42cd66323e6c6061" prefix=" " category="inline-code"></block> 启动还原和恢复。</block>
+  <block id="e4182860aaaaf13f444a75db3f793102" category="paragraph"><block ref="e4182860aaaaf13f444a75db3f793102" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2b097285b35ac926b6e3a30da709b120" category="list-text">通过Oracle Restart网格控件、我们可以观察到、在恢复cdb3时、cdb4处于联机和可用状态。</block>
+  <block id="683ed6b87193d258ccabd5e8ad26ed11" category="paragraph"><block ref="683ed6b87193d258ccabd5e8ad26ed11" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b011ed6e72e83b31014ed609b024d671" category="list-text">from<block ref="d2986ac8cb6bd55892099c1ffd6b1f6f" prefix=" " category="inline-code"></block> 选项卡中、打开作业以查看详细信息。</block>
+  <block id="edcbcb1388308ea29897aeba4d67d61c" category="paragraph"><block ref="edcbcb1388308ea29897aeba4d67d61c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f8dc42fb122639d83a29d4d65e2b815e" category="list-text">从DB VM ora_02中、验证在成功恢复后是否已恢复丢弃的表。</block>
+  <block id="82459660e8d561fc463b49540987f53f" category="section-title">数据库克隆</block>
+  <block id="f6e7e97c5e19c813d868b9fef1ce8249" category="paragraph">在此示例中、使用相同的备份集克隆不同oracle_home中同一VM上的数据库。如果需要、这些过程同样适用于将数据库从备份克隆到VMC中的单独虚拟机。</block>
+  <block id="166b0369d9dcd60c22b00908c9989b23" category="list-text">打开数据库cdb3备份列表。从所选的数据备份中、单击<block ref="ff24590464659ee8cdec688128c35f89" prefix=" " category="inline-code"></block> 用于启动数据库克隆工作流的按钮。</block>
+  <block id="8884a3b01304139dad7b903ad06a0400" category="paragraph"><block ref="8884a3b01304139dad7b903ad06a0400" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="26e18e582adb0a52168bd3417e7e507d" category="list-text">将克隆数据库命名为SID。</block>
+  <block id="020ba895c5ede4e323c57c02fda1d9bd" category="paragraph"><block ref="020ba895c5ede4e323c57c02fda1d9bd" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1864ca75c3d9655e9c9c1fb1fea390df" category="list-text">在VMC中选择一个VM作为目标数据库主机。主机上应已安装和配置相同版本的Oracle。</block>
+  <block id="f2d475f0f2d0c03930fdfb87708ed66b" category="paragraph"><block ref="f2d475f0f2d0c03930fdfb87708ed66b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c1b5c3a41783f4011163cf3a7694f36d" category="list-text">在目标主机上选择正确的oracle_home、用户和组。保留默认凭据。</block>
+  <block id="9babaecbfa4c55df35c955ca48c71e0d" category="paragraph"><block ref="9babaecbfa4c55df35c955ca48c71e0d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="991df28ae4ba0a10c1ae7d1cc1ea3292" category="list-text">更改克隆数据库参数以满足克隆数据库的配置或资源要求。</block>
+  <block id="c6ca5ba171b4aa097ee12c8c90bdf3de" category="paragraph"><block ref="c6ca5ba171b4aa097ee12c8c90bdf3de" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="73ec64d1d5561a05f8953f32ccc418e3" category="list-text">选择恢复范围。<block ref="e6cb3190c21226943d9002045ab8a93a" prefix=" " category="inline-code"></block> 将克隆恢复到备份集中最后一个可用日志文件。</block>
+  <block id="582f52e16891639865aa1d539ebc46aa" category="paragraph"><block ref="582f52e16891639865aa1d539ebc46aa" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9f940cd9350acca488dc054b4cb0fd9e" category="list-text">查看摘要并启动克隆作业。</block>
+  <block id="35103de66034af2bc4c3bb0e027bc3b5" category="paragraph"><block ref="35103de66034af2bc4c3bb0e027bc3b5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a6aaccd301944bbd2ed25852fb0e705a" category="list-text">通过监控克隆作业的执行情况<block ref="d2986ac8cb6bd55892099c1ffd6b1f6f" prefix=" " category="inline-code"></block> 选项卡。</block>
+  <block id="efc1edfade1fbd6646dda59463983b2c" category="paragraph"><block ref="efc1edfade1fbd6646dda59463983b2c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4eb7f9133e0f7dd8abfb2b1a117e57d8" category="list-text">克隆的数据库会立即注册到SnapCenter中。</block>
+  <block id="aee2043864cad9a081fa4672728b956c" category="paragraph"><block ref="aee2043864cad9a081fa4672728b956c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="65640816580ff72a56a1081922993c9f" category="list-text">从DB VM ora_02中、克隆的数据库也会注册到Oracle Restart网格控件中、而丢弃的测试表会恢复到克隆的数据库cdb3tst中、如下所示。</block>
+  <block id="9f6329a70dd516951fa70a4f7a3a10ea" category="paragraph">至此、我们完成了在AWS上的VMC SDDC中对Oracle数据库进行SnapCenter备份、还原和克隆的演示。</block>
+  <block id="ac9c0a61f41745e8c77a713ddf6821eb" category="list-text">VMware Cloud on AWS文档</block>
+  <block id="c795642cf5dd34e946fb3142d8f52288" category="inline-link-macro"><block ref="c795642cf5dd34e946fb3142d8f52288" category="inline-link-rx"></block></block>
+  <block id="450d2faa3005c2b5ef481da0fa99a49c" category="paragraph"><block ref="450d2faa3005c2b5ef481da0fa99a49c" category="inline-link-macro-rx"></block></block>
+  <block id="7a84a73fe9b54c9478dfc0e58c918688" category="paragraph">ASM (Automatic Storage Management、自动存储管理)是许多Oracle安装中常用的Oracle存储卷管理器。这也是Oracle建议的存储管理解决方案。它提供了传统卷管理器和文件系统的替代方案。自Oracle 11g版以来、ASM一直采用网格基础架构而非数据库打包。因此、要在不使用RAC的情况下使用Oracle ASM进行存储管理、您必须在独立服务器中安装Oracle网格基础架构、也称为Oracle Restart。这样做无疑会增加Oracle数据库部署的复杂性。但是、顾名思义、在以重新启动模式部署Oracle时、出现故障的Oracle服务会由网格基础架构自动重新启动、或者在主机重新启动后无需用户干预、从而提供一定程度的高可用性或HA功能。</block>
+  <block id="38c723472785b6d114cf9e85b7ffd3d1" category="list-text">* iSCSI配置。* EC2实例数据库服务器使用iSCSI协议连接到FSX存储。EC2实例通常使用一个网络接口或ENI进行部署。单个NIC接口可同时传输iSCSI和应用程序流量。请务必通过仔细分析Oracle AWR报告来衡量Oracle数据库峰值I/O吞吐量需求、以便选择既满足应用程序流量吞吐量要求又符合iSCSI流量吞吐量要求的正确EC2计算实例。NetApp还建议为正确配置多路径的两个FSX iSCSI端点分配四个iSCSI连接。</block>
+  <block id="c5b771b8234c127dccd38858c77e24a0" category="list-text">添加要用于ASM sysASM组的ASM组。</block>
+  <block id="35a8e6f6e0f2c89cd450cda8861ac889" category="list-text">停止并禁用处于活动状态的Linux防火墙。</block>
+  <block id="432e3219f8a15b5476e2e71941cc6e61" category="list-text">将数据库恢复目标大小设置为+logs.磁盘组大小。</block>
+  <block id="d41392db0c7e69ca86a4c8f0c8bc2a8f" category="doc">TR-4981：《借助Amazon FSx ONTAP降低Oracle Active Data Guard成本》</block>
+  <block id="5afa567381b78444937fdc789ad61e1a" category="paragraph">如果您希望降低Oracle数据库运营成本、并计划在AWS中设置Active Data Guard、则应考虑另一种选择。使用Data Guard将数据从主数据库复制到Amazon FSx ONTAP存储上的单个物理备用数据库、而不是Active Data Guard。随后、可以克隆此备用数据库的多个副本并打开以进行读/写访问、以满足许多其他使用情形的需要、例如报告、开发、测试等 最终结果有效地提供了Active Data Guard的功能、同时消除了Active Data Guard许可证、并为每个额外的备用数据库节省了额外的存储成本。在本文档中、我们将演示如何在AWS中使用现有主数据库设置Oracle Data Guard、并将物理备用数据库放置在Amazon FSx ONTAP存储上。备用数据库通过Snapshot进行备份、并根据需要进行克隆、以便进行读/写访问。</block>
+  <block id="309cd12bd99b7c9e7ad680fcef778228" category="list-text">在AWS中任何存储上的主数据库与Amazon FSx ONTAP存储上的备用数据库之间建立Oracle Data Guard。</block>
+  <block id="1aadf275ee5a04d3c8ffb5a23e3f8f9b" category="cell">2023年11月27日</block>
+  <block id="42f7b826cf30e5551e1f39ed1fa60120" category="paragraph">[Underline]#*适用于Oracle数据库的视频*#</block>
+  <block id="7c0e65d458719c1a00061043a5c9b695" category="video-title">借助iSCSI在NetApp ASA上简化和自动化Oracle部署</block>
+  <block id="f42a1319fb57cedbad32a23e45ec11fc" category="video-title">第1部分—在AWS和FSx中使用混合云打造Oracle现代化</block>
+  <block id="91935697a3dec69875fc666d39a8fef8" category="sidebar">借助子系统装载的FSx ONTAP、在基于AWS的VMware Cloud中简化自我管理Oracle</block>
+  <block id="8add5603a4a488cc171276dbbbed71ea" category="sidebar">借助AWS FSx ONTAP降低Oracle Active Data Guard成本</block>
+  <block id="8d4ab3d80a936103be6c5ad407f12335" category="sidebar">基于AWS的VMware Cloud中的Oracle与子系统装载的FSx ONTAP</block>
+  <block id="998e18ee910f7610303d504847d5f06d" category="sidebar">借助Amazon FSx ONTAP降低Oracle Active Data Guard成本</block>
 </blocks>
