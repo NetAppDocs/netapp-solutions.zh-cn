@@ -59,5 +59,3 @@ image::redhat_openshift_image40.jpg[Red Hat OpenShift 集群上的多租户，�
 由于存储类不是命名空间资源，我们如何确保拒绝另一命名空间或项目中的 Pod 向一个项目的存储类声明？问题解答将使用 ResourceQuotas 。ResourceQuotas 是控制每个项目资源总使用量的对象。它可以限制项目中的对象可以使用的资源数量以及总资源量。使用 ResourceQuotas 几乎可以限制项目中的所有资源，而高效地使用此功能可以帮助组织降低因过度配置或过度消耗资源而导致的成本和中断。请参见文档 https://docs.openshift.com/container-platform/4.7/applications/quotas/quotas-setting-per-project.html["此处"^] 有关详细信息 ...
 
 对于这种使用情形，我们需要限制特定项目中的 Pod 从非专用于其项目的存储类中申请存储。为此，我们需要通过将 ` <storage-class-name>.storageclass.storage.k8s.io/persistentvolumeclaims` 设置为 0 来限制其他存储类的永久性卷请求。此外，集群管理员必须确保项目中的开发人员不应有权修改 ResourceQuotas 。
-
-link:rh-os-n_use_case_multitenancy_configuration.html["下一步：配置。"]

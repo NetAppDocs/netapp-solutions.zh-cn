@@ -13,8 +13,6 @@ summary: 本节介绍了对问题描述 进行的愚蠢重命名以及NFS服务�
 :imagesdir: ./../media/
 
 
-link:kafka-nfs-introduction.html["上一页：简介。"]
-
 [role="lead"]
 Kafka的构建假定底层文件系统符合POSIX标准：例如XFS或ext4。Kafka资源重新平衡会在应用程序仍在使用文件时删除这些文件。符合POSIX的文件系统允许取消链接以继续。但是、它仅会在对文件的所有引用均消失后删除该文件。如果底层文件系统已通过网络连接、则NFS客户端将截获取消链接调用并管理工作流。由于正在取消链接的文件存在待定打开状态、因此NFS客户端会向NFS服务器发送重命名请求、并在未链接的文件最后一次关闭时对已重命名的文件执行删除操作。此行为通常称为NFS愚蠢的重命名、它由NFS客户端进行编排。
 
@@ -27,5 +25,3 @@ NFS服务器和NFS客户端需要进行以下更改、才能处理愚蠢的重�
 
 
 通过对NFS客户端和服务器进行上述更改、Kafka可以安全地获得网络连接NFS存储的所有优势。
-
-link:kafka-nfs-functional-validation-silly-rename-fix.html["下一步：功能验证—错误的重命名修复。"]

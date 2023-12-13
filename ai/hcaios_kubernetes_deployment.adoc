@@ -26,5 +26,3 @@ NOTE: 要使 DeepOps Kubernetes 部署正常工作，所有 Kubernetes 主节点
 如果部署失败，请在 `deepops/config/group_vars/K8s-cluster.yml` 中将 `kubectl_localhost` 的值更改为 false ，然后重复步骤 2 。`Copy kubectl binary to Ansible host` 任务仅在 `kubectl_localhost` 值为 true 时执行，它依赖于 Fetch Ansible 模块，该模块存在已知的内存使用问题。这些内存使用问题有时可能会使任务发生原因失败。如果任务因内存问题描述而失败，则部署操作的其余部分将无法成功完成。
 
 如果在将 `kubectl_localhost` 的值更改为 `false` 后部署成功完成，则必须手动将 `kubectl 二进制文件` 从 Kubernetes 主节点复制到部署跳转主机。您可以通过直接在特定主节点上运行 `which kubectl` 命令来查找 `kubectl 二进制文件` 在该节点上的位置。
-
-link:hcaios_cnvrg.io_deployment.html["接下来： Cnvrg.io 部署"]

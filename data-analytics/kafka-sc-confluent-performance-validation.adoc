@@ -13,8 +13,6 @@ summary: 此页面介绍了在该解决方案 的参数范围内验证Confluent�
 :imagesdir: ./../media/
 
 
-link:kafka-sc-technology-overview.html["上一页：技术概述。"]
-
 [role="lead"]
 我们已使用Confluent Platform对NetApp ONTAP 上的分层存储执行了验证。NetApp和Confluent团队共同执行了此验证、并运行了所需的测试用例。
 
@@ -114,5 +112,3 @@ image:kafka-sc-image8.png["此图展示了如何将环境配置为一个HA对以
 此测试检查了在主题保留工作负载繁重的情况下对象存储的删除性能。保留工作负载是使用TOCC脚本生成的、该脚本会与测试主题并行生成许多消息。本测试主题使用主动式基于大小和基于时间的保留设置进行配置，此设置会导致从对象存储中持续清除事件流。然后，这些区块会归档。这导致代理在对象存储中删除了许多内容、并收集了对象存储删除操作的性能。
 
 有关验证详细信息、请参见 https://docs.confluent.io/platform/current/kafka/tiered-storage.html["两者结合"^] 网站。
-
-link:kafka-sc-performance-tests-with-produce-consume-workload-generator.html["接下来：使用生产消耗工作负载生成器进行性能测试。"]

@@ -13,8 +13,6 @@ summary: '本节中的命令以 CSV 格式转储数据。您可以对 " 大小 "
 :imagesdir: ./../media/
 
 
-link:xcp-bp-specific-date-based-scan-and-copy-of-data.html["Previous ：基于日期的特定数据扫描和复制。"]
-
 [role="lead"]
 以下命令将以 CSV 格式转储数据。您可以对 " 大小 " 列求和以获取数据的总大小。
 
@@ -38,5 +36,3 @@ erase\report_av_fp_cdot_crosstab.csvreport_av_fp_cdot_crosstab.csv20-01-29-10:26
 xcp scan -match “type == d” -depth 3 -fmt "'{}, {}, {}, {}'.format(name, relpath, size)" NFS_Server_IP:/share > directory_report.csv
 ....
 这是使用 ` -fmt` 命令的自定义报告。它会扫描所有目录，并将目录的名称，路径和大小转储到 CSV 文件中。您可以从电子表格应用程序对大小列进行排序。
-
-link:xcp-bp-data-migration-from-7-mode-to-ontap.html["接下来：将数据从 7- 模式迁移到 ONTAP 。"]

@@ -13,8 +13,6 @@ summary: 本节介绍如何在熊猫中加载 Criteo Click Logs Day 15 以及如
 :imagesdir: ./../media/
 
 
-link:aks-anf_load_criteo_click_logs_day_15_in_pandas_and_train_a_scikit-learn_random_forest_model.html["Previous ： Load Criteo click Logs Day 15 in 熊猫并训练一个 sc科学 学习随机林模型。"]
-
 [role="lead"]
 按照与上一节类似的方式，在熊猫中加载 Criteo 单击 Logs Day 15 ，然后训练一个 cscit-Learn 随机林模型。在此示例中，我们使用 dask cuDF 执行了 DataFrame 加载，并在 dask cuML 中训练了一个随机林模型。我们比较了本节中培训时间和规模的差异 link:aks-anf_training_time_comparison.html["" 培训时间比较。 ""]
 
@@ -75,4 +73,3 @@ pred_df = cuml_model.predict(gdf_test)
 # calculate accuracy
 cu_score = cuml.metrics.accuracy_score( test_y, pred_df )
 ....
-link:aks-anf_monitor_dask_using_native_task_streams_dashboard.html["下一步：使用原生任务流信息板监控 dask 。"]

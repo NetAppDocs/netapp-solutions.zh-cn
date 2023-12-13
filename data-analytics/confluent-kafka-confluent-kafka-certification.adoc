@@ -13,8 +13,6 @@ summary: 我们已通过与 Kafka 的 Confluent Platform 的 NetApp StorageGRID 
 :imagesdir: ./../media/
 
 
-link:confluent-kafka-technology-overview.html["上一页：技术概述。"]
-
 [role="lead"]
 我们使用 NetApp StorageGRID 中的 Confluent Platform 6.2 分层存储执行了验证。NetApp 和 Confluent 团队共同执行了此验证，并运行了验证所需的测试用例。
 
@@ -95,5 +93,3 @@ image:confluent-kafka-image8.png["错误：缺少图形映像"]
 === 保留工作负载基准测试
 
 此测试检查了在主题保留工作负载繁重的情况下对象存储的删除性能。保留工作负载是使用测试脚本生成的，该脚本会与测试主题并行生成许多消息。本测试主题使用主动式基于大小和基于时间的保留设置进行配置，此设置会导致从对象存储中持续清除事件流。然后，这些区块会归档。这导致代理在对象存储中删除了大量内容，并收集了对象存储删除操作的性能。
-
-link:confluent-kafka-performance-tests-with-scalability.html["接下来：性能测试和可扩展性。"]

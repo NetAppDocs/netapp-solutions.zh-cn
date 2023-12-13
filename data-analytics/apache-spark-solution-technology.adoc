@@ -13,8 +13,6 @@ summary: 本节介绍Apache Spark的性质和组件、以及它们对解决方�
 :imagesdir: ./../media/
 
 
-link:apache-spark-target-audience.html["上一页：目标受众。"]
-
 [role="lead"]
 Apache Spark是一种常见的编程框架、用于编写直接与Hadoop分布式文件系统(HDFS)配合使用的Hadoop应用程序。SPARK可随时投入生产、支持流式数据处理、并且速度比MapReduce更快。Spark具有可配置的内存数据缓存功能、可实现高效迭代、而Spark shell可通过交互方式学习和探索数据。借助Spark、您可以在Python、Scala或Java中创建应用程序。激发应用程序由一个或多个具有一个或多个任务的作业组成。
 
@@ -34,5 +32,3 @@ image:apache-spark-image3.png["错误：缺少图形映像"]
 转换和操作也适用于Spark数据集和DataFrame。数据集是一组分布式数据、可提供RDD的优势(强类型、使用lambda函数)以及Spark SQL优化的执行引擎的优势。可以使用JVM对象构建数据集、然后使用功能转换(map、flatMap、filter等)进行操作。DataFrame是按命名列组织的数据集。它在概念上相当于关系数据库中的表或R/Python中的数据帧。DataFrame可以从多种源构建、例如结构化数据文件、Hive/HBase中的表、内部或云中的外部数据库或现有RDD。
 
 Spark应用程序包括一个或多个Spark作业。作业在执行器中运行任务、而执行器在YARN容器中运行。每个执行者在一个容器中运行、执行者在应用程序的整个生命周期内都存在。执行者在应用程序启动后得到修复、而yarn不会调整已分配的容器的大小。执行者可以同时对内存数据运行任务。
-
-link:apache-spark-netapp-spark-solutions-overview.html["接下来：NetApp Spark解决方案概述。"]

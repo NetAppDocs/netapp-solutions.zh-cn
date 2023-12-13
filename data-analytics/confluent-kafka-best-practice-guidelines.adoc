@@ -13,9 +13,9 @@ summary: 本节将介绍从此认证中获得的经验教训。
 :imagesdir: ./../media/
 
 
-link:confluent-kafka-confluent-kafka-rebalance.html["上一步：融合自重新平衡集群。"]
-
 [role="lead"]
+本节将介绍从此认证中获得的经验教训。
+
 * 根据我们的验证， S3 对象存储对于 Confluent 来说是保留数据的最佳选择。
 * 我们可以使用高吞吐量 SAN （尤其是 FC ）来保留代理热数据或本地磁盘，因为在 Confluent 分层存储配置中， 代理数据目录中保留的数据大小取决于数据移动到对象存储时的区块大小和保留时间。
 * 当 seg.bytes 较高时，对象存储可提供更好的性能；我们测试了 512 MB 。
@@ -40,5 +40,3 @@ kafka-acls --bootstrap-server localhost:9092 --command-config adminclient-config
 NOTE: 将用户 ` <Kafka>` 替换为部署中的实际代理主体。
 
 例如，命令 `confuent-tier-state` 会在内部主题上为分层存储设置 ACL 。目前，只有一个内部主题与分层存储相关。此示例将创建一个 ACL ，为内部主题上的所有操作提供主体 Kafka 权限。
-
-link:confluent-kafka-sizing.html["接下来：规模估算。"]

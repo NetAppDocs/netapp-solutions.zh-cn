@@ -13,8 +13,6 @@ summary: 通过Cloud Volumes Service 、可以向SMB和NFS客户端共享相同�
 :imagesdir: ./../../media/
 
 
-link:ncvs-gc-smb.html["上一步：SMB。"]
-
 [role="lead"]
 通过Cloud Volumes Service 、可以向SMB和NFS客户端共享相同的数据集、同时保持适当的访问权限 (https://cloud.google.com/architecture/partners/netapp-cloud-volumes/managing-dual-protocol-access["双协议"^]）。这是通过协调协议之间的身份映射以及使用中央后端LDAP服务器向Cloud Volumes Service 提供UNIX身份来实现的。您可以使用Windows Active Directory为Windows和UNIX用户提供方便易用的功能。
 
@@ -51,5 +49,3 @@ link:ncvs-gc-smb.html["上一步：SMB。"]
 
 
 如果要创建双协议卷、则可以在创建卷时选择ACL模式。应根据所需的权限管理来做出此决策。如果您的用户从Windows/SMB客户端管理权限、请选择NTFS。如果您的用户希望使用NFS客户端和chmod/chown、请使用UNIX安全模式。
-
-link:ncvs-gc-considerations-creating-active-directory-connections.html["下一步：创建Active Directory连接的注意事项。"]
