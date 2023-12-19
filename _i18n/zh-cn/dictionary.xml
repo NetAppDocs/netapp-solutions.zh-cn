@@ -20131,4 +20131,38 @@ VMware ESXi 8.0.2、22380479</block>
   <block id="bad091449eff31ae9df2f59050033137" category="sidebar">保护AWS/GCP/Azure上的容器工作负载</block>
   <block id="53232fd3d5921b3fcc95da8d49e62e0e" category="sidebar">将容器工作负载迁移到AWS/GCP/Azure</block>
   <block id="6a896de8ede63deb377202193b9ffa70" category="video-title">利用DataOps工具包和Asta Control Center云爆发实现DevOps加速</block>
+  <block id="3d8ec74e0747a0bf20b9d69d3b1e8b22" category="cell">2023年12月18日</block>
+  <block id="90f2102904b0b8cc8f492ad9480cc156" category="cell">新技术报告：在采用iSCSI的Amazon FSx ONTAP上简化的自动化Oracle部署</block>
+  <block id="9defd6af131e71c31d1fe854d4bebe84" category="summary">解决方案提供了有关在Amazon FSx ONTAP中作为主数据库存储自动部署和保护Oracle的概述和详细信息、其中、iSCSI协议和Oracle数据库配置为在使用Oracle ASM作为卷管理器的独立重新启动中进行。</block>
+  <block id="34730d50bda66d432110c31c6ef3d822" category="doc">借助iSCSI在Amazon FSx ONTAP上简化和自动化Oracle部署</block>
+  <block id="5eb39e783da94614fe437cb8972074ad" category="paragraph">Amazon FSx for NetApp ONTAP是一项存储服务、支持您在AWS云中启动和运行完全托管的NetApp ONTAP文件系统。它提供了NetApp文件系统的熟悉特性、性能、功能和API、并具有完全托管的AWS服务的灵活性、可扩展性和精简性。它支持您在AWS云中运行要求最严苛的数据库工作负载、例如Oracle、让您高枕无忧。</block>
+  <block id="ad023f21227a34bd31c4a07a26c3ceeb" category="paragraph">本文档演示了如何使用Ans可 自动化在Amazon FSx ONTAP文件系统中简化Oracle数据库的部署。Oracle数据库部署在独立重新启动配置中、使用iSCSI协议进行数据访问、使用Oracle ASM进行数据库存储磁盘管理。它还提供了有关使用NetApp SnapCenter UI工具在AWS云中执行高效存储数据库操作的Oracle数据库备份、还原和克隆的信息。</block>
+  <block id="36efee6c5a9ee80f8e017f827d0aa10f" category="list-text">在Amazon FSx ONTAP文件系统上自动部署Oracle数据库</block>
+  <block id="67edc5be7c44db05533e39c0f055b6e1" category="list-text">使用NetApp SnapCenter工具在Amazon FSx ONTAP文件系统上执行Oracle数据库备份和还原</block>
+  <block id="d9fdf48773f4a0e6b5b486cb7ec20ead" category="list-text">使用NetApp SnapCenter工具在Amazon FSx ONTAP文件系统上为开发/测试或其他使用情形创建Oracle数据库克隆</block>
+  <block id="b3dbcb0d704aa6ab5e0e9325ece5ed0a" category="list-text">希望在Amazon FSx ONTAP文件系统上部署Oracle的数据库开发人员。</block>
+  <block id="35c5697c1fb69cf8f643be61e3004cda" category="list-text">希望在Amazon FSx ONTAP文件系统上测试Oracle工作负载的数据库解决方案架构师。</block>
+  <block id="20434e12c335486055c3510da159f861" category="list-text">希望在Amazon FSx ONTAP文件系统上部署和管理Oracle数据库的存储管理员。</block>
+  <block id="23daaf0d27ae240487b8a4d1938bc5ef" category="list-text">希望在Amazon FSx ONTAP文件系统上建立Oracle数据库的应用程序所有者。</block>
+  <block id="2d7e4e3e15ade6aac7796a854a656276" category="cell">Amazon FSx ONTAP存储</block>
+  <block id="7e6308718e9f24d724f497fc5ef23cd2" category="cell">两个EC2 T2大型EC2实例、用于并发部署</block>
+  <block id="53c4eb7bf80a61459560a0d2c63d513a" category="cell">Amazon FSx ONTAP文件系统上的iSCSI LUN</block>
+  <block id="94b06bafed4a2fc40a5a6d7e8836f0e6" category="list-text">*Oracle数据库存储布局。*在此自动化Oracle部署中、我们默认配置四个数据库卷来托管Oracle二进制文件、数据和日志。卷中的一个LUN分配给Oracle二进制文件。然后、我们将使用数据和日志LUN创建两个ASM磁盘组。在+data ASM磁盘组中、我们配置两个数据卷、其中一个卷包含两个LUN。在+logs ASM磁盘组中、我们会在一个日志卷中创建两个LUN。一般来说、在一个ONTAP卷中部署多个LUN可提高性能。</block>
+  <block id="515a6f662581dbf5fadf71e23b6029a6" category="list-text">*部署多个数据库服务器。*自动化解决方案可以在一次运行的AnsablePlaybook中将一个Oracle容器数据库部署到多个数据库服务器。无论数据库服务器的数量如何、该操作手册的执行都保持不变。您可以将多个容器数据库部署到具有不同数据库实例ID (Oracle SID)的单个EC2实例。但是、请确保主机上有足够的内存来支持已部署的数据库。</block>
+  <block id="799dcf0ac999758102eda5ceb490c092" category="list-text">* iSCSI配置。* EC2实例数据库服务器使用iSCSI协议连接到FSX存储。EC2实例通常使用一个网络接口或ENI进行部署。单个NIC接口可同时传输iSCSI和应用程序流量。请务必通过仔细分析Oracle AWR报告来衡量Oracle数据库峰值I/O吞吐量需求、以便选择既满足应用程序流量吞吐量要求又符合iSCSI流量吞吐量要求的正确EC2计算实例。NetApp还建议为正确配置多路径的两个FSX iSCSI端点分配四个iSCSI连接。</block>
+  <block id="e20408188cf4521115d65495b7b67a54" category="list-text">*要用于创建的每个Oracle ASM磁盘组的Oracle ASM冗余级别。*由于Amazon FSx ONTAP已启用HA、可在集群磁盘级别保护数据、因此应使用<block ref="1f9ad4982cbae9fb459c61ba4e63bac9" prefix=" " category="inline-code"></block>，表示选项不允许Oracle ASM镜像磁盘组的内容。</block>
+  <block id="6775f2209818a69f1e1e3a6ed8b4aecf" category="paragraph">以下各节提供了在使用直接挂载的数据库LUN的Amazon FSx ONTAP文件系统上自动部署和保护Oracle 19c的分步过程、这些LUN通过iSCSI传输到EC2实例VM、采用Oracle ASM作为数据库卷管理器的单节点重新启动配置。</block>
+  <block id="960e137d6acb4fa6cfda82d7568472c0" category="list-text">从AWS EC2控制台中、将EC2 Linux实例部署为Oracle数据库服务器。为EC2用户启用SSH专用/公共密钥身份验证。有关环境设置的详细信息、请参见上一节中的架构图。另请查看 <block ref="b75ecbbec453f67f58d497ccd97a8075" category="inline-link-macro-rx"></block> 有关详细信息 ...</block>
+  <block id="70af9dc6b3b24812bb0ab351f929c0f8" category="list-text">从AWS FSx控制台中、配置满足要求的Amazon FSx ONTAP文件系统。查看文档 <block ref="17d8b312d287f0afd6f44b3f25c4f20b" category="inline-link-macro-rx"></block> 了解分步说明。</block>
+  <block id="639b65d4c9e702c350d8464f45f4ae2d" category="list-text">将EC2 Linux实例配置为安装了最新版本的Ansv近 和Git的Ansv可 控制器节点。有关详细信息、请参见以下链接： <block ref="d1250df0700152003f00dbe5bac89608" category="inline-link-macro-rx"></block> 在第-节中<block ref="3d45b043c5518eca1e47fb4ba8a813da" prefix=" " category="inline-code"></block> 或<block ref="2afb5cc3404c6c8162722fd41895c2de" prefix=" " category="inline-code"></block>。</block>
+  <block id="1f9545764510c505dd39a46cecb920cf" category="list-text">EC2实例/tmp/archive目录中的Oracle 19c安装文件后的阶段。</block>
+  <block id="29a85eb1ecf92566b79f102d023963d4" category="video-title">在采用iSCSI的Amazon FSx ONTAP上简化和自动化Oracle部署</block>
+  <block id="b8e52c009307e1df8a80bbea8f5176d9" category="list-text">host_vars/host_name.yml—用于定义仅适用于指定目标的变量的本地变量文件。在我们的使用情形中、这些是Oracle数据库服务器。</block>
+  <block id="0e67f9b1dd3b15c078e6f2a316790949" category="paragraph">除了这些用户定义的变量文件之外、还有多个默认变量文件包含默认参数、除非必要、否则不需要更改这些参数。以下各节介绍如何配置用户定义的变量文件。</block>
+  <block id="1a759fef0c9f698bb151c9b107a2fb30" category="list-text">本地数据库服务器<block ref="0c83664bfb17d8d2c0bbc3551297e488" prefix=" " category="inline-code"></block> 配置，如ora_01.yml、ora_02.yml ...</block>
+  <block id="72ff430412347ee147549697444cc1b2" category="list-text">验证EC2实例上的Oracle容器数据库</block>
+  <block id="c6d315df01ffba499100948d7f6d68c1" category="list-text">验证Oracle侦听器。</block>
+  <block id="dd4284a741b150a5c9e18aa61fe4f607" category="list-text">验证Oracle ASM。</block>
+  <block id="dc7ae7e9c638387699e356b155145c40" category="paragraph">请参阅TR-4979 <block ref="c20f17fc2e5f1396430a5d0ec62c8eda" category="inline-link-macro-rx"></block> 部分。<block ref="d372b360dda93a1ed98b047b474a8d14" prefix=" " category="inline-code"></block> 有关设置SnapCenter以及执行数据库备份、还原和克隆工作流的详细信息。</block>
+  <block id="64de5a7dfd6282ca282a38cee5f5a0b6" category="sidebar">在采用iSCSI的Amazon FSx ONTAP上简化的自动化Oracle部署</block>
 </blocks>
