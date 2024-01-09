@@ -20171,4 +20171,212 @@ VMware ESXi 8.0.2、22380479</block>
   <block id="a1722ee1a41c4364dfc3dcf1cca5c81b" category="example-title">NetApp Cloud Insights</block>
   <block id="9dca55ac55f13f701765725f8cf5c985" category="paragraph">NetApp Cloud Insights是一款全面的监控和分析平台、旨在提供对内部和云基础架构的可见性和控制。</block>
   <block id="93a31c2d8bd53682f99f570fbf24e946" category="video-title">NetApp Cloud Insights—现代数据中心的可观察性</block>
+  <block id="83e9856e9d6140781dad6d19f316e08c" category="summary">本文提供了有关使用AWS SageMaker将FSxN配置为私有S3存储分段的指南。</block>
+  <block id="af98be851b2e51f090cd51feafbfd4fc" category="doc">第1部分—将AWS FSx for NetApp ONTAP (FSxN)作为私有S3存储分段集成到AWS SageMaker中</block>
+  <block id="48a0d621bde82c3641c2bfd148fe7917" category="paragraph">*作者：*
+NetApp高级数据和应用科学人员Ken Jian</block>
+  <block id="e0e4adbb40dea224d3249b910112c156" category="paragraph">本页以SageMaker为例、提供将FSxN配置为私有S3存储分段的指导。</block>
+  <block id="69620f6919f430e72c0f67207535605b" category="inline-link-macro">视频链接</block>
+  <block id="28c7b2b0dbf1eba73ad2f4cd747b7ef9" category="paragraph">有关FSxN的更多信息、请观看此演示文稿(<block ref="f781ab67717d91cabffd32c6ef2dd731" category="inline-link-macro-rx"></block>）</block>
+  <block id="7a97419a6312bf2f5dcdb87d844f3d07" category="section-title">用户指南</block>
+  <block id="2f5513954af7462427835c65fbeeac6d" category="section-title">创建服务器</block>
+  <block id="aa5fe14483191172e4fb6ae032e063db" category="section-title">创建SageMaker笔记本实例</block>
+  <block id="22a9741b15ba6b8515c1bcf1eb1e2424" category="list-text">打开AWS控制台。在搜索面板中、搜索SageMaker并单击服务*亚马逊SageMaker *。</block>
+  <block id="3476e29fba1f99a45d42fc3106ef69ff" category="inline-image-macro">错误：打开AWS控制台</block>
+  <block id="7a3442fcd08aee3ef7cada38cab36691" category="paragraph"><block ref="7a3442fcd08aee3ef7cada38cab36691" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7b8d9a34ee98c3b1e7231bdb38a022c7" category="list-text">打开“笔记本”选项卡下的“*笔记本实例*”，单击橙色按钮*创建笔记本实例*。</block>
+  <block id="5967dd758f5e8b7a5b13714ee9eec573" category="inline-image-macro">错误：AWS SageMaker笔记本实例控制台</block>
+  <block id="f4be1c22ae1980d94aba00017045fc9c" category="paragraph"><block ref="f4be1c22ae1980d94aba00017045fc9c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4b9073e97211281e5af3dac5bcd5b748" category="list-text">在创建页面中、
+输入*笔记本实例名称*
+展开*Network*面板
+保留其它条目默认值，然后选择*VPC*、*Subnet*和*Security group*。(稍后将使用此*VPC*和*Subnet*创建FSxN文件系统)
+单击左下方的橙色按钮*创建笔记本实例*。</block>
+  <block id="c5adb63a7f1793cbf65bf20f56169f00" category="inline-image-macro">错误：创建笔记本实例</block>
+  <block id="ed37a29c5c8b3dad1766b67612c4c5ec" category="paragraph"><block ref="ed37a29c5c8b3dad1766b67612c4c5ec" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="cd5c8a6e0acf4bab9cce5bb55f03978e" category="section-title">创建FSxN文件系统</block>
+  <block id="a0de53cada8c076391cb766a21d191f7" category="list-text">打开AWS控制台。在搜索面板中，搜索FSx并单击服务*FSX*。</block>
+  <block id="19f7553a220ccabad6711e70473524c2" category="inline-image-macro">错误：FSx面板</block>
+  <block id="08850aedb3df32c0b7aab4a82c3046e9" category="paragraph"><block ref="08850aedb3df32c0b7aab4a82c3046e9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="55ecf05d044f8d3b179ea6daf134664f" category="list-text">单击*创建文件系统*。</block>
+  <block id="27084adb60f0bf74b1a974cc4c65c8d5" category="inline-image-macro">错误：创建文件系统</block>
+  <block id="88293d0584791b5f07d37c1a6e91f115" category="paragraph"><block ref="88293d0584791b5f07d37c1a6e91f115" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4022ac9e8fc45c3abfa95a19f7a6e809" category="list-text">选择第一张卡*FSx for FS* NetApp ONTAP，然后单击*Next*。</block>
+  <block id="3ad04953613178bc3114b0de1b0c7c12" category="inline-image-macro">错误：选择文件系统类型</block>
+  <block id="6994b8de5ae43fcb8facf33262bb7d85" category="paragraph"><block ref="6994b8de5ae43fcb8facf33262bb7d85" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a9b05d3465523c46c6ece6e36ff05bba" category="list-text">在详细信息配置页面中。</block>
+  <block id="720e4d0907f5f98d25c99b23a410c93c" category="list-text">选择*标准创建*选项。</block>
+  <block id="e5dc5b446c153a70a036a5e53abc03fa" category="inline-image-macro">错误：创建文件系统面板</block>
+  <block id="8f7864f5bc12c18ce876f1160486c73a" category="paragraph"><block ref="8f7864f5bc12c18ce876f1160486c73a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="bea7f738749e0c476b2d1c016021ec5b" category="list-text">输入*文件系统名称*和* SSD存储容量*。</block>
+  <block id="5acd0fbb1d9cf07686de5953c49ea482" category="inline-image-macro">错误：指定文件系统详细信息</block>
+  <block id="af0b859bd35835b46955433f200653b7" category="paragraph"><block ref="af0b859bd35835b46955433f200653b7" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5db4aeb81b94a1ba5cdcc12c96b36cb1" category="list-text">确保使用与*SageMaker记事本*实例相同的*vpc*和*subnet*。</block>
+  <block id="8fc5bda05ed12061673744ef5ca38e49" category="inline-image-macro">错误：网络和安全配置(&amp;A)</block>
+  <block id="1c7c4783a7418157f53392c903c2d824" category="paragraph"><block ref="88bd06961d668e99f94dabd3d58df0df" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8cb695bdcb362931108f41ff0ec65293" category="list-text">输入SVM (Storage Virtual Machine)的* Storage Virtual Machine*名称和*指定密码*。</block>
+  <block id="fad5d48050c3ffd279ba599f2939fa96" category="inline-image-macro">错误：默认Storage Virtual Machine配置</block>
+  <block id="38caa4ec56d6b1a3e15088848cfc7eff" category="paragraph"><block ref="38caa4ec56d6b1a3e15088848cfc7eff" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="88f1507d805331ee2126ac5b7fa3b660" category="list-text">保留其它条目的默认值，然后单击左下方的橙色按钮*Next*。</block>
+  <block id="66dfcda81b33098d49dd6b202816eac4" category="inline-image-macro">错误：确认配置</block>
+  <block id="20bc5d28ff5ae2518fe7620732f8da5d" category="paragraph"><block ref="20bc5d28ff5ae2518fe7620732f8da5d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b7a01849b3c2c9dfa932ee9d7d70d3d9" category="list-text">单击查看页面左下方的橙色按钮*创建文件系统*。</block>
+  <block id="8bbdba4ec2550ae26e76c7ccb1935997" category="inline-image-macro">错误：查看配置并确认创建</block>
+  <block id="7830d9e7b16a77ed9086d21141c61249" category="paragraph"><block ref="7830d9e7b16a77ed9086d21141c61249" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c12346192a59739b1315d8d07143db6e" category="list-text">启动FSx文件系统可能需要大约*20-40分钟*。</block>
+  <block id="b4acc68213fdec586002e5bceb128160" category="inline-image-macro">错误：检查FSx控制台</block>
+  <block id="55029cbc3bcf30f884f1d4e26a5906dc" category="paragraph"><block ref="55029cbc3bcf30f884f1d4e26a5906dc" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="01ecbbb2b353cf4d915bbe1c1cd5505c" category="section-title">服务器配置</block>
+  <block id="d36647d06b353fcd6fedc60898e43187" category="section-title">ONTAP配置</block>
+  <block id="07afa2af969623c48103624cdb58551c" category="list-text">打开创建的FSx文件系统。请确保状态为*可用*。</block>
+  <block id="a49ba1d26032654a374f6070da411e15" category="inline-image-macro">错误：等待后端创建</block>
+  <block id="4264cdf948169ae396a9b55ff8d1a939" category="paragraph"><block ref="4264cdf948169ae396a9b55ff8d1a939" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6cbcfc771dc80f5ee77c4deba078b135" category="list-text">选择*管理*选项卡并保留*管理端点- IP地址*和* ONTAP管理员用户名*。</block>
+  <block id="e02c80eea85e6af659b706bec351e92f" category="inline-image-macro">错误：文件系统详细信息控制台</block>
+  <block id="ae63a6830c7413a36ca87f5ec0f7a32e" category="paragraph"><block ref="ae63a6830c7413a36ca87f5ec0f7a32e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c0164aebedfb5a99b6386ba01ffbc963" category="list-text">打开创建的*SageMaker笔记本实例*，然后单击*Open JupyterLab*。</block>
+  <block id="b0170bb1aa04e46c9d11cd1c71576225" category="inline-image-macro">错误：AWS SageMaker笔记本实例控制台</block>
+  <block id="6b1bc934025194c0040fad0d84c26b4b" category="paragraph"><block ref="6b1bc934025194c0040fad0d84c26b4b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="12dbc394c66b065a1aef771f11914dad" category="list-text">在Jupyter Lab页面中，打开一个新的*Terminal *。</block>
+  <block id="f96bd7f5e2461f4da9c5cf3081a1435e" category="inline-image-macro">错误：Jupyter Lab欢迎页面</block>
+  <block id="3812ac79085156c315b47611e83566ce" category="paragraph"><block ref="3812ac79085156c315b47611e83566ce" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="783f8aafec7947fdba79675aec73c6ea" category="list-text">输入ssh命令ssh &lt;admin user name&gt;@&lt;ONTAP server IP&gt;登录到FSxN ONTAP文件系统。(用户名和IP地址从步骤2中检索)
+请使用创建*Storage Virtual Machine*时使用的密码。</block>
+  <block id="fbc1bb10b7dba9b1686cf5909b857d11" category="inline-image-macro">错误：Jupyter Lab终端</block>
+  <block id="323c9f126a332a030cb212385df777c2" category="paragraph"><block ref="323c9f126a332a030cb212385df777c2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0a54fdd656710867c428c8113e54b564" category="list-text">按以下顺序执行命令。
+我们使用*fsxn-ONTAP *作为* FSxN专用S3存储分段名称*的名称。
+请使用*Storage Virtual Machine name*作为*-vserver*参数。</block>
+  <block id="7077653c0ede48b67bb9ddf095443097" category="inline-image-macro">错误：Jupyter Lab终端输出</block>
+  <block id="a5b06c1e5b238d4eca22e7fa82a9918d" category="paragraph"><block ref="a5b06c1e5b238d4eca22e7fa82a9918d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="97ba33974b8521c10ce584c5eaf395e8" category="list-text">执行以下命令以检索FSxN Private S3的端点IP和凭据。</block>
+  <block id="1025c82e986534d7a6a941036fce2afd" category="list-text">保留端点IP和凭据以供将来使用。</block>
+  <block id="124a0d0c01ae10c84922faf0071bef0c" category="paragraph"><block ref="124a0d0c01ae10c84922faf0071bef0c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="fb11dcb3b0575af26386e753c028e37d" category="section-title">客户端配置</block>
+  <block id="d885926aec2cdf1253c078102968eb8d" category="list-text">在SageMaker笔记本实例中、创建新的Jupyter笔记本。</block>
+  <block id="a31ea702484a2995987efff159cfd25b" category="inline-image-macro">错误：打开新的Jupyter笔记本</block>
+  <block id="a0e2c1ccf569aed936c0662c38ce28b7" category="paragraph"><block ref="a0e2c1ccf569aed936c0662c38ce28b7" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e248de3aba6cefa5adacaaee03aaa6e8" category="inline-link-macro">fsxn_dema.ipynb</block>
+  <block id="b8c06acb7cb18ff2ed0496ab3d7c9b49" category="list-text">使用以下代码作为解决解决方案问题的方法、将文件上传到FSxN私有S3存储分段。
+有关完整的代码示例、请参阅本笔记本。
+<block ref="bba9246c0aa679574046eb4f09bdd0fc" category="inline-link-macro-rx"></block></block>
+  <block id="cea26986194f845f1cc6f7d6f829d354" category="paragraph">FSxN与SageMaker实例之间的集成到此结束。</block>
+  <block id="6d8aee76fb8c09877162ad6d9e5fdac9" category="section-title">有用的调试检查清单</block>
+  <block id="fc9f2f85096a29f68ece7e9e7110c6a8" category="list-text">确保SageMaker笔记本实例和FSxN文件系统位于同一个VPC中。</block>
+  <block id="2ec57b268e910c39ad70e1b259d09e1a" category="list-text">请记得在ONTAP上运行*set dev*命令，将权限级别设置为*dev*。</block>
+  <block id="5a7d7d5f81481db284cc081576a810b0" category="section-title">常见问题解答(截至2023年9月27日)</block>
+  <block id="94b999326ed2132d685df6f3ff59629d" category="paragraph">问：为什么在将文件上传到FSxN时、我在调用CreateMultipartUpload操作时收到错误"*发生错误(未实施)：您请求的S3命令未实施*"？</block>
+  <block id="5fa41173cd02a7f2f51991d3fbf945fd" category="paragraph">答：作为私有S3存储分段、FSxN支持上传高达100 MB的文件。使用S3协议时、大于100 MB的文件会划分为100 MB的区块、并调用"CreateMultipartUpload"函数。但是、当前实施的FSxN Private S3不支持此功能。</block>
+  <block id="f88f43eebee4cca4c6f0326f74fda45b" category="paragraph">问：为什么在将文件上传到FSxN时、调用PutObject操作时收到错误"*发生错误(AccessDenied)：访问被拒绝*"？</block>
+  <block id="1b00aec10ba8509109eedd8e579fb809" category="paragraph">答：要从SageMaker笔记本实例访问FSxN私有S3存储分段、请将AWS凭据切换到FSxN凭据。但是、要为实例授予写入权限、需要使用 临时解决策 解决方案 挂载存储分段并运行"chmod" shell命令来更改权限。</block>
+  <block id="a15e64da546a6b8f0df25ab3c1ae0911" category="paragraph">问：如何将FSxN Private S3存储分段与其他SageMaker ML服务集成？</block>
+  <block id="91c8fe5f362fce371dcce68bb17a9f1a" category="paragraph">答：遗憾的是、SageMaker服务SDK无法为专用S3存储分段指定端点。因此、FSxN S3与SageMaker服务不兼容、例如、SagMaker Data Rangler、SagMaker Clarify、SagMaker Glue、SagMaker Athena、SagMaker AutoML、 等。</block>
+  <block id="9655e73399e82a17e5955e6dcba21f87" category="summary">本文是一篇有关使用AWS FSx for NetApp ONTAP (FSxN)在SageMaker中训练PyTorch模型的教程、专门针对轮胎质量分类项目。</block>
+  <block id="71a905356768d1db6813d6aba47f4ebe" category="doc">第2部分—利用AWS FSx for NetApp ONTAP (FSxN)作为SageMaker模型训练的数据源</block>
+  <block id="25487964d2cbb5e36908d6c6d6e9001c" category="paragraph">本教程提供了计算机视觉分类项目的一个实际示例、提供了在SageMaker环境中构建ML模型以利用FSxN作为数据源的实践经验。该项目侧重于使用深度学习框架PyTorch、根据轮胎图像对轮胎质量进行分类。它侧重于使用FSxN作为Amazon SageMaker中的数据源来开发机器学习模型。</block>
+  <block id="f2cd5132b81c1386e19a3f084d8940b9" category="section-title">什么是FSxN</block>
+  <block id="441a934c03f21f09898da33a2dae3a68" category="paragraph">Amazon FSx for NetApp ONTAP确实是AWS提供的一款完全托管的存储解决方案。它利用NetApp的ONTAP文件系统提供可靠的高性能存储。由于支持NFS、SMB和iSCSI等协议、因此可以从不同的计算实例和容器无缝访问。该服务旨在提供卓越的性能、确保快速高效的数据运营。它还提供高可用性和持久性、确保您的数据始终可访问并受到保护。此外、Amazon FSx for NetApp ONTAP的存储容量可扩展、使您可以根据需要轻松调整。</block>
+  <block id="925335f81021de4d22fde55ae7f0e86a" category="section-title">前提条件</block>
+  <block id="05ec336213c5aa3c3a49c743c5fbad19" category="section-title">网络环境</block>
+  <block id="20455c4f1650bcad90c6f90b8198a63c" category="inline-image-macro">错误：网络环境</block>
+  <block id="d743633a1920a27998ecfaf136243d75" category="paragraph"><block ref="d743633a1920a27998ecfaf136243d75" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="058c237f3a064c54cd4482ddc0bdee21" category="paragraph">FSxN (Amazon FSx for NetApp ONTAP)是一项AWS存储服务。它包括在NetApp ONTAP系统上运行的文件系统以及与其连接的AWS托管系统虚拟机(SVM)。在提供的图中、由AWS管理的NetApp ONTAP服务器位于VPC之外。SVM充当SageMaker和NetApp ONTAP系统之间的中介、接收来自SageMaker的操作请求并将其转发到底层存储。要访问FSxN、SageMaker必须与FSxN部署位于同一个VPC中。此配置可确保SageMaker和FSxN之间的通信和数据访问。</block>
+  <block id="f8aacfa5c683858912c498f517c9b457" category="section-title">数据访问</block>
+  <block id="dda624dce365defeb65011996c2313ad" category="paragraph">在实际场景中、数据科学家通常会利用存储在FSxN中的现有数据来构建机器学习模型。但是、出于演示目的、由于FSxN文件系统在创建后最初为空、因此需要手动上传训练数据。这可以通过将FSxN作为卷挂载到SageMaker来实现。成功挂载文件系统后、您可以将数据集上传到挂载位置、以便在SageMaker环境中训练模型。通过这种方法、您可以在与SageMaker合作进行模型开发和训练时利用FSxN的存储容量和功能。</block>
+  <block id="e04d28b9d9adbc81027c1ac1c68fe63d" category="paragraph">数据读取过程会将FSxN配置为专用S3存储分段。要了解详细的配置说明、请参见 <block ref="c8ff61ebc26830f9012741fc5a740a66" category="inline-link-macro-rx"></block></block>
+  <block id="30eaeebc8f9611f55e018d1dd51789ba" category="section-title">集成概述</block>
+  <block id="c011a85db53a4a7d12e0146d9d89ced9" category="inline-image-macro">错误：训练工作流</block>
+  <block id="53143d9ff0d27a36c7ff5ea412677076" category="paragraph"><block ref="53143d9ff0d27a36c7ff5ea412677076" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="79f0ede85c2ced5f70fe62f983155c74" category="paragraph">使用FSxN中的训练数据在SageMaker中构建深度学习模型的工作流可概括为三个主要步骤：数据加载程序定义、模型训练和部署。总体而言、这些步骤构成了MLOps管道的基础。但是、每个步骤都涉及多个详细的子步骤、以实现全面实施。这些子步骤包括各种任务、例如数据预处理、数据集拆分、模型配置、超参数调整、模型评估、 和型号部署。这些步骤可确保在SageMaker环境中使用来自FSxN的训练数据构建和部署深度学习模型的流程全面有效。</block>
+  <block id="2870e83ec05413b09bc7de07f60f54fa" category="section-title">分步集成</block>
+  <block id="e3364bc8e125077137411ae17c13b771" category="section-title">数据加载程序</block>
+  <block id="220b880a3d218e80d8fde5901827649a" category="paragraph">为了训练使用数据的PyTorch深度学习网络、我们创建了一个数据加载程序来促进数据馈送。数据加载程序不仅可以定义批大小、还可以确定用于读取和预处理批处理中每个记录的操作步骤。通过配置数据加载程序、我们可以处理批量数据处理、从而实现深度学习网络的训练。</block>
+  <block id="cc0322e5278f21d6001e3995e46e2810" category="paragraph">数据加载程序由3个部分组成。</block>
+  <block id="0cee527e2a952dcfca00fb6de192e2a1" category="section-title">预处理功能</block>
+  <block id="50a46eb952358276ed306b6d88aadc7d" category="paragraph">上述代码段演示了使用*torchVISION．transforms*模块的图像预处理转换的定义。在此图示中、创建预处理对象以应用一系列转换。首先，*ToTendor()*转换将图像转换为张图表示。随后，*Resize((224224))*转换将图像的大小调整为固定的224x224像素大小。最后，*NORMDE()*转换通过减去平均值并除以沿每个通道的标准偏差来使张量值标准化。用于标准化的平均值和标准偏差值通常用于经过预先训练的神经网络模型。总之、该代码通过将图像数据转换为张量、调整图像大小和使像素值标准化来准备图像数据、以便进一步处理或输入到预先训练的模型中。</block>
+  <block id="578a55cb1cfe6e1363a1c73fec7d9c6f" category="section-title">PyTorch数据集类</block>
+  <block id="7e7159cc4ca0129a9b35d893799453b9" category="paragraph">此类提供了获取数据集中记录总数的功能，并定义了读取每个记录的数据的方法。在*__gottim_*函数中，代码利用boto3 S3存储分段对象从FSxN中检索二进制数据。从FSxN访问数据的代码模式类似于从Amazon S3读取数据。后面的说明将深入介绍私有S3对象*bket*的创建过程。</block>
+  <block id="5b1b1d49dd327fbacec0eeca5f4c03d0" category="section-title">FSxN作为私有S3存储库</block>
+  <block id="b8e6ec0139ec0b874bbdf3510ca77ff8" category="paragraph">要从SageMaker中的FSxN读取数据、需要创建一个处理程序、该处理程序使用S3协议指向FSxN存储。这样就可以将FSxN视为专用S3存储分段。处理程序配置包括指定FSxN SVM的IP地址、分段名称和所需凭据。有关获取这些配置项的完整说明、请参阅上的文档 <block ref="c8ff61ebc26830f9012741fc5a740a66" category="inline-link-macro-rx"></block>。</block>
+  <block id="ac5d6406e8dadcbc23e9cf65fe528510" category="paragraph">在上述示例中、b分 段对象用于实例化PyTorch DataSet对象。数据集对象将在后续章节中进一步说明。</block>
+  <block id="e03717a5c1692689919250506bf382a0" category="section-title">PyTorch数据加载程序</block>
+  <block id="0c919f2bf87f2c6df41e7bbc52c68d04" category="paragraph">在提供的示例中、指定的批大小为64、表示每个批将包含64条记录。通过将PyTorch *DataT*类、预处理功能和训练批大小相结合，我们可以获得训练所需的数据加载程序。此数据加载程序有助于在训练阶段批量迭代数据集。</block>
+  <block id="74415cec8ae4d65c228c7fa8da8eae8a" category="section-title">模型训练</block>
+  <block id="74492eb8210f5168d9ee3eff7524ecde" category="paragraph">本规范实施标准的PyTorch培训流程。它定义了一个名为*TireQualityClassifyer*的神经网络模型，该模型使用卷积层和线性层对轮胎质量进行分类。训练循环会迭代数据批处理、并使用反向传播和优化功能来确定损失、然后更新模型的参数。此外、它还会打印当前时间、时期、批处理和损失、以供监控。</block>
+  <block id="4d2e185dfba9f3df542300054ad07998" category="section-title">模型部署</block>
+  <block id="6116a0f9a85671aec95cc56a205cf186" category="paragraph">此代码会将PyTorch模型保存到*Amazon S3*中，因为SageMaker要求将模型存储在S3中进行部署。通过将模型上传到*Amazon S3*，SageMaker便可访问模型，从而可以在已部署的模型上进行部署和引用。</block>
+  <block id="075e4fb3d67ee1fb4bc39dbc5d72b129" category="paragraph">此代码有助于在SageMaker上部署PyTorch模型。它定义了一个自定义的串口器*TireQuality串 口器*，该串口器可将输入数据作为PyTorch张量进行预处理和串口处理。TireQuality谓 词*类是一个自定义的预测程序，它利用定义的串列器和*JSONDeseririter*。该代码还会创建一个*PyTorchModel*对象，用于指定模型的S3位置、IAM角色、框架版本和引用入口点。代码会生成时间戳并根据模型和时间戳构建端点名称。最后、使用Deploy方法部署模型、并指定实例计数、实例类型和生成的端点名称。这样、可以在SageMaker上部署PyTorch模型并可用于进行推入。</block>
+  <block id="bfc7647fbfe6e589911d2da73377b475" category="section-title">参考</block>
+  <block id="99e1766840e675b2dbd8230be049188f" category="paragraph">这是使用已部署端点执行此假定的示例。</block>
+  <block id="e7ee239a021c71c67431ac1c23b9cf1e" category="summary">本文提供了使用AWS服务构建MLOps管道的指南、重点介绍自动化模型重新培训、部署和成本优化。</block>
+  <block id="b77650c231f63812b48a3802736172ae" category="doc">第3部分-构建简化的MLOps管道(CI/CT/CD)</block>
+  <block id="4c04d3884cafb85369c7a0a6b81d10b0" category="paragraph">在本教程中、您将了解如何利用各种AWS服务构建一个简单的MLOps管道、其中包括持续集成(CI)、持续培训(CT)和持续部署(CD)。与传统DevOps管道不同、MLOps需要额外的注意事项才能完成运营周期。通过学习本教程、您将深入了解如何将CT整合到MLOps循环中、从而可以持续训练您的模型并无缝部署数据进行推导。本教程将指导您完成利用AWS服务建立此端到端MLOps管道的过程。</block>
+  <block id="76c3e002d3c052bd6a909366a8dc3845" category="section-title">清单文件</block>
+  <block id="e7e0038bb30579a3120d266861982881" category="cell">功能</block>
+  <block id="dc21b082b0947a93d387b8c7e8f89ee5" category="cell">数据存储</block>
+  <block id="038790391c3f6a420beaed7bca0eb306" category="cell">AWS FSxN</block>
+  <block id="2b36707c45e9c63f4cb9480194f7866a" category="cell">请参见 <block ref="c8ff61ebc26830f9012741fc5a740a66" category="inline-link-macro-rx"></block>。</block>
+  <block id="4c5f43ed06df4b05c18ca410c7016249" category="cell">数据科学IDE</block>
+  <block id="519675ed3f417add91b9aee0a959c599" category="cell">本教程基于中提供的Jupyter笔记本 <block ref="5840d7bf436be22c629530e065e130b2" category="inline-link-macro-rx"></block>。</block>
+  <block id="e1d9ae96a3cc2d87549ec614a5eea75b" category="cell">用于触发MLOps管道的功能</block>
+  <block id="10740b99bf79c58d32e1a8e73062d05c" category="cell">AWS Lamb开发 函数</block>
+  <block id="336d5ebc5436534e61d16e63ddfca327" category="cell">-</block>
+  <block id="0fc1223c31c6d7d5d233235c0a8f3ee0" category="cell">cron作业触发器</block>
+  <block id="0abaf4e46241f987a0b4e6a434e596cd" category="cell">AWS EventBridge</block>
+  <block id="e015867873eac103879d29f569610c66" category="cell">深度学习框架</block>
+  <block id="6af8c08e3948b664c72a8cc3c2709254" category="cell">AWS Python SDK</block>
+  <block id="6686853da3491a56c98917cc5c4ddea2" category="cell">僵尸3</block>
+  <block id="4f465e36f699fcf0570d854d9f692508" category="cell">编程语言</block>
+  <block id="cd9ec78e2cad962acfcab027dd62d904" category="cell">v3.10</block>
+  <block id="d5fede2db8ed0319fd64b4dcc0daee60" category="list-text">一种预配置的FSxN文件系统。本教程将利用存储在FSxN中的数据进行培训。</block>
+  <block id="ee6837bb5e13dcd35683a2adeb22dd85" category="list-text">一个* SageMaker笔记本电脑实例*，该实例配置为与上述FSxN文件系统共享同一个VPC。</block>
+  <block id="cd201faac7e3cf792faa46c93195c65b" category="list-text">在触发*AWS Lambd*函数之前，请确保*SageMaker笔记本实例*处于*STOPPED*状态。</block>
+  <block id="238f736fdf6bcdcd7f397969fe6eb36e" category="list-text">要利用深度神经网络的必要GPU加速、需要使用*毫升g4dn.x大*实例类型。</block>
+  <block id="959b652147461dbebe507fbcc1b9b847" category="inline-image-macro">错误：架构</block>
+  <block id="abb17d022d3042495c18ce4344c1e88c" category="paragraph"><block ref="abb17d022d3042495c18ce4344c1e88c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e320ad9e531a78d8b06272138f0f29b7" category="paragraph">此MLOps管道是一种实际实施、它利用cron作业触发无服务器功能、进而执行使用生命周期回调函数注册的AWS服务。AWS EventBridge*用作cron作业。它会定期调用一个*AWS Lambad*函数，负责对模型进行重新培训和重新部署。此过程涉及到启动*AWS SageMaker笔记本*实例以执行必要的任务。</block>
+  <block id="2f53ab942978849d906d82a87554a1e2" category="section-title">逐步配置</block>
+  <block id="ecce3b4394f7f06232bad571a96a0391" category="section-title">生命周期配置</block>
+  <block id="8482e23b03456ee8ac2760d540c11442" category="paragraph">要为AWS SageMaker笔记本实例配置生命周期回调函数，应使用*Lifecycle configurations*。通过此服务，您可以定义在启动笔记本实例期间要执行的必要操作。具体而言，可以在*Lifecycle configuration*中实施shell脚本，以便在完成培训和部署过程后自动关闭笔记本实例。这是必需的配置、因为成本是MLOps中的主要考虑因素之一。</block>
+  <block id="79d14d6493dc1a7a7d33bf031166f9a9" category="paragraph">需要注意的是，需要提前设置*生命周期配置*的配置。因此、建议在继续其他MLOps管道设置之前、优先配置此方面。</block>
+  <block id="29beb103651093d4e75530e25a50f4bd" category="list-text">要设置生命周期配置，请打开*Sager*面板，然后导航到*Admin configurations*部分下的*Lifecycle configurations*。</block>
+  <block id="f7d7df1c36e1944e5017b5a0efea062b" category="inline-image-macro">错误：SageMaker面板</block>
+  <block id="d26bb875afdf18eb3fb5d209dcb60b22" category="paragraph"><block ref="d26bb875afdf18eb3fb5d209dcb60b22" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="706c89d427897aa8c9093c9ea4ddf1cb" category="list-text">选择*笔记本实例*选项卡，然后单击*创建配置*按钮</block>
+  <block id="9866cc39114ff340fe9706df15b56abb" category="inline-image-macro">错误：生命周期配置欢迎页面</block>
+  <block id="3136c126f3b9d4d7056156b66f4108b5" category="paragraph"><block ref="3136c126f3b9d4d7056156b66f4108b5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4bfce2cb9f46fa7b22c7f04d6aa38b9e" category="list-text">将以下代码粘贴到输入区域。</block>
+  <block id="d5b7dc116820ee855678d5998aaf3330" category="list-text">此脚本执行Jupyter笔记本、该笔记本负责重新训练和重新部署模型以进行引用。执行完成后、笔记本电脑将在5分钟内自动关闭。要了解有关问题陈述和代码实施的更多信息、请参见 <block ref="5840d7bf436be22c629530e065e130b2" category="inline-link-macro-rx"></block>。</block>
+  <block id="14e0e0678133bba2cc24188e6bc33690" category="inline-image-macro">错误：创建生命周期配置</block>
+  <block id="715f40d05a00907e935047e328538c28" category="paragraph"><block ref="715f40d05a00907e935047e328538c28" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a835fb020d342258f64fe6be9b11cc29" category="list-text">创建后，导航到“笔记本实例”，选择目标实例，然后单击“操作”下拉列表中的*更新设置*。</block>
+  <block id="d1e24dfc3304b4a8594b311a179da602" category="inline-image-macro">错误：更新设置下拉列表</block>
+  <block id="8598f268628946a1ff092beb2c16d0f8" category="paragraph"><block ref="8598f268628946a1ff092beb2c16d0f8" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2f80499d713c8d9fe19313ec1dc9bd45" category="list-text">选择已创建的*生命周期配置*，然后单击*更新笔记本实例*。</block>
+  <block id="2a9377c3bd188cc71aaccef2f66a3166" category="inline-image-macro">错误：更新笔记本电脑的生命周期配置</block>
+  <block id="8f34a5f6ac30183ff5cfe66547861732" category="paragraph"><block ref="8f34a5f6ac30183ff5cfe66547861732" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7a0f9cbbefa9b9603cf2241f33621e37" category="section-title">AWS Lamb达 无服务器函数</block>
+  <block id="4a799fa8d490fae92d630fe6cc65b928" category="paragraph">如前所述，*AWS Lambd*功能负责启动*AWS SageMaker笔记本实例*。</block>
+  <block id="be107f93440a41fcae408e1abec6403e" category="list-text">要创建*AWS Lamba函数*，请导航到相应的面板，切换到*FUNCHUDENTS*选项卡，然后单击*Create FUNCHUD*。</block>
+  <block id="524736e1a09117ec61f0aaf467c90139" category="inline-image-macro">错误：AWS兰德函数欢迎页面</block>
+  <block id="7ee982c5adad9c9e36dc667dacddbd13" category="paragraph"><block ref="7ee982c5adad9c9e36dc667dacddbd13" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a60f634c6f68222d8abaaa29bd057217" category="list-text">请将页面上所有必需的条目归档，并记住将运行时切换到*Python 3.10*。</block>
+  <block id="a0dc224a6753dc4e9c8a13943a9ff877" category="inline-image-macro">错误：创建AWS兰德函数</block>
+  <block id="27b829ff3b7d44c395691e9bdd846505" category="paragraph"><block ref="27b829ff3b7d44c395691e9bdd846505" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6bee22bc8ca787cbf1475d27ae7429d6" category="list-text">请验证指定角色是否具有所需的权限*Amazon SageMakerFullAccess*，然后单击*Create Function (创建功能)*按钮。</block>
+  <block id="b2509cc34b786ae706a345e57c5a14e7" category="inline-image-macro">错误：选择执行角色</block>
+  <block id="c027772dae19849892cdd4d41acafd7e" category="paragraph"><block ref="c027772dae19849892cdd4d41acafd7e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="fcc43af2494337ee641b41a13f71fc46" category="list-text">选择创建的Lamb编制 函数。在代码选项卡中、将以下代码复制并粘贴到文本区域中。此代码将启动名为*fsxn-ONTAP的笔记本实例。</block>
+  <block id="c2edd2bdf75433b7f31062be9571f528" category="list-text">单击*DEPLE*按钮以应用此代码更改。</block>
+  <block id="f5805fdb0f184041ac3646e5f627e695" category="inline-image-macro">错误：部署</block>
+  <block id="eb20a664e23a78b3c7113aaf7fb08340" category="paragraph"><block ref="eb20a664e23a78b3c7113aaf7fb08340" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b9bb44167ffa5f5dc2d30616b32fe21b" category="list-text">要指定如何触发此AWS Lambar函数、请单击添加触发器按钮。</block>
+  <block id="e03f392736db7792e8bb592750ba849d" category="inline-image-macro">错误：添加AWS函数触发器</block>
+  <block id="686158583f45232c55625677d31a9257" category="paragraph"><block ref="686158583f45232c55625677d31a9257" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9ba138d79283b1a8aad0ef0cc35ce105" category="list-text">从下拉菜单中选择EventBridge、然后单击标有创建新规则的单选按钮。在计划表达式字段中、输入<block ref="5bb28b828095c4a920fb3d34b89c2b84" prefix=" " category="inline-code"></block>，然后单击添加按钮以创建此新的cron作业规则并将其应用于AWS Lamb另 一个函数。</block>
+  <block id="61303cb3574b9f65d6e49887d43be6c0" category="inline-image-macro">错误：完成触发</block>
+  <block id="48e108c96af91adf1ebc67bfa420d5e8" category="paragraph"><block ref="48e108c96af91adf1ebc67bfa420d5e8" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="fe01cfd78f584d198c87bcb7f8ad2ee6" category="paragraph">每天完成两步配置后，*AWS Lambd*功能将启动*SageMaker笔记本*，使用*FSxN*存储库中的数据执行模型重新训练，将更新的模型重新部署到生产环境，并自动关闭*SageMaker笔记本实例*以优化成本。这可确保模型保持最新。</block>
+  <block id="0be5bfaeb8f14cd39a235e5050cecbc9" category="paragraph">开发MLOps管道的教程到此结束。</block>
+  <block id="9647f011afc518d42e6703912b04ebea" category="sidebar">适用于MLOps的AWS FSx for NetApp ONTAP (FSxN)</block>
 </blocks>

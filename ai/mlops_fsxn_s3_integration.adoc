@@ -1,0 +1,265 @@
+---
+sidebar: sidebar 
+permalink: ai/mlops_fsxn_s3_integration.html 
+keywords: FSxN, AWS S3, SageMaker, MLOps, NetApp ONTAP 
+summary: 本文提供了有关使用AWS SageMaker将FSxN配置为私有S3存储分段的指南。 
+---
+= 第1部分—将AWS FSx for NetApp ONTAP (FSxN)作为私有S3存储分段集成到AWS SageMaker中
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:highlighter: rouge
+:imagesdir: ./../media/
+
+
+[role="lead"]
+*作者：*
+NetApp高级数据和应用科学人员Ken Jian
+
+
+
+== 简介
+
+本页以SageMaker为例、提供将FSxN配置为私有S3存储分段的指导。
+
+有关FSxN的更多信息、请观看此演示文稿(link:http://youtube.com/watch?v=mFN13R6JuUk["视频链接"]）
+
+
+
+== 用户指南
+
+
+
+=== 创建服务器
+
+
+
+==== 创建SageMaker笔记本实例
+
+. 打开AWS控制台。在搜索面板中、搜索SageMaker并单击服务*亚马逊SageMaker *。
++
+image:mlops_fsxn_s3_integration_0.png["错误：打开AWS控制台"]
+
+. 打开“笔记本”选项卡下的“*笔记本实例*”，单击橙色按钮*创建笔记本实例*。
++
+image:mlops_fsxn_s3_integration_1.png["错误：AWS SageMaker笔记本实例控制台"]
+
+. 在创建页面中、
+输入*笔记本实例名称*
+展开*Network*面板
+保留其它条目默认值，然后选择*VPC*、*Subnet*和*Security group*。(稍后将使用此*VPC*和*Subnet*创建FSxN文件系统)
+单击左下方的橙色按钮*创建笔记本实例*。
++
+image:mlops_fsxn_s3_integration_2.png["错误：创建笔记本实例"]
+
+
+
+
+
+==== 创建FSxN文件系统
+
+. 打开AWS控制台。在搜索面板中，搜索FSx并单击服务*FSX*。
++
+image:mlops_fsxn_s3_integration_3.png["错误：FSx面板"]
+
+. 单击*创建文件系统*。
++
+image:mlops_fsxn_s3_integration_4.png["错误：创建文件系统"]
+
+. 选择第一张卡*FSx for FS* NetApp ONTAP，然后单击*Next*。
++
+image:mlops_fsxn_s3_integration_5.png["错误：选择文件系统类型"]
+
+. 在详细信息配置页面中。
++
+.. 选择*标准创建*选项。
++
+image:mlops_fsxn_s3_integration_6.png["错误：创建文件系统面板"]
+
+.. 输入*文件系统名称*和* SSD存储容量*。
++
+image:mlops_fsxn_s3_integration_7.png["错误：指定文件系统详细信息"]
+
+.. 确保使用与*SageMaker记事本*实例相同的*vpc*和*subnet*。
++
+image:mlops_fsxn_s3_integration_8.png["错误：网络和安全配置()"]
+
+.. 输入SVM (Storage Virtual Machine)的* Storage Virtual Machine*名称和*指定密码*。
++
+image:mlops_fsxn_s3_integration_9.png["错误：默认Storage Virtual Machine配置"]
+
+.. 保留其它条目的默认值，然后单击左下方的橙色按钮*Next*。
++
+image:mlops_fsxn_s3_integration_10.png["错误：确认配置"]
+
+.. 单击查看页面左下方的橙色按钮*创建文件系统*。
++
+image:mlops_fsxn_s3_integration_11.png["错误：查看配置并确认创建"]
+
+
+
+. 启动FSx文件系统可能需要大约*20-40分钟*。
++
+image:mlops_fsxn_s3_integration_12.png["错误：检查FSx控制台"]
+
+
+
+
+
+=== 服务器配置
+
+
+
+==== ONTAP配置
+
+. 打开创建的FSx文件系统。请确保状态为*可用*。
++
+image:mlops_fsxn_s3_integration_13.png["错误：等待后端创建"]
+
+. 选择*管理*选项卡并保留*管理端点- IP地址*和* ONTAP管理员用户名*。
++
+image:mlops_fsxn_s3_integration_14.png["错误：文件系统详细信息控制台"]
+
+. 打开创建的*SageMaker笔记本实例*，然后单击*Open JupyterLab*。
++
+image:mlops_fsxn_s3_integration_15.png["错误：AWS SageMaker笔记本实例控制台"]
+
+. 在Jupyter Lab页面中，打开一个新的*Terminal *。
++
+image:mlops_fsxn_s3_integration_16.png["错误：Jupyter Lab欢迎页面"]
+
+. 输入ssh命令ssh <admin user name>@<ONTAP server IP>登录到FSxN ONTAP文件系统。(用户名和IP地址从步骤2中检索)
+请使用创建*Storage Virtual Machine*时使用的密码。
++
+image:mlops_fsxn_s3_integration_17.png["错误：Jupyter Lab终端"]
+
+. 按以下顺序执行命令。
+我们使用*fsxn-ONTAP *作为* FSxN专用S3存储分段名称*的名称。
+请使用*Storage Virtual Machine name*作为*-vserver*参数。
++
+[source, bash]
+----
+vserver object-store-server create -vserver fsxn-svm-demo -object-store-server fsx_s3 -is-http-enabled true -is-https-enabled false
+
+vserver object-store-server user create -vserver fsxn-svm-demo -user s3user
+
+vserver object-store-server group create -name s3group -users s3user -policies FullAccess
+
+vserver object-store-server bucket create fsxn-ontap -vserver fsxn-svm-demo -type nas -nas-path /vol1
+----
++
+image:mlops_fsxn_s3_integration_18.png["错误：Jupyter Lab终端输出"]
+
+. 执行以下命令以检索FSxN Private S3的端点IP和凭据。
++
+[source, bash]
+----
+network interface show -vserver fsxn-svm-demo -lif nfs_smb_management_1
+
+set adv
+
+vserver object-store-server user show
+----
+. 保留端点IP和凭据以供将来使用。
++
+image:mlops_fsxn_s3_integration_19.png["错误：Jupyter Lab终端"]
+
+
+
+
+
+==== 客户端配置
+
+. 在SageMaker笔记本实例中、创建新的Jupyter笔记本。
++
+image:mlops_fsxn_s3_integration_20.png["错误：打开新的Jupyter笔记本"]
+
+. 使用以下代码作为解决解决方案问题的方法、将文件上传到FSxN私有S3存储分段。
+有关完整的代码示例、请参阅本笔记本。
+link:./../media/mlops_fsxn_s3_integration_0.ipynb["fsxn_dema.ipynb"]
++
+[source, python]
+----
+# Setup configurations
+# -------- Manual configurations --------
+seed: int = 77                                                          # Random seed
+bucket_name: str = 'fsxn-ontap'                                         # The bucket name in ONTAP
+aws_access_key_id: str = 'PB7XA31OKDPKTEXMK0S2'                         # Please get this credential from ONTAP
+aws_secret_access_key: str = 'N06DwX7OgBnb5X569dr10JicACYuHfDy3_hmsn7M' # Please get this credential from ONTAP
+fsx_endpoint_ip: str = '172.31.255.251'                                 # Please get this IP address from FSXN
+# -------- Manual configurations --------
+
+# Workaround
+## Permission patch
+!mkdir -p vol1
+!sudo mount -t nfs $fsx_endpoint_ip:/vol1 /home/ec2-user/SageMaker/vol1
+!sudo chmod 777 /home/ec2-user/SageMaker/vol1
+
+## Authentication for FSxN as a Private S3 Bucket
+!aws configure set aws_access_key_id $aws_access_key_id
+!aws configure set aws_secret_access_key $aws_secret_access_key
+
+## Upload file to the FSxN Private S3 Bucket
+%%capture
+local_file_path: str = <Your local file path>
+
+!aws s3 cp --endpoint-url http://$fsx_endpoint_ip /home/ec2-user/SageMaker/$local_file_path  s3://$bucket_name/$local_file_path
+
+# Read data from FSxN Private S3 bucket
+## Initialize a s3 resource client
+import boto3
+
+# Get session info
+region_name = boto3.session.Session().region_name
+
+# Initialize Fsxn S3 bucket object
+# --- Start integrating SageMaker with FSXN ---
+# This is the only code change we need to incorporate SageMaker with FSXN
+s3_client: boto3.client = boto3.resource(
+    's3',
+    region_name=region_name,
+    aws_access_key_id=aws_access_key_id,
+    aws_secret_access_key=aws_secret_access_key,
+    use_ssl=False,
+    endpoint_url=f'http://{fsx_endpoint_ip}',
+    config=boto3.session.Config(
+        signature_version='s3v4',
+        s3={'addressing_style': 'path'}
+    )
+)
+# --- End integrating SageMaker with FSXN ---
+
+## Read file byte content
+bucket = s3_client.Bucket(bucket_name)
+
+binary_data = bucket.Object(data.filename).get()['Body']
+----
+
+
+FSxN与SageMaker实例之间的集成到此结束。
+
+
+
+== 有用的调试检查清单
+
+* 确保SageMaker笔记本实例和FSxN文件系统位于同一个VPC中。
+* 请记得在ONTAP上运行*set dev*命令，将权限级别设置为*dev*。
+
+
+
+
+== 常见问题解答(截至2023年9月27日)
+
+问：为什么在将文件上传到FSxN时、我在调用CreateMultipartUpload操作时收到错误"*发生错误(未实施)：您请求的S3命令未实施*"？
+
+答：作为私有S3存储分段、FSxN支持上传高达100 MB的文件。使用S3协议时、大于100 MB的文件会划分为100 MB的区块、并调用"CreateMultipartUpload"函数。但是、当前实施的FSxN Private S3不支持此功能。
+
+问：为什么在将文件上传到FSxN时、调用PutObject操作时收到错误"*发生错误(AccessDenied)：访问被拒绝*"？
+
+答：要从SageMaker笔记本实例访问FSxN私有S3存储分段、请将AWS凭据切换到FSxN凭据。但是、要为实例授予写入权限、需要使用 临时解决策 解决方案 挂载存储分段并运行"chmod" shell命令来更改权限。
+
+问：如何将FSxN Private S3存储分段与其他SageMaker ML服务集成？
+
+答：遗憾的是、SageMaker服务SDK无法为专用S3存储分段指定端点。因此、FSxN S3与SageMaker服务不兼容、例如、SagMaker Data Rangler、SagMaker Clarify、SagMaker Glue、SagMaker Athena、SagMaker AutoML、 等。
