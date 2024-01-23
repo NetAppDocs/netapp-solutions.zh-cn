@@ -1,52 +1,9 @@
 ---
 sidebar: sidebar 
 permalink: virtualization/vvols-resources.html 
-keywords: tr-4400, vvols, ontap, virtual volumes, protect 
-summary:  
+redirect: ontap-apps-dbs/vmware/vmware-vvols-resources.html 
 ---
-= 故障排除
+= 
 :allow-uri-read: 
-:nofooter: 
-:icons: font
-:linkattrs: 
-:imagesdir: ./../media/
 
 
-[role="lead"]
-追加信息 提供了多种故障排除资源。
-
-
-
-== NetApp 支持站点
-
-除了有关NetApp虚拟化产品的各种知识库文章之外、NetApp 支持站点 还为提供了一个方便的登录页面 https://mysupport.netapp.com/site/products/all/details/otv/docs-tab["适用于 VMware vSphere 的 ONTAP 工具"] 产品。此门户可通过链接访问NetApp社区中的文章、下载内容、技术报告和VMware解决方案讨论。可从以下位置获取：
-
-https://mysupport.netapp.com/site/products/all/details/otv/docs-tab["_ NetApp 支持站点 _"]
-
-有关其他解决方案 文档、请访问：
-
-https://docs.netapp.com/us-en/netapp-solutions/virtualization/index.html["_NetApp虚拟化解决方案_"]
-
-
-
-== 产品故障排除
-
-ONTAP 工具的各种组件(例如vCenter插件、VASA Provider和Storage Replication Adapter)都记录在NetApp文档库中。但是、每个都有一个单独的知识库子部分、并且可能具有特定的故障排除过程。这些说明解决了使用VASA Provider时可能遇到的最常见问题。
-
-
-
-=== VASA Provider UI问题
-
-有时、vCenter vSphere Web Client会遇到与Serenity组件相关的问题、从而导致无法显示适用于ONTAP 的VASA Provider菜单项。请参见部署指南或本知识库中的解决VASA Provider注册问题 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/VSC_and_VASA_Provider/How_to_resolve_display_issues_with_the_vSphere_Web_Client["文章"]。
-
-
-
-=== 配置卷数据存储库失败
-
-有时、在创建Vvol数据存储库时、vCenter服务可能会超时。要更正此错误、请重新启动vmware-sps服务、然后使用vCenter菜单("Storage"(存储)>"New DataStorage"(新建数据存储库)重新挂载Vvol数据存储库。此问题将在《管理指南》中的"使用vCenter Server 6.5配置Vvol数据存储库失败"一节中进行介绍。
-
-
-
-=== 升级Unified Appliance无法挂载ISO
-
-由于vCenter中的错误、用于将Unified Appliance从一个版本升级到下一个版本的ISO可能无法挂载。如果ISO能够连接到vCenter中的设备、请按照本知识库中的过程进行操作 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/VSC_and_VASA_Provider/Virtual_Storage_Console_(VSC)%3A_Upgrading_VSC_appliance_fails_%22failed_to_mount_ISO%22["文章"] 以解决此问题。
