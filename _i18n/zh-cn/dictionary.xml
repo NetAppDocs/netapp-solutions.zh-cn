@@ -18935,8 +18935,6 @@ VMware ESXi 8.0.2、22380479</block>
   <block id="93a31c2d8bd53682f99f570fbf24e946" category="video-title">NetApp Cloud Insights—现代数据中心的可观察性</block>
   <block id="83e9856e9d6140781dad6d19f316e08c" category="summary">本文提供了有关使用AWS SageMaker将FSxN配置为私有S3存储分段的指南。</block>
   <block id="af98be851b2e51f090cd51feafbfd4fc" category="doc">第1部分—将AWS FSx for NetApp ONTAP (FSxN)作为私有S3存储分段集成到AWS SageMaker中</block>
-  <block id="48a0d621bde82c3641c2bfd148fe7917" category="paragraph">*作者：*
-NetApp高级数据和应用科学人员Ken Jian</block>
   <block id="e0e4adbb40dea224d3249b910112c156" category="paragraph">本页以SageMaker为例、提供将FSxN配置为私有S3存储分段的指导。</block>
   <block id="69620f6919f430e72c0f67207535605b" category="inline-link-macro">视频链接</block>
   <block id="28c7b2b0dbf1eba73ad2f4cd747b7ef9" category="paragraph">有关FSxN的更多信息、请观看此演示文稿(<block ref="f781ab67717d91cabffd32c6ef2dd731" category="inline-link-macro-rx"></block>）</block>
@@ -18949,11 +18947,6 @@ NetApp高级数据和应用科学人员Ken Jian</block>
   <block id="7b8d9a34ee98c3b1e7231bdb38a022c7" category="list-text">打开“笔记本”选项卡下的“*笔记本实例*”，单击橙色按钮*创建笔记本实例*。</block>
   <block id="5967dd758f5e8b7a5b13714ee9eec573" category="inline-image-macro">错误：AWS SageMaker笔记本实例控制台</block>
   <block id="f4be1c22ae1980d94aba00017045fc9c" category="paragraph"><block ref="f4be1c22ae1980d94aba00017045fc9c" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="4b9073e97211281e5af3dac5bcd5b748" category="list-text">在创建页面中、
-输入*笔记本实例名称*
-展开*Network*面板
-保留其它条目默认值，然后选择*VPC*、*Subnet*和*Security group*。(稍后将使用此*VPC*和*Subnet*创建FSxN文件系统)
-单击左下方的橙色按钮*创建笔记本实例*。</block>
   <block id="c5adb63a7f1793cbf65bf20f56169f00" category="inline-image-macro">错误：创建笔记本实例</block>
   <block id="ed37a29c5c8b3dad1766b67612c4c5ec" category="paragraph"><block ref="ed37a29c5c8b3dad1766b67612c4c5ec" category="inline-image-macro-rx" type="image"></block></block>
   <block id="cd5c8a6e0acf4bab9cce5bb55f03978e" category="section-title">创建FSxN文件系统</block>
@@ -18979,10 +18972,8 @@ NetApp高级数据和应用科学人员Ken Jian</block>
   <block id="8cb695bdcb362931108f41ff0ec65293" category="list-text">输入SVM (Storage Virtual Machine)的* Storage Virtual Machine*名称和*指定密码*。</block>
   <block id="fad5d48050c3ffd279ba599f2939fa96" category="inline-image-macro">错误：默认Storage Virtual Machine配置</block>
   <block id="38caa4ec56d6b1a3e15088848cfc7eff" category="paragraph"><block ref="38caa4ec56d6b1a3e15088848cfc7eff" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="88f1507d805331ee2126ac5b7fa3b660" category="list-text">保留其它条目的默认值，然后单击左下方的橙色按钮*Next*。</block>
   <block id="66dfcda81b33098d49dd6b202816eac4" category="inline-image-macro">错误：确认配置</block>
   <block id="20bc5d28ff5ae2518fe7620732f8da5d" category="paragraph"><block ref="20bc5d28ff5ae2518fe7620732f8da5d" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="b7a01849b3c2c9dfa932ee9d7d70d3d9" category="list-text">单击查看页面左下方的橙色按钮*创建文件系统*。</block>
   <block id="8bbdba4ec2550ae26e76c7ccb1935997" category="inline-image-macro">错误：查看配置并确认创建</block>
   <block id="7830d9e7b16a77ed9086d21141c61249" category="paragraph"><block ref="7830d9e7b16a77ed9086d21141c61249" category="inline-image-macro-rx" type="image"></block></block>
   <block id="c12346192a59739b1315d8d07143db6e" category="list-text">启动FSx文件系统可能需要大约*20-40分钟*。</block>
@@ -19045,7 +19036,6 @@ NetApp高级数据和应用科学人员Ken Jian</block>
   <block id="058c237f3a064c54cd4482ddc0bdee21" category="paragraph">FSxN (Amazon FSx for NetApp ONTAP)是一项AWS存储服务。它包括在NetApp ONTAP系统上运行的文件系统以及与其连接的AWS托管系统虚拟机(SVM)。在提供的图中、由AWS管理的NetApp ONTAP服务器位于VPC之外。SVM充当SageMaker和NetApp ONTAP系统之间的中介、接收来自SageMaker的操作请求并将其转发到底层存储。要访问FSxN、SageMaker必须与FSxN部署位于同一个VPC中。此配置可确保SageMaker和FSxN之间的通信和数据访问。</block>
   <block id="f8aacfa5c683858912c498f517c9b457" category="section-title">数据访问</block>
   <block id="dda624dce365defeb65011996c2313ad" category="paragraph">在实际场景中、数据科学家通常会利用存储在FSxN中的现有数据来构建机器学习模型。但是、出于演示目的、由于FSxN文件系统在创建后最初为空、因此需要手动上传训练数据。这可以通过将FSxN作为卷挂载到SageMaker来实现。成功挂载文件系统后、您可以将数据集上传到挂载位置、以便在SageMaker环境中训练模型。通过这种方法、您可以在与SageMaker合作进行模型开发和训练时利用FSxN的存储容量和功能。</block>
-  <block id="e04d28b9d9adbc81027c1ac1c68fe63d" category="paragraph">数据读取过程会将FSxN配置为专用S3存储分段。要了解详细的配置说明、请参见 <block ref="c8ff61ebc26830f9012741fc5a740a66" category="inline-link-macro-rx"></block></block>
   <block id="30eaeebc8f9611f55e018d1dd51789ba" category="section-title">集成概述</block>
   <block id="c011a85db53a4a7d12e0146d9d89ced9" category="inline-image-macro">错误：训练工作流</block>
   <block id="53143d9ff0d27a36c7ff5ea412677076" category="paragraph"><block ref="53143d9ff0d27a36c7ff5ea412677076" category="inline-image-macro-rx" type="image"></block></block>
@@ -19077,9 +19067,7 @@ NetApp高级数据和应用科学人员Ken Jian</block>
   <block id="e7e0038bb30579a3120d266861982881" category="cell">功能</block>
   <block id="dc21b082b0947a93d387b8c7e8f89ee5" category="cell">数据存储</block>
   <block id="038790391c3f6a420beaed7bca0eb306" category="cell">AWS FSxN</block>
-  <block id="2b36707c45e9c63f4cb9480194f7866a" category="cell">请参见 <block ref="c8ff61ebc26830f9012741fc5a740a66" category="inline-link-macro-rx"></block>。</block>
   <block id="4c5f43ed06df4b05c18ca410c7016249" category="cell">数据科学IDE</block>
-  <block id="519675ed3f417add91b9aee0a959c599" category="cell">本教程基于中提供的Jupyter笔记本 <block ref="5840d7bf436be22c629530e065e130b2" category="inline-link-macro-rx"></block>。</block>
   <block id="e1d9ae96a3cc2d87549ec614a5eea75b" category="cell">用于触发MLOps管道的功能</block>
   <block id="10740b99bf79c58d32e1a8e73062d05c" category="cell">AWS Lamb开发 函数</block>
   <block id="336d5ebc5436534e61d16e63ddfca327" category="cell">-</block>
@@ -19108,7 +19096,6 @@ NetApp高级数据和应用科学人员Ken Jian</block>
   <block id="9866cc39114ff340fe9706df15b56abb" category="inline-image-macro">错误：生命周期配置欢迎页面</block>
   <block id="3136c126f3b9d4d7056156b66f4108b5" category="paragraph"><block ref="3136c126f3b9d4d7056156b66f4108b5" category="inline-image-macro-rx" type="image"></block></block>
   <block id="4bfce2cb9f46fa7b22c7f04d6aa38b9e" category="list-text">将以下代码粘贴到输入区域。</block>
-  <block id="d5b7dc116820ee855678d5998aaf3330" category="list-text">此脚本执行Jupyter笔记本、该笔记本负责重新训练和重新部署模型以进行引用。执行完成后、笔记本电脑将在5分钟内自动关闭。要了解有关问题陈述和代码实施的更多信息、请参见 <block ref="5840d7bf436be22c629530e065e130b2" category="inline-link-macro-rx"></block>。</block>
   <block id="14e0e0678133bba2cc24188e6bc33690" category="inline-image-macro">错误：创建生命周期配置</block>
   <block id="715f40d05a00907e935047e328538c28" category="paragraph"><block ref="715f40d05a00907e935047e328538c28" category="inline-image-macro-rx" type="image"></block></block>
   <block id="a835fb020d342258f64fe6be9b11cc29" category="list-text">创建后，导航到“笔记本实例”，选择目标实例，然后单击“操作”下拉列表中的*更新设置*。</block>
@@ -19143,4 +19130,24 @@ NetApp高级数据和应用科学人员Ken Jian</block>
   <block id="9647f011afc518d42e6703912b04ebea" category="sidebar">适用于MLOps的AWS FSx for NetApp ONTAP (FSxN)</block>
   <block id="4bf9542c50f7b80d598d7ab1d3bef30b" category="paragraph">在此解决方案 验证中、我们使用Oracle演示灾难恢复。有关Oracle和NetApp ONTAP 最佳实践的详细信息、请参见<block ref="065c174f340523fcff4fc7ccd47e71bd" category="inline-link-rx"></block>。</block>
   <block id="003651b61fd1add7d53aa34a94149bb5" category="sidebar">在ONTAP上部署Oracle数据库</block>
+  <block id="e16acc0f6a19a93c2ce155db24c7dab5" category="summary">这是FSxN MLOps部分的简介页面。</block>
+  <block id="5161c5ce9ddd62084bca0b7596db0266" category="paragraph">*作者：*
+Jian Jian (Ken)、NetApp高级数据和应用科学人员</block>
+  <block id="e9270d7905c7162d5c16d80d7ebe1cd5" category="paragraph">本节将深入介绍AI基础架构开发的实际应用、提供使用FSxN构建MLOps管道的端到端逐步介绍。它包含三个全面的示例、可指导您通过这一强大的数据管理平台满足MLOps需求。</block>
+  <block id="e2e58416305212ecee9fc44a8a57e389" category="paragraph">这些文章侧重于：</block>
+  <block id="b7f3b0c22dc36cd3b8991113153958c8" category="list-text"><block ref="b7f3b0c22dc36cd3b8991113153958c8" category="inline-link-macro-rx"></block></block>
+  <block id="b98e975dc2d06019b67aeb13902d6a15" category="list-text"><block ref="b98e975dc2d06019b67aeb13902d6a15" category="inline-link-macro-rx"></block></block>
+  <block id="882330f00abe9178a19f6053978f5b4f" category="list-text"><block ref="882330f00abe9178a19f6053978f5b4f" category="inline-link-macro-rx"></block></block>
+  <block id="5b53b7bace6f6d10be375785f215b3f4" category="paragraph">本节结束时、您将深入了解如何使用FSxN简化MLOps流程。</block>
+  <block id="f26750c7b8a4a47b5c84b59141936400" category="list-text">在创建页面中、
+输入*笔记本实例名称*
+展开*Network*面板
+保留其它条目默认值，然后选择*VPC*、*Subnet*和*Security group*。(稍后将使用此*VPC*和*Subnet*创建FSxN文件系统)
+单击右下角的橙色按钮*创建笔记本实例*。</block>
+  <block id="c4c7ba1524cf2b18e8592e9ceb83df71" category="list-text">保留其它条目的默认值，然后单击右下角的橙色按钮*Next*。</block>
+  <block id="6d5ce0306761971a734da357efdf9e6f" category="list-text">单击查看页面右下角的橙色按钮*创建文件系统*。</block>
+  <block id="09347bb6e4d6cc013c80eec20591bc29" category="paragraph">数据读取过程会将FSxN配置为专用S3存储分段。要了解详细的配置说明、请参见 <block ref="b7f3b0c22dc36cd3b8991113153958c8" category="inline-link-macro-rx"></block></block>
+  <block id="501f4a3a8ef5900dadf600db64e1ba2b" category="cell">请参见 <block ref="b7f3b0c22dc36cd3b8991113153958c8" category="inline-link-macro-rx"></block>。</block>
+  <block id="1c70a2829c93823d7f0314c6b4bf651c" category="cell">本教程基于中提供的Jupyter笔记本 <block ref="b98e975dc2d06019b67aeb13902d6a15" category="inline-link-macro-rx"></block>。</block>
+  <block id="34388a3a0282609b02f3b2e33e8683b7" category="list-text">此脚本执行Jupyter笔记本、该笔记本负责重新训练和重新部署模型以进行引用。执行完成后、笔记本电脑将在5分钟内自动关闭。要了解有关问题陈述和代码实施的更多信息、请参见 <block ref="b98e975dc2d06019b67aeb13902d6a15" category="inline-link-macro-rx"></block>。</block>
 </blocks>

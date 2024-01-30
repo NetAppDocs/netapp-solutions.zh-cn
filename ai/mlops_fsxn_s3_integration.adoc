@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: ai/mlops_fsxn_s3_integration.html 
-keywords: FSxN, AWS S3, SageMaker, MLOps, NetApp ONTAP 
+keywords: FSxN, MLOps, NetApp ONTAP, SageMaker, AWS S3 
 summary: 本文提供了有关使用AWS SageMaker将FSxN配置为私有S3存储分段的指南。 
 ---
 = 第1部分—将AWS FSx for NetApp ONTAP (FSxN)作为私有S3存储分段集成到AWS SageMaker中
@@ -16,7 +16,7 @@ summary: 本文提供了有关使用AWS SageMaker将FSxN配置为私有S3存储�
 
 [role="lead"]
 *作者：*
-NetApp高级数据和应用科学人员Ken Jian
+Jian Jian (Ken)、NetApp高级数据和应用科学人员
 
 
 
@@ -50,7 +50,7 @@ image:mlops_fsxn_s3_integration_1.png["错误：AWS SageMaker笔记本实例控�
 输入*笔记本实例名称*
 展开*Network*面板
 保留其它条目默认值，然后选择*VPC*、*Subnet*和*Security group*。(稍后将使用此*VPC*和*Subnet*创建FSxN文件系统)
-单击左下方的橙色按钮*创建笔记本实例*。
+单击右下角的橙色按钮*创建笔记本实例*。
 +
 image:mlops_fsxn_s3_integration_2.png["错误：创建笔记本实例"]
 
@@ -90,11 +90,11 @@ image:mlops_fsxn_s3_integration_8.png["错误：网络和安全配置()"]
 +
 image:mlops_fsxn_s3_integration_9.png["错误：默认Storage Virtual Machine配置"]
 
-.. 保留其它条目的默认值，然后单击左下方的橙色按钮*Next*。
+.. 保留其它条目的默认值，然后单击右下角的橙色按钮*Next*。
 +
 image:mlops_fsxn_s3_integration_10.png["错误：确认配置"]
 
-.. 单击查看页面左下方的橙色按钮*创建文件系统*。
+.. 单击查看页面右下角的橙色按钮*创建文件系统*。
 +
 image:mlops_fsxn_s3_integration_11.png["错误：查看配置并确认创建"]
 
@@ -184,11 +184,11 @@ link:./../media/mlops_fsxn_s3_integration_0.ipynb["fsxn_dema.ipynb"]
 ----
 # Setup configurations
 # -------- Manual configurations --------
-seed: int = 77                                                          # Random seed
-bucket_name: str = 'fsxn-ontap'                                         # The bucket name in ONTAP
-aws_access_key_id: str = 'PB7XA31OKDPKTEXMK0S2'                         # Please get this credential from ONTAP
-aws_secret_access_key: str = 'N06DwX7OgBnb5X569dr10JicACYuHfDy3_hmsn7M' # Please get this credential from ONTAP
-fsx_endpoint_ip: str = '172.31.255.251'                                 # Please get this IP address from FSXN
+seed: int = 77                                              # Random seed
+bucket_name: str = 'fsxn-ontap'                             # The bucket name in ONTAP
+aws_access_key_id = '<Your ONTAP bucket key id>'            # Please get this credential from ONTAP
+aws_secret_access_key = '<Your ONTAP bucket access key>'    # Please get this credential from ONTAP
+fsx_endpoint_ip: str = '<Your FSxN IP address>'             # Please get this IP address from FSXN
 # -------- Manual configurations --------
 
 # Workaround

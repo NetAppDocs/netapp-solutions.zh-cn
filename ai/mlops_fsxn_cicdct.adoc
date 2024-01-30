@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: ai/mlops_fsxn_cictcd.html 
-keywords: FSxN, AWS S3, SageMaker, MLOps, NetApp ONTAP 
+keywords: FSxN, MLOps, NetApp ONTAP, AWS Lambda Functions, SageMaker, AWS S3 
 summary: 本文提供了使用AWS服务构建MLOps管道的指南、重点介绍自动化模型重新培训、部署和成本优化。 
 ---
 = 第3部分-构建简化的MLOps管道(CI/CT/CD)
@@ -16,7 +16,7 @@ summary: 本文提供了使用AWS服务构建MLOps管道的指南、重点介绍
 
 [role="lead"]
 *作者：*
-NetApp高级数据和应用科学人员Ken Jian
+Jian Jian (Ken)、NetApp高级数据和应用科学人员
 
 
 
@@ -32,10 +32,10 @@ NetApp高级数据和应用科学人员Ken Jian
 | 功能 | Name | comment 
 
 
-| 数据存储 | AWS FSxN | 请参见 link:https://docs.netapp.com/us-en/netapp-solutions/ai/mlops_fsxn_s3_integration.html["第1部分—将AWS FSx for NetApp ONTAP (FSxN)作为私有S3存储分段集成到AWS SageMaker中"]。 
+| 数据存储 | AWS FSxN | 请参见 link:./mlops_fsxn_s3_integration.html["第1部分—将AWS FSx for NetApp ONTAP (FSxN)作为私有S3存储分段集成到AWS SageMaker中"]。 
 
 
-| 数据科学IDE | AWS SageMaker | 本教程基于中提供的Jupyter笔记本 link:https://docs.netapp.com/us-en/netapp-solutions/ai/mlops_fsxn_sagemaker_integration_training.html["第2部分—利用AWS FSx for NetApp ONTAP (FSxN)作为SageMaker模型训练的数据源"]。 
+| 数据科学IDE | AWS SageMaker | 本教程基于中提供的Jupyter笔记本 link:./mlops_fsxn_sagemaker_integration_training.html["第2部分—利用AWS FSx for NetApp ONTAP (FSxN)作为SageMaker模型训练的数据源"]。 
 
 
 | 用于触发MLOps管道的功能 | AWS Lamb开发 函数 | - 
@@ -112,7 +112,7 @@ echo "Starting the autostop script in cron"
 (crontab -l 2>/dev/null; echo "*/5 * * * * bash -c 'if ps -p $nbconvert_pid > /dev/null; then echo \"Notebook is still running.\" >> /var/log/jupyter.log; else echo \"Notebook execution completed.\" >> /var/log/jupyter.log; $PYTHON_DIR -c \"import boto3;boto3.client(\'sagemaker\').stop_notebook_instance(NotebookInstanceName=get_notebook_name())\" >> /var/log/jupyter.log; fi'") | crontab -
 EOF
 ----
-. 此脚本执行Jupyter笔记本、该笔记本负责重新训练和重新部署模型以进行引用。执行完成后、笔记本电脑将在5分钟内自动关闭。要了解有关问题陈述和代码实施的更多信息、请参见 link:https://docs.netapp.com/us-en/netapp-solutions/ai/mlops_fsxn_sagemaker_integration_training.html["第2部分—利用AWS FSx for NetApp ONTAP (FSxN)作为SageMaker模型训练的数据源"]。
+. 此脚本执行Jupyter笔记本、该笔记本负责重新训练和重新部署模型以进行引用。执行完成后、笔记本电脑将在5分钟内自动关闭。要了解有关问题陈述和代码实施的更多信息、请参见 link:./mlops_fsxn_sagemaker_integration_training.html["第2部分—利用AWS FSx for NetApp ONTAP (FSxN)作为SageMaker模型训练的数据源"]。
 +
 image:mlops_fsxn_cictcd_3.png["错误：创建生命周期配置"]
 
