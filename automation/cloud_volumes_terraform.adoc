@@ -46,7 +46,7 @@ terraform {
   required_providers {
     netapp-cloudmanager = {
       source = "NetApp/netapp-cloudmanager"
-      version = "20.10.0"
+      version = ">= 23.0.0"
     }
   }
 }
@@ -650,6 +650,9 @@ NOTE: 您可以选择使用现有的 vnet 和子网部署 ANF 卷，方法是将
 
 | * AZ-NetApp_vol_storage_quot* | string | （必需）文件系统允许的最大存储配额，以 GB 为单位。 
 |===
+
+NOTE: 根据此建议、此脚本使用 `prevent_destroy` 用于减少配置文件中意外数据丢失的可能性的生命周期参数。有关的详细信息、请参见 `prevent_destroy` 生命周期参数请参见terraform文档： https://developer.hashicorp.com/terraform/tutorials/state/resource-lifecycle#prevent-resource-deletion[]。
+
 --
 .ANF 数据保护
 --
@@ -803,6 +806,9 @@ NOTE: 您可以选择使用现有的 vnet 和子网部署 ANF 卷，方法是将
 
 | * AZ DP 复制频率 * | string | （必需）复制频率，支持的值为 `10 分钟` ， `每小时` ， `dy` ，值区分大小写。 
 |===
+
+NOTE: 根据此建议、此脚本使用 `prevent_destroy` 用于减少配置文件中意外数据丢失的可能性的生命周期参数。有关的详细信息、请参见 `prevent_destroy` 生命周期参数请参见terraform文档： https://developer.hashicorp.com/terraform/tutorials/state/resource-lifecycle#prevent-resource-deletion[]。
+
 --
 .ANF 双协议
 --
@@ -932,6 +938,9 @@ NOTE: 您可以选择使用现有的 vnet 和子网部署 ANF 卷，方法是将
 
 | * AZ-SMB_DNS_servers* | string | （必需）用于创建 ActiveDirectory 对象的 DNS 服务器 IP 。 
 |===
+
+NOTE: 根据此建议、此脚本使用 `prevent_destroy` 用于减少配置文件中意外数据丢失的可能性的生命周期参数。有关的详细信息、请参见 `prevent_destroy` 生命周期参数请参见terraform文档： https://developer.hashicorp.com/terraform/tutorials/state/resource-lifecycle#prevent-resource-deletion[]。
+
 --
 .来自 Snapshot 的 anf 卷
 --
@@ -1050,6 +1059,9 @@ NOTE: 您可以选择使用现有的 vnet 和子网部署 ANF 卷，方法是将
 
 | * 。 as_snapshot_id* | string | （必需）用于创建新 ANF 卷的 Snapshot ID 。 
 |===
+
+NOTE: 根据此建议、此脚本使用 `prevent_destroy` 用于减少配置文件中意外数据丢失的可能性的生命周期参数。有关的详细信息、请参见 `prevent_destroy` 生命周期参数请参见terraform文档： https://developer.hashicorp.com/terraform/tutorials/state/resource-lifecycle#prevent-resource-deletion[]。
+
 --
 .CVO 单节点部署
 --
