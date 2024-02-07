@@ -1,0 +1,624 @@
+---
+sidebar: sidebar 
+permalink: databases/automation_ora_anf_nfs.html 
+keywords: Database, Oracle, Azure, ANF, Ansible, Automation 
+summary: 解决方案提供了有关在Microsoft Azure NetApp Files中自动部署Oracle作为使用NFS协议的主数据库存储以及在启用了DNFS的情况下将Oracle数据库部署为容器数据库的概述和详细信息。 
+---
+= TR-4987：《在采用NFS的Azure NetApp Files上简化的自动化Oracle部署》
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+NetApp公司Allen Cao、Niyaz Mohamed
+
+
+
+== 目的
+
+在云中运行性能密集型和延迟敏感型Oracle工作负载可能会带来挑战。借助Azure NetApp Files (ANF)、企业业务部门(LOB)和存储专业人员可以轻松迁移和运行要求苛刻的Oracle工作负载、而无需更改代码。Azure NetApp Files广泛用作各种情形下的底层共享文件存储服务、例如、在内部部署或将Oracle数据库迁移(迁移)到Azure等情形下。
+
+本文档演示了如何使用Azure NetApp Files自动化通过NFS挂载简化Oracle数据库在Oracle中的部署。Oracle数据库部署在启用了Oracle DNFS协议的容器数据库(CDB)和可插拔数据库(PDB)配置中、以提高性能。此外、可以使用自动化PDB重新定位方法将内部Oracle单实例数据库(PDB)迁移到Azure中新部署的容器数据库中、同时最大限度地减少服务中断。此外、还提供了有关使用Azure云中的NetApp SnapCenter UI工具快速备份、还原和克隆Oracle数据库的信息。
+
+此解决方案 可解决以下使用情形：
+
+* 在Azure NetApp Files上自动部署Oracle容器数据库
+* 在内部未命中和Azure云之间自动迁移Oracle数据库
+
+
+
+
+== audience
+
+此解决方案 适用于以下人员：
+
+* 希望在Azure NetApp Files上部署Oracle的数据库开发人员。
+* 希望在Azure NetApp Files上测试Oracle工作负载的数据库解决方案架构师。
+* 希望在Azure NetApp Files上部署和管理Oracle数据库的存储管理员。
+* 希望在Azure NetApp Files上建立Oracle数据库的应用程序所有者。
+
+
+
+
+== 解决方案 测试和验证环境
+
+此解决方案的测试和验证是在实验室环境中执行的、可能与最终部署环境不匹配。请参见一节 <<Key Factors for Deployment Consideration>> 有关详细信息 ...
+
+
+
+=== 架构
+
+image::automation_ora_anf_nfs_archit.png[此图详细展示了AWS公共云中使用iSCSI和ASM的Oracle部署配置。]
+
+
+
+=== 硬件和软件组件
+
+[cols="33%, 33%, 33%"]
+|===
+
+
+3+| * 硬件 * 
+
+
+| Azure NetApp Files | Azure中由Microsoft提供的最新产品 | 一个具有高级服务级别的容量池 
+
+
+| 适用于数据库服务器的Azure VM | standard_B4ms—4个vCPU、16 GiB | 两个Linux虚拟机实例、用于并发部署 
+
+
+| 适用于SnapCenter的Azure VM | standard_B4ms—4个vCPU、16 GiB | 一个Windows虚拟机实例 
+
+
+3+| *软件* 
+
+
+| RedHat Linux | RHEL Linux 8.6 (LVM)- x64 Gen2 | 已部署RedHat订阅以进行测试 
+
+
+| Windows服务器 | 2022 DataCenter；Azure Edition HotPatch - x64 Gen2 | 托管SnapCenter服务器 
+
+
+| Oracle 数据库 | 版本19.18 | 已应用RU修补程序p34765931_190000_Linux-x86-64.zip 
+
+
+| Oracle OPatch | 版本12.2.0.1.36 | 最新修补程序p6880880_190000_Linux-x86-64.zip 
+
+
+| SnapCenter 服务器 | 版本5.0 | 工作组部署 
+
+
+| 打开JDK | 版本java-11-OpenJDK | DB VM上的SnapCenter插件要求 
+
+
+| NFS | 版本 3.0 | 已启用Oracle DNFS 
+
+
+| Ansible | 核心2.16.2. | Python 3.6.8 
+|===
+
+
+=== 实验室环境中的Oracle数据库配置
+
+[cols="33%, 33%, 33%"]
+|===
+
+
+3+|  
+
+
+| * 服务器 * | * 数据库 * | *DB存储* 
+
+
+| ORA-01 | NTAP1 (NTAP1_PDB1、NTAP1_PDB2、NTAP_PDB3) | /u01、/u02、/u03 NFS挂载到ANF容量池上 
+
+
+| ORA-02. | NTAP2 (NTAP2_PDB1、NTAP2_PDB2、NTAP2_PDB3) | /u01、/u02、/u03 NFS挂载到ANF容量池上 
+|===
+
+
+=== 部署注意事项的关键因素
+
+* *Oracle数据库存储布局。*在此自动化Oracle部署中、我们会默认为每个数据库配置三个数据库卷、以托管Oracle二进制文件、数据和日志。卷会通过NFS以/u01 -二进制、/u02 -数据、/u03 -日志的形式挂载在Oracle数据库服务器上。在/u02和/u03挂载点上配置双控制文件、以实现冗余。
+* *部署多个数据库服务器。*自动化解决方案可以在一次运行的AnsablePlaybook中将一个Oracle容器数据库部署到多个数据库服务器。无论数据库服务器的数量如何、该操作手册的执行都保持不变。通过使用不同的数据库实例ID (Oracle SID)重复部署、您可以将多个容器数据库部署到一个VM实例。但是、请确保主机上有足够的内存来支持已部署的数据库。
+* *DNFS配置。*通过使用DNFS (自Oracle 11g起提供)、在Azure虚拟机上运行的Oracle数据库可以比本机NFS客户端驱动更多的I/O。默认情况下、Oracle自动化部署会在NFSv3上配置DNFS。
+* *分配大容量卷以加快部署速度。* ANF文件系统IO吞吐量根据卷大小进行调节。对于初始部署、分配大容量卷可以加快部署速度。之后、可以动态缩减卷的大小、而不会对应用程序造成影响。
+* *数据库备份。* NetApp提供了一个SnapCenter软件套件、可通过用户友好的用户界面进行数据库备份、还原和克隆。NetApp建议实施此类管理工具、以实现快速(不到一分钟)的快照备份、快速(几分钟)的数据库还原和数据库克隆。
+
+
+
+
+== 解决方案 部署
+
+以下各节提供了在Azure NetApp Files上通过NFS直接挂载数据库卷自动部署Oracle 19c以及将数据库迁移到Azure VM的分步过程。
+
+
+
+=== 部署的前提条件
+
+[%collapsible]
+====
+部署需要满足以下前提条件。
+
+. 已设置Azure帐户、并且已在Azure帐户中创建必要的vNet和网段。
+. 在Azure云门户中、将Azure Linux VM部署为Oracle数据库服务器。为Oracle数据库创建Azure NetApp Files容量池和数据库卷。为azureuser到DB服务器启用VM SSH私有/公共密钥身份验证。有关环境设置的详细信息、请参见上一节中的架构图。另见 link:https://docs.netapp.com/us-en/netapp-solutions/databases/azure_ora_nfile_procedures.html["Azure VM和Azure NetApp Files 上的Oracle分步部署过程"^] 了解详细信息。
++
+
+NOTE: 对于部署了本地磁盘冗余的Azure VM、请确保在VM根磁盘中至少分配了128 G的空间、以便有足够的空间来暂存Oracle安装文件和添加操作系统交换文件。相应地展开/tmplv和/rootlv OS分区。确保数据库卷命名遵循vmname-u01、vmname-u02和vmname-u03约定。
+
++
+[source, cli]
+----
+sudo lvresize -r -L +20G /dev/mapper/rootvg-rootlv
+----
++
+[source, cli]
+----
+sudo lvresize -r -L +10G /dev/mapper/rootvg-tmplv
+----
+. 从Azure云门户中、配置Windows服务器以使用最新版本运行NetApp SnapCenter UI工具。有关详细信息、请参见以下链接： link:https://docs.netapp.com/us-en/snapcenter/install/task_install_the_snapcenter_server_using_the_install_wizard.html["安装 SnapCenter 服务器"^]
+. 将Linux VM配置为安装了最新版本的Ansv近 和Git的Ansv可 控制器节点。有关详细信息、请参见以下链接： link:https://docs.netapp.com/us-en/netapp-solutions/automation/getting-started.html["NetApp解决方案 自动化入门"^] 在第-节中
+`Setup the Ansible Control Node for CLI deployments on RHEL / CentOS` 或
+`Setup the Ansible Control Node for CLI deployments on Ubuntu / Debian`。
++
+
+NOTE: 只要通过ssh端口访问Azure数据库VM、则Ansensure控制器节点就可以查找内部未命中或Azure云中的位置。
+
+. 克隆一份适用于NFS的NetApp Oracle部署自动化工具包副本。
++
+[source, cli]
+----
+git clone https://bitbucket.ngage.netapp.com/scm/ns-bb/na_oracle_deploy_nfs.git
+----
+. Stage Follows Oracle 19c installation files on Azure DB VM /tmp/archive directory with 777 permission。
++
+....
+installer_archives:
+  - "LINUX.X64_193000_db_home.zip"
+  - "p34765931_190000_Linux-x86-64.zip"
+  - "p6880880_190000_Linux-x86-64.zip"
+....
+. 观看以下视频：
++
+.借助NFS在Azure NetApp Files上简化并自动化Oracle部署
+video::d1c859b6-e45a-44c7-8361-b10f012fc89b[panopto,width=360]
+
+
+====
+
+
+=== 自动化参数文件
+
+[%collapsible]
+====
+Ans可 通过预定义的参数执行数据库安装和配置任务。对于此Oracle自动化解决方案、有三个用户定义的参数文件需要用户输入才能执行操作手册。
+
+* 主机—定义运行自动化操作手册的目标。
+* vars/vars.yml—用于定义应用于所有目标的变量的全局变量文件。
+* host_vars/host_name.yml—用于定义仅适用于指定目标的变量的本地变量文件。在我们的使用情形中、这些是Oracle数据库服务器。
+
+
+除了这些用户定义的变量文件之外、还有多个默认变量文件包含默认参数、除非必要、否则不需要更改这些参数。以下各节介绍如何配置用户定义的变量文件。
+
+====
+
+
+=== 参数文件配置
+
+[%collapsible]
+====
+. 可逆目标 `hosts` 文件配置：
++
+[source, shell]
+----
+# Enter Oracle servers names to be deployed one by one, follow by each Oracle server public IP address, and ssh private key of azureuser for the server.
+[oracle]
+ora-01 ansible_host=10.61.180.21 ansible_ssh_private_key_file=ora-01.pem
+ora-02 ansible_host=10.61.180.23 ansible_ssh_private_key_file=ora-02.pem
+
+----
+. 全局 `vars/vars.yml` 文件配置
++
+[source, shell]
+----
+######################################################################
+###### Oracle 19c deployment user configuration variables       ######
+###### Consolidate all variables from ANF, linux and oracle     ######
+######################################################################
+
+###########################################
+### ANF env specific config variables   ###
+###########################################
+
+# Prerequisite to create three volumes in NetApp storage pool from cloud dashboard with following naming convention:
+# db_hostname-u01 - Oracle binary
+# db_hostname-u02 - Oracle data
+# db_hostname-u03 - Oracle redo
+# It is important to strictly follow the name convention or the automation will fail.
+
+# NFS lif ip address to access database volumes in ANF storage pool (retrievable from cloud dashboard)
+nfs_lif: 172.30.136.68
+
+###########################################
+### Linux env specific config variables ###
+###########################################
+
+redhat_sub_username: XXXXXXXX
+redhat_sub_password: XXXXXXXX
+
+
+####################################################
+### DB env specific install and config variables ###
+####################################################
+
+# Database domain name
+db_domain: solutions.netapp.com
+
+# Set initial password for all required Oracle passwords. Change them after installation.
+initial_pwd_all: XXXXXXXX
+
+----
+. 本地数据库服务器 `host_vars/host_name.yml` 配置，如ora_01.yml、ora_02.yml ...
++
+[source, shell]
+----
+# User configurable Oracle host specific parameters
+
+# Enter container database SID. By default, a container DB is created with 3 PDBs within the CDB
+oracle_sid: NTAP1
+
+# Enter database shared memory size or SGA. CDB is created with SGA at 75% of memory_limit, MB. The grand total of SGA should not exceed 75% available RAM on node.
+memory_limit: 8192
+
+----
+
+
+====
+
+
+=== 执行操作手册
+
+[%collapsible]
+====
+自动化工具包中共有五本操作手册。每个任务执行不同的任务块、并用于不同的用途。
+
+....
+0-all_playbook.yml - execute playbooks from 1-4 in one playbook run.
+1-ansible_requirements.yml - set up Ansible controller with required libs and collections.
+2-linux_config.yml - execute Linux kernel configuration on Oracle DB servers.
+4-oracle_config.yml - install and configure Oracle on DB servers and create a container database.
+5-destroy.yml - optional to undo the environment to dismantle all.
+....
+使用以下命令可通过三个选项运行这些操作手册。
+
+. 一次运行即可执行所有部署操作手册。
++
+[source, cli]
+----
+ansible-playbook -i hosts 0-all_playbook.yml -u azureuser -e @vars/vars.yml
+----
+. 使用1-4的数字顺序执行一次一个操作手册。
++
+[source, cli]]
+----
+ansible-playbook -i hosts 1-ansible_requirements.yml -u azureuser -e @vars/vars.yml
+----
++
+[source, cli]
+----
+ansible-playbook -i hosts 2-linux_config.yml -u azureuser -e @vars/vars.yml
+----
++
+[source, cli]
+----
+ansible-playbook -i hosts 4-oracle_config.yml -u azureuser -e @vars/vars.yml
+----
+. 使用标记执行0-all_playbook.yml。
++
+[source, cli]
+----
+ansible-playbook -i hosts 0-all_playbook.yml -u azureuser -e @vars/vars.yml -t ansible_requirements
+----
++
+[source, cli]
+----
+ansible-playbook -i hosts 0-all_playbook.yml -u azureuser -e @vars/vars.yml -t linux_config
+----
++
+[source, cli]
+----
+ansible-playbook -i hosts 0-all_playbook.yml -u azureuser -e @vars/vars.yml -t oracle_config
+----
+. 撤消环境
++
+[source, cli]
+----
+ansible-playbook -i hosts 5-destroy.yml -u azureuser -e @vars/vars.yml
+----
+
+
+====
+
+
+=== 执行后验证
+
+[%collapsible]
+====
+运行此操作手册后、登录到Oracle数据库服务器VM、以验证是否已安装和配置Oracle以及是否已成功创建容器数据库。以下是在主机ora-01上验证Oracle数据库的示例。
+
+. 验证NFS挂载
++
+....
+
+[azureuser@ora-01 ~]$ cat /etc/fstab
+
+#
+# /etc/fstab
+# Created by anaconda on Thu Sep 14 11:04:01 2023
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk/'.
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info.
+#
+# After editing this file, run 'systemctl daemon-reload' to update systemd
+# units generated from this file.
+#
+/dev/mapper/rootvg-rootlv /                       xfs     defaults        0 0
+UUID=268633bd-f9bb-446d-9a1d-8fca4609a1e1 /boot                   xfs     defaults        0 0
+UUID=89D8-B037          /boot/efi               vfat    defaults,uid=0,gid=0,umask=077,shortname=winnt 0 2
+/dev/mapper/rootvg-homelv /home                   xfs     defaults        0 0
+/dev/mapper/rootvg-tmplv /tmp                    xfs     defaults        0 0
+/dev/mapper/rootvg-usrlv /usr                    xfs     defaults        0 0
+/dev/mapper/rootvg-varlv /var                    xfs     defaults        0 0
+/mnt/swapfile swap swap defaults 0 0
+172.30.136.68:/ora-01-u01 /u01 nfs rw,bg,hard,vers=3,proto=tcp,timeo=600,rsize=65536,wsize=65536 0 0
+172.30.136.68:/ora-01-u02 /u02 nfs rw,bg,hard,vers=3,proto=tcp,timeo=600,rsize=65536,wsize=65536 0 0
+172.30.136.68:/ora-01-u03 /u03 nfs rw,bg,hard,vers=3,proto=tcp,timeo=600,rsize=65536,wsize=65536 0 0
+
+[azureuser@ora-01 ~]$ df -h
+Filesystem                 Size  Used Avail Use% Mounted on
+devtmpfs                   7.7G     0  7.7G   0% /dev
+tmpfs                      7.8G     0  7.8G   0% /dev/shm
+tmpfs                      7.8G  8.6M  7.7G   1% /run
+tmpfs                      7.8G     0  7.8G   0% /sys/fs/cgroup
+/dev/mapper/rootvg-rootlv   22G   17G  5.8G  74% /
+/dev/mapper/rootvg-usrlv    10G  2.0G  8.1G  20% /usr
+/dev/mapper/rootvg-varlv   8.0G  890M  7.2G  11% /var
+/dev/sda1                  496M  106M  390M  22% /boot
+/dev/mapper/rootvg-homelv 1014M   40M  975M   4% /home
+/dev/sda15                 495M  5.9M  489M   2% /boot/efi
+/dev/mapper/rootvg-tmplv    12G  8.4G  3.7G  70% /tmp
+tmpfs                      1.6G     0  1.6G   0% /run/user/54321
+172.30.136.68:/ora-01-u01  500G   11G  490G   3% /u01
+172.30.136.68:/ora-01-u03  250G  1.2G  249G   1% /u03
+172.30.136.68:/ora-01-u02  250G  7.1G  243G   3% /u02
+tmpfs                      1.6G     0  1.6G   0% /run/user/1000
+
+....
+. 验证Oracle侦听器
++
+....
+
+[azureuser@ora-01 ~]$ sudo su
+[root@ora-01 azureuser]# su - oracle
+Last login: Thu Feb  1 16:13:44 UTC 2024
+[oracle@ora-01 ~]$ lsnrctl status listener.ntap1
+
+LSNRCTL for Linux: Version 19.0.0.0.0 - Production on 01-FEB-2024 16:25:37
+
+Copyright (c) 1991, 2022, Oracle.  All rights reserved.
+
+Connecting to (DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=ora-01.internal.cloudapp.net)(PORT=1521)))
+STATUS of the LISTENER
+------------------------
+Alias                     LISTENER.NTAP1
+Version                   TNSLSNR for Linux: Version 19.0.0.0.0 - Production
+Start Date                01-FEB-2024 16:13:49
+Uptime                    0 days 0 hr. 11 min. 49 sec
+Trace Level               off
+Security                  ON: Local OS Authentication
+SNMP                      OFF
+Listener Parameter File   /u01/app/oracle/product/19.0.0/NTAP1/network/admin/listener.ora
+Listener Log File         /u01/app/oracle/diag/tnslsnr/ora-01/listener.ntap1/alert/log.xml
+Listening Endpoints Summary...
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=ora-01.hr2z2nbmhnqutdsxgscjtuxizd.jx.internal.cloudapp.net)(PORT=1521)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=ipc)(KEY=EXTPROC1521)))
+  (DESCRIPTION=(ADDRESS=(PROTOCOL=tcps)(HOST=ora-01.hr2z2nbmhnqutdsxgscjtuxizd.jx.internal.cloudapp.net)(PORT=5500))(Security=(my_wallet_directory=/u01/app/oracle/product/19.0.0/NTAP1/admin/NTAP1/xdb_wallet))(Presentation=HTTP)(Session=RAW))
+Services Summary...
+Service "104409ac02da6352e063bb891eacf34a.solutions.netapp.com" has 1 instance(s).
+  Instance "NTAP1", status READY, has 1 handler(s) for this service...
+Service "104412c14c2c63cae063bb891eacf64d.solutions.netapp.com" has 1 instance(s).
+  Instance "NTAP1", status READY, has 1 handler(s) for this service...
+Service "1044174670ad63ffe063bb891eac6b34.solutions.netapp.com" has 1 instance(s).
+  Instance "NTAP1", status READY, has 1 handler(s) for this service...
+Service "NTAP1.solutions.netapp.com" has 1 instance(s).
+  Instance "NTAP1", status READY, has 1 handler(s) for this service...
+Service "NTAP1XDB.solutions.netapp.com" has 1 instance(s).
+  Instance "NTAP1", status READY, has 1 handler(s) for this service...
+Service "ntap1_pdb1.solutions.netapp.com" has 1 instance(s).
+  Instance "NTAP1", status READY, has 1 handler(s) for this service...
+Service "ntap1_pdb2.solutions.netapp.com" has 1 instance(s).
+  Instance "NTAP1", status READY, has 1 handler(s) for this service...
+Service "ntap1_pdb3.solutions.netapp.com" has 1 instance(s).
+  Instance "NTAP1", status READY, has 1 handler(s) for this service...
+The command completed successfully
+
+....
+. 验证Oracle数据库和DNFS
++
+....
+
+[oracle@ora-01 ~]$ cat /etc/oratab
+#
+# This file is used by ORACLE utilities.  It is created by root.sh
+# and updated by either Database Configuration Assistant while creating
+# a database or ASM Configuration Assistant while creating ASM instance.
+
+# A colon, ':', is used as the field terminator.  A new line terminates
+# the entry.  Lines beginning with a pound sign, '#', are comments.
+#
+# Entries are of the form:
+#   $ORACLE_SID:$ORACLE_HOME:<N|Y>:
+#
+# The first and second fields are the system identifier and home
+# directory of the database respectively.  The third field indicates
+# to the dbstart utility that the database should , "Y", or should not,
+# "N", be brought up at system boot time.
+#
+# Multiple entries with the same $ORACLE_SID are not allowed.
+#
+#
+NTAP1:/u01/app/oracle/product/19.0.0/NTAP1:Y
+
+
+[oracle@ora-01 ~]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Thu Feb 1 16:37:51 2024
+Version 19.18.0.0.0
+
+Copyright (c) 1982, 2022, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.18.0.0.0
+
+SQL> select name, open_mode, log_mode from v$database;
+
+NAME      OPEN_MODE            LOG_MODE
+--------- -------------------- ------------
+NTAP1     READ WRITE           ARCHIVELOG
+
+SQL> show pdbs
+
+    CON_ID CON_NAME                       OPEN MODE  RESTRICTED
+---------- ------------------------------ ---------- ----------
+         2 PDB$SEED                       READ ONLY  NO
+         3 NTAP1_PDB1                     READ WRITE NO
+         4 NTAP1_PDB2                     READ WRITE NO
+         5 NTAP1_PDB3                     READ WRITE NO
+SQL> select name from v$datafile;
+
+NAME
+--------------------------------------------------------------------------------
+/u02/oradata/NTAP1/system01.dbf
+/u02/oradata/NTAP1/sysaux01.dbf
+/u02/oradata/NTAP1/undotbs01.dbf
+/u02/oradata/NTAP1/pdbseed/system01.dbf
+/u02/oradata/NTAP1/pdbseed/sysaux01.dbf
+/u02/oradata/NTAP1/users01.dbf
+/u02/oradata/NTAP1/pdbseed/undotbs01.dbf
+/u02/oradata/NTAP1/NTAP1_pdb1/system01.dbf
+/u02/oradata/NTAP1/NTAP1_pdb1/sysaux01.dbf
+/u02/oradata/NTAP1/NTAP1_pdb1/undotbs01.dbf
+/u02/oradata/NTAP1/NTAP1_pdb1/users01.dbf
+
+NAME
+--------------------------------------------------------------------------------
+/u02/oradata/NTAP1/NTAP1_pdb2/system01.dbf
+/u02/oradata/NTAP1/NTAP1_pdb2/sysaux01.dbf
+/u02/oradata/NTAP1/NTAP1_pdb2/undotbs01.dbf
+/u02/oradata/NTAP1/NTAP1_pdb2/users01.dbf
+/u02/oradata/NTAP1/NTAP1_pdb3/system01.dbf
+/u02/oradata/NTAP1/NTAP1_pdb3/sysaux01.dbf
+/u02/oradata/NTAP1/NTAP1_pdb3/undotbs01.dbf
+/u02/oradata/NTAP1/NTAP1_pdb3/users01.dbf
+
+19 rows selected.
+
+SQL> select name from v$controlfile;
+
+NAME
+--------------------------------------------------------------------------------
+/u02/oradata/NTAP1/control01.ctl
+/u03/orareco/NTAP1/control02.ctl
+
+SQL> select member from v$logfile;
+
+MEMBER
+--------------------------------------------------------------------------------
+/u03/orareco/NTAP1/onlinelog/redo03.log
+/u03/orareco/NTAP1/onlinelog/redo02.log
+/u03/orareco/NTAP1/onlinelog/redo01.log
+
+SQL> select svrname, dirname, nfsversion from v$dnfs_servers;
+
+SVRNAME
+--------------------------------------------------------------------------------
+DIRNAME
+--------------------------------------------------------------------------------
+NFSVERSION
+----------------
+172.30.136.68
+/ora-01-u02
+NFSv3.0
+
+172.30.136.68
+/ora-01-u03
+NFSv3.0
+
+SVRNAME
+--------------------------------------------------------------------------------
+DIRNAME
+--------------------------------------------------------------------------------
+NFSVERSION
+----------------
+
+172.30.136.68
+/ora-01-u01
+NFSv3.0
+
+....
+. 登录到Oracle Enterprise Manager Express以验证数据库。
++
+image::automation_ora_anf_nfs_em_01.png[此图提供Oracle Enterprise Manager Express的登录屏幕]
+
++
+image::automation_ora_anf_nfs_em_02.png[此图提供了Oracle Enterprise Manager Express中的容器数据库视图]
+
+
+
+====
+
+
+=== 将Oracle数据库迁移到Azure
+
+[%collapsible]
+====
+Oracle数据库从内部迁移到云是一项繁重的工作。使用正确的策略和自动化可以使流程顺畅进行、并最大限度地减少服务中断和停机时间。请遵循此详细说明 link:https://docs.netapp.com/us-en/netapp-solutions/databases/azure_ora_nfile_migration.html#converting-a-single-instance-non-cdb-to-a-pdb-in-a-multitenant-cdb["将数据库从内部迁移到Azure云"^] 指导您的数据库迁移之旅。
+
+====
+
+
+=== 使用SnapCenter进行Oracle备份、还原和克隆
+
+[%collapsible]
+====
+NetApp建议使用SnapCenter UI工具来管理部署在Azure云中的Oracle数据库。不久将提供详细的解决方案文档。
+
+====
+
+
+== 从何处查找追加信息
+
+要了解有关本文档中所述信息的更多信息，请查看以下文档和 / 或网站：
+
+* Azure NetApp Files
++
+link:https://azure.microsoft.com/en-us/products/netapp["https://azure.microsoft.com/en-us/products/netapp"^]
+
+* 部署Oracle Direct NFS
++
+link:https://docs.oracle.com/en/database/oracle/oracle-database/19/ladbi/deploying-dnfs.html#GUID-D06079DB-8C71-4F68-A1E3-A75D7D96DCE2["https://docs.oracle.com/en/database/oracle/oracle-database/19/ladbi/deploying-dnfs.html#GUID-D06079DB-8C71-4F68-A1E3-A75D7D96DCE2"^]
+
+* 使用响应文件安装和配置Oracle数据库
++
+link:https://docs.oracle.com/en/database/oracle/oracle-database/19/ladbi/installing-and-configuring-oracle-database-using-response-files.html#GUID-D53355E9-E901-4224-9A2A-B882070EDDF7["https://docs.oracle.com/en/database/oracle/oracle-database/19/ladbi/installing-and-configuring-oracle-database-using-response-files.html#GUID-D53355E9-E901-4224-9A2A-B882070EDDF7"^]
+
+* 将Red Hat Enterprise Linux 8.2与ONTAP结合使用
++
+link:https://docs.netapp.com/us-en/ontap-sanhost/hu_rhel_82.html#all-san-array-configurations["https://docs.netapp.com/us-en/ontap-sanhost/hu_rhel_82.html#all-san-array-configurations"^]
+
+

@@ -119,7 +119,7 @@ alter session set container=ncdb;
 
 == 通过PDB重新定位将内部Oracle数据库迁移到Azure
 
-具有最大可用性选项的Oracle PDB重新定位使用PDB热克隆技术、在将PDB复制到目标时、可以启用源PDB可用性。切换后、会话和连接会自动重定向到目标PDB。因此、无论要重新定位的PDB大小如何、停机时间都会降至最低。NetApp提供了一个基于Ansible的工具包、用于自动执行迁移操作步骤。
+使用最大可用性选项的Oracle PDB重新定位采用PDB热克隆技术、这样、在PDB复制到目标时、可以使用源PDB。切换时、用户连接会自动重定向到目标PDB。因此、无论PDB的大小如何、都可以最大限度地减少停机时间。NetApp提供了一个基于Ansible的工具包、用于自动执行迁移操作步骤。
 
 . 在Azure公共云中使用相同版本和修补程序级别在Azure虚拟机上创建CDB。
 . 从Ansible控制器克隆自动化工具包的副本。
