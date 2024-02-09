@@ -1,0 +1,32 @@
+---
+sidebar: sidebar 
+permalink: containers/dwn_overview_trident.html 
+keywords: Trident, Astra Trident, Helm, Operator, iSCSI, NFS, DevOps 
+summary: Astra Trident 是一款开源且完全受支持的存储编排程序，适用于容器和 Kubernetes 分发版，包括 Red Hat OpenShift 。 
+---
+= Astra Trident 概述
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+:k8s_distribution_name: Red Hat OpenShift, VMware Tanzu, Anthos by Google Cloud, Rancher etc
+
+
+[role="normal"]
+Astra Trident是一款完全受支持的开源存储编排程序、适用于｛K8s_distribution_name｝等容器和Kubernetes分发版。Trident 可与包括 NetApp ONTAP 和 Element 存储系统在内的整个 NetApp 存储产品组合配合使用，并且还支持 NFS 和 iSCSI 连接。Trident 允许最终用户从其 NetApp 存储系统配置和管理存储，而无需存储管理员干预，从而加快了 DevOps 工作流的速度。
+
+管理员可以根据项目需求和存储系统型号配置多个存储后端，以实现高级存储功能，包括数据压缩，特定磁盘类型或 QoS 级别，以保证一定水平的性能。定义后，开发人员可以在其项目中使用这些后端创建永久性卷声明（ PVC ），并按需将永久性存储附加到容器。
+
+image:redhat_openshift_image2.png["错误：缺少图形映像"]
+
+Astra Trident具有快速的开发周期、与Kubernetes一样、每年发布四次。
+
+最新版Astra Trident于2022年4月发布。已测试的 Trident 版本的支持列表，可在该支持列表中找到 Kubernetes 分发版本 https://docs.netapp.com/us-en/trident/trident-get-started/requirements.html#supported-frontends-orchestrators["此处"]。
+
+从 20.04 版开始， Trident 设置由 Trident 操作员执行。操作员可以简化大规模部署、并提供额外的支持、包括为在Trident安装过程中部署的Pod提供自我修复。
+
+在 21.01 版中，我们提供了一个 Helm 图表，用于简化 Trident 操作员的安装。
+
+请参见文档 link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy-operator.html["此处"^] 安装和使用Astra Trident。

@@ -1,0 +1,55 @@
+---
+sidebar: sidebar 
+permalink: containers/a-w-n_overview_trident.html 
+keywords: Trident, Astra Trident, Helm, Operator, iSCSI, NFS 
+summary: Astra Trident是一款完全受支持的开源存储编排程序、适用于容器和Kubernetes分发版、包括Anthos。 
+---
+= Astra Trident 概述
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+Astra Trident是一款完全受支持的开源存储编排程序、适用于容器和Kubernetes分发版、包括Anthos。Trident可与包括NetApp ONTAP 在内的整个NetApp存储产品组合配合使用、并且还支持NFS和iSCSI连接。Trident 允许最终用户从其 NetApp 存储系统配置和管理存储，而无需存储管理员干预，从而加快了 DevOps 工作流的速度。
+
+管理员可以根据项目需求和存储系统型号配置多个存储后端、以实现高级存储功能、包括压缩、特定磁盘类型和QoS级别、从而保证一定水平的性能。定义后，开发人员可以在其项目中使用这些后端创建永久性卷声明（ PVC ），并按需将永久性存储附加到容器。
+
+image:a-w-n_astra_trident.png["错误：缺少图形映像"]
+
+Astra Trident具有快速的开发周期、与Kubernetes一样、每年发布四次。
+
+有关最新版本的Astra Trident的文档、请参见 https://docs.netapp.com/us-en/trident/index.html["此处"]。已测试的 Trident 版本的支持列表，可在该支持列表中找到 Kubernetes 分发版本 https://docs.netapp.com/us-en/trident/trident-get-started/requirements.html#supported-frontends-orchestrators["此处"]。
+
+从 20.04 版开始， Trident 设置由 Trident 操作员执行。操作员可以简化大规模部署，并为在 Trident 安装过程中部署的 Pod 提供额外的支持，包括自我修复。
+
+在22.04版本中、我们提供了一个Helm图表、用于简化Trident操作员的安装。
+
+有关Astra Trident安装的详细信息、请参见 https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html["此处"]。
+
+
+
+== 创建存储系统后端
+
+完成 Astra Trident 操作员安装后，您必须为所使用的特定 NetApp 存储平台配置后端。请单击以下链接继续设置和配置Astra Trident。link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-postdeployment.html#step-1-create-a-backend["创建后端。"]
+
+
+
+== 创建存储类。
+
+创建后端后、您必须创建一个存储类、Kubernetes用户需要卷时将指定此类。Kubernetes用户使用按名称指定存储类的永久性卷声明(Persistent Volume Claim、PVC)来配置卷。请单击以下链接创建存储类。link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-postdeployment.html#step-2-create-a-storage-class["创建存储类。"]
+
+
+
+== 动态配置卷
+
+要动态配置卷、您必须使用存储类创建Kubernetes永久性卷声明(PVC)对象。按照以下链接创建PVC对象。link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-postdeployment.html#step-3-provision-your-first-volume["创建PVC"]
+
+
+
+== 使用卷
+
+应用程序可以通过在POD中挂载卷来使用上述步骤中配置的卷。以下链接显示了一个示例。link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-postdeployment.html#step-4-mount-the-volumes-in-a-pod["将卷挂载到Pod中"]

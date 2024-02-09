@@ -1,0 +1,74 @@
+---
+sidebar: sidebar 
+permalink: ehc/ncvs-gc-how-cloud-volumes-service-in-google-cloud-secures-your-data.html 
+keywords: secure, architecture, tenancy model, identity management, control plane, security hardening, encryption, zero trust, ransomware 
+summary: Google Cloud中的Cloud Volumes Service 提供了多种本机保护数据安全的方法。 
+---
+= Google Cloud中的Cloud Volumes Service 如何保护您的数据安全
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+Google Cloud中的Cloud Volumes Service 提供了多种本机保护数据安全的方法。
+
+
+
+== 安全架构和租户模式
+
+Cloud Volumes Service 通过在不同端点之间分段服务管理(控制平面)和数据访问(数据平面)、在Google Cloud中提供一个安全的架构、这样两者都不会影响另一端(请参见一节) link:ncvs-gc-cloud-volumes-service-architecture.html["Cloud Volumes Service 架构"]）。它使用Google https://cloud.google.com/vpc/docs/private-services-access?hl=en_US["私有服务访问"^] (PSA)提供服务的框架。此框架区分由NetApp提供和运营的服务生产者和客户项目中托管要访问Cloud Volumes Service 文件共享的客户端的虚拟私有云(Virtual Private Cloud、VPC)服务使用者。
+
+在此架构中、租户(请参见第节 link:ncvs-gc-cloud-volumes-service-architecture.html#tenancy-model[""租户模式""])定义为除非用户明确连接、否则彼此完全隔离的Google Cloud项目。通过租户、可以使用Cloud Volumes Service 卷平台将数据卷、外部名称服务以及解决方案 的其他基本部分与其他租户完全隔离。由于Cloud Volumes Service 平台是通过VPC对等连接的、因此这种隔离也会对其进行适用场景。您可以使用共享VPC在多个项目之间共享Cloud Volumes Service 卷(请参见一节) link:ncvs-gc-cloud-volumes-service-architecture.html#tenancy-model#shared-vpcs[""共享VPC""]）。您可以对SMB共享和NFS导出应用访问控制、以限制可以查看或修改数据集的用户或对象。
+
+
+
+== 为控制平台提供强大的身份管理功能
+
+在进行Cloud Volumes Service 配置的控制平面中、身份管理通过进行管理 https://cloud.google.com/iam/docs/overview["身份访问管理(IAM)"^]。IAM是一项标准服务、可用于控制对Google Cloud项目实例的身份验证(登录)和授权(权限)。所有配置都使用Cloud Volumes Service API通过使用TLS 1.2加密的安全HTTPS传输执行、而身份验证则使用JWT令牌执行、以提高安全性。适用于Cloud Volumes Service 的Google控制台UI可将用户输入转换为Cloud Volumes Service API调用。
+
+
+
+== 安全强化—限制攻击面
+
+有效安全性的一部分是限制服务中可用的攻击面数。攻击面可能包括各种内容、包括空闲数据、正在传输的数据、登录信息以及数据集本身。
+
+托管服务可从其设计中消除某些固有的攻击面。基础架构管理、如一节所述 link:ncvs-gc-service-operation.html[""服务操作"、"] 由专门的团队处理、并可自动执行、以减少人员实际接触配置的次数、从而有助于减少有意和无意的错误数量。网络隔离、以便只有必要的服务才能彼此访问。加密会插入到数据存储中、只有数据平面需要Cloud Volumes Service 管理员的安全注意。通过隐藏API接口背后的大部分管理内容、可通过限制攻击面来实现安全性。
+
+
+
+== 零信任模式
+
+过去、IT安全理念一直是信任、但要进行验证、这种理念表现为仅依靠外部机制(例如防火墙和入侵检测系统)来缓解威胁。但是、攻击和违规行为演变成通过网络钓鱼、社交工程、内部威胁以及其他验证方法绕过环境中的验证、从而进入网络并造成严重破坏。
+
+Zero Trust已成为一种全新的安全方法、目前的口号是"不信任任何内容、但仍需验证一切"。 因此、默认情况下不允许访问任何内容。此命令可通过多种方式实施、包括标准防火墙和入侵检测系统(IDS)以及以下方法：
+
+* 强大的身份验证方法(例如AES加密的Kerberos或JWT令牌)
+* 单一强身份源(例如Windows Active Directory、轻型目录访问协议(LDAP)和Google IAM)
+* 网络分段和安全多租户(默认情况下仅允许租户访问)
+* 采用最低特权访问策略的粒度访问控制
+* 拥有数字审核和纸质跟踪的一小部分专属管理员
+
+
+在Google Cloud中运行的Cloud Volumes Service 通过实施"不信任、不验证一切"的立场、遵循零信任模式。
+
+
+
+== 加密
+
+对空闲数据进行加密(请参见一节 link:ncvs-gc-data-encryption-at-rest.html[""空闲数据加密""]) link:ncvs-gc-data-encryption-in-transit.html#nas-protocols#smb-encryption[""SMB加密""] 或NFS Kerberos 5p支持。您可以轻松了解跨区域复制传输是否受TLS 1.2加密保护(请参见一节 link:ncvs-gc-security-considerations-and-attack-surfaces.html#detection,-prevention-and-mitigation-of-ransomeware,-malware,-and-viruses#cross-region-replication[""跨区域复制""]）。此外、Google网络还提供加密通信(请参见一节 link:ncvs-gc-data-encryption-in-transit.html[""传输中的数据加密""])、以添加抵御攻击的保护层。有关传输加密的详细信息、请参见一节 link:ncvs-gc-data-encryption-in-transit.html#google-cloud-network[""Google Cloud network""]。
+
+
+
+== 数据保护和备份
+
+安全性不仅仅是为了防止攻击。此外、还需要了解我们如何从发生的攻击中恢复。此策略包括数据保护和备份。Cloud Volumes Service 提供了在发生中断时复制到其他区域的方法(请参见一节 link:ncvs-gc-security-considerations-and-attack-surfaces.html#detection,-prevention-and-mitigation-of-ransomeware,-malware,-and-viruses#cross-region-replication[""跨区域复制""])或数据集受勒索软件攻击影响时。此外、它还可以使用将数据异步备份到Cloud Volumes Service 实例以外的位置 link:ncvs-gc-security-considerations-and-attack-surfaces.html#detection,-prevention-and-mitigation-of-ransomeware,-malware,-and-viruses#cloud-volumes-service-backup["Cloud Volumes Service 备份"]。通过定期备份、减少安全事件所需的时间、为管理员节省资金并提高效率。
+
+
+
+== 利用行业领先的Snapshot副本快速减少勒索软件
+
+除了数据保护和备份之外、Cloud Volumes Service 还支持不可变的Snapshot副本(请参见一节) link:ncvs-gc-security-considerations-and-attack-surfaces.html#detection,-prevention-and-mitigation-of-ransomeware,-malware,-and-viruses#immutable-snapshot-copies[""不可变的Snapshot副本""])允许从勒索软件攻击中恢复的卷(请参见一节 link:ncvs-gc-service-operation.html[""服务操作""])在发现问题描述 后数秒内完成、中断最少。恢复时间和影响取决于Snapshot计划、但您可以创建Snapshot副本、在勒索软件攻击中只能提供一小时的增量。Snapshot副本对性能和容量使用的影响微乎其微、是一种低风险、高回报的数据集保护方法。

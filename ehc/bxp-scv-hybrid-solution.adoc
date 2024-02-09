@@ -1,0 +1,700 @@
+---
+sidebar: sidebar 
+permalink: ehc/bxp-scv-hybrid-solution.html 
+keywords: disaster recovery, vmc, vmware cloud, aws, amazon web services, nfs datastore, fsxn, fsx for ontap, fsx for netapp ontap, backup, restore, sql server, oracle 
+summary:  
+---
+= 3-2-1使用SnapCenter插件和适用于VM的BlueXP备份和恢复为VMware提供数据保护
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+作者：Jsh Powell—NetApp解决方案工程部
+
+
+
+== 概述
+
+3-2-1备份策略是行业认可的数据保护方法、可提供全面的方法来保护有价值的数据。  此策略非常可靠、可确保即使发生意外灾难、仍有可用数据的副本。
+
+该战略由三条基本规则组成：
+
+. 至少保留三份数据副本。这样可以确保即使一个副本丢失或损坏、您仍至少有两个剩余副本可供回退。
+. 将两个备份副本存储在不同的存储介质或设备上。多样化的存储介质有助于防止设备或介质特定的故障。如果一个设备损坏或一种介质发生故障、另一个备份副本不受影响。
+. 最后、确保至少有一个备份副本位于异地。异地存储可防止发生火灾或洪水等本地灾难、这些灾难可能会导致现场副本不可用。
+
+
+本解决方案文档介绍解决方案了使用适用于VMware vSphere的SnapCenter插件(SCV)为内部虚拟机创建主备份和二级备份的3-2-1备份、以及使用BlueXP备份和恢复为虚拟机将数据副本备份到云存储或StorageGRID。
+
+
+
+=== 用例
+
+此解决方案 可解决以下使用情形：
+
+* 使用适用于VMware vSphere的SnapCenter插件备份和还原内部虚拟机和数据存储库。
+* 备份和还原ONTAP集群上托管的内部虚拟机和数据存储库、并使用适用于虚拟机的BlueXP备份和恢复功能备份到对象存储。
+
+
+
+
+=== NetApp ONTAP数据存储
+
+ONTAP是NetApp行业领先的存储解决方案、无论您是通过SAN还是NAS协议访问、它都能提供统一存储。3-2-1备份策略可确保内部数据在多种介质类型上受到保护、NetApp提供的平台从高速闪存到低成本介质不等。
+
+image::bxp-scv-hybrid-40.png[ONTAP数据存储]
+
+有关NetApp所有硬件平台的详细信息、请查看 https://www.netapp.com/data-storage/["NetApp数据存储"]。
+
+
+
+=== 适用于 VMware vSphere 的 SnapCenter 插件
+
+适用于VMware vSphere的SnapCenter插件是一款数据保护产品、与VMware vSphere紧密集成、可轻松管理虚拟机的备份和还原。作为解决方案的一部分、SnapMirror提供了一种快速可靠的方法、可在二级ONTAP存储集群上为虚拟机数据创建第二个不可变化的备份副本。采用此架构后、可以轻松地从主备份位置或二级备份位置启动虚拟机还原操作。
+
+SCV使用OVA文件部署为Linux虚拟设备。现在、此插件将使用远程插件
+架构。远程插件在vCenter Server外部运行、并托管在SCV虚拟设备上。
+
+有关选择控制阀的详细信息，参见 https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/["适用于 VMware vSphere 的 SnapCenter 插件文档"]。
+
+
+
+=== 适用于虚拟机的BlueXP备份和恢复
+
+BlueXP备份和恢复是一款基于云的数据管理工具、可为内部和云环境中的各种备份和恢复操作提供单一控制平台。NetApp BlueXP备份和恢复套件的一部分是一项与适用于VMware vSphere的SnapCenter插件(内部)集成的功能、用于将数据副本扩展到云中的对象存储。这样可以为来自主存储备份或二级存储备份的异地数据创建第三个副本。通过BlueXP备份和恢复、您可以轻松设置存储策略、以便从这两个内置位置中的任何一个位置传输数据副本。
+
+在BlueXP备份和恢复中选择主备份和二级备份作为源将导致实施以下两种拓扑之一：
+
+*扇出拓扑*—适用于VMware vSphere的SnapCenter插件启动备份时，会立即创建本地快照。然后、SCV启动SnapMirror操作、将最新的快照复制到二级ONTAP集群。在BlueXP备份和恢复中、策略会将主ONTAP集群指定为要传输到所选云提供商中的对象存储的数据Snapshot副本的源。
+
+image::bxp-scv-hybrid-01.png[扇出拓扑,800,418]
+
+*级联拓扑*–使用SCV创建主数据副本和二级数据副本与上述扇出拓扑相同。但是、这一次在BlueXP备份和恢复中创建一个策略、指定对象存储备份将源自二级ONTAP集群。
+
+image::bxp-scv-hybrid-02.png[级联拓扑]
+
+BlueXP备份和恢复可以为内部ONTAP快照创建备份副本、并将其备份到AWS Glacie、Azure Blb和GCP归档存储。
+
+image::bxp-scv-hybrid-03.png[级联拓扑]
+
+此外、您还可以使用NetApp StorageGRID作为对象存储备份目标。有关StorageGRID的详细信息、请参阅 https://www.netapp.com/data-storage/storagegrid["StorageGRID登录页面"]。
+
+.解决方案 部署概述
+[%collapsible]
+====
+此列表提供了配置此解决方案以及从SCV和BlueXP备份和恢复执行备份和恢复操作所需的高级步骤：
+
+. 在要用于主数据副本和二级数据副本的ONTAP集群之间配置SnapMirror关系。
+. 配置适用于VMware vSphere的SnapCenter插件。
++
+.. 添加存储系统
+.. 创建备份策略
+.. 创建资源组
+.. 运行备份优先备份作业
+
+
+. 为虚拟机配置BlueXP备份和恢复
++
+.. 添加工作环境
+.. 发现SCV和vCenter设备
+.. 创建备份策略
+.. 激活备份
+
+
+. 使用SCV从主存储和二级存储还原虚拟机。
+. 使用BlueXP备份和还原从对象存储还原虚拟机。
+
+
+====
+.前提条件
+[%collapsible]
+====
+此解决方案的目的是演示对在VMware vSphere中运行且位于由NetApp ONTAP托管的NFS数据存储库上的虚拟机的数据保护。此解决方案 假定已配置以下组件并可供使用：
+
+. 使用NFS或VMFS数据存储库连接到VMware vSphere的ONTAP存储集群。支持NFS和VMFS数据存储库。此解决方案使用了NFS数据存储库。
+. 为用于NFS数据存储库的卷建立SnapMirror关系的二级ONTAP存储集群。
+. 为用于对象存储备份的云提供程序安装了BlueXP连接器。
+. 要备份的虚拟机位于主ONTAP存储集群上的NFS数据存储库中。
+. BlueXP连接器和内部ONTAP存储集群管理接口之间的网络连接。
+. BlueXP连接器和内部SCV设备VM之间以及BlueXP连接器和vCenter之间的网络连接。
+. 内部ONTAP集群间LUN和对象存储服务之间的网络连接。
+. 在主和二级ONTAP存储集群上为管理SVM配置了DNS。有关详细信息、请参见 https://docs.netapp.com/us-en/ontap/networking/configure_dns_for_host-name_resolution.html#configure-an-svm-and-data-lifs-for-host-name-resolution-using-an-external-dns-server["配置 DNS 以进行主机名解析"]。
+
+
+====
+
+
+== 高级架构
+
+此解决方案 的测试/验证是在可能与最终部署环境匹配或可能不匹配的实验室中执行的。
+
+image::bxp-scv-hybrid-04.png[解决方案 架构图]
+
+
+
+== 解决方案 部署
+
+在本解决方案中、我们详细说明了如何部署和验证解决方案、该利用适用于VMware vSphere的SnapCenter插件以及BlueXP备份和恢复功能、在内部数据中心的VMware vSphere集群中执行Windows和Linux虚拟机的备份和恢复。此设置中的虚拟机存储在ONTAP A300存储集群托管的NFS数据存储库中。此外、一个单独的ONTAP A300存储集群可用作使用SnapMirror复制的卷的二级目标。此外、Amazon Web Services和Azure Blb上托管的对象存储也用作数据第三个副本的目标。
+
+我们将继续为SCV管理的备份的二级副本创建SnapMirror关系、并在SCV和BlueXP备份和恢复中配置备份作业。
+
+有关适用于VMware vSphere的SnapCenter插件的详细信息、请参见 https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/["适用于 VMware vSphere 的 SnapCenter 插件文档"]。
+
+有关BlueXP备份和恢复的详细信息、请参阅 https://docs.netapp.com/us-en/bluexp-backup-recovery/index.html["BlueXP备份和恢复文档"]。
+
+
+
+=== 在ONTAP集群之间建立SnapMirror关系
+
+适用于VMware vSphere的SnapCenter插件使用ONTAP SnapMirror技术管理将二级SnapMirror和/或SnapVault副本传输到二级ONTAP集群的过程。
+
+选择控制阀备份策略可以选择使用SnapMirror或SnapVault关系。主要区别在于、使用SnapMirror选项时、在策略中为备份配置的保留计划在主位置和二级位置将相同。SnapVault专为归档而设计、使用此选项时、可以通过SnapMirror关系为二级ONTAP存储集群上的Snapshot副本建立单独的保留计划。
+
+可以在BlueXP中自动执行许多步骤来设置SnapMirror关系、也可以使用System Manager和ONTAP命令行界面来设置SnapMirror关系。下面将讨论所有这些方法。
+
+
+
+==== 与BlueXP建立SnapMirror关系
+
+必须从BlueXP Web控制台完成以下步骤：
+
+.主和二级ONTAP存储系统的复制设置
+[%collapsible]
+====
+首先登录到BlueXP Web控制台并导航到Canvas。
+
+. 将源(主) ONTAP存储系统拖放到目标(二级) ONTAP存储系统上。
++
+image::bxp-scv-hybrid-41.png[拖放存储系统]
+
+. 从显示的菜单中选择*复制*。
++
+image::bxp-scv-hybrid-42.png[选择复制]
+
+. 在*目标对等设置*页面上、选择要用于存储系统之间连接的目标集群间Lifs。
++
+image::bxp-scv-hybrid-43.png[选择集群间的"Lif"]
+
+. 在*目标卷名称*页面上、首先选择源卷、然后填写目标卷名称并选择目标SVM和聚合。单击“*下一步*”继续。
++
+image::bxp-scv-hybrid-44.png[选择源卷]
+
++
+image::bxp-scv-hybrid-45.png[目标卷详细信息]
+
+. 选择进行复制的最大传输速率。
++
+image::bxp-scv-hybrid-46.png[最大传输速率]
+
+. 选择用于确定二级备份的保留计划的策略。此策略可以事先创建(请参见下面的*创建快照保留策略*步骤中的手动过程)，也可以在创建后根据需要进行更改。
++
+image::bxp-scv-hybrid-47.png[选择保留策略]
+
+. 最后，查看所有信息，然后单击*go *按钮开始复制设置过程。
++
+image::bxp-scv-hybrid-48.png[查看并继续]
+
+
+
+====
+
+
+==== 使用System Manager和ONTAP命令行界面建立SnapMirror关系
+
+可以使用System Manager或ONTAP命令行界面完成建立SnapMirror关系所需的所有步骤。下一节提供了这两种方法的详细信息：
+
+.记录源和目标集群间逻辑接口
+[%collapsible]
+====
+对于源和目标ONTAP集群、您可以从System Manager或命令行界面检索集群间LIF信息。
+
+. 在ONTAP 系统管理器中、导航到"网络概述"页面、然后检索类型为"集群间"的IP地址、这些IP地址配置为与安装了FSX的AWS VPC进行通信。
++
+image:dr-vmc-aws-image10.png["错误：缺少图形映像"]
+
+. 要使用命令行界面检索集群间IP地址、请运行以下命令：
++
+....
+ONTAP-Dest::> network interface show -role intercluster
+....
+
+
+====
+.在ONTAP集群之间建立集群对等关系
+[%collapsible]
+====
+要在ONTAP 集群之间建立集群对等关系、必须在另一对等集群中确认在发起ONTAP 集群上输入的唯一密码短语。
+
+. 使用在目标ONTAP集群上设置对等关系 `cluster peer create` 命令：出现提示时、输入一个唯一的密码短语、稍后在源集群上使用该密码短语以完成创建过程。
++
+....
+ONTAP-Dest::> cluster peer create -address-family ipv4 -peer-addrs source_intercluster_1, source_intercluster_2
+Enter the passphrase:
+Confirm the passphrase:
+....
+. 在源集群上、您可以使用ONTAP 系统管理器或命令行界面建立集群对等关系。在ONTAP 系统管理器中、导航到"保护">"概述"、然后选择"对等集群"。
++
+image:dr-vmc-aws-image12.png["错误：缺少图形映像"]
+
+. 在对等集群对话框中、填写所需信息：
++
+.. 输入用于在目标ONTAP集群上建立对等集群关系的密码短语。
+.. 选择`是`以建立加密关系。
+.. 输入目标ONTAP集群的集群间LIF IP地址。
+.. 单击启动集群对等以完成此过程。
++
+image:dr-vmc-aws-image13.png["错误：缺少图形映像"]
+
+
+
+. 使用以下命令验证目标ONTAP集群的集群对等关系的状态：
++
+....
+ONTAP-Dest::> cluster peer show
+....
+
+
+====
+.建立SVM对等关系
+[%collapsible]
+====
+下一步是在目标和源Storage Virtual Machine之间设置SVM关系、这些虚拟机包含将处于SnapMirror关系中的卷。
+
+. 在源FSX集群中、从CLI使用以下命令创建SVM对等关系：
++
+....
+ONTAP-Dest::> vserver peer create -vserver DestSVM -peer-vserver Backup -peer-cluster OnPremSourceSVM -applications snapmirror
+....
+. 在源ONTAP 集群中、接受与ONTAP 系统管理器或命令行界面的对等关系。
+. 在ONTAP 系统管理器中、转到"保护">"概述"、然后在"Storage VM对等方"下选择"对等Storage VM"。
++
+image:dr-vmc-aws-image15.png["错误：缺少图形映像"]
+
+. 在对等Storage VM的对话框中、填写必填字段：
++
+** 源Storage VM
+** 目标集群
+** 目标Storage VM
++
+image:dr-vmc-aws-image16.png["错误：缺少图形映像"]
+
+
+
+. 单击对等Storage VM以完成SVM对等过程。
+
+
+====
+.创建快照保留策略
+[%collapsible]
+====
+SnapCenter 管理主存储系统上作为Snapshot副本存在的备份的保留计划。这是在SnapCenter 中创建策略时建立的。SnapCenter 不会管理二级存储系统上保留的备份的保留策略。这些策略通过在二级FSX集群上创建的SnapMirror策略单独管理、并与与与源卷具有SnapMirror关系的目标卷相关联。
+
+创建SnapCenter 策略时、您可以选择指定一个二级策略标签、该标签将添加到创建SnapCenter 备份时生成的每个快照的SnapMirror标签中。
+
+
+NOTE: 在二级存储上、这些标签与与与目标卷关联的策略规则匹配、以便强制保留快照。
+
+以下示例显示了一个SnapMirror标签、该标签位于作为SQL Server数据库和日志卷每日备份策略一部分生成的所有快照上。
+
+image:dr-vmc-aws-image17.png["错误：缺少图形映像"]
+
+有关为SQL Server数据库创建SnapCenter 策略的详细信息、请参见 https://docs.netapp.com/us-en/snapcenter/protect-scsql/task_create_backup_policies_for_sql_server_databases.html["SnapCenter 文档"^]。
+
+您必须先创建一个SnapMirror策略、其中包含指定要保留的Snapshot副本数量的规则。
+
+. 在FSX集群上创建SnapMirror策略。
++
+....
+ONTAP-Dest::> snapmirror policy create -vserver DestSVM -policy PolicyName -type mirror-vault -restart always
+....
+. 向策略添加SnapMirror标签与SnapCenter 策略中指定的二级策略标签匹配的规则。
++
+....
+ONTAP-Dest::> snapmirror policy add-rule -vserver DestSVM -policy PolicyName -snapmirror-label SnapMirrorLabelName -keep #ofSnapshotsToRetain
+....
++
+以下脚本提供了可添加到策略中的规则示例：
+
++
+....
+ONTAP-Dest::> snapmirror policy add-rule -vserver sql_svm_dest -policy Async_SnapCenter_SQL -snapmirror-label sql-ondemand -keep 15
+....
++
+
+NOTE: 为每个SnapMirror标签以及要保留的快照数量(保留期限)创建其他规则。
+
+
+
+====
+.创建目标卷
+[%collapsible]
+====
+要在ONTAP上创建目标卷、以便接收源卷的Snapshot副本、请在目标ONTAP集群上运行以下命令：
+
+....
+ONTAP-Dest::> volume create -vserver DestSVM -volume DestVolName -aggregate DestAggrName -size VolSize -type DP
+....
+====
+.在源卷和目标卷之间创建SnapMirror关系
+[%collapsible]
+====
+要在源卷和目标卷之间创建SnapMirror关系、请在目标ONTAP集群上运行以下命令：
+
+....
+ONTAP-Dest::> snapmirror create -source-path OnPremSourceSVM:OnPremSourceVol -destination-path DestSVM:DestVol -type XDP -policy PolicyName
+....
+====
+.初始化SnapMirror关系
+[%collapsible]
+====
+初始化SnapMirror关系。此过程将启动从源卷生成的新快照、并将其复制到目标卷。
+
+要创建卷、请在目标ONTAP集群上运行以下命令：
+
+....
+ONTAP-Dest::> snapmirror initialize -destination-path DestSVM:DestVol
+....
+====
+
+
+=== 配置适用于VMware vSphere的SnapCenter插件
+
+安装后、可从vCenter Server设备管理界面访问适用于VMware vSphere的SnapCenter插件。SCV将管理装载到ESXi主机且包含Windows和Linux VM的NFS数据存储库的备份。
+
+查看 https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_protect_data_overview.html["数据保护工作流"] 有关配置备份所涉及步骤的详细信息，请参阅选择控制阀文档的一节。
+
+要配置虚拟机和数据存储库的备份、需要从插件界面完成以下步骤。
+
+.Discovery ONTAP存储系统
+[%collapsible]
+====
+发现要用于主备份和二级备份的ONTAP存储集群。
+
+. 在适用于VMware vSphere的SnapCenter插件中，导航到左侧菜单中的*存储系统*，然后单击*Add*按钮。
++
+image::bxp-scv-hybrid-05.png[存储系统]
+
+. 填写主ONTAP存储系统的凭据和平台类型，然后单击*Add*。
++
+image::bxp-scv-hybrid-06.png[添加存储系统]
+
+. 对二级ONTAP存储系统重复此操作步骤。
+
+
+====
+.创建选择控制阀备份策略
+[%collapsible]
+====
+策略用于为SCV管理的备份指定保留期限、频率和复制选项。
+
+查看 https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_create_backup_policies_for_vms_and_datastores.html["为 VM 和数据存储库创建备份策略"] 有关详细信息、请参见文档中的第节。
+
+要创建备份策略、请完成以下步骤：
+
+. 在适用于VMware vSphere的SnapCenter插件中、导航到左侧菜单中的*策略*、然后单击*创建*按钮。
++
+image::bxp-scv-hybrid-07.png[策略]
+
+. 指定策略名称、保留期限、频率和复制选项以及快照标签。
++
+image::bxp-scv-hybrid-08.png[创建策略]
+
++
+
+NOTE: 在SnapCenter插件中创建策略时、您将看到SnapMirror和SnapVault的选项。如果选择SnapMirror、则主快照和二级快照在策略中指定的保留计划将相同。如果选择SnapVault、则二级快照的保留计划将基于通过SnapMirror关系实施的单独计划。如果您希望二级备份的保留期限更长、则此功能非常有用。
+
++
+
+NOTE: Snapshot标签非常有用、因为它们可用于为复制到二级ONTAP集群的SnapVault副本制定具有特定保留期限的策略。如果将SCV与BlueXP备份和还原结合使用、则Snapshot标签字段必须为空、或者[Underline]#Match#是BlueXP备份策略中指定的标签。
+
+. 对所需的每个策略重复操作步骤。例如、为每日、每周和每月备份分别设置策略。
+
+
+====
+.创建资源组
+[%collapsible]
+====
+资源组包含要包含在备份作业中的数据存储库和虚拟机、以及关联的策略和备份计划。
+
+查看 https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_create_resource_groups_for_vms_and_datastores.html["创建资源组"] 有关详细信息、请参见文档中的第节。
+
+要创建资源组，请完成以下步骤。
+
+. 在适用于VMware vSphere的SnapCenter插件中、导航到左侧菜单中的*资源组*、然后单击*创建*按钮。
++
+image::bxp-scv-hybrid-09.png[创建资源组]
+
+. 在创建资源组向导中、输入组的名称和问题描述以及接收通知所需的信息。单击“*下一步*”
+. 在下一页上、选择要包含在备份作业中的数据存储库和虚拟机、然后单击*下一步*。
++
+image::bxp-scv-hybrid-10.png[选择数据存储库和虚拟机]
+
++
+
+NOTE: 您可以选择特定虚拟机或整个数据存储库。无论选择哪种方式、都会备份整个卷(和数据存储库)、因为备份是通过为底层卷创建快照来完成的。在大多数情况下、最简单的方法是选择整个数据存储库。但是、如果要在还原时限制可用VM的列表、则只能选择一部分VM进行备份。
+
+. 为VMDK位于多个数据存储库上的VM选择跨数据存储库选项、然后单击*下一步*。
++
+image::bxp-scv-hybrid-11.png[跨数据存储库]
+
++
+
+NOTE: BlueXP备份和恢复目前不支持使用跨多个数据存储库的VMDK备份VM。
+
+. 在下一页中，选择要与资源组关联的策略，然后单击*Next*。
++
+image::bxp-scv-hybrid-12.png[资源组策略]
+
++
+
+NOTE: 使用BlueXP备份和恢复将SCV管理的快照备份到对象存储时、每个资源组只能与一个策略相关联。
+
+. 选择一个计划、以确定备份的运行时间。单击“*下一步*”。
++
+image::bxp-scv-hybrid-13.png[资源组策略]
+
+. 最后，查看摘要页，然后在*Finish (完成)*上完成资源组的创建。
+
+
+====
+.运行备份作业
+[%collapsible]
+====
+在最后一步中、运行备份作业并监控其进度。必须在SCV中至少成功完成一个备份作业、然后才能从BlueXP备份和恢复中发现资源。
+
+. 在适用于VMware vSphere的SnapCenter插件中、导航到左侧菜单中的*资源组*。
+. 要启动备份作业，请选择所需的资源组，然后单击*立即运行*按钮。
++
+image::bxp-scv-hybrid-14.png[运行备份作业]
+
+. 要监控备份作业，请导航至左侧菜单中的*Dashboard。在*近期工作活动*下，单击工作ID号以监视工作进度。
++
+image::bxp-scv-hybrid-15.png[监控作业进度]
+
+
+
+====
+
+
+=== 在BlueXP备份和恢复中配置对象存储备份
+
+要使BlueXP有效管理数据基础架构、需要事先安装Connector。Connector执行发现资源和管理数据操作所涉及的操作。
+
+有关BlueXP Connector的详细信息、请参阅 https://docs.netapp.com/us-en/bluexp-setup-admin/concept-connectors.html["了解连接器"] BlueXP文档中的。
+
+为正在使用的云提供程序安装连接器后、可以从Canvas中查看对象存储的图形表示。
+
+要将BlueXP备份和恢复配置为备份由内部SCV管理的数据、请完成以下步骤：
+
+.将工作环境添加到画布中
+[%collapsible]
+====
+第一步是将内部ONTAP存储系统添加到BlueXP
+
+. 从“画布”中选择*添加工作环境*开始。
++
+image::bxp-scv-hybrid-16.png[添加工作环境]
+
+. 从所选位置中选择*内部*，然后单击*发现*按钮。
++
+image::bxp-scv-hybrid-17.png[选择内部部署]
+
+. 填写ONTAP存储系统的凭据，然后单击*Discover (发现)*按钮以添加工作环境。
++
+image::bxp-scv-hybrid-18.png[添加存储系统凭据]
+
+
+
+====
+.了解内部SCV设备和vCenter
+[%collapsible]
+====
+要发现内部数据存储库和虚拟机资源、请添加SCV数据代理的信息以及vCenter管理设备的凭据。
+
+. 从BlueXP左侧菜单中选择*保护>备份和恢复>虚拟机*
++
+image::bxp-scv-hybrid-19.png[选择虚拟机]
+
+. 从虚拟机主屏幕访问*设置*下拉菜单并选择*适用于VMware vSphere的SnapCenter插件*。
++
+image::bxp-scv-hybrid-20.png[设置下拉菜单]
+
+. 单击*注册*按钮、然后输入SnapCenter插件设备的IP地址和端口号以及vCenter管理设备的用户名和密码。单击*注册*按钮开始发现过程。
++
+image::bxp-scv-hybrid-21.png[输入SCV和vCenter信息]
+
+. 可以通过作业监控选项卡监控作业进度。
++
+image::bxp-scv-hybrid-22.png[查看作业进度]
+
+. 发现完成后、您将能够查看所有已发现的SCV设备中的数据存储库和虚拟机。
+ +
+图像：：bxp-SCV hyby-23.png[查看可用资源]
+
+
+====
+.创建BlueXP备份策略
+[%collapsible]
+====
+在适用于虚拟机的BlueXP备份和恢复中、创建策略以指定保留期限、备份源和归档策略。
+
+有关创建策略的详细信息、请参见 https://docs.netapp.com/us-en/bluexp-backup-recovery/task-create-policies-vms.html["创建一个策略以备份数据存储库"]。
+
+. 从虚拟机的BlueXP备份和恢复主页中、访问*设置*下拉菜单并选择*策略*。
++
+image::bxp-scv-hybrid-24.png[选择虚拟机]
+
+. 单击*创建策略*以访问*为混合备份创建策略*窗口。
++
+.. 为策略添加名称
+.. 选择所需的保留期限
+.. 选择是从内部ONTAP主存储系统还是从二级存储系统获取备份
+.. (可选)指定备份分层到归档存储的时间期限、以节省更多成本。
++
+image::bxp-scv-hybrid-25.png[创建备份策略]
+
++
+
+NOTE: 此处输入的SnapMirror标签用于标识要应用此策略的备份。标签名称必须与相应的内部SCV策略中的标签名称匹配。
+
+
+
+. 单击*创建*以完成策略创建。
+
+
+====
+.将数据存储库备份到Amazon Web Services
+[%collapsible]
+====
+最后一步是为各个数据存储库和虚拟机激活数据保护。以下步骤概述了如何激活备份到AWS。
+
+有关详细信息、请参见 https://docs.netapp.com/us-en/bluexp-backup-recovery/task-backup-vm-data-to-aws.html["将数据存储库备份到Amazon Web Services"]。
+
+. 从虚拟机的BlueXP备份和恢复主页中，访问要备份的数据存储库的设置下拉列表，然后选择*Activate Backup*。
++
+image::bxp-scv-hybrid-26.png[激活备份]
+
+. 分配要用于数据保护操作的策略，然后单击*Next*。
++
+image::bxp-scv-hybrid-27.png[分配策略]
+
+. 如果先前已发现数据存储库和工作环境，则会在“*添加工作环境”页面上显示带有复选标记的数据存储库和工作环境。如果以前未发现工作环境、您可以在此处添加它。单击“*下一步*”继续。
++
+image::bxp-scv-hybrid-28.png[添加工作环境]
+
+. 在*选择提供商*页面上单击AWS、然后单击*下一步*按钮继续。
++
+image::bxp-scv-hybrid-29.png[选择云提供商]
+
+. 填写AWS的提供商专用凭据信息、包括要使用的AWS访问密钥和机密密钥、区域和归档层。此外、请为内部ONTAP存储系统选择ONTAP IP空间。单击“*下一步*”。
++
+image::bxp-scv-hybrid-30.png[提供云提供凭据]
+
+. 最后，查看备份作业详细信息，然后单击*Activate Backup*按钮以启动数据存储库的数据保护。
++
+image::bxp-scv-hybrid-31.png[查看并激活]
+
++
+
+NOTE: 此时、数据传输可能不会立即开始。BlueXP备份和恢复每小时扫描一次任何未完成的快照、然后将其传输到对象存储。
+
+
+
+====
+
+
+=== 在数据丢失的情况下还原虚拟机
+
+确保数据安全只是全面数据保护的一个方面。在发生数据丢失或勒索软件攻击时、能够从任何位置快速还原数据同样至关重要。此功能对于保持无缝业务运营和满足恢复点目标至关重要。
+
+NetApp提供高度适应性的3-2-1策略、可对主存储、二级存储和对象存储位置的保留计划进行自定义控制。此策略可以灵活地根据特定需求定制数据保护方法。
+
+本节简要介绍了从适用于VMware vSphere的SnapCenter插件和适用于虚拟机的BlueXP备份和恢复执行数据还原的过程。
+
+
+
+==== 从适用于VMware vSphere的SnapCenter插件还原虚拟机
+
+对于此解决方案虚拟机、已还原到原始位置和备用位置。本解决方案不会涵盖选择控制阀数据恢复能力的所有方面。有关选择控制阀所能提供的所有深度信息，参见 https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_restore_vms_from_backups.html["从备份还原 VM"] 在产品文档中。
+
+.从选择控制阀恢复虚拟机
+[%collapsible]
+====
+要从主存储或二级存储还原虚拟机、请完成以下步骤。
+
+. 从vCenter Client导航到*清单>存储*、然后单击包含要还原的虚拟机的数据存储库。
+. 从*配置*选项卡单击*备份*以访问可用备份列表。
++
+image::bxp-scv-hybrid-32.png[访问备份列表]
+
+. 单击备份以访问VM列表、然后选择要还原的VM。单击*Restore*。
++
+image::bxp-scv-hybrid-33.png[选择要还原的虚拟机]
+
+. 在还原向导中、选择还原整个虚拟机或特定VMDK。选择此选项可安装到原始位置或备用位置、并在还原后提供虚拟机名称和目标数据存储库。单击 * 下一步 * 。
++
+image::bxp-scv-hybrid-34.png[提供还原详细信息]
+
+. 选择从主存储位置或二级存储位置进行备份。
++
+image::bxp-scv-hybrid-35.png[选择主卷或二级卷]
+
+. 最后、查看备份作业的摘要、然后单击完成开始还原过程。
+
+
+====
+
+
+==== 从虚拟机的BlueXP备份和恢复还原虚拟机
+
+通过对虚拟机进行BlueXP备份和恢复、可以将虚拟机还原到其原始位置。还原功能可通过BlueXP Web控制台访问。
+
+有关详细信息、请参见 https://docs.netapp.com/us-en/bluexp-backup-recovery/task-restore-vm-data.html["从云中还原虚拟机数据"]。
+
+.从BlueXP备份和恢复还原虚拟机
+[%collapsible]
+====
+要从BlueXP备份和恢复还原虚拟机、请完成以下步骤。
+
+. 导航到*保护>备份和恢复>虚拟机*，然后单击虚拟机以查看可还原的虚拟机列表。
++
+image::bxp-scv-hybrid-36.png[VM的访问列表]
+
+. 访问要还原的虚拟机的设置下拉菜单、然后选择
++
+image::bxp-scv-hybrid-37.png[选择Restore from settings (从设置还原)]
+
+. 选择要从中进行还原的备份，然后单击*Next*。
++
+image::bxp-scv-hybrid-38.png[选择备份]
+
+. 查看备份作业的摘要，然后单击*Restore*以启动恢复过程。
+. 通过*作业监控*选项卡监控恢复作业的进度。
++
+image::bxp-scv-hybrid-39.png[从作业监控选项卡查看还原]
+
+
+
+====
+
+
+== 结论
+
+通过适用于VMware vSphere的SnapCenter插件和适用于虚拟机的BlueXP备份和恢复实施3-2-1备份策略后、可提供强大、可靠且经济高效的解决方案来实现数据保护。此策略不仅可以确保数据冗余和可访问性、还可以灵活地从任何位置以及内部ONTAP存储系统和基于云的对象存储还原数据。
+
+本文档中提供的用例重点介绍经验证的数据保护技术、这些技术重点介绍了NetApp、VMware和领先云提供商之间的集成。适用于VMware vSphere的SnapCenter插件可与VMware vSphere无缝集成、从而可以高效地集中管理数据保护操作。这种集成简化了虚拟机的备份和恢复流程、从而可以在VMware生态系统中轻松地计划、监控和灵活地执行还原操作。适用于虚拟机的BlueXP备份和恢复通过将虚拟机数据安全地通过空中映射备份到基于云的对象存储、提供3-2-1中的一(1)个备份。直观的界面和逻辑工作流为关键数据的长期归档提供了一个安全平台。
+
+
+
+== 追加信息
+
+要详细了解此解决方案 中提供的技术、请参阅以下追加信息。
+
+* https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/["适用于 VMware vSphere 的 SnapCenter 插件文档"]
+* https://docs.netapp.com/us-en/bluexp-family/["BlueXP文档"]
+

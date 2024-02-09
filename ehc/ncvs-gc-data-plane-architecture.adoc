@@ -1,0 +1,35 @@
+---
+sidebar: sidebar 
+permalink: ehc/ncvs-gc-data-plane-architecture.html 
+keywords: cloud volumes service, google cloud, service networking, vpc peering 
+summary: 适用于Google Cloud的Cloud Volumes Service 利用Google Cloud私有服务访问框架。在此框架中、用户可以连接到Cloud Volumes Service。此框架像使用其他Google Cloud服务一样使用服务网络和VPC对等结构、确保租户之间完全隔离。 
+---
+= 数据平台架构
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+适用于Google Cloud的Cloud Volumes Service 利用了Google Cloud https://cloud.google.com/vpc/docs/configure-private-services-access["私有服务访问"^] 框架。在此框架中、用户可以连接到Cloud Volumes Service。此框架像使用其他Google Cloud服务一样使用服务网络和VPC对等结构、确保租户之间完全隔离。
+
+有关适用于Google Cloud的Cloud Volumes Service 架构概述、请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/architecture["适用于Cloud Volumes Service 的架构"^]。
+
+用户vPC (独立或共享)与托管卷的Cloud Volumes Service 托管租户项目中的vPC建立对等关系。
+
+image:ncvs-gc-image5.png["错误：缺少图形映像"]
+
+上图显示了一个项目(中间为CVS使用者项目)、其中三个VPC网络连接到Cloud Volumes Service 、多个计算引擎VM (GCE1-7)共享卷：
+
+* VC1允许GCE1访问卷A和B
+* VPC2允许GCE2和GCE4访问卷C
+* 第三个VPC网络是一个共享VPC、与两个服务项目共享。它允许GCE3、GCE4、GCE5和GCE6访问卷D和E只有CVS-Performance服务类型的卷才支持共享VPC网络。
+
+
+
+NOTE: GCE7无法访问任何卷。
+
+可以在Cloud Volumes Service 中对传输中(使用Kerberos和/或SMB加密)和空闲数据进行加密。

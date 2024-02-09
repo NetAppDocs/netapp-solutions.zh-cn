@@ -1,0 +1,440 @@
+---
+sidebar: sidebar 
+permalink: ehc/azure-guest-dr-cvo.html 
+keywords: tr4935, 4935, azure, avs, jetstream, guest connect, dr, disaster recovery 
+summary: 将灾难恢复到云是一种具有弹性且经济高效的方式、可保护工作负载免受站点中断和勒索软件等数据损坏事件的影响。借助NetApp SnapMirror、可以将使用来宾连接存储的内部VMware工作负载复制到在Azure中运行的NetApp Cloud Volumes ONTAP。 
+---
+= 使用CVO和AVS进行灾难恢复(来宾连接存储)
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== 概述
+
+作者：NetApp公司Ravi BCB和Niyaz Mohamed
+
+将灾难恢复到云是一种具有弹性且经济高效的方式、可保护工作负载免受站点中断和勒索软件等数据损坏事件的影响。借助NetApp SnapMirror、可以将使用来宾连接存储的内部VMware工作负载复制到在Azure中运行的NetApp Cloud Volumes ONTAP。其中包括应用程序数据；但是、实际VM本身又如何。灾难恢复应涵盖所有相关组件、包括虚拟机、VMDK、应用程序数据等。为此、可以使用SnapMirror以及Jetstream无缝恢复从内部复制到Cloud Volumes ONTAP 的工作负载、同时对VM VMDK使用vSAN存储。
+
+本文档提供了使用NetApp SnapMirror、Jetstream和Azure VMware解决方案 (AVS)设置和执行灾难恢复的分步方法。
+
+image:dr-cvo-avs-image1.png["错误：缺少图形映像"]
+
+
+
+== 假设
+
+本文档重点介绍应用程序数据的子系统内存储(也称为子系统连接)、我们假定内部环境正在使用SnapCenter 进行应用程序一致的备份。
+
+
+NOTE: 本文档将对任何第三方备份或恢复解决方案 进行适用场景。根据环境中使用的解决方案 、按照最佳实践创建符合组织SLA的备份策略。
+
+要在内部环境与Azure虚拟网络之间建立连接、请使用Express route全局访问或具有VPN网关的虚拟WAN。应根据内部VLAN设计创建分段。
+
+
+NOTE: 将内部数据中心连接到Azure有多种选项、这使我们无法在本文档中概述特定的工作流。有关适当的内部到Azure连接方法、请参见Azure文档。
+
+
+
+== 部署DR解决方案
+
+
+
+=== 解决方案 部署概述
+
+. 确保使用具有必要RPO要求的SnapCenter 备份应用程序数据。
+. 在相应的订阅和虚拟网络中使用Cloud Manager使用正确的实例大小配置Cloud Volumes ONTAP。
++
+.. 为相关应用程序卷配置SnapMirror。
+.. 更新SnapCenter 中的备份策略、以便在计划作业完成后触发SnapMirror更新。
+
+
+. 在内部数据中心安装Jetstream灾难恢复软件、并启动虚拟机保护。
+. 在Azure VMware解决方案 私有云中安装Jetstream DR软件。
+. 在灾难事件期间、使用Cloud Manager中断SnapMirror关系、并触发虚拟机故障转移到指定AVS灾难恢复站点中的Azure NetApp Files 或vSAN数据存储库。
++
+.. 重新连接应用程序VM的iSCSI LUN和NFS挂载。
+
+
+. 在主站点恢复之后、通过反向重新同步SnapMirror来调用对受保护站点的故障恢复。
+
+
+
+
+=== 部署详细信息
+
+.在Azure上配置CVO并将卷复制到CVO
+[%collapsible]
+====
+第一步是在Azure上配置Cloud Volumes ONTAP (https://docs.netapp.com/us-en/netapp-solutions/ehc/azure-guest.html["链接。"^])并使用所需的频率和快照保留将所需的卷复制到Cloud Volumes ONTAP。
+
+image:dr-cvo-avs-image2.png["错误：缺少图形映像"]
+
+====
+.配置AVS主机和CVO数据访问
+[%collapsible]
+====
+部署SDDC时需要考虑的两个重要因素是Azure VMware解决方案 中SDDC集群的大小以及SDDC的持续运行时间。对于灾难恢复解决方案 、这两个主要注意事项有助于降低整体运营成本。SDDC可以小至三台主机、在整个规模的部署中一直到多主机集群。
+
+部署AVS集群的决定主要取决于RPO/RTO要求。借助Azure VMware解决方案 、可以及时配置SDDC、以便为测试或实际灾难事件做好准备。及时部署的SDDC可在您不应对灾难时节省ESXi主机成本。但是、在配置SDDC时、这种部署形式会影响RTO几小时。
+
+最常见的部署选项是、SDDC以无中断的引导模式运行。此选项占用的空间很小、可容纳三台始终可用的主机、还可以通过为模拟活动和合规性检查提供运行基线来加快恢复操作的速度、从而避免生产站点和灾难恢复站点之间发生操作偏差的风险。当需要处理实际灾难恢复事件时、可以快速将引导灯集群扩展到所需的级别。
+
+要配置AVS SDDC (无论是按需配置还是在指示灯模式下配置)、请参见 https://docs.netapp.com/us-en/netapp-solutions/ehc/azure-setup.html["在 Azure 上部署和配置虚拟化环境"^]。前提条件是、在建立连接后、验证AVS主机上的子虚拟机是否能够使用Cloud Volumes ONTAP 中的数据。
+
+正确配置Cloud Volumes ONTAP 和AVS后、请使用VAIO机制并利用SnapMirror将应用程序卷副本复制到Cloud Volumes ONTAP 、开始配置Jetstream、以便自动将内部工作负载恢复到AVS (具有应用程序VMDK的VM和具有来宾存储的VM)。
+
+====
+.在内部数据中心中安装Jetstream DR
+[%collapsible]
+====
+Jetstream灾难恢复软件由三个主要组件组成：Jetstream灾难恢复管理服务器虚拟设备(Virtual Appliance、MSA)、灾难恢复虚拟设备(DR Virtual Appliance、DRVA)和主机组件(I/O筛选器软件包)。MSA用于在计算集群上安装和配置主机组件、然后管理Jetstream DR软件。安装过程如下：
+
+. 检查前提条件。
+. 运行容量规划工具以获取资源和配置建议。
+. 将Jetstream DR MSA部署到指定集群中的每个vSphere主机。
+. 在浏览器中使用其DNS名称启动MSA。
+. 向MSA注册vCenter Server。
+. 部署Jetstream DR MSA并注册vCenter Server后、导航到vSphere Web Client中的Jetstream DR插件。可通过导航到"数据中心">"配置">"Jetstream DR"来完成此操作。
++
+image:dr-cvo-avs-image3.png["错误：缺少图形映像"]
+
+. 在Jetstream DR界面中、完成以下任务：
++
+.. 使用I/O筛选器软件包配置集群。
++
+image:dr-cvo-avs-image4.png["错误：缺少图形映像"]
+
+.. 添加位于恢复站点的Azure Blob存储。
++
+image:dr-cvo-avs-image5.png["错误：缺少图形映像"]
+
+
+
+. 从设备选项卡部署所需数量的灾难恢复虚拟设备(DR Virtual Appliances、DRVA)。
++
+
+NOTE: 使用容量规划工具估计所需的DRBA数量。
+
++
+image:dr-cvo-avs-image6.png["错误：缺少图形映像"]
+
++
+image:dr-cvo-avs-image7.png["错误：缺少图形映像"]
+
+. 使用可用数据存储库或独立的共享iSCSI存储池中的VMDK为每个DRVA创建复制日志卷。
++
+image:dr-cvo-avs-image8.png["错误：缺少图形映像"]
+
+. 在受保护域选项卡中、使用Azure Blob Storage站点、DRVA实例和复制日志的相关信息创建所需数量的受保护域。受保护域定义集群中一个或一组同时受保护的应用程序VM、并为故障转移/故障恢复操作分配优先级顺序。
++
+image:dr-cvo-avs-image9.png["错误：缺少图形映像"]
+
++
+image:dr-cvo-avs-image10.png["错误：缺少图形映像"]
+
+. 选择要保护的VM、并根据依赖关系将这些VM分组到应用程序组中。通过应用程序定义、您可以将VM集分组到逻辑组中、这些逻辑组包含其启动顺序、启动延迟以及可在恢复时执行的可选应用程序验证。
++
+
+NOTE: 确保对受保护域中的所有VM使用相同的保护模式。
+
++
+
+NOTE: 回写(VMDK)模式可提供更高的性能。
+
++
+image:dr-cvo-avs-image11.png["错误：缺少图形映像"]
+
+. 确保将复制日志卷放置在高性能存储上。
++
+image:dr-cvo-avs-image12.png["错误：缺少图形映像"]
+
+. 完成后、单击受保护域的开始保护。此时将开始将选定虚拟机的数据复制到指定的Blob存储。
++
+image:dr-cvo-avs-image13.png["错误：缺少图形映像"]
+
+. 复制完成后、虚拟机保护状态将标记为可恢复。
++
+image:dr-cvo-avs-image14.png["错误：缺少图形映像"]
+
++
+
+NOTE: 可以对故障转移运行手册进行配置、以便对VM (称为恢复组)进行分组、设置启动顺序以及修改CPU/内存设置以及IP配置。
+
+. 单击设置、然后单击运行手册配置链接以配置运行手册组。
++
+image:dr-cvo-avs-image15.png["错误：缺少图形映像"]
+
+. 单击创建组按钮开始创建新的运行手册组。
++
+
+NOTE: 如果需要、请在屏幕下部应用自定义预脚本和后脚本、以便在运行手册组执行操作之前和之后自动运行。确保Runbook脚本驻留在管理服务器上。
+
++
+image:dr-cvo-avs-image16.png["错误：缺少图形映像"]
+
+. 根据需要编辑VM设置。指定用于恢复VM的参数、包括启动顺序、启动延迟(以秒为单位指定)、CPU数量以及要分配的内存量。单击向上或向下箭头更改VM的启动顺序。此外、还提供了用于保留MAC的选项。
++
+image:dr-cvo-avs-image17.png["错误：缺少图形映像"]
+
+. 可以为组中的各个VM手动配置静态IP地址。单击虚拟机的NIC视图链接以手动配置其IP地址设置。
++
+image:dr-cvo-avs-image18.png["错误：缺少图形映像"]
+
+. 单击配置按钮以保存相应虚拟机的NIC设置。
++
+image:dr-cvo-avs-image19.png["错误：缺少图形映像"]
+
++
+image:dr-cvo-avs-image20.png["错误：缺少图形映像"]
+
+
+
+现在、故障转移和故障恢复运行手册的状态均列为已配置。故障转移和故障恢复操作手册组会使用相同的初始VM和设置成对创建。如有必要、可以通过单击相应的详细信息链接并进行更改来单独自定义任何运行手册组的设置。
+
+====
+.在私有云中安装Jetstream DR for AVS
+[%collapsible]
+====
+恢复站点(AVS)的一个最佳实践是、提前创建一个三节点的试用集群。这样可以对恢复站点基础架构进行预配置、其中包括以下内容：
+
+* 目标网络分段、防火墙、DHCP和DNS等服务等
+* 安装适用于AVS的Jetstream DR
+* 将ANF卷配置为数据存储库等
+
+
+Jetstream DR支持任务关键型域采用接近零的RTO模式。对于这些域、应预安装目标存储。在这种情况下、建议使用ANF存储类型。
+
+
+NOTE: 应在AVS集群上配置网络配置、包括创建网段、以满足内部部署要求。
+
+
+NOTE: 根据SLA和RTO要求、您可以使用持续故障转移或常规(标准)故障转移模式。对于接近零的RTO、您应在恢复站点开始持续重新水化。
+
+. 要在Azure VMware解决方案 私有云上安装Jetstream DR for AVS、请使用Run命令。从Azure门户中、转到Azure VMware解决方案 、选择私有云、然后选择运行命令>软件包> JSDR.Configuration。
++
+
+NOTE: Azure VMware解决方案 的默认CloudAdmin用户没有足够的权限来安装适用于AVS的Jetstream DR。Azure VMware解决方案 通过调用适用于Jetstream DR的Azure VMware解决方案 Run命令、可以简化并自动安装Jetstream DR。
+
++
+以下屏幕截图显示了使用基于DHCP的IP地址进行安装的情况。
+
++
+image:dr-cvo-avs-image21.png["错误：缺少图形映像"]
+
+. 完成适用于AVS的Jetstream DR安装后、刷新浏览器。要访问Jetstream DR UI、请转到SDDC Datacenter >配置> Jetstream DR。
++
+image:dr-cvo-avs-image22.png["错误：缺少图形映像"]
+
+. 在Jetstream DR界面中、完成以下任务：
++
+.. 添加用于将内部集群作为存储站点进行保护的Azure Blob Storage帐户、然后运行扫描域选项。
+.. 在显示的弹出对话框窗口中、选择要导入的受保护域、然后单击其导入链接。
++
+image:dr-cvo-avs-image23.png["错误：缺少图形映像"]
+
+
+
+. 已导入此域以进行恢复。转到"受保护域"选项卡并验证是否已选择目标域、或者从"选择受保护域"菜单中选择所需域。此时将显示受保护域中可恢复的VM列表。
++
+image:dr-cvo-avs-image24.png["错误：缺少图形映像"]
+
+. 导入受保护域后、部署DRVA设备。
++
+
+NOTE: 也可以使用CPT创建的计划自动执行这些步骤。
+
+. 使用可用的vSAN或ANF数据存储库创建复制日志卷。
+. 导入受保护域并配置恢复VA以使用ANF数据存储库放置VM。
++
+image:dr-cvo-avs-image25.png["错误：缺少图形映像"]
+
++
+
+NOTE: 确保选定网段上已启用DHCP、并且有足够的可用IP。在恢复域时、系统会临时使用动态IP。每个正在恢复的VM (包括持续重新融合)都需要一个单独的动态IP。恢复完成后、此IP将被释放并可重复使用。
+
+. 选择相应的故障转移选项(持续故障转移或故障转移)。在此示例中、选择了持续再融合(持续故障转移)。
++
+
+NOTE: 尽管执行配置时的持续故障转移和故障转移模式有所不同、但这两种故障转移模式都使用相同的步骤进行配置。在发生灾难事件时、可以同时配置和执行故障转移步骤。可以随时配置持续故障转移、然后允许在正常系统运行期间在后台运行。发生灾难事件后、将完成持续故障转移、以便立即将受保护VM的所有权转移到恢复站点(接近零的RTO)。
+
++
+image:dr-cvo-avs-image26.png["错误：缺少图形映像"]
+
+
+
+持续故障转移过程开始、可从UI监控其进度。单击当前步骤部分中的蓝色图标将显示一个弹出窗口、其中显示了故障转移过程当前步骤的详细信息。
+
+====
+.故障转移和故障恢复
+[%collapsible]
+====
+. 在内部环境的受保护集群发生灾难(部分或完整故障)后、您可以在中断相应应用程序卷的SnapMirror关系后使用Jetstream为VM触发故障转移。
++
+image:dr-cvo-avs-image27.png["错误：缺少图形映像"]
+
++
+image:dr-cvo-avs-image28.png["错误：缺少图形映像"]
+
++
+
+NOTE: 此步骤可以轻松地自动执行、以便于恢复过程。
+
+. 在AVS SDDC (目标端)上访问Jetstream UI并触发故障转移选项以完成故障转移。任务栏将显示故障转移活动的进度。
++
+在完成故障转移时显示的对话框窗口中、可以按计划或假定强制指定故障转移任务。
+
++
+image:dr-cvo-avs-image29.png["错误：缺少图形映像"]
+
++
+image:dr-cvo-avs-image30.png["错误：缺少图形映像"]
+
++
+强制故障转移假定主站点不再可访问、并且恢复站点应直接接管受保护域的所有权。
+
++
+image:dr-cvo-avs-image31.png["错误：缺少图形映像"]
+
++
+image:dr-cvo-avs-image32.png["错误：缺少图形映像"]
+
+. 持续故障转移完成后、将显示一条消息、确认任务完成。任务完成后、访问已恢复的VM以配置iSCSI或NFS会话。
++
+
+NOTE: 故障转移模式将更改为在故障转移中运行、并且VM状态可恢复。受保护域中的所有VM现在都在恢复站点上以故障转移操作手册设置指定的状态运行。
+
++
+
+NOTE: 要验证故障转移配置和基础架构、可以在测试模式(测试故障转移选项)下运行Jetstream DR、以观察虚拟机及其数据从对象存储恢复到测试恢复环境的过程。在测试模式下执行故障转移操作步骤 时、其操作类似于实际的故障转移过程。
+
++
+image:dr-cvo-avs-image33.png["错误：缺少图形映像"]
+
+. 恢复虚拟机后、请对子系统中的存储使用存储灾难恢复。要演示此过程、请在此示例中使用SQL Server。
+. 登录到AVS SDDC上已恢复的SnapCenter VM并启用灾难恢复模式。
++
+.. 使用browserN访问SnapCenter UI。
++
+image:dr-cvo-avs-image34.png["错误：缺少图形映像"]
+
+.. 在设置页面中、导航到设置>全局设置>灾难恢复。
+.. 选择启用灾难恢复。
+.. 单击应用。
++
+image:dr-cvo-avs-image35.png["错误：缺少图形映像"]
+
+.. 单击"监控">"作业"以验证是否已启用灾难恢复作业。
++
+
+NOTE: 应使用NetApp SnapCenter 4.6或更高版本进行存储灾难恢复。对于先前版本、应使用应用程序一致的快照(使用SnapMirror复制)、如果必须在灾难恢复站点中恢复先前的备份、则应执行手动恢复。
+
+
+
+. 确保SnapMirror关系已断开。
++
+image:dr-cvo-avs-image36.png["错误：缺少图形映像"]
+
+. 使用相同的驱动器号将LUN从Cloud Volumes ONTAP 连接到已恢复的SQL子虚拟机。
++
+image:dr-cvo-avs-image37.png["错误：缺少图形映像"]
+
+. 打开iSCSI启动程序、清除先前已断开连接的会话、然后为复制的Cloud Volumes ONTAP 卷添加新目标以及多路径。
++
+image:dr-cvo-avs-image38.png["错误：缺少图形映像"]
+
+. 确保使用DR之前使用的相同驱动器盘符连接所有磁盘。
++
+image:dr-cvo-avs-image39.png["错误：缺少图形映像"]
+
+. 重新启动MSSQL服务器服务。
++
+image:dr-cvo-avs-image40.png["错误：缺少图形映像"]
+
+. 确保SQL资源重新联机。
++
+image:dr-cvo-avs-image41.png["错误：缺少图形映像"]
+
++
+
+NOTE: 对于NFS、请使用mount命令连接卷并更新`/etc/fstab`条目。
+
++
+此时、可以正常运行运营并继续正常运营。
+
++
+
+NOTE: 在NSX-T端、可以创建一个单独的专用第1层网关来模拟故障转移场景。这样可以确保所有工作负载可以相互通信、但任何流量都不能路由到环境或从环境中路由出来、这样、执行任何鉴别、控制或强化任务都不会面临交叉感染的风险。此操作不在本文档的讨论范围内、但在模拟隔离时可以轻松完成。
+
+
+
+主站点启动并重新运行后、您可以执行故障恢复。Jetstream将恢复VM保护、并且必须反转SnapMirror关系。
+
+. 还原内部环境。根据灾难意外事件的类型、可能需要还原和/或验证受保护集群的配置。如有必要、可能需要重新安装Jetstream DR软件。
+. 访问已还原的内部环境、转到Jetstream DR UI、然后选择相应的受保护域。受保护站点准备好进行故障恢复后、在UI中选择故障恢复选项。
++
+
+NOTE: CPT生成的故障恢复计划还可用于启动VM及其数据从对象存储返回到原始VMware环境的操作。
+
++
+image:dr-cvo-avs-image42.png["错误：缺少图形映像"]
+
++
+
+NOTE: 指定暂停恢复站点中的VM并在受保护站点中重新启动VM后的最大延迟。完成此过程所需的时间包括：停止故障转移VM后完成复制、清理恢复站点所需的时间以及在受保护站点中重新创建VM所需的时间。NetApp建议10分钟。
+
++
+image:dr-cvo-avs-image43.png["错误：缺少图形映像"]
+
+. 完成故障恢复过程、然后确认虚拟机保护恢复和数据一致性。
++
+image:dr-cvo-avs-image44.png["错误：缺少图形映像"]
+
+. 恢复VM后、断开二级存储与主机的连接并连接到主存储。
++
+image:dr-cvo-avs-image45.png["错误：缺少图形映像"]
+
++
+image:dr-cvo-avs-image46.png["错误：缺少图形映像"]
+
+. 重新启动MSSQL服务器服务。
+. 验证SQL资源是否已恢复联机。
++
+image:dr-cvo-avs-image47.png["错误：缺少图形映像"]
+
++
+
+NOTE: 要故障恢复到主存储、请执行反向重新同步操作、以确保关系方向与故障转移前的关系方向保持一致。
+
++
+
+NOTE: 要在执行反向重新同步操作后保留主存储和二级存储的角色、请再次执行反向重新同步操作。
+
+
+
+此过程适用于Oracle等其他应用程序、类似的数据库模式以及使用来宾连接存储的任何其他应用程序。
+
+在将关键工作负载迁移到生产环境之前、请始终测试恢复这些工作负载所涉及的步骤。
+
+====
+
+
+== 此解决方案 的优势
+
+* 使用高效且具有故障恢复能力的SnapMirror复制。
+* 使用ONTAP 快照保留功能恢复到任何可用时间点。
+* 从存储、计算、网络和应用程序验证步骤中恢复成百上千个VM所需的所有步骤均可实现完全自动化。
+* SnapCenter 使用的克隆机制不会更改复制的卷。
++
+** 这样可以避免卷和快照的数据损坏风险。
+** 在灾难恢复测试工作流期间避免复制中断。
+** 将灾难恢复数据用于灾难恢复以外的工作流、例如开发/测试、安全测试、修补和升级测试以及修复测试。
+
+
+* CPU和RAM优化可通过恢复到较小的计算集群来帮助降低云成本。
+

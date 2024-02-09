@@ -1,0 +1,156 @@
+---
+sidebar: sidebar 
+permalink: containers/dwn_use_case_integrated_data_protection.html 
+keywords: NetApp Astra Control, Astra Control Center, Application, Trident, Astra Trident, Helm, Operator, ONTAP, OpenShift, Kubernetes, Red Hat OpenShift, DevOps, Data Protection, Continuous Data Protection, Induce Data Protection into CI/CD, CI, CD, CI/CD 
+summary: NetApp Astra 控制中心为有状态 Kubernetes 工作负载提供了一组丰富的存储和应用程序感知型数据管理服务，这些服务部署在内部环境中，并采用 NetApp 值得信赖的数据保护技术。 
+---
+= 利用NetApp Astra Control将保护功能集成到CI/CD管道中
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== 概述
+
+DevOps工作流的一个最常见用途是持续集成和持续部署(CI/CD)管道、这些管道可在开发人员提交新代码时在应用程序上构建、集成和运行自动化测试套件。开发运营工程师和站点可靠性工程师(SRE)通常拥有专用于各种工作流的管道、用于开发新功能、回归测试、错误修复、质量工程以及开发流程中的其他功能。
+
+随着团队提高自动化水平、生产应用程序的变革步伐可能会让人感到不知所措。因此、某些团队更愿意保护生产中的应用程序或服务。除了保护代码和容器映像之外、他们还希望保护应用程序状态、配置数据(例如与应用程序关联的Kubernetes对象和资源)以及应用程序的永久性数据。
+
+在此使用情形中、我们将深入了解一个从促销到生产的管道、该管道会部署新版本的应用程序：首先部署到暂存环境、然后部署到生产环境。此示例同样适用于主要公有 云以及内部环境。虽然我们展示了一个版本的应用程序的部署、但该渠道也可用于其他策略、例如蓝色/绿色或金丝雀部署。作为CI/CD管道的一部分、我们将通过创建完整的应用程序备份来保护应用程序。对生产中应用程序及其数据、状态和配置进行应用程序感知备份、对于众多DevOps工作流来说非常有用。
+
+image::dwn_image1.jpg[采用NetApp Astra的DevOps用例1架构]
+
+用于验证此用例的应用程序为 https://magento.com/["Magento"^]一种基于Web的前端电子商务解决方案 、一种用于搜索和分析功能的Elasticsearch实例以及一个跟踪所有购物清单和交易详细信息的MariaDB数据库。此容器化应用程序安装在Red Hat OpenShift集群中。应用程序中的每个POD都使用永久性卷来存储数据。永久性卷由NetApp Astra Trident自动创建、NetApp Astra Trident是适用于Kubernetes的容器存储接口兼容存储编排程序、可在NetApp存储系统上配置存储。此外、为了利用Astra控制中心的应用程序保护功能、相关应用程序由Astra Control管理、然后使用该控制器触发应用程序备份、这些备份将存储应用程序的状态以及永久性卷中的数据。我们使用了 https://github.com/NetApp/netapp-astra-toolkits["NetApp Astra Control Python SDK"^] 自动执行触发应用程序备份的过程、然后将该过程引入到CI/CD管道中。此管道是使用一个常用的CI/CD工具创建和执行的、该工具称为 [https://www.jenkins.io/["Jenkins"^]]以自动执行流、从而构建、保护和部署应用程序。
+
+让我们来了解一下前提条件和操作步骤 、以便在CI/CD管道中引入保护。
+
+
+
+== 使用情形验证前提条件
+
+部署和配置了以下工具或平台作为前提条件：
+
+. Red Hat OpenShift 容器平台
+. NetApp Astra Trident安装在OpenShift上、并配置了NetApp ONTAP 系统的后端
+. 已配置一个指向NetApp ONTAP 后端的默认存储器
+. NetApp Astra Control Center安装在OpenShift集群上
+. OpenShift集群作为受管集群添加到Astra控制中心
+. Jenkins安装在OpenShift集群上、并配置了一个代理节点、其中安装了Docker引擎
+
+
+
+
+== 安装应用程序
+
+首先、让我们从暂存和生产环境中的应用程序初始安装开始。在此使用情形中、此步骤是前提条件、因此可以手动执行。随着新版本的应用程序、CI/CD管道用于后续的构建和部署工作流。
+
+此用例中的生产环境是一个名为`mageno-prod`的命名空间、相应的暂存环境是在Red Hat OpenShift集群上配置的一个名为`mageno-staging`的命名空间。要安装此应用程序、请完成以下步骤：
+
+. 在生产环境中使用BitNami Helm图表安装Magento应用程序。我们对Magento和MariaDB Pod使用rwx PV。
++
+[listing]
+----
+[netapp-user@rhel7 na_astra_control_suite]$ helm install --version 14 magento bitnami/magento -n magento-prod --create-namespace --set image.tag=2.4.1-debian-10-r11,magentoHost=10.63.172.243,persistence.magento.accessMode=ReadWriteMany,persistence.apache.accessMode=ReadWriteMany,mariadb.master.persistence.accessModes[0]=ReadWriteMany
+----
++
+
+NOTE: Magento BitNami Helm图表需要负载平衡器服务才能显示Magento GUI服务。我们使用了 link:https://metallb.universe.tf/["元 LB"^] 用于在此示例中提供内部负载平衡器服务。
+
+. 几分钟后、验证所有Pod和服务是否都在运行。
++
+[listing]
+----
+[netapp-user@rhel7 na_astra_control_suite]$ oc get pods -n magento-prod
+NAME                                                     READY   STATUS    RESTARTS   AGE
+magento-9d658fd96-qrxmt                                  1/1     Running   0          49m
+magento-elasticsearch-coordinating-only-69869cc5-768rm   1/1     Running   0          49m
+magento-elasticsearch-data-0                             1/1     Running   0          49m
+magento-elasticsearch-master-0                           1/1     Running   0          49m
+magento-mariadb-0                                        1/1     Running   0          49m
+----
+. 对暂存环境重复相同的操作步骤。
+
+
+
+
+== 在Astra控制中心管理Magento应用程序
+
+. 导航到应用程序并选择发现的应用程序选项卡。
+. 在生产环境中、单击Magento应用程序旁边的省略号(`mageno-prod`)、然后单击管理。
+. 现在、Magento应用程序由Astra控制中心管理。Astra Control支持的所有操作均可在此应用程序上执行。同时、请记下此应用程序的版本。
++
+image::dwn_image2.jpg[升级前检查Magento版本]
+
+. 重复执行在暂存环境中管理Magento应用程序的步骤(`mageno-staging`)。
+
+
+
+
+== 具有集成保护的CI/CD管道
+
+使用新版本的应用程序时、我们会使用CI/CD管道构建容器映像、备份暂存和生产环境、将新版本的应用程序部署到暂存环境、等待批准升级到生产环境、 然后将新版本的应用程序部署到生产环境中。要使用CI/CD管道、请完成以下步骤：
+
+. 登录到Jenkins并创建所需的凭据：一个用于Magento creds、一个用于MariaDB管理creds、另一个用于MariaDB根creds。
+. 导航到Manage Jenkins > Manage Credentials、然后单击相应的域。
+. 单击Add Credentials、然后将种类设置为Username、并将密码和范围设置为Global。输入凭据的用户名、密码和ID、然后单击确定。
++
+image::dwn_image8.jpg[创建凭据]
+
+. 对其他两个凭据重复相同的操作步骤。
+. 返回信息板、单击"新建项目"创建管道、然后单击"管道"。
+. 从Jenkinsfile复制管道 https://github.com/NetApp/netapp-astra-toolkits/blob/main/ci_cd_examples/jenkins_pipelines/protecting_apps_in_ci_cd_pipelines/Jenkinsfile["此处"^]。
+. 将管道粘贴到Jenkins管道部分、然后单击保存。
+. 使用相应的详细信息填充Jenkins管道的参数、包括Helm图表版本、要升级到的Magento应用程序版本、Astra工具包版本、Astra控制中心FQDN、API令牌及其实例ID。指定生产和暂存环境的Docker注册表、命名空间和Magento IP、同时指定所创建凭据的凭据ID。
++
+[listing]
+----
+MAGENTO_VERSION = '2.4.1-debian-10-r14'
+CHART_VERSION = '14'
+RELEASE_TYPE = 'MINOR'
+ASTRA_TOOLKIT_VERSION = '2.0.2'
+ASTRA_API_TOKEN = 'xxxxxxxx'
+ASTRA_INSTANCE_ID = 'xxx-xxx-xxx-xxx-xxx'
+ASTRA_FQDN = 'netapp-astra-control-center.org.example.com'
+DOCKER_REGISTRY = 'docker.io/netapp-solutions-cicd'
+PROD_NAMESPACE = 'magento-prod'
+PROD_MAGENTO_IP = 'x.x.x.x'
+STAGING_NAMESPACE = 'magento-staging'
+STAGING_MAGENTO_IP = 'x.x.x.x'
+MAGENTO_CREDS = credentials('magento-cred')
+MAGENTO_MARIADB_CREDS = credentials('magento-mariadb-cred')
+MAGENTO_MARIADB_ROOT_CREDS = credentials('magento-mariadb-root-cred')
+----
+. 单击Build now。管道将开始执行并逐步完成各个步骤。首先构建应用程序映像并将其上传到容器注册表。
++
+image::dwn_image3.jpg[管道进度]
+
+. 应用程序备份通过Astra Control启动。
++
+image::dwn_image4.jpg[已启动备份]
+
+. 成功完成备份阶段后、从Astra控制中心验证备份。
++
+image::dwn_image5.jpg[备份成功]
+
+. 然后、新版本的应用程序将部署到暂存环境中。
++
+image::dwn_image6.jpg[已启动暂存部署]
+
+. 完成此步骤后、该程序将等待用户批准部署到生产环境中。在此阶段、假设QA团队执行一些手动测试并批准生产。然后、您可以单击批准将新版本的应用程序部署到生产环境中。
++
+image::dwn_image7.jpg[正在等待升级]
+
+. 验证生产应用程序是否也已升级到所需版本。
++
+image::dwn_image11.jpg[已升级生产应用程序]
+
+
+
+作为CI/CD管道的一部分、我们展示了通过创建完整的应用程序感知型备份来保护应用程序的能力。由于整个应用程序已作为从促销到生产的渠道的一部分进行备份、因此您对高度自动化的应用程序部署更有信心。此应用程序感知型备份包含应用程序的数据、状态和配置、可用于大量DevOps工作流。一个重要的工作流是、在出现不可预知的问题时回滚到应用程序的先前版本。
+
+虽然我们使用Jenkins工具展示了CI/CD工作流、但可以轻松高效地将此概念外推到不同的工具和策略中。要查看此用例的实际操作、请观看视频 link:dwn_videos_data_protection_in_ci_cd_pipeline.html["此处"^]。

@@ -1,0 +1,35 @@
+---
+sidebar: sidebar 
+permalink: containers/vtwn_overview_vst.html 
+keywords: VMware Tanzu, Tanzu, Tanzu Kubernetes Grid Service, vSphere with Kubernetes, vSphere Pods, DevOps 
+summary:  
+---
+= 采用Tanzu的VMware vSphere概述
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+采用Tanzu的VMware vSphere (也称为vSphere Pod)允许您在裸机Kubernetes环境中使用VMware vSphere环境中的ESXi虚拟机管理程序节点作为工作节点。
+
+image::vtwn_image30.png[采用Kubernetes的VMware vSphere]
+
+与原生 TKGS集群一样、在工作负载管理下启用了具有Tanzu环境的VMware vSphere。
+
+创建虚拟化监控集群可为Kubernetes提供高可用性控制平台、并为每个应用程序创建个人命名空间、以确保为用户隔离资源。
+
+image::vtwn_image29.png[监控集群]
+
+启用带有Tanzu的VMware vSphere后、每个ESXi主机都安装并配置了Spherelet应用程序。这样、每个节点就可以在Kubernetes部署中充当辅助角色、并管理每个节点上部署的Pod。
+
+image::vtwn_image28.png[命名空间]
+
+目前、采用Tanzu和vSphere Pod的VMware vSphere仅支持本地vSphere CSI驱动程序。这样、管理员就可以在vSphere客户端中创建存储策略、并从当前可用作vSphere数据存储库的存储目标中进行选择。这些策略用于为容器化应用程序创建永久性卷。
+
+
+NOTE: 尽管目前不支持可直接连接到外部ONTAP 和Element存储阵列的NetApp Astra Trident CSI驱动程序、但这些NetApp存储系统通常用于支持vSphere环境的主存储、 NetApp高级数据管理和存储效率工具也可通过这种方式使用。
+
+如果您想了解有关采用Tanzu的VMware vSphere的更多信息、请参见相关文档 link:https://docs.vmware.com/en/VMware-vSphere/7.0/vmware-vsphere-with-tanzu/GUID-152BE7D2-E227-4DAA-B527-557B564D9718.html["此处"^]。

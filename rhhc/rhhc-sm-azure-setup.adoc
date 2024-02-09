@@ -1,0 +1,139 @@
+---
+sidebar: sidebar 
+permalink: rhhc/rhhc-sm-azure-setup.html 
+keywords: NetApp Solutions, redhat OpenShift, red hat OpenShift, redhat openshift container platform, ocp, openshift container platform, Advanced Cluster Management, ACM, Hub Cluster, containers, container workloads, VMware, customer managed storage, ONTAP, Azure, Azure Cloud. 
+summary:  
+---
+= 在Azure上部署和配置Red Hat OpenShift容器平台
+:allow-uri-read: 
+
+
+
+
+== 在Azure上部署和配置Red Hat OpenShift容器平台
+
+[role="lead"]
+本节简要介绍了如何在Azure中设置和管理OpenShift集群并在其上部署有状态应用程序的工作流。它展示了如何借助Asta三端磁盘/Asta控件配置程序使用NetApp Cloud Volumes ONTAP存储来提供永久性卷。本节详细介绍了如何使用Astra Control Center为有状态应用程序执行数据保护和迁移活动。
+
+下图显示了部署在Azure上并使用VPN连接到数据中心的集群。
+
+image:rhhc-self-managed-azure.png[""]
+
+
+NOTE: 可以通过多种方法在Azure中部署Red Hat OpenShift容器平台集群。此高级设置问题描述 提供了所用特定方法的文档链接。您可以在中提供的相关链接中参考其他方法 link:../rhhc-resources.html["资源部分"]。
+
+设置过程可细分为以下步骤：
+
+.使用命令行界面在Azure上安装OCP集群。
+[%collapsible]
+====
+* 确保您已满足上述所有前提条件 link:https://docs.openshift.com/container-platform/4.13/installing/installing_azure/installing-azure-vnet.html["此处"]。
+* 创建VPN、子网和网络安全组以及专用DNS区域。创建VPN网关和站点间VPN连接。
+* 对于内部环境与Azure之间的VPN连接、我们会创建并配置一个pfSense VM。有关说明，请参见 link:https://docs.netgate.com/pfsense/en/latest/recipes/ipsec-s2s-psk.html["此处"]。
+* 获取安装程序和拉取密钥、然后按照文档中提供的步骤部署集群 link:https://docs.openshift.com/container-platform/4.13/installing/installing_azure/installing-azure-vnet.html["此处"]。
+* 集群安装完成、并将提供一个kubeconfigfile文件以及用户名和密码以登录到集群的控制台。
+
+
+下面提供了一个示例install-config.yaml文件。
+
+....
+apiVersion: v1
+baseDomain: sddc.netapp.com
+compute:
+- architecture: amd64
+  hyperthreading: Enabled
+  name: worker
+  platform:
+    azure:
+      encryptionAtHost: false
+      osDisk:
+        diskSizeGB: 512
+        diskType: "StandardSSD_LRS"
+      type: Standard_D2s_v3
+      ultraSSDCapability: Disabled
+      #zones:
+      #- "1"
+      #- "2"
+      #- "3"
+  replicas: 3
+controlPlane:
+  architecture: amd64
+  hyperthreading: Enabled
+  name: master
+  platform:
+    azure:
+      encryptionAtHost: false
+      osDisk:
+        diskSizeGB: 1024
+        diskType: Premium_LRS
+      type: Standard_D8s_v3
+      ultraSSDCapability: Disabled
+  replicas: 3
+metadata:
+  creationTimestamp: null
+  name: azure-cluster
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  machineNetwork:
+  - cidr: 10.0.0.0/16
+  networkType: OVNKubernetes
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:
+  azure:
+    baseDomainResourceGroupName: ocp-base-domain-rg
+    cloudName: AzurePublicCloud
+    computeSubnet: ocp-subnet2
+    controlPlaneSubnet: ocp-subnet1
+    defaultMachinePlatform:
+      osDisk:
+        diskSizeGB: 1024
+        diskType: "StandardSSD_LRS"
+      ultraSSDCapability: Disabled
+    networkResourceGroupName: ocp-nc-us-rg
+    #outboundType: UserDefinedRouting
+    region: northcentralus
+    resourceGroupName: ocp-cluster-ncusrg
+    virtualNetwork: ocp_vnet_ncus
+publish: Internal
+pullSecret:
+....
+====
+.使用BlueXP在Azure中部署Cloud Volumes ONTAP。
+[%collapsible]
+====
+* 在Azure中的中安装连接器。请参阅说明 https://docs.netapp.com/us-en/bluexp-setup-admin/task-install-connector-azure-bluexp.html["此处"]。
+* 使用连接器在Azure中部署CVO实例。请参阅说明链接：https://docs.netapp.com/us-en/bluexp-cloud-volumes-ontap/task-getting-started-azure.html [此处]。
+
+
+====
+.在Azure的OCP集群中安装A作用 力控制配置程序
+[%collapsible]
+====
+* 对于此项目、所有集群(即、部署了Astra Control Center的集群、Azure中的集群)上都安装了Astra Control置管程序(ACP)。了解有关Astra Control配置程序的更多信息 link:https://docs.netapp.com/us-en/astra-control-center/release-notes/whats-new.html#7-november-2023-23-10-0["此处"]。
+* 创建后端和存储类。请参阅说明 link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-postdeployment.html["此处"]。
+
+
+====
+.将Azure上的OCP集群添加到Asta控制中心。
+[%collapsible]
+====
+* 创建一个具有集群角色的单独KubeConfig文件、该角色包含由Astra Control管理集群所需的最低权限。可以找到相关说明
+link:https://docs.netapp.com/us-en/astra-control-center/get-started/setup_overview.html#create-a-cluster-role-kubeconfig["此处"]。
+* 按照说明将集群添加到Astra Control Center
+link:https://docs.netapp.com/us-en/astra-control-center/get-started/setup_overview.html#add-cluster["此处"]
+
+
+====
+.对多区域架构使用三元数据的CSI拓扑功能
+如今、云提供商支持Kubbernetes/OpenShift集群管理员生成基于分区的集群节点。节点可以位于一个区域内的不同可用性区域中，也可以位于不同区域之间。为了便于在多区域架构中为工作负载配置卷， Astra Trident 使用了 CSI 拓扑。使用 CSI 拓扑功能，可以根据区域和可用性区域将对卷的访问限制为一小部分节点。请参见 link:https://docs.netapp.com/us-en/trident/trident-use/csi-topology.html["此处"] 了解更多详细信息。
+
+
+NOTE: Kubarnetes支持两种卷绑定模式：-将**_VolumeBindingMode_设置为_Immediate_**(默认)时、Asta Trident会在没有任何拓扑感知功能的情况下创建卷。创建永久性卷时，不会依赖于请求的 Pod 的计划要求。-当**_VolumeBindingMode_设置为_WaitForFirstConsumer_**时，为PVC创建和绑定永久性卷的操作会延迟，直到计划和创建使用PVC的Pod为止。这样，卷就会根据拓扑要求强制实施的计划限制来创建。Astra三叉设计存储后端可以根据可用性区域选择性地配置卷(拓扑感知型后端)。对于使用此后端的 StorageClasses ，只有在受支持区域 / 区域中计划的应用程序请求时，才会创建卷。(拓扑感知型存储类)请参见 link:https://docs.netapp.com/us-en/trident/trident-use/csi-topology.html["此处"] 了解更多详细信息。
+
+[下划线]#*演示视频*#
+
+.使用Asta Control对应用程序进行故障转移和故障恢复
+video::1546191b-bc46-42eb-ac34-b0d60142c58d[panopto,width=360]

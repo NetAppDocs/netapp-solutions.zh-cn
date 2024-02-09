@@ -1,0 +1,105 @@
+---
+sidebar: sidebar 
+permalink: ehc/gcp-migrate-veeam.html 
+keywords: gcp, gcve, cvs, migrate , dr, disaster recovery, veeam, replication, proxy, re-ip 
+summary: 当前使用Veeam满足数据保护要求的客户将继续使用该解决方案将工作负载迁移到GCVe、并享受NetApp云卷服务NFS数据存储库的优势。 
+---
+= 使用Veeam复制功能将VM迁移到Google Cloud VMware Engine上的NetApp云卷服务NFS数据存储库
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== 概述
+
+作者：NetApp公司Suresh ThopPay
+
+可以利用Veeam复制功能将VMware vSphere上运行的VM工作负载迁移到Google Cloud VMware Engine (GCVE)。
+
+本文档提供了一种使用NetApp云卷服务、Veeam和Google Cloud VMware引擎(GCVe)设置和执行VM迁移的分步方法。
+
+image:gcp_migration_veeam_01.png["Veeam VM复制架构"]
+
+
+
+== 假设
+
+本文档假设您已具备Google Cloud VPN或Cloud Inter连 或其他网络选项、可用于建立从现有vSphere服务器到Google Cloud VMware Engine的网络连接。
+
+
+NOTE: 将内部数据中心连接到Google Cloud有多种方式、这使我们无法在本文档中概述特定工作流。
+请参见 link:https://cloud.google.com/network-connectivity/docs/how-to/choose-product["Google Cloud文档"] 了解适当的内部到Google连接方法。
+
+
+
+== 部署迁移解决方案
+
+
+
+=== 解决方案 部署概述
+
+. 确保NetApp云卷服务中的NFS数据存储库已挂载到GCVe vCenter上。
+. 确保在现有VMware vSphere环境中部署Veeam Backup Recovery
+. 创建复制作业以开始将虚拟机复制到Google Cloud VMware Engine实例。
+. 对Veeam复制作业执行故障转移。
+. 在Veeam上执行永久故障转移。
+
+
+
+
+=== 部署详细信息
+
+
+
+==== 确保NetApp云卷服务中的NFS数据存储库已挂载到GCVe vCenter上
+
+登录到GCVEvCenter并确保具有足够空间的NFS数据存储库可用。
+如果不是、请参见 link:gcp-ncvs-datastore.html["将NetApp CVS挂载为GCVE)上的NFS数据存储库"]
+
+
+
+==== 确保在现有VMware vSphere环境中部署Veeam Backup Recovery
+
+请参阅 link:https://helpcenter.veeam.com/docs/backup/vsphere/replication_components.html?ver=120["Veeam复制组件"] 安装所需组件的文档。
+
+
+
+==== 创建复制作业以开始将虚拟机复制到Google Cloud VMware Engine实例。
+
+内部vCenter和GCVE vCenter都需要向Veeam注册。 link:https://helpcenter.veeam.com/docs/backup/vsphere/replica_job.html?ver=120["设置vSphere VM复制作业"]
+下面是一个介绍如何操作的视频
+link:https://youtu.be/uzmKXtv7EeY["配置复制作业"]。
+
+
+NOTE: 副本VM可以与源VM具有不同的IP、也可以连接到不同的端口组。有关更多详细信息、请观看上面的视频。
+
+
+
+==== 对Veeam复制作业执行故障转移
+
+要迁移VM、请执行 link:https://helpcenter.veeam.com/docs/backup/vsphere/performing_failover.html?ver=120["执行故障转移"]
+
+
+
+==== 在Veeam上执行永久故障转移。
+
+要将GCVE)视为新的源环境，请执行 link:https://helpcenter.veeam.com/docs/backup/vsphere/permanent_failover.html?ver=120["永久故障转移"]
+
+
+
+== 此解决方案 的优势
+
+* 可以利用现有Veeam备份基础架构进行迁移。
+* Veeam Replication允许更改目标站点上的VM IP地址。
+* 能够重新映射从Veeam外部复制的现有数据(例如从BlueXP复制的数据)
+* 能够在目标站点上指定不同的网络端口组。
+* 可以指定VM的启动顺序。
+* 利用VMware变更块跟踪最大限度地减少通过WAN发送的数据量。
+* 能够执行复制前和后脚本。
+* 能够为快照执行前处理脚本和后处理脚本。
+

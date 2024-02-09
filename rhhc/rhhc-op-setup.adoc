@@ -1,0 +1,110 @@
+---
+sidebar: sidebar 
+permalink: rhhc/rhhc-op-setup.html 
+keywords: NetApp Solutions, redhat OpenShift, red hat OpenShift, redhat openshift container platform, ocp, openshift container platform, Advanced Cluster Management, ACM, Hub Cluster, containers, container workloads, VMware, customer managed storage, ONTAP 
+summary:  
+---
+= 在VMware上部署和配置Red Hat OpenShift容器平台
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+本节将简要介绍如何设置和管理OpenShift集群以及管理其中有状态应用程序的工作流。其中展示了如何在Asta三端存储的帮助下使用NetApp ONTAP 存储阵列来提供永久性卷。本节详细介绍了如何使用Astra Control Center为有状态应用程序执行数据保护和迁移活动。
+
+
+NOTE: 部署Red Hat OpenShift容器平台集群的方法有多种。此高级设置问题描述 提供了所用特定方法的文档链接。您可以在中提供的相关链接中参考其他方法 link:../rhhc-resources.html["资源部分"]。
+
+下图展示了在数据中心内VMware上部署的集群。
+
+image:rhhc-on-premises.png[""]
+
+设置过程可细分为以下步骤：
+
+.部署和配置CentOS VM
+[%collapsible]
+====
+* 它部署在VMware vSphere环境中。
+* 此VM用于部署某些组件、例如NetApp Asta三端磁盘和适用于解决方案 的NetApp Asta控制中心。
+* 在安装期间、会在此虚拟机上配置一个root用户。
+
+
+====
+.在VMware vSphere上部署和配置OpenShift容器平台集群(集线器集群)
+[%collapsible]
+====
+请参见的说明 link:https://access.redhat.com/documentation/en-us/assisted_installer_for_openshift_container_platform/2022/html/assisted_installer_for_openshift_container_platform/installing-on-vsphere#doc-wrapper/["辅助部署"] 部署OCP集群的方法。
+
+
+TIP: 请记住以下内容：-创建ssh公共密钥和专用密钥以提供给安装程序。如果需要、这些密钥将用于登录到主节点和工作节点。-从辅助安装程序下载安装程序。此程序用于启动您在VMware vSphere环境中为主节点和工作节点创建的VM。-虚拟机应满足最低CPU、内存和硬盘要求。(请参阅上的vm create命令 link:https://access.redhat.com/documentation/en-us/assisted_installer_for_openshift_container_platform/2022/html/assisted_installer_for_openshift_container_platform/installing-on-vsphere#doc-wrapper/["这"] 提供此信息的主节点和工作节点的页面)—应在所有VM上启用diskUUID。-至少为主节点创建3个节点、为工作节点创建3个节点。-安装程序发现它们后、打开VMware vSphere集成切换按钮。
+
+====
+.在集线器集群上安装高级集群管理
+[%collapsible]
+====
+可使用集线器集群上的高级集群管理操作员进行安装。请参阅说明 link:https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.7/html/install/installing#doc-wrapper["此处"]。
+
+====
+.在集线器集群上安装内部Red Hat Quay注册表。
+[%collapsible]
+====
+* 要推送Asta映像、需要使用内部注册表。在集线器集群中使用Operator安装Quay内部注册表。
+* 请参阅说明 link:https://access.redhat.com/documentation/en-us/red_hat_quay/2.9/html-single/deploy_red_hat_quay_on_openshift/index#installing_red_hat_quay_on_openshift["此处"]
+
+
+====
+.安装两个额外的OCP集群(源和目标)
+[%collapsible]
+====
+* 可以使用集线器集群上的ACM部署其他集群。
+* 请参阅说明 link:https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.7/html/clusters/cluster_mce_overview#vsphere_prerequisites["此处"]。
+
+
+====
+.配置NetApp ONTAP 存储
+[%collapsible]
+====
+* 在VMware环境中安装可连接到OCP VM的ONTAP 集群。
+* 创建SVM。
+* 配置NAS数据lf以访问SVM中的存储。
+
+
+====
+.在OCP集群上安装NetApp Trident
+[%collapsible]
+====
+* 在集线器、源和目标集群这三个集群上安装NetApp三项功能
+* 请参阅说明 link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy-operator.html["此处"]。
+* 为ONTAP－NAS创建存储后端。
+* 为ONTAP NAS创建存储类。
+* 请参阅说明 link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-postdeployment.html["此处"]。
+
+
+====
+.安装NetApp Asta Control Center
+[%collapsible]
+====
+* NetApp Asta Control Center可使用集线器集群上的Asta Operator进行安装。
+* 请参阅说明 link:https://docs.netapp.com/us-en/astra-control-center/get-started/acc_operatorhub_install.html["此处"]。
+
+
+请记住：*从支持站点下载NetApp Asta Control Center映像。*将图像推送到内部注册表。*请参阅此处的说明。
+
+====
+.在源集群上部署应用程序
+[%collapsible]
+====
+使用OpenShift GitOps部署应用程序。(例如Postgres, Ghost)
+
+====
+.将源集群和目标集群添加到Astra控制中心。
+[%collapsible]
+====
+将集群添加到Astra Control管理后、您可以在集群上安装应用程序(Astra Control之外)、然后转到Astra Control中的"应用程序"页面定义应用程序及其资源。请参见 link:https://docs.netapp.com/us-en/astra-control-center/use/manage-apps.html["开始管理Astra Control Center的应用程序部分"]。
+
+====
+下一步是使用Astra Control Center进行数据保护、并将数据从源集群迁移到目标集群。

@@ -1,0 +1,73 @@
+---
+sidebar: sidebar 
+permalink: ehc/ncvs-gc-service-operation.html 
+keywords: physical security, operations team, customer responsibilities, malicious sre protection, certifications, gdpr 
+summary: Cloud Volumes Service 团队负责管理Google Cloud中的后端服务、并使用多种策略来保护平台安全并防止不必要的访问。 
+---
+= 服务操作
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+Cloud Volumes Service 团队负责管理Google Cloud中的后端服务、并使用多种策略来保护平台安全并防止不必要的访问。
+
+每个客户都获得自己的唯一子网、默认情况下、该子网的访问会与其他客户隔离、而Cloud Volumes Service 中的每个租户都获得自己的命名空间和VLAN以实现整体数据隔离。用户通过身份验证后、服务交付引擎(SDE)只能读取特定于该租户的配置数据。
+
+
+
+== 物理安全性
+
+经过适当的预先批准后、只有现场工程师和具有NetApp徽标的现场支持工程师(Field Support Engineer、FSE)才能访问固定框架和机架进行物理工作。不允许进行存储和网络管理。只有这些现场资源才能执行硬件维护任务。
+
+对于现场工程师、将为工作说明书(SOW)提交一个服务单、其中包括机架ID和设备位置(RU)、所有其他详细信息均包含在服务单中。对于NetApp现场服务工程师、必须向Colo提交现场访问服务单、此服务单应包含访客的详细信息、日期和时间、以供审核。FSE的SOW会在内部传达给NetApp。
+
+
+
+== 运营团队
+
+Cloud Volumes Service 运营团队由生产工程和云卷服务站点可靠性工程师(SRE)以及NetApp现场支持工程师和硬件合作伙伴组成。所有运营团队成员都获得了在Google Cloud中工作的认证、并为提交的每个服务单维护详细的工作记录。此外、我们还制定了严格的变更控制和批准流程、以确保对每项决策进行适当审查。
+
+SRE团队负责管理控制平台以及如何将数据从UI请求路由到Cloud Volumes Service 中的后端硬件和软件。SRE团队还负责管理系统资源、例如卷和索引节点最大值。不允许SRES与客户数据进行交互或访问客户数据。此外、SRES还可以与退回材料授权(Return Material Authorizations、RMA)进行协调、例如为后端硬件请求新磁盘或内存更换请求。
+
+
+
+== 客户责任
+
+Cloud Volumes Service 的客户负责管理其组织的Active Directory和用户角色管理以及卷和数据操作。客户可以具有管理角色、并可以使用NetApp和Google Cloud提供的两个预定义角色(管理员和查看器)将权限委派给同一Google Cloud项目中的其他最终用户。
+
+管理员可以将客户项目中的任何VPC与客户确定合适的Cloud Volumes Service 建立对等关系。客户有责任管理对其Google Cloud Marketplace订阅的访问权限、并管理有权访问数据平面的VPC。
+
+
+
+== 恶意SRE保护
+
+可能会出现的一个问题是、Cloud Volumes Service 如何防止出现恶意SRE或SRE凭据受到损坏的情况？
+
+只能由有限数量的SRE人员访问生产环境。管理权限进一步限制为少数经验丰富的管理员。我们的安全信息和事件管理(Cloud Volumes Service)威胁情报平台会记录任何人在生产环境中执行的所有操作、并检测到基线异常或可疑活动。因此、在对Cloud Volumes Service 后端造成过多损坏之前、可以跟踪和缓解恶意操作。
+
+
+
+== 卷生命周期
+
+Cloud Volumes Service 仅管理服务中的对象、而不管理卷中的数据。只有访问卷的客户端才能管理数据、ACL、文件所有者等。这些卷中的数据会在空闲时进行加密、并且只能由Cloud Volumes Service 实例的租户访问。
+
+Cloud Volumes Service 的卷生命周期为create-update-delete。卷会保留卷的Snapshot副本、直到删除卷为止、只有经过验证的Cloud Volumes Service 管理员才能删除Cloud Volumes Service 中的卷。当管理员请求删除卷时、还需要输入卷名称来验证删除操作。删除卷后、该卷将消失、无法恢复。
+
+如果Cloud Volumes Service 合同终止、NetApp会在特定时间段后标记要删除的卷。在该时间段到期之前、您可以根据客户的请求恢复卷。
+
+
+
+== 认证
+
+适用于Google Cloud的Cloud Volumes Services目前已通过ISO/IEC 27001：2013和ISO/IEC 27018：2019标准的认证。该服务最近还收到了其SOC2 I类证明报告。有关NetApp对数据安全和隐私的承诺的信息、请参见 https://www.netapp.com/company/trust-center/compliance/["合规性：数据安全和数据隐私"^]。
+
+
+
+== GDPR
+
+我们的许多公司都承诺遵守GDPR并遵守隐私规定  https://www.netapp.com/how-to-buy/sales-terms-and-conditions%22%20/o%20%22SEO%20-%20Sales%20Terms%20and%20Conditions["客户合同"^]、例如我们的 https://netapp.na1.echosign.com/public/esignWidget?wid=CBFCIBAA3AAABLblqZhCqPPgcufskl_71q-FelD4DHz5EMJVOkqqT0iiORT10DlfZnZeMpDrse5W6K9LEw6o*["客户数据处理附录"^]、其中包括  https://ec.europa.eu/info/law/law-topic/data-protection/international-dimension-data-protection/standard-contractual-clauses-scc_en["标准合同条款"^] 由欧盟委员会提供。我们还会在隐私政策中做出这些承诺、并以我们公司行为准则中规定的核心价值为后盾。

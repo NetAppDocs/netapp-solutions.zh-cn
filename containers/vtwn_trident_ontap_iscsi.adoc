@@ -1,0 +1,127 @@
+---
+sidebar: sidebar 
+permalink: containers/vtwn_trident_ontap_iscsi.html 
+keywords: Trident, Astra Trident, ONTAP, AFF, FAS, iSCSI, Tanzu, TKG, TKGS, TKGI 
+summary: 要通过iSCSI将NetApp ONTAP 存储系统与用于永久性卷的VMware Tanzu Kubernetes集群集成、第一步是通过登录每个节点并配置iSCSI实用程序或软件包来准备节点以挂载iSCSI卷。 
+---
+= NetApp ONTAP iSCSI 配置
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+要通过iSCSI将NetApp ONTAP 存储系统与适用于永久性卷的VMware Tanzu Kubernetes集群集成、第一步是通过登录到每个节点并配置iSCSI实用程序或软件包以挂载iSCSI卷来准备节点。为此、请按照本节中所述的操作步骤 进行操作 link:https://docs.netapp.com/us-en/trident/trident-use/worker-node-prep.html#iscsi-volumes["链接。"^]。
+
+
+NOTE: NetApp不建议在采用NAT方式部署VMware Tanzu Kubernetes集群时使用此操作步骤。
+
+
+NOTE: TKGI使用Bossh VM作为运行不可变配置映像的Tanzu Kubernetes集群的节点、而在重新启动后、对Bossh VM上的iSCSI软件包进行的任何手动更改都不会保持持久性。因此、NetApp建议对由TKGI部署和操作的Tanzu Kubernetes集群使用NFS卷作为永久性存储。
+
+为iSCSI卷准备好集群节点后、您必须创建一个后端、以便与存储系统进行通信。我们在此解决方案 中配置了一个基本后端、但是、如果您要查找更多自定义选项、请访问文档 link:https://docs.netapp.com/us-en/trident/trident-use/ontap-san.html["此处"^]。
+
+
+
+== 在ONTAP 中创建SVM
+
+要在ONTAP 中创建SVM、请完成以下步骤：
+
+. 登录到ONTAP 系统管理器、导航到存储> Storage VM、然后单击添加。
+. 输入SVM的名称、启用iSCSI协议、然后提供数据LIF的详细信息。
++
+image::vtwn_image25.jpg[iSCSI SVM数据LIF]
+
+. 输入SVM管理帐户的详细信息、然后单击保存。
++
+image::vtwn_image26.jpg[iSCSI SVM管理]
+
+. 要将聚合分配给SVM、请导航到存储>存储VM、单击新创建的SVM旁边的省略号、然后单击编辑。选中将卷创建限制为首选本地层复选框、并将所需聚合附加到其中。
++
+image::vtwn_image27.jpg[SVM聚合分配]
+
+
+
+
+
+== 创建后端和StorageClasses
+
+. 对于提供NFS服务的NetApp ONTAP 系统、请使用backendName、managementLIF、dataLIF、SVM、username在jumphost上创建一个后端配置文件。 密码和其他详细信息。
++
+[listing]
+----
+{
+  "version": 1,
+  "storageDriverName": "ontap-san",
+  "backendName": "ontap-san+10.61.181.231",
+  "managementLIF": "172.21.224.201",
+  "dataLIF": "10.61.181.231",
+  "svm": "trident_svm_iscsi",
+  "username": "admin",
+  "password": "password"
+}
+----
+. 运行以下命令创建Trident后端。
++
+[listing]
+----
+[netapp-user@rhel7 trident-installer]$ ./tridentctl -n trident create backend -f backend-ontap-san.json
++------------------------+----------------+--------------------------------------+--------+---------+
+|          NAME          | STORAGE DRIVER |                 UUID                 | STATE  | VOLUMES |
++------------------------+----------------+--------------------------------------+--------+---------+
+| ontap-san+10.61.181.231 | ontap-san      | 6788533c-7fea-4a35-b797-fb9bb3322b91 | online |       0 |
++------------------------+----------------+--------------------------------------+--------+---------+
+----
+. 创建后端之后、您必须接下来创建一个存储类。以下存储类定义示例突出显示了必填字段和基本字段。参数`backendType`应反映新创建的Trident后端的存储驱动程序。另请注意 name-field 值，稍后必须引用该值。
++
+[listing]
+----
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ontap-iscsi
+provisioner: csi.trident.netapp.io
+parameters:
+  backendType: "ontap-san"
+----
++
+
+NOTE: 此文件中定义了一个名为 `FSType` 的可选字段。在iSCSI后端、可以将此值设置为特定的Linux文件系统类型(XFS、ext4等)、也可以删除此值、以便Tanzu Kubernetes集群决定要使用的文件系统。
+
+. 运行kubectl命令创建存储类。
++
+[listing]
+----
+[netapp-user@rhel7 trident-installer]$ kubectl create -f storage-class-iscsi.yaml
+storageclass.storage.k8s.io/ontap-iscsi created
+----
+. 创建存储类后，您必须创建第一个永久性卷请求（ PVC ）。下面提供了一个PVC定义示例。确保`storageClassName`字段与刚刚创建的存储类的名称匹配。根据要配置的工作负载、可以根据需要进一步自定义PVC定义。
++
+[listing]
+----
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: basic
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: ontap-iscsi
+----
+. 发出kubectl命令创建PVC。根据所创建的后备卷的大小，创建可能需要一些时间，因此您可以在该过程完成后进行观察。
++
+[listing]
+----
+[netapp-user@rhel7 trident-installer]$ kubectl create -f pvc-basic.yaml
+persistentvolumeclaim/basic created
+
+[netapp-user@rhel7 trident-installer]$ kubectl get pvc
+NAME    STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+basic   Bound    pvc-7ceac1ba-0189-43c7-8f98-094719f7956c   1Gi        RWO            ontap-iscsi      3s
+----
+

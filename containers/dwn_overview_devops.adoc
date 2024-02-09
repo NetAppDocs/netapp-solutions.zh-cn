@@ -1,0 +1,52 @@
+---
+sidebar: sidebar 
+permalink: containers/dwn_overview_devops.html 
+keywords: DevOps, Netapp, Astra Trident, Astra Control, Astra 
+summary: 本技术报告概述了DevOps和潜在用例。 
+---
+= DevOps概述
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+:k8s_distribution_name: Red Hat OpenShift, VMware Tanzu, Anthos by Google Cloud etc.
+
+
+[role="lead"]
+在过去几年中、构建软件的企业一直在接受DevOps的概念。DevOps实践打破了组织障碍、让开发和运营团队更加紧密地联系在一起。开发运营实践还可以帮助团队加快交付速度、提高可用性并提高服务和应用程序的稳定性、从而提高团队的工作效率。此外、采用自动化框架也是成功的关键要素—从大规模构建、测试和操作应用程序到管理完全自动化的基础架构平台或堆栈。下面我们将讨论开发运营的一些主要用例、在这些用例中、可以实施NetApp解决方案来帮助增强开发运营实践者在日常实践中遇到的体验。
+
+
+
+== 开发运营用例
+
+虽然DevOps没有一个普遍接受的定义、但适用于DevOps实践者的解决方案通常包含类似的构造或理念、可实现轻松的大规模实施、重复和管理。以下各节介绍了NetApp解决方案支持的DevOps工作流的潜在用例。
+
+
+
+=== 持续集成、持续交付和持续部署(CI/CD)
+
+持续集成、持续交付和持续部署(Continuous Integration、Continuous Delivery和Continuous Deployment、CI/CD)是一种编码理念、它鼓励开发人员通过制定一种方法、使其能够以自动化方式持续更新、测试和部署代码、从而实施和转变其编码实践。在大多数DevOps工作流中实施CI/CD的最常用方法是CI/CD管道、有几个第三方软件应用程序可以帮助实现这一点。
+
+image::dwn_image_16.png[CI/CD映像]
+
+请参见以下常见应用程序示例、这些应用程序可以帮助您处理CI/CD类型的工作流：
+
+https://argoproj.github.io/cd/["ARgoCD"]
+https://jenkins.io["Jenkins"]
+https://tekton.dev["特克顿"]
+
+本技术报告后面介绍的一些使用情形已在Jenkins中进行了演示、但主要的CI/CD原则可应用于组织在自己的实践中实施的任何工具。
+
+
+
+=== 基础架构即代码
+
+基础架构即代码有助于通过自动化命令、API和软件开发套件(SDK)配置和管理IT资源。这一概念通过消除物理数据中心或资源限制、极大地增强了开发运营体验、因为这些限制可能会妨碍开发人员实现其目标。
+
+image::dwn_image_17.png[基础架构即代码映像]
+
+最终用户通常使用编程语言、例如 https://www.python.org/["Python"] 或自动化工具、例如 https://www.ansible.com/["Ansible"] 或 https://puppet.com/["Puppet"] 创建可重复的自动化基础架构扩展操作、开发人员可以根据需要调用这些操作。
+
+NetApp ONTAP 和Astra Control都包含面向公有 的API和Ansible模块或软件开发工具包、这些模块或工具包可以使自动化操作非常易于采用并集成到DevOps流程中。

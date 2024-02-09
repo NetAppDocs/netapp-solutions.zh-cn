@@ -1,0 +1,152 @@
+---
+sidebar: sidebar 
+permalink: ehc/ncvs-gc-considerations-creating-active-directory-connections.html 
+keywords: active directory, credentials, permissions, smb machine accounts, region, backup users, security privilege, 
+summary: 通过Cloud Volumes Service 、可以将Cloud Volumes Service 实例连接到外部Active Directory服务器、以便为SMB和UNIX用户进行身份管理。要在Cloud Volumes Service 中使用SMB、需要创建Active Directory连接。 
+---
+= 创建Active Directory连接的注意事项
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+通过Cloud Volumes Service 、可以将Cloud Volumes Service 实例连接到外部Active Directory服务器、以便为SMB和UNIX用户进行身份管理。要在Cloud Volumes Service 中使用SMB、需要创建Active Directory连接。
+
+此配置提供了多个选项、需要在一定程度上考虑安全性。外部Active Directory服务器可以是内部实例或云原生。如果您使用的是内部Active Directory服务器、请勿将域公开到外部网络(例如使用DMZ或外部IP地址)。而是使用安全专用通道或VPN、单向林信任或专用网络连接到内部网络 https://cloud.google.com/vpc/docs/private-google-access["私有 Google 访问"^]。有关的详细信息、请参见Google Cloud文档 https://cloud.google.com/managed-microsoft-ad/docs/best-practices["在Google Cloud中使用Active Directory的最佳实践"^]。
+
+
+NOTE: CVS-SW要求Active Directory服务器位于同一区域。如果尝试在CVS-SW中与另一个区域建立DC连接、则尝试将失败。使用CVS-SW时、请务必创建包含Active Directory DC的Active Directory站点、然后在Cloud Volumes Service 中指定站点、以避免尝试跨区域DC连接。
+
+
+
+== Active Directory凭据
+
+启用SMB或LDAP for NFS后、Cloud Volumes Service 将与Active Directory控制器进行交互、以创建用于身份验证的计算机帐户对象。这与Windows SMB客户端加入域的方式并要求对Active Directory中的组织单位(OU)具有相同的访问权限没有区别。
+
+在许多情况下、安全组不允许在Cloud Volumes Service 等外部服务器上使用Windows管理员帐户。在某些情况下、作为安全最佳实践、Windows管理员用户将被完全禁用。
+
+
+
+=== 创建SMB计算机帐户所需的权限
+
+要将Cloud Volumes Service 计算机对象添加到Active Directory、此帐户对域具有管理权限或具有管理权限 https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/plan/delegating-administration-by-using-ou-objects["用于创建和修改计算机帐户对象的委派权限"^] 指定的OU为必填项。您可以使用Active Directory中的"控制委派向导"执行此操作、方法是创建一个自定义任务、使用户能够使用提供的以下访问权限创建/删除计算机对象：
+
+* 读 / 写
+* 创建/删除所有子对象
+* 读/写所有属性
+* 更改/重置密码
+
+
+这样会自动将定义的用户的安全ACL添加到Active Directory中的OU中、并最大限度地减少对Active Directory环境的访问。委派用户后、可以在此窗口中将此用户名和密码作为Active Directory凭据提供。
+
+
+NOTE: 传递到Active Directory域的用户名和密码会在计算机帐户对象查询和创建期间利用Kerberos加密来提高安全性。
+
+
+
+== Active Directory连接详细信息
+
+。 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/creating-smb-volumes["Active Directory连接详细信息"^] 为管理员提供字段、以便为计算机帐户放置提供特定的Active Directory架构信息、例如：
+
+* * Active Directory连接类型*用于指定某个区域中的Active Directory连接是用于Cloud Volumes Service 服务类型的卷还是CVS-Performance服务类型的卷。如果在现有连接上设置不正确、则在使用或编辑时可能无法正常工作。
+* *域。* Active Directory域名。
+* *站点*为了保证安全性和性能、将Active Directory服务器限制为特定站点 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/managing-active-directory-connections["注意事项"^]。如果多个Active Directory服务器跨越多个区域、则必须执行此操作、因为Cloud Volumes Service 目前不支持向Cloud Volumes Service 实例以外的其他区域的Active Directory服务器发出Active Directory身份验证请求。(例如、Active Directory域控制器所在的区域仅支持CVS-Performance、但您希望在CVS-SW实例中使用SMB共享。)
+* * DNS服务器。*要在名称查找中使用的DNS服务器。
+* * NetBIOS名称(可选)。*如果需要、则为服务器指定NetBIOS名称。这是使用Active Directory连接创建新计算机帐户时使用的。例如、如果NetBIOS名称设置为cvs-East、则计算机帐户名称将为cvs-East-｛1234｝。请参见一节 link:ncvs-gc-considerations-creating-active-directory-connections.html#how-cloud-volumes-service-shows-up-in-active-directory["Cloud Volumes Service 在Active Directory中的显示方式"] 有关详细信息 ...
+* *组织单位(OU)。*用于创建计算机帐户的特定OU。如果要将计算机帐户的控制权委派给特定OU的用户、则此功能非常有用。
+* * AES加密。*您也可以选中或取消选中为AD身份验证启用AES加密复选框。为Active Directory身份验证启用AES加密可在用户和组查找期间为Cloud Volumes Service 到Active Directory的通信提供额外的安全性。启用此选项之前、请与域管理员联系以确认Active Directory域控制器支持AES身份验证。
+
+
+
+NOTE: 默认情况下、大多数Windows服务器不会禁用较弱的密码(例如DES或RC4-HMAC)、但如果您选择禁用较弱的密码、请确认已将Cloud Volumes Service Active Directory连接配置为启用AES。否则、身份验证将失败。启用AES加密不会禁用较弱的密码、而是会向Cloud Volumes Service SMB计算机帐户添加对AES密码的支持。
+
+
+
+== Kerberos域详细信息
+
+此选项不适用于SMB服务器。而是在为Cloud Volumes Service 系统配置NFS Kerberos时使用。填充这些详细信息后、将配置NFS Kerberos域(类似于Linux上的krb5.conf文件)、并在创建Cloud Volumes Service 卷时指定NFS Kerberos时使用此域、因为Active Directory连接充当NFS Kerberos分发中心(KDC)。
+
+
+NOTE: 目前不支持将非Windows KDC与Cloud Volumes Service 结合使用。
+
+
+
+== Region
+
+使用区域可以指定Active Directory连接所在的位置。此区域必须与Cloud Volumes Service 卷所在的区域相同。
+
+* *使用LDAP的本地NFS用户。*本节还提供了一个允许使用LDAP的本地NFS用户的选项。如果要将UNIX用户组成员资格支持扩展到NFS (扩展组)的16组限制之外、则必须取消选择此选项。但是、使用扩展组需要为UNIX身份配置LDAP服务器。如果您没有LDAP服务器、请取消选择此选项。如果您有LDAP服务器、并且还希望使用本地UNIX用户(例如root)、请选择此选项。
+
+
+
+
+== 备份用户
+
+使用此选项可以指定对Cloud Volumes Service 卷具有备份权限的Windows用户。某些应用程序需要使用备份特权(SeBackupPrivilege)来正确备份和还原NAS卷中的数据。此用户对卷中的数据具有较高的访问权限、因此您应考虑这一点 https://docs.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/audit-audit-the-use-of-backup-and-restore-privilege["启用对该用户访问的审核"^]。启用后、审核事件将显示在事件查看器> Windows日志>安全性中。
+
+image:ncvs-gc-image19.png["错误：缺少图形映像"]
+
+
+
+== 安全权限用户
+
+使用此选项可以指定对Cloud Volumes Service 卷具有安全修改权限的Windows用户。某些应用程序需要安全特权(SeSecurityPrivilege) (https://docs.netapp.com/us-en/ontap/smb-hyper-v-sql/add-sesecurityprivilege-user-account-task.html["例如SQL Server"^])以在安装期间正确设置权限。管理安全日志需要此权限。虽然此特权的功能不如SeBackupPrivilege强大、但NetApp建议这样做 https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/basic-audit-privilege-use["审核用户的访问权限"^] 如果需要、则使用此权限级别。
+
+有关详细信息，请参见 https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4672["分配给新登录的特殊权限"^]。
+
+
+
+== Cloud Volumes Service 在Active Directory中的显示方式
+
+Cloud Volumes Service 在Active Directory中显示为普通计算机帐户对象。命名约定如下。
+
+* CIFS/SMB和NFS Kerberos会创建单独的计算机帐户对象。
+* 启用了LDAP的NFS会在Active Directory中为Kerberos LDAP绑定创建一个计算机帐户。
+* 使用LDAP的双协议卷共享LDAP和SMB的CIFS/SMB计算机帐户。
+* CIFS/SMB计算机帐户的命名约定为name-1234 (随机四位ID、并在< 10个字符名称后附加连字符)。您可以通过Active Directory连接上的NetBIOS名称设置来定义名称(请参见一节<<Active Directory连接详细信息>>")。
+* NFS Kerberos使用nfs-name-1234作为命名约定(最多15个字符)。如果使用的字符数超过15个、则名称为nfs-truncated-name-1234。
+* 启用了LDAP的仅NFS CVS-Performance实例创建一个SMB计算机帐户、以便使用与CIFS/SMB实例相同的命名约定绑定到LDAP服务器。
+* 创建SMB计算机帐户时、默认隐藏的管理共享(请参见一节 link:ncvs-gc-smb.html#default-hidden-shares[""默认隐藏共享""])也会创建(c$、admin$、ipc$)、但这些共享没有分配ACL、因此无法访问。
+* 默认情况下、计算机帐户对象放置在CN=Computers中、但您可以在必要时指定其他OU。请参见第节"<<创建SMB计算机帐户所需的权限>>有关为Cloud Volumes Service 添加/删除计算机帐户对象所需的访问权限的信息。
+
+
+当Cloud Volumes Service 将SMB计算机帐户添加到Active Directory时、将填充以下字段：
+
+* cn (使用指定的SMB服务器名称)
+* dnsHostName (使用SMBserver.domain.com)
+* MSDS-SupportedEncryptionTypes (如果未启用AES加密、则允许使用DES_CBC_MD5、RC4_HMAC_MD5；如果启用了AES加密、则允许使用计算机Kerberos帐户使用DES_CBC_MD5、RC4_HMAC_MD5、AES128_CTS_HMAC_SHA1_96、AES256_CTS_HMAC_SHA1_96)
+* 名称(使用SMB服务器名称)
+* sAMAccountName (使用SMBserver$)
+* servicePrincipalName (具有用于Kerberos的host/smbserver.domain.com和host/smbserver SPN)
+
+
+如果要在计算机帐户上禁用较弱的Kerberos加密类型(enctype)、则可以将计算机帐户上的MSDS-SupportedEncryptionTypes值更改为下表中的一个值、以便仅允许AES。
+
+|===
+| MSDS-SupportedEncryptionTypes值 | 已启用EncType 
+
+
+| 2. | DES_CBC_MD5 
+
+
+| 4. | RC4 HMAC 
+
+
+| 8. | 仅限AES128_CTS_HMAC_SHA1_96 
+
+
+| 16. | 仅限AES256_CTS_HMAC_SHA1_96 
+
+
+| 24 | AES128_CTS_HMAC_SHA1_96和AES256_CTS_HMAC_SHA1_96 
+
+
+| 30 个 | DES_CBC_MD5、RC4_HMAC、AES128_CTS_HMAC_SHA1_96和AES256_CTS_HMAC_SHA1_96 
+|===
+要为SMB计算机帐户启用AES加密、请在创建Active Directory连接时单击为AD身份验证启用AES加密。
+
+为NFS Kerberos启用AES加密、 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/creating-nfs-volumes["请参见Cloud Volumes Service 文档"^]。

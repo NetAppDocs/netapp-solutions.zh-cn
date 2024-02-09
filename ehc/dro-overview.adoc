@@ -1,0 +1,295 @@
+---
+sidebar: sidebar 
+permalink: ehc/dro-overview.html 
+keywords: NetApp Solutions, hybrid, multicloud, multi cloud, hyperscalers, vmware, disaster recovery orchestrator, DRO 
+summary:  
+---
+= TR-4955：使用适用于ONTAP 和VMC的FSX进行灾难恢复(AWS VMware Cloud)
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+NetApp 公司 Niyaz Mohamed
+
+
+
+== 概述
+
+将灾难恢复到云是一种弹性且经济高效的方式、可保护工作负载免受站点中断和数据损坏事件(例如勒索软件)的影响。借助NetApp SnapMirror技术、可以将内部VMware工作负载复制到在AWS中运行的FSX for ONTAP。
+
+可以使用灾难恢复协调器(DRO；具有UI的脚本式解决方案)无缝恢复从内部复制到FSX for ONTAP 的工作负载。DRO可通过VM注册到VMC自动从SnapMirror级别恢复到直接在NSX-T上进行的网络映射所有VMC环境都包含此功能。
+
+image::dro-vmc-image1.png[此图展示了内部数据中心、AWS SDDC实例上的VMware云和适用于NetApp ONTAP 的Amazon FSx之间的结构和互连。其中包括SnapMirror复制、DRaaS操作流量、互联网或直接连接以及VMware Transit Connect。]
+
+
+
+== 入门
+
+
+
+=== 在AWS上部署和配置VMware Cloud
+
+link:https://www.vmware.com/products/vmc-on-aws.html["基于 AWS 的 VMware Cloud"^] 为AWS生态系统中基于VMware的工作负载提供云原生体验。每个VMware软件定义的数据中心(SDDC)均在Amazon Virtual Private Cloud (VPC)中运行、并提供完整的VMware堆栈(包括vCenter Server)、NSX-T软件定义的网络连接、vSAN软件定义的存储以及一个或多个ESXi主机、这些主机可为工作负载提供计算和存储资源。要在AWS上配置VMC环境、请按照此处的步骤进行操作 link:https://docs.netapp.com/us-en/netapp-solutions/ehc/aws-setup.html["链接。"^]。此外、还可以使用引导灯集群进行灾难恢复。
+
+
+NOTE: 在初始版本中、DRO支持现有的试用集群。即将发布的版本将提供按需创建SDDC的功能。
+
+
+
+=== 为ONTAP 配置和配置FSX
+
+适用于NetApp ONTAP 的Amazon FSX是一种完全托管的服务、可提供基于常见NetApp ONTAP 文件系统构建的高度可靠、可扩展、高性能和功能丰富的文件存储。请按照此处的步骤进行操作 link:https://docs.netapp.com/us-en/netapp-solutions/ehc/aws-native-overview.html["链接。"^] 为ONTAP 配置和配置FSX。
+
+
+
+=== 为适用于ONTAP 的FSX部署和配置SnapMirror
+
+下一步是使用NetApp BlueXP并发现在AWS实例上为ONTAP 配置的FSX、并以适当的频率将所需的数据存储库卷从内部环境复制到适用于ONTAP 的FSX并保留NetApp Snapshot副本：
+
+image::dro-vmc-image2.png[此图描绘了BlueXP画布关系映射、其中显示了已启用服务之间的各种交互。]
+
+按照此链接中的步骤配置BlueXP。您也可以使用NetApp ONTAP 命令行界面计划通过此链接进行复制。
+
+
+NOTE: SnapMirror关系是前提条件、必须事先创建。
+
+
+
+== DRO安装
+
+要开始使用DRO、请在指定EC2实例或虚拟机上使用Ubuntu操作系统、以确保满足前提条件。然后安装软件包。
+
+
+
+=== 前提条件
+
+* 确保与源和目标vCenter以及存储系统建立连接。
+* 如果使用的是DNS名称、则应进行DNS解析。否则、您应使用vCenter和存储系统的IP地址。
+* 创建具有root权限的用户。您也可以将sudo与EC2实例结合使用。
+
+
+
+
+=== 操作系统要求
+
+* Ubuntu 20.04 (LTS)、至少具有2 GB和4个vCPU
+* 指定代理VM上必须安装以下软件包：
++
+** Docker
+** Docker构成
+** JQ
+
+
+
+
+更改上的权限 `docker.sock`： `sudo chmod 666 /var/run/docker.sock`。
+
+
+NOTE: 。 `deploy.sh` 此脚本将执行所有必需的前提条件。
+
+
+
+=== 安装软件包
+
+. 在指定虚拟机上下载安装包：
++
+[listing]
+----
+git clone https://github.com/NetApp/DRO-AWS.git
+----
++
+
+NOTE: 该代理可以安装在内部环境中、也可以安装在AWS VPC中。
+
+. 解压缩软件包、运行部署脚本、然后输入主机IP (例如10.10.10.10)。
++
+[listing]
+----
+tar xvf DRO-prereq.tar
+----
+. 导航到目录并按如下所示运行Deploy脚本：
++
+[listing]
+----
+sudo sh deploy.sh
+----
+. 使用以下命令访问UI：
++
+[listing]
+----
+https://<host-ip-address>
+----
++
+使用以下默认凭据：
+
++
+[listing]
+----
+Username: admin
+Password: admin
+----
+
+
+
+NOTE: 可以使用"更改密码"选项更改密码。
+
+image::dro-vmc-image3.png[Disaster Recovery Orchestrator登录屏幕。]
+
+
+
+== DRO配置
+
+正确配置适用于ONTAP 的FSX和VMC之后、您可以开始配置DRO、以便使用适用于ONTAP 的FSX上的只读SnapMirror副本自动将内部工作负载恢复到VMC。
+
+NetApp建议在AWS中部署DRO代理、并将其部署到部署了FSX for ONTAP 的同一VPC上(也可以通过对等连接)。这样、DRO代理便可通过网络与内部组件以及适用于ONTAP 的FSX和VMC资源进行通信。
+
+第一步是发现内部资源和云资源(vCenter和存储)并将其添加到DRO中。在支持的浏览器中打开DRO、并使用默认用户名和密码(admin/admin)以及添加站点。也可以使用发现选项添加站点。添加以下平台：
+
+* 内部部署
++
+** 内部vCenter
+** ONTAP 存储系统
+
+
+* 云
++
+** VMC vCenter
+** 适用于 ONTAP 的 FSX
+
+
+
+
+image::dro-vmc-image4.png[临时占位符图像问题描述。]
+
+image::dro-vmc-image5.png[包含源站点和目标站点的DRO站点概述页面。]
+
+添加后、DRO将执行自动发现、并显示具有从源存储到适用于ONTAP 的FSX的相应SnapMirror副本的VM。DRO会自动检测VM使用的网络和端口组并对其进行填充。
+
+image::dro-vmc-image6.png[包含219个VM和10个数据存储库的自动发现屏幕。]
+
+下一步是将所需的VM分组到功能组中、以用作资源组。
+
+
+
+=== 资源分组
+
+添加平台后、您可以将要恢复的VM分组到资源组中。使用DRO资源组、您可以将一组依赖虚拟机分组到逻辑组中、这些逻辑组包含启动顺序、启动延迟以及可在恢复时执行的可选应用程序验证。
+
+要开始创建资源组、请完成以下步骤：
+
+. 访问*资源组*、然后单击*创建新资源组*。
+. 在*新建资源组*下、从下拉列表中选择源站点、然后单击*创建*。
+. 提供*资源组详细信息*并单击*继续*。
+. 使用搜索选项选择相应的VM。
+. 选择选定虚拟机的启动顺序和启动延迟(秒)。通过选择每个VM并设置其优先级来设置启动顺序。所有VM的默认值均为3。
++
+选项如下：
+
++
+1—第一个启动的虚拟机3—默认值5—最后一个启动的虚拟机
+
+. 单击*创建资源组*。
+
+
+image::dro-vmc-image7.png[包含两个条目的资源组列表的屏幕截图：Test和DemoRG1。]
+
+
+
+=== 复制计划
+
+您需要制定计划、以便在发生灾难时恢复应用程序。从下拉列表中选择源和目标vCenter平台、然后选择要包含在此计划中的资源组、以及应用程序应如何还原和启动的分组(例如、域控制器、第1层、第2层等)。此类计划有时也称为蓝图。要定义恢复计划、请导航到*复制计划*选项卡、然后单击*新建复制计划*。
+
+要开始创建复制计划、请完成以下步骤：
+
+. 访问*复制计划*、然后单击*创建新复制计划*。
++
+image::dro-vmc-image8.png[复制计划屏幕的屏幕截图、其中包含一个名为DemoRP的计划。]
+
+. 在*新复制计划*下、为计划提供一个名称、并通过选择源站点、关联的vCenter、目标站点和关联的vCenter来添加恢复映射。
++
+image::dro-vmc-image9.png[复制计划详细信息的屏幕截图、包括恢复映射。]
+
+. 恢复映射完成后、选择集群映射。
++
+image::dro-vmc-image10.png[临时占位符图像问题描述。]
+
+. 选择*资源组详细信息*、然后单击*继续*。
+. 设置资源组的执行顺序。使用此选项可以选择存在多个资源组时的操作顺序。
+. 完成后、选择指向相应网段的网络映射。应已在VMC中配置这些区块、因此请选择适当的区块以映射虚拟机。
+. 根据VM的选择、系统会自动选择数据存储库映射。
++
+
+NOTE: SnapMirror处于卷级别。因此、所有VM都会复制到复制目标。确保选择属于数据存储库的所有VM。如果未选择这些虚拟机、则仅会处理属于复制计划的虚拟机。
+
++
+image::dro-vmc-image11.png[临时占位符图像问题描述。]
+
+. 在VM详细信息下、您可以选择调整VM的CPU和RAM参数大小；在将大型环境恢复到较小的目标集群或执行灾难恢复测试而无需配置一对一物理VMware基础架构时、这会非常有用。此外、您还可以修改资源组中所有选定虚拟机的启动顺序和启动延迟(秒)。如果需要对资源组启动顺序选择期间选择的启动顺序进行任何更改、还可以选择修改启动顺序。默认情况下、系统会使用在选择资源组期间选择的启动顺序；但是、在此阶段可以执行任何修改。
++
+image::dro-vmc-image12.png[临时占位符图像问题描述。]
+
+. 单击*创建复制计划*。
++
+image::dro-vmc-image13.png[临时占位符图像问题描述。]
+
+
+
+创建复制计划后、可以根据需要使用故障转移选项、test-failover选项或migrate选项。在故障转移和测试-故障转移选项期间、将使用最新的SnapMirror Snapshot副本、或者可以从时间点Snapshot副本中选择特定的Snapshot副本(按照SnapMirror的保留策略)。如果您遇到勒索软件等损坏事件、而最新副本已被泄露或加密、则时间点选项可能会非常有用。DRO显示所有可用时间点。要使用复制计划中指定的配置触发故障转移或测试故障转移、可以单击*故障转移*或*测试故障转移*。
+
+image::dro-vmc-image14.png[临时占位符图像问题描述。]
+
+image::dro-vmc-image15.png[在此屏幕中、系统会为您提供卷快照详细信息、您可以在使用最新快照和选择特定快照之间进行选择。]
+
+可以在任务菜单中监控复制计划：
+
+image::dro-vmc-image16.png[任务菜单显示复制计划的所有作业和选项、还允许您查看日志。]
+
+触发故障转移后、可以在VMC vCenter中看到恢复的项目(VM、网络、数据存储库)。默认情况下、VM将恢复到工作负载文件夹。
+
+image::dro-vmc-image17.png[临时占位符图像问题描述。]
+
+可以在复制计划级别触发故障恢复。对于测试故障转移、可以使用卸载选项回滚更改并删除FlexClone关系。与故障转移相关的故障恢复过程分为两步。选择复制计划并选择*反向数据同步*。
+
+image::dro-vmc-image18.png[复制计划概述的屏幕截图、其中包含Reverse Data Sync选项的下拉列表。]
+
+image::dro-vmc-image19.png[临时占位符图像问题描述。]
+
+完成后、您可以触发故障恢复以移回原始生产站点。
+
+image::dro-vmc-image20.png[复制计划概述的屏幕截图、其中包含故障恢复选项的下拉列表。]
+
+image::dro-vmc-image21.png[原始生产站点已启动且正在运行的DRO摘要页面的屏幕截图。]
+
+在NetApp BlueXP中、我们可以看到相应卷(已映射到VMC的读写卷)的复制运行状况已中断。在测试故障转移期间、DRO不会映射目标卷或副本卷。相反、它会为所需的SnapMirror (或Snapshot)实例创建一个FlexClone副本、并公开FlexClone实例、这样不会占用适用于ONTAP 的FSX的额外物理容量。此过程可确保卷不会被修改、并且即使在灾难恢复测试或鉴别工作流期间、副本作业也可以继续执行。此外、此过程还可确保在发生错误或恢复损坏的数据时、可以清理恢复过程、而不会造成副本被销毁的风险。
+
+image::dro-vmc-image22.png[临时占位符图像问题描述。]
+
+
+
+=== 勒索软件恢复
+
+从勒索软件中恢复可能是一项艰巨的任务。具体而言、IT组织很难确定安全的返回点、一旦确定、就很难保护已恢复的工作负载、防止再次发生攻击、例如、休眠的恶意软件或容易受到攻击的应用程序。
+
+DRO可帮助您从任何可用时间点恢复系统、从而解决这些问题。您还可以将工作负载恢复到正常运行且彼此隔离的网络、以便应用程序可以在不受北-南流量影响的位置彼此运行和通信。这样、您的安全团队就可以安全地进行取证、并确保没有隐藏或休眠的恶意软件。
+
+
+
+== 优势
+
+* 使用高效且具有故障恢复能力的SnapMirror复制。
+* 使用Snapshot副本保留功能恢复到任何可用时间点。
+* 完全自动化执行从存储、计算、网络和应用程序验证步骤中恢复成百上千个VM所需的所有步骤。
+* 使用ONTAP FlexClone技术执行工作负载恢复、方法不会更改复制的卷。
++
+** 避免卷或Snapshot副本发生数据损坏的风险。
+** 在灾难恢复测试工作流期间避免复制中断。
+** 将灾难恢复数据与云计算资源一起用于灾难恢复以外的工作流、例如DevTest、安全测试、修补或升级测试以及修复测试。
+
+
+* CPU和RAM优化、可通过恢复到较小的计算集群来帮助降低云成本。
+

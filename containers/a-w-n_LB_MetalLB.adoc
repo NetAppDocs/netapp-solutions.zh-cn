@@ -1,0 +1,84 @@
+---
+sidebar: sidebar 
+permalink: containers/a-w-n_LB_MetalLB.html 
+summary: 此页面详细介绍了 MetalLB 负载平衡器的安装和配置说明。 
+keywords: Anthos, Kubernetes, MetalLB, LoadBalancer, Astra, Astra Control Center 
+---
+= 安装MetalLB负载平衡器
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+此页面列出了MetalLB受管负载平衡器的安装和配置说明。
+
+
+
+== 安装 MetalLB 负载平衡器
+
+MetalLB负载平衡器与VMware上的Anthos集群完全集成在一起、并从1.11版开始在管理和用户集群设置中执行自动部署。在相应的`cluster.YAML`配置文件中存在文本块、您必须修改这些块才能提供负载平衡器信息。它可以在您的Anthos集群上自行托管、而无需像其他受支持的负载平衡器解决方案那样部署外部资源。此外、您还可以创建一个IP池、通过在未在云提供商上运行的集群中创建类型为负载平衡器的Kubernetes服务来自动分配地址。
+
+
+
+== 与Anthos集成
+
+为Anthos admin启用MetalLB负载平衡器时、您必须修改`admin-cluster.YAML`文件中`loadbalancer：`部分中的几行。您只能修改`controlPlaneVIP：` address、然后将`kind：`设置为MetalLB。有关示例、请参见以下代码片段：
+
+[listing]
+----
+# (Required) Load balancer configuration
+loadBalancer:
+  # (Required) The VIPs to use for load balancing
+  vips:
+    # Used to connect to the Kubernetes API
+    controlPlaneVIP: "10.61.181.230"
+    # # (Optional) Used for admin cluster addons (needed for multi cluster features). Must
+    # # be the same across clusters
+    # addonsVIP: ""
+  # (Required) Which load balancer to use "F5BigIP" "Seesaw" "ManualLB" or "MetalLB".
+  # Uncomment the corresponding field below to provide the detailed spec
+  kind: MetalLB
+----
+为Anthos用户集群启用MetalLB负载平衡器时、每个`user-cluster.YAML`文件中有两个区域必须更新。首先、您必须以类似于`admin-cluster.yaml`文件的方式在`loadbalancer：`部分中修改`controlPlaneVIP：`、`ingressVIP：`和`kind：`值。有关示例、请参见以下代码片段：
+
+[listing]
+----
+loadBalancer:
+  # (Required) The VIPs to use for load balancing
+  vips:
+    # Used to connect to the Kubernetes API
+    controlPlaneVIP: "10.61.181.240"
+    # Shared by all services for ingress traffic
+    ingressVIP: "10.61.181.244"
+  # (Required) Which load balancer to use "F5BigIP" "Seesaw" "ManualLB" or "MetalLB".
+  # Uncomment the corresponding field below to provide the detailed spec
+  kind: MetalLB
+----
+
+NOTE: 此ingresVIP IP地址必须位于稍后在配置中分配给MetalLB负载平衡器的IP地址池中。
+
+然后、您需要导航到`metalLB：`子部分、并通过在`- name：`变量中命名池来修改`addressPools：`部分。此外、还必须创建一个IP地址池、MetalLB可以通过为`addresses：`变量提供一个范围来将该IP地址池分配给loadbalancer类型的服务。
+
+[listing]
+----
+# # (Required when using "MetalLB" kind in user clusters) Specify the MetalLB config
+ metalLB:
+ #   # (Required) A list of non-overlapping IP pools used by load balancer typed services.
+ #   # Must include ingressVIP of the cluster.
+    addressPools:
+ #   # (Required) Name of the address pool
+    - name: "default"
+ #     # (Required) The addresses that are part of this pool. Each address must be either
+ #     # in the CIDR form (1.2.3.0/24) or range form (1.2.3.1-1.2.3.5).
+      addresses:
+      - "10.61.181.244-10.61.181.249"
+----
+
+NOTE: 可以像示例一样提供地址池范围、将其限制为特定子网中的多个地址、也可以在整个子网可用时提供CIDR表示法。
+
+. 创建类型为loadbalancer的Kubernetes服务时、MetalLB会自动为这些服务分配外部IP、并通过响应ARP请求来公布IP地址。
+

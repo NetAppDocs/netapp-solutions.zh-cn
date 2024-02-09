@@ -1,0 +1,162 @@
+---
+sidebar: sidebar 
+permalink: containers/a-w-n_anthos_VMW.html 
+keywords: Anthos, VMware vSphere, ESXi, on_prem 
+summary: VMware vSphere 是一个虚拟化平台，用于集中管理 ESXi 虚拟机管理程序上运行的大量虚拟化服务器和网络。 
+---
+= VMware上的Anthos集群
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+VMware上的Anthos集群是Google Kubernetes Engine的扩展、部署在最终用户的私有数据中心中。企业可以部署设计用于在内部Kubernetes集群中Google Cloud容器中运行的相同应用程序。VMware上的Anthos集群可以部署到数据中心的现有VMware vSphere环境中、这样可以节省资本支出、并加快部署和扩展操作的速度。
+
+在VMware上部署Anthos集群包括以下组件：
+
+* * Anthos管理工作站。*一种部署主机、可从中运行`gkectl`和`kubectl`命令来部署Anthos部署并与之进行交互。
+* *管理集群。*在VMware上设置Anthos集群时部署的初始集群。此集群可管理所有从属用户集群操作、包括部署、扩展和升级。
+* *用户集群。*每个用户集群都部署有自己的负载平衡器实例或分区、使其可以充当单个用户或组的独立Kubernetes集群、从而帮助实现完全多租户。
+
+
+下图显示了VMware上部署Anthos-clusters的问题描述。
+
+image:a-w-n_anthos_controlplanev2_vm_architecture.png["错误：缺少图形映像"]
+
+
+
+== 优势
+
+VMware上的Anthos集群具有以下优势：
+
+* *高级多租户。*可以为每个最终用户分配自己的用户集群、并使用其自身开发环境所需的虚拟资源进行部署。
+* *节省成本。*最终用户可以将多个用户集群部署到同一物理环境中、并将自己的物理资源用于应用程序部署、而不是在Google Cloud环境或大型裸机集群中配置资源、从而显著节省成本。
+* *先开发再发布。*可以在开发应用程序时使用内部部署、这样可以在本地数据中心的隐私环境下测试应用程序、然后再在云中公开发布。
+* * 安全要求。 * 安全问题日益增加或无法存储在公有云中的敏感数据集的客户可以从自己的数据中心的安全环境中运行其应用程序，从而满足组织的要求。
+
+
+
+
+== VMware vSphere
+
+VMware vSphere 是一个虚拟化平台，用于集中管理 ESXi 虚拟机管理程序上运行的大量虚拟化服务器和网络。
+
+有关 VMware vSphere 的详细信息，请参见 https://www.vmware.com/products/vsphere.html["VMware vSphere 网站"^]。
+
+VMware vSphere 可提供以下功能：
+
+* * VMware vCenter Server* 。 VMware vCenter Server 可通过一个控制台统一管理所有主机和 VM ，并聚合对集群，主机和 VM 的性能监控。
+* 通过* VMware vSphere vMotion* VMware vCenter、您可以根据请求在集群中的节点之间热迁移虚拟机、而不会造成中断。
+* * vSphere高可用性。*为避免主机发生故障时发生中断、VMware vSphere允许将主机集群化并配置为高可用性。由于主机故障而中断的 VM 不久将在集群中的其他主机上重新启动，从而还原服务。
+* * 分布式资源计划程序（ DRS ）。 * 可以配置 VMware vSphere 集群，以便对其托管的 VM 的资源需求进行负载平衡。具有资源管理的 VM 可以热迁移到集群中的其他节点，以确保有足够的可用资源。
+
+
+
+
+== 硬件要求
+
+
+
+=== 计算
+
+Google Cloud会定期通过其Anthos Ready平台合作伙伴计划请求更新对包含新版本Anthos的合作伙伴服务器平台的验证。您可以找到当前已验证的服务器平台以及支持的Anthos版本的列表 https://cloud.google.com/anthos/docs/resources/partner-platforms["此处"^]。
+
+
+
+=== 操作系统
+
+VMware上的Anthos集群可以根据客户的选择部署到vSphere 6和7环境中、以匹配他们当前的数据中心基础架构。
+
+下表列出了NetApp和我们的合作伙伴用于验证解决方案 的vSphere版本。
+
+|===
+
+
+| 操作系统 | 版本。 | Anthos版本 
+
+
+| VMware vSphere | 8.01. | 1.15 
+|===
+
+
+=== 其他硬件
+
+为了完成将Anthos作为经过全面验证的解决方案 与NetApp结合使用的部署、NetApp和我们的合作伙伴工程师已经对用于网络连接和存储的其他数据中心组件进行了测试。
+
+下表提供了有关这些附加基础架构组件的信息。
+
+|===
+| 制造商 | 硬件组件 
+
+
+| Mellanox | 交换机(数据网络) 
+
+
+| Cisco | 交换机(管理网络) 
+
+
+| NetApp | AFF 存储系统 
+|===
+
+
+=== 其他软件
+
+下表列出了在验证环境中部署的软件版本。
+
+|===
+
+
+| 制造商 | 软件名称 | version 
+
+
+| NetApp | ONTAP | 9.12.1 
+
+
+| NetApp | Astra Trident | 23.04. 
+|===
+在NetApp执行Anthos Ready平台验证期间、实验室环境是基于下图构建的、通过该图、我们可以使用各种NetApp ONTAP 存储后端测试多种场景。
+
+image:a-w-n_Anthos-1.15-vsphere8_validation.png["错误：缺少图形映像"]
+
+
+
+=== 网络基础架构支持资源
+
+在部署Anthos之前、应具备以下基础架构：
+
+* 至少一个 DNS 服务器，提供可从带内管理网络和 VM 网络访问的完整主机名解析。
+* 至少可从带内管理网络和 VM 网络访问一个 NTP 服务器。
+* 如果集群需要动态扩展、则可以使用DHCP服务器按需提供网络地址租约。
+* （可选）带内管理网络和 VM 网络的出站 Internet 连接。
+
+
+
+
+== 生产部署的最佳实践
+
+本节列出了企业在将此解决方案部署到生产环境之前应考虑的几个最佳实践。
+
+
+
+=== 将Anthos部署到至少包含三个节点的ESXi集群
+
+虽然可以在少于三个节点的vSphere集群中安装Anthos以进行演示或评估、但不建议用于生产工作负载。虽然两个节点支持基本HA和容错功能、但必须修改Anthos集群配置以禁用默认主机关联性、Google Cloud不支持此部署方法。
+
+
+
+=== 配置虚拟机和主机关联性
+
+通过启用VM和主机关联性、可以在多个虚拟机管理程序节点之间分布Anthos集群节点。
+
+关联性或反关联性是一种为一组 VM 和 / 或主机定义规则的方法，用于确定这些 VM 是在同一主机上运行还是在组中的主机上运行，还是在不同主机上运行。它通过创建由具有一组相同参数和条件的 VM 和 / 或主机组成的关联组来应用于 VM 。根据关联组中的 VM 是在组中的同一主机上运行，还是在不同主机上单独运行，此关联组的参数可以定义正关联性或负关联性。
+
+要配置关联组、请参见以下适用于您的VMware vSphere版本的链接。
+
+https://docs.vmware.com/en/VMware-vSphere/6.7/com.vmware.vsphere.resmgmt.doc/GUID-FF28F29C-8B67-4EFF-A2EF-63B3537E6934.html["vSphere 6.7 文档：使用 DRS 关联性规则"^]。https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.resmgmt.doc/GUID-FF28F29C-8B67-4EFF-A2EF-63B3537E6934.html["vSphere 7.0文档：使用DRS关联性规则"^]。
+
+
+NOTE: Anthos在每个`cluster.yaml`文件中都有一个配置选项、用于自动创建节点关联性规则、该规则可根据环境中的ESXi主机数量启用或禁用。
