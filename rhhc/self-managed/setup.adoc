@@ -1,0 +1,75 @@
+---
+sidebar: sidebar 
+permalink: rhhc/self-managed/setup.html 
+keywords: NetApp Solutions, redhat OpenShift, red hat OpenShift, redhat openshift container platform, ocp, openshift container platform, Advanced Cluster Management, ACM, Hub Cluster, containers, container workloads, VMware, customer managed storage, ONTAP 
+summary:  
+---
+= 在AWS上部署和配置Red Hat OpenShift容器平台
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+[role="lead"]
+本节简要介绍了如何在AWS中设置和管理OpenShift集群以及在这些集群上部署有状态应用程序的工作流。其中展示了如何利用NetApp Cloud Volumes ONTAP 存储在Asta三端存储的帮助下提供永久性卷。本节详细介绍了如何使用Astra Control Center为有状态应用程序执行数据保护和迁移活动。
+
+
+NOTE: 可以通过多种方法在AWS上部署Red Hat OpenShift容器平台集群。此高级设置问题描述 提供了所用特定方法的文档链接。您可以在中提供的相关链接中参考其他方法 link:../rhhc-resources.html["资源部分"]。
+
+下图展示了在AWS上部署并使用VPN连接到数据中心的集群。
+
+image:rhhc-self-managed-aws.png[""]
+
+设置过程可细分为以下步骤：
+
+.通过高级集群管理在AWS上安装OCP集群。
+[%collapsible]
+====
+* 创建具有站点到站点VPN连接的VPC (使用pfSense)以连接到内部网络。
+* 内部网络具有Internet连接。
+* 在3个不同的AZs中创建3个专用子网。
+* 为VPC创建Route 53专用托管区域和DNS解析程序。
+
+
+使用高级集群管理(ACM)向导在AWS上创建OpenShift集群。请参阅说明 link:https://docs.openshift.com/dedicated/osd_install_access_delete_cluster/creating-an-aws-cluster.html["此处"]。
+
+
+NOTE: 您也可以从OpenShift混合云控制台在AWS中创建集群。请参见 link:https://docs.openshift.com/container-platform/4.10/installing/installing_aws/installing-aws-default.html["此处"] 有关说明，请参见。
+
+
+TIP: 使用ACM创建集群时、您可以在表单视图中填写详细信息后编辑YAML文件、从而自定义安装。创建集群后、您可以通过ssh登录到集群节点、以便进行故障排除或其他手动配置。使用您在安装期间提供的ssh密钥和username core进行登录。
+
+====
+.使用BlueXP在AWS中部署Cloud Volumes ONTAP。
+[%collapsible]
+====
+* 在内部VMware环境中安装连接器。请参阅说明 link:https://docs.netapp.com/us-en/cloud-manager-setup-admin/task-install-connector-on-prem.html#install-the-connector["此处"]。
+* 使用连接器在AWS中部署CVO实例。请参阅说明 link:https://docs.netapp.com/us-en/cloud-manager-cloud-volumes-ontap/task-getting-started-aws.html["此处"]。
+
+
+
+NOTE: 该连接器也可以安装在云环境中。请参见 link:https://docs.netapp.com/us-en/cloud-manager-setup-admin/concept-connectors.html["此处"] 适用于追加信息 。
+
+====
+.在OCP集群中安装Asta Trdent
+[%collapsible]
+====
+* 使用Helm部署三级联操作员。请参阅说明 link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy-helm.html["此处"]
+* 创建后端和存储类。请参阅说明 link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-postdeployment.html["此处"]。
+
+
+====
+.将AWS上的OCP集群添加到Asta Control Center。
+[%collapsible]
+====
+将AWS中的OCP集群添加到Astra Control Center。
+
+====
+.对多区域架构使用三元数据的CSI拓扑功能
+如今、云提供商支持Kubbernetes/OpenShift集群管理员生成基于分区的集群节点。节点可以位于一个区域内的不同可用性区域中，也可以位于不同区域之间。为了便于在多区域架构中为工作负载配置卷， Astra Trident 使用了 CSI 拓扑。使用 CSI 拓扑功能，可以根据区域和可用性区域将对卷的访问限制为一小部分节点。请参见 link:https://docs.netapp.com/us-en/trident/trident-use/csi-topology.html["此处"] 了解更多详细信息。
+
+
+NOTE: Kubarnetes支持两种卷绑定模式：-将**_VolumeBindingMode_设置为_Immediate_**(默认)时、Asta Trident会在没有任何拓扑感知功能的情况下创建卷。创建永久性卷时，不会依赖于请求的 Pod 的计划要求。-当**_VolumeBindingMode_设置为_WaitForFirstConsumer_**时，为PVC创建和绑定永久性卷的操作会延迟，直到计划和创建使用PVC的Pod为止。这样，卷就会根据拓扑要求强制实施的计划限制来创建。Astra三叉设计存储后端可以根据可用性区域选择性地配置卷(拓扑感知型后端)。对于使用此后端的 StorageClasses ，只有在受支持区域 / 区域中计划的应用程序请求时，才会创建卷。(拓扑感知型存储类)请参见 link:https://docs.netapp.com/us-en/trident/trident-use/csi-topology.html["此处"] 了解更多详细信息。
