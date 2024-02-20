@@ -1,0 +1,148 @@
+---
+sidebar: sidebar 
+permalink: ai/aipod_nv_hw_components.html 
+keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, NVIDIA AI Enterprise, NVIDIA BasePOD, NVIDIA DGX 
+summary: 采用NVIDIA DGX系统的NetApp AI Pod—硬件组件 
+---
+= 采用NVIDIA DGX系统的NetApp AI Pod—硬件组件
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+link:aipod_nv_intro.html["上一页：采用NVIDIA DGX系统的NetApp AI Pod -简介。"]
+
+
+
+== NetApp AFF存储系统
+
+NetApp AFF一流的存储系统凭借行业领先的性能、卓越的灵活性、云集成和同类最佳数据管理功能、可帮助IT部门满足企业存储需求。AFF 系统专为闪存而设计、有助于加速、管理和保护业务关键型数据。
+
+
+
+=== AFF A系列存储系统
+
+A900更新！！！
+
+NetApp AFF A800系统是业内首款端到端NVMe解决方案。对于NAS工作负载、单个AFF A800系统支持以低于500µs微秒的低隔音率进行25 GBps的顺序读取和100万次IOPS的小型随机读取。
+
+image:oai_A800_3D.png["错误：缺少图形映像"]
+
+AFF A800系统支持以下功能：
+*在一个24节点集群中实现高达300 GBps和1、140万次IOPS的巨大吞吐量
+* 100GbE和32 Gb FC连接
+*最多30 TB固态驱动器(SSD)、支持多流写入
+*高密度、2U驱动器架容纳2 PB容量
+*从200 TB (2个控制器)扩展到9.6 PB (24个控制器)
+* NetApp ONTAP包含一整套数据保护和复制功能、可实现行业领先的数据管理
+
+对于规模最大的部署、AFF A900系统可提供更高的性能和容量选项、而其他NetApp存储系统(例如AFF A700、AFF A400和AFF A250)则可提供成本更低的小型部署选项。
+
+
+
+== NVIDIA DGX基本POD
+
+DGX BasePOD是一种集成的解决方案、由NVIDIA硬件和软件组件、MLOps解决方案和第三方存储组成。利用采用NVIDIA产品和经验证的合作伙伴解决方案的横向扩展系统设计最佳实践、客户可以实施一个高效易管理的AI开发平台。图1突出显示了NVIDIA DGX BasePOD的各个组件。
+
+image:oai_basepod_layers.png["错误：缺少图形映像"]
+
+
+
+=== NVIDIA DGX H100系统
+
+DGX&#482；H100系统是DGX Systems的最新迭代产品、它是AI的动力之源、NVIDIA H100 GPU的突破性性能加速了它的发展。
+
+image:oai_H100_3D.png["错误：缺少图形映像"]
+
+DGX H100系统的主要规格如下：
+*八个NVIDIA H100 GPU。
+* 80 GB GPU内存。
+*四个NVIDIA NVSwitch™芯片。
+*支持PCIe 5.0的双56核第四代英特尔®至强®处理器。
+* 2 TB的系统内存。
+*四个OSFP端口、用于八个单端口NVIDIA ConnectX-7 VPI、三个双端口NVIDIA ConnectX-7 VPI。
+*两个1.92 TB M.2 NVMe驱动器用于DGX操作系统、八个3.84 TB U.2 NVMe驱动器用于存储/缓存。
+*最大功率11.3 kW。
+图7显示了DGX H100 CPU托架的后部端口。其中四个OSFP端口为InfiniBand计算网络结构提供八个ConnectX-7 HCA。每对双端口ConnectX-7 HCA都提供指向存储和管理网络结构的并行路径。带外端口用于BMC访问。
+image:oai_H100_rear.png["错误：缺少图形映像"]
+
+
+
+=== NVIDIA DGX A100系统
+
+NVIDIA DGX A100系统在全球首款5千万亿次操作的AI系统中提供前所未有的计算密度、性能和灵活性。
+
+image:oai_A100_3D.png["错误：缺少图形映像"]
+
+DGX A100系统的主要规格如下：
+*八个NVIDIA A100 T程序 核心GPU。
+* 40 GB或80 GB GPU内存选项。
+*六个NVIDIA NVSwitch™芯片。
+*双AMD EPYC™7742 CPU，共128个核心，2.25GHz (基本)，3.4GHz (最大提升)。
+*最多2 TB系统内存。
+*八个NVIDIA ConnectX-6或ConnectX-7 InfiniBand HCA。
+*两个1.92 TB M.2 NVMe驱动器用于DGX操作系统、八个3.84 TB U.2 NVMe驱动器用于存储/缓存。
+*最大功率6.5 kW。
+
+有关DGX A100系统的详细信息、请参见 link:https://www.nvidia.com/en-us/data-center/dgx-a100/["此处"]。
+
+图5显示了DGX A100 CPU托架的后部端口。四个单端口HCA用于InfiniBand计算网络结构。每对双端口HCA都提供指向存储和管理网络结构的并行路径。带外端口用于BMC访问。
+image:oai_A100_rear.png["错误：缺少图形映像"]
+
+
+
+=== NVIDIA网络
+
+
+
+==== NVIDIA QM9700交换机
+
+image:oai_QM9700.png["错误：缺少图形映像"]
+
+具有NDE InfiniBand连接的NVIDIA QM9700交换机为NDE BasePOD配置中的计算网络结构提供支持。ConnectX-7单端口适配器用于InfiniBand计算网络结构。每个NVIDIA DGX系统都与每个QM9700交换机建立了双连接、从而在之间提供多个高带宽、低延迟路径
+系统。
+
+
+
+==== NVIDIA QM4700交换机
+
+image:oai_QM8700.png["错误：缺少图形映像"]
+
+具有HDR InfiniBand连接的NVIDIA QM4700交换机可为HDR BasePOD配置中的计算网络结构提供支持。ConnectX-6单端口适配器用于InfiniBand计算网络结构。每个NVIDIA DGX系统都与每个QM4700交换机建立了双连接、在系统之间提供多个高带宽、低延迟路径。
+
+
+
+==== NVIDIA SN4600交换机
+
+image:oai_SN4600.png["错误：缺少图形映像"]
+
+NVIDIA SN4600交换机总共提供128个端口(每个交换机64个)、可为DGX BasePOD的带内管理提供冗余连接。NVIDIA SN4600交换机可提供1 GbE到200 GbE的速度。对于通过以太网连接的存储设备、也会使用NVIDIA SN4600交换机。NVIDIA DGX双端口HCA上的端口用于带内管理和存储连接。
+
+
+
+==== NVIDIA SN2201交换机
+
+image:oai_SN2201.png["错误：缺少图形映像"]
+
+NVIDIA SN2201交换机提供48个端口、可为带外管理提供连接。带外管理可为BasePOD中的所有组件提供整合的管理连接。
+
+
+
+==== NVIDIA Connect-X 7 HCA
+
+image:oai_CX7.png["错误：缺少图形映像"]
+
+ConnectX-7 HCA是最新的ConnectX HCA行。它可以提供25/50/100/200/400G的吞吐量。NVIDIA DGX系统同时使用单端口和双端口ConnectX-7 HCA、以便通过使用DCT灵活地部署DGX BasePOD。此处提供了其他规格。
+
+
+
+==== NVIDIA Connect-X 6 HCA
+
+image:oai_CX6.png["错误：缺少图形映像"]
+
+ConnectX-6 HCA可提供10/C5/40/50/100/200g的吞吐量。NVIDIA DGX系统同时使用单端口和双端口ConnectX-6 HCA、以便通过HDR灵活地部署DGX BasePOD。
+
+link:aipod_nv_sw_components.html["下一步：采用NVIDIA DGX系统的NetApp AI Pod—软件组件。"]
