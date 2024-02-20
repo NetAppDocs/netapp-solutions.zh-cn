@@ -14,13 +14,275 @@ summary:
 
 
 [role="lead"]
-此页面显示了使用Astra Control Service在AWS上托管Red Hat OpenShift (ROSA)的数据保护选项。
+此页面显示了使用Astra Control Service在AWS上托管Red Hat OpenShift (ROSA)集群的数据保护选项。Astra Control Service (ACS)提供了一个易于使用的图形用户界面、您可以使用该界面添加集群、定义在其中运行的应用程序以及执行应用程序感知型数据管理活动。此外、还可以使用支持工作流自动化的API访问ACS功能。
+
+NetApp Astra控制(ACS或ACC)由Astra三端驱动。Asta三端集成了多种类型的Kubernetes集群、例如Red Hat OpenShift、EKS、AKS、SUSE缓存器、Anthos等。 具有各种NetApp ONTAP存储风格、例如FAS/AFFF、ONTAP Select、CVO、Google Cloud Volumes Service、Azure NetApp Files和Amazon FSx for NetApp ONTAP。
+
+本节详细介绍了使用ACS的以下数据保护选项：
+
+* 显示备份和还原在一个区域运行的ROSA应用程序并还原到另一个区域的视频。
+* 显示ROSA应用程序的Snapshot和Restore的视频。
+* 安装ROSA集群的分步详细信息、Amazon FSx for NetApp ONTAP、使用NetApp Astra三端集成到存储后端、在ROSA集群上安装PostgreSQL应用程序、使用ACS创建应用程序快照并从中还原应用程序。
+* 一篇博客、详细介绍了如何使用ACS在使用FSx for ONTAP的ROSA集群上为myql应用程序创建快照并从快照中还原。
 
 
 
-== FSx NetApp ONTAP for Red Hat OpenShift Service on AWS (ROSA)
+
+== 备份/从备份中还原
 
 以下视频显示了在一个区域运行的ROSA应用程序的备份以及还原到另一个区域的过程。
 
 .FSx NetApp ONTAP for Red Hat OpenShift Service on AWS
 video::01dd455e-7f5a-421c-b501-b01200fa91fd[panopto]
+
+
+== 快照/从快照还原
+
+以下视频显示了如何创建ROSA应用程序的快照以及之后如何从快照中还原。
+
+.使用Amazon FSx for NetApp ONTAP存储在AWS上的Red Hat OpenShift Service (ROSA)集群上为应用程序创建快照/还原
+video::36ecf505-5d1d-4e99-a6f8-b11c00341793[panopto]
+
+
+== 博客
+
+* link:https://community.netapp.com/t5/Tech-ONTAP-Blogs/Using-Astra-Control-Service-for-data-management-of-apps-on-ROSA-clusters-with/ba-p/450903["使用Astra Control Service对带有Amazon FSx存储的ROSA集群上的应用程序进行数据管理"]
+
+
+
+
+== 创建快照并从中还原的分步详细信息
+
+
+
+=== 前提条件设置
+
+* link:https://signin.aws.amazon.com/signin?redirect_uri=https://portal.aws.amazon.com/billing/signup/resume&client_id=signup["AWS 帐户"]
+* link:https://console.redhat.com/["Red Hat OpenShift帐户"]
+* 使用的IAM用户 link:https://www.rosaworkshop.io/rosa/1-account_setup/["适当的权限"] 创建和访问ROSA集群
+* link:https://aws.amazon.com/cli/["AWS命令行界面"]
+* link:https://console.redhat.com/openshift/downloads["罗莎命令行界面"]
+* link:https://console.redhat.com/openshift/downloads["OpenShift命令行界面"](OC)
+* 具有子网以及相应网关和路由的VPC
+* link:https://docs.openshift.com/rosa/rosa_install_access_delete_clusters/rosa_getting_started_iam/rosa-installing-rosa.html["已安装罗莎群集"] VPC
+* link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/getting-started-step1.html["适用于 NetApp ONTAP 的 Amazon FSX"] 在同一个VPC中创建
+* 从访问ROSA集群 link:https://console.redhat.com/openshift/overview["OpenShift混合云控制台"]
+
+
+
+
+=== 后续步骤
+
+. 创建管理员用户并登录到集群。
+. 为集群创建一个kubeconfig.文件。
+. 在集群上安装Asta Trdent。
+. 使用三端CSI配置程序创建后端、存储类和快照类配置。
+. 在集群上部署PostgreSQL应用程序。
+. 创建数据库并添加记录。
+. 将集群添加到ACS中。
+. 在ACS中定义应用程序。
+. 使用ACS创建快照。
+. 删除PostgreSQL应用程序中的数据库。
+. 使用ACS从快照还原。
+. 验证您的应用程序是否已从快照中还原。
+
+
+
+
+==== **1.创建管理员用户并登录到群集**
+
+使用以下命令创建管理员用户以访问ROSA集群：(只有在安装时未创建管理员用户时、才需要创建管理员用户)
+
+`rosa create admin --cluster=<cluster-name>`
+
+此命令将提供如下输出。使用登录到集群 `oc login` 命令。
+
+image:rhhc-rosa-cluster-admin-create.png[""]
+
+
+NOTE: 您也可以使用令牌登录到集群。如果您在创建集群时已创建管理员用户、则可以使用管理员用户凭据从Red Hat OpenShift Hybrid Cloud控制台登录到集群。然后、通过单击右上角显示已登录用户名称的、您可以获取 `oc login` 命令(令牌登录)。
+
+
+
+==== **2.为群集**创建kubeconfig*文件
+
+按照步骤进行操作 link:https://docs.netapp.com/us-en/astra-control-service/get-started/create-kubeconfig.html#create-a-kubeconfig-file-for-red-hat-openshift-service-on-aws-rosa-clusters["此处"] 为ROSA集群创建kubeconfig.稍后在将集群添加到ACS中时、将使用此kubeconfig.文件。
+
+
+
+==== **3.在群集上安装Asta Trdent **
+
+在ROSA集群上安装Asta Trident (最新版本)。要执行此操作、您可以按照给定的任一过程进行操作 link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html["此处"]。要从集群控制台使用Helm安装Trident、请先创建一个名为Trident的项目。
+
+image:rhhc-trident-project-create.png[""]
+
+然后、在"开发工具"视图中、创建Helm图表存储库。对于URL字段、请使用 `'https://netapp.github.io/trident-helm-chart'`。然后为三端操作员创建舵版本。
+
+image:rhhc-helm-repo-create.png[""]
+image:rhhc-helm-release-create.png[""]
+
+返回控制台上的"Administrator view"(管理员视图)、然后在三级工程中选择Pod、以验证所有三级工程模块是否正在运行。
+
+image:rhhc-trident-installed.png[""]
+
+
+
+==== **4.使用三端CSI配置程序**创建后端、存储类和快照类配置
+
+使用下面显示的YAML文件创建三元后端对象、存储类对象和卷快照对象。请务必为您创建的Amazon FSx for NetApp ONTAP文件系统提供凭据、并在后端的YAML配置中提供管理LIF和文件系统的Vserver名称。要获取这些详细信息、请转到适用于Amazon FSx的AWS控制台并选择文件系统、然后导航到管理选项卡。此外、单击更新以设置的密码 `fsxadmin` 用户。
+
+
+NOTE: 您可以使用命令行创建对象、也可以从混合云控制台使用YAML文件创建对象。
+
+image:rhhc-fsx-details.png[""]
+
+**Trident后端配置**
+
+[source, yaml]
+----
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backend-tbc-ontap-nas-secret
+type: Opaque
+stringData:
+  username: fsxadmin
+  password: <password>
+---
+apiVersion: trident.netapp.io/v1
+kind: TridentBackendConfig
+metadata:
+  name: ontap-nas
+spec:
+  version: 1
+  storageDriverName: ontap-nas
+  managementLIF: <management lif>
+  backendName: ontap-nas
+  svm: fsx
+  credentials:
+    name: backend-tbc-ontap-nas-secret
+----
+**存储类**
+
+[source, yaml]
+----
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ontap-nas
+provisioner: csi.trident.netapp.io
+parameters:
+  backendType: "ontap-nas"
+  media: "ssd"
+  provisioningType: "thin"
+  snapshots: "true"
+allowVolumeExpansion: true
+----
+**快照类**
+
+[source, yaml]
+----
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshotClass
+metadata:
+  name: trident-snapshotclass
+driver: csi.trident.netapp.io
+deletionPolicy: Delete
+----
+发出下面所示的命令、验证是否已创建后端、存储类和trdent-snapshotclass对象。
+
+image:rhhc-tbc-sc-verify.png[""]
+
+此时、您需要进行的一项重要修改是将ONTAP NAS设置为默认存储类、而不是GP3、以便您稍后部署的PostgreSQL应用程序可以使用默认存储类。在集群的OpenShift控制台中、在"Storage"下选择"StorageClasses"。将当前默认类的标注编辑为false、并将ONTAP NAS存储类的标注storageclass.Kubernetes.io/is-default-class设置为true。
+
+image:rhhc-change-default-sc.png[""]
+
+image:rhhc-default-sc.png[""]
+
+
+
+==== **5.在群集上部署PostgreSQL应用程序**
+
+您可以从命令行部署此应用程序、如下所示：
+
+`helm install postgresql bitnami/postgresql -n postgresql --create-namespace`
+
+image:rhhc-postgres-install.png[""]
+
+
+NOTE: 如果您看不到应用程序Pod正在运行、则可能是由于安全上下文约束而导致错误。
+image:rhhc-scc-error.png[""]
+编辑以修复此错误 `runAsUser` 和 `fsGroup` 中的字段 `statefuleset.apps/postgresql` 具有的输出中的_id的对象 `oc get project` 命令、如下所示。
+image:rhhc-scc-fix.png[""]
+
+PostgreSQL应用程序应正在运行、并使用Amazon FSx支持的永久性卷作为NetApp ONTAP存储。
+
+image:rhhc-postgres-running.png[""]
+
+image:rhhc-postgres-pvc.png[""]
+
+
+
+==== **6.创建数据库并添加记录**
+
+image:rhhc-postgres-db-create.png[""]
+
+
+
+==== **7.将集群添加到ACs**中
+
+登录到ACS。选择cluster、然后单击Add。选择其他并上传或粘贴kubeconfig.
+
+image:rhhc-acs-add-1.png[""]
+
+单击*Next*并选择ONTAP－NAS作为ACS的默认存储类。单击*Next*(下一步*)，查看详细信息，然后单击*Add*(添加)群集。
+
+image:rhhc-acs-add-2.png[""]
+
+
+
+==== **8.在ACs**中定义应用程序
+
+在ACS中定义PostgreSQL应用程序。在登录页面中，选择*Applications*、*Define*并填写相应的详细信息。单击“*下一步*”几次，查看详细信息，然后单击“*定义*”。应用程序将添加到ACS。
+
+image:rhhc-acs-add-2.png[""]
+
+
+
+==== **9.使用ACs**创建快照
+
+可通过多种方法在ACS中创建快照。您可以从显示应用程序详细信息的页面中选择应用程序并创建快照。您可以单击创建快照来创建按需快照或配置保护策略。
+
+只需单击*创建快照*、提供名称、查看详细信息并单击*快照*、即可创建按需快照。操作完成后、快照状态将更改为"运行状况良好"。
+
+image:rhhc-snapshot-create.png[""]
+
+image:rhhc-snapshot-on-demand.png[""]
+
+
+
+==== **10.删除PostgreSQL应用程序中的数据库**
+
+重新登录到PostgreSQL、列出可用数据库、删除先前创建的数据库并重新列出、以确保数据库已被删除。
+
+image:rhhc-postgres-db-delete.png[""]
+
+
+
+==== **11.使用ACs**从快照恢复
+
+要从快照还原应用程序、请转到ACS UI登录页面、选择应用程序、然后选择还原。您需要选择要从中还原的快照或备份。(通常、您会根据所配置的策略创建多个)。在接下来的几个屏幕中做出适当的选择，然后单击*Restore*。从快照还原后、应用程序状态将从还原变为可用。
+
+image:rhhc-app-restore-1.png[""]
+
+image:rhhc-app-restore-2.png[""]
+
+image:rhhc-app-restore-3.png[""]
+
+
+
+==== **12.验证您的应用程序是否已从快照中恢复**
+
+登录到PostgreSQL客户端、您现在应该可以看到表以及以前的表中的记录。  就是这样。只需单击一个按钮、您的应用程序便已恢复到先前的状态。这就是我们使用Astra Control为客户实现的简单体验。
+
+image:rhhc-app-restore-verify.png[""]
