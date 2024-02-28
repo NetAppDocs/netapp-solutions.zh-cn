@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: ai/aipod_nv_sw_components.html 
 keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, NVIDIA AI Enterprise, NVIDIA BasePOD, NVIDIA DGX 
-summary: 采用NVIDIA DGX系统的NetApp AI Pod—软件组件 
+summary: 采用NVIDIA DGX系统的NetApp AIPod—软件组件 
 ---
-= 采用NVIDIA DGX系统的NetApp AI Pod—软件组件
+= 采用NVIDIA DGX系统的NetApp AIPod—软件组件
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -13,7 +13,7 @@ summary: 采用NVIDIA DGX系统的NetApp AI Pod—软件组件
 :imagesdir: ./../media/
 
 
-link:aipod_nv_hw_components.html["上一页：ONTAP AI -硬件组件。"]
+link:aipod_nv_hw_components.html["上一页：采用NVIDIA DGX系统的NetApp AIPod -硬件组件"]
 
 
 
@@ -25,7 +25,7 @@ link:aipod_nv_hw_components.html["上一页：ONTAP AI -硬件组件。"]
 
 NVIDIA Base Command&#8482；(图2)为每个DGX BasePD提供支持、使企业能够充分利用NVIDIA软件创新的优势。企业可以利用成熟可靠的平台充分发挥投资的全部潜能、该平台包括企业级流程编排和集群管理、可加快计算、存储和网络基础架构速度的库以及针对AI工作负载优化的操作系统(OS)。
 
-image:oai_BaseCommand.png["错误：缺少图形映像"]
+image:aipod_nv_BaseCommand.png["错误：缺少图形映像"]
 
 
 
@@ -33,7 +33,7 @@ image:oai_BaseCommand.png["错误：缺少图形映像"]
 
 NVIDIA NGC™(图3)提供的软件可满足具有不同AI专业知识水平的数据科学家、开发人员和研究人员的需求。NGC上托管的软件会对一组汇总的常见漏洞和风险(CVE)、加密密钥和私钥进行扫描。它经过测试和设计、可扩展到多个GPU、在许多情况下还可扩展到多节点、从而确保用户在DGX系统上的投资最大化。
 
-image:oai_ngc.png["错误：缺少图形映像"]
+image:aipod_nv_ngc.png["错误：缺少图形映像"]
 
 
 
@@ -53,28 +53,30 @@ ONTAP 9是NetApp推出的最新一代存储管理软件、可帮助企业打造�
 
 
 
+==== 加速和保护数据
+
+ONTAP 可提供卓越的性能和数据保护、并通过以下方式扩展这些功能：
+
+* 性能和更低的延迟。ONTAP可以以最低延迟提供最高吞吐量、包括支持使用基于RDMA的NFS的NVIDIA GPUDirect存储(GDS)、并行NFS (pNFS)和NFS会话中继。
+* 数据保护ONTAP提供内置数据保护功能和业内最强大的反勒索软件担保、并在所有平台之间提供通用管理。
+* NetApp卷加密(NVE)。ONTAP 提供原生 卷级加密、并支持板载和外部密钥管理。
+* 多租户和多因素身份验证。ONTAP 支持以最高的安全性级别共享基础架构资源。
+
+
+
+
 ==== 简化数据管理
 
 数据管理对于企业IT运营和数据科学家至关重要、这样才能将适当的资源用于AI应用程序和训练AI/ML数据集。以下有关NetApp技术的追加信息 不在此验证范围内、但可能与您的部署相关。
 
 ONTAP 数据管理软件包括以下功能、可简化操作并降低总运营成本：
 
+* 快照和克隆支持协作、并行实验和增强ML/DL工作流的数据监管。
+* SnapMirror支持在混合云和多站点环境中无缝移动数据、可根据需要随时随地提供数据。
 * 实时数据缩减和扩展的重复数据删除。数据缩减可减少存储块中浪费的空间、重复数据删除可显著提高有效容量。此适用场景数据存储在本地，并分层到云。
 * 最低、最高和自适应服务质量(AQoS)。精细的服务质量(QoS)控制有助于在高度共享的环境中保持关键应用程序的性能水平。
 * NetApp FabricPool。可将冷数据自动分层到公有 和私有云存储选项、包括Amazon Web Services (AWS)、Azure和NetApp StorageGRID Storage解决方案。有关 FabricPool 的详细信息，请参见 https://www.netapp.com/pdf.html?item=/media/17239-tr4598pdf.pdf["TR-4598：FabricPool 最佳实践"^]。
 * NetApp FlexCache。提供远程卷缓存功能、可简化文件分发、减少WAN延迟并降低WAN带宽成本。FlexCache支持跨多个站点进行分布式产品开发、并加快从远程位置访问公司数据集的速度。
-
-
-
-
-==== 加速和保护数据
-
-ONTAP 可提供卓越的性能和数据保护、并通过以下方式扩展这些功能：
-
-* 性能和更低的延迟。ONTAP可以以尽可能低的延迟提供尽可能高的吞吐量、包括支持使用基于RDMA的NFS的NVIDIA GPUDirect存储(GDS)。
-* 数据保护ONTAP 可提供内置数据保护功能、并在所有平台之间进行通用管理。
-* NetApp卷加密(NVE)。ONTAP 提供原生 卷级加密、并支持板载和外部密钥管理。
-* 多租户和多因素身份验证。ONTAP 支持以最高的安全性级别共享基础架构资源。
 
 
 
@@ -107,4 +109,4 @@ NetApp DataOps工具包是一款基于Python的工具、可简化开发/培训�
 
 Astra Trident是一款完全受支持的开源存储编排程序、适用于容器和Kubernetes分发版、包括Anthos。Trident可与包括NetApp ONTAP 在内的整个NetApp存储产品组合配合使用、并且还支持NFS和iSCSI连接。Trident 允许最终用户从其 NetApp 存储系统配置和管理存储，而无需存储管理员干预，从而加快了 DevOps 工作流的速度。
 
-link:aipod_nv_architecture.html["下一步：采用NVIDIA DGX系统的NetApp AI Pod—架构。"]
+link:aipod_nv_architecture.html["下一步：采用NVIDIA DGX系统的NetApp AIPod—解决方案架构"]

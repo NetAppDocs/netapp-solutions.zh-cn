@@ -19583,29 +19583,11 @@ NetApp MetroCluster是一款高可用性和灾难恢复解决方案、可在两�
   <block id="9515e6ca96537d18f6a47819aa47cc22" category="list-text"><block ref="9515e6ca96537d18f6a47819aa47cc22" category="inline-link-macro-rx"></block></block>
   <block id="3d7129df95acd2cd7bb86d4047c105f8" category="list-text"><block ref="3d7129df95acd2cd7bb86d4047c105f8" category="inline-link-macro-rx"></block></block>
   <block id="b8e6da86588e4fe5d778fc4a343aaa80" category="list-text"><block ref="b8e6da86588e4fe5d778fc4a343aaa80" category="inline-link-macro-rx"></block></block>
-  <block id="90d5ac5fb2e6ff10937e8123a8a6a025" category="summary">采用NVIDIA DGX系统的NetApp AI Pod—架构</block>
-  <block id="abbccbb7b1aa1f96d63011e4ce8797ce" category="inline-link-macro">上一页：ONTAP AI -软件组件。</block>
-  <block id="94cd56265a31d688191dee3940ce15c8" category="paragraph"><block ref="94cd56265a31d688191dee3940ce15c8" category="inline-link-macro-rx"></block></block>
   <block id="3f381e6a41ca392b45f43ba4f34ab6df" category="paragraph">此参考架构利用单独的网络结构实现计算集群互连和存储访问、并可在计算节点之间选择NDR200和HDR200 InfiniBand (IB)连接。DGX H100系统预安装了ConnectX-7卡、用于进行DPRIB连接、而DGX A100系统可分别使用ConnectX-6或ConnectX-7卡进行HDR或DPR.</block>
-  <block id="ad2df044322e8106a8cc8de22f244a4d" category="section-title">采用DGX H100系统的ONTAP AI</block>
-  <block id="3d694dd0ad96a84ea66212ee1d2ba5fb" category="paragraph">下图显示了将DGX H100系统与ONTAP AI结合使用时的整体解决方案拓扑。</block>
-  <block id="46c237759b2148cd25b3e26c41c02d7a" category="paragraph"><block ref="46c237759b2148cd25b3e26c41c02d7a" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="ef196914293d6fbeb06754cf53725689" category="paragraph">在此配置中、计算集群网络使用一对QM9700 NDE IB交换机、这些交换机连接在一起以实现高可用性。每个DGX H100系统通过八个NDR200连接连接到交换机、其中、偶数端口连接到一个交换机、奇数端口连接到另一个交换机。</block>
-  <block id="cf30772f9d733e6942cfd61d8ba9ca55" category="paragraph">对于存储系统访问、带内管理和客户端访问、使用一对SN4600以太网交换机。这些交换机通过交换机间链路进行连接、并配置有多个VLAN以隔离各种流量类型。对于大型部署、可以根据需要为主干添加额外的交换机对和额外的叶片、从而将以太网网络扩展为分支-主干配置。每个DGX A100系统都配置有两个双端口ConnectX-6卡、用于以太网和存储流量、对于此解决方案、所有四个端口均以200 Gbps的速度连接到SN4600以太网交换机。将每个卡中的一个端口配置到LACP MAG绑定中、并将一个端口连接到每个交换机、同时在此绑定上托管用于带内管理、客户端访问和用户级存储访问的VLAN。每个卡上的另一个端口在单独的专用RoCE存储VLAN中单独使用、用于连接到AFF A800存储系统、这些端口支持使用NFS v3、具有pNFS的NFSv4.x以及基于RDMA的NFS进行高性能存储访问。</block>
   <block id="c95998835114a4e50f348f8c5e5686ed" category="inline-link-macro">NVIDIA BasePD文档</block>
-  <block id="04f8dff94bd730a0e6df3f5a3c60ec77" category="paragraph">除了计算互连和高速以太网网络之外、所有物理设备还会连接到一个或多个SN2201以太网交换机、以实现带外管理。  有关DGX A100系统连接的更多详细信息、请参见 <block ref="784f66b69fd9a6fd2983e969e5202b40" category="inline-link-macro-rx"></block>。</block>
-  <block id="752dcec6a30a284b3424b4978c38cdae" category="section-title">采用DGX A100系统的ONTAP AI</block>
-  <block id="cec282d139bd30e924a25ced20b42647" category="paragraph">下图显示了使用DGX A100系统和采用ONTAP AI的HDR计算网络结构时的整体解决方案拓扑。</block>
-  <block id="f925fdc62bdd065ac287513f312499f8" category="paragraph"><block ref="f925fdc62bdd065ac287513f312499f8" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="612ffd7908be69eb117f9a20d125c128" category="paragraph">在此配置中、计算集群网络使用一对QM4700 HDR IB交换机、这些交换机连接在一起以实现高可用性。每个DGX A100系统使用四个速率为200 Gbps的单端口ConnectX-6卡连接到交换机、其中一个交换机连接为偶数端口、另一个交换机连接为奇数端口。</block>
   <block id="b6420553f17ebdab39fa9a1825d57651" category="section-title">管理平台服务器</block>
-  <block id="298f36627f6e0a3c8b1627ee6cabcf3d" category="paragraph">此参考架构还包括五个基于CPU的服务器、供管理平台使用。其中两个系统用作Base Command Manager的主节点、用于集群部署和管理。另外三个系统用于提供额外的集群服务、例如、在使用Slurm进行作业计划的部署中、可使用Kubornetes主节点或登录节点。利用Kubnetes的部署可以利用NetApp Asta三端CSI驱动程序为AFF A800存储系统上的管理和AI工作负载提供自动化配置和数据服务以及永久性存储。</block>
   <block id="88bf375fbad1fdc351121a9b4f677a9a" category="paragraph">每个服务器都会以物理方式连接到IB交换机和以太网交换机、以实现集群部署和管理、并通过管理SVM配置NFS挂载到存储系统、以便如前所述存储集群管理项目。</block>
-  <block id="cdee7c019bcceaf7d9433865ac8b4043" category="inline-link-macro">下一步：采用NVIDIA DGX系统的NetApp AI Pod—存储系统设计和大小指导。</block>
-  <block id="8bbcb4f79d76105dba99d801b4cad65d" category="paragraph"><block ref="8bbcb4f79d76105dba99d801b4cad65d" category="inline-link-macro-rx"></block></block>
   <block id="3588242b057ae23fa2aff188226f0df3" category="doc">采用NVIDIA技术的NetApp AI</block>
-  <block id="594e3fc7b73790ecc9bd004f21cccf98" category="section-title">采用NVIDIA DGX系统的NetApp AI Pod</block>
-  <block id="e882bb8cdbe4d96968a5233de7080fa2" category="list-text"><block ref="e882bb8cdbe4d96968a5233de7080fa2" category="inline-link-macro-rx"></block></block>
   <block id="665a75ebe7f2eb08b429734e2cfb1639" category="summary">采用NVIDIA DGX系统的NetApp AI Pod—存储系统设计和大小规划指南</block>
   <block id="0aeeac6e481ccf5fb94ec4f4b60ebe60" category="inline-link-macro">上一页：采用NVIDIA DGX系统的NetApp AI Pod—架构。</block>
   <block id="0e612fc72e44ac3b868669c64baeba1f" category="paragraph"><block ref="0e612fc72e44ac3b868669c64baeba1f" category="inline-link-macro-rx"></block></block>
@@ -19621,77 +19603,20 @@ NetApp MetroCluster是一款高可用性和灾难恢复解决方案、可在两�
   <block id="9bab6352a567b3c48bc08877594fe4ed" category="inline-link-macro">下一步：采用NVIDIA DGX系统的NetApp AI Pod—总结。</block>
   <block id="81be048c32cf3fb6f8ea022bb0314c88" category="paragraph">如中所示 <block ref="e7d2483a5af77a681a4ce9b70e0123d3" category="inline-link-macro-rx"></block>AFF A800系统可轻松支持八个DGX A100系统生成的深度学习训练工作负载。上述其他存储系统的估计值是根据这些结果计算的、而H100 GPU的估计值是通过将A100系统所需的存储吞吐量增加一倍来计算的。  对于存储性能要求较高的大型部署、可以在一个集群中向NetApp ONTAP集群添加更多AFF系统、最多可添加12个HA对(24个节点)。使用本解决方案中所述的FlexGroup技术、一个24节点集群可以在一个命名空间中提供超过40 PB的吞吐量和高达300 Gbps的吞吐量。其他NetApp存储系统(例如AFF A400、A250和C800)以更低的成本为小型部署提供了更低的性能和/或更高的容量选项。由于ONTAP 9支持混合模式集群、因此客户可以先减少初始占用空间、然后随着容量和性能要求的增长向集群添加更多或更大的存储系统。
 <block ref="73b5ef96476759553df4b1fa88f8c59f" category="inline-link-macro-rx"></block></block>
-  <block id="9d870cfc7d3b4785018d0bd93fc9bf55" category="summary">采用NVIDIA DGX系统的NetApp AI Pod—硬件组件</block>
-  <block id="ccd969597853514e4ca5637cd776275e" category="inline-link-macro">上一页：采用NVIDIA DGX系统的NetApp AI Pod -简介。</block>
-  <block id="56ca9ec382420a55613b6e140afeb5f8" category="paragraph"><block ref="56ca9ec382420a55613b6e140afeb5f8" category="inline-link-macro-rx"></block></block>
   <block id="68674fa5fbd6fb83969183d07d48b8cd" category="section-title">NetApp AFF存储系统</block>
   <block id="3b6d33ce139758ecf9b0b83f9ecce001" category="paragraph">NetApp AFF一流的存储系统凭借行业领先的性能、卓越的灵活性、云集成和同类最佳数据管理功能、可帮助IT部门满足企业存储需求。AFF 系统专为闪存而设计、有助于加速、管理和保护业务关键型数据。</block>
-  <block id="ff87fbb55ee5d0babf3f8626effa4069" category="section-title">AFF A系列存储系统</block>
-  <block id="c4b5adeb5d36c44aeff74d166b1b9fbb" category="paragraph">A900更新！！！</block>
-  <block id="3bd3c1439ccd6590c2d11e6eefb57663" category="paragraph">NetApp AFF A800系统是业内首款端到端NVMe解决方案。对于NAS工作负载、单个AFF A800系统支持以低于500µs微秒的低隔音率进行25 GBps的顺序读取和100万次IOPS的小型随机读取。</block>
-  <block id="0e7f645002576751bde40de5a9135f7f" category="paragraph"><block ref="0e7f645002576751bde40de5a9135f7f" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="24ef0368f2216c1272de5164c9ebc9df" category="paragraph">AFF A800系统支持以下功能：
-*在一个24节点集群中实现高达300 GBps和1、140万次IOPS的巨大吞吐量
-* 100GbE和32 Gb FC连接
-*最多30 TB固态驱动器(SSD)、支持多流写入
-*高密度、2U驱动器架容纳2 PB容量
-*从200 TB (2个控制器)扩展到9.6 PB (24个控制器)
-* NetApp ONTAP包含一整套数据保护和复制功能、可实现行业领先的数据管理</block>
-  <block id="058a1c6761b0f2edb8f0586c63768e61" category="paragraph">对于规模最大的部署、AFF A900系统可提供更高的性能和容量选项、而其他NetApp存储系统(例如AFF A700、AFF A400和AFF A250)则可提供成本更低的小型部署选项。</block>
   <block id="64dc43320ec1a44c390fafb5e2408f4b" category="section-title">NVIDIA DGX基本POD</block>
   <block id="c76db82f784b10b3da003e977f51d4bf" category="paragraph">DGX BasePOD是一种集成的解决方案、由NVIDIA硬件和软件组件、MLOps解决方案和第三方存储组成。利用采用NVIDIA产品和经验证的合作伙伴解决方案的横向扩展系统设计最佳实践、客户可以实施一个高效易管理的AI开发平台。图1突出显示了NVIDIA DGX BasePOD的各个组件。</block>
-  <block id="f0f018f9cd4b877bb27c1ec17a56ca92" category="paragraph"><block ref="f0f018f9cd4b877bb27c1ec17a56ca92" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="cc66d4c5eb637c6dd822090f6aedf70a" category="section-title">NVIDIA DGX H100系统</block>
-  <block id="d68bf4c0a1bfe78bae29559fd6cacc53" category="paragraph">DGX&amp;#482；H100系统是DGX Systems的最新迭代产品、它是AI的动力之源、NVIDIA H100 GPU的突破性性能加速了它的发展。</block>
-  <block id="5f963393c2322795ad10a925536dd4f5" category="paragraph"><block ref="5f963393c2322795ad10a925536dd4f5" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="dc859317edf0d5f0279b0f70c306c380" category="paragraph">DGX H100系统的主要规格如下：
-*八个NVIDIA H100 GPU。
-* 80 GB GPU内存。
-*四个NVIDIA NVSwitch™芯片。
-*支持PCIe 5.0的双56核第四代英特尔®至强®处理器。
-* 2 TB的系统内存。
-*四个OSFP端口、用于八个单端口NVIDIA ConnectX-7 VPI、三个双端口NVIDIA ConnectX-7 VPI。
-*两个1.92 TB M.2 NVMe驱动器用于DGX操作系统、八个3.84 TB U.2 NVMe驱动器用于存储/缓存。
-*最大功率11.3 kW。
-图7显示了DGX H100 CPU托架的后部端口。其中四个OSFP端口为InfiniBand计算网络结构提供八个ConnectX-7 HCA。每对双端口ConnectX-7 HCA都提供指向存储和管理网络结构的并行路径。带外端口用于BMC访问。
-<block ref="c608c627c0ecb2f38dab7b009eaf5b08" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="5de4f426a771d3530fa57be156dc0d41" category="section-title">NVIDIA DGX A100系统</block>
-  <block id="a017a3548691b3c4f7b11bbd1b022ca8" category="paragraph">NVIDIA DGX A100系统在全球首款5千万亿次操作的AI系统中提供前所未有的计算密度、性能和灵活性。</block>
-  <block id="30d23638e07011af9a8ee22e615eb975" category="paragraph"><block ref="30d23638e07011af9a8ee22e615eb975" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="e2f13a5097b7876e83f134c4168615ab" category="paragraph">DGX A100系统的主要规格如下：
-*八个NVIDIA A100 T程序 核心GPU。
-* 40 GB或80 GB GPU内存选项。
-*六个NVIDIA NVSwitch™芯片。
-*双AMD EPYC™7742 CPU，共128个核心，2.25GHz (基本)，3.4GHz (最大提升)。
-*最多2 TB系统内存。
-*八个NVIDIA ConnectX-6或ConnectX-7 InfiniBand HCA。
-*两个1.92 TB M.2 NVMe驱动器用于DGX操作系统、八个3.84 TB U.2 NVMe驱动器用于存储/缓存。
-*最大功率6.5 kW。</block>
-  <block id="83b31fa8f6aa38393350ad7e89d8c0ee" category="paragraph">有关DGX A100系统的详细信息、请参见 <block ref="51b7ff9aa3d5b3b46514eda755fe7445" category="inline-link-macro-rx"></block>。</block>
-  <block id="758f3bd0cfde6cbbe227425cf06569eb" category="paragraph">图5显示了DGX A100 CPU托架的后部端口。四个单端口HCA用于InfiniBand计算网络结构。每对双端口HCA都提供指向存储和管理网络结构的并行路径。带外端口用于BMC访问。
-<block ref="efda34bba653afe16afec0d1440df7f3" category="inline-image-macro-rx" type="image"></block></block>
   <block id="d90238071267e4279a25de2c6945b227" category="section-title">NVIDIA网络</block>
   <block id="0f078644fa1021178903a49b54a60d79" category="section-title">NVIDIA QM9700交换机</block>
-  <block id="7c5472176fe27ac0982fc5c39ceba041" category="paragraph"><block ref="7c5472176fe27ac0982fc5c39ceba041" category="inline-image-macro-rx" type="image"></block></block>
   <block id="2944b34bf878526547a8de3a93339175" category="paragraph">具有NDE InfiniBand连接的NVIDIA QM9700交换机为NDE BasePOD配置中的计算网络结构提供支持。ConnectX-7单端口适配器用于InfiniBand计算网络结构。每个NVIDIA DGX系统都与每个QM9700交换机建立了双连接、从而在之间提供多个高带宽、低延迟路径
 系统。</block>
-  <block id="5fefa95961b806a5d6b9ce9a3faa278f" category="section-title">NVIDIA QM4700交换机</block>
-  <block id="e80906d95737ceb829379c4a96e10ac8" category="paragraph"><block ref="e80906d95737ceb829379c4a96e10ac8" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="64f1f1702e7ed61061aa3b4cb4a0186c" category="paragraph">具有HDR InfiniBand连接的NVIDIA QM4700交换机可为HDR BasePOD配置中的计算网络结构提供支持。ConnectX-6单端口适配器用于InfiniBand计算网络结构。每个NVIDIA DGX系统都与每个QM4700交换机建立了双连接、在系统之间提供多个高带宽、低延迟路径。</block>
   <block id="ecfd5ed74b7403cb1a011147318f8d7a" category="section-title">NVIDIA SN4600交换机</block>
-  <block id="93f27aa403d7c7e82bc9a1ef9b133f86" category="paragraph"><block ref="93f27aa403d7c7e82bc9a1ef9b133f86" category="inline-image-macro-rx" type="image"></block></block>
   <block id="94871c2bef457445b4e6e2cd189ad545" category="paragraph">NVIDIA SN4600交换机总共提供128个端口(每个交换机64个)、可为DGX BasePOD的带内管理提供冗余连接。NVIDIA SN4600交换机可提供1 GbE到200 GbE的速度。对于通过以太网连接的存储设备、也会使用NVIDIA SN4600交换机。NVIDIA DGX双端口HCA上的端口用于带内管理和存储连接。</block>
   <block id="8f0b0dfc93a46904a07daa2ac08b2546" category="section-title">NVIDIA SN2201交换机</block>
-  <block id="9275c33c537624ba00430286fe175cd2" category="paragraph"><block ref="9275c33c537624ba00430286fe175cd2" category="inline-image-macro-rx" type="image"></block></block>
   <block id="dd679a2cd4cec43c460e4d404badab8f" category="paragraph">NVIDIA SN2201交换机提供48个端口、可为带外管理提供连接。带外管理可为BasePOD中的所有组件提供整合的管理连接。</block>
   <block id="62288f40d47c2d155b32d32dff8b1101" category="section-title">NVIDIA Connect-X 7 HCA</block>
-  <block id="0c0dd8294d601335a989399c06724414" category="paragraph"><block ref="0c0dd8294d601335a989399c06724414" category="inline-image-macro-rx" type="image"></block></block>
   <block id="a1e3cb661ca2ac3a413606ed60f4c5fd" category="paragraph">ConnectX-7 HCA是最新的ConnectX HCA行。它可以提供25/50/100/200/400G的吞吐量。NVIDIA DGX系统同时使用单端口和双端口ConnectX-7 HCA、以便通过使用DCT灵活地部署DGX BasePOD。此处提供了其他规格。</block>
-  <block id="d2f574d8c6e9acd5199aaa36563a9453" category="section-title">NVIDIA Connect-X 6 HCA</block>
-  <block id="bbd8df265ada29ee9545e49b8584abb5" category="paragraph"><block ref="bbd8df265ada29ee9545e49b8584abb5" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="4b85a2e92dbaff5b552a9d70f500f97a" category="paragraph">ConnectX-6 HCA可提供10/C5/40/50/100/200g的吞吐量。NVIDIA DGX系统同时使用单端口和双端口ConnectX-6 HCA、以便通过HDR灵活地部署DGX BasePOD。</block>
-  <block id="a1b5441b356de4c7aa943f88b8ddb9e6" category="inline-link-macro">下一步：采用NVIDIA DGX系统的NetApp AI Pod—软件组件。</block>
-  <block id="32326e3a4d02dc9d0948ae633c82c0e6" category="paragraph"><block ref="32326e3a4d02dc9d0948ae633c82c0e6" category="inline-link-macro-rx"></block></block>
   <block id="d347ba1211916e66366029d11b59ba2d" category="summary">ONTAP AI是一款基于NVIDIA BasePOD的企业级参考架构、适用于使用ONTAP AFF存储系统和NVIDIA网络和DGX系统的深度学习和人工智能。</block>
   <block id="022a857c06271f783a0d38612e98dbc0" category="doc">采用NVIDIA DGX BasePOD的NetApp AI POD—简介</block>
   <block id="8790c3b96b175989365c226e2f90762d" category="paragraph">NetApp公司Dave Arette</block>
@@ -19700,22 +19625,14 @@ NetApp MetroCluster是一款高可用性和灾难恢复解决方案、可在两�
   <block id="4745c24df216933624630ee34257b9e3" category="paragraph">本文档介绍了AI POD参考架构的关键组件、系统连接信息和解决方案规模估算指南。本文档面向有意为ML/DL和分析工作负载部署高性能基础架构的NetApp和合作伙伴解决方案工程师以及客户战略决策者。</block>
   <block id="03479b81af64177030f17debcbe954fd" category="inline-link-macro">下一步：ONTAP AI—硬件组件</block>
   <block id="4f95edfb679a4d883a14bec5fb0b765f" category="paragraph"><block ref="4f95edfb679a4d883a14bec5fb0b765f" category="inline-link-macro-rx"></block></block>
-  <block id="9bec4f1a6f6f48f582c28bf09d7a8166" category="summary">采用NVIDIA DGX系统的NetApp AI Pod—软件组件</block>
-  <block id="4818c62d0685b6b304d93ea9f26ba7c4" category="inline-link-macro">上一页：ONTAP AI -硬件组件。</block>
-  <block id="040983721e883e938d8487ed9456765d" category="paragraph"><block ref="040983721e883e938d8487ed9456765d" category="inline-link-macro-rx"></block></block>
   <block id="5475410ded0787143601d2206a245532" category="section-title">NVIDIA软件</block>
   <block id="c7bef72157cc39b6eb7c391a393a20d2" category="section-title">NVIDIA基本命令</block>
   <block id="bddf5760536b58d1a8484301e9f90eae" category="paragraph">NVIDIA Base Command&amp;#8482；(图2)为每个DGX BasePD提供支持、使企业能够充分利用NVIDIA软件创新的优势。企业可以利用成熟可靠的平台充分发挥投资的全部潜能、该平台包括企业级流程编排和集群管理、可加快计算、存储和网络基础架构速度的库以及针对AI工作负载优化的操作系统(OS)。</block>
-  <block id="75dcca08486bcfff7ba5db2bc97895d2" category="paragraph"><block ref="75dcca08486bcfff7ba5db2bc97895d2" category="inline-image-macro-rx" type="image"></block></block>
   <block id="327b053bd13ca457c7d93b27fecda336" category="paragraph">NVIDIA NGC™(图3)提供的软件可满足具有不同AI专业知识水平的数据科学家、开发人员和研究人员的需求。NGC上托管的软件会对一组汇总的常见漏洞和风险(CVE)、加密密钥和私钥进行扫描。它经过测试和设计、可扩展到多个GPU、在许多情况下还可扩展到多节点、从而确保用户在DGX系统上的投资最大化。</block>
-  <block id="41c979aacd0dd9c1c894a1570596b6fe" category="paragraph"><block ref="41c979aacd0dd9c1c894a1570596b6fe" category="inline-image-macro-rx" type="image"></block></block>
   <block id="5e8010721a7d2d406751df26b7b427de" category="paragraph">NVIDIA AI Enterprise是一套针对AI的开发和部署进行了优化的AI和数据分析软件。NVIDIA AI Enterprise包括经验证的开源容器和框架、例如NVIDIA RAPIDS™、NVIDIA Tao Toolkit、NVIDIA TensorRT™和NVIDIA Tridon In视 图服务器、这些容器和框架已通过认证并支持在DGX系统上运行。NVIDIA AI Enterprise包含在DGX系统中、可与NVIDIA Base Command和NVIDIA NGC结合使用。</block>
   <block id="9aeccfb63defa46cb78ffa3611d362c6" category="section-title">NetApp软件</block>
   <block id="19ca873746e39bc49842120d4d9e9fd2" category="list-text">NetApp FlexCache。提供远程卷缓存功能、可简化文件分发、减少WAN延迟并降低WAN带宽成本。FlexCache支持跨多个站点进行分布式产品开发、并加快从远程位置访问公司数据集的速度。</block>
-  <block id="8a68622cad27cba61f341e6f0f30464d" category="list-text">性能和更低的延迟。ONTAP可以以尽可能低的延迟提供尽可能高的吞吐量、包括支持使用基于RDMA的NFS的NVIDIA GPUDirect存储(GDS)。</block>
   <block id="bacf2403430c9be349e22f8a7e42a5b9" category="paragraph">NetApp DataOps工具包是一款基于Python的工具、可简化开发/培训工作空间和推理服务器的管理、这些工作空间和服务器由高性能横向扩展NetApp存储提供支持。数据操作工具包可作为独立的实用程序运行、在利用NetApp Asta三端存储自动化来实现存储操作的Kubennet环境中、该工具包的效率更高。主要功能包括：</block>
-  <block id="6d6a60565999069de29c89c2183b5290" category="inline-link-macro">下一步：采用NVIDIA DGX系统的NetApp AI Pod—架构。</block>
-  <block id="871d272efcc8e0b2d6b81d0ad9436985" category="paragraph"><block ref="871d272efcc8e0b2d6b81d0ad9436985" category="inline-link-macro-rx"></block></block>
   <block id="06fccd13fe37c98002ea1b7db4383539" category="summary">采用NVIDIA DGX系统的NetApp AI Pod—总结</block>
   <block id="29960dc3f77022de2577936fc818e360" category="inline-link-macro">上一页：采用NVIDIA DGX系统的NetApp AI Pod—存储系统设计和大小指导。</block>
   <block id="a099ae3c8f02e9a97a4d28a54904ee4f" category="paragraph"><block ref="a099ae3c8f02e9a97a4d28a54904ee4f" category="inline-link-macro-rx"></block></block>
@@ -19743,127 +19660,123 @@ NetApp MetroCluster是一款高可用性和灾难恢复解决方案、可在两�
   <block id="42c9b161f86365b647172182503d9520" category="inline-link"><block ref="42c9b161f86365b647172182503d9520" category="inline-link-rx"></block></block>
   <block id="f5802e2c53799babc0ac27f6cb392604" category="paragraph"><block ref="f5802e2c53799babc0ac27f6cb392604" category="inline-link-rx"></block></block>
   <block id="3389dae361af79b04c9c8e7057f60cc6" category="paragraph">*</block>
-  <block id="c7d87fc52e88be1efa24c63608d4b0a0" category="summary">采用NVIDIA DGX系统的NetApp Aipod是一款基于NVIDIA BasePOD的企业级参考架构、可使用NetApp ONTAP AFF存储系统以及NVIDIA网络和DGX系统进行深度学习和人工智能。</block>
-  <block id="f49da8f3acb959d0d61b034069f4bfb6" category="doc">采用NVIDIA DGX系统的NetApp AI POD—简介</block>
   <block id="217432d0ec5a422d97fdd8082983c438" category="paragraph">NetApp 解决方案 工程部</block>
-  <block id="88934f15007bff6dc49c8fa3861edfb7" category="paragraph">采用NVIDIA DGX系统的NetApp AI POD由NVIDIA DGX BasePOD&amp;#482和NetApp云互联存储系统提供支持、通过消除设计复杂性和猜测、简化了机器学习(ML)和人工智能(AI)工作负载的基础架构部署。采用DGX系统的AI POD基于NVIDIA DGX BasePOD设计构建、可为下一代工作负载提供卓越的计算性能、增加了NetApp AFF存储系统、支持客户从小规模入手、无故障扩展、同时智能地管理从边缘到核心再到云再到云的数据。NetApp AI POD是更广泛的NetApp AI解决方案产品组合的一部分、如下图所示-</block>
-  <block id="b3b5cdccc739f8791e862e9eab926624" category="inline-link-macro">下一步：采用NVIDIA DGX系统的NetApp AI POD—硬件组件</block>
-  <block id="589a3c404a7fd8138eba12920c2d85dd" category="paragraph"><block ref="589a3c404a7fd8138eba12920c2d85dd" category="inline-link-macro-rx"></block></block>
-  <block id="92ec695ca920130ca89f66da808dffff" category="sidebar">采用NVIDIA DGX系统的NetApp AI POD</block>
-  <block id="b9e1a3a8b51ada26e5769669b14ee9ff" category="sidebar">硬件组件</block>
-  <block id="abdab95e10f075f1f46038e7adf39694" category="sidebar">软件组件</block>
   <block id="6190bc67623b848bb7959b33f3f0d2eb" category="list-text"><block ref="6190bc67623b848bb7959b33f3f0d2eb" category="inline-link-macro-rx"></block></block>
   <block id="ff796b13154c28039cc9b13793eda31c" category="inline-link-macro">使用Astra Control Service对带有Amazon FSx存储的ROSA集群上的应用程序进行数据管理 </block>
   <block id="99ecd458328f39eb9eca26c77f13023d" category="list-text"><block ref="99ecd458328f39eb9eca26c77f13023d" category="inline-link-macro-rx"></block></block>
   <block id="67f778c9ede0c0e222ba60a5644d0ef9" category="video-title">使用Amazon FSx for NetApp ONTAP存储在AWS上的Red Hat OpenShift Service (ROSA)集群上为应用程序创建快照/还原</block>
-  <block id="c07d7e29650467546955633b246fda6a" category="paragraph">此页面显示了使用Astra Control Service在AWS上托管Red Hat OpenShift (ROSA)集群的数据保护选项。Astra Control Service (ACS)提供了一个易于使用的图形用户界面、您可以使用该界面添加集群、定义在其中运行的应用程序以及执行应用程序感知型数据管理活动。此外、还可以使用支持工作流自动化的API访问ACS功能。</block>
-  <block id="97533488bc585534ca5130378158f021" category="paragraph">NetApp Astra控制(ACS或ACC)由Astra三端驱动。Asta三端集成了多种类型的Kubernetes集群、例如Red Hat OpenShift、EKS、AKS、SUSE缓存器、Anthos等。 具有各种NetApp ONTAP存储风格、例如FAS/AFFF、ONTAP Select、CVO、Google Cloud Volumes Service、Azure NetApp Files和Amazon FSx for NetApp ONTAP。</block>
-  <block id="6f1cfebfde061a4cdaf77705ab7a4009" category="paragraph">本节详细介绍了使用ACS的以下数据保护选项：</block>
-  <block id="33da028b104a9f96f7020cd949c12c79" category="list-text">显示备份和还原在一个区域运行的ROSA应用程序并还原到另一个区域的视频。</block>
-  <block id="733a18c6cf3c64494d2dfa21ca393537" category="list-text">显示ROSA应用程序的Snapshot和Restore的视频。</block>
-  <block id="9d74bf33165a37b61ad2f50b938972e7" category="list-text">安装ROSA集群的分步详细信息、Amazon FSx for NetApp ONTAP、使用NetApp Astra三端集成到存储后端、在ROSA集群上安装PostgreSQL应用程序、使用ACS创建应用程序快照并从中还原应用程序。</block>
-  <block id="11e2220ebd484b8703528a9133e1a6c6" category="list-text">一篇博客、详细介绍了如何使用ACS在使用FSx for ONTAP的ROSA集群上为myql应用程序创建快照并从快照中还原。</block>
-  <block id="f1496ac3e4a3245d65c86de1ff527370" category="section-title">备份/从备份中还原</block>
-  <block id="5eba799acfc56e5d19da8c3797685e2d" category="section-title">快照/从快照还原</block>
-  <block id="70fe15f76a66619d2b49bdda5d02a6aa" category="paragraph">以下视频显示了如何创建ROSA应用程序的快照以及之后如何从快照中还原。</block>
-  <block id="ece8e805749cce956d96c8cbcddeb1a0" category="video-title">使用Amazon FSx for NetApp ONTAP存储在AWS上的Red Hat OpenShift Service (ROSA)集群上为应用程序创建快照/还原</block>
-  <block id="be8df1f28c0abc85a0ed0c6860e5d832" category="section-title">博客</block>
-  <block id="3a4a68edff076c6484ed03c598313cb8" category="inline-link-macro">使用Astra Control Service对带有Amazon FSx存储的ROSA集群上的应用程序进行数据管理</block>
-  <block id="df1f7fc111c2ed4d19bb019806a32882" category="list-text"><block ref="df1f7fc111c2ed4d19bb019806a32882" category="inline-link-macro-rx"></block></block>
-  <block id="1ea55c3f63a034c9b2511a975c2ff928" category="section-title">创建快照并从中还原的分步详细信息</block>
-  <block id="017b198d0c8d4d362a1107345764d6a2" category="section-title">前提条件设置</block>
-  <block id="3a2b88b991502efccf922110610f9582" category="list-text"><block ref="27fc574b8ea5cd6312c40c8aa826b8e2" category="inline-link-macro-rx"></block></block>
-  <block id="a157286734897fea2ae78eb8d5a07083" category="inline-link-macro">Red Hat OpenShift帐户</block>
-  <block id="d4cc8b87ccca1a93d32d10a54f2f3096" category="list-text"><block ref="d4cc8b87ccca1a93d32d10a54f2f3096" category="inline-link-macro-rx"></block></block>
-  <block id="638cbffb6101ef7301c367160b8afbea" category="inline-link-macro">适当的权限</block>
-  <block id="3eb7df5974139b5c06b1b98ace64875f" category="list-text">使用的IAM用户 <block ref="e6e1437575a8e52c43b6bea47e894f06" category="inline-link-macro-rx"></block> 创建和访问ROSA集群</block>
-  <block id="7820fdb5d8b3ebe0c69c86cf8bd2d0cf" category="inline-link-macro">AWS命令行界面</block>
-  <block id="98301d59c6cad91a32be2e4205f6bb39" category="list-text"><block ref="98301d59c6cad91a32be2e4205f6bb39" category="inline-link-macro-rx"></block></block>
-  <block id="a419a367cad390ff246057d1781b2530" category="inline-link-macro">罗莎命令行界面</block>
-  <block id="e08f074ff23721e4a104f551d21fa4c3" category="list-text"><block ref="e08f074ff23721e4a104f551d21fa4c3" category="inline-link-macro-rx"></block></block>
-  <block id="4fca4e9eaad689a27ecb08ff8f3f807c" category="inline-link-macro">OpenShift命令行界面</block>
-  <block id="00d080f5fe32e84dd619feb7cb7bd2b9" category="list-text"><block ref="44b8b3934efa2fc5ae9867d0131fa46a" category="inline-link-macro-rx"></block>(OC)</block>
-  <block id="4b8e58f2991ec92ce05bbb428c7e785f" category="list-text">具有子网以及相应网关和路由的VPC</block>
-  <block id="8432e6115f09c44c98ef0d5466e1443f" category="inline-link-macro">已安装罗莎群集</block>
-  <block id="9fb986e8b23a43f32df441a71e17d9a4" category="list-text"><block ref="105d5b5c7505cc3d67068ef270819c2c" category="inline-link-macro-rx"></block> VPC</block>
-  <block id="43f4b12f6a6e4653ba2e9e9431316f26" category="list-text"><block ref="191e780a56cabcf83bcdf7c866f8d783" category="inline-link-macro-rx"></block> 在同一个VPC中创建</block>
-  <block id="e53a614538d8dd04ae01b6f7c8fad43c" category="inline-link-macro">OpenShift混合云控制台</block>
-  <block id="e701544c0a6a10d3e9fd724eb673bd08" category="list-text">从访问ROSA集群 <block ref="0adb5adbf9501e5dfbc7213724e52837" category="inline-link-macro-rx"></block></block>
-  <block id="1b920337ea7c0ca3dadb73c0a64b69a7" category="section-title">后续步骤</block>
-  <block id="5152194ac48cdb110daca5acc638a081" category="list-text">创建管理员用户并登录到集群。</block>
-  <block id="7616094045f96860c9ac357dc99c056e" category="list-text">为集群创建一个kubeconfig.文件。</block>
-  <block id="2d0ad6df83342005c040544d3e09f39f" category="list-text">在集群上安装Asta Trdent。</block>
-  <block id="06c9354d40a28d74b82f80702f813d97" category="list-text">使用三端CSI配置程序创建后端、存储类和快照类配置。</block>
-  <block id="7e68821a0b00ad66c94a5fa7b047fc36" category="list-text">在集群上部署PostgreSQL应用程序。</block>
-  <block id="373318637d0909025d357ebb9cf844c0" category="list-text">创建数据库并添加记录。</block>
-  <block id="6923c850b179787ae20741ac2da32a53" category="list-text">将集群添加到ACS中。</block>
-  <block id="76827e03d5e6d5ac048a5177e18ad144" category="list-text">在ACS中定义应用程序。</block>
-  <block id="bf3e8a582d777e7e4a4d17be1def01a0" category="list-text">使用ACS创建快照。</block>
-  <block id="99b7da0ca39d7f2a015829c2ae6e1b15" category="list-text">删除PostgreSQL应用程序中的数据库。</block>
-  <block id="ff472a20f1aad06904e323a536e2eb80" category="list-text">使用ACS从快照还原。</block>
-  <block id="a795bae8ecd08ce83200e5ec3177acee" category="list-text">验证您的应用程序是否已从快照中还原。</block>
-  <block id="0a3f91bec2fbb2d145638ee7f14c108b" category="section-title">**1.创建管理员用户并登录到群集**</block>
-  <block id="4e3a8a5d5f66fd9fc9a976f4241338af" category="paragraph">使用以下命令创建管理员用户以访问ROSA集群：(只有在安装时未创建管理员用户时、才需要创建管理员用户)</block>
-  <block id="25ee9c81495a3a98ecf40dff27da6c1d" category="paragraph"><block ref="aefcb05bda304d0dd039ce44ec039e5e" prefix="" category="inline-code"></block></block>
-  <block id="f60a1c409fe0a27f22ddfa9c96fb2466" category="paragraph">此命令将提供如下输出。使用登录到集群<block ref="a9902f312ee813dfa0df20ecdd92cbfa" prefix=" " category="inline-code"></block> 命令。</block>
-  <block id="01e9485a97f379eebc1941d265f8d05a" category="paragraph"><block ref="01e9485a97f379eebc1941d265f8d05a" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="03c52bbd6e1432956772bd1b77ca8540" category="admonition">您也可以使用令牌登录到集群。如果您在创建集群时已创建管理员用户、则可以使用管理员用户凭据从Red Hat OpenShift Hybrid Cloud控制台登录到集群。然后、通过单击右上角显示已登录用户名称的、您可以获取<block ref="a9902f312ee813dfa0df20ecdd92cbfa" prefix=" " category="inline-code"></block> 命令(令牌登录)。</block>
-  <block id="da82003ccd337703657b4d5043f7b127" category="section-title">**2.为群集**创建kubeconfig*文件</block>
-  <block id="dd97d9a0156710665d9a4b0ed3dbf2be" category="paragraph">按照步骤进行操作 <block ref="442330295b75a08b4add8fd36a48c8ea" category="inline-link-macro-rx"></block> 为ROSA集群创建kubeconfig.稍后在将集群添加到ACS中时、将使用此kubeconfig.文件。</block>
-  <block id="80eae2f21ccc18edb27b82a3c015e4aa" category="section-title">**3.在群集上安装Asta Trdent **</block>
-  <block id="ff384b8fd58939cbc5a0b01b7553fd43" category="paragraph">在ROSA集群上安装Asta Trident (最新版本)。要执行此操作、您可以按照给定的任一过程进行操作 <block ref="4a2b27d6d4bc3dd7ae85bfd131d50753" category="inline-link-macro-rx"></block>。要从集群控制台使用Helm安装Trident、请先创建一个名为Trident的项目。</block>
-  <block id="5cb42da3b2d3dd848285fd2dceb88455" category="paragraph"><block ref="5cb42da3b2d3dd848285fd2dceb88455" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="52d6229020f19bf2c0f6c87406d8ce99" category="paragraph">然后、在"开发工具"视图中、创建Helm图表存储库。对于URL字段、请使用<block ref="20183aea3d2da33700b394e01c04c185" prefix=" " category="inline-code"></block>。然后为三端操作员创建舵版本。</block>
-  <block id="755006051acaf94196661f7923f0474a" category="paragraph"><block ref="02e0c37c72a536f86ea1821d5f0b40a9" category="inline-image-macro-rx" type="image"></block>
-<block ref="02fbe0a7ae321826af934bafa8e91e0f" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="fbaa2d031fe22ec90eeb4eab3182e2ac" category="paragraph">返回控制台上的"Administrator view"(管理员视图)、然后在三级工程中选择Pod、以验证所有三级工程模块是否正在运行。</block>
-  <block id="fff4dc90fd7dcd0428896700f3219ca4" category="paragraph"><block ref="fff4dc90fd7dcd0428896700f3219ca4" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="13f2afc5c2dcacd63d06c728337c30af" category="section-title">**4.使用三端CSI配置程序**创建后端、存储类和快照类配置</block>
-  <block id="3721d2fc71eb71c5c48649880c7691bf" category="paragraph">使用下面显示的YAML文件创建三元后端对象、存储类对象和卷快照对象。请务必为您创建的Amazon FSx for NetApp ONTAP文件系统提供凭据、并在后端的YAML配置中提供管理LIF和文件系统的Vserver名称。要获取这些详细信息、请转到适用于Amazon FSx的AWS控制台并选择文件系统、然后导航到管理选项卡。此外、单击更新以设置的密码<block ref="679500f227997b45be97e3ca8115c678" prefix=" " category="inline-code"></block> 用户。</block>
-  <block id="8535923874d0b7a58a93ff4527cb2572" category="admonition">您可以使用命令行创建对象、也可以从混合云控制台使用YAML文件创建对象。</block>
-  <block id="7f74cd03d9b7c8fc87adbe0fcdd81351" category="paragraph"><block ref="7f74cd03d9b7c8fc87adbe0fcdd81351" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="59122b849c35681f88e25b2cd4c16e23" category="paragraph">**Trident后端配置**</block>
-  <block id="cb6d16d1a0ec12524c8a26a623080f31" category="paragraph">**存储类**</block>
-  <block id="3c2ea64a4125f56cee84a1db41ffd2f7" category="paragraph">**快照类**</block>
-  <block id="096893ffbe489ff9365c6d0f50668e7c" category="paragraph">发出下面所示的命令、验证是否已创建后端、存储类和trdent-snapshotclass对象。</block>
-  <block id="440a9a438f9cce9394792d52629caa63" category="paragraph"><block ref="440a9a438f9cce9394792d52629caa63" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="9430cd2c476ef4b987a050e26d03000f" category="paragraph">此时、您需要进行的一项重要修改是将ONTAP NAS设置为默认存储类、而不是GP3、以便您稍后部署的PostgreSQL应用程序可以使用默认存储类。在集群的OpenShift控制台中、在"Storage"下选择"StorageClasses"。将当前默认类的标注编辑为false、并将ONTAP NAS存储类的标注storageclass.Kubernetes.io/is-default-class设置为true。</block>
-  <block id="3bdb1b8b53e7a9ac42ee9838ac712bc8" category="paragraph"><block ref="3bdb1b8b53e7a9ac42ee9838ac712bc8" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="75dc080ce0f898e99130f0b3644e9d77" category="paragraph"><block ref="75dc080ce0f898e99130f0b3644e9d77" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="d37c1822f1602c399a626ae694dbf8ee" category="section-title">**5.在群集上部署PostgreSQL应用程序**</block>
-  <block id="9849f155acac1c5d527130295c617745" category="paragraph">您可以从命令行部署此应用程序、如下所示：</block>
-  <block id="14153a7fe9b305b3d6594136d6cbd76e" category="paragraph"><block ref="5cda9633b40969705c2d463d9fac411d" prefix="" category="inline-code"></block></block>
-  <block id="f0665a49317e959dc150a2ebddabe631" category="paragraph"><block ref="f0665a49317e959dc150a2ebddabe631" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="ab01f84d3512141e55a0035b8cd4914c" category="admonition">如果您看不到应用程序Pod正在运行、则可能是由于安全上下文约束而导致错误。
-<block ref="777306d8cda1b533446b5e961ae1412f" category="inline-image-macro-rx" type="image"></block>
-编辑以修复此错误<block ref="e70b97e1fe755b3b63eee3148167d06a" prefix=" " category="inline-code"></block> 和<block ref="c7a6c0ee60c6f68dfe700feaacf15703" prefix=" " category="inline-code"></block> 中的字段<block ref="bb2413f7c1896a1256ce050cb9d3c35c" prefix=" " category="inline-code"></block> 具有的输出中的_id的对象<block ref="9254bbe15d1b0e04ead746e78900f19e" prefix=" " category="inline-code"></block> 命令、如下所示。
-<block ref="d8149d6359e97d140ab7f84f5b5238e6" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="4133913addf4da6a9cc67e80c9318fd3" category="paragraph">PostgreSQL应用程序应正在运行、并使用Amazon FSx支持的永久性卷作为NetApp ONTAP存储。</block>
-  <block id="6f38a4eb8e2bb438a090e469844c2656" category="paragraph"><block ref="6f38a4eb8e2bb438a090e469844c2656" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="f32c780aa5389ad7df8c72717d10ae3f" category="paragraph"><block ref="f32c780aa5389ad7df8c72717d10ae3f" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="4c69f86a70efe7305c65ff1d6340bcbd" category="section-title">**6.创建数据库并添加记录**</block>
-  <block id="73472324290d0ff0a1b449226491194c" category="paragraph"><block ref="73472324290d0ff0a1b449226491194c" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="7d6dddc1bca3e6d90fdb148e26c32c4b" category="section-title">**7.将集群添加到ACs**中</block>
-  <block id="4a6182a7ba7174ab2779d387dff86a36" category="paragraph">登录到ACS。选择cluster、然后单击Add。选择其他并上传或粘贴kubeconfig.</block>
-  <block id="d4c542567c0365471f2b24c9629b0ca4" category="paragraph"><block ref="d4c542567c0365471f2b24c9629b0ca4" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="b905de46f0f090636c93c358d1bf512d" category="paragraph">单击*Next*并选择ONTAP－NAS作为ACS的默认存储类。单击*Next*(下一步*)，查看详细信息，然后单击*Add*(添加)群集。</block>
-  <block id="29769e926dc686d9bee4643e06f02c25" category="paragraph"><block ref="29769e926dc686d9bee4643e06f02c25" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="0c22a664581f98929897ef8da6e94435" category="section-title">**8.在ACs**中定义应用程序</block>
-  <block id="b2926c8eedc2da993a395c1f95032e0a" category="paragraph">在ACS中定义PostgreSQL应用程序。在登录页面中，选择*Applications*、*Define*并填写相应的详细信息。单击“*下一步*”几次，查看详细信息，然后单击“*定义*”。应用程序将添加到ACS。</block>
-  <block id="99eaeeaa339c117cf0b288606e4ec627" category="section-title">**9.使用ACs**创建快照</block>
-  <block id="4a0e0784bcd96d89e8f11679f9ed73dd" category="paragraph">可通过多种方法在ACS中创建快照。您可以从显示应用程序详细信息的页面中选择应用程序并创建快照。您可以单击创建快照来创建按需快照或配置保护策略。</block>
-  <block id="d5acd48af1c6d310e4cb02f8f565c19f" category="paragraph">只需单击*创建快照*、提供名称、查看详细信息并单击*快照*、即可创建按需快照。操作完成后、快照状态将更改为"运行状况良好"。</block>
-  <block id="f8c045ff74a98ecb419e1c7d2f4656b4" category="paragraph"><block ref="f8c045ff74a98ecb419e1c7d2f4656b4" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="dad69cf86f54ffa6a676f056c8922549" category="paragraph"><block ref="dad69cf86f54ffa6a676f056c8922549" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="ffd9fa793ba4244940afbe9b5de8959a" category="section-title">**10.删除PostgreSQL应用程序中的数据库**</block>
-  <block id="dca0d4c6836bb6f907d9bcc880ce7b73" category="paragraph">重新登录到PostgreSQL、列出可用数据库、删除先前创建的数据库并重新列出、以确保数据库已被删除。</block>
-  <block id="8fc31abb8f9b32dd12c55899d4923754" category="paragraph"><block ref="8fc31abb8f9b32dd12c55899d4923754" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="21e4e8e2ffcd028f468c54e319969a1a" category="section-title">**11.使用ACs**从快照恢复</block>
-  <block id="637869fd9fa9d9d4a9353f836480096c" category="paragraph">要从快照还原应用程序、请转到ACS UI登录页面、选择应用程序、然后选择还原。您需要选择要从中还原的快照或备份。(通常、您会根据所配置的策略创建多个)。在接下来的几个屏幕中做出适当的选择，然后单击*Restore*。从快照还原后、应用程序状态将从还原变为可用。</block>
-  <block id="4c989fb106d4c7ab2e4542add9732a43" category="paragraph"><block ref="4c989fb106d4c7ab2e4542add9732a43" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="5dcb664c59022883e81f189ae7b757dd" category="paragraph"><block ref="5dcb664c59022883e81f189ae7b757dd" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="27463305443c0a856ccaf3fc0aebe935" category="paragraph"><block ref="27463305443c0a856ccaf3fc0aebe935" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="ca420b4563e97c29e3b846aa3bc4d627" category="section-title">**12.验证您的应用程序是否已从快照中恢复**</block>
-  <block id="0ae87dfe21efbb4555334e2467ecf6a2" category="paragraph">登录到PostgreSQL客户端、您现在应该可以看到表以及以前的表中的记录。  就是这样。只需单击一个按钮、您的应用程序便已恢复到先前的状态。这就是我们使用Astra Control为客户实现的简单体验。</block>
-  <block id="c4b7e4476f0c1295b7ad2b84095afbb7" category="paragraph"><block ref="c4b7e4476f0c1295b7ad2b84095afbb7" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="82b67ae3d50932b0d818b7c3a23b3428" category="summary">采用NVIDIA DGX系统的NetApp AIPod—架构</block>
+  <block id="577df6236e6e1a1682f65355d6d35a2c" category="doc">采用NVIDIA DGX系统的NetApp AIPod—解决方案架构</block>
+  <block id="e768686aaf74da904c7c8966e526e0ad" category="inline-link-macro">上一页：ONTAP AI -软件组件</block>
+  <block id="d6d5b68389c5209df0ea55ba641bb018" category="paragraph"><block ref="d6d5b68389c5209df0ea55ba641bb018" category="inline-link-macro-rx"></block></block>
+  <block id="a39e45b08dafc96fc22bd34295329031" category="section-title">采用DGX H100系统的NetApp AI Pod</block>
+  <block id="8fe7cb1d6c5baff682d5f1357d387742" category="paragraph">下图显示了将DGX H100系统与NetApp AIPod结合使用时的整体解决方案拓扑。</block>
+  <block id="eb606e206352457153b2069dbeccf372" category="paragraph"><block ref="eb606e206352457153b2069dbeccf372" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5dd57c2a315d3af44c2eb40eefc47111" category="section-title">网络配置：</block>
+  <block id="f066e0e84dff992b05455ad6e1eec189" category="paragraph">在此配置中、计算集群网络结构使用一对QM9700 NDE IB交换机、这些交换机连接在一起以实现高可用性。每个DGX H100系统通过八个连接连接到交换机、其中、偶数端口连接到一个交换机、奇数端口连接到另一个交换机。</block>
+  <block id="a907c26590deef718a764c254036a2c1" category="paragraph">对于存储系统访问、带内管理和客户端访问、使用一对SN4600以太网交换机。这些交换机通过交换机间链路进行连接、并配置有多个VLAN以隔离各种流量类型。对于大型部署、可以根据需要为主干交换机添加更多交换机对并添加更多叶片、从而将以太网网络扩展为分支-主干配置。</block>
+  <block id="635c0b351389987f91626670ef23b1a2" category="paragraph">除了计算互连和高速以太网网络之外、所有物理设备还会连接到一个或多个SN2201以太网交换机、以实现带外管理。  有关DGX H100系统连接的更多详细信息、请参见 <block ref="784f66b69fd9a6fd2983e969e5202b40" category="inline-link-macro-rx"></block>。</block>
+  <block id="d726f9e07242f01d038385123f6c5cae" category="section-title">用于存储访问的客户端配置</block>
+  <block id="2941ee44caa927f226d37044b592d9e2" category="paragraph">每个DGX H100系统都配置有两个双端口ConnectX-7卡、用于管理和存储流量、对于此解决方案、每个卡上的两个端口都连接到同一交换机。然后、将每个卡中的一个端口配置到LACP MAG绑定中、并将一个端口连接到每个交换机、同时在此绑定上托管用于带内管理、客户端访问和用户级存储访问的VLAN。</block>
+  <block id="57c43361c9b36c79cf02d6af38643bf3" category="paragraph">每个卡上的另一个端口用于连接到AFF A900存储系统、并可根据工作负载要求在多种配置中使用。对于使用基于RDMA的NFS来支持NVIDIA GPUDirect存储的配置、端口配置为主动/被动绑定、因为任何其他类型的绑定都不支持RDMA。对于不需要RDMA的部署、客户还可以利用存储接口上的LACP绑定来提供高可用性和额外带宽。无论是否使用RDMA、客户端都可以使用NFS v4.1 pNFS和会话中继挂载存储系统、以便能够并行访问集群中的所有存储节点。</block>
+  <block id="2139fe384d5ae165545994dff01961d9" category="section-title">存储系统配置：</block>
+  <block id="faf6590c1a96ba32f0ab5077195bccad" category="paragraph">每个AFF A900存储系统使用每个控制器中的四个100 GbE端口进行连接。每个控制器的两个端口用于从DGX系统访问工作负载数据、每个控制器的两个端口配置为LACP接口组、以支持从管理平台服务器访问集群管理项目和用户主目录。存储系统的所有数据访问均通过NFS提供、其中一个Storage Virtual Machine (SVM)专用于AI工作负载访问、另一个SVM专用于集群管理用途。</block>
+  <block id="d3ce6c1941b0f943b52059b28d6dec78" category="paragraph">工作负载SVM总共配置了八个逻辑接口(LIP)、每个物理端口上配置两个LIP。此配置可提供最大带宽、并允许每个LIF故障转移到同一控制器上的另一个端口、以便在发生网络故障时两个控制器保持活动状态。此配置还支持基于RDMA的NFS以启用GPUDirect存储访问。存储容量以一个大型FlexGroup卷的形式进行配置、该卷跨越集群中的所有存储控制器、每个控制器上有16个成分卷。可从SVM上的任何LIF访问此FlexGroup、并通过将NFSv4.1与pNFS和会话中继结合使用、客户端可与SVM中的每个LIF建立连接、从而可以并行访问每个存储节点的本地数据、从而显著提高性能。此外、还会为工作负载SVM和每个数据LIF配置RDMA协议访问。有关ONTAP的RDMA配置的详细信息、请参见 <block ref="98725a321399dc799a1996bdadb431f5" category="inline-link-macro-rx"></block>。</block>
+  <block id="6c9aef89eae0fd771909b15623e452df" category="paragraph">管理SVM仅需要一个LIF、该LIF托管在每个控制器上配置的双端口接口组上。在管理SVM上配置了其他FlexGroup卷、用于存放集群管理项目、例如集群节点映像、系统监控历史数据和最终用户主目录。下图显示了存储系统的逻辑配置。</block>
+  <block id="2ec795ef40b2ed0ebfe1725380b1fcc0" category="paragraph"><block ref="2ec795ef40b2ed0ebfe1725380b1fcc0" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6822c860c58e2ab2c8d6f14b8b765be8" category="paragraph">此参考架构还包括五个基于CPU的服务器、供管理平台使用。其中两个系统用作Base Command Manager的主节点、用于集群部署和管理。另外三个系统用于提供额外的集群服务、例如、在使用Slurm进行作业计划的部署中、可使用Kubornetes主节点或登录节点。利用Kubnetes的部署可以利用NetApp Asta三端CSI驱动程序为AFF A900存储系统上的管理和AI工作负载提供自动化配置和数据服务以及永久性存储。</block>
+  <block id="a8583d720ed329cf49ab7a670664dc7b" category="inline-link-macro">下一步：采用NVIDIA DGX系统的NetApp AIPod—解决方案验证和大小指导</block>
+  <block id="f29056b0007dcee6eb6cf6c57fd1da5b" category="paragraph"><block ref="f29056b0007dcee6eb6cf6c57fd1da5b" category="inline-link-macro-rx"></block></block>
+  <block id="19a97f58216292f6ce34aa1a3ad9e96e" category="summary">采用NVIDIA DGX系统的NetApp AIPod—从何处查找追加信息</block>
+  <block id="4cc9926ab22b0001fe330910bedef302" category="doc">采用NVIDIA DGX系统的NetApp AIPod—结论和追加信息</block>
+  <block id="86b221b3904230f3b61b8a59c459ae46" category="inline-link-macro">上一页：采用NVIDIA DGX系统的NetApp AIPod—解决方案验证和大小指南</block>
+  <block id="3acf3b79a52ae18126bf7eb4d9bffeb9" category="paragraph"><block ref="3acf3b79a52ae18126bf7eb4d9bffeb9" category="inline-link-macro-rx"></block></block>
+  <block id="ecb026f32a8d162c2e956ac887fbc4c3" category="paragraph">DGX BasePOD架构是下一代深度学习平台、需要同等高级的存储和数据管理功能。通过将DGX BasePD与NetApp AFF系统相结合、NetApp AIPod架构几乎可以在任何规模上实施、从OEM服务器中的单个GPU与AFF A250存储系统配对、到在24节点AFF A900集群上的48个DGX H100系统。结合NetApp ONTAP卓越的云集成和软件定义的功能、AFF支持跨边缘、核心和云端的全套数据管道、助力深度学习项目取得成功。</block>
+  <block id="68e34599e7058d633da08de84c55032d" category="paragraph">要详细了解本文档中所述的信息、请参阅以下文档和/或网站：</block>
+  <block id="aa337d98559cff5848df7daaebbb9c97" category="list-text">NetApp AFF A900存储系统-</block>
+  <block id="5a9e4513c7860af8a56b46990effb9bf" category="inline-link"><block ref="5a9e4513c7860af8a56b46990effb9bf" category="inline-link-rx"></block></block>
+  <block id="d0740233c3ee3b1d510983b87e200157" category="paragraph"><block ref="d0740233c3ee3b1d510983b87e200157" category="inline-link-rx"></block></block>
+  <block id="29b91fda4bb7baae0176d0ca5870634a" category="list-text">NetApp ONTAP RDMA信息-</block>
+  <block id="0f4b138acdd63a2f36e4aeb66ce027c5" category="inline-link-macro"><block ref="0f4b138acdd63a2f36e4aeb66ce027c5" category="inline-link-rx"></block></block>
+  <block id="c08c09703d9322a16ef4a93b82ff897e" category="paragraph"><block ref="c08c09703d9322a16ef4a93b82ff897e" category="inline-link-macro-rx"></block></block>
+  <block id="60183422fc000bb24bd5dbed44e1bf7d" category="paragraph">本文档介绍了NetApp解决方案和ONTAP工程团队的工作：David Arnette、Olga Kornievskaie、Dups f舍 尔、Srithan Kaligotla、Motit Kumar和Rajeev Badrinath。作者还要感谢NVIDIA和BasePOD工程团队的持续支持。</block>
+  <block id="7f86b6f2a05fc6e5c5931f73e9af29fd" category="summary">采用NVIDIA DGX系统的NetApp AIPod—硬件组件</block>
+  <block id="111f9015398e1351a89728156a0215df" category="inline-link-macro">上一页：采用NVIDIA DGX系统的NetApp AIPod -简介</block>
+  <block id="be78a713f4a43883d15810cd5fd05462" category="paragraph"><block ref="be78a713f4a43883d15810cd5fd05462" category="inline-link-macro-rx"></block></block>
+  <block id="581d5f2c74f74ac1ae51355c4a4467b2" category="section-title">AFF A900存储系统</block>
+  <block id="219d5ec1ec3903182135842c58c1dbd6" category="paragraph">由NetApp ONTAP数据管理软件提供支持的NetApp AFF A900提供内置数据保护、可选的反勒索软件功能以及支持最关键业务工作负载所需的高性能和故障恢复能力。它可以消除任务关键型运营中断、最大限度地减少性能调整、并保护数据免受勒索软件攻击。它提供：
+•行业领先的性能
+•不折不扣的数据安全性
+•简化无中断升级</block>
+  <block id="acc8c7361424cc63fe0cc639d84a09cf" category="paragraph"><block ref="acc8c7361424cc63fe0cc639d84a09cf" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1863aa82dcf92831635aa05e975d399d" category="section-title">行业领先的性能</block>
+  <block id="5ac103d261e7d2800d93dbf28681894d" category="paragraph">AFF A900可轻松管理下一代工作负载、例如深度学习、AI和高速分析、以及Oracle、SAP HANA、Microsoft SQL Server和虚拟化应用程序等传统企业数据库。它可以使业务关键型应用程序以最高速度运行、每个HA对的IOPS高达240万次、延迟低至100µs微秒、与以前的NetApp型号相比、性能可提高多达50%。借助基于RDMA的NFS、pNFS和会话中继、您可以使用现有数据中心网络基础架构实现下一代应用程序所需的高级别网络性能。
+您还可以通过对SAN、NAS和对象存储的统一多协议支持进行扩展和扩展、并通过统一的和单个ONTAP数据管理软件为内部或云中的数据提供最大的灵活性。此外、您还可以利用Active IQ和Cloud Insights提供的基于AI的预测性分析来优化系统运行状况。</block>
+  <block id="773efff7a0bbe1582ceff936530b5ae3" category="section-title">不折不扣的数据安全性</block>
+  <block id="895c01d94c53db6ec4945f390932d1a9" category="paragraph">AFF A900系统包含一整套NetApp集成的应用程序一致的数据保护软件。它提供内置数据保护和尖端的反勒索软件解决方案、用于抢占资源和攻击后恢复。您可以阻止将恶意文件写入磁盘、并监控存储异常以获得洞察力。</block>
+  <block id="f6353452ddd71a9ef0e4d8578d7dc7e3" category="section-title">简化无中断升级</block>
+  <block id="fe9837c49199d954bea98588aca27c2a" category="paragraph">AFF A900可作为无中断机箱内升级提供给我们现有的A700客户。通过我们的高级可靠性、可用性、可维护性和易管理性(RASM)功能、我们可以轻松更新并消除任务关键型运营中断。此外、由于ONTAP软件会自动应用固件更新、我们还可以进一步提高运营效率并简化IT团队的日常活动。</block>
+  <block id="17c9aa146d8af0596a6defd73027f43c" category="paragraph">对于规模最大的部署、AFF A900系统可提供最高的性能和容量选项、而其他NetApp存储系统(例如AFF A800、AFF A400和AFF A250)则可提供成本更低的小型部署选项。</block>
+  <block id="9da8f3b99aa5e110cb73325fb8e639d7" category="paragraph"><block ref="9da8f3b99aa5e110cb73325fb8e639d7" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0a5f31a2eea3b274409614f4eb63433c" category="section-title">NVIDIA DGX H100系统</block>
+  <block id="8cb4d859819b09caa549097e6026cde3" category="paragraph">DGX H100系统是DGX系统的最新迭代产品、也是AI的动力之源、NVIDIA H100 GPU的开创性性能为其加速。</block>
+  <block id="ab4808418c5a23beddc5f963adb1b47d" category="paragraph"><block ref="ab4808418c5a23beddc5f963adb1b47d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="01ce56d4ae4360cee9577fb2203f57e0" category="paragraph">DGX H100系统的主要规格如下：
+•八个NVIDIA H100 GPU。
+•80 GB GPU内存。
+•四个NVIDIA NVSwitch™芯片。
+•支持PCIe 5.0的双56核第四代英特尔®至强®处理器。
+2 TB的系统内存。
+•四个OFP端口、用于八个单端口NVIDIA ConnectX-7 VPI、三个双端口NVIDIA ConnectX-7 VPI。
+•两个1.92 TB M.2 NVMe驱动器用于DGX操作系统、八个3.84 TB U.2 NVMe驱动器用于存储/缓存。
+•最大功率11.3 kW。
+图7显示了DGX H100 CPU托架的后部端口。其中四个OSFP端口为InfiniBand计算网络结构提供八个ConnectX-7 HCA。每对双端口ConnectX-7 HCA都提供指向存储和管理网络结构的并行路径。带外端口用于BMC访问。
+<block ref="b5125c9657b2b8930b40d893caf4ddc8" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="94fa279f41086be6c7ecc457d9648053" category="paragraph"><block ref="94fa279f41086be6c7ecc457d9648053" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="daaeec8f853281c0c96a2d2e35e9d0ef" category="paragraph"><block ref="daaeec8f853281c0c96a2d2e35e9d0ef" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1ca9534c00119666a7c4e181fdda7e7a" category="paragraph"><block ref="1ca9534c00119666a7c4e181fdda7e7a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e5f9156ef7fb4c9f221fbf6158c7f9fa" category="paragraph"><block ref="e5f9156ef7fb4c9f221fbf6158c7f9fa" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9ced46278532bc0084e0fefef090242d" category="inline-link-macro">下一步：采用NVIDIA DGX系统的NetApp AIPod—软件组件</block>
+  <block id="cad5afa656ff6f36baf42ba91e59fd47" category="paragraph"><block ref="cad5afa656ff6f36baf42ba91e59fd47" category="inline-link-macro-rx"></block></block>
+  <block id="77f2324c2483df30f029d522599f882e" category="summary">采用NVIDIA DGX系统的NetApp AIPod—软件组件</block>
+  <block id="761b7922a1f4674560d4630525b77820" category="inline-link-macro">上一页：采用NVIDIA DGX系统的NetApp AIPod -硬件组件</block>
+  <block id="b48d327ba5d492d35263e794cff48c88" category="paragraph"><block ref="b48d327ba5d492d35263e794cff48c88" category="inline-link-macro-rx"></block></block>
+  <block id="4b72ee56152d36223c6764026e4e2d76" category="paragraph"><block ref="4b72ee56152d36223c6764026e4e2d76" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0899e022f74ff7e4176989ebf790ce12" category="paragraph"><block ref="0899e022f74ff7e4176989ebf790ce12" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="eee83e970a37631d16767e4eb4d6af44" category="list-text">性能和更低的延迟。ONTAP可以以最低延迟提供最高吞吐量、包括支持使用基于RDMA的NFS的NVIDIA GPUDirect存储(GDS)、并行NFS (pNFS)和NFS会话中继。</block>
+  <block id="b2d0aaf645ff5747fbe1e0aec0cf528c" category="list-text">数据保护ONTAP提供内置数据保护功能和业内最强大的反勒索软件担保、并在所有平台之间提供通用管理。</block>
+  <block id="621721e0b0144695aabce4090fa40eed" category="list-text">快照和克隆支持协作、并行实验和增强ML/DL工作流的数据监管。</block>
+  <block id="b1932ff070760d4f32c0a3701982558d" category="list-text">SnapMirror支持在混合云和多站点环境中无缝移动数据、可根据需要随时随地提供数据。</block>
+  <block id="826fe2a66df89db18bb43157b2975159" category="inline-link-macro">下一步：采用NVIDIA DGX系统的NetApp AIPod—解决方案架构</block>
+  <block id="e0073a8725830dcd0bd0ddc6676565fd" category="paragraph"><block ref="e0073a8725830dcd0bd0ddc6676565fd" category="inline-link-macro-rx"></block></block>
+  <block id="848ae08c8ade912370b3f3e29e096488" category="summary">采用NVIDIA DGX系统的NetApp AIPod—总结</block>
+  <block id="c9b8745e892e2c7b78f3ed6c29625108" category="doc">采用NVIDIA DGX系统的NetApp AIPod—解决方案验证和大小指导</block>
+  <block id="75dccb01a6188861431ae57d6825b5dc" category="inline-link-macro">上一页：采用NVIDIA DGX系统的NetApp AIPod—解决方案架构</block>
+  <block id="7771db55ec8b557d312a4d77d397e5b7" category="paragraph"><block ref="7771db55ec8b557d312a4d77d397e5b7" category="inline-link-macro-rx"></block></block>
+  <block id="773a9689ba6682deeabffa6746d64105" category="section-title">解决方案验证</block>
+  <block id="364bed9cbf28e51b3a87b1cece482054" category="paragraph">此解决方案中的存储配置已通过使用开源工具FIO的一系列综合工作负载进行验证。这些测试包括用于模拟由执行深度学习培训作业的DGX系统生成的存储工作负载的读写I/O模式。存储配置已通过一个双插槽CPU服务器集群进行验证、该集群可同时运行FIO工作负载、以模拟一个DGX系统集群。每个客户端都配置了与前文所述相同的网络配置、并添加了以下详细信息。</block>
+  <block id="9b3cad043096c397b17339135694a7f4" category="paragraph">此验证使用了以下挂载选项-
+•VERS=4.1. #启用pNFS以并行访问多个存储节点
+•proto = RDMA #将传输协议设置为RDMA、而不是默认TCP
+•端口=20049 #为RDMA NFS服务指定正确的端口
+•max_connect = 16 #启用NFS会话中继以聚合存储端口带宽
+•write=eager #可提高缓冲写入的写入性能
+•rsize=262144、wsize=262144 #将I/O传输大小设置为256k</block>
+  <block id="517e9f0f1cdacee61fe40e1989d9171c" category="paragraph">此外、还为客户端配置了NFS max_sSession_狭 缝值1024。在使用基于RDMA的NFS对解决方案进行测试时、存储网络端口配置了主动/被动绑定。在这项验证中使用了以下绑定参数-
+•mode=active-backup #将绑定设置为主动/被动模式
+主卷=&lt;interface name&gt; #所有客户端的主接口都分布在交换机之间
+•MII-monitor-interval=100 #指定100毫秒的监控间隔
+•故障转移-mac-policy=active #指定活动链路的MAC地址是绑定的MAC。要通过绑定接口正确运行RDMA、必须执行此操作。</block>
+  <block id="13e766ae456cff38288a10e042da1460" category="paragraph">存储系统按照所述进行配置、配置有两个A900 HA对(4个控制器)、其中两个NS224磁盘架、每个HA对连接有24个1.9 TB NVMe磁盘驱动器。如架构部分所述、所有控制器的存储容量均使用FlexGroup卷进行合并、所有客户端的数据分布在集群中的所有控制器上。</block>
+  <block id="477bd5148332bc9bdc67f73a05ae2dc6" category="paragraph">根据上述测试、NVDIIA已认证测试的存储配置可轻松支持包含八个DGX H100系统的集群。对于存储性能要求较高的大型部署、可以在一个集群中向NetApp ONTAP集群添加更多AFF系统、最多可添加12个HA对(24个节点)。使用本解决方案中所述的FlexGroup技术、一个24节点集群可以在一个命名空间中提供超过40 PB的吞吐量和高达300 Gbps的吞吐量。其他NetApp存储系统(例如AFF A400、A250和C800)以更低的成本为小型部署提供了更低的性能和/或更高的容量选项。由于ONTAP 9支持混合模式集群、因此客户可以先减少初始占用空间、然后随着容量和性能要求的增长向集群添加更多或更大的存储系统。下表显示了每个AFF型号所支持的A100和H100 GPU数量的粗略估计。</block>
+  <block id="85ef311a45608f54eb2382269d3472e6" category="paragraph"><block ref="85ef311a45608f54eb2382269d3472e6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c683ba7d802f6abbc28cf9842ffd6c21" category="inline-link-macro">下一步：采用NVIDIA DGX系统的NetApp AIPod—总结与追加信息</block>
+  <block id="d02b39ad24851279f902e2d640a23236" category="paragraph"><block ref="d02b39ad24851279f902e2d640a23236" category="inline-link-macro-rx"></block></block>
+  <block id="9f68b039fbd3ecc8729ee9a4be7903ea" category="summary">采用NVIDIA DGX系统的NetApp AIPod是一款基于NVIDIA BasePOD的企业级参考架构、可使用NetApp ONTAP AFF存储系统以及NVIDIA网络和DGX系统实现深度学习和人工智能。</block>
+  <block id="c76b2a4135db1bf6b22445f907d31311" category="doc">采用NVIDIA DGX系统的NetApp AIPod—简介</block>
+  <block id="5c349adcb09ccdf15a52df4f74796990" category="paragraph">NetApp&amp;#482；采用NVIDIA DGX&amp;#482的AIPod；由NVIDIA DGX BasePOD&amp;#482提供支持的系统；以及NetApp云连接存储系统、通过消除设计复杂性和猜测、简化了机器学习(ML)和人工智能(AI)工作负载的基础架构部署。采用NVIDIA DGX系统的AIPod基于NVIDIA DGX BasePOD设计构建、可为下一代工作负载提供卓越的计算性能、并添加了NetApp AFF存储系统、支持客户从小规模入手、无故障扩展、同时智能地管理从边缘到核心再到云再到云的数据。NetApp AIPod是更广泛的NetApp AI解决方案产品组合的一部分、如下图所示-</block>
+  <block id="28fc4ff24eeac14eb2855c3d52eb752f" category="paragraph"><block ref="28fc4ff24eeac14eb2855c3d52eb752f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="89499f1c5b524f3ec39275214b8e3241" category="paragraph">本文档介绍AIPod参考架构的关键组件、系统连接信息和解决方案规模估算指导。本文档面向有意为ML/DL和分析工作负载部署高性能基础架构的NetApp和合作伙伴解决方案工程师以及客户战略决策者。</block>
+  <block id="2ce56ff2610ea929e68ca98f14b571b7" category="inline-link-macro">下一步：采用NVIDIA DGX系统的NetApp AIPod -硬件组件</block>
+  <block id="80ddd7f3c9e49fe76ef18afcde547154" category="paragraph"><block ref="80ddd7f3c9e49fe76ef18afcde547154" category="inline-link-macro-rx"></block></block>
 </blocks>
