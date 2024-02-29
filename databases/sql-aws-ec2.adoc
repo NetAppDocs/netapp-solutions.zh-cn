@@ -173,7 +173,7 @@ image:sql-awsec2-image3.png["错误：缺少图形映像"]
 
 
 ....
-Vol create -vserver svm001 -volume vol_awssqlprod01_data -aggregate aggr1 -size 800GB -state online -tiering-policy snapshot-only -percent-snapshot-space 0 -autosize-mode grow -snapshot-policy none -security-style ntfs -aggregate aggr1
+vol create -vserver svm001 -volume vol_awssqlprod01_data -aggregate aggr1 -size 800GB -state online -tiering-policy snapshot-only -percent-snapshot-space 0 -autosize-mode grow -snapshot-policy none -security-style ntfs
 volume modify -vserver svm001 -volume vol_awssqlprod01_data -fractional-reserve 0
 volume modify -vserver svm001 -volume vol_awssqlprod01_data -space-mgmt-try-first vol_grow
 volume snapshot autodelete modify -vserver svm001 -volume vol_awssqlprod01_data -delete-order oldest_first
@@ -209,7 +209,7 @@ igroup create -igroup igrp_ws2019sql1 -protocol iscsi -ostype windows -initiator
 
 
 ....
-lun create -path /vol/vol_awssqlprod01_data/lun_awssqlprod01_data -size 700GB -ostype windows_2008 -space-reserve enabled -space-allocation enabled lun create -path /vol/vol_awssqlprod01_log/lun_awssqlprod01_log -size 100GB -ostype windows_2008 -space-reserve enabled -space-allocation enabled
+lun create -path /vol/vol_awssqlprod01_data/lun_awssqlprod01_data -size 700GB -ostype windows_2008 -space-allocation enabled lun create -path /vol/vol_awssqlprod01_log/lun_awssqlprod01_log -size 100GB -ostype windows_2008 -space-allocation enabled
 ....
 image:sql-awsec2-image5.png["错误：缺少图形映像"]
 
@@ -249,15 +249,15 @@ foreach ($TargetPortal in $TargetPortals) {New-IscsiTargetPortal -TargetPortalAd
 ....
 image:sql-awsec2-image10.png["错误：缺少图形映像"]
 
-+
 *最佳实践*
 
+* 为每个目标接口配置五个iSCSI会话以获得最佳性能。
+* 配置轮循策略以获得最佳整体iSCSI性能。
+* 格式化LUN时、请确保分区的分配单元大小设置为64K
 +
-*为每个目标接口配置五个iSCSI会话以获得最佳性能。
-*配置循环策略以获得最佳的整体iSCSI性能。
-*格式化LUN时、请确保分区的分配单元大小设置为64K
+.. 运行以下PowerShell命令以确保iSCSI会话保持不变。
 
-. 运行以下PowerShell命令以确保iSCSI会话保持不变。
+
 
 
 ....
@@ -414,13 +414,16 @@ NOTE: SnapCenter 使用主机日志目录存储事务日志备份数据。这是
 
 * 不包含tempdb数据库的系统数据库备份
 * 10%的LUN开销空间将主机日志目录置于专用卷或LUN上。主机日志目录中的数据量取决于备份的大小以及备份的保留天数。
-
-
++
 image:sql-awsec2-image17.png["错误：缺少图形映像"]
 
++
 如果已配置LUN、则可以选择挂载点来表示主机日志目录。
 
++
 image:sql-awsec2-image18.png["错误：缺少图形映像"]
+
+
 
 ====
 现在、您可以为SQL Server执行备份、还原和克隆操作了。
@@ -437,31 +440,28 @@ image:sql-awsec2-image18.png["错误：缺少图形映像"]
 * 使用资源组进行备份配置、以优化Snapshot以及要管理的作业数。
 +
 .. 选择*资源*、然后选择左上角下拉菜单中的* Microsoft SQL Server *。选择*刷新资源*。
-
-
-
-
++
 image:sql-awsec2-image19.png["错误：缺少图形映像"]
 
-. 选择要备份的数据库，然后选择*Next*和(**)以添加策略(如果尚未创建)。按照*新SQL Server备份策略*创建新策略。
-
-
+.. 选择要备份的数据库，然后选择*Next*和(**)以添加策略(如果尚未创建)。按照*新SQL Server备份策略*创建新策略。
++
 image:sql-awsec2-image20.png["错误：缺少图形映像"]
 
-. 如有必要、选择验证服务器。此服务器是SnapCenter 在创建完整备份后运行DBCC CHECKDB的服务器。单击*下一步*进行通知、然后选择*摘要*进行查看。查看后、单击*完成*。
-
-
+.. 如有必要、选择验证服务器。此服务器是SnapCenter 在创建完整备份后运行DBCC CHECKDB的服务器。单击*下一步*进行通知、然后选择*摘要*进行查看。查看后、单击*完成*。
++
 image:sql-awsec2-image21.png["错误：缺少图形映像"]
 
-. 单击*立即备份*以测试备份。在弹出窗口中、选择*备份*。
-
-
+.. 单击*立即备份*以测试备份。在弹出窗口中、选择*备份*。
++
 image:sql-awsec2-image22.png["错误：缺少图形映像"]
 
-. 选择*监控*以验证备份是否已完成。
-
-
+.. 选择*监控*以验证备份是否已完成。
++
 image:sql-awsec2-image23.png["错误：缺少图形映像"]
+
+
+
+
 
 *最佳实践*
 
