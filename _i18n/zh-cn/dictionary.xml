@@ -19944,4 +19944,41 @@ NetApp MetroCluster是一款高可用性和灾难恢复解决方案、可在两�
   <block id="0ae87dfe21efbb4555334e2467ecf6a2" category="paragraph">登录到PostgreSQL客户端、您现在应该可以看到表以及以前的表中的记录。  就是这样。只需单击一个按钮、您的应用程序便已恢复到先前的状态。这就是我们使用Astra Control为客户实现的简单体验。</block>
   <block id="c4b7e4476f0c1295b7ad2b84095afbb7" category="paragraph"><block ref="c4b7e4476f0c1295b7ad2b84095afbb7" category="inline-image-macro-rx" type="image"></block></block>
   <block id="63864fe27243a67429a0ee731461c1fd" category="sidebar">将VM从VMware迁移到OpenShift虚拟化</block>
+  <block id="622b235a9123d972c612737c81eb55a1" category="doc">NetApp和VMware的NFSv3 nConnect功能</block>
+  <block id="922214eccd42dc7249f715ccfe0f66fd" category="paragraph">从VMware vSphere 8.0 U1 (作为技术预览版)开始、nconnect功能可为NFS v3数据存储库卷实现多个TCP连接、从而提高吞吐量。  使用NFS版本3数据存储库的客户现在可以增加与NFS服务器的连接数、从而最大程度地提高高速网络接口卡的利用率。</block>
+  <block id="2f5a0a2f5bc09f02ff2874d6f119ce71" category="inline-link-macro">VMware vSphere 8.0 Update 2发行说明</block>
+  <block id="a780007c9fc76074a8010f3e0baef2ef" category="admonition">8.0 U2通常提供此功能、请参阅上的存储部分 <block ref="b47acafec9d9ecdb185067327510996c" category="inline-link-macro-rx"></block></block>
+  <block id="029dffdb3a47e8a7b61eefb05272f3b6" category="list-text">在同一主机上为每个NFS数据存储库托管更多虚拟机。</block>
+  <block id="c9c3ecb745a906eed9c9dc66bce091b2" category="list-text">提高NFS数据存储库性能。</block>
+  <block id="e2d5091735d8049dbac491b96e7800e3" category="list-text">提供一个选项、以便为基于虚拟机和容器的应用程序提供更高级别的服务。</block>
+  <block id="52eb43485175b27d516a58a137af2d9a" category="section-title">技术详细信息</block>
+  <block id="456bb25eb1c4cc4d1d3167077db63dc3" category="inline-link-macro">NFS最佳实践和实施指南</block>
+  <block id="80fbff02df105327c999a32ee770abbd" category="paragraph">nconnect的目的是为vSphere主机上的每个NFS数据存储库提供多个TCP连接。这有助于提高NFS数据存储库的并行处理能力和性能。  在ONTAP中、建立NFS挂载后、系统将创建连接ID (CID)。该CID可提供多达128个并发传输中操作。当客户端超过该数量时、ONTAP会启用一种流量控制形式、直到其他操作完成后、它可以释放一些可用资源为止。这些暂停通常只需几微秒、但在数百万次操作过程中、这些操作会累加并造成性能问题。nConnect可以采用128个限制、并将其乘以客户端上的nconnect会话数、这样每个CID可提供更多并发操作、并可能增加性能优势。有关更多详细信息、请参见 <block ref="2286147d95e2b48568ae4e520e809846" category="inline-link-macro-rx"></block></block>
+  <block id="a117913f518b234647a8b383734ba750" category="section-title">默认NFSv3数据存储库</block>
+  <block id="5362dc6cc8a918b056c07a887b52e3bd" category="paragraph">为了解决NFS数据存储库单个连接的性能限制、需要挂载更多数据存储库或添加更多主机来增加连接。</block>
+  <block id="147d27fd2004a0ec68674942c780aa9a" category="image-alt">不具有nconnect功能的NFSv3数据存储库</block>
+  <block id="debf3a3ee7d6a6155b69615056e5ce4b" category="section-title">使用nConnect NFSv3数据存储库</block>
+  <block id="2ff2577b7287e07a33b1e780f8b40120" category="paragraph">使用ONTAP工具或其他选项创建NFS数据存储库后、可以使用vSphere命令行界面、PowerCLI、政府工具或其他API选项修改每个NFSv3数据存储库的连接数。为了避免与vMotion同时出现性能问题、请在属于vSphere集群的所有vSphere主机上保持NFS数据存储库的连接数不变。</block>
+  <block id="dba363f6b127a7aeb65476b3b3edb346" category="image-alt">启用了nconnect功能的NFSv3数据存储库</block>
+  <block id="5aa0dfe1002dfe6bce0026bf5a097872" category="section-title">前提条件</block>
+  <block id="d7d014eeaf77806f8ad332d6854a67d8" category="paragraph">要使用nconnect功能、应满足以下依赖关系。</block>
+  <block id="e8467e9b509c4924668c01eb7ab2adde" category="cell">ONTAP 版本</block>
+  <block id="cd88f82366c9681ae528ea72ce607479" category="cell">vSphere版本</block>
+  <block id="8413c683b4b27cc3f4dbd4c90329d8ba" category="cell">注释</block>
+  <block id="9d00c1626c7c0d2a2cd78a53a717750f" category="cell">9.8或更高版本</block>
+  <block id="eb0c9cc2c6a76a4089f51a287dd39018" category="cell">8更新版本1</block>
+  <block id="e1d5cb4dfc779ae2355a88e6a3f38365" category="cell">技术预览、可选择增加连接数。</block>
+  <block id="9b89481f1fd15e1e95aeaa045da8b998" category="cell">8更新版本2</block>
+  <block id="7d1a33e2cd7619ca1e16a100c756f5b0" category="cell">通常可选择增加和减少连接数。</block>
+  <block id="a3ea8d7f45af50751b41f8125b9a7129" category="section-title">更新与NFS数据存储库的连接数</block>
+  <block id="92e68741358a011ae3df1c44bf7d4c35" category="paragraph">如果使用ONTAP工具或vCenter创建NFS数据存储库、则会使用单个TCP连接。要增加连接数、可以使用vSphere CLI。参考命令如下所示。</block>
+  <block id="c7d92ab621306068cc4168881ed2f1ed" category="paragraph">或使用如下所示的PowerCLI</block>
+  <block id="e80a22c5f59287fb8f804bd0a2e09455" category="paragraph">以下是增加与政府工具的连接数的示例。</block>
+  <block id="50b0980875a7cd34545a5c01a4398252" category="inline-link-macro">VMware知识库文章91497</block>
+  <block id="3ba5ed93588ff7ccc7888bd1cba3cdc7" category="paragraph">请参见 <block ref="fbb4155d7308fecba08eb8bea19301a0" category="inline-link-macro-rx"></block> 有关详细信息 ...</block>
+  <block id="224bf8a6dd71d9cf8a138d3b25a8d716" category="paragraph">ONTAP支持的最大连接数取决于存储平台型号。查找上的exec_ctx <block ref="2286147d95e2b48568ae4e520e809846" category="inline-link-macro-rx"></block> 有关详细信息 ...</block>
+  <block id="afd75162084fb9f067c0d9f408ee61ed" category="inline-link-macro">VMware知识库文章91481.</block>
+  <block id="3a516056fd5d0047684222dc0a7805ae" category="paragraph">随着每个NFSv3数据存储库的连接数的增加、可挂载到该vSphere主机上的NFS数据存储库数量也会减少。每个vSphere主机支持的连接总数为256。检查 <block ref="d75d1c1247a51175ceaa5837dc1dae33" category="inline-link-macro-rx"></block> 每个vSphere主机的数据存储库限制。</block>
+  <block id="3689679bbefbc2ba446cce4674849fa3" category="admonition">VVOV数据存储库不支持nConnect功能。但是、协议端点会计入连接限制。创建VVOV数据存储库时、系统会为SVM的每个数据lf创建一个协议端点。</block>
+  <block id="6fe78fbb29bed287952ede829b7529d4" category="sidebar">nConnect功能与NetApp和VMware结合使用</block>
 </blocks>
