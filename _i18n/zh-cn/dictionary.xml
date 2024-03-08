@@ -19772,4 +19772,176 @@ NetApp MetroCluster是一款高可用性和灾难恢复解决方案、可在两�
   <block id="c762aaec425b12667f2a575012e48905" category="list-text">为每个目标接口配置五个iSCSI会话以获得最佳性能。</block>
   <block id="72a53f90bcbaa031cad1c79575c53094" category="list-text">配置轮循策略以获得最佳整体iSCSI性能。</block>
   <block id="168b03d713c83578e3c90be8e0a76a8e" category="list-text">格式化LUN时、请确保分区的分配单元大小设置为64K</block>
+  <block id="c018e127ecd02f5fde489e4444402e79" category="section-title">使用适用于虚拟化的迁移工具包将VM从VMware迁移到OpenShift虚拟化</block>
+  <block id="ed28eb7490c30b746183ce03d45078bb" category="paragraph">在本节中、我们将了解如何使用虚拟化迁移工具包(Migration Toolkit for Virtualization、Mtv)将虚拟机从VMware迁移到在OpenShift容器平台上运行并使用Asta Trident与NetApp ONTAP存储集成的OpenShift虚拟化。</block>
+  <block id="4c3578ac96eaf28e931991a1ad4f0966" category="paragraph">以下视频演示了如何使用ONTAP SAN将RHEL VM从VMware迁移到OpenShift虚拟化以实现永久性存储。</block>
+  <block id="1a77203f1aab519882f2e846b9d9b719" category="video-title">使用Red Hat VtTM通过NetApp ONTAP存储将VM迁移到OpenShift虚拟化</block>
+  <block id="ea79c776da84047793859d6582eb03d9" category="paragraph">下图简要展示了将VM从VMware迁移到Red Hat OpenShift虚拟化的过程。</block>
+  <block id="5545f87dec77c5fda3d45b6aedaa1d06" category="paragraph"><block ref="5545f87dec77c5fda3d45b6aedaa1d06" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7a4a5d7419037b65e3a5d2f120b2e45a" category="section-title">迁移示例的前提条件</block>
+  <block id="92308586782b1ac3ca67d5246beb4254" category="section-title">**在VMware**上</block>
+  <block id="ab31f70ad4d51f1953d4174e7a97998c" category="list-text">安装了一个使用RHEL 9.3的RHEL 9 VM、并具有以下配置：</block>
+  <block id="c859d53505195ea9836fd1dd18a342de" category="list-text">CPU：2、内存：20 GB、硬盘：20 GB</block>
+  <block id="49dcb604dd937c117e3eb904336b63a6" category="list-text">用户凭据：root用户和管理员用户凭据</block>
+  <block id="45b7cf9911c7c95a3e96680e5101a366" category="list-text">虚拟机准备就绪后、安装了PostgreSQL服务器。</block>
+  <block id="a1d26d1742c3c5015c533cb7b4125649" category="list-text">PostgreSQL服务器已启动并启用、可在启动时启动</block>
+  <block id="ba180a6063bec76a659b566752131283" category="list-text">添加了2个数据库、其中添加了1个表和1行。请参见 <block ref="f6571761cb4f08005f15599248450b50" category="inline-link-macro-rx"></block> 有关在RHEL上安装PostgreSQL服务器以及创建数据库和表条目的说明、请参见。</block>
+  <block id="d486afc72ff9ff542e8957b66aabe34f" category="admonition">确保启动PostgreSQL服务器并启用服务以在启动时启动。</block>
+  <block id="3bc4bf0e263e39cc80e52b11fd83fc18" category="section-title">**在OpenShift集群上**</block>
+  <block id="d6cd4900fddb3efade4a282a26e76510" category="paragraph">在安装此版本之前、已完成以下安装：</block>
+  <block id="37fdc4699dbf9c03a1788f82eff3c290" category="list-text">OpenShift集群4.13.34</block>
+  <block id="7a1b797fd20321e22ea865d10d6f2cf3" category="inline-link-macro">Astra三打23.10.</block>
+  <block id="39d5f21c59b11d3b23ca05c3b2223f69" category="list-text"><block ref="39d5f21c59b11d3b23ca05c3b2223f69" category="inline-link-macro-rx"></block></block>
+  <block id="8363d6d8b175f7d34d8dcd10b0920d9b" category="list-text">为iSCSI启用的集群节点上的多路径(对于ONONTAP SAN存储类)。请参见提供的YAML以创建一个守护进程集、以便在集群中的每个节点上启用iSCSI。</block>
+  <block id="0f0f67946a5dc2825c8af27dc202945c" category="list-text">使用iSCSI的ONTAP SAN的三端和存储类。请参见为三元后端和存储类提供的YAML文件。</block>
+  <block id="4662ff3eab124bb57ed62299c1453baf" category="list-text"><block ref="4662ff3eab124bb57ed62299c1453baf" category="inline-link-macro-rx"></block></block>
+  <block id="ab134299dd9b7432c9b96f83421154f7" category="paragraph">要在OpenShift集群节点上安装iSCSI和多路径、请使用下面提供的YAML文件
+**为iSCSI准备群集节点**</block>
+  <block id="76560162775238630068f3372685523f" category="paragraph">使用以下YAML文件创建使用ONTAP SAN存储的三元后端配置
+** iSCSI的三端**</block>
+  <block id="eb822d62df05605c782061d2694c7416" category="paragraph">使用以下YAML文件创建要使用ONTAP SAN存储的三元存储类配置
+**用于iSCSI**的三级存储类</block>
+  <block id="32e2326cf08fa2b8a2d8da07af89492d" category="section-title">*安装Mst*</block>
+  <block id="b20b36d31c21c88b330220afadc4c248" category="paragraph">现在、您可以安装适用于虚拟化的迁移工具包(Migration Toolkit for Virtualization、简称为迁移工具包)。请参阅提供的说明 <block ref="78541cf70d4432a26af2ad2bc2f1599e" category="inline-link-macro-rx"></block> 有关安装的帮助。</block>
+  <block id="833a308c57b0294d5fc8b47fcbc273aa" category="paragraph">虚拟化迁移工具包(Migration Toolkit for Virtualization、Tmb)用户界面集成到OpenShift Web控制台中。
+您可以参考 <block ref="0501eeadc64b28b9be041bb74afe3ad8" category="inline-link-macro-rx"></block> 开始使用用户界面执行各种任务。</block>
+  <block id="ba34a808d5ef47822d13b6eaae380955" category="paragraph">**创建源提供程序**</block>
+  <block id="9dfd530db6afa78f79d825306725d533" category="paragraph">要将RHEL VM从VMware迁移到OpenShift虚拟化、您需要先为VMware创建源提供程序。请参阅说明 <block ref="5a232a9d86f11be106236c73b37bba4f" category="inline-link-macro-rx"></block> 以创建源提供程序。</block>
+  <block id="698f626f0a4cef07823d743a2dbe05f6" category="paragraph">要创建VMware源提供程序、您需要满足以下条件：</block>
+  <block id="2f01f330ac5bbca687428a4aea084ec7" category="list-text">vCenter URL</block>
+  <block id="f8e71877199d54f902a68305fe9e4d65" category="list-text">vCenter凭据</block>
+  <block id="85b0b1a49d5b88187baef2af24bc6e5c" category="list-text">vCenter Server指纹</block>
+  <block id="67410b0417131e71e5479ef47bf0b29d" category="list-text">存储库中的VDDK映像</block>
+  <block id="959b7c4b71886115429518587644aebe" category="paragraph">创建源提供程序的示例：</block>
+  <block id="4a7bfcd7504eb44e425e13e3debe92da" category="paragraph"><block ref="4a7bfcd7504eb44e425e13e3debe92da" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="431899a140e7168ac10851938d985f34" category="admonition">虚拟化迁移工具包(Migration Toolkit for Virtualization、Mv）使用VMware虚拟磁盘开发工具包(Virtual Disk Development Kit、VDDK) SDK来加快从VMware vSphere传输虚拟磁盘的速度。因此、强烈建议创建VDDK映像、尽管这是可选的。
+要使用此功能、请下载VMware虚拟磁盘开发工具包(VDDK)、构建VDDK映像、然后将VDDK映像推送到映像注册表。</block>
+  <block id="4a6d1c59688d4bfd35bf9273bf11f8ea" category="paragraph">按照提供的说明进行操作 <block ref="102736775f16e15f2f98ffe552b0757e" category="inline-link-macro-rx"></block> 创建VDDK映像并将其推送到可从OpenShift集群访问的注册表。</block>
+  <block id="3eb78782382908bcbe75ff430f148a0a" category="paragraph">**创建目标提供程序**</block>
+  <block id="41a9e71e2ab20cb7e1db9492b652a4e7" category="paragraph">由于OpenShift虚拟化提供程序是源提供程序、因此会自动添加主机集群。</block>
+  <block id="25570b7a362c49ef673bd98cf2359271" category="paragraph">**创建迁移计划**</block>
+  <block id="3008c031ed8e56d6902d0efc66eaa035" category="paragraph">按照提供的说明进行操作 <block ref="39595bf3d6cb45be93d62f6764c92ee0" category="inline-link-macro-rx"></block> 以创建迁移计划。</block>
+  <block id="5254832d8ded5bf2d2f6fe4975628d7b" category="paragraph">创建计划时，如果尚未创建，则需要创建以下内容：</block>
+  <block id="cfd81ec3034efddb911513d79b28d9db" category="list-text">用于将源网络映射到目标网络的网络映射。</block>
+  <block id="367829c9ebbf303aad8f4325f563de34" category="list-text">用于将源数据存储库映射到目标存储类的存储映射。为此、您可以选择ONTAP SAN存储类。
+创建迁移计划后，该计划的状态应显示*Ready*，现在您应该能够*Start*该计划。</block>
+  <block id="78949f8442528702feefd1dcf8f25406" category="paragraph"><block ref="78949f8442528702feefd1dcf8f25406" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="ef53e330f7c1069c8dca0ff4d2bc9430" category="paragraph">单击*Start*将运行一系列步骤来完成虚拟机的迁移。</block>
+  <block id="3024dfed82e5852da00b05eb0ea5e81b" category="paragraph"><block ref="3024dfed82e5852da00b05eb0ea5e81b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="65a63a95f4cf90511c46b9f9419385b1" category="paragraph">完成所有步骤后，您可以通过单击左侧导航菜单中“Virtualization”(虚拟化)下的*virtual Machines*来查看迁移的VM。
+其中提供了访问虚拟机的说明 <block ref="9866532d9d0f47e3947d77adbdcf2432" category="inline-link-macro-rx"></block>。</block>
+  <block id="87a2f6eb52f66b7c3f568cc74f0aae89" category="paragraph">您可以登录到虚拟机并验证pos正在 使用的数据库的内容。此表中的数据库、表和条目应与在源VM上创建的相同。</block>
+  <block id="cdee7c019bcceaf7d9433865ac8b4043" category="inline-link-macro">下一步：采用NVIDIA DGX系统的NetApp AI Pod—存储系统设计和大小指导。</block>
+  <block id="8bbcb4f79d76105dba99d801b4cad65d" category="paragraph"><block ref="8bbcb4f79d76105dba99d801b4cad65d" category="inline-link-macro-rx"></block></block>
+  <block id="c07d7e29650467546955633b246fda6a" category="paragraph">此页面显示了使用Astra Control Service在AWS上托管Red Hat OpenShift (ROSA)集群的数据保护选项。Astra Control Service (ACS)提供了一个易于使用的图形用户界面、您可以使用该界面添加集群、定义在其中运行的应用程序以及执行应用程序感知型数据管理活动。此外、还可以使用支持工作流自动化的API访问ACS功能。</block>
+  <block id="97533488bc585534ca5130378158f021" category="paragraph">NetApp Astra控制(ACS或ACC)由Astra三端驱动。Asta三端集成了多种类型的Kubernetes集群、例如Red Hat OpenShift、EKS、AKS、SUSE缓存器、Anthos等。 具有各种NetApp ONTAP存储风格、例如FAS/AFFF、ONTAP Select、CVO、Google Cloud Volumes Service、Azure NetApp Files和Amazon FSx for NetApp ONTAP。</block>
+  <block id="6f1cfebfde061a4cdaf77705ab7a4009" category="paragraph">本节详细介绍了使用ACS的以下数据保护选项：</block>
+  <block id="33da028b104a9f96f7020cd949c12c79" category="list-text">显示备份和还原在一个区域运行的ROSA应用程序并还原到另一个区域的视频。</block>
+  <block id="733a18c6cf3c64494d2dfa21ca393537" category="list-text">显示ROSA应用程序的Snapshot和Restore的视频。</block>
+  <block id="9d74bf33165a37b61ad2f50b938972e7" category="list-text">安装ROSA集群的分步详细信息、Amazon FSx for NetApp ONTAP、使用NetApp Astra三端集成到存储后端、在ROSA集群上安装PostgreSQL应用程序、使用ACS创建应用程序快照并从中还原应用程序。</block>
+  <block id="11e2220ebd484b8703528a9133e1a6c6" category="list-text">一篇博客、详细介绍了如何使用ACS在使用FSx for ONTAP的ROSA集群上为myql应用程序创建快照并从快照中还原。</block>
+  <block id="f1496ac3e4a3245d65c86de1ff527370" category="section-title">备份/从备份中还原</block>
+  <block id="5eba799acfc56e5d19da8c3797685e2d" category="section-title">快照/从快照还原</block>
+  <block id="70fe15f76a66619d2b49bdda5d02a6aa" category="paragraph">以下视频显示了如何创建ROSA应用程序的快照以及之后如何从快照中还原。</block>
+  <block id="ece8e805749cce956d96c8cbcddeb1a0" category="video-title">使用Amazon FSx for NetApp ONTAP存储在AWS上的Red Hat OpenShift Service (ROSA)集群上为应用程序创建快照/还原</block>
+  <block id="be8df1f28c0abc85a0ed0c6860e5d832" category="section-title">博客</block>
+  <block id="3a4a68edff076c6484ed03c598313cb8" category="inline-link-macro">使用Astra Control Service对带有Amazon FSx存储的ROSA集群上的应用程序进行数据管理</block>
+  <block id="df1f7fc111c2ed4d19bb019806a32882" category="list-text"><block ref="df1f7fc111c2ed4d19bb019806a32882" category="inline-link-macro-rx"></block></block>
+  <block id="1ea55c3f63a034c9b2511a975c2ff928" category="section-title">创建快照并从中还原的分步详细信息</block>
+  <block id="017b198d0c8d4d362a1107345764d6a2" category="section-title">前提条件设置</block>
+  <block id="3a2b88b991502efccf922110610f9582" category="list-text"><block ref="27fc574b8ea5cd6312c40c8aa826b8e2" category="inline-link-macro-rx"></block></block>
+  <block id="a157286734897fea2ae78eb8d5a07083" category="inline-link-macro">Red Hat OpenShift帐户</block>
+  <block id="d4cc8b87ccca1a93d32d10a54f2f3096" category="list-text"><block ref="d4cc8b87ccca1a93d32d10a54f2f3096" category="inline-link-macro-rx"></block></block>
+  <block id="638cbffb6101ef7301c367160b8afbea" category="inline-link-macro">适当的权限</block>
+  <block id="3eb7df5974139b5c06b1b98ace64875f" category="list-text">使用的IAM用户 <block ref="e6e1437575a8e52c43b6bea47e894f06" category="inline-link-macro-rx"></block> 创建和访问ROSA集群</block>
+  <block id="7820fdb5d8b3ebe0c69c86cf8bd2d0cf" category="inline-link-macro">AWS命令行界面</block>
+  <block id="98301d59c6cad91a32be2e4205f6bb39" category="list-text"><block ref="98301d59c6cad91a32be2e4205f6bb39" category="inline-link-macro-rx"></block></block>
+  <block id="a419a367cad390ff246057d1781b2530" category="inline-link-macro">罗莎命令行界面</block>
+  <block id="e08f074ff23721e4a104f551d21fa4c3" category="list-text"><block ref="e08f074ff23721e4a104f551d21fa4c3" category="inline-link-macro-rx"></block></block>
+  <block id="4fca4e9eaad689a27ecb08ff8f3f807c" category="inline-link-macro">OpenShift命令行界面</block>
+  <block id="00d080f5fe32e84dd619feb7cb7bd2b9" category="list-text"><block ref="44b8b3934efa2fc5ae9867d0131fa46a" category="inline-link-macro-rx"></block>(OC)</block>
+  <block id="4b8e58f2991ec92ce05bbb428c7e785f" category="list-text">具有子网以及相应网关和路由的VPC</block>
+  <block id="8432e6115f09c44c98ef0d5466e1443f" category="inline-link-macro">已安装罗莎群集</block>
+  <block id="9fb986e8b23a43f32df441a71e17d9a4" category="list-text"><block ref="105d5b5c7505cc3d67068ef270819c2c" category="inline-link-macro-rx"></block> VPC</block>
+  <block id="43f4b12f6a6e4653ba2e9e9431316f26" category="list-text"><block ref="191e780a56cabcf83bcdf7c866f8d783" category="inline-link-macro-rx"></block> 在同一个VPC中创建</block>
+  <block id="e53a614538d8dd04ae01b6f7c8fad43c" category="inline-link-macro">OpenShift混合云控制台</block>
+  <block id="e701544c0a6a10d3e9fd724eb673bd08" category="list-text">从访问ROSA集群 <block ref="0adb5adbf9501e5dfbc7213724e52837" category="inline-link-macro-rx"></block></block>
+  <block id="1b920337ea7c0ca3dadb73c0a64b69a7" category="section-title">后续步骤</block>
+  <block id="5152194ac48cdb110daca5acc638a081" category="list-text">创建管理员用户并登录到集群。</block>
+  <block id="7616094045f96860c9ac357dc99c056e" category="list-text">为集群创建一个kubeconfig.文件。</block>
+  <block id="2d0ad6df83342005c040544d3e09f39f" category="list-text">在集群上安装Asta Trdent。</block>
+  <block id="06c9354d40a28d74b82f80702f813d97" category="list-text">使用三端CSI配置程序创建后端、存储类和快照类配置。</block>
+  <block id="7e68821a0b00ad66c94a5fa7b047fc36" category="list-text">在集群上部署PostgreSQL应用程序。</block>
+  <block id="373318637d0909025d357ebb9cf844c0" category="list-text">创建数据库并添加记录。</block>
+  <block id="6923c850b179787ae20741ac2da32a53" category="list-text">将集群添加到ACS中。</block>
+  <block id="76827e03d5e6d5ac048a5177e18ad144" category="list-text">在ACS中定义应用程序。</block>
+  <block id="bf3e8a582d777e7e4a4d17be1def01a0" category="list-text">使用ACS创建快照。</block>
+  <block id="99b7da0ca39d7f2a015829c2ae6e1b15" category="list-text">删除PostgreSQL应用程序中的数据库。</block>
+  <block id="ff472a20f1aad06904e323a536e2eb80" category="list-text">使用ACS从快照还原。</block>
+  <block id="a795bae8ecd08ce83200e5ec3177acee" category="list-text">验证您的应用程序是否已从快照中还原。</block>
+  <block id="0a3f91bec2fbb2d145638ee7f14c108b" category="section-title">**1.创建管理员用户并登录到群集**</block>
+  <block id="4e3a8a5d5f66fd9fc9a976f4241338af" category="paragraph">使用以下命令创建管理员用户以访问ROSA集群：(只有在安装时未创建管理员用户时、才需要创建管理员用户)</block>
+  <block id="25ee9c81495a3a98ecf40dff27da6c1d" category="paragraph"><block ref="aefcb05bda304d0dd039ce44ec039e5e" prefix="" category="inline-code"></block></block>
+  <block id="f60a1c409fe0a27f22ddfa9c96fb2466" category="paragraph">此命令将提供如下输出。使用登录到集群<block ref="a9902f312ee813dfa0df20ecdd92cbfa" prefix=" " category="inline-code"></block> 命令。</block>
+  <block id="01e9485a97f379eebc1941d265f8d05a" category="paragraph"><block ref="01e9485a97f379eebc1941d265f8d05a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="03c52bbd6e1432956772bd1b77ca8540" category="admonition">您也可以使用令牌登录到集群。如果您在创建集群时已创建管理员用户、则可以使用管理员用户凭据从Red Hat OpenShift Hybrid Cloud控制台登录到集群。然后、通过单击右上角显示已登录用户名称的、您可以获取<block ref="a9902f312ee813dfa0df20ecdd92cbfa" prefix=" " category="inline-code"></block> 命令(令牌登录)。</block>
+  <block id="da82003ccd337703657b4d5043f7b127" category="section-title">**2.为群集**创建kubeconfig*文件</block>
+  <block id="dd97d9a0156710665d9a4b0ed3dbf2be" category="paragraph">按照步骤进行操作 <block ref="442330295b75a08b4add8fd36a48c8ea" category="inline-link-macro-rx"></block> 为ROSA集群创建kubeconfig.稍后在将集群添加到ACS中时、将使用此kubeconfig.文件。</block>
+  <block id="80eae2f21ccc18edb27b82a3c015e4aa" category="section-title">**3.在群集上安装Asta Trdent **</block>
+  <block id="ff384b8fd58939cbc5a0b01b7553fd43" category="paragraph">在ROSA集群上安装Asta Trident (最新版本)。要执行此操作、您可以按照给定的任一过程进行操作 <block ref="4a2b27d6d4bc3dd7ae85bfd131d50753" category="inline-link-macro-rx"></block>。要从集群控制台使用Helm安装Trident、请先创建一个名为Trident的项目。</block>
+  <block id="5cb42da3b2d3dd848285fd2dceb88455" category="paragraph"><block ref="5cb42da3b2d3dd848285fd2dceb88455" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="52d6229020f19bf2c0f6c87406d8ce99" category="paragraph">然后、在"开发工具"视图中、创建Helm图表存储库。对于URL字段、请使用<block ref="20183aea3d2da33700b394e01c04c185" prefix=" " category="inline-code"></block>。然后为三端操作员创建舵版本。</block>
+  <block id="755006051acaf94196661f7923f0474a" category="paragraph"><block ref="02e0c37c72a536f86ea1821d5f0b40a9" category="inline-image-macro-rx" type="image"></block>
+<block ref="02fbe0a7ae321826af934bafa8e91e0f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="fbaa2d031fe22ec90eeb4eab3182e2ac" category="paragraph">返回控制台上的"Administrator view"(管理员视图)、然后在三级工程中选择Pod、以验证所有三级工程模块是否正在运行。</block>
+  <block id="fff4dc90fd7dcd0428896700f3219ca4" category="paragraph"><block ref="fff4dc90fd7dcd0428896700f3219ca4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="13f2afc5c2dcacd63d06c728337c30af" category="section-title">**4.使用三端CSI配置程序**创建后端、存储类和快照类配置</block>
+  <block id="3721d2fc71eb71c5c48649880c7691bf" category="paragraph">使用下面显示的YAML文件创建三元后端对象、存储类对象和卷快照对象。请务必为您创建的Amazon FSx for NetApp ONTAP文件系统提供凭据、并在后端的YAML配置中提供管理LIF和文件系统的Vserver名称。要获取这些详细信息、请转到适用于Amazon FSx的AWS控制台并选择文件系统、然后导航到管理选项卡。此外、单击更新以设置的密码<block ref="679500f227997b45be97e3ca8115c678" prefix=" " category="inline-code"></block> 用户。</block>
+  <block id="8535923874d0b7a58a93ff4527cb2572" category="admonition">您可以使用命令行创建对象、也可以从混合云控制台使用YAML文件创建对象。</block>
+  <block id="7f74cd03d9b7c8fc87adbe0fcdd81351" category="paragraph"><block ref="7f74cd03d9b7c8fc87adbe0fcdd81351" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="59122b849c35681f88e25b2cd4c16e23" category="paragraph">**Trident后端配置**</block>
+  <block id="cb6d16d1a0ec12524c8a26a623080f31" category="paragraph">**存储类**</block>
+  <block id="3c2ea64a4125f56cee84a1db41ffd2f7" category="paragraph">**快照类**</block>
+  <block id="096893ffbe489ff9365c6d0f50668e7c" category="paragraph">发出下面所示的命令、验证是否已创建后端、存储类和trdent-snapshotclass对象。</block>
+  <block id="440a9a438f9cce9394792d52629caa63" category="paragraph"><block ref="440a9a438f9cce9394792d52629caa63" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9430cd2c476ef4b987a050e26d03000f" category="paragraph">此时、您需要进行的一项重要修改是将ONTAP NAS设置为默认存储类、而不是GP3、以便您稍后部署的PostgreSQL应用程序可以使用默认存储类。在集群的OpenShift控制台中、在"Storage"下选择"StorageClasses"。将当前默认类的标注编辑为false、并将ONTAP NAS存储类的标注storageclass.Kubernetes.io/is-default-class设置为true。</block>
+  <block id="3bdb1b8b53e7a9ac42ee9838ac712bc8" category="paragraph"><block ref="3bdb1b8b53e7a9ac42ee9838ac712bc8" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="75dc080ce0f898e99130f0b3644e9d77" category="paragraph"><block ref="75dc080ce0f898e99130f0b3644e9d77" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d37c1822f1602c399a626ae694dbf8ee" category="section-title">**5.在群集上部署PostgreSQL应用程序**</block>
+  <block id="9849f155acac1c5d527130295c617745" category="paragraph">您可以从命令行部署此应用程序、如下所示：</block>
+  <block id="14153a7fe9b305b3d6594136d6cbd76e" category="paragraph"><block ref="5cda9633b40969705c2d463d9fac411d" prefix="" category="inline-code"></block></block>
+  <block id="f0665a49317e959dc150a2ebddabe631" category="paragraph"><block ref="f0665a49317e959dc150a2ebddabe631" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="ab01f84d3512141e55a0035b8cd4914c" category="admonition">如果您看不到应用程序Pod正在运行、则可能是由于安全上下文约束而导致错误。
+<block ref="777306d8cda1b533446b5e961ae1412f" category="inline-image-macro-rx" type="image"></block>
+编辑以修复此错误<block ref="e70b97e1fe755b3b63eee3148167d06a" prefix=" " category="inline-code"></block> 和<block ref="c7a6c0ee60c6f68dfe700feaacf15703" prefix=" " category="inline-code"></block> 中的字段<block ref="bb2413f7c1896a1256ce050cb9d3c35c" prefix=" " category="inline-code"></block> 具有的输出中的_id的对象<block ref="9254bbe15d1b0e04ead746e78900f19e" prefix=" " category="inline-code"></block> 命令、如下所示。
+<block ref="d8149d6359e97d140ab7f84f5b5238e6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4133913addf4da6a9cc67e80c9318fd3" category="paragraph">PostgreSQL应用程序应正在运行、并使用Amazon FSx支持的永久性卷作为NetApp ONTAP存储。</block>
+  <block id="6f38a4eb8e2bb438a090e469844c2656" category="paragraph"><block ref="6f38a4eb8e2bb438a090e469844c2656" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f32c780aa5389ad7df8c72717d10ae3f" category="paragraph"><block ref="f32c780aa5389ad7df8c72717d10ae3f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4c69f86a70efe7305c65ff1d6340bcbd" category="section-title">**6.创建数据库并添加记录**</block>
+  <block id="73472324290d0ff0a1b449226491194c" category="paragraph"><block ref="73472324290d0ff0a1b449226491194c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7d6dddc1bca3e6d90fdb148e26c32c4b" category="section-title">**7.将集群添加到ACs**中</block>
+  <block id="4a6182a7ba7174ab2779d387dff86a36" category="paragraph">登录到ACS。选择cluster、然后单击Add。选择其他并上传或粘贴kubeconfig.</block>
+  <block id="d4c542567c0365471f2b24c9629b0ca4" category="paragraph"><block ref="d4c542567c0365471f2b24c9629b0ca4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b905de46f0f090636c93c358d1bf512d" category="paragraph">单击*Next*并选择ONTAP－NAS作为ACS的默认存储类。单击*Next*(下一步*)，查看详细信息，然后单击*Add*(添加)群集。</block>
+  <block id="29769e926dc686d9bee4643e06f02c25" category="paragraph"><block ref="29769e926dc686d9bee4643e06f02c25" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0c22a664581f98929897ef8da6e94435" category="section-title">**8.在ACs**中定义应用程序</block>
+  <block id="b2926c8eedc2da993a395c1f95032e0a" category="paragraph">在ACS中定义PostgreSQL应用程序。在登录页面中，选择*Applications*、*Define*并填写相应的详细信息。单击“*下一步*”几次，查看详细信息，然后单击“*定义*”。应用程序将添加到ACS。</block>
+  <block id="99eaeeaa339c117cf0b288606e4ec627" category="section-title">**9.使用ACs**创建快照</block>
+  <block id="4a0e0784bcd96d89e8f11679f9ed73dd" category="paragraph">可通过多种方法在ACS中创建快照。您可以从显示应用程序详细信息的页面中选择应用程序并创建快照。您可以单击创建快照来创建按需快照或配置保护策略。</block>
+  <block id="d5acd48af1c6d310e4cb02f8f565c19f" category="paragraph">只需单击*创建快照*、提供名称、查看详细信息并单击*快照*、即可创建按需快照。操作完成后、快照状态将更改为"运行状况良好"。</block>
+  <block id="f8c045ff74a98ecb419e1c7d2f4656b4" category="paragraph"><block ref="f8c045ff74a98ecb419e1c7d2f4656b4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="dad69cf86f54ffa6a676f056c8922549" category="paragraph"><block ref="dad69cf86f54ffa6a676f056c8922549" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="ffd9fa793ba4244940afbe9b5de8959a" category="section-title">**10.删除PostgreSQL应用程序中的数据库**</block>
+  <block id="dca0d4c6836bb6f907d9bcc880ce7b73" category="paragraph">重新登录到PostgreSQL、列出可用数据库、删除先前创建的数据库并重新列出、以确保数据库已被删除。</block>
+  <block id="8fc31abb8f9b32dd12c55899d4923754" category="paragraph"><block ref="8fc31abb8f9b32dd12c55899d4923754" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="21e4e8e2ffcd028f468c54e319969a1a" category="section-title">**11.使用ACs**从快照恢复</block>
+  <block id="637869fd9fa9d9d4a9353f836480096c" category="paragraph">要从快照还原应用程序、请转到ACS UI登录页面、选择应用程序、然后选择还原。您需要选择要从中还原的快照或备份。(通常、您会根据所配置的策略创建多个)。在接下来的几个屏幕中做出适当的选择，然后单击*Restore*。从快照还原后、应用程序状态将从还原变为可用。</block>
+  <block id="4c989fb106d4c7ab2e4542add9732a43" category="paragraph"><block ref="4c989fb106d4c7ab2e4542add9732a43" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5dcb664c59022883e81f189ae7b757dd" category="paragraph"><block ref="5dcb664c59022883e81f189ae7b757dd" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="27463305443c0a856ccaf3fc0aebe935" category="paragraph"><block ref="27463305443c0a856ccaf3fc0aebe935" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="ca420b4563e97c29e3b846aa3bc4d627" category="section-title">**12.验证您的应用程序是否已从快照中恢复**</block>
+  <block id="0ae87dfe21efbb4555334e2467ecf6a2" category="paragraph">登录到PostgreSQL客户端、您现在应该可以看到表以及以前的表中的记录。  就是这样。只需单击一个按钮、您的应用程序便已恢复到先前的状态。这就是我们使用Astra Control为客户实现的简单体验。</block>
+  <block id="c4b7e4476f0c1295b7ad2b84095afbb7" category="paragraph"><block ref="c4b7e4476f0c1295b7ad2b84095afbb7" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="63864fe27243a67429a0ee731461c1fd" category="sidebar">将VM从VMware迁移到OpenShift虚拟化</block>
 </blocks>

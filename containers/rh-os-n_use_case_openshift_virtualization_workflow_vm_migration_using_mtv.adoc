@@ -1,0 +1,232 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_use_case_openshift_virtualization_workflow_vm_migration_using_mtv.html 
+keywords: OpenShift, OCP, Astra Trident, NetApp ONTAP, Red Hat OpenShift, OpenShift Virtualization, CNV, Container Native Virtualization, Red Hat OpenShift Virtualization 
+summary: 借助 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化 
+---
+= 工作流：使用 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== 使用适用于虚拟化的迁移工具包将VM从VMware迁移到OpenShift虚拟化
+
+在本节中、我们将了解如何使用虚拟化迁移工具包(Migration Toolkit for Virtualization、Mtv)将虚拟机从VMware迁移到在OpenShift容器平台上运行并使用Asta Trident与NetApp ONTAP存储集成的OpenShift虚拟化。
+
+以下视频演示了如何使用ONTAP SAN将RHEL VM从VMware迁移到OpenShift虚拟化以实现永久性存储。
+
+.使用Red Hat VtTM通过NetApp ONTAP存储将VM迁移到OpenShift虚拟化
+video::bac58645-dd75-4e92-b5fe-b12b015dc199[panopto,width=360]
+下图简要展示了将VM从VMware迁移到Red Hat OpenShift虚拟化的过程。
+
+image:rh-os-n_use_case_vm_migration_using_mtv.png[""]
+
+
+
+=== 迁移示例的前提条件
+
+
+
+=== **在VMware**上
+
+* 安装了一个使用RHEL 9.3的RHEL 9 VM、并具有以下配置：
++
+** CPU：2、内存：20 GB、硬盘：20 GB
+** 用户凭据：root用户和管理员用户凭据
+
+
+* 虚拟机准备就绪后、安装了PostgreSQL服务器。
++
+** PostgreSQL服务器已启动并启用、可在启动时启动
++
+[source, console]
+----
+systemctl start postgresql.service`
+systemctl enable postgresql.service
+The above command ensures that the server can start in the VM in OpenShift Virtualization after migration
+----
+** 添加了2个数据库、其中添加了1个表和1行。请参见 link:https://access.redhat.com/documentation/fr-fr/red_hat_enterprise_linux/9/html/configuring_and_using_database_servers/installing-postgresql_using-postgresql["此处"] 有关在RHEL上安装PostgreSQL服务器以及创建数据库和表条目的说明、请参见。
+
+
+
+
+
+NOTE: 确保启动PostgreSQL服务器并启用服务以在启动时启动。
+
+
+
+=== **在OpenShift集群上**
+
+在安装此版本之前、已完成以下安装：
+
+* OpenShift集群4.13.34
+* link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html["Astra三打23.10."]
+* 为iSCSI启用的集群节点上的多路径(对于ONONTAP SAN存储类)。请参见提供的YAML以创建一个守护进程集、以便在集群中的每个节点上启用iSCSI。
+* 使用iSCSI的ONTAP SAN的三端和存储类。请参见为三元后端和存储类提供的YAML文件。
+* link:https://docs.openshift.com/container-platform/4.13/virt/install/installing-virt-web.html["OpenShift 虚拟化"]
+
+
+要在OpenShift集群节点上安装iSCSI和多路径、请使用下面提供的YAML文件
+**为iSCSI准备群集节点**
+
+[source, yaml]
+----
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  namespace: trident
+  name: trident-iscsi-init
+  labels:
+    name: trident-iscsi-init
+spec:
+  selector:
+    matchLabels:
+      name: trident-iscsi-init
+  template:
+    metadata:
+      labels:
+        name: trident-iscsi-init
+    spec:
+      hostNetwork: true
+      serviceAccount: trident-node-linux
+      initContainers:
+      - name: init-node
+        command:
+          - nsenter
+          - --mount=/proc/1/ns/mnt
+          - --
+          - sh
+          - -c
+        args: ["$(STARTUP_SCRIPT)"]
+        image: alpine:3.7
+        env:
+        - name: STARTUP_SCRIPT
+          value: |
+            #! /bin/bash
+            sudo yum install -y lsscsi iscsi-initiator-utils sg3_utils device-mapper-multipath
+            rpm -q iscsi-initiator-utils
+            sudo sed -i 's/^\(node.session.scan\).*/\1 = manual/' /etc/iscsi/iscsid.conf
+            cat /etc/iscsi/initiatorname.iscsi
+            sudo mpathconf --enable --with_multipathd y --find_multipaths n
+            sudo systemctl enable --now iscsid multipathd
+            sudo systemctl enable --now iscsi
+        securityContext:
+          privileged: true
+      hostPID: true
+      containers:
+      - name: wait
+        image: k8s.gcr.io/pause:3.1
+      hostPID: true
+      hostNetwork: true
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+  updateStrategy:
+    type: RollingUpdate
+----
+使用以下YAML文件创建使用ONTAP SAN存储的三元后端配置
+** iSCSI的三端**
+
+[source, yaml]
+----
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backend-tbc-ontap-san-secret
+type: Opaque
+stringData:
+  username: <username>
+  password: <password>
+---
+apiVersion: trident.netapp.io/v1
+kind: TridentBackendConfig
+metadata:
+  name: ontap-san
+spec:
+  version: 1
+  storageDriverName: ontap-san
+  managementLIF: <management LIF>
+  backendName: ontap-san
+  svm: <SVM name>
+  credentials:
+    name: backend-tbc-ontap-san-secret
+----
+使用以下YAML文件创建要使用ONTAP SAN存储的三元存储类配置
+**用于iSCSI**的三级存储类
+
+[source, yaml]
+----
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ontap-san
+provisioner: csi.trident.netapp.io
+parameters:
+  backendType: "ontap-san"
+  media: "ssd"
+  provisioningType: "thin"
+  snapshots: "true"
+allowVolumeExpansion: true
+----
+
+
+=== *安装Mst*
+
+现在、您可以安装适用于虚拟化的迁移工具包(Migration Toolkit for Virtualization、简称为迁移工具包)。请参阅提供的说明 link:https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.5/html/installing_and_using_the_migration_toolkit_for_virtualization/installing-the-operator["此处"] 有关安装的帮助。
+
+虚拟化迁移工具包(Migration Toolkit for Virtualization、Tmb)用户界面集成到OpenShift Web控制台中。
+您可以参考 link:https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.5/html/installing_and_using_the_migration_toolkit_for_virtualization/migrating-vms-web-console#mtv-ui_mtv["此处"] 开始使用用户界面执行各种任务。
+
+**创建源提供程序**
+
+要将RHEL VM从VMware迁移到OpenShift虚拟化、您需要先为VMware创建源提供程序。请参阅说明 link:https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.5/html/installing_and_using_the_migration_toolkit_for_virtualization/migrating-vms-web-console#adding-providers["此处"] 以创建源提供程序。
+
+要创建VMware源提供程序、您需要满足以下条件：
+
+* vCenter URL
+* vCenter凭据
+* vCenter Server指纹
+* 存储库中的VDDK映像
+
+
+创建源提供程序的示例：
+
+image:rh-os-n_use_case_vm_migration_source_provider.png[""]
+
+
+NOTE: 虚拟化迁移工具包(Migration Toolkit for Virtualization、Mv）使用VMware虚拟磁盘开发工具包(Virtual Disk Development Kit、VDDK) SDK来加快从VMware vSphere传输虚拟磁盘的速度。因此、强烈建议创建VDDK映像、尽管这是可选的。
+要使用此功能、请下载VMware虚拟磁盘开发工具包(VDDK)、构建VDDK映像、然后将VDDK映像推送到映像注册表。
+
+按照提供的说明进行操作 link:https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.5/html/installing_and_using_the_migration_toolkit_for_virtualization/prerequisites#creating-vddk-image_mtv["此处"] 创建VDDK映像并将其推送到可从OpenShift集群访问的注册表。
+
+**创建目标提供程序**
+
+由于OpenShift虚拟化提供程序是源提供程序、因此会自动添加主机集群。
+
+**创建迁移计划**
+
+按照提供的说明进行操作 link:https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.5/html/installing_and_using_the_migration_toolkit_for_virtualization/migrating-vms-web-console#creating-migration-plan_mtv["此处"] 以创建迁移计划。
+
+创建计划时，如果尚未创建，则需要创建以下内容：
+
+* 用于将源网络映射到目标网络的网络映射。
+* 用于将源数据存储库映射到目标存储类的存储映射。为此、您可以选择ONTAP SAN存储类。
+创建迁移计划后，该计划的状态应显示*Ready*，现在您应该能够*Start*该计划。
+
+
+image:rh-os-n_use_case_vm_migration_using_mtv_plan_ready.png[""]
+
+单击*Start*将运行一系列步骤来完成虚拟机的迁移。
+
+image:rh-os-n_use_case_vm_migration_using_mtv_plan_complete.png[""]
+
+完成所有步骤后，您可以通过单击左侧导航菜单中“Virtualization”(虚拟化)下的*virtual Machines*来查看迁移的VM。
+其中提供了访问虚拟机的说明 link:https://docs.openshift.com/container-platform/4.13/virt/virtual_machines/virt-accessing-vm-consoles.html["此处"]。
+
+您可以登录到虚拟机并验证pos正在 使用的数据库的内容。此表中的数据库、表和条目应与在源VM上创建的相同。
