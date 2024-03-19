@@ -24,15 +24,15 @@ summary:
 
 === 简介
 
-近20年来、NetApp ONTAP软件已成为VMware vSphere环境中的首要存储解决方案、并不断推出创新功能来简化管理并降低成本。NetApp是NAS和统一存储平台开发领域的公认领导者、这些平台可提供广泛的协议和连接支持。除了这一细分市场之外、还有许多客户更喜欢基于块的SAN存储平台的精简性和成本优势、这些平台专注于出色地完成一项工作。NetApp的全闪存SAN阵列(AFF ASA)凭借大规模精简性以及适用于所有应用程序和云提供商的一致管理和自动化功能、兑现了这一承诺。
+近20年来、NetApp ONTAP软件已成为VMware vSphere环境中的首要存储解决方案、并不断推出创新功能来简化管理并降低成本。NetApp是NAS和统一存储平台开发领域的公认领导者、这些平台可提供广泛的协议和连接支持。除了这一细分市场之外、还有许多客户更喜欢基于块的SAN存储平台的精简性和成本优势、这些平台专注于出色地完成一项工作。NetApp的全闪存SAN阵列(ASA)凭借大规模精简性以及适用于所有应用程序和云提供商的一致管理和自动化功能、兑现了这一承诺。
 
 
 
 === 本文档的目的
 
-在本文档中、我们将介绍将NetApp AFF ASA存储系统与VMware vSphere结合使用的独特价值、并对NetApp全闪存SAN阵列进行技术概述。此外、我们还将了解其他工具、以简化VMware和ONTAP数据中心的存储配置、数据保护和监控。
+在本文档中、我们将介绍将NetApp ASA存储系统与VMware vSphere结合使用的独特价值、并对NetApp全闪存SAN阵列进行技术概述。此外、我们还将了解其他工具、以简化VMware和ONTAP数据中心的存储配置、数据保护和监控。
 
-本文档的部署部分介绍了如何使用适用于VMware vSphere的ONTAP工具创建VVOV数据存储库、以及如何使用NetApp Cloud Insights为现代数据中心提供可观察性。
+本文档的部署部分介绍了如何使用适用于VMware vSphere的ONTAP工具创建VVOV数据存储库、以及如何使用NetApp Cloud Insights观察现代数据中心。
 
 
 
@@ -68,13 +68,13 @@ vSphere 8.0引入了一些新的改进功能、包括但不限于：
 
 *集成的Kubernetes Runtime *—包括Tanzu后、vSphere 8.0可简化容器流程编排。
 
-有关详细信息、请参见博客、 https://core.vmware.com/resource/whats-new-vsphere-8/["vSphere 8中的新增功能"]
+有关详细信息、请参见博客、 https://core.vmware.com/resource/whats-new-vsphere-8/["vSphere 8中的新增功能"]。
 
 
 
 ===== VMware虚拟卷(vvol)
 
-vvol是vSphere集群中一种全新的存储管理方法、可简化管理并更精细地控制存储资源。在vVol数据存储库中、每个虚拟磁盘都是一个vVol、并成为存储系统上的本机LUN对象。存储系统和vSphere通过VMware API for Storage AWARMIVAIVIANGIVIGE (VASA)提供程序进行集成、使存储系统能够识别VM数据并对其进行相应管理。vCenter Client中定义的存储策略用于分配和管理存储资源。
+vvol是vSphere集群中一种全新的存储管理方法、可简化管理并更精细地控制存储资源。在vVol数据存储库中、每个虚拟磁盘都是一个vVol、并成为存储系统上的本机LUN对象。存储系统和vSphere通过* VMware API for Storage AWAREIVAIVE(VASA)*提供程序进行集成，使存储系统能够识别VM数据并对其进行相应的管理。vCenter Client中定义的存储策略用于分配和管理存储资源。
 
 虚拟卷是一种简化的存储管理方法、在某些使用情形中更受欢迎。
 
@@ -88,6 +88,7 @@ vvol是vSphere集群中一种全新的存储管理方法、可简化管理并更
 
 有关将NVMe与vSphere结合使用的详细信息、请参见 https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-storage/GUID-2A80F528-5B7D-4BE9-8EF6-52E2301DC423.html["关于VMware NVMe存储"] 在vSphere存储文档中。
 
+'''
 
 
 === NetApp ONTAP
@@ -170,6 +171,7 @@ ONTAP One许可包括以下所有功能：
 
 *S3 SnapMirror–支持将ONTAP S3对象复制到与S3兼容的备用目标。
 
+'''
 
 
 === NetApp全闪存SAN阵列
@@ -250,6 +252,7 @@ NetApp为NetApp全闪存SAN阵列提供了一组独特的存储保障。其独�
 
 请参见 https://www.netapp.com/data-storage/all-flash-san-storage-array/["NetApp ASA产品门户"] 有关详细信息 ...
 
+'''
 
 
 === 适用于VMware vSphere的NetApp插件
@@ -271,7 +274,7 @@ ONTAP工具包括以下组件：
 
 * Storage Replication Adapter (SRA)：*启用并与VMware Site Recovery Manager (SRM)结合使用后、SRA有助于在发生故障时恢复vCenter Server数据存储库和虚拟机、从而可以配置受保护站点和恢复站点以实现灾难恢复。
 
-有关适用于VMware的NetApp ONTAP工具的详细信息、请参见以下内容： https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html[]。
+有关适用于VMware的NetApp ONTAP工具的详细信息、请参见 https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html["适用于 VMware vSphere 的 ONTAP 工具文档"]。
 
 
 
@@ -297,6 +300,7 @@ BlueXP集成支持3-2-1备份策略、将数据副本扩展到云中的对象存
 
 有关采用BlueXP的3-2-1备份策略的详细信息、请访问 https://community.netapp.com/t5/Tech-ONTAP-Blogs/3-2-1-Data-Protection-for-VMware-with-SnapCenter-Plug-in-and-BlueXP-backup-and/ba-p/446180["3-2-1使用SnapCenter插件和适用于VM的BlueXP备份和恢复为VMware提供数据保护"]。
 
+'''
 
 
 === NetApp Cloud Insights
