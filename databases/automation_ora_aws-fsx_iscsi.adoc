@@ -119,7 +119,7 @@ image::automation_ora_aws-fsx_iscsi_archit.png[此图详细展示了AWS公共云
 
 * *Oracle数据库存储布局。*在此自动化Oracle部署中、我们默认配置四个数据库卷来托管Oracle二进制文件、数据和日志。卷中的一个LUN分配给Oracle二进制文件。然后、我们将使用数据和日志LUN创建两个ASM磁盘组。在+data ASM磁盘组中、我们配置两个数据卷、其中一个卷包含两个LUN。在+logs ASM磁盘组中、我们会在一个日志卷中创建两个LUN。一般来说、在一个ONTAP卷中部署多个LUN可提高性能。
 * *部署多个数据库服务器。*自动化解决方案可以在一次运行的AnsablePlaybook中将一个Oracle容器数据库部署到多个数据库服务器。无论数据库服务器的数量如何、该操作手册的执行都保持不变。您可以将多个容器数据库部署到具有不同数据库实例ID (Oracle SID)的单个EC2实例。但是、请确保主机上有足够的内存来支持已部署的数据库。
-* * iSCSI配置。* EC2实例数据库服务器使用iSCSI协议连接到FSX存储。EC2实例通常使用一个网络接口或ENI进行部署。单个NIC接口可同时传输iSCSI和应用程序流量。请务必通过仔细分析Oracle AWR报告来衡量Oracle数据库峰值I/O吞吐量需求、以便选择既满足应用程序流量吞吐量要求又符合iSCSI流量吞吐量要求的正确EC2计算实例。NetApp还建议为正确配置多路径的两个FSX iSCSI端点分配四个iSCSI连接。
+* * iSCSI配置。* EC2实例数据库服务器使用iSCSI协议连接到FSX存储。EC2实例通常使用一个网络接口或ENI进行部署。单个NIC接口可同时传输iSCSI和应用程序流量。请务必通过仔细分析Oracle AWR报告来衡量Oracle数据库峰值I/O吞吐量需求、以便选择既满足应用程序流量吞吐量要求又符合iSCSI流量吞吐量要求的正确EC2计算实例。此外、AWS EC2通常会将每个TCP流量限制为5 Gbps。每个iSCSI路径可提供5 Gbps (625 Mbps)的带宽、要满足更高的吞吐量要求、可能需要多个iSCSI连接。
 * *要用于创建的每个Oracle ASM磁盘组的Oracle ASM冗余级别。*由于Amazon FSx ONTAP已启用HA、可在集群磁盘级别保护数据、因此应使用 `External Redundancy`，表示选项不允许Oracle ASM镜像磁盘组的内容。
 * *数据库备份。* NetApp提供了一个SnapCenter软件套件、可通过用户友好的用户界面进行数据库备份、还原和克隆。NetApp建议实施此类管理工具、以实现快速(不到一分钟)的快照备份、快速(几分钟)的数据库还原和数据库克隆。
 
