@@ -23,23 +23,25 @@ link:aipod_nv_hw_components.html["上一页：采用NVIDIA DGX系统的NetApp AI
 
 === NVIDIA基本命令
 
-NVIDIA Base Command&#8482；(图2)为每个DGX BasePD提供支持、使企业能够充分利用NVIDIA软件创新的优势。企业可以利用成熟可靠的平台充分发挥投资的全部潜能、该平台包括企业级流程编排和集群管理、可加快计算、存储和网络基础架构速度的库以及针对AI工作负载优化的操作系统(OS)。
+NVIDIA Base Command&#482；为每个DGX BasePD提供支持、使企业能够充分利用NVIDIA软件创新的优势。企业可以利用成熟可靠的平台充分发挥投资的全部潜能、该平台包括企业级流程编排和集群管理、可加快计算、存储和网络基础架构速度的库以及针对AI工作负载优化的操作系统(OS)。
 
-image:aipod_nv_BaseCommand.png["错误：缺少图形映像"]
+_NVIDIA基本命令解决方案_
+image:aipod_nv_BaseCommand_new.png["错误：缺少图形映像"]
 
 
 
 === NVIDIA GPU Cloud （ NGC ）
 
-NVIDIA NGC™(图3)提供的软件可满足具有不同AI专业知识水平的数据科学家、开发人员和研究人员的需求。NGC上托管的软件会对一组汇总的常见漏洞和风险(CVE)、加密密钥和私钥进行扫描。它经过测试和设计、可扩展到多个GPU、在许多情况下还可扩展到多节点、从而确保用户在DGX系统上的投资最大化。
+NVIDIA NGC™提供的软件可满足具有不同AI专业知识水平的数据科学家、开发人员和研究人员的需求。NGC上托管的软件会对一组汇总的常见漏洞和风险(CVE)、加密密钥和私钥进行扫描。它经过测试和设计、可扩展到多个GPU、在许多情况下还可扩展到多节点、从而确保用户在DGX系统上的投资最大化。
 
+_NVIDIA GPU Cloud_
 image:aipod_nv_ngc.png["错误：缺少图形映像"]
 
 
 
 === NVIDIA AI Enterprise
 
-NVIDIA AI Enterprise是一套针对AI的开发和部署进行了优化的AI和数据分析软件。NVIDIA AI Enterprise包括经验证的开源容器和框架、例如NVIDIA RAPIDS™、NVIDIA Tao Toolkit、NVIDIA TensorRT™和NVIDIA Tridon In视 图服务器、这些容器和框架已通过认证并支持在DGX系统上运行。NVIDIA AI Enterprise包含在DGX系统中、可与NVIDIA Base Command和NVIDIA NGC结合使用。
+NVIDIA AI Enterprise是一款端到端软件平台、可将生成性AI应用于每个企业、为生成性AI基础模型提供速度最快、最高效的运行时间、这些模型经过优化、可在NVIDIA DGX平台上运行。凭借生产级安全性、稳定性和易管理性、它简化了生成性AI解决方案的开发。DGX BasePOD附带了NVIDIA AI Enterprise、供企业开发人员访问经过预先训练的模型、优化的框架、微服务、加速库和企业支持。
 
 
 
@@ -60,7 +62,7 @@ ONTAP 可提供卓越的性能和数据保护、并通过以下方式扩展这�
 * 性能和更低的延迟。ONTAP可以以最低延迟提供最高吞吐量、包括支持使用基于RDMA的NFS的NVIDIA GPUDirect存储(GDS)、并行NFS (pNFS)和NFS会话中继。
 * 数据保护ONTAP提供内置数据保护功能和业内最强大的反勒索软件担保、并在所有平台之间提供通用管理。
 * NetApp卷加密(NVE)。ONTAP 提供原生 卷级加密、并支持板载和外部密钥管理。
-* 多租户和多因素身份验证。ONTAP 支持以最高的安全性级别共享基础架构资源。
+* 存储多租户和多因素身份验证。ONTAP 支持以最高的安全性级别共享基础架构资源。
 
 
 
@@ -75,6 +77,7 @@ ONTAP 数据管理软件包括以下功能、可简化操作并降低总运营�
 * SnapMirror支持在混合云和多站点环境中无缝移动数据、可根据需要随时随地提供数据。
 * 实时数据缩减和扩展的重复数据删除。数据缩减可减少存储块中浪费的空间、重复数据删除可显著提高有效容量。此适用场景数据存储在本地，并分层到云。
 * 最低、最高和自适应服务质量(AQoS)。精细的服务质量(QoS)控制有助于在高度共享的环境中保持关键应用程序的性能水平。
+* 通过NetApp FlexGroup、可以在存储集群中的所有节点之间分布数据、从而为超大型数据集提供海量容量和更高的性能。
 * NetApp FabricPool。可将冷数据自动分层到公有 和私有云存储选项、包括Amazon Web Services (AWS)、Azure和NetApp StorageGRID Storage解决方案。有关 FabricPool 的详细信息，请参见 https://www.netapp.com/pdf.html?item=/media/17239-tr4598pdf.pdf["TR-4598：FabricPool 最佳实践"^]。
 * NetApp FlexCache。提供远程卷缓存功能、可简化文件分发、减少WAN延迟并降低WAN带宽成本。FlexCache支持跨多个站点进行分布式产品开发、并加快从远程位置访问公司数据集的速度。
 
@@ -85,7 +88,7 @@ ONTAP 数据管理软件包括以下功能、可简化操作并降低总运营�
 
 ONTAP 可通过以下功能满足不断变化的苛刻业务需求：
 
-* 无缝扩展和无中断运行。ONTAP 支持无中断地向现有控制器和横向扩展集群添加容量。客户可以升级到 NVMe 和 32 Gb FC 等最新技术，而无需进行成本高昂的数据迁移或中断。
+* 无缝扩展和无中断运行。ONTAP支持向现有控制器和横向扩展集群联机添加容量。客户可以升级到 NVMe 和 32 Gb FC 等最新技术，而无需进行成本高昂的数据迁移或中断。
 * 云连接。ONTAP 是云互联程度最高的存储管理软件、可在所有公有 云中选择软件定义的存储(ONTAP Select)和云原生实例(NetApp Cloud Volumes Service)。
 * 与新兴应用程序集成。ONTAP 通过使用支持现有企业应用程序的相同基础架构、为下一代平台和应用程序(例如自动驾驶汽车、智能城市和行业4.0)提供企业级数据服务。
 
@@ -95,16 +98,18 @@ ONTAP 可通过以下功能满足不断变化的苛刻业务需求：
 === NetApp DataOps 工具包
 
 NetApp DataOps工具包是一款基于Python的工具、可简化开发/培训工作空间和推理服务器的管理、这些工作空间和服务器由高性能横向扩展NetApp存储提供支持。数据操作工具包可作为独立的实用程序运行、在利用NetApp Asta三端存储自动化来实现存储操作的Kubennet环境中、该工具包的效率更高。主要功能包括：
-快速配置新的高容量JupyterLab工作空间、这些工作空间由高性能横向扩展NetApp存储提供支持。
-快速配置新的NVIDIA Tridon推力服务器实例、这些实例由企业级NetApp存储提供支持。
-•近乎即时地克隆高容量JupyterLab工作空间、以便进行实验或快速迭代。
-•近乎即时地保存高容量JupyterLab工作空间的快照、以便进行备份和/或可追溯性/基线化。
-•近乎即时地配置、克隆和创建高容量、高性能数据卷的快照。
+
+* 快速配置新的高容量JupyterLab工作空间、这些工作空间以高性能横向扩展NetApp存储为后盾。
+* 快速配置由企业级NetApp存储提供支持的新NVIDIA Triton推理服务器实例。
+* 近乎即时地克隆高容量JupyterLab工作空间、以便进行实验或快速迭代。
+* 近乎即时地为高容量JupyterLab工作空间创建快照、用于备份和/或可追溯性/基线化。
+* 近乎即时地配置、克隆和创建高容量、高性能数据卷的快照。
+
 
 
 
 === NetApp Astra Trident
 
-Astra Trident是一款完全受支持的开源存储编排程序、适用于容器和Kubernetes分发版、包括Anthos。Trident可与包括NetApp ONTAP 在内的整个NetApp存储产品组合配合使用、并且还支持NFS和iSCSI连接。Trident 允许最终用户从其 NetApp 存储系统配置和管理存储，而无需存储管理员干预，从而加快了 DevOps 工作流的速度。
+Astra Trident是一款完全受支持的开源存储编排程序、适用于容器和Kubernetes分发版、包括Anthos。通过使用NetApp ONTAP等整个NetApp存储产品组合、可以支持NFS、NVMe/TCP和iSCSI连接。Trident 允许最终用户从其 NetApp 存储系统配置和管理存储，而无需存储管理员干预，从而加快了 DevOps 工作流的速度。
 
 link:aipod_nv_architecture.html["下一步：采用NVIDIA DGX系统的NetApp AIPod—解决方案架构"]
