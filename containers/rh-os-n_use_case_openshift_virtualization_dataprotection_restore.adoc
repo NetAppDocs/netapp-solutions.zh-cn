@@ -1,0 +1,44 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_use_case_openshift_virtualization_dataprotection_restore.html 
+keywords: OpenShift, OCP, Astra Trident, NetApp ONTAP, Red Hat OpenShift, OpenShift Virtualization, CNV, Container Native Virtualization, Red Hat OpenShift Virtualization, OADP operator, Openshift Data Protection Application operator, velero 
+summary: 借助 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化 
+---
+= 从备份还原虚拟机
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== 前提条件
+
+要从备份中还原、我们假设虚拟机所在的命名空间被意外删除。
+
+
+
+== 执行还原的步骤
+
+要从刚刚创建的备份进行还原、需要创建一个还原自定义资源(CR)。我们需要为其提供一个名称、提供要从中还原的备份的名称、并将restorEPVs设置为true。
+可以按中所示设置其他参数 link:https://docs.openshift.com/container-platform/4.14/backup_and_restore/application_backup_and_restore/backing_up_and_restoring/restoring-applications.html["文档。"]。单击创建按钮。
+
+image::redhat_openshift_OADP_restore_image1.jpg[创建还原CR]
+
+....
+apiVersion: velero.io/v1
+kind: Restore
+metadata:
+  name: restore1
+  namespace: openshift-adp
+spec:
+  backupName: backup1
+  restorePVs: true
+....
+当阶段显示完成时、您将看到虚拟机已还原
+创建快照时的状态。(如果备份是在虚拟机运行时创建的、则从备份还原虚拟机将启动已还原的虚拟机并使其进入运行状态)
+
+image::redhat_openshift_OADP_restore_image2.jpg[已创建还原CR]

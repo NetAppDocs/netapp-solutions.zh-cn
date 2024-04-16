@@ -1,0 +1,43 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_use_case_openshift_virtualization_dataprotection_overview.html 
+keywords: OpenShift, OCP, Astra Trident, NetApp ONTAP, Red Hat OpenShift, OpenShift Virtualization, CNV, Container Native Virtualization, Red Hat OpenShift Virtualization, OADP operator, Openshift Data Protection Application operator, velero 
+summary: 借助NetApp ONTAP实现Red Hat OpenShift虚拟化数据保护 
+---
+= 使用OpenShift API实现数据保护(OADP)、在OpenShift虚拟化中为VM提供数据保护
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+Banu Sund har, NetApp
+
+[role="lead"]
+本参考文档详细介绍了如何使用OpenShift API for Data Protection (OADP)和Velero创建VM备份并将其移至ONTAP S3。VM的PVC备份是使用CSI Asta三端Snapshot创建的。
+
+OpenShift虚拟化环境中的虚拟机是在OpenShift容器平台的工作节点中运行的容器化应用程序。保护VM元数据以及VM的永久性磁盘非常重要、这样、当VM丢失或损坏时、您可以对其进行恢复。
+
+OpenShift虚拟化VM的永久性磁盘可以通过集成到OpenShift集群的ONTAP存储作为后备存储 link:https://docs.netapp.com/us-en/trident/["Astra三端CSI"]。在本节中、我们将使用 link:https://docs.openshift.com/container-platform/4.14/backup_and_restore/application_backup_and_restore/installing/installing-oadp-ocs.html["用于数据保护的OpenShift API (OADP)"] 将VM (包括其数据卷)备份到ONTAP对象存储。然后、我们会根据需要从备份中还原。
+
+通过OADP、可以对OpenShift集群上的应用程序进行备份、还原和灾难恢复。可以使用OADP保护的数据包括Kubbernetes资源对象、永久性卷和内部映像。
+
+image::redhat_openshift_OADP_image1.jpg[用于数据保护的OpenShift API]
+
+Red Hat OpenShift利用了OpenSource社区开发的解决方案来实现数据保护。 link:https://velero.io/["Velero"] 是一款开源工具、用于安全备份和还原、执行灾难恢复以及迁移Kubbernetes集群资源和永久性卷。为了轻松使用Velero、OpenShift开发了OADP运算符和Velero插件、以便与CSI存储驱动程序集成。公开的OADP API的核心基于Velero API。安装并配置OADP操作程序后、可以执行的备份/还原操作将基于Velero API公开的操作。
+
+image::redhat_openshift_OADP_image2.jpg[用于数据保护的OpenShift API]
+
+OADP 1.3可从OpenShift集群的操作中心进行下载、版本为：它具有内置的Data Mover、可将CSI卷快照移动到远程对象存储。这样可以在备份期间将快照移动到对象存储位置、从而提高可移植性和持久性。灾难发生后、快照可供还原。
+
+**以下是本节中示例的组件版本**
+
+* OpenShift集群4.14.
+* 通过Red Hat提供的OperatorOpenShift Virtualization Operator安装OpenShift虚拟化
+* OADP Operator 1.13由Red Hat提供
+* 适用于Linux的Velero CLI 1.13
+* Astra三端到子24.02
+* ONTAP 9.12.
+
