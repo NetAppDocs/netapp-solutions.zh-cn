@@ -20214,10 +20214,6 @@ ONTAP S3已配置为Velero PVC快照的默认位置。</block>
 <block ref="593072cec0260f2bb27124338ab043c0" category="inline-link-macro-rx"></block>
 <block ref="6968e35abd1952220c77606158074b41" category="inline-link-macro-rx"></block>
 <block ref="ef09cb46023a74a11707df91db2b15f5" category="inline-link-macro-rx"></block></block>
-  <block id="0146176b0348d74f15a3409a6a4921fc" category="paragraph">侧栏：侧栏
-PerMalink：AI/aipod_nv_hw_components.html
-关键词：NetApp AI、AI、人工智能、ML、机器学习、 NVIDIA、NVIDIA AI Enterprise、NVIDIA BasePOD、NVIDIA DGX
-摘要：采用NVIDIA DGX系统的NetApp AIPod -硬件组件</block>
   <block id="c3ae34e32e1b64f47fb79db64784fcd5" category="inline-link-macro">使用Asta Control Center通过备份进行灾难恢复的演示视频</block>
   <block id="ca9d44629d70b9f7b3c3cd14440f8f24" category="paragraph"><block ref="ca9d44629d70b9f7b3c3cd14440f8f24" category="inline-link-macro-rx"></block></block>
   <block id="7dd560122213e64b542e95018ff44ab1" category="paragraph">此页面显示了使用Astra Control Service在AWS上托管Red Hat OpenShift (ROSA)的数据保护选项。</block>
@@ -20227,4 +20223,25 @@ PerMalink：AI/aipod_nv_hw_components.html
   <block id="3500ba09d0538297440ca620c9dd46bf" category="sidebar">备份</block>
   <block id="2bd339d85ee3b33e513359ce781b60cc" category="sidebar">还原</block>
   <block id="1d6394982dcf1616cecf68fcde7cdf0f" category="sidebar">删除备份和还原</block>
+  <block id="ca9f31b430e2d1494cf56125653b71e1" category="doc">SnapCenter Oracle克隆生命周期自动化</block>
+  <block id="a95c751edfb266fb61714e4b56479b01" category="paragraph">客户喜欢NetApp ONTAP存储的FlexClone功能、该功能可为数据库节省大量存储成本。此基于Ans可 通过NetApp SnapCenter命令行实用程序按计划自动设置、克隆和刷新已克隆的Oracle数据库、以简化生命周期管理。该工具包适用于部署到ONTAP存储(内部未命中或公共云)并由NetApp SnapCenter UI工具管理的Oracle数据库。</block>
+  <block id="305b49cab56a63db69a75b8a90237992" category="list-text">设置Oracle数据库克隆规范配置文件。</block>
+  <block id="ffe89dfaf822383b1610d2235661b139" category="list-text">按照用户定义的计划创建和刷新克隆Oracle数据库。</block>
+  <block id="5a82f1374e653dd60890a248f3da4afa" category="list-text">使用SnapCenter管理Oracle数据库的数据库管理员。</block>
+  <block id="eeb8bce8b54b9d524c33c1838a0d56ff" category="list-text">使用SnapCenter管理ONTAP存储的存储管理员。</block>
+  <block id="d2d0cadcec645d853fb3c7ebf1705d31" category="list-text">有权访问SnapCenter UI的应用程序所有者。</block>
+  <block id="ec26bffdac6e146ef20365de82135a71" category="section-title">Ans可 处理目标主机文件配置</block>
+  <block id="c57304a243a04357bd7b6a14b757cb11" category="paragraph">该工具包包含一个主机文件、用于定义运行Ands得以 执行的Playbook的目标。通常、它是目标Oracle克隆主机。下面是一个示例文件。主机条目包括目标主机IP地址以及用于管理员用户访问主机以执行克隆或刷新命令的ssh密钥。</block>
+  <block id="f4516853063c4206701e5aa89787feaa" category="paragraph"># Oracle克隆主机</block>
+  <block id="dd5cc97aa774a3a1c065bbb01fcf3e7d" category="paragraph">AnsablePlaybooks从多个变量文件中获取变量输入。下面是一个全局变量文件vars.yml示例。</block>
+  <block id="a4f107861ae1069b802d4818e857efeb" category="paragraph">主机变量在名为｛｛host_name｝｝.yml的host_vars目录中定义。以下是显示典型配置的目标Oracle主机变量文件ora_04.cie.netapp.com.yml的示例。</block>
+  <block id="b9221ffda439eb4a537f8bb3073871aa" category="section-title">其他克隆目标Oracle服务器配置</block>
+  <block id="d94c052d91f30fa14b5db2ac2139bda3" category="paragraph">克隆目标Oracle服务器应与安装并修补的源Oracle服务器具有相同的Oracle软件堆栈。Oracle用户.bash_profile已配置$oracle_base和$oracle_home。此外、$oracle_home变量应与源Oracle服务器设置匹配。下面是一个示例。</block>
+  <block id="9ed50a56f8c83c496fdb2d3fe909497f" category="paragraph">共有三本使用SnapCenter命令行界面实用程序执行Oracle数据库克隆生命周期的操作手册。</block>
+  <block id="56f060833065e38dfd98d52734f5c81c" category="list-text">安装Andsone控制器的前提条件-仅一次。</block>
+  <block id="230f70b0a7d8d86c8ea52493d17f962f" category="list-text">设置克隆规范文件—仅一次。</block>
+  <block id="6a1fa0bf47a6db0c3d4281d1316fd9e0" category="list-text">使用shell脚本定期从crontab创建和刷新克隆数据库、以调用刷新操作手册。</block>
+  <block id="8aafbc88c398f3b5492811671ba656ad" category="paragraph">对于其他克隆数据库、请创建一个单独的CLONE n_setup.yml和CLONE n_refresh .yml以及CLONE n_refresh。在host_vars目录中相应地配置"Andsvey"目标主机和hostname.yml文件。</block>
+  <block id="465d2a2dc0602710238ac36717c64844" category="cell">2024年4月17日</block>
+  <block id="2de363e9c11e72fe1c95728c8cf3e449" category="sidebar">SnapCenter Oracle克隆生命周期</block>
 </blocks>

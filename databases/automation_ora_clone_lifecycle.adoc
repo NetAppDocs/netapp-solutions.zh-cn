@@ -1,0 +1,207 @@
+---
+sidebar: sidebar 
+permalink: databases/automation_ora_clone_lifecycle.html 
+keywords: Oracle, AWS, FSx ONTAP, Database, Oracle 19c, HA, DR 
+summary: '解决方案提供了一个基于Ans得 的自动化工具包、用于在AWS中配置Oracle数据库高可用性和灾难恢复(High Availability and Disaster Recovery、HA/DR)、其中AWS FSx ONTAP用作Oracle数据库存储、EC2实例用作计算实例。' 
+---
+= SnapCenter Oracle克隆生命周期自动化
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+NetApp公司Allen Cao、Niyaz Mohamed
+
+
+
+== 目的
+
+客户喜欢NetApp ONTAP存储的FlexClone功能、该功能可为数据库节省大量存储成本。此基于Ans可 通过NetApp SnapCenter命令行实用程序按计划自动设置、克隆和刷新已克隆的Oracle数据库、以简化生命周期管理。该工具包适用于部署到ONTAP存储(内部未命中或公共云)并由NetApp SnapCenter UI工具管理的Oracle数据库。
+
+此解决方案 可解决以下使用情形：
+
+* 设置Oracle数据库克隆规范配置文件。
+* 按照用户定义的计划创建和刷新克隆Oracle数据库。
+
+
+
+
+== audience
+
+此解决方案 适用于以下人员：
+
+* 使用SnapCenter管理Oracle数据库的数据库管理员。
+* 使用SnapCenter管理ONTAP存储的存储管理员。
+* 有权访问SnapCenter UI的应用程序所有者。
+
+
+
+
+== 许可证
+
+访问、下载、安装或使用此GitHub存储库中的内容即表示您同意中列出的许可条款 link:https://github.com/NetApp/na_ora_hadr_failover_resync/blob/master/LICENSE.TXT["许可证文件"^]。
+
+
+NOTE: 在使用此GitHub存储库中的内容制作和/或共享任何衍生作品方面存在一些限制。在使用内容之前、请确保您已阅读许可条款。如果您不同意所有条款、请勿访问、下载或使用此存储库中的内容。
+
+
+
+== 解决方案 部署
+
+
+
+=== 部署的前提条件
+
+[%collapsible]
+====
+部署需要满足以下前提条件。
+
+....
+Ansible controller:
+  Ansible v.2.10 and higher
+  ONTAP collection 21.19.1
+  Python 3
+  Python libraries:
+    netapp-lib
+    xmltodict
+    jmespath
+....
+....
+SnapCenter server:
+  version 5.0
+  backup policy configured
+  Source database protected with a backup policy
+....
+....
+Oracle servers:
+  Source server managed by SnapCenter
+  Target server managed by SnapCenter
+  Target server with identical Oracle software stack as source server installed and configured
+....
+====
+
+
+=== 下载此工具包
+
+[%collapsible]
+====
+[source, cli]
+----
+git clone https://bitbucket.ngage.netapp.com/scm/ns-bb/na_oracle_clone_lifecycle.git
+----
+====
+
+
+=== Ans可 处理目标主机文件配置
+
+[%collapsible]
+====
+该工具包包含一个主机文件、用于定义运行Ands得以 执行的Playbook的目标。通常、它是目标Oracle克隆主机。下面是一个示例文件。主机条目包括目标主机IP地址以及用于管理员用户访问主机以执行克隆或刷新命令的ssh密钥。
+
+# Oracle克隆主机
+
+....
+[clone_1]
+ora_04.cie.netapp.com ansible_host=10.61.180.29 ansible_ssh_private_key_file=ora_04.pem
+....
+ [clone_2]
+ [clone_3]
+====
+
+
+=== 全局变量配置
+
+[%collapsible]
+====
+AnsablePlaybooks从多个变量文件中获取变量输入。下面是一个全局变量文件vars.yml示例。
+
+ # ONTAP specific config variables
+ # SnapCtr specific config variables
+....
+snapctr_usr: xxxxxxxx
+snapctr_pwd: 'xxxxxxxx'
+....
+ backup_policy: 'Oracle Full offline Backup'
+ # Linux specific config variables
+ # Oracle specific config variables
+====
+
+
+=== 主机变量配置
+
+[%collapsible]
+====
+主机变量在名为｛｛host_name｝｝.yml的host_vars目录中定义。以下是显示典型配置的目标Oracle主机变量文件ora_04.cie.netapp.com.yml的示例。
+
+ # User configurable Oracle clone db host specific parameters
+....
+# Source database to clone from
+source_db_sid: NTAP1
+source_db_host: ora_03.cie.netapp.com
+....
+....
+# Clone database
+clone_db_sid: NTAP1DEV
+....
+ snapctr_obj_id: '{{ source_db_host }}\{{ source_db_sid }}'
+====
+
+
+=== 其他克隆目标Oracle服务器配置
+
+[%collapsible]
+====
+克隆目标Oracle服务器应与安装并修补的源Oracle服务器具有相同的Oracle软件堆栈。Oracle用户.bash_profile已配置$oracle_base和$oracle_home。此外、$oracle_home变量应与源Oracle服务器设置匹配。下面是一个示例。
+
+ # .bash_profile
+....
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+        . ~/.bashrc
+fi
+....
+....
+# User specific environment and startup programs
+export ORACLE_BASE=/u01/app/oracle
+export ORACLE_HOME=/u01/app/oracle/product/19.0.0/NTAP1
+....
+====
+
+
+=== 执行操作手册
+
+[%collapsible]
+====
+共有三本使用SnapCenter命令行界面实用程序执行Oracle数据库克隆生命周期的操作手册。
+
+. 安装Andsone控制器的前提条件-仅一次。
++
+[source, cli]
+----
+ansible-playbook -i hosts ansible_requirements.yml
+----
+. 设置克隆规范文件—仅一次。
++
+[source, cli]
+----
+ansible-playbook -i hosts clone_1_setup.yml -u admin -e @vars/vars.yml
+----
+. 使用shell脚本定期从crontab创建和刷新克隆数据库、以调用刷新操作手册。
++
+[source, cli]
+----
+0 */4 * * * /home/admin/na_oracle_clone_lifecycle/clone_1_refresh.sh
+----
+
+
+对于其他克隆数据库、请创建一个单独的CLONE n_setup.yml和CLONE n_refresh .yml以及CLONE n_refresh。在host_vars目录中相应地配置"Andsvey"目标主机和hostname.yml文件。
+
+====
+
+
+== 从何处查找追加信息
+
+要了解有关NetApp 解决方案 自动化的详细信息、请查看以下网站 link:https://docs.netapp.com/us-en/netapp-solutions/automation/automation_introduction.html["NetApp 解决方案自动化"^]
