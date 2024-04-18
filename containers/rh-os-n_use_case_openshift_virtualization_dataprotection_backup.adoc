@@ -19,7 +19,7 @@ summary: 借助 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化
 
 要按需创建整个VM (VM元数据和VM磁盘)的备份，请单击**备份**选项卡。这将创建备份自定义资源(CR)。提供了一个示例YAML以创建备份CR。使用此YAML、将备份指定命名空间中的虚拟机及其磁盘。可以按中所示设置其他参数 link:https://docs.openshift.com/container-platform/4.14/backup_and_restore/application_backup_and_restore/backing_up_and_restoring/oadp-creating-backup-cr.html["文档。"]。
 
-CSI将创建支持磁盘的永久性卷的快照、并将其移至YAML中提供的对象存储位置。备份将在系统中保留30天、如TTL中所指定。
+CSI将创建支持磁盘的永久性卷的快照。系统会创建VM备份及其磁盘快照、并将其存储在YAML中指定的备份位置。备份将在系统中保留30天、如TTL中所指定。
 
 ....
 apiVersion: velero.io/v1
@@ -31,14 +31,18 @@ spec:
   includedNamespaces:
   - virtual-machines-demo
   snapshotVolumes: true
-  storageLocation: velero-demo-1
+  storageLocation: velero-demo-1 //this is the backupStorageLocation previously created
+                                 //when Velero is configured.
   ttl: 720h0m0s
 ....
-备份完成后、其阶段应显示为已完成。
+备份完成后、其阶段将显示为已完成。
 
 image::redhat_openshift_OADP_backup_image1.jpg[备份已完成]
 
 您可以借助S3浏览器应用程序检查对象存储中的备份。备份路径显示在已配置的分段中、并带有前缀名称(velero/ducobackup)。您可以查看备份内容、包括卷快照、日志和虚拟机的其他元数据。
+
+
+NOTE: 在StorageGRID中、您还可以使用租户管理器提供的S3控制台来查看备份对象。
 
 image::redhat_openshift_OADP_backup_image2.jpg[S3中的备份对象]
 
@@ -46,7 +50,8 @@ image::redhat_openshift_OADP_backup_image2.jpg[S3中的备份对象]
 
 == 在OpenShift虚拟化中为VM创建计划备份
 
-要按计划创建备份、您需要创建计划自定义资源。
+要按计划创建备份、您需要创建计划CR。
+
 该计划只是一个cron表达式、允许您指定创建备份的时间。用于创建计划CR的YAML示例。
 
 ....
@@ -66,12 +71,10 @@ spec:
     ttl: 720h0m0s
 ....
 cron表达式07 ***表示每天7：00创建备份。
-此外、还会指定要包含在备份中的空间以及备份的存储位置。因此、使用计划CR而非备份CR来创建指定时间和频率的备份。
+此外、还会指定要包含在备份中的空间以及备份的存储位置。因此、使用计划CR而不是备份CR来按指定的时间和频率创建备份。
 
 创建计划后、该计划将处于启用状态。
-
-image::redhat_openshift_OADP_backup_image3.jpg[已创建计划]
+图像：：redhat_openshift_OADP_backup_image3.jpg[Schedule创建]
 
 备份将按照此计划创建、并可从备份选项卡查看。
-
-image::redhat_openshift_OADP_backup_image4.jpg[已创建计划]
+图像：：redhat_openshift_OADP_backup_image4.jpg[Schedule创建]

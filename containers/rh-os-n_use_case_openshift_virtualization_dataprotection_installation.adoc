@@ -36,7 +36,7 @@ NOTE: 如果要在VM处于running状态时为其创建备份、则必须在该�
 
 == 安装OADP Operator的步骤
 
-. 转到集群的Operator Hub、然后选择Red Hat OADP operator。在安装页面中、使用所有默认选项、然后单击安装。在下一页上、再次使用所有默认值、然后单击安装。OADP操作符将安装在名为OpenShift-ADP的命名空间中。
+. 转到集群的Operator Hub、然后选择Red Hat OADP operator。在安装页面中、使用所有默认选项、然后单击安装。在下一页上、再次使用所有默认值、然后单击安装。OADP操作符将安装在命名空间OpenShift-ADP中。
 
 
 image::redhat_openshift_OADP_install_image1.jpg[在Operator Hub中使用OpenShift API进行数据保护]
@@ -47,12 +47,24 @@ image::redhat_openshift_OADP_install_image3.jpg[已安装OpenShift API for Data 
 
 
 
-=== 使用ONTAP S3详细信息配置Velero的前提条件：
+=== 使用ONTAP S3详细信息配置Velero的前提条件
 
 操作员安装成功后、配置Velero实例。
 您可以将Velero配置为使用S3兼容对象存储。按照中所示的过程配置ONTAP S3 link:https://docs.netapp.com/us-en/ontap/object-storage-management/index.html["ONTAP文档中的对象存储管理一节"]。要与Velero集成，您需要从ONTAP S3配置中获取以下信息。
 
-* 可用于访问S3的逻辑接口(LIF) IP
+* 可用于访问S3的逻辑接口(LIF)
+* 用于访问S3的用户凭据、其中包括访问密钥和机密访问密钥
+* S3中具有用户访问权限的备份的分段名称
+* 为了安全访问对象存储、应在对象存储服务器上安装TLS证书。
+
+
+
+
+=== 使用StorageGRID S3详细信息配置Velero的前提条件
+
+您可以将Velero配置为使用S3兼容对象存储。您可以使用中所示的过程配置StorageGRID S3 link:https://docs.netapp.com/us-en/storagegrid-116/s3/configuring-tenant-accounts-and-connections.html["StorageGRID文档"]。要与Velero集成，您需要从StorageGRID S3配置中获取以下信息。
+
+* 可用于访问S3的端点
 * 用于访问S3的用户凭据、其中包括访问密钥和机密访问密钥
 * S3中具有用户访问权限的备份的分段名称
 * 为了安全访问对象存储、应在对象存储服务器上安装TLS证书。
@@ -62,30 +74,27 @@ image::redhat_openshift_OADP_install_image3.jpg[已安装OpenShift API for Data 
 
 === 配置Velero的步骤
 
-* 首先、为ONTAP S3用户凭据创建一个密钥。这将用于稍后配置Velero。您可以从命令行界面或Web控制台创建密钥。
-要从Web控制台创建密钥，请选择机密，然后单击密钥/值机密。
-提供凭据名称、密钥和值的值、如图所示。请务必使用S3用户的访问密钥ID和机密访问密钥。
+* 首先、为ONTAP S3用户凭据或StorageGRID租户用户凭据创建一个密钥。这将用于稍后配置Velero。您可以从命令行界面或Web控制台创建密钥。
+要从Web控制台创建密钥，请选择机密，然后单击密钥/值机密。提供凭据名称、密钥和值的值、如图所示。请务必使用S3用户的访问密钥ID和机密访问密钥。正确命名密钥。在以下示例中、系统会创建一个具有名为ONTAP S3-cred据 的ONTAP S3用户凭据的密钥。
 
 
-image::redhat_openshift_OADP_install_image4.jpg[ONTAP S3凭据的机密]
+image::redhat_openshift_OADP_install_image4.jpg[S3用户凭据的机密]
 
-image::redhat_openshift_OADP_install_image5.jpg[为ONTAP S3凭据创建密码]
+image::redhat_openshift_OADP_install_image5.jpg[为S3用户凭据创建密码]
 
+要通过命令行界面创建名为SG-S3-cred据 的机密、您可以使用以下命令。
+图像：redhat_openshift_OADP_install_image6.jpg[Create使用命令行界面获取S3用户凭据的密码]
 
-NOTE: 要通过命令行界面创建名为cl云 凭据的默认机密、您可以使用以下命令。如果备份和快照位置使用相同的凭据、则只需创建如上所示的默认密钥即可。有关其他情形、请参见OADP文档。
+* 接下来，要配置Velero，请从Operators下的菜单项中选择Installed Operators，单击OADP Operator，然后选择Data分别 保护应用程序选项卡。
+图像：：redhat_openshift_OADP_install_image7.jpg[DataProtectionApplication]
 
-image::redhat_openshift_OADP_install_image6.jpg[使用命令行界面为ONTAP S3凭据创建机密]
-
-* 接下来，选择配置Velero，从操作员下的菜单项中选择已安装的操作员，单击OADP操作员，然后选择数据保护应用程序选项卡。
-
-
-image::redhat_openshift_OADP_install_image7.jpg[DataSetionApplication]
 
 单击"Create Data分别 保护应用程序"。在表单视图中、为DataProtection应用程序提供一个名称或使用默认名称。
+图像：redhat_openshift_OADP_install_image8.jpg[Create DataSetionApplication]
 
-image::redhat_openshift_OADP_install_image8.jpg[创建DataSetionApplication]
+现在转到YAML视图并替换规格信息、如下面的YAML文件示例所示。
 
-现在、转到YAML视图并替换默认信息或添加以下YAML文件中所示的信息。
+**用ONTAP S3作为备份位置来配置Velero的YAML文件样本**
 
 ....
 spec:
@@ -99,7 +108,7 @@ spec:
           s3Url: 'https://10.xx.xx.xx' //Ensure TLS certificate for S3 is configured
         credential:
           key: cloud
-          name: cloud-credentials //previously created secret named cloud-credentials
+          name: ontap-s3-credentials //previously created secret
         default: true
         objectStorage:
           bucket: velero //Your bucket name previously created in S3 for backups
@@ -116,20 +125,45 @@ spec:
         - openshift
         - aws
         - kubevirt //Add this plugin
-  snapshotLocations:
+....
+**用StorageGRID S3作为备份位置和快照位置来配置Velero的YAML文件样本**
+
+....
+spec:
+  backupLocations:
     - velero:
         config:
+          insecureSkipTLSVerify: 'true'
           profile: default
-          region: us-east
+          region: us-east-1 // region of your StorageGrid system
+          s3ForcePathStyle: 'True'
+          s3Url: 'https://172.21.254.25:10443' //the IP used to access S3
+        credential:
+          key: cloud
+          name: sg-s3-credentials //secret created earlier
+        default: true
+        objectStorage:
+          bucket: velero
+          prefix: demobackup
         provider: aws
+  configuration:
+    nodeAgent:
+      enable: true
+      uploaderType: kopia
+    velero:
+      defaultPlugins:
+        - csi
+        - openshift
+        - aws
+        - kubevirt
 ....
-上述YAML在规范中包含以下部分、需要相应地配置这些部分、与示例类似：
+上述YAML文件已在规范中相应地配置了以下部分、与上述示例类似
 
 **备份位置**
-ONTAP S3 (其凭据和其他信息如YAML中所示)被配置为Velero的默认备份位置。
+ONTAP S3或StorageGRID S3 (及其凭据和YAML中显示的其他信息)被配置为Velero的默认备份位置。
 
 **快照位置**
-ONTAP S3已配置为Velero PVC快照的默认位置。
+如果使用容器存储接口(CSI)快照、则无需指定快照位置、因为您将创建一个卷快照类CR来注册CSI驱动程序。在本示例中、您使用的是A作用 力的三端CSI、并且之前已使用三端CSI驱动程序创建了卷eSnap而已。
 
 **启用CSI**
 将CSI添加到Velero的DEDEPTO插 件中、以便使用CSI快照备份永久性卷。
@@ -142,7 +176,7 @@ ONTAP S3已配置为Velero PVC快照的默认位置。
 
 image::redhat_openshift_OADP_install_image9.jpg[三项功能Snapshot类标签]
 
-确保即使删除了卷Snapshot对象、这些快照也可以持久保留。这可以通过将删除策略设置为保留来实现。否则、删除命名空间将完全丢失以前备份过的所有PVC。
+确保即使删除了卷Snapshot对象、这些快照也可以持久保留。这可以通过将*DELERionPolicy*设置为保留来实现。否则、删除命名空间将完全丢失以前备份过的所有PVC。
 
 ....
 apiVersion: snapshot.storage.k8s.io/v1
@@ -155,8 +189,7 @@ deletionPolicy: Retain
 image::redhat_openshift_OADP_install_image10.jpg[应将卷SnapshotClass删除策略设置为保留]
 
 确保已创建Data놣 rotionApplication且其状态为"病 况：已调节"。
-
-image::redhat_openshift_OADP_install_image11.jpg[已创建DataSetionApplication对象]
+图像：redhat_openshift_OADP_install_image11.jpg[DataProtectionApplication对象已创建]
 
 OADP操作员将创建相应的备份存储位置。创建备份时将使用此位置。
 
