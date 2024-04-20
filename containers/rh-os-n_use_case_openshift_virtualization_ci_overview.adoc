@@ -1,0 +1,45 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_use_case_openshift_virtualization_ci_overview.html 
+keywords: OpenShift, OCP, Astra Trident, NetApp ONTAP, Red Hat OpenShift, OpenShift Virtualization, CNV, Container Native Virtualization, Red Hat OpenShift Virtualization, cloud Insights 
+summary: 在Red Hat OpenShift虚拟化中使用Cloud Insights监控VM 
+---
+= 在Red Hat OpenShift虚拟化中使用Cloud Insights监控VM
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+作者：Banu Sunzhar、NetApp
+
+[role="lead"]
+本参考文档的这一部分详细介绍了如何将NetApp Cloud Insights与Red Hat OpenShift集群集成以监控OpenShift虚拟化VM。
+
+NetApp Cloud Insights 是一款云基础架构监控工具，可让您深入了解整个基础架构。借助 Cloud Insights ，您可以监控，故障排除和优化所有资源，包括公有云和私有数据中心。有关NetApp Cloud Insights的详细信息、请参阅 https://docs.netapp.com/us-en/cloudinsights["Cloud Insights 文档"]。
+
+要开始使用Cloud Insights、您必须在NetApp BlueXP门户上注册。有关详细信息，请参见 link:https://docs.netapp.com/us-en/cloudinsights/task_cloud_insights_onboarding_1.html["Cloud Insights 入职"]
+
+Cloud Insights具有多种功能、可帮助您快速轻松地查找数据、排除问题并深入了解您的环境。您可以通过功能强大的查询轻松查找数据、在信息板中可视化数据、并针对您设置的数据阈值发送电子邮件警报。请参见 link:https://docs.netapp.com/us-en/cloudinsights/concept_feature_tutorials.html#introduction["视频教程"] 以帮助您了解这些功能。
+
+要使Cloud Insights开始收集数据、您需要满足以下要求
+
+**数据收集器**
+有3种类型的数据收集器：
+*基础架构(存储设备、网络交换机、计算基础架构)
+*操作系统(如VMware或Windows)
+*服务(如Kafka)
+
+数据收集器可发现来自ONTAP存储设备(基础架构数据收集器)等数据源的信息。收集的信息用于分析、验证、监控和故障排除。
+
+**采集单元**
+如果您使用的是基础架构数据收集器、则还需要一个采集单元将数据注入Cloud Insights。采集单元是专门用于托管数据收集器的计算机、通常是虚拟机。此计算机通常与受监控项目位于同一数据中心/VPC中。
+
+**电报代理**
+Cloud Insights还支持电报作为其收集集成数据的代理。Telegraf 是一种插件驱动的服务器代理，可用于收集和报告指标，事件和日志。
+
+Cloud Insights架构
+
+image::redhat_openshift_ci_overview_image1.jpg[Cloud Insights架构]

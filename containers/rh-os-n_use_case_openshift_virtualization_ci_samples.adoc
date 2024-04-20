@@ -1,0 +1,61 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_use_case_openshift_virtualization_ci_samples.html 
+keywords: OpenShift, OCP, Astra Trident, NetApp ONTAP, Red Hat OpenShift, OpenShift Virtualization, CNV, Container Native Virtualization, Red Hat OpenShift Virtualization, cloud Insights 
+summary: 在Red Hat OpenShift虚拟化中使用Cloud Insights监控VM 
+---
+= Red Hat OpenShift虚拟化中VM的监控功能示例
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== **根据事件监视和创建警报**
+
+以下示例根据事件监控OpenShift虚拟化中包含VM的命名空间。在此示例中、系统将基于集群中指定命名空间的** logs.Kubernetes**.event创建一个监控器。
+
+image::redhat_openshift_ci_samples_image1.jpg[Cloud Insights示例]
+
+此查询可提供命名空间中虚拟机的所有事件。(命名空间中只有一个虚拟机)。此外、还可以构建一个高级查询、以便根据原因为"失败"或"失败挂载"的事件进行筛选。通常、当问题描述在创建PV或将PV挂载到POD时会创建这些事件、这些事件指示动态配置程序中存在用于创建永久性的问题 VM的卷。
+如上所示创建警报监控时、您还可以配置向收件人发送通知。此外、您还可以提供更正操作或追加信息、这些操作可能有助于解决此错误。在上述示例中、追加信息可以研究用于解析问题描述的三端配置和存储类定义。
+
+
+
+== **更改分析**
+
+通过"变更分析"、您可以查看集群状态发生了哪些变化、包括哪些人进行了更改、这有助于对问题进行故障排除。
+
+image::redhat_openshift_ci_samples_image2.jpg[Cloud Insights示例]
+
+在上述示例中、在OpenShift集群上为包含OpenShift虚拟化VM的命名空间配置了变更分析。信息板将根据时间线显示更改。您可以向下钻取以查看更改的内容、然后单击所有更改差异以查看清单的差异。从清单中、您可以看到为永久性磁盘创建了新的备份。
+
+image::redhat_openshift_ci_samples_image3.jpg[Cloud Insights示例]
+
+image::redhat_openshift_ci_samples_image4.jpg[Cloud Insights示例]
+
+
+
+== **后端存储映射**
+
+借助Cloud Insights、您可以轻松查看VM磁盘的后端存储以及有关PVC的多项统计信息。
+
+image::redhat_openshift_ci_samples_image5.jpg[Cloud Insights示例]
+
+您可以单击后端列下的链接、此链接将直接从后端ONTAP存储中提取数据。
+
+image::redhat_openshift_ci_samples_image6.jpg[Cloud Insights示例]
+
+另一种查看所有POD到存储映射的方法是、从Explore下的Observability菜单创建一个All Metrics查询。
+
+image::redhat_openshift_ci_samples_image7.jpg[Cloud Insights示例]
+
+单击任何链接都将显示ONTP存储中的相应详细信息。例如、单击"storageVirtualMachine"列中的SVM名称将从ONTAP中提取有关SVM的详细信息。单击内部卷名称将在ONTAP中提取有关该卷的详细信息。
+
+image::redhat_openshift_ci_samples_image8.jpg[Cloud Insights示例]
+
+image::redhat_openshift_ci_samples_image9.jpg[Cloud Insights示例]
