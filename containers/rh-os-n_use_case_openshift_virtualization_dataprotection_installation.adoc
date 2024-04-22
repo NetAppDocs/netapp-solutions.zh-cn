@@ -83,14 +83,17 @@ image::redhat_openshift_OADP_install_image4.jpg[S3用户凭据的机密]
 image::redhat_openshift_OADP_install_image5.jpg[为S3用户凭据创建密码]
 
 要通过命令行界面创建名为SG-S3-cred据 的机密、您可以使用以下命令。
-图像：redhat_openshift_OADP_install_image6.jpg[Create使用命令行界面获取S3用户凭据的密码]
+
+image::redhat_openshift_OADP_install_image6.jpg[使用命令行界面为S3用户凭据创建机密]
 
 * 接下来，要配置Velero，请从Operators下的菜单项中选择Installed Operators，单击OADP Operator，然后选择Data分别 保护应用程序选项卡。
-图像：：redhat_openshift_OADP_install_image7.jpg[DataProtectionApplication]
 
+
+image::redhat_openshift_OADP_install_image7.jpg[DataSetionApplication]
 
 单击"Create Data分别 保护应用程序"。在表单视图中、为DataProtection应用程序提供一个名称或使用默认名称。
-图像：redhat_openshift_OADP_install_image8.jpg[Create DataSetionApplication]
+
+image::redhat_openshift_OADP_install_image8.jpg[创建DataSetionApplication]
 
 现在转到YAML视图并替换规格信息、如下面的YAML文件示例所示。
 
@@ -157,7 +160,7 @@ spec:
         - aws
         - kubevirt
 ....
-上述YAML文件已在规范中相应地配置了以下部分、与上述示例类似
+YAML文件中的规范部分应针对与上述示例类似的以下参数进行适当配置
 
 **备份位置**
 ONTAP S3或StorageGRID S3 (及其凭据和YAML中显示的其他信息)被配置为Velero的默认备份位置。
@@ -165,7 +168,8 @@ ONTAP S3或StorageGRID S3 (及其凭据和YAML中显示的其他信息)被配置
 **快照位置**
 如果使用容器存储接口(CSI)快照、则无需指定快照位置、因为您将创建一个卷快照类CR来注册CSI驱动程序。在本示例中、您使用的是A作用 力的三端CSI、并且之前已使用三端CSI驱动程序创建了卷eSnap而已。
 
-**启用CSI**
+**启用CSI插件**
+
 将CSI添加到Velero的DEDEPTO插 件中、以便使用CSI快照备份永久性卷。
 要备份CSI支持的PVC、Velero CSI插件将在设置了**Velero.io/CSI-VOumesnAPshot-class**标签的集群中选择卷SnapshotClass。。
 
@@ -189,7 +193,9 @@ deletionPolicy: Retain
 image::redhat_openshift_OADP_install_image10.jpg[应将卷SnapshotClass删除策略设置为保留]
 
 确保已创建Data놣 rotionApplication且其状态为"病 况：已调节"。
-图像：redhat_openshift_OADP_install_image11.jpg[DataProtectionApplication对象已创建]
+
+image::redhat_openshift_OADP_install_image11.jpg[已创建DataSetionApplication对象]
 
 OADP操作员将创建相应的备份存储位置。创建备份时将使用此位置。
-图像：：redhat_openshift_OADP_install_image12.jpg[BackupStorageLocation已创建]
+
+image::redhat_openshift_OADP_install_image12.jpg[已创建备份存储位置]

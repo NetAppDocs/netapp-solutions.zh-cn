@@ -20111,9 +20111,6 @@ DGX H100 CPU托盘的后部端口如下所示。其中四个OSFP端口为InfiniB
   <block id="0dd1a3a2828692d2794be8354b1e1904" category="list-text">S3中具有用户访问权限的备份的分段名称</block>
   <block id="0078beddeff16d325abdba87d72ecd51" category="list-text">为了安全访问对象存储、应在对象存储服务器上安装TLS证书。</block>
   <block id="ff89d7533cfe0ae0aef578589170d1c7" category="section-title">配置Velero的步骤</block>
-  <block id="dd19c4f79c4af35933158cf34586fe93" category="paragraph">**启用CSI**
-将CSI添加到Velero的DEDEPTO插 件中、以便使用CSI快照备份永久性卷。
-要备份CSI支持的PVC、Velero CSI插件将在设置了**Velero.io/CSI-VOumesnAPshot-class**标签的集群中选择卷SnapshotClass。。</block>
   <block id="411bee16b777d9bcbff8b84a2ec800eb" category="list-text">您必须已创建三端卷SnapshotClass。</block>
   <block id="17473960c94d8c852076c1ded0ed61d4" category="list-text">编辑trdent-snapshotclass的标签并将其设置为
 ** Velero.io/CSI-VOUESNAPECUE-CLASS=TRUE**，如下所示。</block>
@@ -20151,7 +20148,6 @@ DGX H100 CPU托盘的后部端口如下所示。其中四个OSFP端口为InfiniB
   <block id="ca9d44629d70b9f7b3c3cd14440f8f24" category="paragraph"><block ref="ca9d44629d70b9f7b3c3cd14440f8f24" category="inline-link-macro-rx"></block></block>
   <block id="7dd560122213e64b542e95018ff44ab1" category="paragraph">此页面显示了使用Astra Control Service在AWS上托管Red Hat OpenShift (ROSA)的数据保护选项。</block>
   <block id="cd25a3e993cfcb7dc008e56db66965e0" category="section-title">FSx NetApp ONTAP for Red Hat OpenShift Service on AWS (ROSA)</block>
-  <block id="32e1db2193905eaf98856555f070ee3b" category="sidebar">适用于OpenShift虚拟化的数据保护</block>
   <block id="52e49f56ff0478e0156dcd83b1f3765c" category="sidebar">OADP安装</block>
   <block id="3500ba09d0538297440ca620c9dd46bf" category="sidebar">备份</block>
   <block id="2bd339d85ee3b33e513359ce781b60cc" category="sidebar">还原</block>
@@ -20183,10 +20179,6 @@ DGX H100 CPU托盘的后部端口如下所示。其中四个OSFP端口为InfiniB
   <block id="d894351907b5c62a82330f8b48880b61" category="section-title">在OpenShift虚拟化中为VM创建计划备份</block>
   <block id="5ecb8594d45ba6d911bd9416145be11f" category="paragraph">cron表达式07 ***表示每天7：00创建备份。
 此外、还会指定要包含在备份中的空间以及备份的存储位置。因此、使用计划CR而不是备份CR来按指定的时间和频率创建备份。</block>
-  <block id="7bc6014ccd6b125db01c49e268bdcbe8" category="paragraph">创建计划后、该计划将处于启用状态。
-图像：：redhat_openshift_OADP_backup_image3.jpg[Schedule创建]</block>
-  <block id="e6013f4af13aa8a3971fca83b1d02ab7" category="paragraph">备份将按照此计划创建、并可从备份选项卡查看。
-图像：：redhat_openshift_OADP_backup_image4.jpg[Schedule创建]</block>
   <block id="2003f0bb711323d885f4b2f0ae1d61bd" category="section-title">还原到同一命名空间</block>
   <block id="19b526387a9916ff1e3f24e7910f1f12" category="paragraph">要从刚刚创建的备份进行还原、需要创建一个还原自定义资源(CR)。我们需要为其提供一个名称、提供要从中还原的备份的名称、并将restorEPVs设置为true。可以按中所示设置其他参数 <block ref="d4d5c1753093015ad4958595f6604080" category="inline-link-macro-rx"></block>。单击创建按钮。</block>
   <block id="0119ea7355249cd061216800d9972a5d" category="paragraph">当阶段显示完成时、您可以看到虚拟机已还原到创建快照时的状态。(如果备份是在虚拟机运行时创建的、则从备份中还原虚拟机将启动已还原的虚拟机并使其进入运行状态)。VM将还原到同一命名空间。</block>
@@ -20216,23 +20208,14 @@ DGX H100 CPU托盘的后部端口如下所示。其中四个OSFP端口为InfiniB
 要从Web控制台创建密钥，请选择机密，然后单击密钥/值机密。提供凭据名称、密钥和值的值、如图所示。请务必使用S3用户的访问密钥ID和机密访问密钥。正确命名密钥。在以下示例中、系统会创建一个具有名为ONTAP S3-cred据 的ONTAP S3用户凭据的密钥。</block>
   <block id="af88dcba6a1b60fd13dab3b4661894f1" category="image-alt">S3用户凭据的机密</block>
   <block id="59057b98650fa41bca9719fde2c67273" category="image-alt">为S3用户凭据创建密码</block>
-  <block id="283ffaf4a7e7d75161ace0bcfc6321d1" category="paragraph">要通过命令行界面创建名为SG-S3-cred据 的机密、您可以使用以下命令。
-图像：redhat_openshift_OADP_install_image6.jpg[Create使用命令行界面获取S3用户凭据的密码]</block>
-  <block id="85dcf020e0162eb9cc2a68529579d120" category="list-text">接下来，要配置Velero，请从Operators下的菜单项中选择Installed Operators，单击OADP Operator，然后选择Data分别 保护应用程序选项卡。
-图像：：redhat_openshift_OADP_install_image7.jpg[DataProtectionApplication]</block>
-  <block id="4e2b16951fd5a29395afbfc2749925d2" category="paragraph">单击"Create Data分别 保护应用程序"。在表单视图中、为DataProtection应用程序提供一个名称或使用默认名称。
-图像：redhat_openshift_OADP_install_image8.jpg[Create DataSetionApplication]</block>
   <block id="72b64d2ebd0901d2e51026c57dd096fe" category="paragraph">现在转到YAML视图并替换规格信息、如下面的YAML文件示例所示。</block>
   <block id="5597a937099a8099e0a04565b9d02f97" category="paragraph">**用ONTAP S3作为备份位置来配置Velero的YAML文件样本**</block>
   <block id="0b9704b74e90ab5906d1a5fa08177856" category="paragraph">**用StorageGRID S3作为备份位置和快照位置来配置Velero的YAML文件样本**</block>
-  <block id="737c9ca341247cad0069f3a8db7d712f" category="paragraph">上述YAML文件已在规范中相应地配置了以下部分、与上述示例类似</block>
   <block id="a0f9e33cefd69b70382dd17bbaf09cb3" category="paragraph">**备份位置**
 ONTAP S3或StorageGRID S3 (及其凭据和YAML中显示的其他信息)被配置为Velero的默认备份位置。</block>
   <block id="098a52e4f20328bdaf8852e706f9ad80" category="paragraph">**快照位置**
 如果使用容器存储接口(CSI)快照、则无需指定快照位置、因为您将创建一个卷快照类CR来注册CSI驱动程序。在本示例中、您使用的是A作用 力的三端CSI、并且之前已使用三端CSI驱动程序创建了卷eSnap而已。</block>
   <block id="e7e77e84a12b26da5fb80a5965defbec" category="paragraph">确保即使删除了卷Snapshot对象、这些快照也可以持久保留。这可以通过将*DELERionPolicy*设置为保留来实现。否则、删除命名空间将完全丢失以前备份过的所有PVC。</block>
-  <block id="58e9be9afc81874abdc32da0b86e1850" category="paragraph">确保已创建Data놣 rotionApplication且其状态为"病 况：已调节"。
-图像：redhat_openshift_OADP_install_image11.jpg[DataProtectionApplication对象已创建]</block>
   <block id="6967372fdda8370bb5f60d38b150f3b9" category="cell">2024年4月19日</block>
   <block id="830c044146fe93686d0daa926ed99ca4" category="cell">为OpenShift虚拟化中的VM的CI集成添加了新内容</block>
   <block id="1326575b2c1b1308aa89618a6a3bcae9" category="summary">在Red Hat OpenShift虚拟化中使用Cloud Insights监控VM</block>
@@ -20250,8 +20233,6 @@ ONTAP S3或StorageGRID S3 (及其凭据和YAML中显示的其他信息)被配置
   <block id="6a73b5a5ac4acceafec03521beaf766d" category="paragraph">您可以单击后端列下的链接、此链接将直接从后端ONTAP存储中提取数据。</block>
   <block id="fe7809ef7be15f2d6c7bed438b7b3985" category="paragraph">另一种查看所有POD到存储映射的方法是、从Explore下的Observability菜单创建一个All Metrics查询。</block>
   <block id="7086007925346179c177344a212d3bcf" category="paragraph">单击任何链接都将显示ONTP存储中的相应详细信息。例如、单击"storageVirtualMachine"列中的SVM名称将从ONTAP中提取有关SVM的详细信息。单击内部卷名称将在ONTAP中提取有关该卷的详细信息。</block>
-  <block id="8282cb7324bc526a3b51aa07cf722cb9" category="paragraph">备份完成后、其阶段将显示为已完成。
-图像：redhat_openshift_OADP_backup_image1.jpg[Backup completed]</block>
   <block id="f606a8a15d81171e5129dc1280765ea9" category="paragraph">要按计划创建备份、您需要创建计划CR。
 该计划只是一个cron表达式、允许您指定创建备份的时间。用于创建计划CR的YAML示例。</block>
   <block id="ec24608680bd87828f5a7a709d799717" category="image-alt">还原到新命名空间已完成</block>
@@ -20264,8 +20245,6 @@ ONTAP S3或StorageGRID S3 (及其凭据和YAML中显示的其他信息)被配置
   <block id="5741b97a1c3d59400f48ced12bf93d00" category="list-text">ONTAP的数据收集器
 有关完整说明、请参见 <block ref="99ebb95aaa8942e8702a8866e00b0985" category="inline-link-macro-rx"></block></block>
   <block id="0e6ebe29b11446bc982770b6eeb68b91" category="paragraph">此外、如果您使用StorageGRID进行VM备份、则还需要一个用于StorageGRID的数据收集器。</block>
-  <block id="99073ac7dc3a438f9732edfead3ca044" category="paragraph">OADP操作员将创建相应的备份存储位置。创建备份时将使用此位置。
-图像：：redhat_openshift_OADP_install_image12.jpg[BackupStorageLocation已创建]</block>
   <block id="e9cd906bff4168b2db757834569b5474" category="paragraph">本参考文档的这一部分详细介绍了如何将NetApp Cloud Insights与Red Hat OpenShift集群集成以监控OpenShift虚拟化VM。</block>
   <block id="5858ee4031acd7b896faa2d3d2c1a299" category="inline-link">Cloud Insights 文档</block>
   <block id="00911ced9034aa731093735d56a2e06c" category="paragraph">NetApp Cloud Insights 是一款云基础架构监控工具，可让您深入了解整个基础架构。借助 Cloud Insights ，您可以监控，故障排除和优化所有资源，包括公有云和私有数据中心。有关NetApp Cloud Insights的详细信息、请参阅<block ref="68693b67403a80c90005e9f7b1aea49c" category="inline-link-rx"></block>。</block>
@@ -20288,4 +20267,24 @@ Cloud Insights还支持电报作为其收集集成数据的代理。Telegraf 是
   <block id="8701b90c7fdcf3f267913eaa7d7f2492" category="sidebar">使用Cloud Insights监控</block>
   <block id="ad400e9f48073229bddccc88cd839a9b" category="sidebar">与Cloud Insights集成</block>
   <block id="44af4addaf3cb425e2b28b201e741227" category="sidebar">监控功能示例</block>
+  <block id="c04e0f40b83a86fd835680d3df9ce399" category="paragraph">备份完成后、其阶段将显示为已完成。</block>
+  <block id="a2eabcbade98a44462292c4666e62044" category="image-alt">备份已完成</block>
+  <block id="599face14cd53a7849f684fdf7b91e65" category="paragraph">创建计划后、该计划将处于启用状态。</block>
+  <block id="d3d6921625349c57f2e95781861ce577" category="image-alt">已创建计划</block>
+  <block id="2b8a498ff5a5d59604f3b541192e2fb4" category="paragraph">备份将按照此计划创建、并可从备份选项卡查看。</block>
+  <block id="13694d8ba2d767e027aeeac32722eb09" category="paragraph">要通过命令行界面创建名为SG-S3-cred据 的机密、您可以使用以下命令。</block>
+  <block id="cdd00080e6d299ef506ce8a1b74d316d" category="image-alt">使用命令行界面为S3用户凭据创建机密</block>
+  <block id="4d9ccfbdd1fc2da7be47ec9c101274d2" category="list-text">接下来，要配置Velero，请从Operators下的菜单项中选择Installed Operators，单击OADP Operator，然后选择Data分别 保护应用程序选项卡。</block>
+  <block id="9008c35bfe3869440e28fa139fb2d3ec" category="image-alt">DataSetionApplication</block>
+  <block id="39658e507fb56267a59206317ef9b26e" category="paragraph">单击"Create Data分别 保护应用程序"。在表单视图中、为DataProtection应用程序提供一个名称或使用默认名称。</block>
+  <block id="a190a7e1ff0a242b91e3d3a6e2c9095d" category="image-alt">创建DataSetionApplication</block>
+  <block id="9a61266e5f6546757f71bb6329126490" category="paragraph">YAML文件中的规范部分应针对与上述示例类似的以下参数进行适当配置</block>
+  <block id="a68b2348883a87a5ea93dd25acc5cdd6" category="paragraph">**启用CSI插件**</block>
+  <block id="96e71ab67ae223478d46f140d4875a14" category="paragraph">将CSI添加到Velero的DEDEPTO插 件中、以便使用CSI快照备份永久性卷。
+要备份CSI支持的PVC、Velero CSI插件将在设置了**Velero.io/CSI-VOumesnAPshot-class**标签的集群中选择卷SnapshotClass。。</block>
+  <block id="05bd5e78c996c165b2b1a844cb7b14b8" category="paragraph">确保已创建Data놣 rotionApplication且其状态为"病 况：已调节"。</block>
+  <block id="2c1d400031827c3d65ce20bdbb3dc8e6" category="image-alt">已创建DataSetionApplication对象</block>
+  <block id="910eb46960200452a3b203a9e0ccdc76" category="paragraph">OADP操作员将创建相应的备份存储位置。创建备份时将使用此位置。</block>
+  <block id="3a11516868032de940e8bc2e948be30e" category="image-alt">已创建备份存储位置</block>
+  <block id="5d2d4303446e0c5e9645e0b2422a1ad8" category="sidebar">OpenShift虚拟化的数据保护</block>
 </blocks>
