@@ -20267,4 +20267,26 @@ Cloud Insights还支持电报作为其收集集成数据的代理。Telegraf 是
   <block id="3a11516868032de940e8bc2e948be30e" category="image-alt">已创建备份存储位置</block>
   <block id="5d2d4303446e0c5e9645e0b2422a1ad8" category="sidebar">OpenShift虚拟化的数据保护</block>
   <block id="9efbc1b64cbf1bbaf08130fd4c478321" category="paragraph"><block ref="9efbc1b64cbf1bbaf08130fd4c478321" category="inline-link-rx"></block></block>
+  <block id="7150e1290a17ad9e4549acb1a4f4a888" category="example-title">还原到其他存储类</block>
+  <block id="a6b055a2f62dc049defeb05a7d186312" category="paragraph">Velero提供了一种在恢复期间通过指定json修补程序来修改资源的通用功能。json修补程序会在还原之前应用于资源。json修补程序在configmap中指定、而configmap则在restore命令中引用。通过此功能、您可以使用不同的存储类进行还原。</block>
+  <block id="b45b5adeeb9d3b646ac0e2962eed14b8" category="paragraph">在以下示例中、虚拟机在创建期间使用ONTAP NAS作为其磁盘的存储类。此时将创建名为backup1的虚拟机备份。</block>
+  <block id="0f5ab9dea568b63380f582d47142605d" category="image-alt">使用ONTAP NAS的VM</block>
+  <block id="36f3d5f77370ebf54f23222450623d24" category="image-alt">VM备份ONTAP -NAS</block>
+  <block id="8eb0f9243be0e48a55ecbcd42e605c3e" category="paragraph">通过删除虚拟机模拟虚拟机丢失。</block>
+  <block id="67371bfa2c4d892a1d4841cc3ab1de4f" category="paragraph">要使用其他存储类(例如、ONTAP NAS生态存储类)还原VM、需要执行以下两个步骤：</block>
+  <block id="529c8e63075a3c60a8fc833f0c664f87" category="paragraph">**步骤1**</block>
+  <block id="8aac47e6b29cf85fe908aa025bc1db44" category="paragraph">在OpenShift-ADP命名空间中创建配置映射(控制台)、如下所示：
+填写屏幕截图中所示的详细信息：
+选择命名空间：OpenShift-adp
+name：change-storage-class-config (可以是任何名称)
+密钥：change-storage-class-config.yaml：
+值：</block>
+  <block id="281d2e013ca2bbec46f79d7f0c8cfe96" category="image-alt">配置映射UI</block>
+  <block id="9dd92251e4f33d4c989f95e5c2d71788" category="paragraph">生成的配置映射对象应如下所示(命令行界面)：</block>
+  <block id="a164b60352c32f22a83568e6f2405ea1" category="image-alt">配置映射命令行界面</block>
+  <block id="bcb8a9f8aea6e89a60470e3aedd27caf" category="paragraph">创建还原时、此配置映射将应用资源修饰符规则。对于从RHEL开始的所有永久性卷声明、将应用修补程序将存储类名称替换为ONTAP NAS生态。</block>
+  <block id="d685633fbcf8ed1958820e107d3ef519" category="paragraph">**步骤2**</block>
+  <block id="f62abd32a25a95630687a09de6a8a27f" category="paragraph">要恢复VM、请在Velero命令行界面中使用以下命令：</block>
+  <block id="3b87fef5f45775a22e4ab995164459cc" category="paragraph">VM将还原到与使用存储类ONTAP NAS-ECO创建的磁盘相同的命名空间中。</block>
+  <block id="7fe12b8c679f04a968c25b25ee90efc6" category="image-alt">VM还原ONTAP NAS生态</block>
 </blocks>
