@@ -844,7 +844,6 @@
   <block id="c83553858a60514501e9751c0747dea0" category="doc">基本资源分配公平</block>
   <block id="dc12a1ce34c0a7a264de91bc9b933a62" category="paragraph">在本节中，我们会显示，当 `team-d` 请求更多 GPU （它们低于其配额）时，系统会暂停 `team-b` 和 `team-c` 的工作负载，并以公平的方式将其移至待定状态。</block>
   <block id="ccc33823c0dc5e9ee0838a5eaa86f076" category="inline-link-macro">第 4.9 节的测试详细信息</block>
-  <block id="86bbd55ea7850716c0c192b19c86176a" category="paragraph">有关提交作业，使用的容器映像以及执行的命令序列等详细信息，请参见一节 <block ref="94d73a1896276f719be59227f0e93a14" category="inline-link-macro-rx"></block>。</block>
   <block id="b6ea2a2f48a443e7d027bd652ac84762" category="paragraph">下图显示了由于自动负载平衡和预先计划而产生的集群利用率，每个组分配的 GPU 以及待处理作业。我们可以观察到，当所有团队工作负载请求的 GPU 总数超过集群中可用的 GPU 总数时， Run ： AI 的内部公平算法会分别为 `team-b` 和 `team-c` 暂停一个作业，因为它们已达到项目配额。这样可以提供整体较高的集群利用率，而数据科学团队仍在管理员设置的资源限制下工作。</block>
   <block id="d1a54cf8cb2a06c0715d2f042fbf44bd" category="paragraph"><block ref="d1a54cf8cb2a06c0715d2f042fbf44bd" category="inline-image-macro-rx" type="image"></block></block>
   <block id="d52816ece2166f7a2e0eadf58d617df9" category="paragraph">此测试场景的结果显示以下内容：</block>
@@ -914,7 +913,6 @@
   <block id="802125395813e0bec35472d0403ab94e" category="list-text">Jupyter 笔记本电脑</block>
   <block id="91c4a4ef606f959264719f8d084aab0e" category="list-text">运行： AI 容器</block>
   <block id="23edbe937c996eb973ab4c69f9648893" category="list-text">集群已满时显示高利用率</block>
-  <block id="815a27a2c38741e36d920cbea5587384" category="paragraph">有关在测试期间执行的实际命令序列的详细信息，请参见 <block ref="3a65193f11bb9f699d19b0e9a996cd93" category="inline-link-macro-rx"></block>。</block>
   <block id="9d020ce52f8e9ff0d2f2defe3942d660" category="paragraph">提交所有 13 个工作负载后，您可以看到一个容器名称和分配的 GPU 列表，如下图所示。我们有七个培训和六个互动作业，模拟四个数据科学团队，每个团队都有自己的模型运行或开发。对于交互式作业，各个开发人员都在使用 Jupyter 笔记本电脑编写或调试其代码。因此，它适合在不使用过多集群资源的情况下配置 GPU 分段。</block>
   <block id="5deafc9e56279ca519f1e3c351856aa8" category="paragraph"><block ref="5deafc9e56279ca519f1e3c351856aa8" category="inline-image-macro-rx" type="image"></block></block>
   <block id="1aa04853a58b1b9ab0033c7e24b9d929" category="paragraph">此测试场景的结果如下：</block>
@@ -2168,8 +2166,6 @@
   <block id="050060785f2852b203c9e82254f2946a" category="list-text">显示系统如何根据配额之间的比率在超过配额的多个组之间分配公平的集群份额，以便具有较大配额的组获得较大的备用容量份额。</block>
   <block id="9e06f625a31670e60f0a8a09917c3ba0" category="paragraph">结束时 <block ref="26be59a535445b1fffeef12f5e70f3e6" category="inline-link-macro-rx"></block>，有两个工作负载排队：一个用于 `team-b` ，一个用于 `team-c` 。在本节中，我们将对其他工作负载进行排队。</block>
   <block id="286cda6cf9e9438a2cff2827773cfe7a" category="inline-link-macro">第 4.10 节的测试详细信息</block>
-  <block id="0e7a9992269080ceaf2b90c188cbb861" category="paragraph">有关提交作业，使用的容器映像以及执行的命令序列等详细信息，请参见 <block ref="37da92aa18d307c3afbe514e0c6c1f90" category="inline-link-macro-rx"></block>。</block>
-  <block id="b1df8ade330dd8e3c0962d87a58c1ba9" category="paragraph">根据部分提交所有作业时 <block ref="37da92aa18d307c3afbe514e0c6c1f90" category="inline-link-macro-rx"></block>系统信息板显示 `team-A` ， `team-b` 和 `team-c` 所有 GPU 都超过其预设配额。与预设的软配额（ 4 个）相比， `team-A` 占用的 GPU 更多，而 `team-b` 和 `team-c` 每个占用的 GPU 都比其软配额（ 2 个）多两个。分配的过度配额 GPU 的比率等于其预设配额的比率。这是因为系统使用预设配额作为优先级的参考，并在多个团队请求更多 GPU ，超过其配额时相应地进行配置。当企业数据科学团队积极参与 AI 模型的开发和生产时，这种自动负载平衡可以实现公平和优先级划分。</block>
   <block id="6effcb49094093af4699b050b9994a58" category="paragraph"><block ref="6effcb49094093af4699b050b9994a58" category="inline-image-macro-rx" type="image"></block></block>
   <block id="b3be1869ca88e0b5881bc6d1da583426" category="list-text">系统开始将其他团队的工作负载取消队列。</block>
   <block id="d2325970b5cec6b47eb2c10267e3a599" category="list-text">除队顺序根据公平算法来确定，这样 `team-b` 和 `team-c` 会获得相同数量的超配额 GPU （因为它们具有类似的配额）， 而 `team-A` 获得的 GPU 数量是原来的两倍，因为他们的配额是 `team-b` 和 `team-c` 的两倍。</block>
@@ -19516,70 +19512,30 @@ NetApp MetroCluster是一款高可用性和灾难恢复解决方案、可在两�
   <block id="c5fba67fe93c8d014f877258df805278" category="sidebar">VMware Explore中的NetApp会话</block>
   <block id="312acc68148fa022a1a2433045ac2909" category="sidebar">NetApp TV VMware会话</block>
   <block id="7ce9aa2e37f5d6f229413a5ac6836381" category="inline-link-macro">接下来：使用Jarvis、BlueXP Copy and Sync和Nemo Overview构建虚拟助手</block>
-  <block id="4a03ee30ef4da835305c8534548e6347" category="paragraph"><block ref="4a03ee30ef4da835305c8534548e6347" category="inline-link-macro-rx"></block></block>
   <block id="9515e6ca96537d18f6a47819aa47cc22" category="list-text"><block ref="9515e6ca96537d18f6a47819aa47cc22" category="inline-link-macro-rx"></block></block>
   <block id="3d7129df95acd2cd7bb86d4047c105f8" category="list-text"><block ref="3d7129df95acd2cd7bb86d4047c105f8" category="inline-link-macro-rx"></block></block>
   <block id="b8e6da86588e4fe5d778fc4a343aaa80" category="list-text"><block ref="b8e6da86588e4fe5d778fc4a343aaa80" category="inline-link-macro-rx"></block></block>
   <block id="c95998835114a4e50f348f8c5e5686ed" category="inline-link-macro">NVIDIA BasePD文档</block>
   <block id="b6420553f17ebdab39fa9a1825d57651" category="section-title">管理平台服务器</block>
   <block id="3588242b057ae23fa2aff188226f0df3" category="doc">采用NVIDIA技术的NetApp AI</block>
-  <block id="665a75ebe7f2eb08b429734e2cfb1639" category="summary">采用NVIDIA DGX系统的NetApp AI Pod—存储系统设计和大小规划指南</block>
-  <block id="0aeeac6e481ccf5fb94ec4f4b60ebe60" category="inline-link-macro">上一页：采用NVIDIA DGX系统的NetApp AI Pod—架构。</block>
-  <block id="0e612fc72e44ac3b868669c64baeba1f" category="paragraph"><block ref="0e612fc72e44ac3b868669c64baeba1f" category="inline-link-macro-rx"></block></block>
-  <block id="42dc99c097c1b9b9af75ba060788e1f1" category="section-title">存储系统设计</block>
-  <block id="a8bbeb39283cabdf232353640b1912a2" category="paragraph">每个AFF A800存储系统使用每个控制器中的四个100 GbE端口进行连接。每个控制器的两个端口用于从DGX系统访问工作负载数据、每个控制器的两个端口配置为LACP接口组、以支持从管理平台服务器访问集群管理项目和用户主目录。存储系统的所有数据访问均通过NFS提供、其中一个Storage Virtual Machine (SVM)专用于AI工作负载访问、另一个SVM专用于集群管理用途。</block>
-  <block id="67004abc3c020854d6f0ce5c0303d67e" category="paragraph">工作负载SVM总共配置了四个逻辑接口(Logical Interface、Logical Interface、Logical Interface、简称为Logical Interface、简称为Logical Interface、简称为Logical Interface、简称为Logical Interface、简称为Logical Interface、简称为Logical Interface、简称每个物理端口托管一个两个LIP、因此每个控制器上的每个VLAN具有两个LIP。此配置可提供最大带宽、并允许每个LIF故障转移到同一控制器上的另一个端口、以便在发生网络故障时两个控制器保持活动状态。此配置还支持基于RDMA的NFS以启用GPUDirect存储访问。存储容量以一个大型FlexGroup卷的形式配置、该卷跨越两个控制器。此可从SVM上的任何FlexGroup进行访问、DGX A100系统的挂载点会分布在可用的LUN之间、以实现负载平衡。</block>
-  <block id="570a94ea84b9e283c5f0051826733505" category="paragraph">管理SVM仅需要一个LIF、该LIF托管在每个控制器上配置的双端口接口组上。在管理SVM上配置了其他FlexGroup卷、用于存放集群管理项目、例如集群节点映像、系统监控历史数据和最终用户主目录。下图显示了存储系统的逻辑配置。</block>
-  <block id="7775254786443c9bb9d3a8210f791295" category="paragraph"><block ref="7775254786443c9bb9d3a8210f791295" category="inline-image-macro-rx" type="image"></block></block>
   <block id="4534545218c3df22ad30ec5ab0466128" category="section-title">存储系统大小指导</block>
-  <block id="22ba4624feefdfa4ac6f4c2457463981" category="paragraph">此架构可供希望使用NVIDIA DGX系统和NetApp AFF存储系统实施深度学习基础架构的客户和合作伙伴参考。下表显示了每个AFF型号所支持的A100和H100 GPU数量的粗略估计。</block>
-  <block id="0ba478911eb0d5e4ac05f4b07afc5fee" category="paragraph"><block ref="0ba478911eb0d5e4ac05f4b07afc5fee" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="728adfd3607777ad12144223b13e3beb" category="inline-link-macro">此参考架构的先前版本</block>
-  <block id="9bab6352a567b3c48bc08877594fe4ed" category="inline-link-macro">下一步：采用NVIDIA DGX系统的NetApp AI Pod—总结。</block>
-  <block id="81be048c32cf3fb6f8ea022bb0314c88" category="paragraph">如中所示 <block ref="e7d2483a5af77a681a4ce9b70e0123d3" category="inline-link-macro-rx"></block>AFF A800系统可轻松支持八个DGX A100系统生成的深度学习训练工作负载。上述其他存储系统的估计值是根据这些结果计算的、而H100 GPU的估计值是通过将A100系统所需的存储吞吐量增加一倍来计算的。  对于存储性能要求较高的大型部署、可以在一个集群中向NetApp ONTAP集群添加更多AFF系统、最多可添加12个HA对(24个节点)。使用本解决方案中所述的FlexGroup技术、一个24节点集群可以在一个命名空间中提供超过40 PB的吞吐量和高达300 Gbps的吞吐量。其他NetApp存储系统(例如AFF A400、A250和C800)以更低的成本为小型部署提供了更低的性能和/或更高的容量选项。由于ONTAP 9支持混合模式集群、因此客户可以先减少初始占用空间、然后随着容量和性能要求的增长向集群添加更多或更大的存储系统。
-<block ref="73b5ef96476759553df4b1fa88f8c59f" category="inline-link-macro-rx"></block></block>
   <block id="68674fa5fbd6fb83969183d07d48b8cd" category="section-title">NetApp AFF存储系统</block>
   <block id="3b6d33ce139758ecf9b0b83f9ecce001" category="paragraph">NetApp AFF一流的存储系统凭借行业领先的性能、卓越的灵活性、云集成和同类最佳数据管理功能、可帮助IT部门满足企业存储需求。AFF 系统专为闪存而设计、有助于加速、管理和保护业务关键型数据。</block>
   <block id="64dc43320ec1a44c390fafb5e2408f4b" category="section-title">NVIDIA DGX基本POD</block>
   <block id="d90238071267e4279a25de2c6945b227" category="section-title">NVIDIA网络</block>
-  <block id="d347ba1211916e66366029d11b59ba2d" category="summary">ONTAP AI是一款基于NVIDIA BasePOD的企业级参考架构、适用于使用ONTAP AFF存储系统和NVIDIA网络和DGX系统的深度学习和人工智能。</block>
-  <block id="022a857c06271f783a0d38612e98dbc0" category="doc">采用NVIDIA DGX BasePOD的NetApp AI POD—简介</block>
-  <block id="8790c3b96b175989365c226e2f90762d" category="paragraph">NetApp公司Dave Arette</block>
-  <block id="4aca3e6f7db20954268b5cc64ee4dd5e" category="paragraph">由NVIDIA DGX BasePOD&amp;#482和NetApp云互联存储系统提供支持的NetApp AI POD参考架构可消除设计复杂性和猜测性、简化机器学习(ML)和人工智能(AI)工作负载的基础架构部署。ONTAP AI基于NVIDIA DGX BasePOD设计构建、可为下一代工作负载提供卓越的计算性能、并添加了NetApp AFF存储系统、支持客户从小规模入手、无干扰地进行扩展、同时智能地管理从边缘到核心再到云再到云的数据。NetApp AI POD是更广泛的NetApp AI解决方案产品组合的一部分、如下图所示-</block>
-  <block id="df414eefe37bdc243f5daac10fc3d749" category="paragraph"><block ref="df414eefe37bdc243f5daac10fc3d749" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="4745c24df216933624630ee34257b9e3" category="paragraph">本文档介绍了AI POD参考架构的关键组件、系统连接信息和解决方案规模估算指南。本文档面向有意为ML/DL和分析工作负载部署高性能基础架构的NetApp和合作伙伴解决方案工程师以及客户战略决策者。</block>
-  <block id="03479b81af64177030f17debcbe954fd" category="inline-link-macro">下一步：ONTAP AI—硬件组件</block>
-  <block id="4f95edfb679a4d883a14bec5fb0b765f" category="paragraph"><block ref="4f95edfb679a4d883a14bec5fb0b765f" category="inline-link-macro-rx"></block></block>
   <block id="5475410ded0787143601d2206a245532" category="section-title">NVIDIA软件</block>
   <block id="c7bef72157cc39b6eb7c391a393a20d2" category="section-title">NVIDIA基本命令</block>
   <block id="9aeccfb63defa46cb78ffa3611d362c6" category="section-title">NetApp软件</block>
-  <block id="06fccd13fe37c98002ea1b7db4383539" category="summary">采用NVIDIA DGX系统的NetApp AI Pod—总结</block>
-  <block id="29960dc3f77022de2577936fc818e360" category="inline-link-macro">上一页：采用NVIDIA DGX系统的NetApp AI Pod—存储系统设计和大小指导。</block>
-  <block id="a099ae3c8f02e9a97a4d28a54904ee4f" category="paragraph"><block ref="a099ae3c8f02e9a97a4d28a54904ee4f" category="inline-link-macro-rx"></block></block>
-  <block id="949416db0d1989692b36b5f6f8ce5a0f" category="paragraph">DGX BasePOD架构是下一代深度学习平台、需要同等高级的存储和数据管理功能。通过将DGX BasePOD与NetApp AFF系统相结合、此架构几乎可以在任何规模下实施、从一个与AFF A250存储系统配对的DGX A100到一个24节点AFF A800集群上的48个DGX A100系统。结合NetApp ONTAP卓越的云集成和软件定义的功能、AFF支持跨边缘、核心和云端的全套数据管道、助力深度学习项目取得成功。</block>
-  <block id="bbd4de8c111df7a7c885105e16d426eb" category="inline-link-macro">下一步：采用NVIDIA DGX系统的NetApp AI Pod—追加信息。</block>
-  <block id="234027be73c5b020cd4dfbd23082ea4c" category="paragraph"><block ref="234027be73c5b020cd4dfbd23082ea4c" category="inline-link-macro-rx"></block></block>
-  <block id="faf3bfb28373fa64aad8c3c641b272d3" category="summary">采用NVIDIA DGX系统的NetApp AI Pod—从何处查找追加信息</block>
-  <block id="890699b1202f548485a4d15db59e30e9" category="inline-link-macro">上一页：采用NVIDIA DGX系统的NetApp AI Pod—总结。</block>
-  <block id="7ae738bf396314b8df6c0f3531207693" category="paragraph"><block ref="7ae738bf396314b8df6c0f3531207693" category="inline-link-macro-rx"></block></block>
-  <block id="3e25f5537dc80d1324e8b8639d0f3331" category="list-text">ONTAP AI- NetApp通过NVIDIA DGX A100系统验证的架构</block>
-  <block id="81df4cf10cdf43ee92694f3c8c2c5ae8" category="inline-link"><block ref="81df4cf10cdf43ee92694f3c8c2c5ae8" category="inline-link-rx"></block></block>
-  <block id="e4e23e4911dfd012ecb94a958409f0b9" category="paragraph"><block ref="e4e23e4911dfd012ecb94a958409f0b9" category="inline-link-rx"></block></block>
   <block id="5f60faf04d2b972aa0cf8c369cfc6a26" category="inline-link"><block ref="5f60faf04d2b972aa0cf8c369cfc6a26" category="inline-link-rx"></block></block>
   <block id="d99ede023f079413a479e349dcb54616" category="paragraph"><block ref="d99ede023f079413a479e349dcb54616" category="inline-link-rx"></block></block>
   <block id="0ab76d4872db09ecb57fa710fc123418" category="inline-link"><block ref="0ab76d4872db09ecb57fa710fc123418" category="inline-link-rx"></block></block>
   <block id="01bf6d43d7d61e8ecfb56c62edde16aa" category="paragraph"><block ref="01bf6d43d7d61e8ecfb56c62edde16aa" category="inline-link-rx"></block></block>
-  <block id="d33e3a5f8c0cfc60c3e79f3c4a1c7d60" category="list-text">NVIDIA BasePD</block>
   <block id="6ff1278864800ae134fcd2dda1a5e0e9" category="inline-link"><block ref="6ff1278864800ae134fcd2dda1a5e0e9" category="inline-link-rx"></block></block>
   <block id="0c2cd58ffa7f091c420ae61854a0a8db" category="paragraph"><block ref="0c2cd58ffa7f091c420ae61854a0a8db" category="inline-link-rx"></block></block>
-  <block id="fe9aea34e4ae9a0dee450504e80761d5" category="list-text">NVIDIA DGX A100系统</block>
-  <block id="0cc2b112d6c81a7525840f7c4cd76527" category="inline-link"><block ref="0cc2b112d6c81a7525840f7c4cd76527" category="inline-link-rx"></block></block>
-  <block id="64d169ecb4b9b6ca5305f7275294eaae" category="paragraph"><block ref="64d169ecb4b9b6ca5305f7275294eaae" category="inline-link-rx"></block></block>
   <block id="51c8257f6c8ba308b83f9f13b405dad0" category="inline-link"><block ref="51c8257f6c8ba308b83f9f13b405dad0" category="inline-link-rx"></block></block>
   <block id="a19d7568aa9c7e4c1f3bf3e831367115" category="paragraph"><block ref="a19d7568aa9c7e4c1f3bf3e831367115" category="inline-link-rx"></block></block>
   <block id="42c9b161f86365b647172182503d9520" category="inline-link"><block ref="42c9b161f86365b647172182503d9520" category="inline-link-rx"></block></block>
   <block id="f5802e2c53799babc0ac27f6cb392604" category="paragraph"><block ref="f5802e2c53799babc0ac27f6cb392604" category="inline-link-rx"></block></block>
-  <block id="3389dae361af79b04c9c8e7057f60cc6" category="paragraph">*</block>
   <block id="217432d0ec5a422d97fdd8082983c438" category="paragraph">NetApp 解决方案 工程部</block>
   <block id="6190bc67623b848bb7959b33f3f0d2eb" category="list-text"><block ref="6190bc67623b848bb7959b33f3f0d2eb" category="inline-link-macro-rx"></block></block>
   <block id="ff796b13154c28039cc9b13793eda31c" category="inline-link-macro">使用Astra Control Service对带有Amazon FSx存储的ROSA集群上的应用程序进行数据管理 </block>
@@ -19861,7 +19817,6 @@ NetApp MetroCluster是一款高可用性和灾难恢复解决方案、可在两�
   <block id="0c008dad767075dab996c133e44d5d2f" category="cell">vCenter</block>
   <block id="33fe6d8f3148d10c2ff7ce3ff095dd41" category="cell">8.0.1</block>
   <block id="50ce33a86e6915635518e9752cf0a12f" category="cell">24.02.0</block>
-  <block id="d5be180cffbcebeed45fc66b922620ec" category="paragraph"><block ref="d5be180cffbcebeed45fc66b922620ec" category="inline-image-macro-rx" type="image"></block></block>
   <block id="300ff7c5525219cf0316ee35285ce086" category="summary">解决方案提供了有关快速恢复在Azure NetApp Files容量池上使用NFS挂载部署到Azure VM计算实例的Oracle VLDB的概述和详细信息、以暂存备用数据库副本、该副本将通过RMAN不断进行增量合并。</block>
   <block id="af9bda0d447d00102cfa07c616299ce9" category="doc">TR-4990：《使用ANF上的增量合并快速恢复Oracle VLDB》</block>
   <block id="36c33b5f7d9b9effb307d69b5d9bbfcd" category="paragraph">如果您对VLDB的SLA非常感兴趣、并考虑将Oracle数据库迁移到Azure等公共云、则可以使用Microsoft Azure NetApp Files (ANF)等资源设置类似的数据库保护结构、以便暂存备用数据库映像副本。在本文档中、我们将演示如何从ANF容量池配置和导出NFS文件系统、以便挂载到Oracle数据库服务器上、暂存备用数据库副本、以便在主存储发生故障时快速恢复。</block>
@@ -20123,10 +20078,6 @@ DGX H100 CPU托盘的后部端口如下所示。其中四个OSFP端口为InfiniB
 <block ref="593072cec0260f2bb27124338ab043c0" category="inline-link-macro-rx"></block>
 <block ref="6968e35abd1952220c77606158074b41" category="inline-link-macro-rx"></block>
 <block ref="ef09cb46023a74a11707df91db2b15f5" category="inline-link-macro-rx"></block></block>
-  <block id="c3ae34e32e1b64f47fb79db64784fcd5" category="inline-link-macro">使用Asta Control Center通过备份进行灾难恢复的演示视频</block>
-  <block id="ca9d44629d70b9f7b3c3cd14440f8f24" category="paragraph"><block ref="ca9d44629d70b9f7b3c3cd14440f8f24" category="inline-link-macro-rx"></block></block>
-  <block id="7dd560122213e64b542e95018ff44ab1" category="paragraph">此页面显示了使用Astra Control Service在AWS上托管Red Hat OpenShift (ROSA)的数据保护选项。</block>
-  <block id="cd25a3e993cfcb7dc008e56db66965e0" category="section-title">FSx NetApp ONTAP for Red Hat OpenShift Service on AWS (ROSA)</block>
   <block id="52e49f56ff0478e0156dcd83b1f3765c" category="sidebar">OADP安装</block>
   <block id="3500ba09d0538297440ca620c9dd46bf" category="sidebar">备份</block>
   <block id="2bd339d85ee3b33e513359ce781b60cc" category="sidebar">还原</block>
@@ -20289,4 +20240,10 @@ name：change-storage-class-config (可以是任何名称)
   <block id="f62abd32a25a95630687a09de6a8a27f" category="paragraph">要恢复VM、请在Velero命令行界面中使用以下命令：</block>
   <block id="3b87fef5f45775a22e4ab995164459cc" category="paragraph">VM将还原到与使用存储类ONTAP NAS-ECO创建的磁盘相同的命名空间中。</block>
   <block id="7fe12b8c679f04a968c25b25ee90efc6" category="image-alt">VM还原ONTAP NAS生态</block>
+  <block id="6628df15d7a3266db0b4897f7ab50d50" category="paragraph"><block ref="6628df15d7a3266db0b4897f7ab50d50" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="afd5de9b67c9e2934ff9fcf0175a576d" category="paragraph"><block ref="afd5de9b67c9e2934ff9fcf0175a576d" category="inline-link-macro-rx"></block></block>
+  <block id="72879b529fd29ad15a31984e76d8ac98" category="paragraph">有关提交作业，使用的容器映像以及执行的命令序列等详细信息，请参见 <block ref="4a69e55fabddbe5de2ad320fef797766" category="inline-link-macro-rx"></block>。</block>
+  <block id="a15ee8ccfbda203e4a226dc6dfa5fc71" category="paragraph">根据部分提交所有作业时 <block ref="4a69e55fabddbe5de2ad320fef797766" category="inline-link-macro-rx"></block>，则系统信息板会显示此信息<block ref="9320270de4ff6824ae7a21f729fb7d44" prefix=" " category="inline-code"></block>，<block ref="238ff8d9192e9c01e50a8d6d21f1607b" prefix=" " category="inline-code"></block>，和<block ref="3b40d1328b825dda4b761a8e534669b7" prefix=" " category="inline-code"></block> 所有处理器都具有比其预设配额更多的GPU。<block ref="9320270de4ff6824ae7a21f729fb7d44" prefix=" " category="inline-code"></block> 所占用的GPU比其预设的软配额(四个)多四个、而<block ref="238ff8d9192e9c01e50a8d6d21f1607b" prefix=" " category="inline-code"></block> 和<block ref="3b40d1328b825dda4b761a8e534669b7" prefix=" " category="inline-code"></block> 每个CPU占用的GPU比其软配额多两个(两个)。分配的过度配额 GPU 的比率等于其预设配额的比率。这是因为系统使用预设配额作为优先级的参考，并在多个团队请求更多 GPU ，超过其配额时相应地进行配置。当企业数据科学团队积极参与 AI 模型的开发和生产时，这种自动负载平衡可以实现公平和优先级划分。</block>
+  <block id="acf646d3df994a986cb4fb734be3745a" category="paragraph">有关提交作业，使用的容器映像以及执行的命令序列等详细信息，请参见一节 <block ref="f68e50551f9bc140041352f2cf4be5e5" category="inline-link-macro-rx"></block>。</block>
+  <block id="6d0de71c9859630bdaf1ada9a3828222" category="paragraph">有关在测试期间执行的实际命令序列的详细信息，请参见 <block ref="fc7df2d3920af3c66f165cd183a1291d" category="inline-link-macro-rx"></block>。</block>
 </blocks>
