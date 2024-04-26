@@ -1,0 +1,69 @@
+---
+sidebar: sidebar 
+permalink: ai/vector-database-technology-requirement.html 
+keywords: vector database 
+summary: 技术要求—用于NetApp的向量数据库解决方案 
+---
+= 技术要求
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== 技术要求
+
+本文档中执行的大多数验证均使用了下面概述的硬件和软件配置、但性能除外。这些配置可作为指导原则、帮助您设置环境。但是、请注意、具体组件可能会因客户要求而异。
+
+
+
+== 硬件要求
+
+|===
+| 硬件 | 详细信息 
+
+
+| NetApp AFF存储阵列HA对 | * A800
+* ONTAP 9.14.1.
+* 48个3.49 TB SSD -NVM
+*两个灵活组卷：元数据和数据。
+*元数据NFS卷具有12个250 GB的永久性卷。
+*数据是一个ONTAP NAS S3卷 
+
+
+| 6个Fujitsu PRIMERGY RX2540 M4 | * 64个CPU
+*英特尔®至强®金牌6142 CPU @ 2.60GHz
+* 256 GM物理内存
+* 1个100GbE网络端口 
+
+
+| 网络 | 100 GbE 
+
+
+| StorageGRID | * 1个SG100、3个SGF6024
+* 3 x 24 x 7.68 TB 
+|===
+
+
+== 软件要求
+
+|===
+| 软件 | 详细信息 
+
+
+| Milvus集群 | *图表- Milvus-4.1.11.
+*应用程序版本–2.3.4
+*依赖包、如bookkeeper、zookeeper、pulsar、etic、proxy" querynnode、worker 
+
+
+| Kubernetes | * 5节点K8s集群
+* 1个主节点和4个工作节点
+*版本–1.7.2 
+
+
+| Python | *3.10.12. 
+|===

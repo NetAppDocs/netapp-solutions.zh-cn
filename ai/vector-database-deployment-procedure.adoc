@@ -1,0 +1,61 @@
+---
+sidebar: sidebar 
+permalink: ai/vector-database-deployment-procedure.html 
+keywords: vector database, vector-database-deployment-procedure 
+summary: vector-database－Deployment－Procedure－用于NetApp的向量数据库解决方案 
+---
+= 部署操作步骤
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+
+
+== 部署操作步骤
+
+在本部署部分中、我们将Milvus向量数据库与Kubbernetes一起用于实验室设置、如下所示。
+
+image:Deployment_architecture.png["错误：缺少图形映像"]
+
+NetApp存储可为集群提供存储、以保留客户数据和Milvus集群数据。
+
+
+
+=== NetApp存储设置—ONTAP
+
+* 存储系统初始化
+* 创建Storage Virtual Machine (SVM)
+* 分配逻辑网络接口
+* NFS、S3配置和许可
+
+
+对于NFS (网络文件系统)、请遵循以下步骤：
+
+. 为NFSv4创建FlexGroup卷。在此验证设置中、我们使用了48个SSD、1个SSD专用于控制器的根卷、47个SSD分布于NFSv4]]。验证FlexGroup卷的NFS导出策略是否具有Kubernetes (K8s)节点网络的读/写权限。如果未设置这些权限、请为K8s节点网络授予读/写(RW)权限。
+. 在所有K8s节点上、创建一个文件夹、并通过每个K8s节点上的逻辑接口(Logical Interface、LIF)将FlexGroup卷挂载到此文件夹中。
+
+
+对于NAS S3 (网络连接存储简单存储服务)、请遵循以下步骤：
+
+. 为NFS创建FlexGroup卷。
+. 使用"vserver object-store-server creation"命令设置启用了HTTP且管理状态设置为"UP "的对象存储服务器。您可以选择启用HTTPS并设置自定义侦听器端口。
+. 使用vserver object-store-server user create -user <username>命令创建object-store-server用户。
+. 要获取访问密钥和机密密钥、可以运行以下命令：set diag；vserver object-store-server user show -user <username>。但是、接下来、这些密钥将在用户创建过程中提供、也可以使用REST API调用来检索。
+. 使用在步骤2中创建的用户建立一个对象存储服务器组并授予访问权限。在此示例中、我们提供了"FullAccess"。
+. 通过将NAS分段的类型设置为"NAS "并提供NFS3卷的路径来创建NAS分段。也可以使用S3存储分段来实现此目的。
+
+
+
+
+=== NetApp存储设置—StorageGRID
+
+. 安装StorageGRID软件。
+. 创建租户和存储分段。
+. 创建具有所需权限的用户。
+
+
+请在中查看更多详细信息 https://docs.netapp.com/us-en/storagegrid-116/primer/index.html[]
