@@ -20246,4 +20246,155 @@ name：change-storage-class-config (可以是任何名称)
   <block id="a15ee8ccfbda203e4a226dc6dfa5fc71" category="paragraph">根据部分提交所有作业时 <block ref="4a69e55fabddbe5de2ad320fef797766" category="inline-link-macro-rx"></block>，则系统信息板会显示此信息<block ref="9320270de4ff6824ae7a21f729fb7d44" prefix=" " category="inline-code"></block>，<block ref="238ff8d9192e9c01e50a8d6d21f1607b" prefix=" " category="inline-code"></block>，和<block ref="3b40d1328b825dda4b761a8e534669b7" prefix=" " category="inline-code"></block> 所有处理器都具有比其预设配额更多的GPU。<block ref="9320270de4ff6824ae7a21f729fb7d44" prefix=" " category="inline-code"></block> 所占用的GPU比其预设的软配额(四个)多四个、而<block ref="238ff8d9192e9c01e50a8d6d21f1607b" prefix=" " category="inline-code"></block> 和<block ref="3b40d1328b825dda4b761a8e534669b7" prefix=" " category="inline-code"></block> 每个CPU占用的GPU比其软配额多两个(两个)。分配的过度配额 GPU 的比率等于其预设配额的比率。这是因为系统使用预设配额作为优先级的参考，并在多个团队请求更多 GPU ，超过其配额时相应地进行配置。当企业数据科学团队积极参与 AI 模型的开发和生产时，这种自动负载平衡可以实现公平和优先级划分。</block>
   <block id="acf646d3df994a986cb4fb734be3745a" category="paragraph">有关提交作业，使用的容器映像以及执行的命令序列等详细信息，请参见一节 <block ref="f68e50551f9bc140041352f2cf4be5e5" category="inline-link-macro-rx"></block>。</block>
   <block id="6d0de71c9859630bdaf1ada9a3828222" category="paragraph">有关在测试期间执行的实际命令序列的详细信息，请参见 <block ref="fc7df2d3920af3c66f165cd183a1291d" category="inline-link-macro-rx"></block>。</block>
+  <block id="d49b03bd02e3a29931f35731ab14ac7a" category="doc">将VM迁移到ONTAP数据存储库</block>
+  <block id="54d68277c4e43b3c370ab8964ab25cad" category="paragraph">作者：Sresh Thoppay</block>
+  <block id="204cf02ce9cbbfd6e0836ca9884ccf66" category="paragraph">VMware vSphere by Broadcom支持使用VMFS、NFS和VVOl数据存储库托管虚拟机。客户可以选择使用超融合基础架构或集中式共享存储系统创建这些数据存储库。客户经常看到在基于ONTAP的存储系统上托管的价值、可以为虚拟机提供节省空间的快照和克隆、跨数据中心和云选择各种部署模式的能力、监控和警报工具的运营效率、用于检查VM数据的安全性、监管和可选合规性工具、 等等。</block>
+  <block id="890da9fed14fe309a0fdde943fb5d659" category="paragraph">可以使用适用于VMware vSphere的SnapCenter插件(SCV)保护ONTAP数据存储库上托管的VM。选择控制阀创建基于存储的快照、并复制到远程ONTAP存储系统。可以从主存储系统或二级存储系统执行还原。</block>
+  <block id="fcc257d7549568e3c425f55212efb787" category="paragraph">客户可以灵活地选择或Cloud Insights操作系统、也可以同时选择这两者或其他第三方工具、这些工具使用ONTAP API来进行故障排除、监控性能、报告和警报通知功能。</block>
+  <block id="b819a27fdd8e2f9eaa3407b548fe624b" category="paragraph">客户可以使用ONTAP工具vCenter插件或其API轻松配置数据存储库、即使ONTAP数据存储库已启动、也可以将虚拟机迁移到该数据存储库。</block>
+  <block id="75d66cd35b187dcc4b725b210065df47" category="inline-link">VMotion通知</block>
+  <block id="80bbb1148c2b39d0b565b6fa03862d4f" category="admonition">使用外部管理工具(如阿里阿自动化、Tanzu或其他Kubornetes类型)部署的某些VM通常取决于VM存储策略。如果在同一VM存储策略内的数据存储库之间进行迁移、则对应用程序的影响应较小。请与应用程序所有者联系、以将这些VM正确迁移到新数据存储库。推出vSphere 8<block ref="621223852bf67beddd0524df07ac442b" category="inline-link-rx"></block> 为vMotion准备应用程序。</block>
+  <block id="f6c05c1c9189db18461e6c942d451c95" category="section-title">网络要求</block>
+  <block id="a1003c791b34c3785b58d9768efcbf03" category="example-title">使用vMotion迁移VM</block>
+  <block id="a7652fc6c491d79b3c3c4a99cb76962e" category="paragraph">我们假定已为ONTAP数据存储库设置了双存储网络、以提供连接、容错和性能提升。</block>
+  <block id="dde61dad088e88e4aabbeee9c78dfca1" category="paragraph">在vSphere主机之间迁移VM也可通过vSphere主机的VMKernel接口进行。对于热迁移(已启动虚拟机)、将使用启用了vMotion服务的VMKernel接口；对于冷迁移(已关闭虚拟机)、将使用启用了配置服务的VMKernel接口来移动数据。如果未找到有效接口、则会使用管理接口移动某些使用情形可能不需要的数据。</block>
+  <block id="32f8b4cf2402d5eb90cc90d39131168e" category="image-alt">具有已启用服务的VMkernel</block>
+  <block id="16fa66dd55eea6dcf504a1d077edd4c8" category="paragraph">编辑VMKernel接口时、可以使用此处的选项启用所需的服务。</block>
+  <block id="941e117067da98712335addd3eb2874d" category="image-alt">VMkernel服务选项</block>
+  <block id="96bb6ffddff2c3d6965d4080b9aeee05" category="admonition">确保至少有两个高速活动上行链路NIC可用于vMotion和配置VMkernel接口所使用的端口组。</block>
+  <block id="407f1754d47b022d224184ba78043466" category="section-title">虚拟机迁移方案</block>
+  <block id="60a392608625b9eda74d86f2c986cbae" category="paragraph">无论虚拟机的电源状态如何、通常都会使用VMotion来迁移虚拟机。下面提供了适用于特定情形的其他注意事项和迁移操作步骤。</block>
+  <block id="60a503f29372372274084ecd49ed17d1" category="inline-link">vSphere vMotion的虚拟机条件和限制</block>
+  <block id="0c14b5f3504d3c6600a08f3df7d41c0c" category="admonition">了解<block ref="e0cb2315491f681731a706f563808c47" category="inline-link-rx"></block> 在继续执行任何VM迁移选项之前。</block>
+  <block id="b54d9fc1cdef0a24fc13ccfcc05a04ca" category="example-title">从特定vSphere数据存储库迁移虚拟机</block>
+  <block id="1209c19104cf806da2509fa4183cf968" category="paragraph">按照下面的操作步骤使用UI将VM迁移到新数据存储库。</block>
+  <block id="9f54af6392a5e7279ec1b02fb2298987" category="list-text">使用vSphere Web Client、从存储清单中选择数据存储库、然后单击VM选项卡。</block>
+  <block id="790aafeec785d0aa5fdfb6623aecca43" category="image-alt">特定数据存储库上的VM</block>
+  <block id="897f1852c8668105ad2a65f3b4fa48d3" category="list-text">选择需要迁移的VM、然后右键单击以选择迁移选项。</block>
+  <block id="5b45431eb9e43c0a6c8e25ebeec30931" category="image-alt">要迁移的VM</block>
+  <block id="319bdcf124675442ec6c92d4d13ea0fc" category="list-text">选择仅更改存储的选项、然后单击下一步</block>
+  <block id="f01ff7c5824aa7e336bb2c63605af566" category="image-alt">仅更改存储</block>
+  <block id="a9f42c8f26c6400571da2659cf9304b5" category="list-text">选择所需的虚拟机存储策略、然后选择兼容的数据存储库。单击下一步。</block>
+  <block id="42b9f39f790b84524255a3bc2ab8a0ad" category="image-alt">符合虚拟机存储策略的数据存储库</block>
+  <block id="44deb0f29e9f172ee448f0db4c874fcd" category="list-text">查看并单击完成。</block>
+  <block id="bc23a7167da832f427ffc4fa76d9ef6d" category="image-alt">存储迁移回顾</block>
+  <block id="0cacdcaa9d3e9fe0bf42cf374b6cbe40" category="paragraph">要使用PowerCLI迁移VM、请参见以下示例脚本。</block>
+  <block id="8a1755b488b0f6539ec19c5a97bf121e" category="example-title">在同一vSphere集群中迁移VM</block>
+  <block id="58b2178d121a8d9a1acd0e9914e2d9a3" category="list-text">使用vSphere Web Client、从主机和集群清单中选择集群、然后单击VM选项卡。</block>
+  <block id="449cadb2d3f338e7c1c5191df927af17" category="image-alt">特定集群上的VM</block>
+  <block id="abd56d7535056b175963af8675f32417" category="admonition">如果数据存储库集群与完全自动化的存储DRS (动态资源计划)结合使用、并且这两个(源和目标)数据存储库的类型相同(VMS/NFS/VVOV)、请将这两个数据存储库保留在同一存储集群中、并通过在源上启用维护模式从源数据存储库迁移VM。经验与处理计算主机以进行维护的方式类似。</block>
+  <block id="9f6fd7041d2c3ca675247d6e96769bbb" category="example-title">在多个vSphere集群之间迁移VM</block>
+  <block id="c1bd08cef6ea55ad141205bb4652da6f" category="inline-link">CPU兼容性和vSphere增强型vMotion兼容性</block>
+  <block id="09ce712d38435c43c14330eec53eac63" category="admonition">请参见<block ref="e23eefa452e620c7bec0358099045012" category="inline-link-rx"></block> 源主机和目标主机的CPU系列或型号不同。</block>
+  <block id="a33e2de71bc4a1dd5ee6184e1a98ebb6" category="list-text">选择更改计算资源和存储的选项、然后单击"Next"(下一步)</block>
+  <block id="a5bd22742fd4e0f4ecb0c61b99a2c288" category="image-alt">更改计算和存储</block>
+  <block id="fd01f71c33a35b5c16d4ecaf7ce1a13e" category="list-text">导航并选择要迁移的正确集群。</block>
+  <block id="ef1457e12341de535ac7ae0516675283" category="image-alt">选择目标集群</block>
+  <block id="5414b98fd86dc083de07b88f343fb651" category="list-text">选择VM文件夹以放置目标VM。</block>
+  <block id="464e747fad140eb886cff9ec3680d475" category="image-alt">选择目标VM文件夹</block>
+  <block id="d32dfec856eea052d20d2b8906fd379b" category="list-text">选择目标端口组。</block>
+  <block id="94dc8485375f9bbfd9b9284b678097cd" category="image-alt">选择目标端口组</block>
+  <block id="69974531d6c2e078a7a0cde100095d1e" category="example-title">在同一SSO域中的vCenter Server之间迁移VM</block>
+  <block id="e4991f515597208b8d5688673bd1ac21" category="paragraph">按照下面的操作步骤将VM迁移到同一vSphere Client UI上列出的新vCenter Server。</block>
+  <block id="668251322616477782480694c04ab4eb" category="inline-link">有关vCenter Server实例之间vMotion的要求的vSphere文档</block>
+  <block id="ab57d919a9919ca4017920aac2a8e4ee" category="admonition">有关源vCenter版本和目标vCenter版本等其他要求、请查看<block ref="fe891a9f77ed004b24005fa491da9680" category="inline-link-rx"></block></block>
+  <block id="8ec58dea3da0b291945f34e7c8168d60" category="list-text">在目标vCenter Server中选择目标集群。</block>
+  <block id="905bc5c946741b9eafdefa1971a6baa7" category="list-text">查看迁移选项、然后单击完成。</block>
+  <block id="29666ff4ecae595758733eced0aa5ad9" category="example-title">在不同SSO域中的vCenter Server之间迁移VM</block>
+  <block id="1c910c6be757ce73c14710c8122dca21" category="inline-link">有关Advanced Cross vCenter vMotion的vSphere文档</block>
+  <block id="c9f306cb665dd9d71a91c89759c68f93" category="admonition">此场景假定vCenter Server之间存在通信。否则、请检查下面列出的跨数据中心位置方案。有关前提条件、请检查<block ref="bccd34eef164fe095ec62ac5a42de8c6" category="inline-link-rx"></block></block>
+  <block id="e406710b15a07b21d4825ff2f964f699" category="paragraph">按照下面的操作步骤使用UI将VM迁移到不同的vCenter Server。</block>
+  <block id="498119a32e8d664cab00250b219c58d9" category="list-text">使用vSphere Web Client、选择源vCenter服务器、然后单击VM选项卡。</block>
+  <block id="ba24b739273947a5409988bbd21c2aab" category="image-alt">源vCenter上的VM</block>
+  <block id="6881953e56fc32f6e5f25e09d700f15e" category="list-text">选择选项"跨vCenter Server导出"、然后单击"下一步"</block>
+  <block id="9a14e6dcef5d5c8983b859a7a239c6c1" category="image-alt">跨vCenter Server导出</block>
+  <block id="6367b892ffc53d7adaa5a0c9e9b0a02b" category="inline-link">使用高级跨vCenter vMotion导入或克隆虚拟机</block>
+  <block id="a6f37f2903b9cc572dde89263d795b1e" category="admonition">也可以从目标vCenter Server导入虚拟机。对于该操作步骤、请检查<block ref="9290a9639d8037eccb6a45858e00f5cb" category="inline-link-rx"></block></block>
+  <block id="34f454ce9807d9bed3fecbe0313c4375" category="list-text">提供vCenter凭据详细信息、然后单击Login。</block>
+  <block id="dcf2f84dc2ed5c13d78c9e07b650b7f3" category="image-alt">vCenter凭据</block>
+  <block id="fb33443398c997be3189bb0bcb56ba84" category="list-text">确认并接受vCenter Server的SSL证书指纹</block>
+  <block id="756dd24c655b10ff50e1080c86006a66" category="image-alt">SSL指纹</block>
+  <block id="564e50c5976559e86167f9d548ad6370" category="list-text">展开目标vCenter并选择目标计算集群。</block>
+  <block id="038da2ca8132ab4cf9fe19e675224901" category="image-alt">选择目标计算集群</block>
+  <block id="1d12db92b7ccf2af58b588c91e5bd82e" category="list-text">根据虚拟机存储策略选择目标数据存储库。</block>
+  <block id="66b61996ce6209d7510dea647e03b769" category="image-alt">选择目标数据存储库</block>
+  <block id="78db36cfcb0440faa85c0516734b05a6" category="list-text">选择目标VM文件夹。</block>
+  <block id="72f9e1c10b495969d9ef7f5a79361ad5" category="image-alt">选择目标VM文件夹</block>
+  <block id="d94d7e93cfd4acf342602ffbff856d37" category="list-text">为每个网络接口卡映射选择VM端口组。</block>
+  <block id="ed2a8b1e8fab33e7adc52b0ff40ae5f5" category="image-alt">选择目标端口组</block>
+  <block id="ebb73e5c897390410510df8f70d6d74a" category="list-text">查看并单击完成、在vCenter Server之间启动vMotion。</block>
+  <block id="eba2a6f8bfc6e572c3f1d9fa67ec85d4" category="image-alt">Cross vMotion Operation Review (交叉vMotion操作检查)</block>
+  <block id="4d857a0e593650e074a7ffe9773c3632" category="example-title">跨数据中心位置迁移VM</block>
+  <block id="1237d2428c491a7ca754fb6a3839d446" category="list-text">如果通过使用NSX联合或其他选项在数据中心之间扩展第2层流量、请按照操作步骤在vCenter Server之间迁移VM。</block>
+  <block id="e0feb3f150778c55cd2bdaa7800bd5d7" category="inline-link">迁移类型</block>
+  <block id="3bd5eca5cdbfa2dd714a010bdaa9345d" category="list-text">HCX提供各种功能<block ref="3cd60fb0fe6feb45b3393ab8f79e019c" category="inline-link-rx"></block> 在数据中心之间使用Replication Assisted vMotion移动VM、而不会出现任何停机。</block>
+  <block id="92ff10610f02d69d0210f44405b7168f" category="inline-link">Site Recovery Manager （ SRM ）</block>
+  <block id="53e1f72e49bbe9331d452ecc588b922d" category="list-text"><block ref="a4331ca67aafd96e8a301ab1a33f3509" category="inline-link-rx"></block> 通常用于灾难恢复、也经常用于利用基于存储阵列的复制进行计划内迁移。</block>
+  <block id="06c32184313f549852daf2e04dcf218b" category="inline-link">适用于IO的vSphere API (VAIO)</block>
+  <block id="35f5ef3f322557bcff13138a62b59ef8" category="list-text">持续数据保护(Continuous Data Protection、CDP)产品使用<block ref="8ebb1cee71de54be4835de36a0290b69" category="inline-link-rx"></block> 截获数据并将副本发送到远程位置、以实现近乎为零的RPO解决方案。</block>
+  <block id="87a66c45cb30347915a4014838a0f4d9" category="list-text">还可以使用备份和恢复产品。但通常会导致较长的RTO。</block>
+  <block id="6df60b22eb19b43d8974d55e9a795fb5" category="inline-link">BlueXP灾难恢复即服务(DRaaS)</block>
+  <block id="d08685f539f3ad65ab57968b61eba3f9" category="list-text"><block ref="69feacfcc51ddf6e1d23ac643481c973" category="inline-link-rx"></block> 利用基于存储阵列的复制并自动执行某些任务、以恢复目标站点上的VM。</block>
+  <block id="39a7eb71e665b94466266b569e781f07" category="example-title">在混合云环境中迁移VM</block>
+  <block id="72ef6588eba130fb47ce1f5172b69be2" category="inline-link">配置混合链接模式</block>
+  <block id="0ae4dbb29780eba3f98ffdae192d1e85" category="list-text"><block ref="044e7f3c76e00fe37ca96c5420cef90d" category="inline-link-rx"></block> 然后按照的操作步骤进行操作 <block ref="dcf4a615f787596fc0e523e6a8915b60" category="inline-link-macro-rx"></block></block>
+  <block id="0815ed3077a37c90c4f61274fec19467" category="list-text">HCX提供各种功能<block ref="3cd60fb0fe6feb45b3393ab8f79e019c" category="inline-link-rx"></block> 在数据中心之间使用Replication Assisted vMotion、以便在VM启动时移动VM。</block>
+  <block id="edf54c782dbd49c240beed36e32356d4" category="list-text"><block ref="aa69f95f3441e9158198c8fbcd79d1d9" category="inline-link-rx"></block> [TR 4942：使用VMware HCX将工作负载迁移到FSx ONTAP数据存储库]</block>
+  <block id="fb26d4a91849b5222c7cc3e697f73e9e" category="list-text"><block ref="fa614abc6b366c7a8ad7d9f802cdd96f" category="inline-link-rx"></block> [TR-4940：《使用VMware HCX将工作负载迁移到Azure NetApp Files数据存储库—快速入门指南》]</block>
+  <block id="0cc35c23da2cbd5d78bedf2bc7ec0265" category="list-text"><block ref="19929a6e4c99723d808e8bb22cd6ada1" category="inline-link-rx"></block> [使用VMware HCX将工作负载迁移到Google Cloud VMware Engine上的NetApp云卷服务数据存储库—快速入门指南]</block>
+  <block id="c9aa8865357f8d28a39b515e32e322fa" category="list-text">使用受支持的持续数据保护(Continuous Data Protection、CDP)产品<block ref="8ebb1cee71de54be4835de36a0290b69" category="inline-link-rx"></block> 截获数据并将副本发送到远程位置、以实现近乎为零的RPO解决方案。</block>
+  <block id="548622601625d0572232ff5e88f43cfc" category="admonition">如果源VM驻留在块VVOR数据存储库上、则可以使用SnapMirror将其复制到其他受支持的云提供商的Amazon FSx for NetApp ONTAP或Cloud Volumes ONTAP (CVO)、并将其用作云原生VM的iSCSI卷。</block>
+  <block id="4b906f2763db0ad5b2cd7b3e4a94e370" category="section-title">VM模板迁移方案</block>
+  <block id="2beb4533477854135dc786d19e56f54f" category="paragraph">VM模板可以由vCenter Server或内容库进行管理。VM模板、VF和OVA模板的分发、其他类型的文件通过将其发布到本地内容库中来处理、远程内容库可以订阅。</block>
+  <block id="69aaf7a25ecba3b46f091acc2a26a375" category="list-text">存储在vCenter清单中的VM模板可以转换为VM并使用VM迁移选项。</block>
+  <block id="943aaaf14a7b6774218736f11d00128f" category="list-text">OVF和OVA模板、则可以将存储在内容库中的其他类型的文件克隆到其他内容库。</block>
+  <block id="cfe857baa4de93f801753d9bfd30d78e" category="list-text">内容库VM模板可以托管在任何数据存储库上、需要将其添加到新的内容库中。</block>
+  <block id="7e0919921d3c9a2aef87040ac9bf5f80" category="example-title">迁移数据存储库上托管的VM模板</block>
+  <block id="21177e86f717d23724774d73a0800c3a" category="list-text">在vSphere Web Client中、右键单击VM and Template文件夹视图下的VM模板、然后选择要转换为VM的选项。</block>
+  <block id="eec997a307c93d2a7e3b7cd9f25a6307" category="image-alt">将VM模板转换为VM</block>
+  <block id="be9fd3f8886256221d4e932cf339724a" category="list-text">将其转换为虚拟机后、请按照虚拟机迁移选项进行操作。</block>
+  <block id="2a83c46873f4dd078b9c4e000af614cd" category="example-title">克隆内容库项目</block>
+  <block id="96493622abfb35cd9b4d38122c28c6eb" category="list-text">在vSphere Web Client中、选择内容库</block>
+  <block id="3a22b4031bea0fd8f705f32fe45397e4" category="image-alt">内容库选择</block>
+  <block id="ee4734d24f979dc096ebe764cc2dc30f" category="list-text">选择要克隆项目的内容库</block>
+  <block id="46f4c7aed6bf09d2989a2d223649d910" category="list-text">右键单击该项目，然后单击“Clone Item (克隆项目)”。</block>
+  <block id="029d7ece4004248369beb2eae047063e" category="image-alt">克隆内容库项目</block>
+  <block id="da42d9ba17908a32a08db32c8a9c2ada" category="admonition">如果使用操作菜单、请确保列出正确的目标对象以执行操作。</block>
+  <block id="02afe2bc03a35181a52f02b50a6ba678" category="list-text">选择目标内容库、然后单击确定。</block>
+  <block id="9138c408681dceaa26ff381fc0b1b8c1" category="image-alt">选择目标内容库</block>
+  <block id="f807729efd88585dea30094890b0b720" category="list-text">验证项目是否可用于目标内容库。</block>
+  <block id="787a396ffcf3ffeca0f5904980751f1f" category="image-alt">验证克隆项</block>
+  <block id="409e8a1acb8f8c223147cf43f2316437" category="paragraph">以下是将内容库中的内容库项目从CL01复制到CL02的PowerCLI脚本示例。</block>
+  <block id="b781f7a1513ea04287a8c6d1dd3081be" category="example-title">在内容库中将VM添加为模板</block>
+  <block id="2e1700a6761ff9d108dd97f2a584bdf9" category="list-text">在vSphere Web Client中、选择虚拟机、然后右键单击以选择"Clone as Template in Library (在库中克隆为模板)"</block>
+  <block id="73da111dc3ec824e3b0bed6ebdf4461c" category="image-alt">VM克隆为libary中的模板</block>
+  <block id="2cf7310335b47fd818497808d4753dd1" category="admonition">如果选择将VM模板克隆到libary中、则它只能将其存储为VF和OVA模板、而不能存储为VM模板。</block>
+  <block id="64f74f21a516453c3e0e651802577261" category="list-text">确认选择"Template type"(模板类型)作为"VM Template "(VM模板)、然后按照" Answering the wizard"(回答向导)完成此操作</block>
+  <block id="98e04836ab8cd3209aa7fa6295b4389d" category="image-alt">模板类型选择</block>
+  <block id="22ee93f09388f930aa163b6fbcf82288" category="inline-link">《vSphere VM管理指南》</block>
+  <block id="494b77ce135ad96a652ab9647e5e25f3" category="admonition">有关内容库中VM模板的其他详细信息、请查看<block ref="c284cacffafdeb5d7a286a9127e38521" category="inline-link-rx"></block></block>
+  <block id="36be1a9a089ef5749ee2801cebb76989" category="example-title">从第三方存储系统(包括vSAN)迁移到ONTAP数据存储库。</block>
+  <block id="8d529016191c5d8888d2b3cee0d947cc" category="list-text">根据ONTAP数据存储库的配置位置、从上面选择虚拟机迁移选项。</block>
+  <block id="82154dec8199b96d4b6fc6e680b3987f" category="example-title">从先前版本迁移到最新版本的vSphere。</block>
+  <block id="5109f11ddb7fa395a2b9702dd7da5188" category="list-text">如果无法进行原位升级、可以启动新环境并使用上述迁移选项。</block>
+  <block id="334bd7f3fcfccda29c4ee8976c9828cb" category="admonition">在"跨vCenter迁移"选项中、如果源上没有导出选项、则从目标导入。对于该操作步骤、请检查<block ref="9290a9639d8037eccb6a45858e00f5cb" category="inline-link-rx"></block></block>
+  <block id="fcfd0c15962db1f564732b4025884f01" category="example-title">迁移到VCF工作负载域。</block>
+  <block id="67885add60f172422ab38b3902e15ebe" category="list-text">将VM从每个vSphere集群迁移到目标工作负载域。</block>
+  <block id="ed0e87b54c5aad3a24966d14ebf411a5" category="inline-link">配置用于桥接的边缘VM</block>
+  <block id="19de566bd971c51837ce2deb47067778" category="admonition">要与源vCenter上其他集群上的现有虚拟机进行网络通信、请通过将源vCenter vSphere主机添加到传输区域来扩展NSX分段、或者使用边缘上的L2网桥在VLAN中进行L2通信。查看的NSX文档<block ref="bb2820de2f23f7b0baf46c5e8a60841a" category="inline-link-rx"></block></block>
+  <block id="bc9119ed58244e2689047c3cedd83108" category="inline-link">vSphere虚拟机迁移</block>
+  <block id="90ff984679593568b4363d81214593c7" category="inline-link">vSphere 8 for vMotion中的新增功能</block>
+  <block id="3530a6bb587bbd3bccbd4f5c5a3313fe" category="inline-link">vSphere vMotion资源</block>
+  <block id="3a231af9bfa3b8f20d401bc62fdd9c21" category="inline-link">NSX联合中的第0层网关配置</block>
+  <block id="4c7b9062bf6dec81cf8f1f612748c4ea" category="inline-link">《HCX 4.8用户指南》</block>
+  <block id="4617dd5a7193927c5552182931541c9c" category="inline-link">VMware Site Recovery Manager 文档</block>
+  <block id="9cbdaaae1425029c06e92fc0ff0ff025" category="inline-link">适用于VMware的BlueXP灾难恢复</block>
+  <block id="82f8578ded21713de0f5ef6be76e3c35" category="paragraph"><block ref="737bdbf6f9dcb079099f0cc0c45b3e20" category="inline-link-rx"></block>
+<block ref="d27dd599aabe2e126f2234fd46858e0b" category="inline-link-rx"></block>
+<block ref="d2b062be46952e71b615056bb86e0f22" category="inline-link-rx"></block>
+<block ref="1c850a6572152069960afafbf7b9cafd" category="inline-link-rx"></block>
+<block ref="17002551c272e5801f1939557c549c43" category="inline-link-rx"></block>
+<block ref="a1b160da533b2cfee0734b4e536da205" category="inline-link-rx"></block>
+<block ref="c041b58a139d19e8eb3afdf1c5f3b721" category="inline-link-rx"></block></block>
+  <block id="5ccca54298e375044707defdae8151e1" category="sidebar">将VM迁移到ONTAP数据存储库</block>
 </blocks>
