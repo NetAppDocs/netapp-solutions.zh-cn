@@ -1,0 +1,110 @@
+---
+sidebar: sidebar 
+permalink: rhhc/on-premises/data-protection.html 
+keywords: NetApp Solutions, redhat OpenShift, red hat OpenShift, redhat openshift container platform, ocp, openshift container platform, Advanced Cluster Management, ACM, Hub Cluster, containers, container workloads, VMware, customer managed storage, ONTAP 
+summary:  
+---
+= 使用Astra保护数据
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+[role="lead"]
+此页面显示了使用Asta Control Center (ACC)在VMware vSphere上运行的基于Red Hat OpenShift容器的应用程序的数据保护选项。
+
+随着用户利用Red Hat OpenShift对其应用程序进行现代化改造、应制定数据保护策略、以防止意外删除或任何其他人为错误。出于监管或合规目的、通常还需要制定保护策略来保护数据免受灾难的影响。
+
+数据保护的要求各不相同、从还原到时间点副本、到自动故障转移到其他故障域、无需任何人为干预。许多客户选择ONTAP 作为其Kubernetes应用程序的首选存储平台、因为它具有丰富的功能、例如多租户、多协议、高性能和高容量产品、适用于多站点位置的复制和缓存、以及安全性和灵活性。
+
+ONTAP 中的数据保护可通过临时或策略控制的方式实现-**快照**-**备份和恢复**
+
+Snapshot副本和备份均可保护以下类型的数据：-**表示应用程序状态的应用程序元数据**-**与应用程序关联的任何永久性数据卷**-**属于应用程序的任何资源项目**
+
+
+
+== 使用ACC创建Snapshot
+
+可以使用Snapshot和ACC捕获数据的时间点副本。保护策略用于定义要保留的Snapshot副本数。可用的最小计划选项为每小时。与计划内Snapshot副本相比、可以随时创建按需手动Snapshot副本、创建时间间隔也更短。Snapshot副本存储在与应用程序相同的已配置卷上。
+
+
+
+=== 使用ACC配置Snapshot
+
+image::rhhc-onprem-dp-snap.png[Astra Control Center Snapshot视图]
+
+
+
+== 使用ACC进行备份和恢复
+
+备份基于Snapshot。ACC可以使用CSI创建Snapshot副本、并使用时间点Snapshot副本执行备份。备份存储在外部对象存储中(任何兼容S3、包括位于不同位置的ONTAP S3)。可以为计划的备份和要保留的备份版本数配置保护策略。最小RPO为1小时。
+
+
+
+=== 使用ACC从备份还原应用程序
+
+ACC从存储备份的S3存储分段还原应用程序。
+
+image:rhhc-onprem-dp-br.png["A作用 控制中心还原选项"]
+
+
+
+== 特定于应用程序的执行挂钩
+
+此外、还可以将执行挂钩配置为与托管应用程序的数据保护操作结合运行。尽管提供了存储阵列级别的数据保护功能、但通常还需要执行额外的步骤才能使备份和还原保持应用程序一致。应用程序专用的其他步骤可能包括：-创建Snapshot副本之前或之后。-创建备份之前或之后。-从Snapshot副本或备份还原之后。
+
+Astra Control可以执行这些应用程序专用步骤、这些步骤编码为称为执行挂钩的自定义脚本。
+
+https://github.com/NetApp/Verda["NetApp Verda GitHub项目"] 为常见的云原生应用程序提供执行挂钩、使保护应用程序变得简单、强大且易于编排。如果您有足够的信息来支持存储库中没有的应用程序、请随时为该项目做出贡献。
+
+
+
+== 为Redis应用程序创建Snapshot前创建副本的示例执行挂钩。
+
+image::rhhc-onprem-dp-br-hook.png[Asta Control Center执行挂钩]
+
+
+
+== 使用ACC复制
+
+为了实现区域保护或实现低RPO和RTO解决方案 、可以将应用程序复制到在其他站点(最好是在其他区域)运行的另一个Kubornetes实例。ACC利用ONTAP async SnapMirror并将RPO低至5分钟。复制操作是通过复制到ONTAP 来完成的、然后进行故障转移会在目标集群中创建Kubbernetes资源。
+
+
+NOTE: 请注意、复制与备份和还原不同、在备份和还原中、备份将转到S3并从S3执行还原。请访问以下链接：https://docs.netapp.com/us-en/astra-control-center/concepts/data-protection.html#replication-to-a-remote-cluster[here]、了解有关这两种类型的数据保护之间差异的更多详细信息。
+
+请参见 link:https://docs.netapp.com/us-en/astra-control-center/use/replicate_snapmirror.html["此处"] 有关SnapMirror设置说明、请参见。
+
+
+
+=== 采用ACC的SnapMirror
+
+image::rhhc-onprem-dp-rep.png[Asta Control Center复制]
+
+
+NOTE: SAN经济型和NAS经济型存储驱动程序不支持复制功能。请参见 link:https://docs.netapp.com/us-en/astra-control-center/get-started/requirements.html#astra-trident-requirements["此处"] 了解更多详细信息。
+
+
+
+=== 演示视频：
+
+link:https://www.netapp.tv/details/29504?mcid=35609780286441704190790628065560989458["使用Asta Control Center进行灾难恢复的演示视频"]
+
+
+
+== 借助MetroCluster 实现业务连续性
+
+我们大多数适用于ONTAP 的硬件平台都具有高可用性功能、可防止设备发生故障、从而避免执行灾难恢复。但是、为了防止火灾或任何其他灾难、并在零RPO和低RTO的情况下继续开展业务、通常会使用MetroCluster 解决方案。
+
+当前拥有ONTAP 系统的客户可以通过在距离限制范围内添加受支持的ONTAP 系统来扩展到MetroCluster 、从而提供区域级灾难恢复。Asta三端存储接口(CSI、容器存储接口)支持NetApp ONTAP 、包括MetroCluster 配置以及Cloud Volumes ONTAP 、Azure NetApp Files 、AWS FSx for NetApp ONTAP 等其他选项 Astra三端存储为ONTAP 提供了五个存储驱动程序选项、所有这些选项均支持MetroCluster 配置。请参见 link:https://docs.netapp.com/us-en/trident/trident-concepts/ontap-drivers.html["此处"] 有关Asta三端存储驱动程序支持的ONTAP 存储驱动程序的更多详细信息。
+
+MetroCluster 解决方案 需要第2层网络扩展或功能才能从两个容错域访问相同的网络地址。MetroCluster 配置到位后、解决方案 对应用程序所有者是透明的、因为MetroCluster SVM中的所有卷都受到保护、并可获得SyncMirror 的优势(零RPO)。
+
+image:rhhc-onprem-dp-bc.png["采用MetroCluster 的业务连续性解决方案"]
+
+
+TIP: 对于三元数据后端配置(TBC)、在使用MetroCluster 配置时、请勿指定dataLIF和SVM。为管理LIF指定SVM管理IP并使用vsadmin角色凭据。
+
+有关Astra Control Center数据保护功能的详细信息、请参见 link:https://docs.netapp.com/us-en/astra-control-center/concepts/data-protection.html["此处"]

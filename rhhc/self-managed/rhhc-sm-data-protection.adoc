@@ -1,0 +1,81 @@
+---
+sidebar: sidebar 
+permalink: rhhc/self-managed/rhhc-sm-data-protection.html 
+keywords: NetApp Solutions, redhat OpenShift, red hat OpenShift, redhat openshift container platform, ocp, openshift container platform, Advanced Cluster Management, ACM, Hub Cluster, containers, container workloads, VMware, customer managed storage, ONTAP 
+summary:  
+---
+= 使用Astra Control Center保护数据
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../../media/
+
+
+[role="lead"]
+此页面显示了在VMware vSphere上运行的基于Red Hat OpenShift容器的应用程序的数据保护选项、或者使用Astra Control Center (ACC)在云中运行的应用程序。
+
+随着用户利用Red Hat OpenShift对其应用程序进行现代化改造、应制定数据保护策略、以防止意外删除或任何其他人为错误。出于监管或合规目的、通常还需要制定保护策略来保护数据免受灾难的影响。
+
+数据保护的要求各不相同、从还原到时间点副本、到自动故障转移到其他故障域、无需任何人为干预。许多客户选择ONTAP 作为其Kubernetes应用程序的首选存储平台、因为它具有丰富的功能、例如多租户、多协议、高性能和高容量产品、适用于多站点位置的复制和缓存、以及安全性和灵活性。
+
+客户可以将云环境设置为其数据中心扩展、以便充分利用云的优势、并做好在未来移动工作负载的准备。对于这类客户而言、将其OpenShift应用程序及其数据备份到云环境是不可避免的选择。然后、他们可以将应用程序和关联数据还原到云中的OpenShift集群或数据中心。
+
+
+
+== 使用ACC进行备份和恢复
+
+应用程序所有者可以查看和更新ACC发现的应用程序。ACC可以使用CSI创建Snapshot副本、并使用时间点Snapshot副本执行备份。备份目标可以是云环境中的对象存储。可以为计划的备份和要保留的备份版本数配置保护策略。最小RPO为1小时。
+
+
+
+=== 使用ACC从备份还原应用程序
+
+image:rhhc-onprem-dp-br.png["A作用 控制中心还原选项"]
+
+
+
+== 特定于应用程序的执行挂钩
+
+尽管可以使用存储阵列级别的数据保护功能、但通常需要执行额外的步骤才能使备份和还原应用程序保持一致。应用程序专用的其他步骤可能包括：-创建Snapshot副本之前或之后。-创建备份之前或之后。-从Snapshot副本或备份还原之后。Astra Control可以执行这些应用程序专用步骤、这些步骤编码为称为执行挂钩的自定义脚本。
+
+NetApp的 link:https://github.com/NetApp/Verda["开源项目Verda"] 为常见的云原生应用程序提供执行挂钩、使保护应用程序变得简单、强大且易于编排。如果您有足够的信息来支持存储库中没有的应用程序、请随时为该项目做出贡献。
+
+
+
+== 为Redis应用程序创建Snapshot前创建副本的示例执行挂钩。
+
+image::rhhc-onprem-dp-br-hook.png[Asta Control Center执行挂钩]
+
+
+
+== 使用ACC复制
+
+为了实现区域保护或实现低RPO和RTO解决方案 、可以将应用程序复制到在其他站点(最好是在其他区域)运行的另一个Kubornetes实例。ACC利用ONTAP async SnapMirror并将RPO低至5分钟。请参见 link:https://docs.netapp.com/us-en/astra-control-center/use/replicate_snapmirror.html["此处"] 有关SnapMirror设置说明、请参见。
+
+
+
+=== 采用ACC的SnapMirror
+
+image::rhhc-onprem-dp-rep.png[Asta Control Center复制]
+
+
+NOTE: SAN经济型和NAS经济型存储驱动程序不支持复制功能。请参见 link:https://docs.netapp.com/us-en/astra-control-center/get-started/requirements.html#astra-trident-requirements["此处"] 了解更多详细信息。
+
+
+
+=== 演示视频：
+
+link:https://www.netapp.tv/details/29504?mcid=35609780286441704190790628065560989458["使用Asta Control Center进行灾难恢复的演示视频"]
+
+.使用Astra Control Center保护数据
+video::0cec0c90-4c6f-4018-9e4f-b09700eefb3a[panopto,width=360]
+有关Astra Control Center数据保护功能的详细信息、请参见 link:https://docs.netapp.com/us-en/astra-control-center/concepts/data-protection.html["此处"]
+
+
+
+== 使用ACC进行灾难恢复(使用复制进行故障转移和故障恢复)
+
+.使用Asta Control对应用程序进行故障转移和故障恢复
+video::1546191b-bc46-42eb-ac34-b0d60142c58d[panopto,width=360]
