@@ -22,6 +22,10 @@ Kubnetes和向量数据库共同构成一个功能强大的可扩展解决方案
 
 . 在本节中、我们将详细介绍在Kubbernetes上安装Milvus集群的过程、并利用NetApp存储控制器来存储集群数据和客户数据。
 . 要安装Milvus集群、需要使用永久性卷(PV)来存储来自各种Milvus集群组件的数据。这些组成部分包括etC2(三个实例)、脉冲星-博彩记(三个实例)、脉冲星-博彩记分类账(三个实例)和脉冲星-祖-数据(三个实例)。
++
+
+NOTE: 在Milvus集群中、我们可以使用Pulsar或Kafka作为底层引擎、支持Milvus集群可靠地存储和发布/订阅消息流。对于采用NFS的Kafka、NetApp在ONTAP 9.12.1及更高版本中进行了改进、这些增强功能以及RHEL 8.7或9.1及更高版本中包含的NFSv4.1和Linux更改解决了问题描述在基于NFS运行Kafka时可能发生的"愚蠢重命名"NFS问题。如果您对使用NetApp NFS解决方案运行Kafka这一主题的更多深入信息感兴趣、请检查- https://docs.netapp.com/us-en/netapp-solutions/data-analytics/kafka-nfs-introduction.html[]。
+
 . 我们从NetApp ONTAP创建了一个NFS卷、并建立了12个永久性卷、每个卷具有250 GB的存储空间。存储大小可能因集群大小而异；例如、我们还有一个集群、其中每个PV具有50 GB。请参阅下面的PV YAML文件之一了解更多详细信息；我们总共有12个此类文件。在每个文件中、storageClassName会设置为"默认"、并且存储和路径对于每个PV都是唯一的。
 +
 [source, yaml]
