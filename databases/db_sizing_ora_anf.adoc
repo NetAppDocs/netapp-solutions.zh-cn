@@ -1,0 +1,177 @@
+---
+sidebar: sidebar 
+permalink: databases/db_sizing_ora_anf.html 
+keywords: ONTAP, Azure, ANF, Sizing 
+summary: 解决方案提供了一个有用的工具包、用于估算Azure云中ANF上Oracle部署的计算和存储的规模 
+---
+= 适用于Azure NetApp Files的Oracle大小规划指南
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+NetApp公司Allen Cao、Niyaz Mohamed
+
+
+
+== 目的
+
+要将现有Oracle工作负载从一个平台迁移到另一个平台、例如从内部环境迁移到公共云、需要对目标平台中的计算和存储进行规模估算、以满足性能和服务级别要求。本文档演示了一个简单的工具包来实现这一目标。
+
+与可能会随着时间推移而增长的新数据库应用程序不同、现有Oracle工作负载已在计算和存储需求方面确立了工作负载模式、这些模式会记录在Oracle工作负载存储库或AWR中。此工具包利用HTML解析器从Oracle AWR中检索相关信息。通过SQL脚本获取的数据库规模估算信息补充了这些结果、以便在重新定位Oracle数据库时提供有意义的计算和存储指导。
+
+此解决方案 可解决以下使用情形：
+
+* 在将数据库从内部重新定位到Microsoft Azure云时、为Oracle数据库服务器计算提供规模估算指导。
+* 在将数据库从内部重新定位到Microsoft Azure NetApp Files时、为Oracle数据库服务器存储提供规模估算指导。
+
+
+
+
+== audience
+
+此解决方案 适用于以下人员：
+
+* 在内部私有数据中心或Microsoft Azure云环境中管理Oracle数据库的数据库管理员。
+* 管理支持Oracle数据库的内置存储或Microsoft Azure NetApp Files存储的存储管理员。
+* 喜欢将Oracle数据库从内部迁移到Microsoft Azure云的应用程序所有者。
+
+
+
+
+== 许可证
+
+访问、下载、安装或使用此工具包存储库中的内容即表示您同意中列出的许可条款 link:https://netapp.sharepoint.com/sites/CIEBuilt-OnsTeam-DatabasesandApps/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FCIEBuilt%2DOnsTeam%2DDatabasesandApps%2FShared%20Documents%2FDatabases%20and%20Apps%2FDatabase%20Solutions%2FDB%20Sizing%20Toolkits%2FOracle%20Sizing%20Guidance%20for%20ANF%2FLICENSE%2ETXT&parent=%2Fsites%2FCIEBuilt%2DOnsTeam%2DDatabasesandApps%2FShared%20Documents%2FDatabases%20and%20Apps%2FDatabase%20Solutions%2FDB%20Sizing%20Toolkits%2FOracle%20Sizing%20Guidance%20for%20ANF["许可证文件"^]。
+
+
+NOTE: 在使用此工具包存储库中的内容生成和/或共享任何衍生作品方面存在一些限制。在使用内容之前、请确保您已阅读许可条款。如果您不同意所有条款、请勿访问、下载或使用此存储库中的内容。
+
+
+
+== 解决方案 部署
+
+
+
+=== 部署的前提条件
+
+[%collapsible]
+====
+部署需要满足以下前提条件。
+
+* Oracle AWR报告可捕获高峰应用程序工作负载期间数据库活动的快照。
+* 访问Oracle数据库以使用数据库访问权限执行SQL脚本。
+
+
+====
+
+
+=== 下载此工具包
+
+[%collapsible]
+====
+从存储库中检索工具包 link:https://netapp.sharepoint.com/sites/CIEBuilt-OnsTeam-DatabasesandApps/Shared%20Documents/Forms/AllItems.aspx?csf=1&web=1&e=uJYdVB&CID=bec786b6%2Dccaa%2D42e3%2Db47d%2Ddf0dcb0ce0ef&RootFolder=%2Fsites%2FCIEBuilt%2DOnsTeam%2DDatabasesandApps%2FShared%20Documents%2FDatabases%20and%20Apps%2FDatabase%20Solutions%2FDB%20Sizing%20Toolkits%2FOracle%20Sizing%20Guidance%20for%20ANF&FolderCTID=0x01200006E27E44A468B3479EA2D52BCD950351["适用于ANF的Oracle大小指导"^]
+
+====
+
+
+=== 如何使用工具包？
+
+[%collapsible]
+====
+该工具包由一个基于Web的HTML解析器和两个用于收集Oracle数据库信息的SQL脚本组成。然后、将输出输入到Excel模板中、为Oracle数据库服务器生成计算和存储规模估算指导。
+
+* 使用 link:https://app.atroposs.com/#/awr-module["HTML解析器"^] AWR模块、用于从AWR报告中检索当前Oracle数据库的规模估算信息。
+* 作为数据库A执行ora_db_data_szie.sql以从数据库中检索Oracle物理数据文件大小。
+* 作为数据库A执行ora_db_logs_size.sql、以使用所需的归档日志保留窗口(天)检索Oracle归档日志大小。
+* 将上述规模估算信息输入到Excel模板文件oracle_db_sizing_template_anf.xlsx中、为Oracle数据库服务器的计算和存储创建规模估算指导。
+
+
+====
+
+
+=== 工具包使用演示
+
+[%collapsible]
+====
+. 打开HTML解析器AWR模块。
++
+image::db_sizing_ora_parser_01.png[此图提供了用于Oracle规模估算的HTML解析器屏幕]
+
+. 将输出格式检查为.csv、然后单击 `Upload files` 上传AWR报告。解析器将在HTML页面中返回结果、其中包含表摘要以及output.csv文件 `Download` 文件夹。
++
+image::db_sizing_ora_parser_02.png[此图提供了用于Oracle规模估算的HTML解析器屏幕]
+
+. 打开Excel模板文件、然后将csv内容复制并粘贴到列A和单元格1中以生成数据库服务器规模估算信息。
++
+image::db_sizing_ora_parser_03_anf.png[此图提供了用于Oracle规模估算的Excel模板屏幕截图]
+
+. 突出显示列A以及字段1和2、然后单击 `Data`、然后 `Text to Columns` 以打开文本向导。选择 `Delimited`、然后 `Next` 至下一屏幕。
++
+image::db_sizing_ora_parser_04_anf.png[此图提供了用于Oracle规模估算的Excel模板屏幕截图]
+
+. 检查 `Other`，然后输入'='作为 `Delimiters`。单击 `Next` 至下一屏幕。
++
+image::db_sizing_ora_parser_05_anf.png[此图提供了用于Oracle规模估算的Excel模板屏幕截图]
+
+. 单击 `Finish` 将字符串转换为可读列格式。请注意、VM和ANF规模估算字段已填充从Oracle AWR报告中检索到的数据。
++
+image::db_sizing_ora_parser_06_anf.png[此图提供了用于Oracle规模估算的Excel模板屏幕截图]
+
++
+image::db_sizing_ora_parser_07_anf.png[此图提供了用于Oracle规模估算的Excel模板屏幕截图]
+
+. 以sqlplus中的数据库A形式执行脚本ora_db_data_size.sql、ora_db_logs_size.sql、以检索现有Oracle数据库数据大小和已归档日志大小以及保留窗口天数。
++
+....
+
+[oracle@ora_01 ~]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Tue Mar 5 15:25:27 2024
+Version 19.18.0.0.0
+
+Copyright (c) 1982, 2022, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.18.0.0.0
+
+
+SQL> @/home/oracle/ora_db_data_size.sql;
+
+Aggregate DB File Size, GiB Aggregate DB File RW, GiB Aggregate DB File RO, GiB
+--------------------------- ------------------------- -------------------------
+                     159.05                    159.05                         0
+
+SQL> @/home/oracle/ora_db_logs_size.sql;
+Enter value for archivelog_retention_days: 14
+old   6:       where first_time >= sysdate - &archivelog_retention_days
+new   6:       where first_time >= sysdate - 14
+
+Log Size, GiB
+-------------
+        93.83
+
+SQL>
+
+....
++
+
+NOTE: 使用上述脚本检索的数据库规模估算信息是所有物理数据库数据文件或日志文件的实际大小之和。它不会计入每个数据文件中的可用空间。
+
+. 将结果输入到Excel文件中以完成规模估算指导输出。
++
+image::db_sizing_ora_parser_08_anf.png[此图提供了用于Oracle规模估算的Excel模板屏幕截图]
+
+. ANF使用三层服务级别(Standard、Premium、Ultra)来管理数据库卷吞吐量限制。请参见 link:https://learn.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-service-levels["Azure NetApp Files 的服务级别"^] 了解详细信息。根据规模估算指导输出、选择可提供满足数据库要求的吞吐量的ANF服务级别。
+
+
+====
+
+
+== 从何处查找追加信息
+
+要了解有关NetApp数据库解决方案的详细信息、请查看以下网站 link:index.html["NetApp企业数据库解决方案"^]
