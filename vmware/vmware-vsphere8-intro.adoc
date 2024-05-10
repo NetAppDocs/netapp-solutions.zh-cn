@@ -1,0 +1,58 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmware-vsphere8-intro.html 
+keywords: vSphere, vSphere 8, vSphere 8u1, ONTAP 9.12, interoperability, VMware compatibility 
+summary:  
+---
+= VMware vSphere 8的新增功能
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+作者：NetApp解决方案工程部Chris Reno
+
+NetApp与VMware技术的集成已有20年的历史、耗时数千小时。随着vSphere 8和ONTAP 9.12的出现、这两家公司都提供了能够满足最苛刻的客户工作负载要求的产品。将这些产品组合到解决方案中后、无论是在内部还是在公有云中、都能解决客户面临的实际挑战。将这些产品组合到解决方案中后、无论是在内部还是在公有云中、都可以解决客户面临的实际挑战。
+
+为了帮助您确定产品、协议、操作系统等的支持能力、请查看以下资源：
+
+* 。 https://mysupport.netapp.com/matrix/#welcome["NetApp 互操作性表工具"] IMTIMT 定义了可用于构建FC/FCoE、iSCSI、NFS和CIFS配置以及与其他插件和软件产品集成的合格组件和版本。
+* 。 https://www.vmware.com/resources/compatibility/search.php?deviceCategory=san&details=1&partner=64&isSVA=0&page=1&display_interval=10&sortColumn=Partner&sortOrder=Asc["VMware 兼容性指南"]。《VMware兼容性指南》列出了系统、I/O、存储/SAN、备份与VMware Infrastructure和软件产品的兼容性等。
+* https://www.netapp.com/support-and-training/documentation/ontap-tools-for-vmware-vsphere-documentation/"["适用于 VMware 的 NetApp ONTAP 工具"]。适用于VMware vSphere的ONTAP 工具是一个vCenter Server插件、其中包括Virtual Storage Console (VSC)、VASA Provider和Storage Replication Adapter (SRA)扩展。OTV 9.12完全受VMware vSphere 8支持、每天都能为客户带来真正的价值。
+
+
+
+
+== NetApp ONTAP 和VMware支持的版本
+
+
+NOTE: 在下表中选择链接时、请让页面扩展。
+
+[cols="20%, 20%, 20%, 20%, 20%"]
+|===
+
+
+| *VMware vSphere版本* | * SAN * | * NFS * | *OTV* | * SnapCenter * 
+
+
+| *vSphere 8* | https://imt.netapp.com/matrix/imt.jsp?components=105985;&solution=1&isHWU&src=IMT["链接。"] | https://imt.netapp.com/matrix/imt.jsp?components=105985;&solution=976&isHWU&src=IMT["链接。"] | https://imt.netapp.com/matrix/imt.jsp?components=105986;&solution=1777&isHWU&src=IMT["链接。"] | https://imt.netapp.com/matrix/imt.jsp?components=105985;&solution=1517&isHWU&src=IMT["链接。"] 
+
+
+| *vSphere 8u1* | https://imt.netapp.com/matrix/imt.jsp?components=110521;&solution=1&isHWU&src=IMT["链接。"] | https://imt.netapp.com/matrix/imt.jsp?components=110521;&solution=976&isHWU&src=IMT["链接。"] | https://imt.netapp.com/matrix/imt.jsp?components=110521;&solution=1777&isHWU&src=IMT["链接。"] | https://imt.netapp.com/matrix/imt.jsp?components=110521;&solution=1517&isHWU&src=IMT["链接。"] 
+|===
+[cols="20%, 20%, 20%, 20%, 20%"]
+|===
+
+
+| *VMware vSphere版本* | *存储系统/协议* | *OTV - SRA* | *OTV–VASA Provider* | *适用于VMware vSphere的SnapCenter 插件* 
+
+
+| *vSphere 8* | https://www.vmware.com/resources/compatibility/search.php?deviceCategory=san&details=1&partner=64&releases=589&FirmwareVersion=ONTAP%209.0,ONTAP%209.1,ONTAP%209.10.1,ONTAP%209.11.1,ONTAP%209.12.1,ONTAP%209.2,ONTAP%209.3,ONTAP%209.4,ONTAP%209.5,ONTAP%209.6,ONTAP%209.7,ONTAP%209.8,ONTAP%209.9,ONTAP%209.9.1%20P3,ONTAP%209.%6012.1&isSVA=0&page=1&display_interval=10&sortColumn=Partner&sortOrder=Asc["链接。"] | https://www.vmware.com/resources/compatibility/search.php?deviceCategory=sra&details=1&partner=64&sraName=587&page=1&display_interval=10&sortColumn=Partner&sortOrder=Asc["链接。"] | https://www.vmware.com/resources/compatibility/detail.php?deviceCategory=wcp&productid=55380&vcl=true["链接。"] | https://www.vmware.com/resources/compatibility/search.php?deviceCategory=vvols&details=1&partner=64&releases=589&page=1&display_interval=10&sortColumn=Partner&sortOrder=Asc["链接。"] 
+
+
+| *vSphere 8u1* | https://www.vmware.com/resources/compatibility/search.php?deviceCategory=san&details=1&partner=64&releases=652&FirmwareVersion=ONTAP%209.0,ONTAP%209.1,ONTAP%209.10.1,ONTAP%209.11.1,ONTAP%209.12.1,ONTAP%209.2,ONTAP%209.3,ONTAP%209.4,ONTAP%209.5,ONTAP%209.6,ONTAP%209.7,ONTAP%209.8,ONTAP%209.9,ONTAP%209.9.1%20P3,ONTAP%209.%6012.1&isSVA=0&page=1&display_interval=10&sortColumn=Partner&sortOrder=Asc["链接。"] | https://www.vmware.com/resources/compatibility/search.php?deviceCategory=sra&details=1&partner=64&sraName=587&page=1&display_interval=10&sortColumn=Partner&sortOrder=Asc["链接。"] | https://www.vmware.com/resources/compatibility/detail.php?deviceCategory=wcp&productid=55380&vcl=true["链接。"] | https://www.vmware.com/resources/compatibility/detail.php?deviceCategory=wcp&productid=55380&vcl=true["链接。"] 
+|===

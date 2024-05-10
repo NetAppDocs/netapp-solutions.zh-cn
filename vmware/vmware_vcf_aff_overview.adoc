@@ -1,0 +1,133 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmware_vcf_aff_overview.html 
+keywords: netapp, vmware, cloud, foundation, vcf, aff, all-flash, nfs, vvol, vvols, array, ontap tools, otv, sddc 
+summary:  
+---
+= 采用NetApp AFF阵列的VMware Cloud Foundation
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+作者：Jsh Powell、Ravi BCB
+
+
+
+== 采用NetApp AFF阵列的VMware Cloud Foundation
+
+VMware Cloud Foundation (VCF)是一款集成的软件定义的数据中心(SDDC)平台、可提供一整套软件定义的基础架构、用于在混合云环境中运行企业级应用程序。它将计算、存储、网络和管理功能整合到一个统一平台中、跨私有云和公共云提供一致的运营体验。
+
+本文档提供了有关使用NetApp纯闪存AFF存储系统的VMware Cloud Foundation可用存储选项的信息。本指南介绍了受支持的存储选项、并提供了有关使用NFS和VVOR数据存储库作为主存储创建工作负载域的具体说明、以及一系列补充存储选项。
+
+
+
+=== 用例
+
+本文档涵盖的使用情形：
+
+* 适用于希望在私有云和公共云之间实现统一环境的客户的存储选项。
+* 用于为工作负载域部署虚拟基础架构的自动化解决方案。
+* 可扩展的存储解决方案专为满足不断变化的需求而定制、即使不与计算资源需求直接对应也是如此。
+* 使用ONTAP作为主存储部署VCF VI工作负载域。
+* 使用适用于VMware vSphere的ONTAP工具为VI工作负载域部署补充存储。
+
+
+
+
+=== audience
+
+此解决方案 适用于以下人员：
+
+* 解决方案架构师希望为VMware环境提供更灵活的存储选项、以最大限度地降低TCO。
+* 解决方案架构师希望通过VCF存储选项为主要云提供商提供数据保护和灾难恢复选项。
+* 希望了解如何使用主体存储和补充存储配置VCF的存储管理员。
+
+
+
+
+== 技术概述
+
+采用NetApp AFF 解决方案 的VCF由以下主要组件构成：
+
+
+
+=== VMware Cloud Foundation
+
+VMware Cloud Foundation通过将SDDC Manager、vSphere、vSAN、NSX和VMware A一切 关键组件相结合来创建虚拟化数据中心、扩展了VMware的vSphere虚拟机管理程序产品。
+
+VCF解决方案既支持本机Kubbernetes工作负载、也支持基于虚拟机的工作负载。VMware vSphere、VMware vSAN、VMware NSX-T数据中心和VMware vReal Cloud Management等关键服务是VCF软件包不可或缺的组成部分。这些服务相结合、可建立一个软件定义的基础架构、能够高效管理计算、存储、网络、安全和云管理。
+
+vcf由一个管理域和多达24个VI工作负载域组成、每个工作负载域代表一个应用程序就绪基础架构单元。工作负载域由一个vCenter实例管理的一个或多个vSphere集群组成。
+
+image:vmware-vcf-aff-image02.png["VCF架构"]
+
+有关VCF架构和规划的详细信息、请参见 link:https://docs.vmware.com/en/VMware-Cloud-Foundation/5.1/vcf-design/GUID-A550B597-463F-403F-BE9A-BFF3BECB9523.html["VMware Cloud Foundation中的架构模型和工作负载域类型"]。
+
+｛｛｝
+
+
+
+==== VCF存储选项
+
+VMware将VCF的存储选项分为*主体*和*补充*存储。VCF管理域必须使用vSAN作为其主存储。但是、管理域有许多补充存储选项、VI工作负载域既有主要存储选项、也有补充存储选项。
+
+image:vmware-vcf-aff-image01.png["VCF存储选项"]
+
+*工作负载域的主要存储*
+主体存储是指在SDDC Manager中的设置过程中可以直接连接到VI工作负载域的任何类型的存储。主体存储是为工作负载域配置的第一个数据存储库、其中包括光纤通道上的vSAN、vvol (VMFS)、NFS和VMFS。
+
+*用于管理和工作负载域的补充存储*
+补充存储是一种存储类型、可以在创建集群后随时添加到管理域或工作负载域中。补充存储代表支持的存储选项范围最广、所有这些存储选项在NetApp AFF阵列上均受支持。
+
+有关VMware Cloud Foundation的其他文档资源：
+* link:https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html["VMware Cloud Foundation文档"]
+* link:https://docs.vmware.com/en/VMware-Cloud-Foundation/5.1/vcf-design/GUID-2156EC66-BBBB-4197-91AD-660315385D2E.html["VMware Cloud Foundation支持的存储类型"]
+* link:https://docs.vmware.com/en/VMware-Cloud-Foundation/5.1/vcf-admin/GUID-2C4653EB-5654-45CB-B072-2C2E29CB6C89.html["在VMware Cloud Foundation中管理存储"]
+
+｛｛｝
+
+
+
+=== NetApp全闪存存储阵列
+
+NetApp AFF (全闪存FAS)阵列是一款高性能存储解决方案、旨在充分利用闪存技术的速度和效率。AFF阵列集成了集成数据管理功能、例如基于快照的备份、复制、精简配置和数据保护功能。
+
+NetApp AFF阵列利用ONTAP存储操作系统、在一个统一架构中为与VCF兼容的所有存储选项提供全面的存储协议支持。
+
+NetApp AFF存储阵列可用于性能最高的A系列和基于QLC闪存的C系列。这两个系列均使用NVMe闪存驱动器。
+
+有关NetApp AFF A系列存储阵列的详细信息、请参见 link:https://www.netapp.com/data-storage/aff-a-series/["NetApp AFF A 系列"] 登录页面。
+
+有关NetApp C系列存储阵列的详细信息、请参见 link:https://www.netapp.com/data-storage/aff-c-series/["NetApp AFF C系列"] 登录页面。
+
+｛｛｝
+
+
+
+=== 适用于 VMware vSphere 的 NetApp ONTAP 工具
+
+通过适用于VMware vSphere的ONTAP工具(OTV)、管理员可以直接从vSphere Client中管理NetApp存储。通过ONTAP工具、您可以部署和管理数据存储库、以及配置VVOV数据存储库。
+
+ONTAP工具允许将数据存储库映射到存储功能配置文件、这些配置文件确定了一组存储系统属性。这样便可创建具有特定属性(例如存储性能和QoS)的数据存储库。
+
+ONTAP工具还包括一个适用于ONTAP存储系统的* VMware vSphere存储感知API (VSA)提供程序*，可用于配置VMware虚拟卷(VVOL)数据存储库、创建和使用存储功能配置文件、验证合规性以及监控性能。
+
+有关NetApp ONTAP工具的详细信息、请参见 link:https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html["适用于 VMware vSphere 的 ONTAP 工具文档"] 页面。
+
+
+
+== 解决方案概述
+
+在本文档介绍的方案中、我们将演示如何使用ONTAP存储系统作为VCF VI工作负载域部署的主存储。此外、我们还将安装并使用适用于VMware vSphere的ONTAP工具为VI工作负载域配置补充数据存储库。
+
+本文档涵盖的场景：
+
+* *在VI工作负载域部署期间配置并使用NFS数据存储库作为主存储。*单击
+link:vsphere_ontap_auto_block_fc.html["*此处*"] 了解部署步骤。
+* *安装并演示如何使用ONTAP工具在VI工作负载域中配置和挂载NFS数据存储库作为补充存储。*单击 link:vsphere_ontap_auto_block_fc.html["*此处*"] 了解部署步骤。
+

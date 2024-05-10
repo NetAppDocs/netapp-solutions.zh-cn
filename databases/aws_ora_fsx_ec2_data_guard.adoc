@@ -123,9 +123,9 @@ image::aws_ora_fsx_data_guard_architecture.png[此图详细展示了使用FSxN�
 
 我们假定您已将主Oracle数据库部署在VPC中的AWS EC2环境中、并以此作为设置Data Guard的起点。主数据库使用Oracle ASM进行部署以进行存储管理。  为Oracle数据文件、日志文件和控制文件等创建了两个ASM磁盘组-+data和+logs 有关使用ASM在AWS中部署Oracle的详细信息、请参阅以下技术报告以获得帮助。
 
-* link:https://docs.netapp.com/us-en/netapp-solutions/databases/aws_ora_fsx_ec2_deploy_intro.html["基于EC2和FSx的Oracle数据库部署最佳实践"^]
-* link:https://docs.netapp.com/us-en/netapp-solutions/databases/aws_ora_fsx_ec2_iscsi_asm.html["使用iSCSI/ASM在AWS FSX/EC2中部署和保护Oracle数据库"^]
-* link:https://docs.netapp.com/us-en/netapp-solutions/databases/aws_ora_fsx_ec2_nfs_asm.html["Oracle 19c在使用NFS/ASM的AWS FSX/EC2上独立重新启动"^]
+* link:aws_ora_fsx_ec2_deploy_intro.html["基于EC2和FSx的Oracle数据库部署最佳实践"^]
+* link:aws_ora_fsx_ec2_iscsi_asm.html["使用iSCSI/ASM在AWS FSX/EC2中部署和保护Oracle数据库"^]
+* link:aws_ora_fsx_ec2_nfs_asm.html["Oracle 19c在使用NFS/ASM的AWS FSX/EC2上独立重新启动"^]
 
 
 主Oracle数据库可以运行在FSx ONTAP上、也可以运行在AWS EC2生态系统中的任何其他可选存储上。下一节介绍了在使用ASM存储的主EC2数据库实例与使用ASM存储的备用EC2数据库实例之间设置Oracle Data Guard的分步部署过程。
@@ -406,7 +406,7 @@ srvctl start database -d db1
 Oracle Data Guard要求操作系统内核配置和Oracle软件堆栈(包括备用EC2数据库实例上的修补程序集)与主EC2数据库实例匹配。为了便于管理和简化、备用EC2数据库实例数据库存储配置也应与主EC2数据库实例(例如ASM磁盘组的名称、数量和大小)完美匹配。下面是为Data Guard设置备用EC2数据库实例的详细过程。所有命令都应以Oracle所有者用户id的身份执行。
 
 . 首先、查看主EC2实例上的主数据库配置。在此演示中、我们已在主EC2数据库实例上设置了一个名为db1的主Oracle数据库、其中两个ASM磁盘组+data和+logs采用独立的Restart配置。主ASM磁盘组可以位于EC2生态系统中的任何类型的存储上。
-. 请按照文档中的步骤进行操作 link:https://docs.netapp.com/us-en/netapp-solutions/databases/aws_ora_fsx_ec2_iscsi_asm.html["TR-4965：《使用iSCSI/ASM在AWS FSX/EC2中部署和保护Oracle数据库》"^] 在备用EC2数据库实例上安装和配置GRID和Oracle以与主数据库匹配。应配置数据库存储、并将其分配给FSx ONTAP中的备用EC2数据库实例、其存储容量应与主EC2数据库实例相同。
+. 请按照文档中的步骤进行操作 link:aws_ora_fsx_ec2_iscsi_asm.html["TR-4965：《使用iSCSI/ASM在AWS FSX/EC2中部署和保护Oracle数据库》"^] 在备用EC2数据库实例上安装和配置GRID和Oracle以与主数据库匹配。应配置数据库存储、并将其分配给FSx ONTAP中的备用EC2数据库实例、其存储容量应与主EC2数据库实例相同。
 +
 
 NOTE: 在中的步骤10处停止 `Oracle database installation` 部分。备用数据库将使用dbca数据库复制功能从主数据库中进行初始化。
@@ -800,7 +800,7 @@ DGMGRL>
 ====
 在Data Guard中的AWS FSx ONTAP上暂存备用数据库的主要优势在于、可以通过FlexCloned以最少的额外存储投资来处理许多其他用例。在下一节中、我们将演示如何在FSx ONTAP上为已挂载和正在恢复的备用数据库卷创建快照和克隆以用于其他目的、例如开发、测试、报告等。 使用NetApp SnapCenter工具。
 
-下面简要介绍了使用SnapCenter从Data Guard中托管的物理备用数据库克隆读/写数据库的过程。有关如何设置和配置SnapCenter的详细说明、请参阅 link:https://docs.netapp.com/us-en/netapp-solutions/databases/hybrid_dbops_snapcenter_usecases.html["采用 SnapCenter 的混合云数据库解决方案"^] Relavant Oracle (重新初始Oracle)部分。
+下面简要介绍了使用SnapCenter从Data Guard中托管的物理备用数据库克隆读/写数据库的过程。有关如何设置和配置SnapCenter的详细说明、请参阅 link:hybrid_dbops_snapcenter_usecases.html["采用 SnapCenter 的混合云数据库解决方案"^] Relavant Oracle (重新初始Oracle)部分。
 
 . 我们首先创建一个测试表、然后在主数据库的测试表中插入一行。然后、我们将验证事务是否向下遍历到备用、最后遍历克隆。
 +
@@ -993,7 +993,7 @@ link:https://docs.oracle.com/en/database/oracle/oracle-database/19/sbydb/index.h
 
 * WP-7357：《基于EC2和FSx的Oracle数据库部署最佳实践》
 +
-link:https://docs.netapp.com/us-en/netapp-solutions/databases/aws_ora_fsx_ec2_deploy_intro.html["https://docs.netapp.com/us-en/netapp-solutions/databases/aws_ora_fsx_ec2_deploy_intro.html"^]
+link:aws_ora_fsx_ec2_deploy_intro.html["简介"]
 
 * 适用于 NetApp ONTAP 的 Amazon FSX
 +

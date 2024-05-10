@@ -144,7 +144,7 @@ image::automation_ora_anf_nfs_archit.png[此图详细展示了AWS公共云中使
 部署需要满足以下前提条件。
 
 . 已设置Azure帐户、并且已在Azure帐户中创建必要的vNet和网段。
-. 在Azure云门户中、将Azure Linux VM部署为Oracle数据库服务器。为Oracle数据库创建Azure NetApp Files容量池和数据库卷。为azureuser到DB服务器启用VM SSH私有/公共密钥身份验证。有关环境设置的详细信息、请参见上一节中的架构图。另见 link:https://docs.netapp.com/us-en/netapp-solutions/databases/azure_ora_nfile_procedures.html["Azure VM和Azure NetApp Files 上的Oracle分步部署过程"^] 了解详细信息。
+. 在Azure云门户中、将Azure Linux VM部署为Oracle数据库服务器。为Oracle数据库创建Azure NetApp Files容量池和数据库卷。为azureuser到DB服务器启用VM SSH私有/公共密钥身份验证。有关环境设置的详细信息、请参见上一节中的架构图。另见 link:azure_ora_nfile_procedures.html["Azure VM和Azure NetApp Files 上的Oracle分步部署过程"^] 了解详细信息。
 +
 
 NOTE: 对于部署了本地磁盘冗余的Azure VM、请确保在VM根磁盘中至少分配了128 G的空间、以便有足够的空间来暂存Oracle安装文件和添加操作系统交换文件。相应地展开/tmplv和/rootlv OS分区。确保数据库卷命名遵循vmname-u01、vmname-u02和vmname-u03约定。
@@ -160,7 +160,7 @@ sudo lvresize -r -L +20G /dev/mapper/rootvg-rootlv
 sudo lvresize -r -L +10G /dev/mapper/rootvg-tmplv
 ----
 . 从Azure云门户中、配置Windows服务器以使用最新版本运行NetApp SnapCenter UI工具。有关详细信息、请参见以下链接： link:https://docs.netapp.com/us-en/snapcenter/install/task_install_the_snapcenter_server_using_the_install_wizard.html["安装 SnapCenter 服务器"^]
-. 将Linux VM配置为安装了最新版本的Ansv近 和Git的Ansv可 控制器节点。有关详细信息、请参见以下链接： link:https://docs.netapp.com/us-en/netapp-solutions/automation/getting-started.html["NetApp解决方案 自动化入门"^] 在第-节中
+. 将Linux VM配置为安装了最新版本的Ansv近 和Git的Ansv可 控制器节点。有关详细信息、请参见以下链接： link:../automation/getting-started.html["NetApp解决方案 自动化入门"^] 在第-节中
 `Setup the Ansible Control Node for CLI deployments on RHEL / CentOS` 或
 `Setup the Ansible Control Node for CLI deployments on Ubuntu / Debian`。
 +
@@ -587,7 +587,7 @@ image::automation_ora_anf_nfs_em_02.png[此图提供了Oracle Enterprise Manager
 
 [%collapsible]
 ====
-Oracle数据库从内部迁移到云是一项繁重的工作。使用正确的策略和自动化可以使流程顺畅进行、并最大限度地减少服务中断和停机时间。请遵循此详细说明 link:https://docs.netapp.com/us-en/netapp-solutions/databases/azure_ora_nfile_migration.html#converting-a-single-instance-non-cdb-to-a-pdb-in-a-multitenant-cdb["将数据库从内部迁移到Azure云"^] 指导您的数据库迁移之旅。
+Oracle数据库从内部迁移到云是一项繁重的工作。使用正确的策略和自动化可以使流程顺畅进行、并最大限度地减少服务中断和停机时间。请遵循此详细说明 link:azure_ora_nfile_migration.html#converting-a-single-instance-non-cdb-to-a-pdb-in-a-multitenant-cdb["将数据库从内部迁移到Azure云"^] 指导您的数据库迁移之旅。
 
 ====
 
@@ -596,7 +596,7 @@ Oracle数据库从内部迁移到云是一项繁重的工作。使用正确的�
 
 [%collapsible]
 ====
-NetApp建议使用SnapCenter UI工具来管理部署在Azure云中的Oracle数据库。请参阅TR-4988： link:https://docs.netapp.com/us-en/netapp-solutions/databases/snapctr_ora_azure_anf.html["使用SnapCenter在ANF上执行Oracle数据库备份、恢复和克隆"^] 了解详细信息。
+NetApp建议使用SnapCenter UI工具来管理部署在Azure云中的Oracle数据库。请参阅TR-4988： link:snapctr_ora_azure_anf.html["使用SnapCenter在ANF上执行Oracle数据库备份、恢复和克隆"^] 了解详细信息。
 
 ====
 
@@ -607,7 +607,7 @@ NetApp建议使用SnapCenter UI工具来管理部署在Azure云中的Oracle数�
 
 * 使用SnapCenter在ANF上执行Oracle数据库备份、恢复和克隆
 +
-link:https://docs.netapp.com/us-en/netapp-solutions/databases/snapctr_ora_azure_anf.html["使用SnapCenter在ANF上执行Oracle数据库备份、恢复和克隆"^]
+link:snapctr_ora_azure_anf.html["使用SnapCenter在ANF上执行Oracle数据库备份、恢复和克隆"^]
 
 * Azure NetApp Files
 +

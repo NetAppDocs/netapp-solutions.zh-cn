@@ -1,0 +1,550 @@
+---
+sidebar: sidebar 
+permalink: vmware/migrate-vms-to-ontap-datastore.html 
+keywords: netapp, vmware, ontap, datastore, migration, svmotion, hcx, xvmotion, vmotion, vvol, iscsi, nfs, nvme, fc, sso 
+summary:  
+---
+= 将VM迁移到ONTAP数据存储库
+:allow-uri-read: 
+
+
+
+
+== 将VM迁移到ONTAP数据存储库
+
+作者：Sresh Thoppay
+
+[role="lead"]
+VMware vSphere by Broadcom支持使用VMFS、NFS和VVOl数据存储库托管虚拟机。客户可以选择使用超融合基础架构或集中式共享存储系统创建这些数据存储库。客户经常看到在基于ONTAP的存储系统上托管的价值、可以为虚拟机提供节省空间的快照和克隆、跨数据中心和云选择各种部署模式的能力、监控和警报工具的运营效率、用于检查VM数据的安全性、监管和可选合规性工具、 等等。
+
+可以使用适用于VMware vSphere的SnapCenter插件(SCV)保护ONTAP数据存储库上托管的VM。选择控制阀创建基于存储的快照、并复制到远程ONTAP存储系统。可以从主存储系统或二级存储系统执行还原。
+
+客户可以灵活地选择或Cloud Insights操作系统、也可以同时选择这两者或其他第三方工具、这些工具使用ONTAP API来进行故障排除、监控性能、报告和警报通知功能。
+
+客户可以使用ONTAP工具vCenter插件或其API轻松配置数据存储库、即使ONTAP数据存储库已启动、也可以将虚拟机迁移到该数据存储库。
+
+
+NOTE: 使用外部管理工具(如阿里阿自动化、Tanzu或其他Kubornetes类型)部署的某些VM通常取决于VM存储策略。如果在同一VM存储策略内的数据存储库之间进行迁移、则对应用程序的影响应较小。请与应用程序所有者联系、以将这些VM正确迁移到新数据存储库。推出vSphere 8 https://core.vmware.com/resource/vsphere-vmotion-notifications["VMotion通知"] 为vMotion准备应用程序。
+
+
+
+== 网络要求
+
+.使用vMotion迁移VM
+[%collapsible]
+====
+我们假定已为ONTAP数据存储库设置了双存储网络、以提供连接、容错和性能提升。
+
+在vSphere主机之间迁移VM也可通过vSphere主机的VMKernel接口进行。对于热迁移(已启动虚拟机)、将使用启用了vMotion服务的VMKernel接口；对于冷迁移(已关闭虚拟机)、将使用启用了配置服务的VMKernel接口来移动数据。如果未找到有效接口、则会使用管理接口移动某些使用情形可能不需要的数据。
+
+image::migrate-vms-to-ontap-image02.png[具有已启用服务的VMkernel]
+
+编辑VMKernel接口时、可以使用此处的选项启用所需的服务。
+
+image::migrate-vms-to-ontap-image01.png[VMkernel服务选项]
+
+
+TIP: 确保至少有两个高速活动上行链路NIC可用于vMotion和配置VMkernel接口所使用的端口组。
+
+====
+
+
+== 虚拟机迁移方案
+
+无论虚拟机的电源状态如何、通常都会使用VMotion来迁移虚拟机。下面提供了适用于特定情形的其他注意事项和迁移操作步骤。
+
+
+NOTE: 了解 https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-vcenter-esxi-management/GUID-0540DF43-9963-4AF9-A4DB-254414DC00DA.html["vSphere vMotion的虚拟机条件和限制"] 在继续执行任何VM迁移选项之前。
+
+.从特定vSphere数据存储库迁移虚拟机
+[%collapsible]
+====
+按照下面的操作步骤使用UI将VM迁移到新数据存储库。
+
+. 使用vSphere Web Client、从存储清单中选择数据存储库、然后单击VM选项卡。
++
+image::migrate-vms-to-ontap-image03.png[特定数据存储库上的VM]
+
+. 选择需要迁移的VM、然后右键单击以选择迁移选项。
++
+image::migrate-vms-to-ontap-image04.png[要迁移的VM]
+
+. 选择仅更改存储的选项、然后单击下一步
++
+image::migrate-vms-to-ontap-image05.png[仅更改存储]
+
+. 选择所需的虚拟机存储策略、然后选择兼容的数据存储库。单击下一步。
++
+image::migrate-vms-to-ontap-image06.png[符合虚拟机存储策略的数据存储库]
+
+. 查看并单击完成。
++
+image::migrate-vms-to-ontap-image07.png[存储迁移回顾]
+
+
+
+要使用PowerCLI迁移VM、请参见以下示例脚本。
+
+[source, powershell]
+----
+#Authenticate to vCenter
+Connect-VIServer -server vcsa.sddc.netapp.local -force
+
+# Get all VMs with filter applied for a specific datastore
+$vm = Get-DataStore 'vSanDatastore' | Get-VM Har*
+
+#Gather VM Disk info
+$vmdisk = $vm | Get-HardDisk
+
+#Gather the desired Storage Policy to set for the VMs. Policy should be available with valid datastores.
+$storagepolicy = Get-SPBMStoragePolicy 'NetApp Storage'
+
+#set VM Storage Policy for VM config and its data disks.
+$vm, $vmdisk | Get-SPBMEntityConfiguration | Set-SPBMEntityConfiguration -StoragePolicy $storagepolicy
+
+#Migrate VMs to Datastore specified by Policy
+$vm | Move-VM -Datastore (Get-SPBMCompatibleStorage -StoragePolicy $storagepolicy)
+
+#Ensure VM Storage Policy remains compliant.
+$vm, $vmdisk | Get-SPBMEntityConfiguration
+----
+====
+.在同一vSphere集群中迁移VM
+[%collapsible]
+====
+按照下面的操作步骤使用UI将VM迁移到新数据存储库。
+
+. 使用vSphere Web Client、从主机和集群清单中选择集群、然后单击VM选项卡。
++
+image::migrate-vms-to-ontap-image08.png[特定集群上的VM]
+
+. 选择需要迁移的VM、然后右键单击以选择迁移选项。
++
+image::migrate-vms-to-ontap-image04.png[要迁移的VM]
+
+. 选择仅更改存储的选项、然后单击下一步
++
+image::migrate-vms-to-ontap-image05.png[仅更改存储]
+
+. 选择所需的虚拟机存储策略、然后选择兼容的数据存储库。单击下一步。
++
+image::migrate-vms-to-ontap-image06.png[符合虚拟机存储策略的数据存储库]
+
+. 查看并单击完成。
++
+image::migrate-vms-to-ontap-image07.png[存储迁移回顾]
+
+
+
+要使用PowerCLI迁移VM、请参见以下示例脚本。
+
+[source, powershell]
+----
+#Authenticate to vCenter
+Connect-VIServer -server vcsa.sddc.netapp.local -force
+
+# Get all VMs with filter applied for a specific cluster
+$vm = Get-Cluster 'vcf-m01-cl01' | Get-VM Aria*
+
+#Gather VM Disk info
+$vmdisk = $vm | Get-HardDisk
+
+#Gather the desired Storage Policy to set for the VMs. Policy should be available with valid datastores.
+$storagepolicy = Get-SPBMStoragePolicy 'NetApp Storage'
+
+#set VM Storage Policy for VM config and its data disks.
+$vm, $vmdisk | Get-SPBMEntityConfiguration | Set-SPBMEntityConfiguration -StoragePolicy $storagepolicy
+
+#Migrate VMs to Datastore specified by Policy
+$vm | Move-VM -Datastore (Get-SPBMCompatibleStorage -StoragePolicy $storagepolicy)
+
+#Ensure VM Storage Policy remains compliant.
+$vm, $vmdisk | Get-SPBMEntityConfiguration
+----
+
+TIP: 如果数据存储库集群与完全自动化的存储DRS (动态资源计划)结合使用、并且这两个(源和目标)数据存储库的类型相同(VMS/NFS/VVOV)、请将这两个数据存储库保留在同一存储集群中、并通过在源上启用维护模式从源数据存储库迁移VM。经验与处理计算主机以进行维护的方式类似。
+
+====
+.在多个vSphere集群之间迁移VM
+[%collapsible]
+====
+
+NOTE: 请参见 https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-vcenter-esxi-management/GUID-03E7E5F9-06D9-463F-A64F-D4EC20DAF22E.html["CPU兼容性和vSphere增强型vMotion兼容性"] 源主机和目标主机的CPU系列或型号不同。
+
+按照下面的操作步骤使用UI将VM迁移到新数据存储库。
+
+. 使用vSphere Web Client、从主机和集群清单中选择集群、然后单击VM选项卡。
++
+image::migrate-vms-to-ontap-image08.png[特定集群上的VM]
+
+. 选择需要迁移的VM、然后右键单击以选择迁移选项。
++
+image::migrate-vms-to-ontap-image04.png[要迁移的VM]
+
+. 选择更改计算资源和存储的选项、然后单击"Next"(下一步)
++
+image::migrate-vms-to-ontap-image09.png[更改计算和存储]
+
+. 导航并选择要迁移的正确集群。
++
+image::migrate-vms-to-ontap-image12.png[选择目标集群]
+
+. 选择所需的虚拟机存储策略、然后选择兼容的数据存储库。单击下一步。
++
+image::migrate-vms-to-ontap-image13.png[符合虚拟机存储策略的数据存储库]
+
+. 选择VM文件夹以放置目标VM。
++
+image::migrate-vms-to-ontap-image14.png[选择目标VM文件夹]
+
+. 选择目标端口组。
++
+image::migrate-vms-to-ontap-image15.png[选择目标端口组]
+
+. 查看并单击完成。
++
+image::migrate-vms-to-ontap-image07.png[存储迁移回顾]
+
+
+
+要使用PowerCLI迁移VM、请参见以下示例脚本。
+
+[source, powershell]
+----
+#Authenticate to vCenter
+Connect-VIServer -server vcsa.sddc.netapp.local -force
+
+# Get all VMs with filter applied for a specific cluster
+$vm = Get-Cluster 'vcf-m01-cl01' | Get-VM Aria*
+
+#Gather VM Disk info
+$vmdisk = $vm | Get-HardDisk
+
+#Gather the desired Storage Policy to set for the VMs. Policy should be available with valid datastores.
+$storagepolicy = Get-SPBMStoragePolicy 'NetApp Storage'
+
+#set VM Storage Policy for VM config and its data disks.
+$vm, $vmdisk | Get-SPBMEntityConfiguration | Set-SPBMEntityConfiguration -StoragePolicy $storagepolicy
+
+#Migrate VMs to another cluster and Datastore specified by Policy
+$vm | Move-VM -Destination (Get-Cluster 'Target Cluster') -Datastore (Get-SPBMCompatibleStorage -StoragePolicy $storagepolicy)
+
+#When Portgroup is specific to each cluster, replace the above command with
+$vm | Move-VM -Destination (Get-Cluster 'Target Cluster') -Datastore (Get-SPBMCompatibleStorage -StoragePolicy $storagepolicy) -PortGroup (Get-VirtualPortGroup 'VLAN 101')
+
+#Ensure VM Storage Policy remains compliant.
+$vm, $vmdisk | Get-SPBMEntityConfiguration
+----
+====
+.在同一SSO域中的vCenter Server之间迁移VM
+[#vmotion-same-sso%collapsible]
+====
+按照下面的操作步骤将VM迁移到同一vSphere Client UI上列出的新vCenter Server。
+
+
+NOTE: 有关源vCenter版本和目标vCenter版本等其他要求、请查看 https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-vcenter-esxi-management/GUID-DAD0C40A-7F66-44CF-B6E8-43A0153ABE81.html["有关vCenter Server实例之间vMotion的要求的vSphere文档"]
+
+. 使用vSphere Web Client、从主机和集群清单中选择集群、然后单击VM选项卡。
++
+image::migrate-vms-to-ontap-image08.png[特定集群上的VM]
+
+. 选择需要迁移的VM、然后右键单击以选择迁移选项。
++
+image::migrate-vms-to-ontap-image04.png[要迁移的VM]
+
+. 选择更改计算资源和存储的选项、然后单击"Next"(下一步)
++
+image::migrate-vms-to-ontap-image09.png[更改计算和存储]
+
+. 在目标vCenter Server中选择目标集群。
++
+image::migrate-vms-to-ontap-image12.png[选择目标集群]
+
+. 选择所需的虚拟机存储策略、然后选择兼容的数据存储库。单击下一步。
++
+image::migrate-vms-to-ontap-image13.png[符合虚拟机存储策略的数据存储库]
+
+. 选择VM文件夹以放置目标VM。
++
+image::migrate-vms-to-ontap-image14.png[选择目标VM文件夹]
+
+. 选择目标端口组。
++
+image::migrate-vms-to-ontap-image15.png[选择目标端口组]
+
+. 查看迁移选项、然后单击完成。
++
+image::migrate-vms-to-ontap-image07.png[存储迁移回顾]
+
+
+
+要使用PowerCLI迁移VM、请参见以下示例脚本。
+
+[source, powershell]
+----
+#Authenticate to Source vCenter
+$sourcevc = Connect-VIServer -server vcsa01.sddc.netapp.local -force
+$targetvc = Connect-VIServer -server vcsa02.sddc.netapp.local -force
+
+# Get all VMs with filter applied for a specific cluster
+$vm = Get-Cluster 'vcf-m01-cl01'  -server $sourcevc| Get-VM Win*
+
+#Gather the desired Storage Policy to set for the VMs. Policy should be available with valid datastores.
+$storagepolicy = Get-SPBMStoragePolicy 'iSCSI' -server $targetvc
+
+#Migrate VMs to target vCenter
+$vm | Move-VM -Destination (Get-Cluster 'Target Cluster' -server $targetvc) -Datastore (Get-SPBMCompatibleStorage -StoragePolicy $storagepolicy -server $targetvc) -PortGroup (Get-VirtualPortGroup 'VLAN 101' -server $targetvc)
+
+$targetvm = Get-Cluster 'Target Cluster' -server $targetvc | Get-VM Win*
+
+#Gather VM Disk info
+$targetvmdisk = $targetvm | Get-HardDisk
+
+#set VM Storage Policy for VM config and its data disks.
+$targetvm, $targetvmdisk | Get-SPBMEntityConfiguration | Set-SPBMEntityConfiguration -StoragePolicy $storagepolicy
+
+#Ensure VM Storage Policy remains compliant.
+$targetvm, $targetvmdisk | Get-SPBMEntityConfiguration
+----
+====
+.在不同SSO域中的vCenter Server之间迁移VM
+[%collapsible]
+====
+
+NOTE: 此场景假定vCenter Server之间存在通信。否则、请检查下面列出的跨数据中心位置方案。有关前提条件、请检查 https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-vcenter-esxi-management/GUID-1960B6A6-59CD-4B34-8FE5-42C19EE8422A.html["有关Advanced Cross vCenter vMotion的vSphere文档"]
+
+按照下面的操作步骤使用UI将VM迁移到不同的vCenter Server。
+
+. 使用vSphere Web Client、选择源vCenter服务器、然后单击VM选项卡。
++
+image::migrate-vms-to-ontap-image10.png[源vCenter上的VM]
+
+. 选择需要迁移的VM、然后右键单击以选择迁移选项。
++
+image::migrate-vms-to-ontap-image04.png[要迁移的VM]
+
+. 选择选项"跨vCenter Server导出"、然后单击"下一步"
++
+image::migrate-vms-to-ontap-image11.png[跨vCenter Server导出]
+
++
+
+TIP: 也可以从目标vCenter Server导入虚拟机。对于该操作步骤、请检查 https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-vcenter-esxi-management/GUID-ED703E35-269C-48E0-A34D-CCBB26BFD93E.html["使用高级跨vCenter vMotion导入或克隆虚拟机"]
+
+. 提供vCenter凭据详细信息、然后单击Login。
++
+image::migrate-vms-to-ontap-image23.png[vCenter凭据]
+
+. 确认并接受vCenter Server的SSL证书指纹
++
+image::migrate-vms-to-ontap-image24.png[SSL指纹]
+
+. 展开目标vCenter并选择目标计算集群。
++
+image::migrate-vms-to-ontap-image25.png[选择目标计算集群]
+
+. 根据虚拟机存储策略选择目标数据存储库。
++
+image::migrate-vms-to-ontap-image26.png[选择目标数据存储库]
+
+. 选择目标VM文件夹。
++
+image::migrate-vms-to-ontap-image27.png[选择目标VM文件夹]
+
+. 为每个网络接口卡映射选择VM端口组。
++
+image::migrate-vms-to-ontap-image28.png[选择目标端口组]
+
+. 查看并单击完成、在vCenter Server之间启动vMotion。
++
+image::migrate-vms-to-ontap-image29.png[Cross vMotion Operation Review (交叉vMotion操作检查)]
+
+
+
+要使用PowerCLI迁移VM、请参见以下示例脚本。
+
+[source, powershell]
+----
+#Authenticate to Source vCenter
+$sourcevc = Connect-VIServer -server vcsa01.sddc.netapp.local -force
+$targetvc = Connect-VIServer -server vcsa02.sddc.netapp.local -force
+
+# Get all VMs with filter applied for a specific cluster
+$vm = Get-Cluster 'Source Cluster'  -server $sourcevc| Get-VM Win*
+
+#Gather the desired Storage Policy to set for the VMs. Policy should be available with valid datastores.
+$storagepolicy = Get-SPBMStoragePolicy 'iSCSI' -server $targetvc
+
+#Migrate VMs to target vCenter
+$vm | Move-VM -Destination (Get-Cluster 'Target Cluster' -server $targetvc) -Datastore (Get-SPBMCompatibleStorage -StoragePolicy $storagepolicy -server $targetvc) -PortGroup (Get-VirtualPortGroup 'VLAN 101' -server $targetvc)
+
+$targetvm = Get-Cluster 'Target Cluster' -server $targetvc | Get-VM Win*
+
+#Gather VM Disk info
+$targetvmdisk = $targetvm | Get-HardDisk
+
+#set VM Storage Policy for VM config and its data disks.
+$targetvm, $targetvmdisk | Get-SPBMEntityConfiguration | Set-SPBMEntityConfiguration -StoragePolicy $storagepolicy
+
+#Ensure VM Storage Policy remains compliant.
+$targetvm, $targetvmdisk | Get-SPBMEntityConfiguration
+----
+====
+.跨数据中心位置迁移VM
+[%collapsible]
+====
+* 如果通过使用NSX联合或其他选项在数据中心之间扩展第2层流量、请按照操作步骤在vCenter Server之间迁移VM。
+* HCX提供各种功能 https://docs.vmware.com/en/VMware-HCX/4.8/hcx-user-guide/GUID-8A31731C-AA28-4714-9C23-D9E924DBB666.html["迁移类型"] 在数据中心之间使用Replication Assisted vMotion移动VM、而不会出现任何停机。
+* https://docs.vmware.com/en/Site-Recovery-Manager/index.html["Site Recovery Manager （ SRM ）"] 通常用于灾难恢复、也经常用于利用基于存储阵列的复制进行计划内迁移。
+* 持续数据保护(Continuous Data Protection、CDP)产品使用 https://core.vmware.com/resource/vmware-vsphere-apis-io-filtering-vaio#section1["适用于IO的vSphere API (VAIO)"] 截获数据并将副本发送到远程位置、以实现近乎为零的RPO解决方案。
+* 还可以使用备份和恢复产品。但通常会导致较长的RTO。
+* https://docs.netapp.com/us-en/bluexp-disaster-recovery/get-started/dr-intro.html["BlueXP灾难恢复即服务(DRaaS)"] 利用基于存储阵列的复制并自动执行某些任务、以恢复目标站点上的VM。
+
+
+====
+.在混合云环境中迁移VM
+[%collapsible]
+====
+* https://docs.vmware.com/en/VMware-Cloud/services/vmware-cloud-gateway-administration/GUID-91C57891-4D61-4F4C-B580-74F3000B831D.html["配置混合链接模式"] 然后按照的操作步骤进行操作 link:#vmotion-same-sso["在同一SSO域中的vCenter Server之间迁移VM"]
+* HCX提供各种功能 https://docs.vmware.com/en/VMware-HCX/4.8/hcx-user-guide/GUID-8A31731C-AA28-4714-9C23-D9E924DBB666.html["迁移类型"] 在数据中心之间使用Replication Assisted vMotion、以便在VM启动时移动VM。
++
+** 链接：./EHC/aws-migrate-vmware-hcx.html [TR 4942：使用VMware HCX将工作负载迁移到FSx ONTAP数据存储库]
+** 链接：./EHC/azure-migrate-vmware-hcx.html [TR-4940：使用VMware HCX将工作负载迁移到Azure NetApp Files数据存储库—快速入门指南]
+** 链接：./EHC/VMware gcp-migrate-vmware-hcx.html [使用VMware HCX将工作负载迁移到Google Cloud上的NetApp云卷服务数据存储库VMware Engine—快速入门指南]
+
+
+* https://docs.netapp.com/us-en/bluexp-disaster-recovery/get-started/dr-intro.html["BlueXP灾难恢复即服务(DRaaS)"] 利用基于存储阵列的复制并自动执行某些任务、以恢复目标站点上的VM。
+* 使用受支持的持续数据保护(Continuous Data Protection、CDP)产品 https://core.vmware.com/resource/vmware-vsphere-apis-io-filtering-vaio#section1["适用于IO的vSphere API (VAIO)"] 截获数据并将副本发送到远程位置、以实现近乎为零的RPO解决方案。
+
+
+
+TIP: 如果源VM驻留在块VVOR数据存储库上、则可以使用SnapMirror将其复制到其他受支持的云提供商的Amazon FSx for NetApp ONTAP或Cloud Volumes ONTAP (CVO)、并将其用作云原生VM的iSCSI卷。
+
+====
+
+
+== VM模板迁移方案
+
+VM模板可以由vCenter Server或内容库进行管理。VM模板、VF和OVA模板的分发、其他类型的文件通过将其发布到本地内容库中来处理、远程内容库可以订阅。
+
+* 存储在vCenter清单中的VM模板可以转换为VM并使用VM迁移选项。
+* OVF和OVA模板、则可以将存储在内容库中的其他类型的文件克隆到其他内容库。
+* 内容库VM模板可以托管在任何数据存储库上、需要将其添加到新的内容库中。
+
+
+.迁移数据存储库上托管的VM模板
+[%collapsible]
+====
+. 在vSphere Web Client中、右键单击VM and Template文件夹视图下的VM模板、然后选择要转换为VM的选项。
++
+image::migrate-vms-to-ontap-image16.png[将VM模板转换为VM]
+
+. 将其转换为虚拟机后、请按照虚拟机迁移选项进行操作。
+
+
+====
+.克隆内容库项目
+[%collapsible]
+====
+. 在vSphere Web Client中、选择内容库
++
+image::migrate-vms-to-ontap-image17.png[内容库选择]
+
+. 选择要克隆项目的内容库
+. 右键单击该项目，然后单击“Clone Item (克隆项目)”。
++
+image::migrate-vms-to-ontap-image18.png[克隆内容库项目]
+
++
+
+WARNING: 如果使用操作菜单、请确保列出正确的目标对象以执行操作。
+
+. 选择目标内容库、然后单击确定。
++
+image::migrate-vms-to-ontap-image19.png[选择目标内容库]
+
+. 验证项目是否可用于目标内容库。
++
+image::migrate-vms-to-ontap-image20.png[验证克隆项]
+
+
+
+以下是将内容库中的内容库项目从CL01复制到CL02的PowerCLI脚本示例。
+
+[source, powershell]
+----
+#Authenticate to vCenter Server(s)
+$sourcevc = Connect-VIServer -server 'vcenter01.domain' -force
+$targetvc = Connect-VIServer -server 'vcenter02.domain' -force
+
+#Copy content library items from source vCenter content library CL01 to target vCenter content library CL02.
+Get-ContentLibaryItem -ContentLibary (Get-ContentLibary 'CL01' -Server $sourcevc) | Where-Object { $_.ItemType -ne 'vm-template' } | Copy-ContentLibaryItem -ContentLibrary (Get-ContentLibary 'CL02' -Server $targetvc)
+----
+====
+.在内容库中将VM添加为模板
+[%collapsible]
+====
+. 在vSphere Web Client中、选择虚拟机、然后右键单击以选择"Clone as Template in Library (在库中克隆为模板)"
++
+image::migrate-vms-to-ontap-image21.png[VM克隆为libary中的模板]
+
++
+
+TIP: 如果选择将VM模板克隆到libary中、则它只能将其存储为VF和OVA模板、而不能存储为VM模板。
+
+. 确认选择"Template type"(模板类型)作为"VM Template "(VM模板)、然后按照" Answering the wizard"(回答向导)完成此操作
++
+image::migrate-vms-to-ontap-image22.png[模板类型选择]
+
++
+
+NOTE: 有关内容库中VM模板的其他详细信息、请查看 https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-vm-administration/GUID-E9EAF7AC-1C08-441A-AB80-0BAA1EAF9F0A.html["《vSphere VM管理指南》"]
+
+
+
+====
+
+
+== 用例
+
+.从第三方存储系统(包括vSAN)迁移到ONTAP数据存储库。
+[%collapsible%open]
+====
+* 根据ONTAP数据存储库的配置位置、从上面选择虚拟机迁移选项。
+
+
+====
+.从先前版本迁移到最新版本的vSphere。
+[%collapsible%open]
+====
+* 如果无法进行原位升级、可以启动新环境并使用上述迁移选项。
++
+
+TIP: 在"跨vCenter迁移"选项中、如果源上没有导出选项、则从目标导入。对于该操作步骤、请检查 https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-vcenter-esxi-management/GUID-ED703E35-269C-48E0-A34D-CCBB26BFD93E.html["使用高级跨vCenter vMotion导入或克隆虚拟机"]
+
+
+
+====
+.迁移到VCF工作负载域。
+[%collapsible%open]
+====
+* 将VM从每个vSphere集群迁移到目标工作负载域。
++
+
+NOTE: 要与源vCenter上其他集群上的现有虚拟机进行网络通信、请通过将源vCenter vSphere主机添加到传输区域来扩展NSX分段、或者使用边缘上的L2网桥在VLAN中进行L2通信。查看的NSX文档 https://docs.vmware.com/en/VMware-NSX/4.1/administration/GUID-0E28AC86-9A87-47D4-BE25-5E425DAF7585.html["配置用于桥接的边缘VM"]
+
+
+
+====
+
+
+== 其他资源
+
+* https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-vcenter-esxi-management/GUID-FE2B516E-7366-4978-B75C-64BF0AC676EB.html["vSphere虚拟机迁移"]
+* https://core.vmware.com/blog/whats-new-vsphere-8-vmotion["vSphere 8 for vMotion中的新增功能"]
+* https://core.vmware.com/vmotion["vSphere vMotion资源"]
+* https://docs.vmware.com/en/VMware-NSX/4.1/administration/GUID-47F34658-FA46-4160-B2E0-4EAE722B43F0.html["NSX联合中的第0层网关配置"]
+* https://docs.vmware.com/en/VMware-HCX/4.8/hcx-user-guide/GUID-BFD7E194-CFE5-4259-B74B-991B26A51758.html["《HCX 4.8用户指南》"]
+* https://docs.vmware.com/en/Site-Recovery-Manager/index.html["VMware Site Recovery Manager 文档"]
+* https://docs.netapp.com/us-en/bluexp-disaster-recovery/get-started/dr-intro.html["适用于VMware的BlueXP灾难恢复"]
+

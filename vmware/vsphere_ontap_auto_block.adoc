@@ -1,0 +1,57 @@
+---
+sidebar: sidebar 
+permalink: vmware/vsphere_ontap_auto_block.html 
+keywords: vSphere, datastore, VMFS, FC, NVMe/FC, iSER, iSCSI, FCoE,SAN, ONTAP tools 
+summary: 此页面提供了在 VMware vSphere 环境中部署 NetApp ONTAP 存储 iSCSI VMFS 数据存储库的步骤。 
+---
+= 使用 ONTAP 配置 vSphere 传统块存储
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+:scriptsdir: ./../scripts/
+:author: Suresh Thoppay, TME - Hybrid Cloud Solutions
+:firstname: Suresh
+:authorinitials: STT
+:middlename: Thoppay,
+:lastname: TME - Hybrid Cloud Solutions
+:authors: Suresh Thoppay, TME - Hybrid Cloud Solutions
+
+
+[role="lead"]
+VMware vSphere 支持以下 VMFS 数据存储库选项，并指定了 ONTAP SAN 协议支持。
+
+[cols="70%, 30%"]
+|===
+| VMFS 数据存储库选项 | ONTAP SAN 协议支持 
+
+
+ a| 
+link:vsphere_ontap_auto_block_fc.html["光纤通道（ FC ）"]
+| 是的。 
+
+
+ a| 
+link:vsphere_ontap_auto_block_fcoe.html["以太网光纤通道（ FCoE ）"]
+| 是的。 
+
+
+ a| 
+link:vsphere_ontap_auto_block_iscsi.html["iSCSI"]
+| 是的。 
+
+
+| 适用于 RDMA 的 iSCSI 扩展（ iSER ） | 否 
+
+
+ a| 
+link:vsphere_ontap_auto_block_nvmeof.html["采用 FC 的基于网络结构的 NVMe （ NVMe/FC ）"]
+| 是的。 
+
+
+| 采用基于融合以太网的 RDMA 的基于网络结构的 NVMe （ NVMe/RoCE ） | 否 
+|===
+
+NOTE: 如果需要 iSER 或 NVMe/RoCE VMFS ，请检查基于 SANtricity 的存储系统。

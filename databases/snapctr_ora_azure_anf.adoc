@@ -21,7 +21,7 @@ NetApp公司Allen Cao、Niyaz Mohamed
 
 NetApp SnapCenter 软件是一款易于使用的企业平台，可安全地协调和管理应用程序，数据库和文件系统之间的数据保护。它可以将备份、还原和克隆生命周期管理工作负载分流给应用程序所有者、而不会影响对存储系统上的活动进行监控和监管的能力、从而简化这些任务。通过利用基于存储的数据管理、它可以提高性能和可用性、并缩短测试和开发时间。
 
-在TR-4987中、 link:https://docs.netapp.com/us-en/netapp-solutions/databases/automation_ora_anf_nfs.html["使用NFS在Azure NetApp Files上简化、自动化的Oracle部署"^]中、我们演示了在Azure云中的Azure NetApp Files (ANF)上自动部署Oracle。在本文档中、我们使用非常友好的SnapCenter UI工具展示了Azure云中ANF上的Oracle数据库保护和管理。
+在TR-4987中、 link:automation_ora_anf_nfs.html["使用NFS在Azure NetApp Files上简化、自动化的Oracle部署"^]中、我们演示了在Azure云中的Azure NetApp Files (ANF)上自动部署Oracle。在本文档中、我们使用非常友好的SnapCenter UI工具展示了Azure云中ANF上的Oracle数据库保护和管理。
 
 此解决方案 可解决以下使用情形：
 
@@ -141,10 +141,10 @@ image::automation_ora_anf_nfs_archit.png[此图详细展示了AWS公共云中使
 
 [%collapsible]
 ====
-部署要求现有Oracle数据库在Azure中的ANF上运行。如果没有、请按照以下步骤创建两个Oracle数据库以进行解决方案验证。有关在Azure云中的ANF上通过自动化部署Oracle数据库的详细信息、请参见TR-4987： link:https://docs.netapp.com/us-en/netapp-solutions/databases/automation_ora_anf_nfs.html["使用NFS在Azure NetApp Files上简化、自动化的Oracle部署"^]
+部署要求现有Oracle数据库在Azure中的ANF上运行。如果没有、请按照以下步骤创建两个Oracle数据库以进行解决方案验证。有关在Azure云中的ANF上通过自动化部署Oracle数据库的详细信息、请参见TR-4987： link:automation_ora_anf_nfs.html["使用NFS在Azure NetApp Files上简化、自动化的Oracle部署"^]
 
 . 已设置Azure帐户、并且已在Azure帐户中创建必要的vNet和网段。
-. 在Azure云门户中、将Azure Linux VM部署为Oracle数据库服务器。为Oracle数据库创建Azure NetApp Files容量池和数据库卷。为azureuser到DB服务器启用VM SSH私有/公共密钥身份验证。有关环境设置的详细信息、请参见上一节中的架构图。另见 link:https://docs.netapp.com/us-en/netapp-solutions/databases/azure_ora_nfile_procedures.html["Azure VM和Azure NetApp Files 上的Oracle分步部署过程"^] 了解详细信息。
+. 在Azure云门户中、将Azure Linux VM部署为Oracle数据库服务器。为Oracle数据库创建Azure NetApp Files容量池和数据库卷。为azureuser到DB服务器启用VM SSH私有/公共密钥身份验证。有关环境设置的详细信息、请参见上一节中的架构图。另见 link:azure_ora_nfile_procedures.html["Azure VM和Azure NetApp Files 上的Oracle分步部署过程"^] 了解详细信息。
 +
 
 NOTE: 对于部署了本地磁盘冗余的Azure VM、请确保在VM根磁盘中至少分配了128 G的空间、以便有足够的空间来暂存Oracle安装文件和添加操作系统交换文件。相应地展开/tmplv和/rootlv OS分区。确保数据库卷命名遵循vmname-u01、vmname-u02和vmname-u03约定。
@@ -160,14 +160,14 @@ sudo lvresize -r -L +20G /dev/mapper/rootvg-rootlv
 sudo lvresize -r -L +10G /dev/mapper/rootvg-tmplv
 ----
 . 从Azure云门户中、配置Windows服务器以使用最新版本运行NetApp SnapCenter UI工具。有关详细信息、请参见以下链接： link:https://docs.netapp.com/us-en/snapcenter/install/task_install_the_snapcenter_server_using_the_install_wizard.html["安装 SnapCenter 服务器"^]。
-. 将Linux VM配置为安装了最新版本的Ansv近 和Git的Ansv可 控制器节点。有关详细信息、请参见以下链接： link:https://docs.netapp.com/us-en/netapp-solutions/automation/getting-started.html["NetApp解决方案 自动化入门"^] 在第-节中
+. 将Linux VM配置为安装了最新版本的Ansv近 和Git的Ansv可 控制器节点。有关详细信息、请参见以下链接： link:../automation/getting-started.html["NetApp解决方案 自动化入门"^] 在第-节中
 `Setup the Ansible Control Node for CLI deployments on RHEL / CentOS` 或
 `Setup the Ansible Control Node for CLI deployments on Ubuntu / Debian`。
 +
 
 NOTE: 只要通过ssh端口访问Azure数据库VM、则Ansensure控制器节点就可以查找内部未命中或Azure云中的位置。
 
-. 克隆一份适用于NFS的NetApp Oracle部署自动化工具包副本。按照中的说明进行操作 link:https://docs.netapp.com/us-en/netapp-solutions/databases/automation_ora_anf_nfs.html["TR-4887"^] 执行这些操作手册。
+. 克隆一份适用于NFS的NetApp Oracle部署自动化工具包副本。按照中的说明进行操作 link:automation_ora_anf_nfs.html["TR-4887"^] 执行这些操作手册。
 +
 [source, cli]
 ----
@@ -548,6 +548,6 @@ link:https://docs.netapp.com/us-en/snapcenter/index.html["https://docs.netapp.co
 
 * TR-4987：《在采用NFS的Azure NetApp Files上简化的自动化Oracle部署》
 +
-link:https://docs.netapp.com/us-en/netapp-solutions/databases/automation_ora_anf_nfs.html["https://docs.netapp.com/us-en/netapp-solutions/databases/automation_ora_anf_nfs.html"^]
+link:automation_ora_anf_nfs.html["部署操作步骤"]
 
 

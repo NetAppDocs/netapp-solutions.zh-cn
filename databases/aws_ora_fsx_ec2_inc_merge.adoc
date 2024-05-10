@@ -107,9 +107,9 @@ image::aws_ora_fsx_ec2_vldb_architecture.png[此图详细展示了使用FSxN在A
 
 我们假定您已在VPC中的AWS EC2环境中部署Oracle VLDB。如果您需要有关在AWS中部署Oracle的帮助、请参阅以下技术报告以获取帮助。
 
-* link:https://docs.netapp.com/us-en/netapp-solutions/databases/aws_ora_fsx_ec2_deploy_intro.html["基于EC2和FSx的Oracle数据库部署最佳实践"^]
-* link:https://docs.netapp.com/us-en/netapp-solutions/databases/aws_ora_fsx_ec2_iscsi_asm.html["使用iSCSI/ASM在AWS FSX/EC2中部署和保护Oracle数据库"^]
-* link:https://docs.netapp.com/us-en/netapp-solutions/databases/aws_ora_fsx_ec2_nfs_asm.html["Oracle 19c在使用NFS/ASM的AWS FSX/EC2上独立重新启动"^]
+* link:aws_ora_fsx_ec2_deploy_intro.html["基于EC2和FSx的Oracle数据库部署最佳实践"^]
+* link:aws_ora_fsx_ec2_iscsi_asm.html["使用iSCSI/ASM在AWS FSX/EC2中部署和保护Oracle数据库"^]
+* link:aws_ora_fsx_ec2_nfs_asm.html["Oracle 19c在使用NFS/ASM的AWS FSX/EC2上独立重新启动"^]
 
 
 您的Oracle VLDB可以在FSx ONTAP上运行、也可以在AWS EC2生态系统中的任何其他可选存储上运行。下一节将分步介绍如何设置RMAN增量合并到Oracle VLDB的映像副本、该副本暂存在AWS FSx ONTAP存储的NFS挂载中。
@@ -999,7 +999,7 @@ RMAN> @rman_bkup_merge.cmd
 . 通过AWS EC2控制台访问操作系统和版本相同的新EC2数据库实例主机ora_02。使用与主EC2数据库服务器主机相同的修补程序和Oracle预安装RPM配置操作系统内核、并向主机添加交换空间。使用纯软件选项在主EC2数据库服务器主机中安装相同版本和修补程序的Oracle。这些任务可通过以下链接中提供的NetApp自动化工具包自动执行。
 +
 工具包： link:https://github.com/NetApp-Automation/na_oracle19c_deploy["na_oracle19c_dDeploy"^]
-文档： link:https://docs.netapp.com/us-en/netapp-solutions/databases/marketing_overview.html#awxtower-deployments["在 NFS 上自动部署适用于 ONTAP 的 Oracle19c"^]
+文档： link:marketing_overview.html#awxtower-deployments["在 NFS 上自动部署适用于 ONTAP 的 Oracle19c"^]
 
 . 配置Oracle环境的方式与主EC2数据库实例主机ora_01类似、例如oratab、oraInst.loc和Oracle用户.bash_profile。最好将这些文件备份到FSxN NFS挂载点。
 . FSxN NFS挂载上的Oracle数据库备份映像副本存储在跨越AWS可用性区域的FSx集群上、以实现冗余、高可用性和高性能。只要网络连接可访问、NFS文件系统就可以轻松挂载到新服务器上。以下过程会将Oracle VLDB备份的映像副本挂载到新配置的EC2数据库实例主机以进行恢复。
