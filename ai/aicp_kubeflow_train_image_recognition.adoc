@@ -1,0 +1,71 @@
+---
+sidebar: sidebar 
+permalink: ai/aicp_kubeflow_train_image_recognition.html 
+keywords: Jupyter Notebook, Kubeflow Pipeline, NetApp DataOps Toolkit, MNIST, Image Recognition 
+summary: 使用NetApp的开源MLOps—示例工作流—使用Kubeflow和NetApp DataOps工具包训练图像识别模型 
+---
+= 示例工作流-使用Kubeflow和NetApp数据操作工具包训练图像识别模型
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+本节介绍使用Kubeflow和NetApp数据操作工具包培训和部署用于图像识别的神经网络所涉及的步骤。此示例用于展示整合了NetApp存储的培训作业。
+
+
+
+== 前提条件
+
+创建一个包含所需配置的文档、以用于Kubeflow管道中的训练和测试步骤。
+以下是一个多克尔文件示例-
+
+[source]
+----
+FROM pytorch/pytorch:latest
+RUN pip install torchvision numpy scikit-learn matplotlib tensorboard
+WORKDIR /app
+COPY . /app
+COPY train_mnist.py /app/train_mnist.py
+CMD ["python", "train_mnist.py"]
+----
+根据您的要求，安装运行该程序所需的所有必需库和软件包。在训练机器学习模型之前、我们假定您已部署有效的Kubeflow。
+
+
+
+== 使用PyTorch和Kubeflow管道训练有关MNIST数据的小型NN
+
+我们以一个小型神经网络为例、该网络是根据MNIST数据进行训练的。MNIST数据集由0到9位数字的字母图像组成。图像的大小为28x28像素。数据集分为60、000个训练影像和10、000个验证影像。用于此实验的神经网络是一个2层馈送网络。使用Kubeflow管道执行培训。请参见文档 https://www.kubeflow.org/docs/components/pipelines/v1/introduction/["此处"^] 有关详细信息 ...我们的Kubeflow管道整合了"前提条件"部分中的Docker映像。
+
+image:kubeflow_pipeline.png["Kubeflow管道运行可视化"]
+
+
+
+== 使用Tensorboard直观显示结果
+
+模型训练完成后、我们可以使用Tensorboard直观显示结果。 https://www.tensorflow.org/tensorboard["Tensorboard"^] 作为Kubeflow信息板上的一项功能提供。您可以为您的作业创建自定义的tensorboard。以下示例显示了训练精度与的图解环比和训练损失的数量与时代的数量。
+
+image:tensorboard_graph.png["训练损失和准确性的Tensorboard图"]
+
+
+
+== 使用Katb试验超参数
+
+https://www.kubeflow.org/docs/components/katib/hyperparameter/["Katb."^] 是Kubeflow中的一个工具、可用于实验模型超参数。要创建实验、请先定义所需的指标/目标。这通常是测试准确性。定义指标后、选择要使用的超参数(优化器/leining_rate /层数)。Katb使用用户定义的值执行超参数扫描、以找到满足所需度量的最佳参数组合。您可以在用户界面的每个部分中定义这些参数。或者，也可以使用必要的规范定义*YAML*文件。下面是一个Katis实验的示意图-
+
+image:katib_experiment_1.png["带有超参数的Katb检测仪表板"]
+
+image:katib_experiment_2.png["试用检查成功"]
+
+
+
+== 使用NetApp快照保存数据以实现可跟踪性
+
+在模型训练期间、我们可能希望保存训练数据集的快照、以便于跟踪。为此、我们可以向管道中添加Snapshot步骤、如下所示。要创建快照、可以使用 https://github.com/NetApp/netapp-dataops-toolkit/tree/main/netapp_dataops_k8s["适用于Kubernetes的NetApp DataOps工具包"^]。
+
+image:kubeflow_snapshot.png["用于在Kubeflow中构建Snapshot管道的代码"]
+
+请参见 https://github.com/NetApp/netapp-dataops-toolkit/tree/main/netapp_dataops_k8s/Examples/Kubeflow["适用于Kubeflow的NetApp数据操作工具包示例"^] 有关详细信息 ...

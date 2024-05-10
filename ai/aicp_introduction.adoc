@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: ai/aicp_introduction.html 
 keywords: tr-4798, tr4798, 4798, NetApp AI, Machine, Deep learning, introduction 
-summary: 此报告介绍如何快速克隆数据命名空间。它演示了如何定义和实施 AI 培训工作流，这些工作流可以近乎即时地创建数据和模型基线，以实现可追溯性和版本控制。同时，还介绍了如何在站点和区域之间无缝复制数据，以及如何快速配置 Jupyter 笔记本电脑工作空间，以便访问海量数据集。 
+summary: 本解决方案旨在演示可整合到MLOps工作流中的多种不同开源工具和框架。这些不同的工具和框架可以结合使用、也可以单独使用、具体取决于要求和用例。 
 ---
-= TR-4798 ： NetApp AI 控制平台
+= NetApp的开源MLOps
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,14 +14,17 @@ summary: 此报告介绍如何快速克隆数据命名空间。它演示了如�
 
 
 NetApp 公司 Mike Oglesby
+NetApp公司的Mohan Acharya先生
 
 [role="lead"]
-各行各业各种规模的企业和组织都在转向人工智能（ AI ），机器学习（ ML ）和深度学习（ DL ），以解决实际问题，提供创新产品和服务，并在竞争日益激烈的市场中占据优势。随着企业越来越多地使用 AI ， ML 和 DL ，他们面临着许多挑战，包括工作负载可扩展性和数据可用性。本文档演示了如何使用 NetApp AI 控制平台来应对这些挑战， NetApp AI 控制平台是一种将 NetApp 数据管理功能与常见开源工具和框架配对的解决方案。
+各行各业各种规模的企业和组织都在转向人工智能（ AI ），机器学习（ ML ）和深度学习（ DL ），以解决实际问题，提供创新产品和服务，并在竞争日益激烈的市场中占据优势。随着企业越来越多地使用 AI ， ML 和 DL ，他们面临着许多挑战，包括工作负载可扩展性和数据可用性。本解决方案演示了如何通过将NetApp数据管理功能与常用开源工具和框架结合使用来应对这些挑战。
 
-此报告介绍如何快速克隆数据命名空间。此外，还将向您展示如何在站点和区域之间无缝复制数据，以创建统一的统一 AI/ML/DL 数据管道。此外，它还会指导您完成 AI ， ML 和 DL 培训工作流的定义和实施，这些工作流可近乎即时地创建数据和模型基线，以实现可追溯性和版本控制。使用此解决方案，您可以跟踪每个模型训练返回到用于训练和 / 或验证模型的确切数据集。最后，本文档将向您介绍如何快速配置 Jupyter 笔记本电脑工作空间，以便访问海量数据集。
+本解决方案旨在演示可整合到MLOps工作流中的多种不同开源工具和框架。这些不同的工具和框架可以结合使用、也可以单独使用、具体取决于要求和用例。
 
-注意：对于涉及大量需要共享访问同一数据集的 GPU 服务器的 HPC 模式大规模分布式培训，或者如果您需要 / 更喜欢并行文件系统，请查看 link:https://www.netapp.com/pdf.html?item=/media/31317-tr-4890.pdf["TR-4890"^]。本技术报告介绍了如何包括 link:https://blog.netapp.com/solution-support-for-beegfs-and-e-series/["NetApp 完全支持的并行文件系统解决方案 BeeGFS"^] 作为 NetApp AI 控制平台的一部分。此解决方案可从少数 NVIDIA DGX A100 系统扩展到全闪满的 140 节点 SuperPOD 。
+此解决方案涵盖以下工具/框架：
 
-NetApp AI 控制平台面向数据科学家和数据工程师，因此只需极少的 NetApp 或 NetApp ONTAP ® 专业知识即可。借助此解决方案，可以使用简单熟悉的工具和界面来执行数据管理功能。如果您的环境中已有 NetApp 存储，您可以立即测试运行 NetApp AI Control 平台。如果您要测试解决方案驱动器，但尚未安装 NetApp 存储，请访问 http://cloud.netapp.com/["cloud.netapp.com"^]，您只需几分钟即可使用基于云的 NetApp 存储解决方案启动并运行。下图显示了解决方案的可视化视图。
+* link:https://airflow.apache.org["Apache 气流"]
+* link:https://www.kubeflow.org["Kubeflow"]
+
 
 image:aicp_image1.png["错误：缺少图形映像"]

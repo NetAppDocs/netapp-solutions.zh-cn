@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: ai/aicp_apache_airflow_deployment.html 
 keywords: AI, control plane, apache, airflow 
-summary: 本节介绍在 Kubernetes 集群中部署气流时必须完成的任务。 
+summary: 采用NetApp的开源MLOps—Apache Airflow部署 
 ---
 = Apache Airflow 部署
 :hardbreaks:
@@ -14,7 +14,7 @@ summary: 本节介绍在 Kubernetes 集群中部署气流时必须完成的任�
 
 
 [role="lead"]
-NetApp 建议在 Kubernetes 顶部运行 Apache Airflow 。本节介绍在 Kubernetes 集群中部署气流时必须完成的任务。
+本节介绍在 Kubernetes 集群中部署气流时必须完成的任务。
 
 
 NOTE: 可以在 Kubernetes 以外的平台上部署 Airflow 。在 Kubernetes 以外的平台上部署气流不在此解决方案的范围内。
@@ -26,7 +26,7 @@ NOTE: 可以在 Kubernetes 以外的平台上部署 Airflow 。在 Kubernetes �
 在执行本节所述的部署练习之前，我们假定您已执行以下任务：
 
 . 您已有一个工作正常的 Kubernetes 集群。
-. 您已按照《 NetApp Trident 部署和配置》一节中所述在 Kubernetes 集群中安装和配置 NetApp Trident 。
+. 您已在Kubbernetes集群中安装并配置NetApp Asta三端存储。有关Asta三项功能的更多详细信息、请参见 link:https://docs.netapp.com/us-en/trident/index.html["Astra Trident 文档"]。
 
 
 
@@ -39,7 +39,7 @@ Airflow 可使用 Kubernetes 常用的软件包管理器 Helm 进行部署。在
 
 == 设置默认 Kubernetes StorageClass
 
-在部署 Airflow 之前，您必须在 Kubernetes 集群中指定一个默认 StorageClass 。气流部署过程会尝试使用默认 StorageClass 配置新的永久性卷。如果未将任何 StorageClass 指定为默认 StorageClass ，则部署将失败。要在集群中指定默认 StorageClass ，请按照一节中所述的说明进行操作 link:aicp_kubeflow_deployment_overview.html["Kubeflow 部署"]。如果已在集群中指定默认 StorageClass ，则可以跳过此步骤。
+在部署 Airflow 之前，您必须在 Kubernetes 集群中指定一个默认 StorageClass 。气流部署过程会尝试使用默认 StorageClass 配置新的永久性卷。如果未将任何 StorageClass 指定为默认 StorageClass ，则部署将失败。要在集群中指定默认StorageClass、请按照中所述的说明进行操作 link:aicp_kubeflow_deployment_overview.html["Kubeflow 部署"] 部分。如果已在集群中指定默认 StorageClass ，则可以跳过此步骤。
 
 
 

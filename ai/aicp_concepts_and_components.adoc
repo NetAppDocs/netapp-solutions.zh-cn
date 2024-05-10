@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: ai/aicp_concepts_and_components.html 
 keywords: Trident, DeepOps, ONTAP, FlexClone, containers, AI, Kubernetes, Kubeflow, Jupyter, Airflow 
-summary: 此页面提供了了解 NetApp 如何推进 AI 项目的背景信息，包括有关容器， Kubernetes ， NetApp Trident 等的信息。 
+summary: 采用NetApp的开源MLOps—技术概述 
 ---
-= 概念和组件
+= 技术概述
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -40,39 +40,49 @@ image:aicp_image2.png["错误：缺少图形映像"]
 
 == Kubernetes
 
-Kubernetes 是一款开源分布式容器编排平台，最初由 Google 设计，现在由 Cloud 原生计算基金会（ CNCF ）维护。Kubernetes 可以为容器化应用程序实现部署，管理和扩展功能的自动化。近年来， Kubernetes 已成为主导容器业务流程平台。虽然支持其他容器打包格式和运行时间，但 Kubernetes 最常用作 Docker 容器的业务流程系统。有关详细信息，请访问 https://kubernetes.io["Kubernetes 网站"^]。
+Kubernetes 是一款开源分布式容器编排平台，最初由 Google 设计，现在由 Cloud 原生计算基金会（ CNCF ）维护。Kubernetes 可以为容器化应用程序实现部署，管理和扩展功能的自动化。近年来， Kubernetes 已成为主导容器业务流程平台。有关详细信息，请访问 https://kubernetes.io["Kubernetes 网站"^]。
 
 
 
-== NetApp Trident
+== NetApp Astra Trident
 
-Trident 是一款由 NetApp 开发和维护的开源存储编排程序，可大大简化 Kubernetes 工作负载的永久性存储的创建，管理和使用。Trident 本身是 Kubernetes 本机应用程序，直接在 Kubernetes 集群中运行。借助 Trident ， Kubernetes 用户（开发人员，数据科学家， Kubernetes 管理员等）可以采用他们已熟悉的标准 Kubernetes 格式创建，管理永久性存储卷并与其交互。同时，他们还可以利用 NetApp 的高级数据管理功能以及由 NetApp 技术提供支持的数据网络结构。Trident 可将持久存储的复杂性抽象化，并使其易于使用。有关详细信息，请访问 https://netapp.io/persistent-storage-provisioner-for-kubernetes/["Trident 网站"^]。
+Asta Trident支持在公有云或内部环境中的所有常见NetApp存储平台上使用和管理存储资源、包括ONTAP (AFF、FAS、Select、云、 Amazon FSx for NetApp ONTAP)、Element软件(NetApp HCI、SolidFire)、Azure NetApp Files服务以及Google Cloud上的Cloud Volumes Service。Asta Trident是一款符合容器存储接口(CSI)的动态存储编排程序、可与Kubbernetes本机集成。
 
 
 
-== NVIDIA DeepOps
+== NetApp DataOps 工具包
 
-DeepOps 是 NVIDIA 的一个开源项目，通过使用 Ansible ，可以根据最佳实践自动部署 GPU 服务器集群。DeepOps 采用模块化设计，可用于执行各种部署任务。在本文档及其所述的验证练习中， DeepOps 用于部署一个由 GPU 服务器辅助节点组成的 Kubernetes 集群。有关详细信息，请访问 https://github.com/NVIDIA/deepops["DeepOps 网站"^]。
+。 link:https://github.com/NetApp/netapp-dataops-toolkit["NetApp DataOps 工具包"] 是一款基于Python的工具、可简化由高性能横向扩展NetApp存储提供支持的开发/培训工作空间和参考服务器的管理。主要功能包括：
+
+* 快速配置以高性能横向扩展NetApp存储为后盾的新的高容量工作空间。
+* 近乎即时地克隆高容量工作空间、以便进行实验或快速迭代。
+* 近乎即时地保存高容量工作空间的快照、以便进行备份和/或可追溯性/基线化。
+* 近乎即时地配置、克隆和快照高容量、高性能数据卷。
+
 
 
 
 == Kubeflow
 
-Kubeflow 是一款适用于 Kubernetes 的开源 AI 和 ML 工具包，最初由 Google 开发。通过 Kubeflow 项目，可以在 Kubernetes 上轻松，便携且可扩展地部署 AI 和 ML 工作流。Kubeflow 将 Kubernetes 的错综复杂之处抽象出来，让数据科学家能够专注于他们最了解的―数据科学。有关可视化效果，请参见下图。随着企业 IT 部门越来越多地在 Kubernetes 上实现标准化， Kubeflow 的吸引力也越来越大。有关详细信息，请访问 http://www.kubeflow.org/["Kubeflow 网站"^]。
-
-image:aicp_image3.png["错误：缺少图形映像"]
+Kubeflow 是一款适用于 Kubernetes 的开源 AI 和 ML 工具包，最初由 Google 开发。通过 Kubeflow 项目，可以在 Kubernetes 上轻松，便携且可扩展地部署 AI 和 ML 工作流。Kubeflow―了Kubenetes的复杂性、使数据科学家能够专注于他们最了解的数据科学。有关可视化效果，请参见下图。对于更喜欢一体化MLOps平台的组织来说、Kubeflow是一个很好的开源选择。有关详细信息，请访问 http://www.kubeflow.org/["Kubeflow 网站"^]。
 
 
 
 === KubeFlow 管道
 
-Kubeflow 管道是 Kubeflow 的一个关键组件。Kubeflow 管道是一个平台和标准，用于定义和部署可移植且可扩展的 AI 和 ML 工作流。有关详细信息，请参见 https://www.kubeflow.org/docs/components/pipelines/pipelines/["Kubeflow 官方文档"^]。
+Kubeflow 管道是 Kubeflow 的一个关键组件。Kubeflow 管道是一个平台和标准，用于定义和部署可移植且可扩展的 AI 和 ML 工作流。有关详细信息，请参见 https://www.kubeflow.org/docs/components/pipelines/["Kubeflow 官方文档"^]。
 
 
 
 === Jupyter 笔记本电脑服务器
 
 Jupyter 笔记本电脑服务器是一款开源 Web 应用程序，数据科学家可以利用它创建类似于维基的文档，这些文档称为 Jupyter 笔记本电脑，其中包含实时代码以及描述性测试。Jupyter 笔记本电脑在 AI 和 ML 社区中广泛使用，可用于记录，存储和共享 AI 和 ML 项目。Kubeflow 可简化 Kubernetes 上 Jupyter 笔记本电脑服务器的配置和部署。有关 Jupyter 笔记本电脑的详细信息，请访问 http://www.jupyter.org/["Jupyter 网站"^]。有关 Kubeflow 环境中 Jupyter 笔记本电脑的详细信息，请参见 https://www.kubeflow.org/docs/components/notebooks/overview/["Kubeflow 官方文档"^]。
+
+
+
+=== Katb.
+
+Katis是一个用于自动化机器学习(AutoML)的Kubornetes原生项目。Katb支持超参数调整、早期停止和神经架构搜索(NAS)。Katis是一个与机器学习(ML)框架无关的项目。它可以调整以用户选择的任何语言编写的应用程序的超参数、并本机支持许多ML框架、例如TensorFlow、MXNet、PyTorch、XGBoost、 等。Katib"支持许多各种AutoML算法、例如贝叶斯优化、帕森树估算器、随机搜索、协方差矩阵自适应进化策略、超频带、高效神经架构搜索、可区分架构搜索等。有关 Kubeflow 环境中 Jupyter 笔记本电脑的详细信息，请参见 https://www.kubeflow.org/docs/components/katib/overview/["Kubeflow 官方文档"^]。
 
 
 
@@ -88,42 +98,44 @@ Apache Airflow 是一个开源工作流管理平台，支持对复杂的企业�
 
 
 
-== NetApp ONTAP 9.
+== NetApp ONTAP
 
-NetApp ONTAP 9 是 NetApp 推出的最新一代存储管理软件，可帮助像您这样的企业打造现代化的基础架构并过渡到云就绪数据中心。借助行业领先的数据管理功能，无论数据位于何处， ONTAP 都可以通过一组工具来管理和保护数据。您还可以将数据自由移动到任何需要的位置：边缘，核心或云。ONTAP 9 包含许多功能，可简化数据管理，加快和保护关键数据，并在混合云架构中打造适应未来需求的基础架构。
+ONTAP 9是NetApp推出的最新一代存储管理软件、可帮助企业打造现代化的基础架构并过渡到云就绪数据中心。借助行业领先的数据管理功能，无论数据位于何处， ONTAP 都可以通过一组工具来管理和保护数据。您还可以将数据自由移动到需要的任何位置：边缘，核心或云。ONTAP 9包含许多功能、可简化数据管理、加快和保护关键数据、并在混合云架构中实现下一代基础架构功能。
 
 
 
 === 简化数据管理
 
-数据管理对于企业 IT 运营至关重要，这样您就可以为应用程序和数据集使用适当的资源。ONTAP 包括以下功能，可简化运营并降低总运营成本：
+数据管理对于企业IT运营和数据科学家至关重要、这样才能将适当的资源用于AI应用程序和训练AI/ML数据集。以下有关NetApp技术的追加信息 不在此验证范围内、但可能与您的部署相关。
 
-* * 实时数据缩减和扩展的重复数据删除。 * 数据缩减可减少存储块中浪费的空间，重复数据删除可显著提高有效容量。
-* * 最低，最高和自适应服务质量（ QoS ）。 * 细粒度 QoS 控制有助于在高度共享的环境中保持关键应用程序的性能水平。
-* * ONTAP FabricPool 。 * 此功能可将冷数据自动分层到公有和私有云存储选项，包括 Amazon Web Services （ AWS ）， Azure 和 NetApp StorageGRID 基于对象的存储。
+ONTAP 数据管理软件包括以下功能、可简化操作并降低总运营成本：
+
+* 实时数据缩减和扩展的重复数据删除。数据缩减可减少存储块中浪费的空间、重复数据删除可显著提高有效容量。此适用场景数据存储在本地，并分层到云。
+* 最低、最高和自适应服务质量(AQoS)。精细的服务质量(QoS)控制有助于在高度共享的环境中保持关键应用程序的性能水平。
+* NetApp FabricPool。可将冷数据自动分层到公有 和私有云存储选项、包括Amazon Web Services (AWS)、Azure和NetApp StorageGRID Storage解决方案。有关 FabricPool 的详细信息，请参见 https://www.netapp.com/pdf.html?item=/media/17239-tr4598pdf.pdf["TR-4598：FabricPool 最佳实践"^]。
 
 
 
 
 === 加速和保护数据
 
-ONTAP 可提供卓越的性能和数据保护，并通过以下功能扩展这些功能：
+ONTAP 可提供卓越的性能和数据保护、并通过以下方式扩展这些功能：
 
-* * 高性能和低延迟。 * ONTAP 以尽可能低的延迟提供最高的吞吐量。
-* * NetApp ONTAP FlexGroup 技术 * 。 FlexGroup 卷是一种高性能数据容器，可线性扩展到高达 20 PB 和 4000 亿个文件，从而提供一个可简化数据管理的命名空间。
-* * 数据保护。 * ONTAP 提供内置数据保护功能，并在所有平台之间进行通用管理。
-* * NetApp 卷加密。 * ONTAP 提供原生卷级加密，并支持板载和外部密钥管理。
+* 性能和更低的延迟。ONTAP 可提供尽可能高的吞吐量和尽可能低的延迟。
+* 数据保护ONTAP 可提供内置数据保护功能、并在所有平台之间进行通用管理。
+* NetApp卷加密(NVE)。ONTAP 提供原生 卷级加密、并支持板载和外部密钥管理。
+* 多租户和多因素身份验证。ONTAP 支持以最高的安全性级别共享基础架构资源。
 
 
 
 
 === Future-Proof 基础架构
 
-ONTAP 9 可帮助您满足不断变化的苛刻业务需求：
+ONTAP 可通过以下功能满足不断变化的苛刻业务需求：
 
-* * 无缝扩展和无中断运行。 * ONTAP 支持向现有控制器和横向扩展集群无中断添加容量。您可以升级到 NVMe 和 32 Gb FC 等最新技术，而无需进行昂贵的数据迁移或中断。
-* * 云连接。 * ONTAP 是云连接最广泛的存储管理软件之一，可在所有公有云中选择软件定义的存储（ ONTAP Select ）和云原生实例（ NetApp Cloud Volumes Service ）。
-* * 与新兴应用程序集成。 * 通过使用支持现有企业级应用程序的相同基础架构， ONTAP 可为 OpenStack ， Hadoop 和 MongoDB 等下一代平台和应用程序提供企业级数据服务。
+* 无缝扩展和无中断运行。ONTAP 支持无中断地向现有控制器和横向扩展集群添加容量。客户可以升级到 NVMe 和 32 Gb FC 等最新技术，而无需进行成本高昂的数据迁移或中断。
+* 云连接。ONTAP是云互联程度最高的存储管理软件、可在所有公有云中选择软件定义的存储和云原生实例。
+* 与新兴应用程序集成。ONTAP 通过使用支持现有企业应用程序的相同基础架构、为下一代平台和应用程序(例如自动驾驶汽车、智能城市和行业4.0)提供企业级数据服务。
 
 
 
@@ -153,8 +165,6 @@ image:aicp_image5.png["错误：缺少图形映像"]
 NetApp SnapMirror 软件是一款经济高效且易于使用的统一复制解决方案，可跨数据网络结构实现。它可以通过 LAN 或 WAN 高速复制数据。它可以为各种类型的应用程序提供高数据可用性和快速数据复制，包括虚拟和传统环境中的业务关键型应用程序。在将数据复制到一个或多个 NetApp 存储系统并持续更新二级数据时，您的数据将保持最新，并可随时使用。不需要外部复制服务器。有关利用 SnapMirror 技术的架构示例，请参见下图。
 
 SnapMirror 软件通过仅通过网络发送更改的块来利用 NetApp ONTAP 的存储效率。SnapMirror 软件还可使用内置网络压缩来加快数据传输速度，并将网络带宽利用率降低多达 70% 。借助 SnapMirror 技术，您可以利用一个精简复制数据流创建一个存储库，同时维护活动镜像和先前的时间点副本，从而将网络流量减少多达 50% 。
-
-image:aicp_image6.png["错误：缺少图形映像"]
 
 
 

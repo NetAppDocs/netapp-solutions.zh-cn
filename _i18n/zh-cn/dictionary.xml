@@ -920,19 +920,12 @@
   <block id="25421e793bda820f3023762c547a2495" category="list-text">集群利用率高。</block>
   <block id="fdf3de6e0502b5404d2e0b379421f759" category="list-text">由于分配百分比的影响，比 GPU 的实验更多。</block>
   <block id="68cf93a70e0f0fe62bc0428ce8a8b348" category="list-text">`team-d` 并未使用所有配额；因此， `team-b` 和 `team-c` 可以在其实验中使用额外的 GPU ，从而加快创新速度。</block>
-  <block id="3642f282b12269091ab196a3aabf0858" category="summary">Trident 操作示例</block>
-  <block id="7f41e102595a65d30401b887b75060a4" category="paragraph">本节包括您可能希望使用 Trident 执行的各种操作的示例。</block>
   <block id="5a95bc44d2d93c77b65585a52a71d631" category="section-title">导入现有卷</block>
   <block id="37e60d34ab15afa59aac0989309fc77a" category="paragraph">如果您的 NetApp 存储系统 / 平台上有要挂载到 Kubernetes 集群中的容器上但未与集群中的 PVC 绑定的现有卷，则必须导入这些卷。您可以使用 Trident 卷导入功能导入这些卷。</block>
-  <block id="f363c1a10e150fdee0f4f310a06acb5e" category="inline-link-macro">ONTAP AI 部署的 Trident 后端示例</block>
   <block id="8f811f6151a10e9d15de57c2af8fcfed" category="inline-link">Kubernetes 官方文档</block>
   <block id="40ef3fb23e015d9b4b46a16fa50f10d3" category="inline-link">Trident 文档</block>
-  <block id="4330c34147b36030c50afe1d04ec2213" category="paragraph">以下示例命令显示了为在本节示例中创建的每个 Trident 后端导入相同卷 `PB_FG_ALL` 两次 <block ref="5ce2b96729b1637e197bdd36eb4db4ee" category="inline-link-macro-rx"></block>，步骤 1 。通过以这种方式导入同一卷两次，您可以在不同 LIF 之间多次挂载此卷（现有 FlexGroup 卷），如一节所述 <block ref="5ce2b96729b1637e197bdd36eb4db4ee" category="inline-link-macro-rx"></block>，步骤 1 。有关 PVCs 的详细信息，请参见<block ref="ca589c3cf5b20ae0a636e2b7691f2873" category="inline-link-rx"></block>。有关卷导入功能的详细信息，请参见<block ref="e6b3671f5db59046617458d31ef4f50b" category="inline-link-rx"></block>。</block>
   <block id="313da63dfeb95842dd6a105fdcf40ebc" category="paragraph">在示例 PVC 规范文件中指定了 `accessModes` 值 `ReadOnlyMany` 。有关 `accessMode` 字段的详细信息，请参见<block ref="ca589c3cf5b20ae0a636e2b7691f2873" category="inline-link-rx"></block>。</block>
-  <block id="6631bf64346739a9880a9789a941a8d6" category="inline-link-macro">适用于 ONTAP AI 部署的 Kubernetes StorageClasses 示例</block>
-  <block id="e6d82e60d43fe02e01930addfe670e8f" category="admonition">以下示例导入命令中指定的后端名称与在本节的示例中创建的后端相对应 <block ref="5ce2b96729b1637e197bdd36eb4db4ee" category="inline-link-macro-rx"></block>，步骤 1 。以下示例 PVC 定义文件中指定的 StorageClass 名称与在本节的示例中创建的 StorageClasses 相对应 <block ref="6d8c8eb29a4e4c3a50119b70d2e8171e" category="inline-link-macro-rx"></block>，步骤 1 。</block>
   <block id="533fff63e0b7486b2768ad15b5e2981c" category="section-title">配置新卷</block>
-  <block id="e149d2e1fdb31ad28f79dd3d2c7ee8ff" category="paragraph">您可以使用 Trident 在 NetApp 存储系统或平台上配置新卷。以下示例命令显示了新 FlexVol 卷的配置。在此示例中，使用在一节的示例中创建的 StorageClass 配置卷 <block ref="6d8c8eb29a4e4c3a50119b70d2e8171e" category="inline-link-macro-rx"></block>，步骤 2 。</block>
   <block id="78b7c8c28867630a421236d6f1ff9ba3" category="paragraph">在以下示例 PVC 定义文件中指定了 `accessModes` 值 `ReadWriteMany` 。有关 `accessMode` 字段的详细信息，请参见<block ref="ca589c3cf5b20ae0a636e2b7691f2873" category="inline-link-rx"></block>。</block>
   <block id="c701c7fe143bef79cc6eebc32606262e" category="paragraph">要了解有关本文档中所述信息的更多信息，请参见以下资源：</block>
   <block id="e40030fd64108859627c7a126638f0e6" category="list-text">NetApp AI 控制平台：</block>
@@ -1061,40 +1054,12 @@
   <block id="5d138e1f42e31fb645a3e3f5a8d37929" category="list-text">数据科学家正在寻找高效的方法，以便在具有多个团队和项目的集群环境中实现高效的模型开发目标</block>
   <block id="0d43a0c7aeec219a746e836746c0b208" category="list-text">负责维护和运行生产模型的数据工程师</block>
   <block id="00d764d2e91381a99d6f2c7b108e7c8e" category="list-text">希望打造最佳 Kubernetes 集群资源利用体验并通过 AI 计划缩短上市时间的高管和 IT 决策者和业务主管</block>
-  <block id="01360221b637a04fa184dc6b9355fa46" category="summary">在创建此解决方案时，我们执行了简单的性能比较。我们使用 Kubernetes 执行了多个标准 NetApp 基准测试作业，并将基准测试结果与使用简单 Docker run 命令执行的执行情况进行了比较。</block>
-  <block id="0e2f0f77407bfd956f621e13b8c1be34" category="doc">性能测试</block>
-  <block id="467941822b3a557a8db7197e12285f14" category="paragraph">在创建此解决方案时，我们执行了简单的性能比较。我们使用 Kubernetes 执行了多个标准 NetApp AI 基准测试作业，并将基准测试结果与使用简单 Docker run 命令执行的执行情况进行了比较。我们没有发现任何明显的性能差异。因此，我们得出的结论是，使用 Kubernetes 编排容器化 AI 培训作业不会对性能产生负面影响。有关性能比较结果，请参见下表。</block>
-  <block id="74575b23d5305310e904f87eb02ff980" category="cell">基准测试</block>
   <block id="239658e016e3d5d06ae719d280a79fec" category="cell">数据集</block>
-  <block id="c269688995d2959579fca276425898b8" category="cell">Docker 运行（映像 / 秒）</block>
-  <block id="b3acbf223e2bb7a3a796e3b698a7748d" category="cell">Kubernetes （图像 / 秒）</block>
-  <block id="6de4dbc350a60fb9d5ea80ac7854681d" category="cell">单节点 TensorFlow</block>
-  <block id="2ec7cdace40d8a092e842288dfe854f7" category="cell">合成数据</block>
-  <block id="a5ee9f5535788c17b947b7f2d8354351" category="cell">6,667.2475</block>
-  <block id="b573d76a35b8d44de29524f11e873c60" category="cell">6,661.93125</block>
-  <block id="b318879f822314efe94c2f096d06465c" category="cell">ImageNet</block>
-  <block id="f9622443c76d58838af97acd4f0c12ed" category="cell">6,570.2025</block>
-  <block id="f93ed9c22230ae6e2ed85323e8d3dff7" category="cell">6,530.59125</block>
-  <block id="83817408eae44458daefc1a9516ad170" category="cell">同步分布式双节点 TensorFlow</block>
-  <block id="d4b63997154f30598f823403bb4df7ba" category="cell">13,213.70625</block>
-  <block id="a328a929a422e4b69be5bbe94694282e" category="cell">13,218.288125</block>
-  <block id="209f721713f475a9a0f4ba2743b40853" category="cell">12,941.69125</block>
-  <block id="1f07dab13107a813c6d35bb76648ec48" category="cell">12,881.33875</block>
-  <block id="66bc9494be0116470b223f2e07873f77" category="summary">本页介绍部署 Kubernetes 集群以实施 NetApp AI 控制平面解决方案时必须完成的任务。如果您已有 Kubernetes 集群，则只要您运行的是 Kubernetes 和 NetApp Trident 支持的 Kubernetes 版本，就可以跳过本节。</block>
   <block id="2034cc978abb3057c4cf27e92b16ee74" category="doc">Kubernetes 部署</block>
   <block id="7236436bac67d8eaadbf52811774b916" category="inline-link">Kubeflow 官方文档</block>
-  <block id="7c1ab988344d6a8d8cd9a30d6240955a" category="paragraph">本节介绍部署 Kubernetes 集群以实施 NetApp AI 控制平面解决方案时必须完成的任务。如果您已有 Kubernetes 集群，则只要您运行的是 Kubernetes 和 NetApp Trident 支持的 Kubernetes 版本，就可以跳过本节。有关 Kubeflow 支持的 Kubernetes 版本列表，请参见<block ref="01b2e82a7080cdbeb934280240df876e" category="inline-link-rx"></block>。有关 Trident 支持的 Kubernetes 版本列表，请参见<block ref="e6b3671f5db59046617458d31ef4f50b" category="inline-link-rx"></block>。</block>
-  <block id="ef8333b35fd982099a6ca0c7799b5618" category="paragraph">对于采用采用 NVIDIA GPU 的裸机节点的内部 Kubernetes 部署， NetApp 建议使用 NVIDIA 的 DeepOps Kubernetes 部署工具。本节概述了使用 DeepOps 部署 Kubernetes 集群的过程。</block>
   <block id="e5595c75c723712666f834213ee6568f" category="paragraph">在执行本节所述的部署练习之前，我们假定您已执行以下任务：</block>
-  <block id="612cba744b0eac9a7f153d2c4b8975da" category="list-text">您已按照标准配置说明配置任何裸机 Kubernetes 节点（例如，属于 ONTAP AI POD 的 NVIDIA DGX 系统）。</block>
-  <block id="5a881e8e37e19924ac592136b5e7cfd3" category="inline-link">DeepOps GitHub 站点</block>
-  <block id="452f5f6e8da4512f6cce223a76ae3558" category="list-text">您已在所有 Kubernetes 主节点和工作节点以及部署跳转主机上安装受支持的操作系统。有关 DeepOps 支持的操作系统列表，请参见<block ref="253a2cf380d7db7eaadb375aa91e2221" category="inline-link-rx"></block>。</block>
-  <block id="a711e4ccced882d1762a8c653be8e921" category="section-title">使用 NVIDIA DeepOps 安装和配置 Kubernetes</block>
   <block id="47302a7393e0a038a150e679c9b3e80d" category="paragraph">要使用 NVIDIA DeepOps 部署和配置 Kubernetes 集群，请从部署跳转主机执行以下任务：</block>
   <block id="5c51dc3fcfdd9653809e90fa3948c2f4" category="inline-link">Getting Started 页面</block>
-  <block id="0e91d2e60705ecb1730e9b96510019af" category="list-text">按照上的说明下载 NVIDIA DeepOps<block ref="6fb71807bf6999d2aec034d498e3ebf6" category="inline-link-rx"></block> 在 NVIDIA DeepOps GitHub 站点上。</block>
-  <block id="2ed5978807d3da780c60a19b3f38a293" category="inline-link">Kubernetes 部署指南页面</block>
-  <block id="5c18e4efa8c5cc9efb26e3f748b4e26d" category="list-text">按照上的说明在集群中部署 Kubernetes<block ref="b336a8bbad16f0e8d58bf87e261f51fa" category="inline-link-rx"></block> 在 NVIDIA DeepOps GitHub 站点上。</block>
   <block id="cb2418c01859c7704da751aa5a7d2421" category="doc">解决方案概述</block>
   <block id="bff183f31dd9706bece9767f4388a819" category="paragraph">由 NVIDIA DGX 系统和 NetApp 云连接存储系统提供支持的 NetApp ONTAP AI 架构由 NetApp 和 NVIDIA 开发并验证。此参考架构为 IT 组织提供了以下优势：</block>
   <block id="88acd7d612f76d7928b6b0448806e1ea" category="list-text">为各种性能和成本点提供一系列存储选项 NetApp ONTAP AI 可将 DGX 系统和 NetApp AFF A220 存储系统与一流的网络紧密集成在一起。NetApp ONTAP AI 和 DGX 系统消除了设计复杂性和猜测性工作，从而简化了 AI 部署。客户可以从小规模入手，无中断地扩展系统，同时智能地管理从边缘到核心再到云再到云的数据。</block>
@@ -1144,55 +1109,12 @@
   <block id="2bd802cca9bf193b441123437f5d39ca" category="list-text">* 限制交互作业的持续时间 * 。研究人员经常忘记关闭交互式作业。这可能会导致资源浪费。一些组织倾向于限制交互式作业的持续时间并自动关闭这些作业。</block>
   <block id="10c2495ded559d79de96be22751712dc" category="paragraph">下图显示了已创建四个团队的 " 项目 " 视图。每个团队分配不同数量的 GPU 来处理不同的工作负载， GPU 总数等于由两个 DGX-1 组成的集群中可用 GPU 总数。</block>
   <block id="9ba047faa1d241a6153be986be27097f" category="paragraph"><block ref="9ba047faa1d241a6153be986be27097f" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="9e40fd8f5f0e113c758dfa63adc1221d" category="summary">Kubeflow 能够快速配置新的 Jupyter 笔记本电脑服务器，以充当数据科学家工作空间。要使用 Kubeflow 配置新的 Jupyter 笔记本电脑服务器，请执行此页面上列出的任务。</block>
   <block id="7fad49a67f130cbd7629be2d6c719aea" category="doc">为数据科学家或开发人员配置 Jupyter 笔记本电脑工作空间</block>
-  <block id="52d84951381eb0ab7a285dd32b31702c" category="paragraph">Kubeflow 能够快速配置新的 Jupyter 笔记本电脑服务器，以充当数据科学家工作空间。要使用 Kubeflow 配置新的 Jupyter 笔记本电脑服务器，请执行以下任务。有关 Kubeflow 上下文中 Jupyter 笔记本电脑的详细信息，请参见<block ref="05932219411c169f9e48f874e56f1ed3" category="inline-link-rx"></block>。</block>
-  <block id="5e82e4aa94a53b3b50acf347914be197" category="list-text">从 Kubeflow 中央信息板中，单击主菜单中的 Notebook Servers 以导航到 Jupyter 笔记本电脑服务器管理页面。</block>
   <block id="358d18b5a42ec1d80b04e767298ea372" category="paragraph"><block ref="358d18b5a42ec1d80b04e767298ea372" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="208feb7a4d57f0afc49e53fe1fe8b978" category="list-text">单击新服务器以配置新的 Jupyter 笔记本电脑服务器。</block>
-  <block id="3541a3b25823fa3b302c686b6fe2a212" category="paragraph"><block ref="3541a3b25823fa3b302c686b6fe2a212" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="5f95069a2e81949b101427e1fa4afddf" category="list-text">为新服务器指定一个名称，选择希望服务器基于的 Docker 映像，并指定服务器要预留的 CPU 和 RAM 量。如果命名空间字段为空，请使用页面标题中的选择命名空间菜单选择命名空间。然后， Namespace 字段将自动填充所选命名空间。</block>
-  <block id="4fbbbc4aaa49d653f486738eed12357a" category="paragraph">在以下示例中，选择了 `kubeflow-anonymous` 命名空间。此外，还接受 Docker 映像， CPU 和 RAM 的默认值。</block>
-  <block id="69bc8b3ae7667985c27ce3ef5de0e6ca" category="paragraph"><block ref="69bc8b3ae7667985c27ce3ef5de0e6ca" category="inline-image-macro-rx" type="image"></block></block>
   <block id="124793fd2a85b1699a94b12bf4661758" category="inline-link-macro">Kubeflow 部署</block>
-  <block id="095efbb867f01094d56c633d3337a412" category="list-text">指定工作空间卷详细信息。如果选择创建新卷，则会使用默认 StorageClass 配置该卷或 PVC 。因为在部分中，使用 Trident 的 StorageClass 被指定为默认 StorageClass <block ref="b868c02e3d390c0001190527c8f4ba0b" category="inline-link-macro-rx"></block>，卷或 PVC 配置有 Trident 。此卷会自动挂载为 Jupyter 笔记本电脑服务器容器中的默认工作空间。用户在服务器上创建但未保存到单独数据卷的任何笔记本电脑将自动保存到此工作空间卷。因此，这些笔记本电脑在重新启动后会持久存在。</block>
-  <block id="c44927b0124469511a724e179c80bfb5" category="paragraph"><block ref="c44927b0124469511a724e179c80bfb5" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="555e44b3745904843417371073338d08" category="list-text">添加数据卷。以下示例指定了一个名为 "pt-fg-all" 的现有 PVC 并接受默认挂载点。</block>
-  <block id="0c73069b282d8e99ecbd8feb39164d40" category="paragraph"><block ref="0c73069b282d8e99ecbd8feb39164d40" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="b120f9006af3d27ef70eb256c99c6617" category="list-text">* 可选： * 请求将所需数量的 GPU 分配给您的笔记本服务器。在以下示例中，请求一个 GPU 。</block>
-  <block id="c969e6364e4561a959d1ce20f7187723" category="paragraph"><block ref="c969e6364e4561a959d1ce20f7187723" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="b8da2142543d647576288d71dddabb01" category="list-text">单击启动以配置新的笔记本电脑服务器。</block>
-  <block id="37a742c47c216725dd178d8c3c7a3f31" category="list-text">等待笔记本电脑服务器完全配置完毕。如果您从未使用您指定的 Docker 映像配置服务器，则可能需要几分钟的时间，因为需要下载此映像。服务器配置完成后， Jupyter 笔记本电脑服务器管理页面上的状态列会显示一个绿色复选标记。</block>
-  <block id="417a2eafac6842560d3900cf9d12b5bb" category="paragraph"><block ref="417a2eafac6842560d3900cf9d12b5bb" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="0463a63e8059055e703ecd9ffa72e106" category="list-text">单击连接以连接到新的服务器 Web 界面。</block>
-  <block id="4fbf21602f4888216386998d62f1defd" category="list-text">确认步骤 6 中指定的数据集卷已挂载到服务器上。请注意，默认情况下，此卷会挂载在默认工作空间中。从用户的角度来看，这只是工作空间中的另一个文件夹。用户可能是数据科学家，而不是基础架构专家，因此使用此卷无需具备任何存储专业知识。</block>
-  <block id="c4b6acc44505864a5dccae2571b74f6a" category="paragraph"><block ref="c4b6acc44505864a5dccae2571b74f6a" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="a7d375154397ce9358d2234ec578ff7e" category="paragraph"><block ref="a7d375154397ce9358d2234ec578ff7e" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="479d03862d87da58784e60e5cfcec977" category="list-text">打开一个终端，假设步骤 5 中请求了一个新卷，请执行 `df -h` 以确认已挂载新的 Trident 配置的永久性卷作为默认工作空间。</block>
-  <block id="68f39a4f77e618e6617c3830fb47de7c" category="paragraph">默认工作空间目录是首次访问服务器的 Web 界面时显示的基目录。因此，使用 Web 界面创建的任何项目都会存储在此 Trident 配置的永久性卷上。</block>
-  <block id="d3e91c75db0cb717734224e6eb72e201" category="paragraph"><block ref="d3e91c75db0cb717734224e6eb72e201" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="1d739fe0e421e9cb4d6315f0021cc5eb" category="paragraph"><block ref="1d739fe0e421e9cb4d6315f0021cc5eb" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="b8c20de15cf5efa2297f9d40d899450e" category="list-text">使用终端运行 `nvidia-smi` 以确认为笔记本电脑服务器分配了正确数量的 GPU 。在以下示例中，已按照步骤 7 中的请求为笔记本电脑服务器分配一个 GPU 。</block>
-  <block id="ed4e7225349e5c6cd33dfd15ad878438" category="paragraph"><block ref="ed4e7225349e5c6cd33dfd15ad878438" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="0a37acabf89826767b5a5fcb8dacffa3" category="summary">此页面介绍了在 Kubernetes 集群中部署 Kubeflow 必须完成的任务。</block>
   <block id="e560b8ed748180150ee1a196f2247fce" category="paragraph">本节介绍在 Kubernetes 集群中部署 Kubeflow 必须完成的任务。</block>
-  <block id="f48269a81318d4bd2dd9e57a8239fe56" category="list-text">您已有一个有效的 Kubernetes 集群，并且正在运行 Kubernetes 支持的版本。有关支持的版本列表，请参见<block ref="01b2e82a7080cdbeb934280240df876e" category="inline-link-rx"></block>。</block>
-  <block id="3429b7e0331de8d2f8d377b034ca6855" category="inline-link-macro">Trident 部署和配置</block>
-  <block id="9fc644d78f21555decceeddf5b691fa4" category="list-text">您已在 Kubernetes 集群中安装和配置 NetApp Trident ，如中所述 <block ref="ec7700e2b8d95edf2f2700b590eab273" category="inline-link-macro-rx"></block>。</block>
   <block id="72727333279dd1f9e8b63f969075bca8" category="section-title">设置默认 Kubernetes StorageClass</block>
-  <block id="e1be30d98edccc10974d5d339832197c" category="paragraph">在部署 Kubeflow 之前，您必须在 Kubernetes 集群中指定一个默认 StorageClass 。Kubeflow 部署过程会尝试使用默认 StorageClass 配置新的永久性卷。如果未将任何 StorageClass 指定为默认 StorageClass ，则部署将失败。要在集群中指定默认 StorageClass ，请从部署跳转主机执行以下任务。如果已在集群中指定默认 StorageClass ，则可以跳过此步骤。</block>
-  <block id="e3e4fbe325df2b20670ca04ad0c2a517" category="list-text">将现有 StorageClasses 之一指定为默认 StorageClass 。以下示例命令显示了名为 `ontap-ai- FlexVols-Retain` 的 StorageClass 的默认 StorageClass 。</block>
   <block id="f830a6eea70ae3a0e7af4606462ad281" category="admonition">`ontap-nas-flexgroup` Trident 后端类型的最小 PVC 大小相当大。默认情况下， KubeFlow 会尝试配置大小只有少数几 GB 的 PVC 。因此，在部署 Kubeflow 时，不应将利用 `ontap-nas-flexgroup` 后端类型的 StorageClass 指定为默认 StorageClass 。</block>
-  <block id="f12aad36b1ab9194dd8bc67542366bff" category="section-title">使用 NVIDIA DeepOps 部署 Kubeflow</block>
-  <block id="3e1922d78dd7bdb1e8d7e7bd8f5aa92c" category="paragraph">NetApp 建议使用 NVIDIA DeepOps 提供的 Kubeflow 部署工具。要使用 DeepOps 部署工具在 Kubernetes 集群中部署 Kubeflow ，请从部署跳转主机执行以下任务。</block>
-  <block id="3ede8bc1f55c95b9a16b2429e0b9bbcc" category="admonition">或者，您也可以按照手动方式部署 Kubeflow<block ref="c75d7e23bc80ca81cea11fe427173cb3" category="inline-link-rx"></block> 在 Kubeflow 官方文档中</block>
-  <block id="a73d6d865f72179145299c720c53d39c" category="inline-link">Kubeflow 部署说明</block>
-  <block id="04e3c704baa1b4c23cd48a18c10fcf39" category="list-text">按照中的说明在集群中部署 Kubeflow<block ref="5e7f04c1dfa70dd058d2720be031c44b" category="inline-link-rx"></block> 在 NVIDIA DeepOps GitHub 站点上。</block>
-  <block id="2efdbab31c5d41a149e5092f4b8d7e48" category="list-text">记下 DeepOps Kubeflow 部署工具输出的 Kubeflow 信息板 URL 。</block>
-  <block id="b714a06d49f16f8b7f988d95734d177f" category="list-text">确认在 Kubeflow 命名空间中部署的所有 Pod 均显示 `Ststatus` of `running` ，并确认命名空间中部署的任何组件均未处于错误状态。可能需要几分钟时间，才能启动所有 Pod 。</block>
-  <block id="d6049afd6b1943d1e98ca6347dd907c5" category="list-text">在 Web 浏览器中，通过导航到步骤 2 中记下的 URL 来访问 Kubeflow 中央信息板。</block>
-  <block id="64f559cf2e77f73aca6bd3dc9649f62c" category="paragraph">默认用户名为 `admin@kubeflow.org` ，默认密码为 `1231234` 。要创建其他用户，请按照中的说明进行操作<block ref="f529217f090b2c9cc3764f14abdec5f7" category="inline-link-rx"></block>。</block>
-  <block id="2d84920115f9dc91fe2d35c4dc07eaf0" category="paragraph"><block ref="2d84920115f9dc91fe2d35c4dc07eaf0" category="inline-image-macro-rx" type="image"></block></block>
   <block id="48c4dc7fbfa1197490124f13eb565bd2" category="doc">ONTAP AI 部署</block>
   <block id="70d5c23ad68d59b2546133efdd1c3267" category="inline-link">NVA-1121-Deploy ：由 NVIDIA 提供支持的 NetApp ONTAP AI</block>
   <block id="b393f072bc6b17085b75486a2abbcf97" category="paragraph">部署 ONTAP AI 需要安装和配置网络，计算和存储硬件。本文档不会介绍有关部署 ONTAP AI 基础架构的具体说明。有关详细的部署信息，请参见<block ref="8c03c9c25bc6aba17e86c510148a3423" category="inline-link-rx"></block>。</block>
@@ -1211,11 +1133,8 @@
   <block id="14f48338822299bdf82bb4528d3c9e07" category="paragraph">我们运行的 RESNET-50 基准测试与中相同<block ref="c37aff28e1a25306bf31a11e21ff2c71" category="inline-link-rx"></block>。对于不驻留在公有 Docker 存储库中的容器，我们使用了标志 ` -local-image` 。我们将主机 DGX-1 节点上的目录 ` /mnt` 和 ` /tm` 分别挂载到 ` /mnt` 和 ` /tm` 。该数据集位于 NetApp AFFA800 上，并且 `dataset_dir` 参数指向目录。` -num_devices=1` 和 ` -g 1` 表示我们为此作业分配一个 GPU 。前者是 `run.py` 脚本的参数，而后者是 `runai Submit` 命令的标志。</block>
   <block id="bccb844975c2eec86eb25c0d8e2a989b" category="paragraph">下图显示了一个系统概述信息板，其中 GPU 利用率为 97% ，所有十六个可用 GPU 均已分配。您可以在 GPU/ 项目条形图中轻松查看为每个团队分配的 GPU 数量。" 正在运行的作业 " 窗格显示当前正在运行的作业名称，项目，用户，类型，节点， GPU 已用，运行时间，进度和利用率详细信息。队列中的工作负载列表及其等待时间显示在 "Pending" 作业中。最后，节点框将提供集群中各个 DGX-1 节点的 GPU 编号和利用率。</block>
   <block id="1acc627e7c9d8002628b2e12c91ac683" category="paragraph"><block ref="1acc627e7c9d8002628b2e12c91ac683" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="3ff1a758f526c5ceb434059efe27020a" category="summary">Apache 气流工作流示例</block>
   <block id="6e4cd672cd8bd06c42a9e4ba697c61de" category="inline-link">适用于 Kubernetes 的 NetApp 数据科学工具包</block>
-  <block id="c5da96d7204df28dd9fdc33139c8a776" category="paragraph">。<block ref="42224cf159df1ff428bf611c27a06039" category="inline-link-rx"></block> 可与气流结合使用。通过将 NetApp 数据科学工具包与 Airflow 结合使用，您可以将 NetApp 数据管理操作整合到由 Airflow 协调的自动化工作流中。</block>
   <block id="dee957e8ec77b256b931e812220f0553" category="inline-link">气流示例</block>
-  <block id="9fc322b3a5bb56d2d6ac18c15773d1c2" category="paragraph">请参见<block ref="c50bba54faf39c027cd571674d44a9c0" category="inline-link-rx"></block> 有关在 Airflow 中使用工具包的详细信息，请参见 NetApp Data Science Toolkit GitHub 存储库中的一节。</block>
   <block id="fbe29309a183681bc26203d4c65853a2" category="paragraph">本节将介绍传统数据科学管道及其缺点。此外，还介绍了建议的数据集缓存解决方案的架构。</block>
   <block id="1f14aecc1193f646e0005e27fbc6e63d" category="section-title">传统数据科学管道和缺点</block>
   <block id="17fb7d0ba5495199d3e18fe23dff7b59" category="paragraph">ML 模型开发和部署的典型顺序涉及以下迭代步骤：</block>
@@ -1255,12 +1174,7 @@
   <block id="dbffd2a20c35c06fbb6ba0cd17e54ef6" category="list-text">监控提交到缓存数据集的总内存以及可用于其他缓存提交的 NFS 存储容量（例如缓存管理）。</block>
   <block id="61d5e7050cbe037ad5adeaf246e6be19" category="list-text">如果数据集在特定时间未使用，则会使其过期。默认值为一天；其他配置选项可用。</block>
   <block id="0a1bc6b4024485ff9b55c99c1237e175" category="doc">使用 Run ： AI 优化集群和 GPU 利用率</block>
-  <block id="b8b025dc1895637326d2420e912751e0" category="summary">在使用 Trident 在 Kubernetes 集群中动态配置存储资源之前，必须先创建一个或多个 Trident 后端。此页面上的示例展示了在 ONTAP AI POD 上部署 NetApp AI 控制平面解决方案时可能需要创建的不同类型的后端。</block>
-  <block id="c0fe00dd01499e23426b850b65782c77" category="paragraph">在使用 Trident 在 Kubernetes 集群中动态配置存储资源之前，必须先创建一个或多个 Trident 后端。以下示例展示了在 ONTAP AI POD 上部署 NetApp AI 控制平台解决方案时可能需要创建的不同类型的后端。有关后端的详细信息，请参见<block ref="e6b3671f5db59046617458d31ef4f50b" category="inline-link-rx"></block>。</block>
-  <block id="1e698f68960fb964df99e73068c9377c" category="list-text">NetApp 建议为要在 NetApp AFF 系统上使用的每个数据 LIF （提供数据访问的逻辑网络接口）创建一个启用了 FlexGroup 的 Trident 后端。这样，您可以在 LIF 之间平衡卷挂载</block>
-  <block id="327a3876126e4773cfcc5e30649c9483" category="paragraph">以下示例命令显示了为与同一 ONTAP Storage Virtual Machine （ SVM ）关联的两个不同数据 LIF 创建两个启用了 FlexGroup 的 Trident 后端。这些后端使用 `ontap-nas-flexgroup` 存储驱动程序。ONTAP 支持两种主要数据卷类型： FlexVol 和 FlexGroup 。FlexVol 卷具有大小限制（截至本文撰写时，最大大小取决于特定部署）。另一方面， FlexGroup 卷可以线性扩展到高达 20 PB 和 4000 亿个文件，从而提供一个可显著简化数据管理的命名空间。因此， FlexGroup 卷最适合依赖大量数据的 AI 和 ML 工作负载。</block>
   <block id="ba9f56aafb45a750a8dffe5de6d2ed78" category="paragraph">如果您使用的是少量数据，并且希望使用 FlexVol 卷而不是 FlexGroup 卷，则可以创建使用 `ontap-NAS` 存储驱动程序而不是 `ontap-nas-flexgroup` 存储驱动程序的 Trident 后端。</block>
-  <block id="d04adbc45ec06c05c1826745b8f4ddf2" category="list-text">NetApp 还建议创建一个或多个启用了 FlexVol 的 Trident 后端。如果您使用 FlexGroup 卷来训练数据集存储，则可能需要使用 FlexVol 卷来存储结果，输出，调试信息等。如果要使用 FlexVol 卷，必须创建一个或多个启用了 FlexVol 的 Trident 后端。下面的示例命令显示了如何创建一个使用单个数据 LIF 且已启用 FlexVol 的 Trident 后端。</block>
   <block id="ad2376beebecdcf7846ba973fa1a005b" category="doc">设置</block>
   <block id="9dc7cfc5bd8fb85bad9fdab5cdded288" category="doc">运行： AI 安装</block>
   <block id="c1b7d088e01f6ec6ec89bf69437e4bb1" category="paragraph">要安装 Run ： AI ，请完成以下步骤：</block>
@@ -1300,13 +1214,7 @@
   <block id="00a48f02675717eaf6082c4ba536a366" category="list-text">与 NetApp ， Amazon S3 ， HDFS ， SQL 数据库以及流式传输或消息传送协议等第三方数据源集成</block>
   <block id="901630ad39a688431a68dc119f5378a3" category="list-text">基于 Grafana 的实时信息板</block>
   <block id="887fce38ef8ddd8546748bb746ed7e5a" category="paragraph"><block ref="887fce38ef8ddd8546748bb746ed7e5a" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="a905494ad30a6d54678a2122c04bfd54" category="summary">Jupyter 笔记本电脑和 Kubeflow 管道示例</block>
-  <block id="80e94617849fe0b057f3edcc76a6ac72" category="doc">示例笔记本电脑和管道</block>
-  <block id="3da57858cd6a76521b38784effc6a06f" category="paragraph">。<block ref="42224cf159df1ff428bf611c27a06039" category="inline-link-rx"></block> 可与 Kubeflow 结合使用。将 NetApp 数据科学工具包与 Kubeflow 结合使用具有以下优势：</block>
-  <block id="624a53dc5871ce49612a285ee2bf367e" category="list-text">数据科学家可以直接在 Jupyter 笔记本电脑中执行高级 NetApp 数据管理操作。</block>
-  <block id="1c7d37cb415e8b7777b071784911a77a" category="list-text">可以使用 Kubeflow 管道框架将高级 NetApp 数据管理操作整合到自动化工作流中。</block>
   <block id="5e646a4ae4330cb948544333980f9f49" category="inline-link">Kubeflow 示例</block>
-  <block id="987823970c7b662272fb9e0058bf5ff1" category="paragraph">请参见<block ref="3eb5d4ffd5360858e22dfb9799f211d7" category="inline-link-rx"></block> 有关将工具包与 Kubeflow 结合使用的详细信息，请参见 NetApp Data Science Toolkit GitHub 存储库中的一节。</block>
   <block id="7c0ea3e86521674f72e056d148d4f2ce" category="paragraph">NetApp 和 Run ： AI 已在本技术报告中展开合作，展示了 NetApp ONTAP AI 解决方案与 Run ： AI 平台在简化 AI 工作负载流程方面的独特功能。上述步骤提供了一个参考架构，用于简化深度学习的数据管道和工作负载流程。建议希望实施这些解决方案的客户联系 NetApp 和 Run ： AI 了解更多信息。</block>
   <block id="8383a1cf96c028a0986b7371049c8495" category="doc">网络设备故障预测用例摘要</block>
   <block id="dea416ff04e558b0d76cce896b618880" category="paragraph">本用例基于亚洲电信领域的 Iguazio 客户。每年有 10 万个企业客户和 125 万个网络中断事件，因此迫切需要预测并采取主动行动，防止网络故障影响客户。此解决方案为他们提供了以下优势：</block>
@@ -1324,8 +1232,6 @@
   <block id="737af365257800065a6412e56d652acc" category="list-text">验证所有资产是否均正常工作。</block>
   <block id="8a5fd124171d01a74b1af73e73ab7761" category="list-text">查找用于构建您自己的应用程序的文档： PDF 可在 `Model Scripts` &gt; `JarVis Documentation` &gt; `File Browser` 中找到。</block>
   <block id="f68b67869778246b8f0d8a98ed043512" category="paragraph">本节详细介绍了虚拟零售助理的实施。</block>
-  <block id="1703cadf8e847114fb353feaaf03beb9" category="summary">本节包括在 ONTAP AI POD 上部署 Kubernetes 时可以执行的各种高性能作业的示例。</block>
-  <block id="639ce1b23959b4470d67802f0e5e412a" category="doc">ONTAP AI 部署的高性能作业示例</block>
   <block id="e7446d382d8184be0a342a2fc45d4394" category="doc">WP-7328 ：使用 NVIDIA JarVis 的 NetApp 对话 AI</block>
   <block id="5dabc617366db74ce2a9fa3915f6af5a" category="paragraph">Rick Huang ， Sung-Han Lin ， NetApp ， NVIDIA 公司的 Dide Onofino</block>
   <block id="018aacc6ea95e20996bf57b319fd037a" category="paragraph">NVIDIA DGX 系统系列由全球首款基于人工智能（ AI ）的集成系统组成，这些系统专为企业 AI 而构建。NetApp AFF 存储系统可提供极致性能和行业领先的混合云数据管理功能。NetApp 和 NVIDIA 合作创建了 NetApp ONTAP AI 参考架构，这是一款适用于人工智能和机器学习（ ML ）的统包解决方案工作负载，可提供企业级性能，可靠性和支持。</block>
@@ -1377,16 +1283,8 @@
   <block id="6e08d9d65c68d5f447f4fd239052c12e" category="section-title">weather flow.yml</block>
   <block id="b7dc1d2ced2caa9352158983c5ffeda1" category="section-title">error_flow.yml</block>
   <block id="39cf3ca3e5dbe56d6eade7cbe3cc40e6" category="doc">Kubeflow 操作和任务示例</block>
-  <block id="368c8f521d74a015b7a3e1a46c8847b1" category="paragraph">本节包括您可能希望使用 Kubeflow 执行的各种操作和任务的示例。</block>
-  <block id="33204bfa9ee287508f03782fd7ad512e" category="summary">在使用 Trident 在 Kubernetes 集群中动态配置存储资源之前，必须创建一个或多个 Kubernetes StorageClasses 。此页面上的示例展示了在 ONTAP AI POD 上部署 NetApp AI 控制平面解决方案时可能需要创建的不同类型的 StorageClasses 。</block>
-  <block id="d9206a5144976221af82df78ad3d7977" category="paragraph">在使用 Trident 在 Kubernetes 集群中动态配置存储资源之前，必须创建一个或多个 Kubernetes StorageClasses 。以下示例展示了在 ONTAP AI POD 上部署 NetApp AI 控制平面解决方案时可能需要创建的不同类型的 StorageClasses 。有关 StorageClasses 的详细信息，请参见<block ref="e6b3671f5db59046617458d31ef4f50b" category="inline-link-rx"></block>。</block>
-  <block id="993143e7434e63409a07cf3e8c422505" category="list-text">NetApp 建议为在一节中创建的每个启用了 FlexGroup 的 Trident 后端创建一个单独的 StorageClass <block ref="5ce2b96729b1637e197bdd36eb4db4ee" category="inline-link-macro-rx"></block>，步骤 1 。通过这些粒度级 StorageClasses ，您可以将与特定 LIF （创建 Trident 后端时指定的 LIF ）相对应的 NFS 挂载添加为 StorageClass 规范文件中指定的特定后端。下面的示例命令显示了两个 StorageClasses 的创建过程，这两个 StorageClasses 对应于在部分中创建的两个示例后端 <block ref="5ce2b96729b1637e197bdd36eb4db4ee" category="inline-link-macro-rx"></block>，步骤 1 。有关 StorageClasses 的详细信息，请参见<block ref="e6b3671f5db59046617458d31ef4f50b" category="inline-link-rx"></block>。</block>
   <block id="d9348d075dc7b3c91cff99d56dfc327b" category="inline-link">Kubernetes 文档</block>
   <block id="a596fcc71d1c43e3ba86b1557ac7af81" category="paragraph">为了在删除相应的 PersistentVolumeClaim （ PVC ）时不删除永久性卷，以下示例使用了 `reClaimPolicy` 值 `Retain` 。有关 `re"claimPolicy` " 字段的详细信息，请参见相关官员<block ref="2b8f9bbf9efeff879b3debc5484f0056" category="inline-link-rx"></block>。</block>
-  <block id="f053cb3a491d2bc48d41230b10a9b164" category="list-text">NetApp 还建议创建一个与您在部分中创建的启用了 FlexVol 的 Trident 后端对应的 StorageClass <block ref="5ce2b96729b1637e197bdd36eb4db4ee" category="inline-link-macro-rx"></block>，步骤 2 。下面的示例命令显示了为 FlexVol 卷创建一个 StorageClass 的过程。</block>
-  <block id="99608a01905f0e69895bbb864a0deba3" category="paragraph">在以下示例中，未在 StorageClass 定义文件中指定特定后端，因为仅创建了一个启用了 FlexVol 的 Trident 后端。使用 Kubernetes 管理使用此 StorageClass 的卷时， Trident 会尝试使用使用 `ontap-NAS` 驱动程序的任何可用后端。</block>
-  <block id="ee1d27a4ae3e30ff30ef72e305b029e7" category="list-text">NetApp 还建议为 FlexGroup 卷创建通用存储类。以下示例命令显示了如何为 FlexGroup 卷创建一个通用 StorageClass 。</block>
-  <block id="d4a43a35c5d5a5ce3aefe77ceaa73a5c" category="paragraph">请注意， StorageClass 定义文件中未指定特定后端。因此，在使用 Kubernetes 管理使用此 StorageClass 的卷时， Trident 会尝试使用使用 `ontap-nas-flexgroup` 驱动程序的任何可用后端。</block>
   <block id="2732cb29fe3befd83c06e7c220b5456d" category="doc">第 4.10 节的测试详细信息</block>
   <block id="273936fc522fd7dbe4473de8a0b2a985" category="paragraph">此部分包含此部分的测试详细信息 <block ref="2783e1454358e180d4e2876ef9492c64" category="inline-link-macro-rx"></block>。</block>
   <block id="cf46f9264bb33ef7576cf671194a0275" category="paragraph">按以下顺序提交 `team-A` ， `team-b` 和 `team-c` 的作业：</block>
@@ -1458,15 +1356,7 @@
   <block id="79fcc0299f1a85ebab053926e2222bca" category="paragraph">容器成功启动后，执行 `runai list` 以查看用于访问 Jupyter 笔记本电脑的 `S服务 URL （ S ）` 。此 URL 由入口端点，作业名称和端口组成。例如，请参见<block ref="0309fbe8f364c8f6dfe6f383da8c46c2" category="inline-link-rx"></block>。</block>
   <block id="451b08ed1bf6f7f0a8931cff52c4c45e" category="inline-link">使用连接的端口启动交互式构建工作负载</block>
   <block id="b524842923f8cb1e38064fadc680893f" category="paragraph">有关详细信息，请参见<block ref="414875add8a18a03ddddfb14fb1c47f4" category="inline-link-rx"></block>。</block>
-  <block id="86608a0b346f307c76f8ae00c9f6bcb9" category="summary">此报告介绍如何快速克隆数据命名空间。它演示了如何定义和实施 AI 培训工作流，这些工作流可以近乎即时地创建数据和模型基线，以实现可追溯性和版本控制。同时，还介绍了如何在站点和区域之间无缝复制数据，以及如何快速配置 Jupyter 笔记本电脑工作空间，以便访问海量数据集。</block>
   <block id="f0829d8f9d70b9de9de7beae86dc2129" category="paragraph">NetApp 公司 Mike Oglesby</block>
-  <block id="27114500e25aba7a27847b772d396575" category="paragraph">各行各业各种规模的企业和组织都在转向人工智能（ AI ），机器学习（ ML ）和深度学习（ DL ），以解决实际问题，提供创新产品和服务，并在竞争日益激烈的市场中占据优势。随着企业越来越多地使用 AI ， ML 和 DL ，他们面临着许多挑战，包括工作负载可扩展性和数据可用性。本文档演示了如何使用 NetApp AI 控制平台来应对这些挑战， NetApp AI 控制平台是一种将 NetApp 数据管理功能与常见开源工具和框架配对的解决方案。</block>
-  <block id="98300151efa6f504dee4866e49cf2078" category="paragraph">此报告介绍如何快速克隆数据命名空间。此外，还将向您展示如何在站点和区域之间无缝复制数据，以创建统一的统一 AI/ML/DL 数据管道。此外，它还会指导您完成 AI ， ML 和 DL 培训工作流的定义和实施，这些工作流可近乎即时地创建数据和模型基线，以实现可追溯性和版本控制。使用此解决方案，您可以跟踪每个模型训练返回到用于训练和 / 或验证模型的确切数据集。最后，本文档将向您介绍如何快速配置 Jupyter 笔记本电脑工作空间，以便访问海量数据集。</block>
-  <block id="3a8a3991c7ef251983bda0fd052b9b10" category="inline-link-macro">TR-4890</block>
-  <block id="3cbee33bcafaf0315e821a3331b91eb5" category="inline-link-macro">NetApp 完全支持的并行文件系统解决方案 BeeGFS</block>
-  <block id="63de7cb3a054a3754335c60a0c8ba878" category="paragraph">注意：对于涉及大量需要共享访问同一数据集的 GPU 服务器的 HPC 模式大规模分布式培训，或者如果您需要 / 更喜欢并行文件系统，请查看 <block ref="f82f3a4db7a848244fd5070f378c86fb" category="inline-link-macro-rx"></block>。本技术报告介绍了如何包括 <block ref="99c493838dffa23aa6d1149e33e3edf0" category="inline-link-macro-rx"></block> 作为 NetApp AI 控制平台的一部分。此解决方案可从少数 NVIDIA DGX A100 系统扩展到全闪满的 140 节点 SuperPOD 。</block>
-  <block id="9f1cc947f3e0236f8d5bc32d8d33509a" category="inline-link">cloud.netapp.com</block>
-  <block id="9d50c340b35848862ab6ecbdadc401ed" category="paragraph">NetApp AI 控制平台面向数据科学家和数据工程师，因此只需极少的 NetApp 或 NetApp ONTAP ® 专业知识即可。借助此解决方案，可以使用简单熟悉的工具和界面来执行数据管理功能。如果您的环境中已有 NetApp 存储，您可以立即测试运行 NetApp AI Control 平台。如果您要测试解决方案驱动器，但尚未安装 NetApp 存储，请访问<block ref="d72e38e0d1c5ca8869f2dd987734920b" category="inline-link-rx"></block>，您只需几分钟即可使用基于云的 NetApp 存储解决方案启动并运行。下图显示了解决方案的可视化视图。</block>
   <block id="1f39acb56ba2a8669371819a64348c74" category="paragraph"><block ref="1f39acb56ba2a8669371819a64348c74" category="inline-image-macro-rx" type="image"></block></block>
   <block id="ed8e4613850a4014b0e6ef830982caf2" category="paragraph">此部分包含此部分的测试详细信息 <block ref="26be59a535445b1fffeef12f5e70f3e6" category="inline-link-macro-rx"></block>。</block>
   <block id="17b3673d5c28fb72e7cc48549f489dd4" category="cell">6/8</block>
@@ -1784,17 +1674,7 @@
   <block id="1d706cc291efb1d79274befd6f9dd64c" category="paragraph"><block ref="1d706cc291efb1d79274befd6f9dd64c" category="inline-image-macro-rx" type="image"></block></block>
   <block id="12d0e4b8ba8db4e6a7aa1dda942a1ed4" category="paragraph">在 Jupyter 终端提示符处，克隆项目。</block>
   <block id="d4095d9e0ab52b6d683ace00b5cbea55" category="paragraph">现在，您应在 Jupyter 工作空间的文件树中看到 `NetOps" - "NetApp` " 文件夹。</block>
-  <block id="2e52c56d063752bbfeda9c8f9d2fee41" category="summary">此页面介绍了在 Kubernetes 集群中安装和配置 NetApp Trident 时必须完成的任务。</block>
-  <block id="7c4090c7fa7a91e8c7fed182401dbf6b" category="doc">NetApp Trident 部署和配置</block>
-  <block id="e539ec743b02403b5ba74b884d117a5a" category="paragraph">本节介绍在 Kubernetes 集群中安装和配置 NetApp Trident 时必须完成的任务。</block>
-  <block id="14ede02439184c7c75e53410ffa40370" category="list-text">您已有一个可正常工作的 NetApp 存储设备，软件定义的实例或云存储服务， Trident 支持此服务。</block>
-  <block id="984b69562391cb8032fd50ded03a29a6" category="paragraph">要在 Kubernetes 集群中安装和配置 NetApp Trident ，请从部署跳转主机执行以下任务：</block>
-  <block id="07d8795f785e6495307106596d07402e" category="list-text">使用以下方法之一部署 Trident ：</block>
-  <block id="040d3466a6f1c45ca2e523c9354dfdc7" category="inline-link">Trident 部署说明</block>
-  <block id="bb6989644edf59b8c5e0de0c25b6f8b6" category="list-text">如果您使用 NVIDIA DeepOps 部署 Kubernetes 集群，则也可以使用 NVIDIA DeepOps 在 Kubernetes 集群中部署 Trident 。要使用 DeepOps 部署 Trident ，请按照<block ref="77e542aaaac8c5d2482c94ca2d79c997" category="inline-link-rx"></block> 在 NVIDIA DeepOps GitHub 站点上。</block>
   <block id="014e85e7f3bbdad1ad6f193e82d21755" category="inline-link">部署说明</block>
-  <block id="7cfdcb466d040b6c8f9c85e9981b9652" category="inline-link-macro">适用于 ONTAP AI 部署的 Kubernetes Storageclasses 示例</block>
-  <block id="180b707bbdd9c2fc8001a966c6c7d029" category="admonition">如果要在 ONTAP AI POD 上部署 NetApp AI 控制平台解决方案，请参见 <block ref="5ce2b96729b1637e197bdd36eb4db4ee" category="inline-link-macro-rx"></block> 有关您可能希望创建和的不同 Trident 后端的一些示例，请参见 <block ref="d495c2f5a68f6923824470c0096419c8" category="inline-link-macro-rx"></block> 有关可能要创建的不同 Kubernetes StorageClasses 的一些示例，请参见。</block>
   <block id="13e8f52d7e19f83d3e64003c58ea220b" category="doc">使用 NDE 在 NetApp HCI 上部署 VMware 虚拟基础架构（自动化部署）</block>
   <block id="2635318d9bf1ea76c73bfab7f3eeafb7" category="section-title">NDE 部署前提条件</block>
   <block id="f6ec2c1aa5118cb19e89af5a10ecb65c" category="inline-link">NetApp HCI 前提条件检查清单</block>
@@ -1931,7 +1811,6 @@
   <block id="8683624a37c6626765321b5cc2f60954" category="paragraph"><block ref="8683624a37c6626765321b5cc2f60954" category="inline-image-macro-rx" type="image"></block></block>
   <block id="9f02f72c9470e67a8b3c5f9054b0a32c" category="inline-link">MLRun GitHub 站点</block>
   <block id="01661b1e0825da7434573266df1672e0" category="paragraph">有关 MLRun 的信息比本文档中介绍的信息更多。可以将 AL 项目（包括步骤和功能的定义）保存到 API 数据库中，并进行版本控制，也可以单独调用或作为完整项目调用。此外，还可以保存项目并将其推送到 Git 以供日后使用。我们建议您在中了解更多信息<block ref="92ae596fd8e402850e22f59a73ed3a44" category="inline-link-rx"></block>。</block>
-  <block id="10dedd24e41d2fa9b5a5e681dd5b4882" category="summary">此页面提供了了解 NetApp 如何推进 AI 项目的背景信息，包括有关容器， Kubernetes ， NetApp Trident 等的信息。</block>
   <block id="0b7e964d1176d21b9ba3eceec8ed95ac" category="doc">概念和组件</block>
   <block id="5cd2adc9e2a5254e4c1da803519f298b" category="section-title">人工智能</block>
   <block id="c2fabc0982aa161064ff2b73f50800d5" category="paragraph">AI 是一门计算机科学学科，其中计算机经过训练，可以模拟人类思维的认知功能。AI 开发人员培训计算机，以便以类似于甚至优于人类的方式学习和解决问题。深度学习和机器学习是 AI 的子领域。企业越来越多地采用 AI ， ML 和 DL 来满足其关键业务需求。以下是一些示例：</block>
@@ -1945,39 +1824,20 @@
   <block id="da28cd415837c7f3d1d6221ff490b84b" category="paragraph">此外，还可以通过容器直接将应用程序依赖关系，运行时间等内容高效地打包到应用程序中。最常用的容器打包格式是 Docker 容器。已采用 Docker 容器格式进行容器化的应用程序可以在可以运行 Docker 容器的任何计算机上执行。即使计算机上不存在应用程序的依赖关系，也是如此，因为所有依赖关系都打包在容器中。有关详细信息，请访问<block ref="f3aa778c455b7c9002cc51cdc41e7924" category="inline-link-rx"></block>。</block>
   <block id="9c3d617029ed075512781527983e01e4" category="paragraph"><block ref="9c3d617029ed075512781527983e01e4" category="inline-image-macro-rx" type="image"></block></block>
   <block id="1304134d4f70b5d09af5fb5a8bda1de8" category="inline-link">Kubernetes 网站</block>
-  <block id="7a1446916a360f9c8ae3b94a97ad8c86" category="paragraph">Kubernetes 是一款开源分布式容器编排平台，最初由 Google 设计，现在由 Cloud 原生计算基金会（ CNCF ）维护。Kubernetes 可以为容器化应用程序实现部署，管理和扩展功能的自动化。近年来， Kubernetes 已成为主导容器业务流程平台。虽然支持其他容器打包格式和运行时间，但 Kubernetes 最常用作 Docker 容器的业务流程系统。有关详细信息，请访问<block ref="b99a36b6d7a8af9ad1172136115f0275" category="inline-link-rx"></block>。</block>
   <block id="6ea70a0ecace7daa9dfbbc8ff3282de1" category="inline-link">Trident 网站</block>
-  <block id="f9b736ec48694a34e744a1a0309602bd" category="paragraph">Trident 是一款由 NetApp 开发和维护的开源存储编排程序，可大大简化 Kubernetes 工作负载的永久性存储的创建，管理和使用。Trident 本身是 Kubernetes 本机应用程序，直接在 Kubernetes 集群中运行。借助 Trident ， Kubernetes 用户（开发人员，数据科学家， Kubernetes 管理员等）可以采用他们已熟悉的标准 Kubernetes 格式创建，管理永久性存储卷并与其交互。同时，他们还可以利用 NetApp 的高级数据管理功能以及由 NetApp 技术提供支持的数据网络结构。Trident 可将持久存储的复杂性抽象化，并使其易于使用。有关详细信息，请访问<block ref="ad5406ed69f3fe0de810f757310402c9" category="inline-link-rx"></block>。</block>
   <block id="47bbe104ad41e6af2ee0dba5dc76d74d" category="inline-link">DeepOps 网站</block>
   <block id="b1c5aef0d1e7ec0339ca5caa48c1b3e3" category="paragraph">DeepOps 是 NVIDIA 的一个开源项目，通过使用 Ansible ，可以根据最佳实践自动部署 GPU 服务器集群。DeepOps 采用模块化设计，可用于执行各种部署任务。在本文档及其所述的验证练习中， DeepOps 用于部署一个由 GPU 服务器辅助节点组成的 Kubernetes 集群。有关详细信息，请访问<block ref="640792bfd91bad987ba8fd5d776a2824" category="inline-link-rx"></block>。</block>
   <block id="173c35c4ef789d6956a0cd6fbd9a0cfc" category="inline-link">Kubeflow 网站</block>
-  <block id="ea77b50ef31a778a66411b993d6cb7d1" category="paragraph">Kubeflow 是一款适用于 Kubernetes 的开源 AI 和 ML 工具包，最初由 Google 开发。通过 Kubeflow 项目，可以在 Kubernetes 上轻松，便携且可扩展地部署 AI 和 ML 工作流。Kubeflow 将 Kubernetes 的错综复杂之处抽象出来，让数据科学家能够专注于他们最了解的―数据科学。有关可视化效果，请参见下图。随着企业 IT 部门越来越多地在 Kubernetes 上实现标准化， Kubeflow 的吸引力也越来越大。有关详细信息，请访问<block ref="bbfd4ba68f44e2ff98f04ea32205485d" category="inline-link-rx"></block>。</block>
-  <block id="a2b0a43dcae6386929654b652393e691" category="paragraph"><block ref="a2b0a43dcae6386929654b652393e691" category="inline-image-macro-rx" type="image"></block></block>
   <block id="e569c07c88fe6f8af1f63410c200abd1" category="section-title">KubeFlow 管道</block>
-  <block id="384873a621d99250018cd7ce1768f8af" category="paragraph">Kubeflow 管道是 Kubeflow 的一个关键组件。Kubeflow 管道是一个平台和标准，用于定义和部署可移植且可扩展的 AI 和 ML 工作流。有关详细信息，请参见<block ref="6de5a235a0c43df48d05588e1b69b959" category="inline-link-rx"></block>。</block>
   <block id="a0b0430a41f582a12dac8f4d63ab450d" category="inline-link">Jupyter 网站</block>
   <block id="385904ba8ac27bcacafadf2113386df4" category="section-title">Apache 气流</block>
   <block id="c01fb6f699235f8c5d36bdda9e155c77" category="paragraph">Apache Airflow 是一个开源工作流管理平台，支持对复杂的企业工作流进行编程创作，计划和监控。它通常用于自动执行 ETL 和数据管道工作流，但不限于这些类型的工作流。气流项目由 Airbnb 发起，但此后在业内备受欢迎，现在由 Apache 软件基金会赞助。气流采用 Python 编写，气流工作流通过 Python 脚本创建，气流是按照 " 配置即代码 " 原则设计的。 现在，许多企业级气流用户都在 Kubernetes 上运行 Airflow 。</block>
   <block id="8fb4a72500791f0bea82c5c9b4c33772" category="section-title">定向循环图（ DAG ）</block>
   <block id="afd712bbacf94fbaf2852bd23c6b1a84" category="paragraph">在气流模式下，工作流称为定向环比图（ DAG ）。DAG 由按顺序，并行或两者的组合执行的任务组成，具体取决于 DAG 定义。气流计划程序会根据 DAG 定义中指定的任务级别依赖关系对一组工作负载执行各个任务。DAG 是通过 Python 脚本定义和创建的。</block>
   <block id="a5119a6bd0f4d733e0f1f4c10f9d063b" category="section-title">NetApp ONTAP 9.</block>
-  <block id="0b83cba78e13ee67f3ada794b1e8edb8" category="paragraph">NetApp ONTAP 9 是 NetApp 推出的最新一代存储管理软件，可帮助像您这样的企业打造现代化的基础架构并过渡到云就绪数据中心。借助行业领先的数据管理功能，无论数据位于何处， ONTAP 都可以通过一组工具来管理和保护数据。您还可以将数据自由移动到任何需要的位置：边缘，核心或云。ONTAP 9 包含许多功能，可简化数据管理，加快和保护关键数据，并在混合云架构中打造适应未来需求的基础架构。</block>
-  <block id="849f9e6e3176f7bb2abaf1dfdda6f4de" category="section-title">简化数据管理</block>
-  <block id="5d0a72b50313f5f3615263a7d19ee676" category="paragraph">数据管理对于企业 IT 运营至关重要，这样您就可以为应用程序和数据集使用适当的资源。ONTAP 包括以下功能，可简化运营并降低总运营成本：</block>
-  <block id="30490e1b1bd18c329c3b28df91914ffe" category="list-text">* 实时数据缩减和扩展的重复数据删除。 * 数据缩减可减少存储块中浪费的空间，重复数据删除可显著提高有效容量。</block>
   <block id="c5b25bb449b07e8b863f41dbe3b90a2a" category="list-text">* 最低，最高和自适应服务质量（ QoS ）。 * 细粒度 QoS 控制有助于在高度共享的环境中保持关键应用程序的性能水平。</block>
-  <block id="d9a5709ce7afa0856dd86539f75c8087" category="list-text">* ONTAP FabricPool 。 * 此功能可将冷数据自动分层到公有和私有云存储选项，包括 Amazon Web Services （ AWS ）， Azure 和 NetApp StorageGRID 基于对象的存储。</block>
-  <block id="ddb2f8d78c57d5743fdee9e17ae053c9" category="section-title">加速和保护数据</block>
-  <block id="4994fe58be1734616de0863809040200" category="paragraph">ONTAP 可提供卓越的性能和数据保护，并通过以下功能扩展这些功能：</block>
-  <block id="b109ecc7b4570bf3dbb9f8d082595075" category="list-text">* 高性能和低延迟。 * ONTAP 以尽可能低的延迟提供最高的吞吐量。</block>
-  <block id="9e184f7b8847a390232c0163d45ab461" category="list-text">* NetApp ONTAP FlexGroup 技术 * 。 FlexGroup 卷是一种高性能数据容器，可线性扩展到高达 20 PB 和 4000 亿个文件，从而提供一个可简化数据管理的命名空间。</block>
   <block id="ef9770ee572f97c59254dc0d022afda8" category="list-text">* 数据保护。 * ONTAP 提供内置数据保护功能，并在所有平台之间进行通用管理。</block>
   <block id="493a7caad772a79b06f5d4a7dd98afcd" category="list-text">* NetApp 卷加密。 * ONTAP 提供原生卷级加密，并支持板载和外部密钥管理。</block>
-  <block id="0950833529b7822458a242631cce3b3b" category="section-title">Future-Proof 基础架构</block>
-  <block id="ba5b61620e18b71a8644dbc382c0c4f1" category="paragraph">ONTAP 9 可帮助您满足不断变化的苛刻业务需求：</block>
-  <block id="d9d73747d25ab5e9c5de8f1f61c9ec7c" category="list-text">* 无缝扩展和无中断运行。 * ONTAP 支持向现有控制器和横向扩展集群无中断添加容量。您可以升级到 NVMe 和 32 Gb FC 等最新技术，而无需进行昂贵的数据迁移或中断。</block>
-  <block id="512a65c054e8b5d06216e0eae55abedb" category="list-text">* 云连接。 * ONTAP 是云连接最广泛的存储管理软件之一，可在所有公有云中选择软件定义的存储（ ONTAP Select ）和云原生实例（ NetApp Cloud Volumes Service ）。</block>
-  <block id="5ca60f373401802dfa44501cfa4f5cc7" category="list-text">* 与新兴应用程序集成。 * 通过使用支持现有企业级应用程序的相同基础架构， ONTAP 可为 OpenStack ， Hadoop 和 MongoDB 等下一代平台和应用程序提供企业级数据服务。</block>
   <block id="49a023178611b07475bac0823fc2dd53" category="section-title">NetApp Snapshot 副本</block>
   <block id="42884680ea9780d61f4cce71fdc606b1" category="paragraph">NetApp Snapshot 副本是卷的只读时间点映像。该映像占用的存储空间极少，并且性能开销极低，因为它仅记录自创建上次 Snapshot 副本以来创建的文件所做的更改，如下图所示。</block>
   <block id="13455e6dd452fcc850acd6696e670600" category="paragraph">Snapshot 副本的效率归功于核心 ONTAP 存储虚拟化技术—任意位置写入文件布局（ Write Anywhere File Layout ， WAFL ）。与数据库一样， WAFL 使用元数据指向磁盘上的实际数据块。但是，与数据库不同， WAFL 不会覆盖现有块。它会将更新后的数据写入新块并更改元数据。这是因为 ONTAP 在创建 Snapshot 副本时引用元数据，而不是复制数据块，因此 Snapshot 副本的效率非常高。这样做可以避免其他系统在查找要复制的块时花费寻道时间，并避免创建副本本身的成本。</block>
@@ -1989,7 +1849,6 @@
   <block id="f67824f4f94415299484432a092f76b1" category="section-title">NetApp SnapMirror 数据复制技术</block>
   <block id="553416a55e03cc49df61e631d17b8011" category="paragraph">NetApp SnapMirror 软件是一款经济高效且易于使用的统一复制解决方案，可跨数据网络结构实现。它可以通过 LAN 或 WAN 高速复制数据。它可以为各种类型的应用程序提供高数据可用性和快速数据复制，包括虚拟和传统环境中的业务关键型应用程序。在将数据复制到一个或多个 NetApp 存储系统并持续更新二级数据时，您的数据将保持最新，并可随时使用。不需要外部复制服务器。有关利用 SnapMirror 技术的架构示例，请参见下图。</block>
   <block id="5a12ba5d186c9ffcce65438f531e7c47" category="paragraph">SnapMirror 软件通过仅通过网络发送更改的块来利用 NetApp ONTAP 的存储效率。SnapMirror 软件还可使用内置网络压缩来加快数据传输速度，并将网络带宽利用率降低多达 70% 。借助 SnapMirror 技术，您可以利用一个精简复制数据流创建一个存储库，同时维护活动镜像和先前的时间点副本，从而将网络流量减少多达 50% 。</block>
-  <block id="423eee692f81241addaf586841d0c66a" category="paragraph"><block ref="423eee692f81241addaf586841d0c66a" category="inline-image-macro-rx" type="image"></block></block>
   <block id="6efa8f47d1a76af77ce311b436e4dca9" category="section-title">NetApp XCP</block>
   <block id="0e4fcaf78d0d4feda27a31ecb6944b58" category="paragraph">NetApp XCP 是一款基于客户端的软件，可用于任意到 NetApp 以及 NetApp 到 NetApp 的数据迁移和文件系统洞察。XCP 旨在通过利用所有可用系统资源来处理大容量数据集和高性能迁移来实现扩展和最大性能。XCP 可通过生成报告的选项帮助您全面了解文件系统。</block>
   <block id="9a3914e340e4b09762f8231f9fd0ddaa" category="paragraph">NetApp XCP 可通过一个软件包提供，该软件包支持 NFS 和 SMB 协议。XCP 包括一个适用于 NFS 数据集的 Linux 二进制文件和一个适用于 SMB 数据集的 Windows 可执行文件。</block>
@@ -2029,9 +1888,7 @@
   <block id="8f33b30dd333b320c87f038f61e17523" category="cell">m5.4xlarge</block>
   <block id="b8f3b98512c841c7f30ce704570ac0b6" category="cell">数据节点</block>
   <block id="ea93f0324aaeaa177497ea41b52cb9ff" category="cell">I3.4 x 大型</block>
-  <block id="232abf87aa3028a990e94f6bb51fe8bd" category="summary">要在 Kubernetes 集群中执行单节点 AI 和 ML 作业，请从部署跳转主机执行此页面上的任务。</block>
   <block id="46300fa439cc237919f854816fc89fc2" category="doc">执行单节点 AI 工作负载</block>
-  <block id="ebbcd572ece7625ba24f2c3ecda6d5b5" category="paragraph">要在 Kubernetes 集群中执行单节点 AI 和 ML 作业，请从部署跳转主机执行以下任务。借助 Trident ，您可以快速轻松地使可能包含数 PB 数据的数据卷可供 Kubernetes 工作负载访问。要使此类数据卷可从 Kubernetes Pod 中访问，只需在 Pod 定义中指定 PVC 即可。此步骤是 Kubernetes 本机操作；不需要 NetApp 专业知识。</block>
   <block id="e3305581bc1f67d1989e08e42a43c113" category="admonition">本节假定您已将尝试在 Kubernetes 集群中执行的特定 AI 和 ML 工作负载容器化（采用 Docker 容器格式）。</block>
   <block id="6bdbab1141be3c52dec1f29c4c5fdf52" category="inline-link">ImageNet 网站</block>
   <block id="08eb6cc7203ec1b36805e4767d450467" category="list-text">以下示例命令显示了如何为使用 ImageNet 数据集的 TensorFlow 基准工作负载创建 Kubernetes 作业。有关 ImageNet 数据集的详细信息，请参见<block ref="19a9693db577a40175aef26761f77fe7" category="inline-link-rx"></block>。</block>
@@ -2074,13 +1931,10 @@
   <block id="1f9a7430deed674d394796eaea14138f" category="paragraph">本技术报告为拥有小型到大型数据科学 / 工程团队的客户提供了一些准则，可通过使用运行： AI 命令行界面和 NetApp ONTAP AI 上的系统信息板来优化 Kubernetes 集群和 GPU 的使用。此外，它还包括运行： AI 平台安装信息，测试场景以及适用于经验证的测试用例的详细命令。Run ： AI Orchestration 解决方案与 NetApp AI 控制平面相结合，可通过优化资源利用率提高开发人员的工作效率，从而加快创新速度。</block>
   <block id="c2ae2e58baf01933984b63bbfd58c6c2" category="summary">本节介绍在 Kubernetes 集群中部署气流时必须完成的任务。</block>
   <block id="7d2a9e50f39ee00c2b180900e7bacc92" category="doc">Apache Airflow 部署</block>
-  <block id="f23c532f744716d23270b963c3eca570" category="paragraph">NetApp 建议在 Kubernetes 顶部运行 Apache Airflow 。本节介绍在 Kubernetes 集群中部署气流时必须完成的任务。</block>
   <block id="1874d60ac69d2a867825b1b7ab0f9297" category="admonition">可以在 Kubernetes 以外的平台上部署 Airflow 。在 Kubernetes 以外的平台上部署气流不在此解决方案的范围内。</block>
   <block id="c7a7dda60a4edd19d3b5bad13d43d605" category="list-text">您已有一个工作正常的 Kubernetes 集群。</block>
-  <block id="e59b39fd5c122dde3747561247eb2888" category="list-text">您已按照《 NetApp Trident 部署和配置》一节中所述在 Kubernetes 集群中安装和配置 NetApp Trident 。</block>
   <block id="ead9806c164633fcb334dc844a3d588f" category="section-title">安装 Helm</block>
   <block id="f9093f3279eca680041e957a2a0505dd" category="paragraph">Airflow 可使用 Kubernetes 常用的软件包管理器 Helm 进行部署。在部署气流之前，必须在部署跳转主机上安装 Helm 。要在部署跳转主机上安装 Helm ，请按照<block ref="cf3f65305f288242c9d49061d26ec8ec" category="inline-link-rx"></block> 在官方 Helm 文档中。</block>
-  <block id="678c0949a1824bf54eba73ab0a2609d8" category="paragraph">在部署 Airflow 之前，您必须在 Kubernetes 集群中指定一个默认 StorageClass 。气流部署过程会尝试使用默认 StorageClass 配置新的永久性卷。如果未将任何 StorageClass 指定为默认 StorageClass ，则部署将失败。要在集群中指定默认 StorageClass ，请按照一节中所述的说明进行操作 <block ref="b868c02e3d390c0001190527c8f4ba0b" category="inline-link-macro-rx"></block>。如果已在集群中指定默认 StorageClass ，则可以跳过此步骤。</block>
   <block id="c7feb8d7350bb5372c4dd0dfc1383865" category="section-title">使用 Helm 部署气流</block>
   <block id="a781e1f3dbd7b5f15c3257febe820528" category="paragraph">要使用 Helm 在 Kubernetes 集群中部署气流，请从部署跳转主机执行以下任务：</block>
   <block id="fe1b26293aba127732d69bdc90866794" category="list-text">按照说明使用 Helm 部署气流<block ref="e4140084ec840191180d755827375d89" category="inline-link-rx"></block> 用于 Artifact Hub 上的官方气流图表。下面的示例命令显示了如何使用 Helm 部署气流。根据您的环境和所需配置，根据需要修改，添加和 / 或删除 `custom- values.yaml` 文件中的值。</block>
@@ -2226,37 +2080,14 @@
   <block id="f1a4e0eca545ebe9e3c32f1fde407410" category="list-text">业务用户希望能够访问 AI/ML 应用程序。我们介绍了 NetApp 和 Iguazio 如何帮助这些角色为我们的平台带来业务价值。</block>
   <block id="00cc9e5c959e62a9132baca479060db3" category="paragraph">此解决方案遵循 AI/ML 应用程序的生命周期。我们从数据科学家的工作开始，定义准备数据以及训练和部署模型所需的不同步骤。接下来，我们将完成创建完整管道所需的工作，该管道能够跟踪项目，试验执行并部署到 Kubeflow 。为了完成整个周期，我们将管道与 NetApp Cloud Volumes 集成，以启用数据版本控制，如下图所示。</block>
   <block id="ddd4a11ec23c52d3f0831809bc4d7c8f" category="paragraph"><block ref="ddd4a11ec23c52d3f0831809bc4d7c8f" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="0de039e647bc53dcce6e7bceb8605cbf" category="paragraph">各行各业各种规模的企业和组织都在转向人工智能（ AI ），机器学习（ ML ）和深度学习（ DL ），以解决实际问题，提供创新产品和服务，并在竞争日益激烈的市场中占据优势。随着企业越来越多地使用 AI ， ML 和 DL ，他们面临着许多挑战，包括工作负载可扩展性和数据可用性。可以通过使用 NetApp AI 控制平台解决方案来应对这些挑战。</block>
-  <block id="cae02473f4798da0fdd40f4f598b1d96" category="paragraph">通过此解决方案，您可以快速克隆数据命名空间。此外，您还可以定义和实施 AI ， ML 和 DL 培训工作流，这些工作流可近乎即时地创建数据和模型基线，以实现可追溯性和版本控制。使用此解决方案，您可以跟踪每个模型训练返回到模型经过训练和 / 或验证的确切数据集。最后，借助此解决方案，您可以快速配置 Jupyter 笔记本电脑工作空间，以访问海量数据集。</block>
-  <block id="696dba9a093d4ac7b67234745dd57835" category="paragraph">由于此解决方案面向数据科学家和数据工程师，因此只需极少的 NetApp 或 NetApp ONTAP 专业知识即可。借助此解决方案，可以使用简单熟悉的工具和界面来执行数据管理功能。此外，此解决方案还利用完全开源和免费的组件。因此，如果您的环境中已有 NetApp 存储，则可以立即实施此解决方案。如果您要测试此解决方案的驱动器，但尚未安装 NetApp 存储，请访问<block ref="d72e38e0d1c5ca8869f2dd987734920b" category="inline-link-rx"></block>，您可以随时使用基于云的 NetApp 存储解决方案启动和运行。</block>
-  <block id="3a607d0e3fa64fd7558e11352f751dd0" category="summary">NetApp AI 控制平面解决方案不依赖于此特定硬件。</block>
-  <block id="976cf3edd8adeff2e75cd7a9dd0dae21" category="paragraph">NetApp AI 控制平面解决方案不依赖于此特定硬件。解决方案与 Trident 支持的任何 NetApp 物理存储设备，软件定义的实例或云服务兼容。例如， NetApp AFF 存储系统， Azure NetApp Files ， NetApp Cloud Volumes Service ， NetApp ONTAP Select 软件定义的存储实例或 NetApp Cloud Volumes ONTAP 实例。此外，只要 Kubernetes 和 NetApp Trident 支持所使用的 Kubernetes 版本，即可在任何 Kubernetes 集群上实施解决方案。有关 Kubeflow 支持的 Kubernetes 版本列表，请参见<block ref="01b2e82a7080cdbeb934280240df876e" category="inline-link-rx"></block>。有关 Trident 支持的 Kubernetes 版本列表，请参见<block ref="e6b3671f5db59046617458d31ef4f50b" category="inline-link-rx"></block>。有关用于验证解决方案的环境的详细信息，请参见下表。</block>
-  <block id="2e4fd4a404800f52299c132a3403dc72" category="cell">基础架构组件</block>
   <block id="64d354dc5879cf570ce7b4ef676e75bd" category="cell">操作系统</block>
-  <block id="4152ac69f367cb5f64dfbc247dd41db0" category="cell">部署跳转主机</block>
-  <block id="583a65df9db4119165f5ea0abaa50281" category="cell">虚拟机</block>
-  <block id="204dd0a482d284a7fb87c908f713f9bd" category="cell">Ubuntu 20.04.2 LTS</block>
-  <block id="f341fd2fe180518e152be2d6fb4ec20b" category="cell">Kubernetes 主节点</block>
-  <block id="a89c263b82f7c7f61c9b6c93080f8425" category="cell">Kubernetes 工作节点</block>
-  <block id="76a7e6383604f84ace970ce86ba76a9f" category="cell">Kubernetes GPU 工作节点</block>
-  <block id="f89b34b046a8d6e3137c95861fa3cf8a" category="cell">NVIDIA DGX-1 （裸机）</block>
-  <block id="eba551f3f972830c55b1c9bef15b5f26" category="cell">NVIDIA DGX OS 4.0.5 （基于 Ubuntu 18.04.2 LTS ）</block>
-  <block id="0911ffdbb76c891f964e39a07eb6b697" category="cell">1 个 HA 对</block>
   <block id="1672d070f346948fb25e819b40bb3ade" category="cell">NetApp AFF A220</block>
-  <block id="d1d73cf191d1afbd40e85644467cae8b" category="cell">NetApp ONTAP 9.7 P6</block>
   <block id="68782f72ebeb2cac06f03226a6e941bb" category="cell">软件组件</block>
   <block id="47354877541923135499c38a6606138a" category="cell">2.0.1</block>
   <block id="9ba69bd971d430b368ce3f0286c8e77c" category="cell">Apache 气流 Helm 图表</block>
   <block id="ecfa741d55b7b1a85bd61a2307877c8c" category="cell">8.0.8</block>
-  <block id="fd99a7ef225418315b041ad631a5674c" category="cell">19.03.12</block>
-  <block id="56765472680401499c79732468ba4340" category="cell">1.2</block>
-  <block id="48d02190984e4f8526f99f9cd9550e08" category="cell">1.18.9</block>
-  <block id="d58d49f83f534f5d71b20750bb7927c7" category="cell">21.01.2</block>
-  <block id="7a04e1f765218bcbfc633ef331b312b8" category="inline-link-macro">61898cdfda</block>
-  <block id="7855beff2fafbce2cf0df4d67f8dfed7" category="cell">提交时主分支的 Trident 部署功能 <block ref="686ead03155c78694e1a59db0970fc1a" category="inline-link-macro-rx"></block>；从 21.03 版开始提供所有其他功能</block>
   <block id="db5eb84117d06047c97c9a0191b5fffe" category="section-title">支持</block>
   <block id="b2e75bbfb9933bc21b7f875e8676641d" category="inline-link-macro">请联系 NetApp</block>
-  <block id="a1773dfa99aa26853e90886d55e0d05a" category="paragraph">NetApp 不为 Apache Airflow ， Docker ， Kubeflow ， Kubernetes 或 NVIDIA DeepOps 提供企业级支持。如果您对具有与 NetApp AI 控制平台解决方案类似的功能的完全受支持的解决方案感兴趣， <block ref="103a4ac9affe57bb7edb7796bfdeb684" category="inline-link-macro-rx"></block> 关于 NetApp 与合作伙伴共同提供的完全受支持的 AI/ML 解决方案。</block>
   <block id="3cfbc3bac23f6bb9e7ebdc6deefeaf1d" category="paragraph">由 NetApp 和 NVIDIA 开发并验证的 NetApp ONTAP AI 架构由 NVIDIA DGX 系统和 NetApp 云连接存储系统提供支持。此参考架构为 IT 组织提供了以下优势：</block>
   <block id="410a2fbd85ad3d74051034eac2b94889" category="list-text">为各种性能和成本点提供了一系列存储选项</block>
   <block id="6fa0f6cc1d5d12069641e73217a17be2" category="paragraph">NetApp ONTAP AI 将 DGX 系统和 NetApp AFF A800 存储系统与一流的网络紧密集成在一起。NetApp ONTAP AI 和 DGX 系统消除了设计复杂性和猜测性工作，从而简化了 AI 部署。客户可以从小规模入手，无中断地扩展系统，同时智能地管理从边缘到核心再到云再到云的数据。</block>
@@ -2280,7 +2111,6 @@
   <block id="2dfe8bb84d94f23030d91e315d7899bc" category="admonition">要使 DeepOps Kubernetes 部署正常工作，所有 Kubernetes 主节点和工作节点上必须存在相同的用户。</block>
   <block id="c6fff1434177c1b95244b5300314f730" category="paragraph">如果部署失败，请在 `deepops/config/group_vars/K8s-cluster.yml` 中将 `kubectl_localhost` 的值更改为 false ，然后重复步骤 2 。`Copy kubectl binary to Ansible host` 任务仅在 `kubectl_localhost` 值为 true 时执行，它依赖于 Fetch Ansible 模块，该模块存在已知的内存使用问题。这些内存使用问题有时可能会使任务发生原因失败。如果任务因内存问题描述而失败，则部署操作的其余部分将无法成功完成。</block>
   <block id="24e1fa4c913dcdc975e022f921d4d603" category="paragraph">如果在将 `kubectl_localhost` 的值更改为 `false` 后部署成功完成，则必须手动将 `kubectl 二进制文件` 从 Kubernetes 主节点复制到部署跳转主机。您可以通过直接在特定主节点上运行 `which kubectl` 命令来查找 `kubectl 二进制文件` 在该节点上的位置。</block>
-  <block id="d7cd7846436814deb26b0df06d7a4b2a" category="summary">要在 Kubernetes 集群中执行同步多节点 AI 和 ML 作业，请在部署跳转主机上执行此页面上列出的任务。通过此过程，您可以利用存储在 NetApp 卷上的数据，并使用单个工作节点所能提供的 GPU 。</block>
   <block id="8725f0c1877790fea82aedbc23e26e70" category="doc">执行同步分布式 AI 工作负载</block>
   <block id="deb7f52575de614a91ae7472b76138ec" category="paragraph">要在 Kubernetes 集群中执行同步多节点 AI 和 ML 作业，请在部署跳转主机上执行以下任务。通过此过程，您可以利用存储在 NetApp 卷上的数据，并使用单个工作节点所能提供的 GPU 。有关同步分布式 AI 作业的描述，请参见下图。</block>
   <block id="c073d47c72ebccdc821d9e6419b3008c" category="admonition">与异步分布式作业相比，同步分布式作业有助于提高性能和训练准确性。本文档不会讨论同步作业与异步作业的利弊。</block>
@@ -3489,7 +3319,6 @@
   <block id="e648dd2d4df65a903e9c1204d81abaed" category="sidebar">适用于 AI 和 ML 模型培训工作负载的 NetApp AFF A800 和 Fujitsu 服务器 PRIMERGY GX2570 M5</block>
   <block id="6a571fb799acb43b64f874729f838e2a" category="sidebar">数据管道，数据湖和管理</block>
   <block id="c79bd5ac7ebc0eae5588b9ad529a380f" category="sidebar">适用于自主驾驶工作负载的 NetApp StorageGRID 数据湖</block>
-  <block id="fad62e8b886e655813cc4ce635152f62" category="sidebar">Trident 部署</block>
   <block id="70be05b3500f28affc2d048f81c4f7ab" category="sidebar">分布式 Azure 培训—通道检测</block>
   <block id="7767872606b9c99eb656c9568c1fdd83" category="sidebar">车道检测—使用 Run AI 进行分布式培训</block>
   <block id="ce3b746194cb1fb7d96dfe14187115e0" category="sidebar">采用数据缓存的混合云 AI 操作系统</block>
@@ -6352,7 +6181,6 @@
   <block id="3e9d3644ee18a66c51ddd16b668eaa5a" category="sidebar">自动化 Oracle 数据保护</block>
   <block id="82be90bcfc8fd03855e030edaa25583a" category="sidebar">适用于 AWX/ 塔式服务器的自动化 Oracle 数据保护</block>
   <block id="080e5221e660ab18a3746fe480956ebc" category="paragraph">在容器管理级别， Kubernetes 容器管理是一个不错的选择，完全上游版本（ Canonical ）或适用于企业部署的修改版本（ Red Hat ）均支持此功能。。 <block ref="8ff9014ec7345470e1bb9286d28496e4" category="inline-link-macro-rx"></block> 使用 NetApp Trident 和新添加的<block ref="18f9f1b3975974bec435249b1752c2d6" category="inline-link-rx"></block> 为数据科学家和数据工程师提供内置可追溯性，数据管理功能，接口和工具，以便与 NetApp 存储集成。Kubeflow 是适用于 Kubernetes 的 ML 工具包，可在 TensorFlow Serving 或 NVIDIA Triton 推理服务器等多个平台上提供额外的 AI 功能以及对型号版本控制和 KFServing 的支持。另一个选项是 NVIDIA EGX 平台，它可提供工作负载管理以及对支持 GPU 的 AI 推理容器目录的访问。但是，这些选项可能需要大量的精力和专业知识才能投入生产，并且可能需要第三方独立软件供应商（ ISV ）或顾问的协助。</block>
-  <block id="fffa1b56750a0334993c90d5adc9912a" category="doc">TR-4798 ： NetApp AI 控制平台</block>
   <block id="68eff5f8d34b801d40ab55f098bc6478" category="inline-link-macro">请单击此处了解解决方案入门</block>
   <block id="e5dec240e8be4a30564a7e8ddc0d568a" category="list-text">准备就绪后，单击 <block ref="a171481e1cde5211da297c03090cb7ce" category="inline-link-macro-rx"></block>。</block>
   <block id="4d0c05180ba83e5c8a9bbac094c365e2" category="list-text">此自动化设置为运行三个阶段（安装， Oracle 二进制文件复制计划，数据库，日志和仅适用于日志的复制计划），以及第四个阶段以在灾难恢复站点恢复数据库。</block>
@@ -7502,7 +7330,6 @@
   <block id="eeb4980c2a89f07abf1a0b927066b23c" category="sidebar">借助 E 系列和适用于 AI 的 BeeGFS 实现数据移动</block>
   <block id="13f985aafb32ac9e387186e5a437f96e" category="sidebar">采用数据缓存的混合云 AI</block>
   <block id="ac82c7a9ef13f3b604553ccfe1a5bd76" category="sidebar">支持和管理</block>
-  <block id="3cd04d0e6cf45786c9e94148f213b537" category="sidebar">适用于 AI 管道和工作空间访问的 NetApp AI 控制平台</block>
   <block id="447e8e0102d91009c125adb678cd7fb5" category="sidebar">与 Iguazio 的 MLRun 管道</block>
   <block id="71e6eb0dc5951ca93effe179d000f534" category="sidebar">情感分析</block>
   <block id="cfff43e76ea0e95d290a279bdb279a2e" category="sidebar">点击率预测— Azure 中的分布式培训</block>
@@ -9998,10 +9825,6 @@
   <block id="a047c61461aba5a84a0a221900c33984" category="paragraph">图像处理用于通过计算机体层成像(CT)或磁场共振成像(MRI)获得的3D图像诊断用于手术计划的病理学。HIPAA隐私规则规定了组织必须如何收集、处理和擦除所有个人信息和照片等数字图像的数据。要使数据符合HIPAA《安全港》规定的可共享性、必须删除全面照片图像和任何类似图像。用于从结构化的CT/MR图像中模糊个人面部特征的除名或头骨‐剥离算法等自动化技术已成为生物医学研究机构数据共享过程的重要组成部分。</block>
   <block id="2c5c3872e94de8a36eac45213c5bf2e6" category="paragraph">传统上、企业客户已经在内部培训和部署了AI/ML模式。出于规模经济和效率方面的考虑、这些客户正在进行扩展、将AI/ML功能迁移到公有 、混合云或多云云部署中。但是、它们受数据可以公开到其他基础架构的约束。NetApp解决方案可解决所需的各种网络安全威胁<block ref="9da3a9a08c9461b229d33f221e8caa37" category="inline-link-rx"></block> 和安全性评估、结合使用Protopia数据转换、最大程度地降低将图像处理AI/ML工作负载迁移到云的相关风险。</block>
   <block id="236e54165aafef697c2c82c667e05d36" category="doc">TR-4928：《责任AI和机密推理—NetApp AI与Protopia映像和数据转型》</block>
-  <block id="5b8a88d59edea26637f628caefd05974" category="list-text">您已有一个有效的 Kubernetes 集群，并且正在运行 Trident 支持的 Kubernetes 版本。有关支持的版本列表，请参见<block ref="77881c904b113f84b0f08c355b95174f" category="inline-link-rx"></block>。</block>
-  <block id="b81146e6af95bf6e22cf57459890216f" category="inline-link">后端</block>
-  <block id="f652904c3bfb48fb25a0a75f485f0ff6" category="inline-link">StorageClasses</block>
-  <block id="05543563edfd7ed0348edd3b47280705" category="list-text">如果您未使用 NVIDIA DeepOps 部署 Kubernetes 集群，或者您只是希望手动部署 Trident ，则可以按照部署 Trident<block ref="e119dd171387190517d77417752a581c" category="inline-link-rx"></block> 在 Trident 文档中。有关如何配置的详细信息、请务必至少创建一个Trident后端和一个Kubernetes StorageClass<block ref="9e44c6ae604c64be7a70b0384fa1cccd" category="inline-link-rx"></block> 和<block ref="336146b6899186b663ba5a7b38e8c39b" category="inline-link-rx"></block> 请参见NetApp文档中链接的小节。</block>
   <block id="36522cc6d4eb67d30ef19d321901fa6e" category="cell">2022年6月16日</block>
   <block id="e1ea84e227dd99913363ade155774bcf" category="cell">添加了采用NetApp设计指南的NVIDIA DGX SuperPOD</block>
   <block id="1edbb6849585c57ecbf402c0706ecf2d" category="sidebar">采用NetApp技术的NVIDIA DGX SuperPOD (设计指南)</block>
@@ -21681,4 +21504,112 @@ Milvus独立集群的网络和服务器连接如下。</block>
   <block id="311d52ab2a0bb3e46955c806249f590f" category="sidebar">NFS和虚拟卷作为工作负载域的补充存储</block>
   <block id="634a39984b6bd9120081d40b9aa095c4" category="example-title">VMware Cloud Foundation与NetApp ONTAP</block>
   <block id="b46d2e27ef712b8851dadcf6c46f239b" category="video-title">NFS数据存储库作为VCF工作负载域的主要存储</block>
+  <block id="90751ec743b3c880fd66b27aa04eeae5" category="summary">使用NetApp的开源MLOps—示例Astra三项操作</block>
+  <block id="30052bfcd7f83c6ccc4908d677cde267" category="doc">Asta三端操作示例</block>
+  <block id="21caa183663c777d789f6be2e101dfce" category="paragraph">本节包括您可能希望使用Asta三端对其执行的各种操作的示例。</block>
+  <block id="8a87b71bee3405ddd29416b675ef7c61" category="paragraph">以下示例命令显示了名为的卷的导入过程<block ref="49f0544a1f0d45f5d68ad2e883eaec4a" prefix=" " category="inline-code"></block>。有关 PVCs 的详细信息，请参见<block ref="ca589c3cf5b20ae0a636e2b7691f2873" category="inline-link-rx"></block>。有关卷导入功能的详细信息，请参见<block ref="7e5b92b70f9fb8a6ea9680492953995f" category="inline-link-rx"></block>。</block>
+  <block id="6b2d9cc0e6416b1fddc173d87e1ebad4" category="paragraph">您可以使用 Trident 在 NetApp 存储系统或平台上配置新卷。</block>
+  <block id="4268e244b7de91b44bea226a48855c28" category="section-title">使用kubec迎接 新卷的到来</block>
+  <block id="d5c5993dfd543be5e01f6d98516d64cb" category="paragraph">以下示例命令显示了如何使用kubec用 配置新的FlexVol卷。</block>
+  <block id="3b12f01a10ad45fb526861fc286c7953" category="section-title">使用NetApp数据操作工具包配置新卷</block>
+  <block id="b1e49394b547d60433afdf0d608bc52b" category="paragraph">此外、您还可以使用适用于Kubornetes的NetApp数据操作工具包在NetApp存储系统或平台上配置新卷。适用于Kubnetes的NetApp数据操作工具包利用三端存储来配置卷、但为用户简化了配置过程。请参见 <block ref="37e4d77423419479f43c92e2fdd640ea" category="inline-link-macro-rx"></block> 了解详细信息。</block>
+  <block id="9dd88053035e8518106da3a40ce3aa3b" category="summary">采用NetApp的开源MLOps—Apache Airflow部署</block>
+  <block id="14d9b10c6196045941347a9e85704b50" category="inline-link-macro">Astra Trident 文档</block>
+  <block id="f5cfab6d300668774052fa7a09c6c8c5" category="list-text">您已在Kubbernetes集群中安装并配置NetApp Asta三端存储。有关Asta三项功能的更多详细信息、请参见 <block ref="2b8a155fc083396b96b18cee0ba5eab0" category="inline-link-macro-rx"></block>。</block>
+  <block id="1a5b654be73470478440b1f34bcd0e17" category="paragraph">在部署 Airflow 之前，您必须在 Kubernetes 集群中指定一个默认 StorageClass 。气流部署过程会尝试使用默认 StorageClass 配置新的永久性卷。如果未将任何 StorageClass 指定为默认 StorageClass ，则部署将失败。要在集群中指定默认StorageClass、请按照中所述的说明进行操作 <block ref="b868c02e3d390c0001190527c8f4ba0b" category="inline-link-macro-rx"></block> 部分。如果已在集群中指定默认 StorageClass ，则可以跳过此步骤。</block>
+  <block id="1358ee6f6793d8ad5c774e77af0ef2f8" category="summary">NetApp中的开源MLOps -使用具有Airflow的NetApp数据操作工具包</block>
+  <block id="a6341ca5ab25e7d3076dec050c9e5a97" category="doc">使用NetApp数据操作工具包和Airflow</block>
+  <block id="a408a973f45f990bcd545653e35109ff" category="paragraph">。<block ref="d2f8e20a78f43c00804244e7ccbfa516" category="inline-link-rx"></block> 可与气流结合使用。通过将NetApp数据操作工具包与Airflow结合使用、您可以将NetApp数据管理操作(例如创建快照和克隆)整合到由Airflow编排的自动化工作流中。</block>
+  <block id="b6cc356bf5062501529145b3a4643413" category="paragraph">请参见<block ref="7c367129528d87aa1adf73a57a51aa4d" category="inline-link-rx"></block> 部分、NetApp了解有关在Airflow中使用此工具包的详细信息。</block>
+  <block id="95cd1b9d487589b619592ac7a94f1001" category="summary">采用NetApp的开源MLOps—架构</block>
+  <block id="bc0d43771a5e521dfc562e99af983c88" category="paragraph">此解决方案不依赖于特定硬件。解决方案与 Trident 支持的任何 NetApp 物理存储设备，软件定义的实例或云服务兼容。例如、NetApp AFF存储系统、Amazon FSx for NetApp ONTAP、Azure NetApp Files或NetApp Cloud Volumes ONTAP实例。此外、只要Kubeflow和NetApp Asta三端技术支持所使用的Kubenetes版本、解决方案就可以在任何Kubenetes集群上实施。有关 Kubeflow 支持的 Kubernetes 版本列表，请参见<block ref="01b2e82a7080cdbeb934280240df876e" category="inline-link-rx"></block>。有关 Trident 支持的 Kubernetes 版本列表，请参见<block ref="7e5b92b70f9fb8a6ea9680492953995f" category="inline-link-rx"></block>。有关用于验证解决方案的环境的详细信息，请参见下表。</block>
+  <block id="e0d8584ae6ed8fd534954ae8ed8755a3" category="inline-link-macro">部署KF</block>
+  <block id="ddd0629058f2fe605ef2ce7f054558c1" category="cell">1.7、通过部署 <block ref="f36b6222867dc75589b32398e1411061" category="inline-link-macro-rx"></block> 0.1.1.</block>
+  <block id="32b2e96c4f6d14da1df5b25db372de8f" category="cell">1.26.</block>
+  <block id="217af7d1776d22530d98be04d104fd49" category="cell">23.07</block>
+  <block id="631a1ca048c1446bc63201ba6a0d5d2f" category="paragraph">NetApp不为Apache Airflow、Kubeflow或Kubenetes提供企业级支持。如果您对完全受支持的MLOps平台感兴趣、 <block ref="103a4ac9affe57bb7edb7796bfdeb684" category="inline-link-macro-rx"></block> 关于NetApp与合作伙伴联合提供的完全受支持的MLOps解决方案。</block>
+  <block id="f12c45e1eac8241ea579d7123235dcbe" category="summary">采用NetApp的开源MLOps—适用于NetApp AIPod部署的Asta三叉式后端示例</block>
+  <block id="47f07dc41d6652580eebc88ef9913aee" category="doc">适用于NetApp AIPod部署的Asta三叉式后端示例</block>
+  <block id="bf498d2b211c45a57e0eaa477b958b58" category="inline-link-macro">NetApp AIPod</block>
+  <block id="fa9aef0d1c656dabe112e808a529c069" category="paragraph">在使用Asta Trident在Kubornetes集群中动态配置存储资源之前、您必须先创建一个或多个Trident后端。以下示例表示在上将此解决方案的组件部署到上时可能要创建的不同类型的后端 <block ref="55a7aef237bed3fbd4c872b9ab2f2525" category="inline-link-macro-rx"></block>。有关后端的详细信息，请参见 <block ref="2b8a155fc083396b96b18cee0ba5eab0" category="inline-link-macro-rx"></block>。</block>
+  <block id="5bce19d939aea54f55df565bb07b573b" category="list-text">NetApp建议为AIPod创建启用了FlexGroup的三端。</block>
+  <block id="987adc3703d1f7aeb77e70a3d25e35ca" category="paragraph">以下命令示例显示了如何为AIPod Storage Virtual Machine (SVM)创建启用了FlexGroup的三端。此后端使用<block ref="844e84da8e822b4a33c4d8188da97937" prefix=" " category="inline-code"></block> 存储驱动程序。ONTAP 支持两种主要数据卷类型： FlexVol 和 FlexGroup 。FlexVol 卷具有大小限制（截至本文撰写时，最大大小取决于特定部署）。另一方面， FlexGroup 卷可以线性扩展到高达 20 PB 和 4000 亿个文件，从而提供一个可显著简化数据管理的命名空间。因此， FlexGroup 卷最适合依赖大量数据的 AI 和 ML 工作负载。</block>
+  <block id="112efecf6dc8105639ea7e0b2a19f0e1" category="list-text">NetApp还建议创建启用了的FlexVol后端。您可能希望使用FlexVol卷托管永久性应用程序、存储结果、输出、调试信息等。如果要使用 FlexVol 卷，必须创建一个或多个启用了 FlexVol 的 Trident 后端。以下命令示例显示了创建一个启用了FlexVol的三端后端。</block>
+  <block id="0e6dc629616db1f269870318e89e7522" category="summary">使用NetApp的开源MLOps—示例工作流—使用Kubeflow和NetApp DataOps工具包训练图像识别模型</block>
+  <block id="659e23f00660c05c4b7cf730eae0befe" category="doc">示例工作流-使用Kubeflow和NetApp数据操作工具包训练图像识别模型</block>
+  <block id="cc799f8653f5775220453347865834a9" category="paragraph">本节介绍使用Kubeflow和NetApp数据操作工具包培训和部署用于图像识别的神经网络所涉及的步骤。此示例用于展示整合了NetApp存储的培训作业。</block>
+  <block id="b759ef76b26f922987fbf418c77766cb" category="paragraph">创建一个包含所需配置的文档、以用于Kubeflow管道中的训练和测试步骤。
+以下是一个多克尔文件示例-</block>
+  <block id="d1658ed5f5e35aee28cc518869591c5b" category="paragraph">根据您的要求，安装运行该程序所需的所有必需库和软件包。在训练机器学习模型之前、我们假定您已部署有效的Kubeflow。</block>
+  <block id="1d7fb7fa777edda515304ad19af75036" category="section-title">使用PyTorch和Kubeflow管道训练有关MNIST数据的小型NN</block>
+  <block id="a2d6c085b2bfbb3fc92caceedba6806e" category="paragraph">我们以一个小型神经网络为例、该网络是根据MNIST数据进行训练的。MNIST数据集由0到9位数字的字母图像组成。图像的大小为28x28像素。数据集分为60、000个训练影像和10、000个验证影像。用于此实验的神经网络是一个2层馈送网络。使用Kubeflow管道执行培训。请参见文档<block ref="bcb10ee1db2d847a3cadc06c872375ac" category="inline-link-rx"></block> 有关详细信息 ...我们的Kubeflow管道整合了"前提条件"部分中的Docker映像。</block>
+  <block id="edfa32db89306c0de4efde13667133a5" category="inline-image-macro">Kubeflow管道运行可视化</block>
+  <block id="c2e3ee842ee353e33fe3e0fa4e10ccc4" category="paragraph"><block ref="c2e3ee842ee353e33fe3e0fa4e10ccc4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e7d85cbff0f5dec5d5092004b5b8774e" category="section-title">使用Tensorboard直观显示结果</block>
+  <block id="d3246eab9678602f9301a80184803dff" category="inline-link">Tensorboard</block>
+  <block id="12e2a8be9c4e17ffc7dc66217d8530ff" category="paragraph">模型训练完成后、我们可以使用Tensorboard直观显示结果。<block ref="a07862d9a0e51dec9c3587e87c541181" category="inline-link-rx"></block> 作为Kubeflow信息板上的一项功能提供。您可以为您的作业创建自定义的tensorboard。以下示例显示了训练精度与的图解环比和训练损失的数量与时代的数量。</block>
+  <block id="1618fe0e500d9ed850d5e614c6620fd8" category="inline-image-macro">训练损失和准确性的Tensorboard图</block>
+  <block id="8565bb5d94979ae0257bb64a951e792b" category="paragraph"><block ref="8565bb5d94979ae0257bb64a951e792b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="cbdd778d6f4497497010df3f4ae35a67" category="section-title">使用Katb试验超参数</block>
+  <block id="d8d51bb44e1cdcb1d7fde82b687339bd" category="inline-link">Katb.</block>
+  <block id="a47bff2eb2b867ca89a553eeb14da493" category="paragraph"><block ref="98b590f3a453d1e0809708b45d553c8f" category="inline-link-rx"></block> 是Kubeflow中的一个工具、可用于实验模型超参数。要创建实验、请先定义所需的指标/目标。这通常是测试准确性。定义指标后、选择要使用的超参数(优化器/leining_rate /层数)。Katb使用用户定义的值执行超参数扫描、以找到满足所需度量的最佳参数组合。您可以在用户界面的每个部分中定义这些参数。或者，也可以使用必要的规范定义*YAML*文件。下面是一个Katis实验的示意图-</block>
+  <block id="70e367edef0d0f2a63f6fff084365aa4" category="inline-image-macro">带有超参数的Katb检测仪表板</block>
+  <block id="cc870146cb8e063d47cedb7a16dc03dc" category="paragraph"><block ref="cc870146cb8e063d47cedb7a16dc03dc" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="cd53955b02bf4a8bb0a318390df24ae6" category="inline-image-macro">试用检查成功</block>
+  <block id="517e7cdabf620ab563ef4ba8a98e69ea" category="paragraph"><block ref="517e7cdabf620ab563ef4ba8a98e69ea" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="18d3e96caf95415deff9bb8b5bc25063" category="section-title">使用NetApp快照保存数据以实现可跟踪性</block>
+  <block id="0b6ef7f84e44ffbb76d4eef1ef587269" category="paragraph">在模型训练期间、我们可能希望保存训练数据集的快照、以便于跟踪。为此、我们可以向管道中添加Snapshot步骤、如下所示。要创建快照、可以使用<block ref="6bc4513613cdc996b868b94d9e9ded69" category="inline-link-rx"></block>。</block>
+  <block id="9f205d5330ff4142363e15d261753156" category="inline-image-macro">用于在Kubeflow中构建Snapshot管道的代码</block>
+  <block id="e95288dea92885bb774089ae37134cc4" category="paragraph"><block ref="e95288dea92885bb774089ae37134cc4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="fe2b6f01ffb206a03c2e0fd0a802a4ca" category="inline-link">适用于Kubeflow的NetApp数据操作工具包示例</block>
+  <block id="7ba41dac79bc84ef4a806ce87fc4f97a" category="paragraph">请参见<block ref="f0b3c05b3c22509c21d3296c77ee92d9" category="inline-link-rx"></block> 有关详细信息 ...</block>
+  <block id="fdc02d1c80a87a40b5361ca1abf33964" category="summary">采用NetApp的开源MLOps—适用于NetApp AIPod部署的Kubernetes StorageClasses示例</block>
+  <block id="d25894e802e87270d1f6b560c3332055" category="doc">适用于NetApp AIPod部署的Kubernetes StorageClasses示例</block>
+  <block id="34d80de2b0eacd68ae1fe5ebe406f08e" category="paragraph">在使用Asta三端到功能在Kubornetes集群中动态配置存储资源之前、您必须先创建一个或多个Kubornetes StorageCluster。以下示例表示在上将此解决方案的组件部署到上时可能要创建的不同类型的StorageCluster <block ref="55a7aef237bed3fbd4c872b9ab2f2525" category="inline-link-macro-rx"></block>。有关 StorageClasses 的详细信息，请参见 <block ref="2b8a155fc083396b96b18cee0ba5eab0" category="inline-link-macro-rx"></block>。</block>
+  <block id="3f91a2c4d8ba66304e817a6c1c8d8086" category="inline-link-macro">基于 RDMA 的 NFS</block>
+  <block id="55a6a28f9683a4d94b435595baf958da" category="list-text">NetApp建议为您在一节中创建的启用了FlexGroup的三端后端创建存储类 <block ref="4de496be201fe2e6f2e531c124448b74" category="inline-link-macro-rx"></block>，步骤 1 。下面的示例命令显示了创建多个StorageClasses的过程、这些StorageClasses对应于本节中创建的两个示例后端 <block ref="4de496be201fe2e6f2e531c124448b74" category="inline-link-macro-rx"></block>，第1步-一个利用的步骤 <block ref="2f98f20aaeb2334cc6d03f1e60eea86f" category="inline-link-macro-rx"></block> 而不是。</block>
+  <block id="c07a9ca2de692cb8c35daed9f10dd85b" category="paragraph">注意：以下示例StorageClasses使用的最大传输大小为262144。要使用此最大传输大小、必须相应地在ONTAP系统上配置最大传输大小。请参见 <block ref="26a3379d3e0cb48f6481615ab36d21ec" category="inline-link-macro-rx"></block> 了解详细信息。</block>
+  <block id="adeccc59588e0805fa9dd333f392e6d1" category="paragraph">注意：要使用基于RDMA的NFS、必须在ONTAP系统上配置基于RDMA的NFS。有关详细信息、请参见https://docs.netapp.com/us-en/ontap/nfs-rdma/[ONTAP的第2部分。</block>
+  <block id="602a8e075e5568ea4823ea77d93a76e1" category="paragraph">注意：在以下示例中、未在StorageClass定义文件的StoragePoool字段中指定特定后端。</block>
+  <block id="62acbc5516251cee189bac7cc106b015" category="inline-link-macro">适用于AIPod部署的Asta Trendent后端示例</block>
+  <block id="cde65fa3950fb97130931fdab40fd818" category="list-text">NetApp 还建议创建一个与您在部分中创建的启用了 FlexVol 的 Trident 后端对应的 StorageClass <block ref="6d1a5bf12938fae7cf1bae2a6e0c1378" category="inline-link-macro-rx"></block>，第2步。下面的示例命令显示了为 FlexVol 卷创建一个 StorageClass 的过程。</block>
+  <block id="fc614170d6c05a82aef1df8658cdddbb" category="paragraph">注意：在以下示例中、未在StorageClass定义文件的StoragePoool字段中指定特定后端。当您使用Kubnetes管理使用此存储类的卷时、啮合动物会尝试使用任何使用的可用后端<block ref="8321592ce24c8a122ecf26a63cfca407" prefix=" " category="inline-code"></block> 驱动程序。</block>
+  <block id="6999319a5a39a9ca41436977f2cb8b8d" category="summary">采用NetApp的开源MLOps—技术概述</block>
+  <block id="f0ce8ef614fdf23fe30bc43ff89f53d3" category="paragraph">Kubernetes 是一款开源分布式容器编排平台，最初由 Google 设计，现在由 Cloud 原生计算基金会（ CNCF ）维护。Kubernetes 可以为容器化应用程序实现部署，管理和扩展功能的自动化。近年来， Kubernetes 已成为主导容器业务流程平台。有关详细信息，请访问<block ref="b99a36b6d7a8af9ad1172136115f0275" category="inline-link-rx"></block>。</block>
+  <block id="848e9aa6db82ee40216f6535427697b8" category="paragraph">。 <block ref="e1b71d44cb7c7cac57b187c39d01c5ce" category="inline-link-macro-rx"></block> 是一款基于Python的工具、可简化由高性能横向扩展NetApp存储提供支持的开发/培训工作空间和参考服务器的管理。主要功能包括：</block>
+  <block id="b96dbbd391395e38a8ba72ae75c21dc9" category="list-text">快速配置以高性能横向扩展NetApp存储为后盾的新的高容量工作空间。</block>
+  <block id="629509198041b5749e015afa6a9b2629" category="list-text">近乎即时地克隆高容量工作空间、以便进行实验或快速迭代。</block>
+  <block id="01f719401b5bc2f16f328b588b0bef97" category="list-text">近乎即时地保存高容量工作空间的快照、以便进行备份和/或可追溯性/基线化。</block>
+  <block id="9a9c31b74376d75ed88c300dfd734acf" category="paragraph">Kubeflow 是一款适用于 Kubernetes 的开源 AI 和 ML 工具包，最初由 Google 开发。通过 Kubeflow 项目，可以在 Kubernetes 上轻松，便携且可扩展地部署 AI 和 ML 工作流。Kubeflow―了Kubenetes的复杂性、使数据科学家能够专注于他们最了解的数据科学。有关可视化效果，请参见下图。对于更喜欢一体化MLOps平台的组织来说、Kubeflow是一个很好的开源选择。有关详细信息，请访问<block ref="bbfd4ba68f44e2ff98f04ea32205485d" category="inline-link-rx"></block>。</block>
+  <block id="f69bb06b79f60baced2f6faf97fc9e14" category="paragraph">Kubeflow 管道是 Kubeflow 的一个关键组件。Kubeflow 管道是一个平台和标准，用于定义和部署可移植且可扩展的 AI 和 ML 工作流。有关详细信息，请参见<block ref="34d1e4686e190f53e3511c4faa8ac68b" category="inline-link-rx"></block>。</block>
+  <block id="85643a5f7e2c08aee06468e5f827f120" category="paragraph">Katis是一个用于自动化机器学习(AutoML)的Kubornetes原生项目。Katb支持超参数调整、早期停止和神经架构搜索(NAS)。Katis是一个与机器学习(ML)框架无关的项目。它可以调整以用户选择的任何语言编写的应用程序的超参数、并本机支持许多ML框架、例如TensorFlow、MXNet、PyTorch、XGBoost、 等。Katib"支持许多各种AutoML算法、例如贝叶斯优化、帕森树估算器、随机搜索、协方差矩阵自适应进化策略、超频带、高效神经架构搜索、可区分架构搜索等。有关 Kubeflow 环境中 Jupyter 笔记本电脑的详细信息，请参见<block ref="5b959b0f3dbfc4557138b63a781b201c" category="inline-link-rx"></block>。</block>
+  <block id="c6459218853a974bb2b38718e6db79ed" category="summary">本解决方案旨在演示可整合到MLOps工作流中的多种不同开源工具和框架。这些不同的工具和框架可以结合使用、也可以单独使用、具体取决于要求和用例。</block>
+  <block id="eb1b19572557d2f13528a30754e9997a" category="doc">NetApp的开源MLOps</block>
+  <block id="05ab57dca43916fc74d7802affe9265b" category="paragraph">NetApp 公司 Mike Oglesby
+NetApp公司的Mohan Acharya先生</block>
+  <block id="7107eb79b94bd3c5651f8a6e75ef88a4" category="paragraph">各行各业各种规模的企业和组织都在转向人工智能（ AI ），机器学习（ ML ）和深度学习（ DL ），以解决实际问题，提供创新产品和服务，并在竞争日益激烈的市场中占据优势。随着企业越来越多地使用 AI ， ML 和 DL ，他们面临着许多挑战，包括工作负载可扩展性和数据可用性。本解决方案演示了如何通过将NetApp数据管理功能与常用开源工具和框架结合使用来应对这些挑战。</block>
+  <block id="0b34fcae55a765c46410fb4116433e75" category="paragraph">此解决方案涵盖以下工具/框架：</block>
+  <block id="38bc1999fe2f940195390b7ca8a1fb77" category="list-text"><block ref="38bc1999fe2f940195390b7ca8a1fb77" category="inline-link-macro-rx"></block></block>
+  <block id="0dd038edff0498be0e73ed25b044e9b4" category="list-text"><block ref="0dd038edff0498be0e73ed25b044e9b4" category="inline-link-macro-rx"></block></block>
+  <block id="f8e6fa4a88901fdc129b3ce376463f53" category="summary">采用NetApp的开源MLOps—执行同步分布式AI工作负载</block>
+  <block id="3b1ef0ea9661ba5d2eeba15fab13cf00" category="summary">采用NetApp的开源MLOps—执行单节点AI工作负载</block>
+  <block id="9e339bbe1fec0fc2a91b7c2f8dd9d7f7" category="paragraph">要在 Kubernetes 集群中执行单节点 AI 和 ML 作业，请从部署跳转主机执行以下任务。借助 Trident ，您可以快速轻松地使可能包含数 PB 数据的数据卷可供 Kubernetes 工作负载访问。要使此类数据卷可从 Kubernetes Pod 中访问，只需在 Pod 定义中指定 PVC 即可。</block>
+  <block id="0dbcc7b3c9a4c5ed6afff19c771a989d" category="summary">NetApp中的开源MLOps -将NetApp数据操作工具包与Kubeflow结合使用</block>
+  <block id="3b70474868bce72e0d5d1fac42d1f643" category="doc">将NetApp数据操作工具包与Kubeflow结合使用</block>
+  <block id="4065ea77b68b6d949a165c54fc532d2a" category="paragraph">。<block ref="6f920cea43eeb6dd3a1bfb8ce1f9946a" category="inline-link-rx"></block> 可与 Kubeflow 结合使用。将 NetApp 数据科学工具包与 Kubeflow 结合使用具有以下优势：</block>
+  <block id="0a19b387d7028ea674dc64f74ecb97ea" category="list-text">数据科学家可以直接从Jupyter笔记本中执行高级NetApp数据管理操作、例如创建快照和克隆。</block>
+  <block id="f4a972e1ae8aa85c6e67d7ad0ccc6dc4" category="list-text">使用Kubeflow管道框架、可以将高级NetApp数据管理操作(例如创建快照和克隆)整合到自动化工作流中。</block>
+  <block id="f1db0bc6ea6a4eee559e5d9946fd92ea" category="paragraph">请参见<block ref="a5886b5aa215f1fd67a69d09a2725b9d" category="inline-link-rx"></block> 有关将工具包与 Kubeflow 结合使用的详细信息，请参见 NetApp Data Science Toolkit GitHub 存储库中的一节。</block>
+  <block id="0e82e7615bc43e60306731cd1402df29" category="summary">使用NetApp的开源MLOps—为数据专家或开发人员配置Jupyter笔记本电脑工作空间</block>
+  <block id="b09a995a770ac7d1022303afcc4effb0" category="paragraph">Kubeflow 能够快速配置新的 Jupyter 笔记本电脑服务器，以充当数据科学家工作空间。有关 Kubeflow 上下文中 Jupyter 笔记本电脑的详细信息，请参见<block ref="05932219411c169f9e48f874e56f1ed3" category="inline-link-rx"></block>。</block>
+  <block id="ba47b65d29a2bcf968281d1e04ee29bb" category="summary">NetApp的开源MLOps—Kubeflow部署</block>
+  <block id="f3538dfada37d551dd71f26249dd82c6" category="list-text">您已有一个正在运行的Kubenetes集群、并且正在运行的Kubeflow版本支持此Kubenetes版本。有关支持的Kubernetes版本的列表、请参阅中您的Kubeflow版本的依赖关系 <block ref="b84967824090781ee960169bb3232fc6" category="inline-link-macro-rx"></block>。</block>
+  <block id="84d21063d216560d873bc66cd38d62e8" category="paragraph">在部署Kubeflow之前、我们建议在Kubenetes集群中指定一个默认StorageClass。Kubeflow部署过程可能会尝试使用默认StorageClass配置新的永久性卷。如果未将任何StorageClass指定为默认StorageClass、则部署可能会失败。要在集群中指定默认 StorageClass ，请从部署跳转主机执行以下任务。如果已在集群中指定默认 StorageClass ，则可以跳过此步骤。</block>
+  <block id="d371ec612c125519e69855ad89d4445b" category="list-text">将现有 StorageClasses 之一指定为默认 StorageClass 。以下示例命令显示了名为的StorageClass的命名<block ref="19a55e78496416c8db6565a114cfd5f3" prefix=" " category="inline-code"></block> 作为默认StorageClass。</block>
+  <block id="7724a5f9edc284eef2e4bc112adc1dd9" category="section-title">Kubeflow部署选项</block>
+  <block id="e135506d2171533787a405262eeb67bc" category="paragraph">部署Kubeflow有许多不同的选项。请参见 <block ref="59d814781a574912b676e75f9fe0e882" category="inline-link-macro-rx"></block> 有关部署选项的列表、请选择最适合您的需求的选项。</block>
+  <block id="07379a7db414d96104f4d3ab35ee3d59" category="admonition">出于验证目的、我们使用部署了Kubeflow 1.7 <block ref="f36b6222867dc75589b32398e1411061" category="inline-link-macro-rx"></block> 0.1.1.</block>
+  <block id="7db9622b0fe429a5609baef19fc1670f" category="sidebar">NetApp Astra三端配置</block>
+  <block id="465565bb968875734ebb24f50523ff61" category="sidebar">示例工作流程-训练图像识别模型</block>
+  <block id="2eb0960d2ac7a904c6f8e7e3f25a2ca6" category="sidebar">AIPod部署的高性能作业示例</block>
 </blocks>

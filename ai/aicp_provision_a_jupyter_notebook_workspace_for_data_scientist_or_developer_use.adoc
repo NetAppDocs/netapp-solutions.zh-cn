@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: ai/aicp_provision_a_jupyter_notebook_workspace_for_data_scientist_or_developer_use.html 
 keywords: Jupyter, Notebook, Workspace, Kubeflow 
-summary: Kubeflow 能够快速配置新的 Jupyter 笔记本电脑服务器，以充当数据科学家工作空间。要使用 Kubeflow 配置新的 Jupyter 笔记本电脑服务器，请执行此页面上列出的任务。 
+summary: 使用NetApp的开源MLOps—为数据专家或开发人员配置Jupyter笔记本电脑工作空间 
 ---
 = 为数据科学家或开发人员配置 Jupyter 笔记本电脑工作空间
 :hardbreaks:
@@ -14,59 +14,6 @@ summary: Kubeflow 能够快速配置新的 Jupyter 笔记本电脑服务器，�
 
 
 [role="lead"]
-Kubeflow 能够快速配置新的 Jupyter 笔记本电脑服务器，以充当数据科学家工作空间。要使用 Kubeflow 配置新的 Jupyter 笔记本电脑服务器，请执行以下任务。有关 Kubeflow 上下文中 Jupyter 笔记本电脑的详细信息，请参见 https://www.kubeflow.org/docs/components/notebooks/["Kubeflow 官方文档"^]。
+Kubeflow 能够快速配置新的 Jupyter 笔记本电脑服务器，以充当数据科学家工作空间。有关 Kubeflow 上下文中 Jupyter 笔记本电脑的详细信息，请参见 https://www.kubeflow.org/docs/components/notebooks/["Kubeflow 官方文档"^]。
 
-. 从 Kubeflow 中央信息板中，单击主菜单中的 Notebook Servers 以导航到 Jupyter 笔记本电脑服务器管理页面。
-+
 image:aicp_image9.png["错误：缺少图形映像"]
-
-. 单击新服务器以配置新的 Jupyter 笔记本电脑服务器。
-+
-image:aicp_image10.png["错误：缺少图形映像"]
-
-. 为新服务器指定一个名称，选择希望服务器基于的 Docker 映像，并指定服务器要预留的 CPU 和 RAM 量。如果命名空间字段为空，请使用页面标题中的选择命名空间菜单选择命名空间。然后， Namespace 字段将自动填充所选命名空间。
-+
-在以下示例中，选择了 `kubeflow-anonymous` 命名空间。此外，还接受 Docker 映像， CPU 和 RAM 的默认值。
-
-+
-image:aicp_image11.png["错误：缺少图形映像"]
-
-. 指定工作空间卷详细信息。如果选择创建新卷，则会使用默认 StorageClass 配置该卷或 PVC 。因为在部分中，使用 Trident 的 StorageClass 被指定为默认 StorageClass link:aicp_kubeflow_deployment_overview.html["Kubeflow 部署"]，卷或 PVC 配置有 Trident 。此卷会自动挂载为 Jupyter 笔记本电脑服务器容器中的默认工作空间。用户在服务器上创建但未保存到单独数据卷的任何笔记本电脑将自动保存到此工作空间卷。因此，这些笔记本电脑在重新启动后会持久存在。
-+
-image:aicp_image12.png["错误：缺少图形映像"]
-
-. 添加数据卷。以下示例指定了一个名为 "pt-fg-all" 的现有 PVC 并接受默认挂载点。
-+
-image:aicp_image13.png["错误：缺少图形映像"]
-
-. * 可选： * 请求将所需数量的 GPU 分配给您的笔记本服务器。在以下示例中，请求一个 GPU 。
-+
-image:aicp_image14.png["错误：缺少图形映像"]
-
-. 单击启动以配置新的笔记本电脑服务器。
-. 等待笔记本电脑服务器完全配置完毕。如果您从未使用您指定的 Docker 映像配置服务器，则可能需要几分钟的时间，因为需要下载此映像。服务器配置完成后， Jupyter 笔记本电脑服务器管理页面上的状态列会显示一个绿色复选标记。
-+
-image:aicp_image15.png["错误：缺少图形映像"]
-
-. 单击连接以连接到新的服务器 Web 界面。
-. 确认步骤 6 中指定的数据集卷已挂载到服务器上。请注意，默认情况下，此卷会挂载在默认工作空间中。从用户的角度来看，这只是工作空间中的另一个文件夹。用户可能是数据科学家，而不是基础架构专家，因此使用此卷无需具备任何存储专业知识。
-+
-image:aicp_image16.png["错误：缺少图形映像"]
-
-+
-image:aicp_image17.png["错误：缺少图形映像"]
-
-. 打开一个终端，假设步骤 5 中请求了一个新卷，请执行 `df -h` 以确认已挂载新的 Trident 配置的永久性卷作为默认工作空间。
-+
-默认工作空间目录是首次访问服务器的 Web 界面时显示的基目录。因此，使用 Web 界面创建的任何项目都会存储在此 Trident 配置的永久性卷上。
-
-+
-image:aicp_image18.png["错误：缺少图形映像"]
-
-+
-image:aicp_image19.png["错误：缺少图形映像"]
-
-. 使用终端运行 `nvidia-smi` 以确认为笔记本电脑服务器分配了正确数量的 GPU 。在以下示例中，已按照步骤 7 中的请求为笔记本电脑服务器分配一个 GPU 。
-
-
-image:aicp_image20.png["错误：缺少图形映像"]

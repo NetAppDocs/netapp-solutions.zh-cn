@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: ai/aicp_kubeflow_deployment_overview.html 
 keywords: Kubeflow, Prerequisites, Kubernetes, cluster 
-summary: 此页面介绍了在 Kubernetes 集群中部署 Kubeflow 必须完成的任务。 
+summary: NetApp的开源MLOps—Kubeflow部署 
 ---
 = Kubeflow 部署
 :hardbreaks:
@@ -22,17 +22,17 @@ summary: 此页面介绍了在 Kubernetes 集群中部署 Kubeflow 必须完成�
 
 在执行本节所述的部署练习之前，我们假定您已执行以下任务：
 
-. 您已有一个有效的 Kubernetes 集群，并且正在运行 Kubernetes 支持的版本。有关支持的版本列表，请参见 https://www.kubeflow.org/docs/started/getting-started/["Kubeflow 官方文档"^]。
-. 您已在 Kubernetes 集群中安装和配置 NetApp Trident ，如中所述 link:aicp_netapp_trident_deployment_and_configuration_overview.html["Trident 部署和配置"]。
+. 您已有一个正在运行的Kubenetes集群、并且正在运行的Kubeflow版本支持此Kubenetes版本。有关支持的Kubernetes版本的列表、请参阅中您的Kubeflow版本的依赖关系 link:https://www.kubeflow.org/docs/releases/["Kubeflow 官方文档"^]。
+. 您已在Kubbernetes集群中安装并配置NetApp Asta三端存储。有关Asta三项功能的更多详细信息、请参见 link:https://docs.netapp.com/us-en/trident/index.html["Astra Trident 文档"]。
 
 
 
 
 == 设置默认 Kubernetes StorageClass
 
-在部署 Kubeflow 之前，您必须在 Kubernetes 集群中指定一个默认 StorageClass 。Kubeflow 部署过程会尝试使用默认 StorageClass 配置新的永久性卷。如果未将任何 StorageClass 指定为默认 StorageClass ，则部署将失败。要在集群中指定默认 StorageClass ，请从部署跳转主机执行以下任务。如果已在集群中指定默认 StorageClass ，则可以跳过此步骤。
+在部署Kubeflow之前、我们建议在Kubenetes集群中指定一个默认StorageClass。Kubeflow部署过程可能会尝试使用默认StorageClass配置新的永久性卷。如果未将任何StorageClass指定为默认StorageClass、则部署可能会失败。要在集群中指定默认 StorageClass ，请从部署跳转主机执行以下任务。如果已在集群中指定默认 StorageClass ，则可以跳过此步骤。
 
-. 将现有 StorageClasses 之一指定为默认 StorageClass 。以下示例命令显示了名为 `ontap-ai- FlexVols-Retain` 的 StorageClass 的默认 StorageClass 。
+. 将现有 StorageClasses 之一指定为默认 StorageClass 。以下示例命令显示了名为的StorageClass的命名 `ontap-ai-flexvols-retain` 作为默认StorageClass。
 
 
 
@@ -56,183 +56,9 @@ ontap-ai-flexvols-retain (default)   csi.trident.netapp.io   54s
 ....
 
 
-== 使用 NVIDIA DeepOps 部署 Kubeflow
+== Kubeflow部署选项
 
-NetApp 建议使用 NVIDIA DeepOps 提供的 Kubeflow 部署工具。要使用 DeepOps 部署工具在 Kubernetes 集群中部署 Kubeflow ，请从部署跳转主机执行以下任务。
-
-
-NOTE: 或者，您也可以按照手动方式部署 Kubeflow https://www.kubeflow.org/docs/started/getting-started/["安装说明"^] 在 Kubeflow 官方文档中
-
-. 按照中的说明在集群中部署 Kubeflow https://github.com/NVIDIA/deepops/blob/master/docs/k8s-cluster/kubeflow.md["Kubeflow 部署说明"^] 在 NVIDIA DeepOps GitHub 站点上。
-. 记下 DeepOps Kubeflow 部署工具输出的 Kubeflow 信息板 URL 。
-+
-....
-$ ./scripts/k8s/deploy_kubeflow.sh -x
-…
-INFO[0007] Applied the configuration Successfully!       filename="cmd/apply.go:72"
-Kubeflow app installed to: /home/ai/kubeflow
-It may take several minutes for all services to start. Run 'kubectl get pods -n kubeflow' to verify
-To remove (excluding CRDs, istio, auth, and cert-manager), run: ./scripts/k8s_deploy_kubeflow.sh -d
-To perform a full uninstall : ./scripts/k8s_deploy_kubeflow.sh -D
-Kubeflow Dashboard (HTTP NodePort): http://10.61.188.111:31380
-....
-. 确认在 Kubeflow 命名空间中部署的所有 Pod 均显示 `Ststatus` of `running` ，并确认命名空间中部署的任何组件均未处于错误状态。可能需要几分钟时间，才能启动所有 Pod 。
-+
-....
-$ kubectl get all -n kubeflow
-NAME                                                           READY   STATUS    RESTARTS   AGE
-pod/admission-webhook-bootstrap-stateful-set-0                 1/1     Running   0          95s
-pod/admission-webhook-deployment-6b89c84c98-vrtbh              1/1     Running   0          91s
-pod/application-controller-stateful-set-0                      1/1     Running   0          98s
-pod/argo-ui-5dcf5d8b4f-m2wn4                                   1/1     Running   0          97s
-pod/centraldashboard-cf4874ddc-7hcr8                           1/1     Running   0          97s
-pod/jupyter-web-app-deployment-685b455447-gjhh7                1/1     Running   0          96s
-pod/katib-controller-88c97d85c-kgq66                           1/1     Running   1          95s
-pod/katib-db-8598468fd8-5jw2c                                  1/1     Running   0          95s
-pod/katib-manager-574c8c67f9-wtrf5                             1/1     Running   1          95s
-pod/katib-manager-rest-778857c989-fjbzn                        1/1     Running   0          95s
-pod/katib-suggestion-bayesianoptimization-65df4d7455-qthmw     1/1     Running   0          94s
-pod/katib-suggestion-grid-56bf69f597-98vwn                     1/1     Running   0          94s
-pod/katib-suggestion-hyperband-7777b76cb9-9v6dq                1/1     Running   0          93s
-pod/katib-suggestion-nasrl-77f6f9458c-2qzxq                    1/1     Running   0          93s
-pod/katib-suggestion-random-77b88b5c79-l64j9                   1/1     Running   0          93s
-pod/katib-ui-7587c5b967-nd629                                  1/1     Running   0          95s
-pod/metacontroller-0                                           1/1     Running   0          96s
-pod/metadata-db-5dd459cc-swzkm                                 1/1     Running   0          94s
-pod/metadata-deployment-6cf77db994-69fk7                       1/1     Running   3          93s
-pod/metadata-deployment-6cf77db994-mpbjt                       1/1     Running   3          93s
-pod/metadata-deployment-6cf77db994-xg7tz                       1/1     Running   3          94s
-pod/metadata-ui-78f5b59b56-qb6kr                               1/1     Running   0          94s
-pod/minio-758b769d67-llvdr                                     1/1     Running   0          91s
-pod/ml-pipeline-5875b9db95-g8t2k                               1/1     Running   0          91s
-pod/ml-pipeline-persistenceagent-9b69ddd46-bt9r9               1/1     Running   0          90s
-pod/ml-pipeline-scheduledworkflow-7b8d756c76-7x56s             1/1     Running   0          90s
-pod/ml-pipeline-ui-79ffd9c76-fcwpd                             1/1     Running   0          90s
-pod/ml-pipeline-viewer-controller-deployment-5fdc87f58-b2t9r   1/1     Running   0          90s
-pod/mysql-657f87857d-l5k9z                                     1/1     Running   0          91s
-pod/notebook-controller-deployment-56b4f59bbf-8bvnr            1/1     Running   0          92s
-pod/profiles-deployment-6bc745947-mrdkh                        2/2     Running   0          90s
-pod/pytorch-operator-77c97f4879-hmlrv                          1/1     Running   0          92s
-pod/seldon-operator-controller-manager-0                       1/1     Running   1          91s
-pod/spartakus-volunteer-5fdfddb779-l7qkm                       1/1     Running   0          92s
-pod/tensorboard-6544748d94-nh8b2                               1/1     Running   0          92s
-pod/tf-job-dashboard-56f79c59dd-6w59t                          1/1     Running   0          92s
-pod/tf-job-operator-79cbfd6dbc-rb58c                           1/1     Running   0          91s
-pod/workflow-controller-db644d554-cwrnb                        1/1     Running   0          97s
-NAME                                                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)             AGE
-service/admission-webhook-service                    ClusterIP   10.233.51.169   <none>        443/TCP             97s
-service/application-controller-service               ClusterIP   10.233.4.54     <none>        443/TCP             98s
-service/argo-ui                                      NodePort    10.233.47.191   <none>        80:31799/TCP        97s
-service/centraldashboard                             ClusterIP   10.233.8.36     <none>        80/TCP              97s
-service/jupyter-web-app-service                      ClusterIP   10.233.1.42     <none>        80/TCP              97s
-service/katib-controller                             ClusterIP   10.233.25.226   <none>        443/TCP             96s
-service/katib-db                                     ClusterIP   10.233.33.151   <none>        3306/TCP            97s
-service/katib-manager                                ClusterIP   10.233.46.239   <none>        6789/TCP            96s
-service/katib-manager-rest                           ClusterIP   10.233.55.32    <none>        80/TCP              96s
-service/katib-suggestion-bayesianoptimization        ClusterIP   10.233.49.191   <none>        6789/TCP            95s
-service/katib-suggestion-grid                        ClusterIP   10.233.9.105    <none>        6789/TCP            95s
-service/katib-suggestion-hyperband                   ClusterIP   10.233.22.2     <none>        6789/TCP            95s
-service/katib-suggestion-nasrl                       ClusterIP   10.233.63.73    <none>        6789/TCP            95s
-service/katib-suggestion-random                      ClusterIP   10.233.57.210   <none>        6789/TCP            95s
-service/katib-ui                                     ClusterIP   10.233.6.116    <none>        80/TCP              96s
-service/metadata-db                                  ClusterIP   10.233.31.2     <none>        3306/TCP            96s
-service/metadata-service                             ClusterIP   10.233.27.104   <none>        8080/TCP            96s
-service/metadata-ui                                  ClusterIP   10.233.57.177   <none>        80/TCP              96s
-service/minio-service                                ClusterIP   10.233.44.90    <none>        9000/TCP            94s
-service/ml-pipeline                                  ClusterIP   10.233.41.201   <none>        8888/TCP,8887/TCP   94s
-service/ml-pipeline-tensorboard-ui                   ClusterIP   10.233.36.207   <none>        80/TCP              93s
-service/ml-pipeline-ui                               ClusterIP   10.233.61.150   <none>        80/TCP              93s
-service/mysql                                        ClusterIP   10.233.55.117   <none>        3306/TCP            94s
-service/notebook-controller-service                  ClusterIP   10.233.10.166   <none>        443/TCP             95s
-service/profiles-kfam                                ClusterIP   10.233.33.79    <none>        8081/TCP            92s
-service/pytorch-operator                             ClusterIP   10.233.37.112   <none>        8443/TCP            95s
-service/seldon-operator-controller-manager-service   ClusterIP   10.233.30.178   <none>        443/TCP             92s
-service/tensorboard                                  ClusterIP   10.233.58.151   <none>        9000/TCP            94s
-service/tf-job-dashboard                             ClusterIP   10.233.4.17     <none>        80/TCP              94s
-service/tf-job-operator                              ClusterIP   10.233.60.32    <none>        8443/TCP            94s
-service/webhook-server-service                       ClusterIP   10.233.32.167   <none>        443/TCP             87s
-NAME                                                       READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/admission-webhook-deployment               1/1     1            1           97s
-deployment.apps/argo-ui                                    1/1     1            1           97s
-deployment.apps/centraldashboard                           1/1     1            1           97s
-deployment.apps/jupyter-web-app-deployment                 1/1     1            1           97s
-deployment.apps/katib-controller                           1/1     1            1           96s
-deployment.apps/katib-db                                   1/1     1            1           97s
-deployment.apps/katib-manager                              1/1     1            1           96s
-deployment.apps/katib-manager-rest                         1/1     1            1           96s
-deployment.apps/katib-suggestion-bayesianoptimization      1/1     1            1           95s
-deployment.apps/katib-suggestion-grid                      1/1     1            1           95s
-deployment.apps/katib-suggestion-hyperband                 1/1     1            1           95s
-deployment.apps/katib-suggestion-nasrl                     1/1     1            1           95s
-deployment.apps/katib-suggestion-random                    1/1     1            1           95s
-deployment.apps/katib-ui                                   1/1     1            1           96s
-deployment.apps/metadata-db                                1/1     1            1           96s
-deployment.apps/metadata-deployment                        3/3     3            3           96s
-deployment.apps/metadata-ui                                1/1     1            1           96s
-deployment.apps/minio                                      1/1     1            1           94s
-deployment.apps/ml-pipeline                                1/1     1            1           94s
-deployment.apps/ml-pipeline-persistenceagent               1/1     1            1           93s
-deployment.apps/ml-pipeline-scheduledworkflow              1/1     1            1           93s
-deployment.apps/ml-pipeline-ui                             1/1     1            1           93s
-deployment.apps/ml-pipeline-viewer-controller-deployment   1/1     1            1           93s
-deployment.apps/mysql                                      1/1     1            1           94s
-deployment.apps/notebook-controller-deployment             1/1     1            1           95s
-deployment.apps/profiles-deployment                        1/1     1            1           92s
-deployment.apps/pytorch-operator                           1/1     1            1           95s
-deployment.apps/spartakus-volunteer                        1/1     1            1           94s
-deployment.apps/tensorboard                                1/1     1            1           94s
-deployment.apps/tf-job-dashboard                           1/1     1            1           94s
-deployment.apps/tf-job-operator                            1/1     1            1           94s
-deployment.apps/workflow-controller                        1/1     1            1           97s
-NAME                                                                 DESIRED   CURRENT   READY   AGE
-replicaset.apps/admission-webhook-deployment-6b89c84c98              1         1         1       97s
-replicaset.apps/argo-ui-5dcf5d8b4f                                   1         1         1       97s
-replicaset.apps/centraldashboard-cf4874ddc                           1         1         1       97s
-replicaset.apps/jupyter-web-app-deployment-685b455447                1         1         1       97s
-replicaset.apps/katib-controller-88c97d85c                           1         1         1       96s
-replicaset.apps/katib-db-8598468fd8                                  1         1         1       97s
-replicaset.apps/katib-manager-574c8c67f9                             1         1         1       96s
-replicaset.apps/katib-manager-rest-778857c989                        1         1         1       96s
-replicaset.apps/katib-suggestion-bayesianoptimization-65df4d7455     1         1         1       95s
-replicaset.apps/katib-suggestion-grid-56bf69f597                     1         1         1       95s
-replicaset.apps/katib-suggestion-hyperband-7777b76cb9                1         1         1       95s
-replicaset.apps/katib-suggestion-nasrl-77f6f9458c                    1         1         1       95s
-replicaset.apps/katib-suggestion-random-77b88b5c79                   1         1         1       95s
-replicaset.apps/katib-ui-7587c5b967                                  1         1         1       96s
-replicaset.apps/metadata-db-5dd459cc                                 1         1         1       96s
-replicaset.apps/metadata-deployment-6cf77db994                       3         3         3       96s
-replicaset.apps/metadata-ui-78f5b59b56                               1         1         1       96s
-replicaset.apps/minio-758b769d67                                     1         1         1       93s
-replicaset.apps/ml-pipeline-5875b9db95                               1         1         1       93s
-replicaset.apps/ml-pipeline-persistenceagent-9b69ddd46               1         1         1       92s
-replicaset.apps/ml-pipeline-scheduledworkflow-7b8d756c76             1         1         1       91s
-replicaset.apps/ml-pipeline-ui-79ffd9c76                             1         1         1       91s
-replicaset.apps/ml-pipeline-viewer-controller-deployment-5fdc87f58   1         1         1       91s
-replicaset.apps/mysql-657f87857d                                     1         1         1       92s
-replicaset.apps/notebook-controller-deployment-56b4f59bbf            1         1         1       94s
-replicaset.apps/profiles-deployment-6bc745947                        1         1         1       91s
-replicaset.apps/pytorch-operator-77c97f4879                          1         1         1       94s
-replicaset.apps/spartakus-volunteer-5fdfddb779                       1         1         1       94s
-replicaset.apps/tensorboard-6544748d94                               1         1         1       93s
-replicaset.apps/tf-job-dashboard-56f79c59dd                          1         1         1       93s
-replicaset.apps/tf-job-operator-79cbfd6dbc                           1         1         1       93s
-replicaset.apps/workflow-controller-db644d554                        1         1         1       97s
-NAME                                                        READY   AGE
-statefulset.apps/admission-webhook-bootstrap-stateful-set   1/1     97s
-statefulset.apps/application-controller-stateful-set        1/1     98s
-statefulset.apps/metacontroller                             1/1     98s
-statefulset.apps/seldon-operator-controller-manager         1/1     92s
-$ kubectl get pvc -n kubeflow
-NAME             STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS               AGE
-katib-mysql      Bound    pvc-b07f293e-d028-11e9-9b9d-00505681a82d   10Gi       RWO            ontap-ai-flexvols-retain   27m
-metadata-mysql   Bound    pvc-b0f3f032-d028-11e9-9b9d-00505681a82d   10Gi       RWO            ontap-ai-flexvols-retain   27m
-minio-pv-claim   Bound    pvc-b22727ee-d028-11e9-9b9d-00505681a82d   20Gi       RWO            ontap-ai-flexvols-retain   27m
-mysql-pv-claim   Bound    pvc-b2429afd-d028-11e9-9b9d-00505681a82d   20Gi       RWO            ontap-ai-flexvols-retain   27m
-....
-. 在 Web 浏览器中，通过导航到步骤 2 中记下的 URL 来访问 Kubeflow 中央信息板。
-+
-默认用户名为 `admin@kubeflow.org` ，默认密码为 `1231234` 。要创建其他用户，请按照中的说明进行操作 https://www.kubeflow.org/docs/components/multi-tenancy/["Kubeflow 官方文档"^]。
+部署Kubeflow有许多不同的选项。请参见 link:https://www.kubeflow.org/docs/started/installing-kubeflow/["Kubeflow 官方文档"] 有关部署选项的列表、请选择最适合您的需求的选项。
 
 
-
-image:aicp_image8.png["错误：缺少图形映像"]
+NOTE: 出于验证目的、我们使用部署了Kubeflow 1.7 link:https://www.deploykf.org["部署KF"] 0.1.1.
