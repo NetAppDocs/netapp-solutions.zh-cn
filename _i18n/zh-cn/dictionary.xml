@@ -26,7 +26,6 @@
   <block id="34b6cd75171affba6957e308dcbd92be" category="cell">version</block>
   <block id="ea4c55be196897a16d86999f5c16d582" category="cell">虚拟化</block>
   <block id="c73bbd3786350b0a8d3577d82afdf489" category="cell">Red Hat Enterprise Linux</block>
-  <block id="80e910f35b12e9c61335fa88de36edd0" category="cell">Red Hat 虚拟化</block>
   <block id="8c4aa541ee911e8d80451ef8cc304806" category="section-title">存储</block>
   <block id="a87ff679a2f3e71d9181a67b7542122c" category="cell">4.</block>
   <block id="c8984126713ed072b9cb0a44a162be4d" category="cell">AFF</block>
@@ -303,11 +302,6 @@
   <block id="b175d08ac03101cd40f077848d436e1f" category="cell">Red Hat OpenShift</block>
   <block id="7cf4fea896dee61293d729d9985621d7" category="cell">容器编排</block>
   <block id="2454407b9991c6c5f417a2feb8ea7970" category="cell">4.6 EUS ， 4.7</block>
-  <block id="9c4e78a1b7e7b4981aced1e10d037c6d" category="cell">Red Hat OpenStack 平台</block>
-  <block id="de45aa336111dfa1825c54726464307c" category="cell">私有云基础架构</block>
-  <block id="3c5825a0d4bdb85c67182ef89bc9c7eb" category="cell">16.1</block>
-  <block id="f9a97ed4e88eeab44f2693afa0eb2089" category="cell">4.4</block>
-  <block id="9c295b8302ac546bb93a346b68089f50" category="cell">6.7U3.</block>
   <block id="1be465260df7c846768e06c988594a6a" category="paragraph">要了解有关本文档中所述信息的更多信息，请查看以下网站：</block>
   <block id="e690fa655ec589e6d0abb58164d5ccfd" category="doc">追加信息：采用 NetApp 技术的 Red Hat OpenShift</block>
   <block id="6f4e4d9fbe846fd8bf7decf7dcffbd63" category="list-text">NetApp 文档</block>
@@ -3687,7 +3681,6 @@
   <block id="81f74b2a02db97d708bd7cbf08d2463a" category="section-title">NetApp 存储系统</block>
   <block id="660d073f0987fac312dc40bd5dc868bd" category="paragraph">NetApp 拥有多个存储系统，非常适合企业数据中心和混合云部署。NetApp 产品组合包括 NetApp ONTAP ， NetApp Element 和 NetApp E 系列存储系统，所有这些系统均可为容器化应用程序提供永久性存储。</block>
   <block id="069b087e8e1e69cc928f18a85f683523" category="section-title">NetApp 存储集成</block>
-  <block id="b4186621511a622be24ad982b0a8ec32" category="paragraph">NetApp Astra 控制中心为有状态 Kubernetes 工作负载提供了一组丰富的存储和应用程序感知型数据管理服务，这些服务部署在内部环境中，并采用值得信赖的 NetApp 数据保护技术。</block>
   <block id="947496ade2e4a2c8e929d9aa9f00be04" category="paragraph">有关详细信息，请访问 NetApp Astra 网站<block ref="508f471fa59796a53754f031c40091c1" category="inline-link-rx"></block>。</block>
   <block id="0bc570c518e7c4f356ebceb14fa8372f" category="section-title">高级配置选项</block>
   <block id="aa44798f04a58b33c3699abd02a59c57" category="paragraph">本节专门介绍实际用户在将此解决方案部署到生产环境中时可能需要执行的自定义设置，例如创建专用私有映像注册表或部署自定义负载平衡器实例。</block>
@@ -3873,7 +3866,6 @@
   <block id="5ba8ff3c009683ee423b0884c25360d0" category="list-text">导航到工作负载 &gt; 虚拟化 &gt; 虚拟机，然后单击创建 &gt; 使用 YAML 。</block>
   <block id="cd32f6b0aebb29494cbc9cc21a10c926" category="list-text">在规范 &gt; 模板 &gt; 规范 &gt; 卷部分中，附加克隆的 PVC ，而不是容器磁盘。根据您的要求提供新虚拟机的所有其他详细信息。</block>
   <block id="f79c612e785ac74789a25e8dda9e8731" category="doc">Astra Trident 概述</block>
-  <block id="bd4a2d19c5168aa8c2b89b4affba2402" category="cell">9.8 ， 9.9.1</block>
   <block id="4af39dbe40f8a0467bbdd739a971f0ea" category="admonition">以下消息指示 Astra 控制中心已成功安装。</block>
   <block id="5946314197ad84982efa6561d9da8302" category="list-text">获取 traefik 服务负载平衡器 IP 。</block>
   <block id="298a1e8781e536e60684ab1700c60962" category="list-text">在 DNS 服务器中添加一个条目，将 Astra 控制中心 CRD 文件中提供的 FQDN 指向 traefik 服务的 `external-IP` 。</block>
@@ -7374,9 +7366,7 @@
   <block id="713522228cb3164cc6e71ff6d49c3b13" category="sidebar">从 GPF 到 NFS —详细步骤</block>
   <block id="75afdb5cd8c025ed0681bdb302fcdcda" category="cell">在 NVA-1160 中增加了新的章节：通过 OperatorHub 和 Ansible 安装 Astra 控制中心</block>
   <block id="593fdc7a2167cd2ada3e71219ceb0ecb" category="paragraph">有关详细信息，请访问 Astra Trident 网站<block ref="845024b96ab150d9f628b33995c60669" category="inline-link-rx"></block>。</block>
-  <block id="3d930ae98e9d9fc9a418d6b8e5e5639f" category="cell">21.12.60</block>
   <block id="8e232cd005846e0f66f39f19aa03103c" category="cell">22.01.0</block>
-  <block id="2bb7e89d50aed884078c4b7857f5bb39" category="cell">4.6 EUS ， 4.7 ， 4.8</block>
   <block id="1e90637438eb06672159d2998d220e86" category="open-title">使用 OperatorHub</block>
   <block id="bff0144772c74d96da07b6ccefb79f96" category="list-text">登录到 NetApp 支持站点并下载最新版本的 NetApp Astra 控制中心。为此，您需要在 NetApp 帐户中附加许可证。下载完 tarball 后，将其传输到管理工作站。</block>
   <block id="baac643870c95006b4243d078606a15d" category="list-text">开始安装之前，请将 Astra Control Center 映像推送到映像注册表。您可以选择使用 Docker 或 Podman 执行此操作，此步骤将提供这两者的说明。</block>
@@ -21785,4 +21775,15 @@ Hyper-V可以根据Hyper-V虚拟机管理程序或虚拟机组的配置自动执
   <block id="0f918a8c53934de71a5c4c6afb0052ec" category="sidebar">虚拟化概述</block>
   <block id="3303b862bb3d6e9b5da9ffd466b9ac23" category="sidebar">OpenShift虚拟化</block>
   <block id="8a729f5eaa8a662d877d47031190113d" category="sidebar">利用VMware实现虚拟化</block>
+  <block id="e01dfa7b5cfb38c5552092515021cc87" category="paragraph">NetApp Asta Control为有状态Kub联网 工作负载提供了一套丰富的存储和应用程序感知型数据管理服务、这些服务部署在一个内置环境中、并由值得信赖的NetApp数据保护技术提供支持。</block>
+  <block id="e0739ad23d309ee33a0a3672f5d321cb" category="paragraph">有关详细信息，请访问 NetApp Astra 网站<block ref="16565d08b5fe4e4f7d576aa24bfe1451" category="inline-link-rx"></block>。</block>
+  <block id="8b2b7bab9251640fb5c8caa0b8a8ff98" category="cell">9.8、9.9.1、9.12.1</block>
+  <block id="39fb4ad8a6e759f2d7bcc25ff03a604e" category="cell">21.12.60、23.04、23.07、23.10、24.02</block>
+  <block id="9f1cef20c22f2c879e7f62586b151463" category="cell">22.01.0、23.04、23.07、23.10、24.02</block>
+  <block id="19b5452422900052aa9895c31e3bb9bd" category="cell">4.6 EUS、4.7、4.8、4.10、4.11、 4.12、4.13、4.14</block>
+  <block id="38890f5544003fcf40576b9458f3e3ce" category="cell">7.0、8.0.2</block>
+  <block id="707e3d8366c78bf1a24e6e4dcacfca8e" category="paragraph">Amazon FSx for NetApp ONTAP在AWS云中提供完全托管的共享存储、并具有ONTAP常见的数据访问和管理功能。有关Amazon FSx for NetApp ONTAP的详细信息、请单击<block ref="7573663d3852e00b0e56a5dac3594a6a" category="inline-link-rx"></block>。</block>
+  <block id="b2ed084fcecb6db65b12c65588a0a926" category="paragraph">Azure NetApp Files是Azure原生的第一方企业级高性能文件存储服务。它提供的卷即服务可用于创建NetApp帐户、容量池和卷。您还可以选择服务和性能级别并管理数据保护。您可以使用熟悉并依赖内部环境的相同协议和工具创建和管理高性能、高可用性和可扩展的文件共享。有关Azure NetApp Files的详细信息、请单击<block ref="fc5eaf030008b3907c3925b272228bba" category="inline-link-rx"></block>。</block>
+  <block id="1215f8190533dfdf63d2224a6d88266f" category="section-title">Google Cloud NetApp卷</block>
+  <block id="6a529e89f36a18cfaf22ebfd0be19ce9" category="paragraph">Google Cloud NetApp Volumes是一种完全托管的基于云的数据存储服务、可提供高级数据管理功能和高度可扩展的性能。它允许您将基于文件的应用程序迁移到Google Cloud。它支持内置的网络文件系统(NFS3和NFSv4.1)和服务器消息块(SMB)协议、因此您无需重新构建应用程序、可以继续为应用程序获取永久性存储。有关Google Cloud NetApp卷P的详细信息、请单击<block ref="9ef49dd5917f54781359b5df82c18923" category="inline-link-rx"></block>。</block>
 </blocks>
