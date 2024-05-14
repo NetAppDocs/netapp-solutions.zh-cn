@@ -1,0 +1,64 @@
+---
+sidebar: sidebar 
+permalink: vmware/migrate-vms-to-ec2-fsxn-arch.html 
+keywords: netapp, vmware, amazon, ec2, fsxn, migration, iscsi, 
+summary: '本技术报告介绍如何使用卷云迁移(CMC)的MigrateOps "数据移动性即代码"功能将内部VMware vSphere VM迁移到数据磁盘位于FSx for ONTAP iSCSI LUN上的Amazon EC2实例。' 
+---
+= 使用FSxN将VM迁移到Amazon EC2：架构和前提条件
+:allow-uri-read: 
+
+
+
+
+== 使用FSxN将VM迁移到Amazon EC2：架构和前提条件
+
+[role="lead"]
+本文介绍了完成迁移的高级架构和部署前提条件。
+
+
+
+== 高级架构
+
+下图展示了使用CMC MigrateOps将VMware上的虚拟机磁盘(VMDK)数据迁移到AWS的高级架构：
+
+image:migrate-ec2-fsxn-image01.png["使用FSxN将VM迁移到Amazon EC2架构图"]
+
+
+
+== 如何使用Amazon EC2和FSx for ONTAP iSCSI将VMware VM迁移到AWS
+
+
+
+=== 前提条件
+
+开始逐步指导步骤之前、请确保满足以下前提条件：
+
+*在AWS*上
+
+* AWS帐户。这包括子网、VPC设置、路由表、安全规则迁移、安全组、 以及其他网络要求、例如负载平衡。与任何迁移一样、网络连接应是最重要的工作和考虑因素。
+* 允许您同时为ONTAP和Amazon EC2实例配置FSx的适当IAM角色。
+* 允许路由表和安全组与FSx for ONTAP进行通信。
+* 将入站规则添加到相应的安全组(有关详细信息、请参见下文)、以实现从内部数据中心到AWS的安全数据传输。
+* 可解析公共Internet域名的有效DNS。
+* 检查DNS解析是否正常工作、并允许您解析主机名。
+* 为了获得最佳性能并获得合理的规模估算、请使用源环境中的性能数据对FSx for ONTAP存储进行合理的规模估算。
+* 每个MigrateOps会话都使用一个EIEF、因此应增加EIEF的配额以实现更多并行处理。请记住、默认的进口配置配额为5。
+* (如果正在迁移基于Active Directory的工作负载) Amazon EC2上的Windows Active Directory域。
+
+
+*适用于卷云迁移*
+
+* 一个位于的Cloud"数据云"帐户 link:http://cloud.cirrusdata.com/["cloud.cirrusdata.com"] 必须在使用CMC之前创建。必须允许通过HTTPS与CDN、ucrevin数据端点和软件存储库进行出站通信。
+* 允许通过HTTPS协议(端口443)与Cloud"数据云"服务进行(出站)通信。
+* 对于要由CMC项目管理的主机、已部署的CMC软件必须启动与卷云数据云的单向出站TCP连接。
+* 允许TCP协议端口443访问portal-gateway.cloud.cirrusdata.com、当前地址为208.67.222.222。
+* 允许使用二进制数据有效负载(应用程序/八位组流)的HTTP POST请求(通过HTTPS连接)。这与文件上传类似。
+* 确保portal-gateway.cloud.cirrusdata.com可由您的DNS解析(或通过操作系统主机文件解析)。
+* 如果您有严格的规则禁止产品实例进行出站连接，则可以在出站443连接来自一个安全的非生产主机的情况下使用CMC的“管理中继”功能。
+
+
+*注意*：不会将任何存储数据发送到任何地方。仅发送管理元数据、并且可以选择屏蔽此元数据、以便不包含实际主机名、卷名和网络IP。
+
+为了将数据从内部存储库迁移到AWS、MigrateOps可自动管理主机到主机(H2H)连接。这些网络连接是优化的单向基于TCP的网络连接、CMC使用这些网络连接来促进远程迁移。此过程采用无中断数据压缩和加密功能、根据数据的性质、可将流量减少多达八倍。
+
+*注意*：CMC的设计可确保在整个迁移阶段、生产数据/I/O不会离开生产网络。因此、源主机和目标主机之间需要直接连接。

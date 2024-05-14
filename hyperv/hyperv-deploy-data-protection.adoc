@@ -1,0 +1,167 @@
+---
+sidebar: sidebar 
+permalink: hyperv/hyperv-deploy-data-protection.html 
+keywords: hyperv, hyper-v, deploy, netapp, virtualization, data, protection 
+summary: 解决方案提供了在NetApp存储上部署Hyper-V所需的步骤 
+---
+= 在NetApp存储上部署Microsoft Hyper-V：数据保护
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+数据保护是任何生产工作负载的关键租户。  本节介绍如何备份和还原Hyper-V虚拟机。
+
+
+
+== 使用NetApp存储快照还原
+
+备份VM以及快速恢复或克隆VM是ONTAP卷的一大优势。使用Snapshot副本可以快速创建VM甚至整个CSV卷的FlexClone副本、而不会影响性能。这样、在克隆生产数据卷并将其挂载到QA、暂存和开发环境时、可以使用生产数据、而不会面临数据损坏的风险。FlexClone卷可用于创建生产数据的测试副本、而无需将复制数据所需的空间量增加一倍。
+
+请注意、Hyper-V节点会为每个磁盘分配一个唯一ID、为具有相应分区(MBR或GPT)的卷创建快照将具有相同的唯一标识。MBR使用磁盘签名、而GPT使用GUID (全局唯一标识符)。如果是独立Hyper-V主机、则可以轻松挂载FlexClone卷、而不会产生任何冲突。这是因为独立的Hyper-V服务器可以自动检测重复的磁盘ID并动态更改它们、而无需用户干预。可以使用此方法根据情况需要复制vHD来恢复虚拟机。
+
+虽然对于独立Hyper-V主机来说非常简单、但Hyper-V集群的操作步骤有所不同。恢复过程包括将FlexClone卷映射到独立Hyper-V主机、或者使用diskpart通过将FlexClone卷映射到独立Hyper-V主机来手动更改签名(这一点非常重要、因为磁盘ID冲突会导致磁盘无法联机)、完成后、 将FlexClone卷映射到集群。
+
+
+
+== 使用第三方解决方案备份和还原
+
+*注意*：本部分使用Commvault,但这适用于其他第三方解决方案。
+
+CommvaultIntelliSnap®利用ONTAP快照创建基于硬件的快照
+Hyper-V可以根据Hyper-V虚拟机管理程序或虚拟机组的配置自动执行备份、也可以手动执行虚拟机组或特定虚拟机的备份。IntelliSnap可以快速保护Hyper-V环境、将生产虚拟化场的负载降到最低。IntelliSnap技术与虚拟服务器代理(VSA)的集成使NetApp ONTAP阵列能够在几分钟内完成对大量虚拟机和数据存储的备份。通过精细访问、可以从二级存储层恢复单个文件和文件夹以及完整的子系统.vhd文件。
+
+在配置虚拟化环境之前、请部署需要与阵列进行快照集成的适当代理。Microsoft Hyper-V虚拟化环境需要以下代理：
+
+* MediaAgent
+* 虚拟服务器代理(VSA)
+* VSS硬件提供程序(Windows Server 2012及更高版本的操作系统)
+
+
+*使用阵列管理配置NetApp阵列*
+
+以下步骤显示了如何在使用ONTAP阵列和Hyper-V的环境中配置IntelliSnap虚拟机备份
+
+. 在"CommCell Console"(CommCell控制台)的功能区上、单击"Storage"(存储)选项卡、然后单击"Array Management"(阵列管理)。
+. 此时将显示"Array Management"(阵列管理)对话框。
+. 单击添加。
++
+出现“Array Properties (阵列属性)”对话框。
+
++
+image:hyperv-deploy-image09.png["“阵列属性”对话框的图像"]
+
+. 在常规选项卡上、指定以下信息：
+. 从Snap Vendor列表中、选择NetApp。
+. 在名称框中、输入主文件服务器的主机名、完全限定域名(FQDN)或TCP/IP地址。
+. 在阵列访问节点选项卡上、选择可用的介质代理。
+. 在Snap Configuration选项卡上、根据需要配置Snapshot Configuration Properties。
+. 单击确定。
+. <Mandatory step>完成后、还可以在NetApp存储阵列上配置SVM、方法是使用检测选项自动检测Storage Virtual Machine (SVM)、然后选择SVM、并使用添加选项将SVM作为阵列管理条目添加到CommServe数据库中。
++
+image:hyperv-deploy-image10.png["将SVM配置为阵列管理条目的图像"]
+
+. 单击Advanced (高级)(如下图所示)、然后选中Enable IntelliSnap (启用IntelliSnap)复选框。
++
+image:hyperv-deploy-image11.png["启用IntelliSnap选项的图示"]
+
+
+
+有关配置阵列的详细步骤、请参见 link:https://documentation.commvault.com/11.20/configuring_netapp_array_using_array_management.html["正在配置NetApp阵列"] 和 link:https://cvdocssaproduction.blob.core.windows.net/cvdocsproduction/2023e/expert/configuring_storage_virtual_machines_on_netapp_arrays.html["在NetApp阵列上配置Storage Virtual Machine"]
+
+*添加Hyper-V作为虚拟机管理程序*
+
+下一步是添加Hyper-V虚拟机管理程序并添加虚拟机组。
+
+*前提条件*
+
+* 虚拟机管理程序可以是Hyper-V集群、集群中的Hyper-V服务器或独立的Hyper-V服务器。
+* 对于Hyper-V Server 2012及更高版本、用户必须属于Hyper-V管理员组。对于Hyper-V集群、用户帐户必须具有完全集群权限(读取和完全控制)。
+* 确定要安装虚拟服务器代理(VSA)以创建用于备份和还原操作的访问节点(VSA代理)的一个或多个节点。要发现Hyper-V服务器、必须在CommServe系统上安装VSA。
+* 要对Hyper-V 2012 R2使用更改的块跟踪、请选择Hyper-V集群中的所有节点。
+
+
+以下步骤显示了如何将Hyper-V添加为虚拟机管理程序。
+
+. 核心设置完成后、在保护选项卡上、单击虚拟化磁贴。
+. 在创建服务器备份计划页面上、键入计划的名称、然后提供有关存储、保留和备份计划的信息。
+. 此时将显示"Add hypervisor"页面>"Select vendor"：选择Hyper-V (输入IP地址或FQDN和用户凭据)
+. 对于Hyper-V服务器、请单击Discover node。填充节点字段后、选择要安装虚拟服务器代理的一个或多个节点。
++
+image:hyperv-deploy-image12.png["发现hyper-v节点的图像"]
+
+. 单击Next (下一步)和Save (保存)。
++
+image:hyperv-deploy-image13.png["显示上一步结果的图像"]
+
+. 在"Add VM group"(添加VM组)页面上、选择要保护的虚拟机(Demo是在本例中创建的VM组)、然后启用IntelliSnap选项、如下所示。
++
+image:hyperv-deploy-image14.png["显示要保护的虚拟机选择的图像"]
+
++
+*注意*：在VM组上启用IntelliSnap后，CommVault会自动为主(Snap)副本和备份副本创建计划策略。
+
+. 单击保存。
+
+
+有关配置阵列的详细步骤、请参见 link:https://documentation.commvault.com/2023e/essential/guided_setup_for_hyper_v.html["添加虚拟机管理程序"]。
+
+*执行备份:*
+
+. 在导航窗格中、转至"Protect">"Virtualization (保护>虚拟化)"。此时将显示虚拟机页面。
+. 备份虚拟机或虚拟机组。在此演示中、将选择VM组。在VM组对应的行中、单击操作按钮action_button、然后选择备份。在这种情况下、nimplan是与DemOTP和DemOrp01相关的计划。
++
+image:hyperv-deploy-image15.png["用于选择要备份的VM的对话框的图像"]
+
+. 备份成功后、还原点将可用、如屏幕截图所示。从Snap副本中、可以还原完整的VM以及子系统文件和文件夹。
++
+image:hyperv-deploy-image16.png["显示备份还原点的图像"]
+
++
+*注意*：对于利用率较高的关键虚拟机，每个CSV所保留的虚拟机较少
+
+
+
+*执行还原操作:*
+
+通过还原点还原完整的VM、子系统文件和文件夹或虚拟磁盘文件。
+
+. 在导航窗格中、转至"Protect">"Virtualation"、此时将显示"Virtual Machine"页面。
+. 单击VM Groups选项卡。
+. 此时将显示虚拟机组页面。
+. 在VM Groups区域中、对包含虚拟机的VM组单击Restore。
+. 此时将显示Select restore type页面。
++
+image:hyperv-deploy-image17.png["显示备份的还原类型的图像"]
+
+. 根据所做的选择选择选择子文件或完整虚拟机、然后触发还原。
++
+image:hyperv-deploy-image18.png["用于还原的选项的图"]
+
+
+
+有关所有受支持的还原选项的详细步骤、请参见 link:https://documentation.commvault.com/2023e/essential/restores_for_hyper_v.html["Hyper-V还原"]。
+
+
+
+== 高级NetApp ONTAP选项
+
+NetApp SnapMirror可实现高效的站点间存储复制、从而导致灾难
+快速、可靠且易于管理的恢复、可满足当今全球企业的需求。SnapMirror可通过LAN和广域网高速复制数据、为任务关键型应用程序提供高数据可用性和快速恢复、并具有出色的存储重复数据删除和网络压缩功能。借助NetApp SnapMirror技术、灾难恢复可以保护整个数据中心。卷可以增量备份到异地位置。SnapMirror按照所需RPO的频率执行基于块的增量复制。块级更新可降低带宽和时间要求、并在灾难恢复站点保持数据一致性。
+
+重要的一步是创建整个数据集的一次性基线传输。执行增量更新前需要执行此操作。此操作包括在源上创建Snapshot副本、以及将其引用的所有数据块传输到目标文件系统。初始化完成后、可以按计划或手动触发更新。每次更新仅将新块和更改的块从源文件系统传输到目标文件系统。此操作包括在源卷上创建Snapshot副本、将其与基线副本进行比较、以及仅将发生更改的块传输到目标卷。新副本将成为下次更新的基线副本。由于复制是定期进行的、因此SnapMirror可以整合更改的块并节省网络带宽。对写入吞吐量和写入延迟的影响微乎其微。
+
+要执行恢复、请完成以下步骤：
+
+. 连接到二级站点上的存储系统。
+. 中断SnapMirror关系。
+. 将SnapMirror卷中的LUN映射到二级站点上Hyper-V服务器的启动程序组(igrop)。
+. 将LUN映射到Hyper-V集群后、使这些磁盘联机。
+. 使用故障转移集群PowerShell cmdlet、将磁盘添加到可用存储并将其转换为CSV。
+. 将CSV中的虚拟机导入到Hyper-V管理器中、使其具有高可用性、然后将其添加到集群中。
+. 打开VM。
+

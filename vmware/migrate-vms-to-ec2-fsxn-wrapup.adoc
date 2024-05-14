@@ -1,0 +1,39 @@
+---
+sidebar: sidebar 
+permalink: vmware/migrate-vms-to-ec2-fsxn-wrapup.html 
+keywords: netapp, vmware, amazon, ec2, fsxn, migration, iscsi, 
+summary: '本技术报告介绍如何使用卷云迁移(CMC)的MigrateOps "数据移动性即代码"功能将内部VMware vSphere VM迁移到数据磁盘位于FSx for ONTAP iSCSI LUN上的Amazon EC2实例。' 
+---
+= 使用FSxN将VM迁移到Amazon EC2：其他可能性和结论
+:allow-uri-read: 
+
+
+
+
+== 使用FSxN将VM迁移到Amazon EC2：其他可能性和结论
+
+[role="lead"]
+本文重点介绍此迁移解决方案的其他可能性、并结束本主题。
+
+
+
+== 其他可能性
+
+这种方法也可以扩展为在内部VM上使用子系统内存储迁移VM。可以使用CMC迁移操作系统VMDK、并且可以使用SnapMirror复制子系统中的iSCSI LUN。此过程需要中断镜像并将LUN附加到新迁移的Amazon EC2实例、如下图所示。
+
+image:migrate-ec2-fsxn-image13.png["此图显示了此迁移解决方案的另一种可能性"]
+
+
+
+== 结论
+
+本文档提供了使用CMC的MigrateOps功能将存储在内部VMware存储库中的数据通过Amazon EC2实例和FSx for ONTAP迁移到AWS的完整概览。
+
+以下视频演示了从开始到结束的迁移过程：
+
+.将VMware VM迁移到Amazon EC2
+video::317a0758-cba9-4bd8-a08b-b17000d88ae9[panopto]
+要了解图形用户界面以及基本的Amazon EBS到FSx for ONTAP本地迁移、请观看此五分钟演示视频：
+
+.借助卷云迁移、大规模迁移到任何存储
+video::PeFNZxXeQAU[youtube]

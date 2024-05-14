@@ -1,0 +1,208 @@
+---
+sidebar: sidebar 
+permalink: hyperv/hyperv-deploy-considerations.html 
+keywords: hyperv, hyper-v, deploy, netapp, virtualization, consideration 
+summary: 解决方案提供了在NetApp存储上部署Hyper-V所需的步骤 
+---
+= 在NetApp存储上部署Microsoft Hyper-V：注意事项
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+要确保应用程序、服务和工作负载能够在Hyper-V环境中有效运行、此步骤至关重要。兼容性检查必须包括操作系统版本、Windows服务器版本、应用程序依赖项、数据库系统以及现有环境中存在的任何特定配置或自定义设置。
+
+
+
+== 正确估算存储规模
+
+在部署工作负载或从现有虚拟机管理程序迁移之前、请确保工作负载的规模已调整为满足所需的性能。为此、可以轻松地收集每个虚拟机的性能数据、这些数据会收集CPU (已用/已配置)、内存(已用/已配置)、存储(已配置/已使用)、网络吞吐量和延迟的统计信息、并汇总读/写IOPS、吞吐量和块大小。要成功部署并正确估算存储阵列和工作负载主机的规模、必须使用这些参数。
+
+*注意*：在估算Hyper-V和相关工作负载的存储规模时、请规划IOPS和容量。
+
+*注意*：对于I/O密度较高的VM或需要大量资源和容量的VM、请将操作系统和数据磁盘隔离。操作系统和应用程序二进制文件更改频率不高、并且可以接受卷崩溃状态一致性。
+
+*注意*：与使用VHD相比、使用子系统连接的存储(也称为子系统)来存储高性能数据磁盘。这也有助于简化克隆过程。
+
+
+
+== 提高虚拟机性能
+
+选择适当数量的RAM和vCPU以获得最佳性能、并将多个磁盘连接到一个虚拟SCSI控制器。对于部署中的虚拟磁盘、仍然建议使用固定VHDx作为主要选择、并且使用任何类型的VHDX虚拟磁盘都没有限制。
+
+*注意*：避免在Windows Server上安装不必要的角色，因为这些角色将不会被利用。
+
+*注意*：选择Gen2作为能够从SCSI控制器加载VM的虚拟机的代数，并且基于VMBus和VSP/VSC架构进行启动，这将显著提高VM的整体性能。
+
+*注意*：避免频繁执行检查点操作、因为这会对虚拟机的性能产生负面影响。
+
+
+
+== SMB3.0设计和注意事项
+
+SMB 3.0文件共享可用作Hyper-V的共享存储ONTAP支持通过适用于Hyper-V的SMB共享实现无中断运行Hyper-V可以使用SMB文件共享来存储虚拟机文件、例如配置、快照和虚拟硬盘(Virtual Hard Disk、VHD)文件。使用专用的ONTAP CIFS SVM实现Hyper-V基于SMB3.0的共享用于存储虚拟机文件的卷必须使用NTFS安全模式卷创建。建议在Hyper-V主机和NetApp阵列之间使用10 GB网络(如果有)进行连接。如果网络连接为1 GB、NetApp建议创建一个由多个1 GB端口组成的接口组。将提供SMB多通道的每个NIC连接到其专用IP子网、以便每个子网在客户端和服务器之间提供一条路径。
+
+*要点*
+
+* 在ONTAP SVM上启用SMB多通道
+* ONTAP CIFS SVM应在集群中的每个节点上至少具有一个数据LIF。
+* 使用的共享必须配置为具有持续可用属性集。
+* 现在、每个AFF (A系列和C系列)、纯SAN阵列(ASA)和FAS系统都包含ONTAP One。因此、不需要单独的许可证。
+* 对于共享VHDx、请使用子系统连接的iSCSI LUN
+
+
+*注意*：ODX支持并支持多种协议。在文件共享与iSCSI或FCP连接的LUN之间复制数据也会利用ODX。
+
+*注意*：应相应地设置集群中节点的时间设置。如果NetApp CIFS服务器必须加入Windows Active Directory (AD)域、则应使用网络时间协议(NTP)。
+
+*注意*：必须通过CIFS服务器启用较大的MTU值。数据包大小较小可能会导致性能下降。
+
+
+
+== 配置SMB卷
+
+. 验证是否已在Storage Virtual Machine (SVM)上启用所需的CIFS服务器选项
+. 应将以下选项设置为true：smb2-enabled smb3-enabled copy-offload-enabled scopy-enabled是-多通道-启用是-大型-MTU-enabled
++
+image:hyperv-deploy-image03.png["SMB卷设置的图像"]
+
+. 在Storage Virtual Machine (SVM)上创建NTFS数据卷、然后配置持续可用的共享以用于Hyper-V
++
+image:hyperv-deploy-image04.png["NTFS数据卷设置的图像"]
+
++
+*注意*：除非将配置中使用的卷创建为NTFS安全模式卷、否则基于SMB的Hyper-V不会正常运行。
+
+. 在共享上启用持续可用并配置NTFS权限、以包括具有完全控制权的Hyper-V节点。
++
+image:hyperv-deploy-image05.png["NTFS权限设置的图像"]
+
+
+
+有关详细的最佳实践指导、请参见 link:https://docs.netapp.com/us-en/ontap-apps-dbs/microsoft/win_overview.html["Hyper-V部署准则和最佳实践"]。
+
+有关追加信息、请参见 link:https://docs.netapp.com/us-en/ontap/smb-hyper-v-sql/server-volume-requirements-hyper-v-concept.html["基于 SMB 的 Hyper-V 的 SMB 服务器和卷要求
+"]。
+
+
+
+== 块协议设计和注意事项
+
+*要点*
+
+* 在主机上使用多路径(MPIO)管理多个路径。根据需要创建更多路径、以便于数据移动操作或利用更多I/O资源、但不要超过主机操作系统可支持的最大路径数。
+* 在访问LUN的主机上安装Host Utilities Kit。
+* 至少创建8个卷。
+
+
+*注意*：每个卷使用一个LUN、因此LUN与CSV的比率为1：1映射。
+
+* 在要使用iSCSI或光纤通道提供数据的每个存储控制器上、SVM的每个以太网网络或光纤通道网络都应具有一个LIF。
+* 使用FCP或iSCSI提供数据的SVM需要SVM管理接口。
+
+
+
+
+== 正在配置iSCSI卷
+
+要配置iSCSI卷、请确保满足以下前提条件。
+
+* Storage Virtual Machine (SVM)应启用iSCSI协议并创建相应的逻辑接口(Logical Interface、Logical Interface、Logical Interface、Logical Interface、SVM)。
+* 指定聚合必须具有足够的可用空间来容纳LUN。
+
+
+*注意*：默认情况下，ONTAP使用选择性LUN映射(选择性LUN Map, SLM)使LUN只能通过LUN所属节点及其高可用性(HA)配对节点上的路径进行访问。
+
+* 配置每个节点上的所有iSCSI LIFs、以便在LUN移动到集群中的另一节点时实现LUN移动性。
+
+
+* 步骤 *
+
+. 使用System Manager导航到LUN窗口(可以使用ONTAP命令行界面执行相同的操作)。
+. 单击创建。
+. 浏览并选择要在其中创建LUN的指定SVM、此时将显示创建LUN向导。
+. 在常规属性页面上、为包含Hyper-V虚拟机虚拟硬盘(Virtual Hard Disk、VHD)的LUN选择Hyper-V。
++
+image:hyperv-deploy-image06.png["用于创建Hyper-V LUN的\"General Properties\"(常规属性)页面的图像"]
+
+. <单击更多选项>在"LUN Container"页面上、选择现有FlexVol卷、否则将创建新卷。
+. <单击更多选项>在启动程序映射页面上、单击添加启动程序组、在常规选项卡上输入所需信息、然后在启动程序选项卡上输入主机的iSCSI启动程序节点名称。
+. 确认详细信息、然后单击完成以完成向导。
+
+
+创建LUN后、转到故障转移集群管理器。要将磁盘添加到CSV、必须将该磁盘添加到集群的可用存储组(如果尚未添加)、然后将该磁盘添加到集群上的CSV。
+
+*注意*：在故障转移集群中、CSV功能默认处于启用状态。
+
+*将磁盘添加到可用存储：*
+
+. 在故障转移集群管理器的控制台树中、展开集群名称、然后展开存储。
+. 右键单击磁盘、然后选择添加磁盘。此时将显示一个列表、其中显示了可添加以在故障转移集群中使用的磁盘。
+. 选择要添加的一个或多个磁盘、然后选择确定。
+. 此时、磁盘将分配给可用存储组。
+. 完成后、选择刚刚分配给可用存储的磁盘、右键单击所选内容、然后选择添加到集群共享卷。
++
+image:hyperv-deploy-image07.png["添加到集群共享卷界面的图像"]
+
+. 磁盘现在已分配给集群中的集群共享卷组。磁盘作为编号卷(挂载点)公开给每个集群节点、位于%SystemDrive%ClusterStorage文件夹下。这些卷将显示在CSVFS文件系统中。
+
+
+有关追加信息、请参见 link:https://learn.microsoft.com/en-us/windows-server/failover-clustering/failover-cluster-csvs#add-a-disk-to-csv-on-a-failover-cluster["在故障转移集群中使用集群共享卷"]。
+
+*创建高可用性虚拟机：*
+
+要创建高可用性虚拟机、请执行以下步骤：
+
+. 在故障转移集群管理器中、选择或指定所需的集群。确保已展开集群下的控制台树。
+. 单击角色。
+. 在操作窗格中、单击虚拟机、然后单击新建虚拟机。此时将显示"New Virtual Machine Wizard"(新建虚拟机向导)。单击下一步。
+. 在Specify Name and Location页面上、指定虚拟机的名称、例如nimdemO。单击将虚拟机存储在其他位置、然后键入完整路径、或者单击浏览并导航到共享存储。
+. 为与物理网络适配器关联的虚拟交换机分配内存并配置网络适配器。
+. 在连接虚拟硬盘页面上、单击创建虚拟硬盘。
+. 在"Installation Options (安装选项)"页面上、单击"Install an operating system from a boot CD/DVD-ROM (从启动CD/DVD-ROM安装操作系统)"。在介质下、指定介质的位置、然后单击完成。
+. 此时将创建虚拟机。然后、故障转移集群管理器中的高可用性向导会自动配置虚拟机以实现高可用性。
+
+
+
+
+== 使用ODX功能快速配置虚拟磁盘
+
+通过ONTAP中的ODX功能、只需复制由ONTAP存储系统托管的主VHDX文件、即可创建主VHDX的副本。由于启用了ODX的副本不会将任何数据放在网络线上、因此复制过程会在NetApp存储端进行、因此速度可以提高多达6到8倍。快速配置的一般注意事项包括存储在文件共享上的主系统已准备好的映像以及由Hyper-V主机启动的常规复制过程。
+
+*注意*：ONTAP支持对SMB和SAN协议使用ODX。
+
+*注意*：要利用Hyper-V中ODX副本卸载直通的使用情形、子操作系统必须支持ODX、并且子操作系统的磁盘必须是SCSI磁盘、并由支持ODX的存储(SMB或SAN)提供后备支持。子操作系统上的 IDE 磁盘不支持 ODX 直通。
+
+
+
+== 性能优化
+
+虽然建议的每个CSV的VM数量是主观的、但许多因素决定了可放置在每个CSV或SMB卷上的最佳VM数量。虽然大多数管理员仅考虑容量、但发送到VHDx的并发I/O量是影响整体性能的最关键因素之一。控制性能最简单的方法是、调节每个CSV或共享上放置的虚拟机数量。如果并发虚拟机I/O模式向CSV或共享发送的流量过多、则磁盘队列会填满、并会产生较高的延迟。
+
+
+
+== SMB卷和CSV规模估算
+
+确保解决方案具有足够的端到端大小以避免出现瓶颈、在为Hyper-V VM存储创建卷时、最佳实践是创建不超过所需大小的卷。适当的卷规模可防止意外在CSV上放置过多的虚拟机、并降低资源争用的可能性。每个集群共享卷(CSV)都支持一个或多个VM。要放置在CSV上的VM数量取决于工作负载和业务首选项以及如何使用ONTAP存储功能(例如快照和复制)。在大多数部署情形下、将多个VM放置在一个CSV上是一个很好的起点。根据特定使用情形调整此方法、以满足性能和数据保护要求。
+
+由于卷和VHDx大小可以轻松增加、因此、如果虚拟机需要额外容量、则不必将CSV的大小设置为大于所需大小。可以使用Diskpart扩展CSV大小、或者更简单的方法是创建新的CSV并将所需的VM迁移到新的CSV。为了获得最佳性能、最佳做法是增加CSV数量、而不是作为临时措施增加其大小。
+
+
+
+== migration
+
+在当前市场条件下、最常见的使用情形之一是迁移。客户可以使用VMM Fabric或其他第三方迁移工具来迁移VM。这些工具使用主机级副本将数据从源平台移动到目标平台、这可能会非常耗时、具体取决于迁移范围内的虚拟机数量。
+
+与使用基于主机的迁移过程相比、在这种情况下使用ONTAP可以加快迁移速度。ONTAP还支持将虚拟机从一个虚拟机管理程序快速迁移到另一个虚拟机管理程序(此处为ESXi到Hyper-V)。在NetApp存储上、任何大小的VMDK都可以在几秒钟内转换为VHDx。这就是我们的PowerShell方式—它利用NetApp FlexClone®技术快速转换VM硬盘。它还负责创建和配置目标和目标VM。
+
+此过程有助于最大限度地减少停机时间并提高业务效率。此外、它还可以降低许可成本、减少受制于单个供应商的情况、从而提供丰富的选择和灵活性。对于希望优化VM许可成本并扩展IT预算的组织来说、这一点也非常有用。
+
+以下视频介绍了将虚拟机从VMware ESX迁移到Hyper-V的过程
+
+.从ESX到Hyper-V的零接触迁移
+video::f4bd0e96-9517-465a-be53-b16d00e305fe[panopto]
+有关使用FlexClone和PowerShell进行迁移的追加信息、请参见 link:hyperv-deploy-script.html["用于迁移的PowerShell脚本"]。

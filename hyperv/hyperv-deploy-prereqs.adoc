@@ -1,0 +1,230 @@
+---
+sidebar: sidebar 
+permalink: hyperv/hyperv-deploy-prereqs.html 
+keywords: hyperv, hyper-v, deploy, netapp, virtualization, prereqs, pre-requisites 
+summary: 解决方案提供了在NetApp存储上部署Hyper-V所需的步骤 
+---
+= 在NetApp存储上部署Microsoft Hyper-V：前提条件
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+本主题介绍了使用ONTAP存储系统配置和部署双节点故障转移集群和集群模式Hyper-V虚拟机的步骤。
+
+
+
+== 部署操作步骤的前提条件
+
+* 所有硬件都必须经过所运行的Windows Server版本的认证、并且整个故障转移集群解决方案必须通过验证配置向导中的所有测试
+* Hyper-V节点已加入域控制器(建议)、并且彼此之间具有适当的连接。
+* 每个Hyper-V节点的配置应完全相同。
+* 在每个Hyper-V服务器上配置网络适配器和指定虚拟交换机、用于隔离管理、iSCSI、SMB和实时迁移的流量。
+* 故障转移集群功能已在每个Hyper-V服务器上启用。
+* SMB共享或LV用作共享存储、用于存储Hyper-V集群中的虚拟机及其磁盘。
+* 存储不应在不同集群之间共享。为每个集群规划一个或多个CSV/CIFS共享。
+* 如果SMB共享用作共享存储、则必须配置SMB共享上的权限、以授予对集群中所有Hyper-V节点的计算机帐户的访问权限。
+
+
+有关详细信息，请参见
+
+* link:https://learn.microsoft.com/en-us/windows-server/virtualization/hyper-v/system-requirements-for-hyper-v-on-windows#how-to-check-for-hyper-v-requirements["Windows Server上Hyper-V的系统要求"]
+* link:https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/jj134244(v=ws.11)#step-1-prepare-to-validate-hardware-for-a-failover-cluster["验证故障转移集群的硬件"]
+* link:https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/jj863389(v=ws.11)["部署Hyper-V集群"]
+
+
+
+
+=== 安装Windows功能
+
+以下步骤介绍如何安装所需的Windows Server 2022功能。
+
+*所有主机*
+
+. 在所有指定节点上准备Windows OS 2022以及必要的更新和设备驱动程序。
+. 使用安装期间输入的管理员密码登录到每个Hyper-V节点。
+. 右键单击任务栏中的PowerShell图标并选择以启动PowerShell提示符 `Run as Administrator`。
+. 添加Hyper-V、MPIO和集群功能。
++
+[source, cli]
+----
+Add-WindowsFeature Hyper-V, Failover-Clustering, Multipath-IO `-IncludeManagementTools –Restart
+----
+
+
+
+
+=== 正在配置网络
+
+正确的网络规划是实现容错部署的关键。为每种类型的流量设置不同的物理网络适配器是故障转移集群的标准建议。由于能够添加虚拟网络适配器、交换机嵌入式绑定(组)和引入Hyper-V QoS等功能、因此可以在更少的物理适配器上精简网络流量。在设计网络配置时应考虑服务质量、冗余和流量隔离。将VLAN等网络隔离技术与流量隔离技术相结合、可以为流量和服务质量提供冗余、从而提高和提高存储流量性能的一致性。
+
+建议使用多个逻辑和/或物理网络隔离和隔离特定工作负载。通常分为多个网段的典型网络流量示例如下：
+
+* iSCSI存储网络。
+* CSV (集群共享卷)或Heartbeat网络。
+* 实时迁移
+* VM网络
+* 管理网络
+
+
+*注意*：如果将iSCSI与专用NIC结合使用，则不建议使用任何绑定解决方案，而应使用MPIO/DSM。
+
+*注意*：Hyper-V网络最佳实践也不建议在Hyper-V环境中对SMB 3.0存储网络使用NIC绑定。
+
+有关追加信息、请参见 link:https://learn.microsoft.com/en-us/windows-server/virtualization/hyper-v/plan/plan-hyper-v-networking-in-windows-server["在Windows Server中规划Hyper-V网络"]
+
+
+
+=== 确定Hyper-V的存储设计
+
+Hyper-V支持使用NAS (SMB3.0)和块存储(iSCSI/FC)作为虚拟机的后备存储。NetApp支持SMB3.0、iSCSI和FC协议、这些协议可用作VM的本机存储—使用iSCSI/FC和SMB3的集群共享卷(CSV)。对于需要直接访问存储的工作负载、客户还可以使用SMB3和iSCSI作为子系统连接的存储选项。ONTAP为统一存储(全闪存阵列)提供了灵活的选项—适用于需要混合协议访问和SAN优化存储(全SAN阵列)的工作负载(仅适用于SAN配置)。
+
+SMB3与iSCSI/FC的选择是受当前现有基础架构的驱动、SMB3/iSCSI允许客户使用现有网络基础架构。对于已有FC基础架构的客户、可以利用该基础架构并将存储呈现为基于FC的集群共享卷。
+
+*注意：*运行ONTAP软件的NetApp存储控制器可在Hyper-V环境中支持以下工作负载：
+
+* 在持续可用的SMB 3.0共享上托管的VM
+* 托管在iSCSI或FC上运行的集群共享卷(CSV) LUN上的VM
+* 子系统内存储、并将直通磁盘传递到子系统虚拟机
+
+
+*注意*：核心ONTAP功能，如精简配置、重复数据删除、数据压缩、数据缩减、灵活克隆、 无论使用何种平台或操作系统、快照和复制都可以在后台无缝工作、并为Hyper-V工作负载提供显著价值。这些功能的默认设置最适合Windows Server和Hyper-V
+
+*注意*：如果VM有多个可用路径、并且安装并配置了多路径I/O功能、则使用子系统内启动程序的子VM上支持MPIO。
+
+*注意*：ONTAP支持所有主要的行业标准客户端协议：NFS、SMB、FC、FCoE、iSCSI、 NVMe/FC和S3。但是、Microsoft不支持NVMe/FC和NVMe/TCP。
+
+
+
+=== 安装NetApp Windows iSCSI主机实用程序
+
+下一节介绍如何在无人看管的情况下安装NetApp Windows iSCSI主机实用程序。有关安装的详细信息、请参见 link:https://docs.netapp.com/us-en/ontap-sanhost/hu_wuhu_72.html["安装Windows Unified Host Utilities 7.2 (或支持的最新版本)"]
+
+*所有主机*
+
+. 下载 link:https://mysupport.netapp.com/site/products/all/details/hostutilities/downloads-tab/download/61343/7.2["Windows iSCSI Host Utilities"]
+. 取消阻止下载的文件。
++
+[source, cli]
+----
+Unblock-file ~\Downloads\netapp_windows_host_utilities_7.2_x64.msi
+----
+. 安装Host Utilities。
++
+[source, cli]
+----
+~\Downloads\netapp_windows_host_utilities_7.2_x64.msi /qn "MULTIPATHING=1"
+----
+
+
+*注*：在此过程中，系统将重新启动。
+
+
+
+=== 正在配置Windows主机iSCSI启动程序
+
+以下步骤介绍如何配置内置的Microsoft iSCSI启动程序。
+
+*所有主机*
+
+. 右键单击任务栏中的PowerShell图标并选择以管理员身份运行、以启动PowerShell提示符。
+. 将iSCSI服务配置为自动启动。
++
+[source, cli]
+----
+Set-Service -Name MSiSCSI -StartupType Automatic
+----
+. 启动iSCSI服务。
++
+[source, cli]
+----
+Start-Service -Name MSiSCSI
+----
+. 配置MPIO以声明任何iSCSI设备。
++
+[source, cli]
+----
+Enable-MSDSMAutomaticClaim -BusType iSCSI
+----
+. 将所有新声明的设备的默认负载平衡策略设置为轮叫。
++
+[source, cli]
+----
+Set-MSDSMGlobalDefaultLoadBalancePolicy -Policy RR 
+----
+. 为每个控制器配置iSCSI目标。
++
+[source, cli]
+----
+New-IscsiTargetPortal -TargetPortalAddress <<iscsia_lif01_ip>> -InitiatorPortalAddress <iscsia_ipaddress>
+
+New-IscsiTargetPortal -TargetPortalAddress <<iscsib_lif01_ip>> -InitiatorPortalAddress <iscsib_ipaddress
+
+New-IscsiTargetPortal -TargetPortalAddress <<iscsia_lif02_ip>> -InitiatorPortalAddress <iscsia_ipaddress>
+
+New-IscsiTargetPortal -TargetPortalAddress <<iscsib_lif02_ip>> -InitiatorPortalAddress <iscsib_ipaddress>
+----
+. 将每个iSCSI网络的会话连接到每个目标。
++
+[source, cli]
+----
+Get-IscsiTarget | Connect-IscsiTarget -IsPersistent $true -IsMultipathEnabled $true -InitiatorPo rtalAddress <iscsia_ipaddress>
+
+Get-IscsiTarget | Connect-IscsiTarget -IsPersistent $true -IsMultipathEnabled $true -InitiatorPo rtalAddress <iscsib_ipaddress>
+----
+
+
+*注意*：添加多个会话(最小值为5到8)以提高性能并利用带宽。
+
+
+
+=== 创建集群
+
+*仅限一台服务器*
+
+. 右键单击PowerShell图标并选择、以使用管理权限启动PowerShell提示符 `Run as Administrator``。
+. 创建新集群。
++
+[source, cli]
+----
+New-Cluster -Name <cluster_name> -Node <hostnames> -NoStorage -StaticAddress <cluster_ip_address>
+----
++
+image:hyperv-deploy-image01.png["显示集群管理接口的图像"]
+
+. 为实时迁移选择适当的集群网络。
+. 指定CSV网络。
++
+[source, cli]
+----
+(Get-ClusterNetwork -Name Cluster).Metric = 900
+----
+. 更改集群以使用仲裁磁盘。
++
+.. 右键单击PowerShell图标并选择"Run as Administrator (以管理员身份运行)"、以管理员权限启动PowerShell提示符。
++
+[source, cli]
+----
+start-ClusterGroup "Available Storage"| Move-ClusterGroup -Node $env:COMPUTERNAME
+----
+.. 在故障转移集群管理器中、选择 `Configure Cluster Quorum Settings`。
++
+image:hyperv-deploy-image02.png["Configure Cluster Quorum设置的图像"]
+
+.. 单击欢迎页面中的下一步。
+.. 选择仲裁见证、然后单击下一步。
+.. 选择Configure a disk witness`(配置磁盘见证)、然后单击Next (下一步)。
+.. 从可用存储中选择磁盘W：、然后单击下一步。
+.. 在确认页面中单击下一步、并在摘要页面上单击完成。
++
+有关仲裁和见证的更多详细信息、请参见 link:https://learn.microsoft.com/en-us/windows-server/failover-clustering/manage-cluster-quorum#general-recommendations-for-quorum-configuration["配置和管理仲裁"]
+
+
+
+. 从故障转移集群管理器运行集群验证向导以验证部署。
+. 创建CSV LUN以存储虚拟机数据、并通过故障转移集群管理器中的角色创建高可用性虚拟机。
+
