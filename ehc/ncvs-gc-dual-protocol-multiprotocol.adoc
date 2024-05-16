@@ -20,7 +20,7 @@ summary: 通过Cloud Volumes Service 、可以向SMB和NFS客户端共享相同�
 
 == 访问控制
 
-* *共享访问控制。*确定哪些客户端和/或用户和组可以访问NAS共享。对于NFS、导出策略和规则控制客户端对导出的访问。NFS导出可通过Cloud Volumes Service 实例进行管理。SMB使用CIFS/SMB共享和共享ACL、在用户和组级别提供更精细的控制。您只能使用从SMB客户端配置共享级ACL https://library.netapp.com/ecmdocs/ECMP1401220/html/GUID-C1772CDF-8AEE-422B-AB87-CFCB7E50FF94.html["MMC/计算机管理"^] 具有Cloud Volumes Service 实例管理员权限的帐户(请参见一节 link:ncvs-gc-smb.html#accounts-with-local/builtin-administrator/backup-rights[""具有本地/BUILTIN管理员/备份权限的帐户。""]）。
+* *共享访问控制。*确定哪些客户端和/或用户和组可以访问NAS共享。对于NFS、导出策略和规则控制客户端对导出的访问。NFS导出可通过Cloud Volumes Service 实例进行管理。SMB使用CIFS/SMB共享和共享ACL、在用户和组级别提供更精细的控制。您只能使用对SMB Cloud Volumes Service实例具有管理员权限的帐户通过管理^从https://library.netapp.com/ecmdocs/ECMP1401220/html/GUID-C1772CDF-8AEE-422B-AB87-CFCB7E50FF94.html[MMC/Computer客户端配置共享级ACL (请参见链接：ncs-gc-sb.html#Accounts with local/BUILTIN administrator/backup rights ["Accounts with local/BUILTIN administrator/backup rights。"]部分)。
 * *文件访问控制。*在文件或文件夹级别控制权限、并且始终从NAS客户端进行管理。NFS客户端可以使用传统模式位(rwx)或NFSv4 ACL。SMB客户端利用NTFS权限。
 
 

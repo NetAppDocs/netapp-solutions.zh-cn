@@ -14,13 +14,15 @@ summary:
 
 
 [role="lead"]
+在云中的各个区域之间使用块级复制进行灾难恢复、是一种具有故障恢复能力且经济高效的方法、可以保护工作负载免受站点中断和数据损坏事件(例如勒索软件)的影响。
+
 作者：Niyaz Mohamed、NetApp解决方案工程部
 
 
 
 == 概述
 
-在云中的各个区域之间使用块级复制进行灾难恢复、是一种具有故障恢复能力且经济高效的方法、可以保护工作负载免受站点中断和数据损坏事件(例如勒索软件)的影响。通过Azure NetApp Files (ANF)跨区域卷复制、可以将在Azure VMware解决方案 (AVS) SDDC站点上使用Azure NetApp Files 卷作为主AVS站点上的NFS数据存储库运行的VMware工作负载复制到目标恢复区域中的指定二级AVS站点。
+通过Azure NetApp Files (ANF)跨区域卷复制、可以将在Azure VMware解决方案 (AVS) SDDC站点上使用Azure NetApp Files 卷作为主AVS站点上的NFS数据存储库运行的VMware工作负载复制到目标恢复区域中的指定二级AVS站点。
 
 灾难恢复编排程序(Disaster Recovery Orchestrator、DRO)(一种具有UI的脚本解决方案)可用于无缝恢复从一个AVS SDDC复制到另一个AVS SDDC的工作负载。DRO可通过中断复制对等关系、然后将目标卷挂载为数据存储库、通过向AVS注册VM、直接在NSX-T (包括在所有AVS私有云中)上映射网络来自动恢复。
 

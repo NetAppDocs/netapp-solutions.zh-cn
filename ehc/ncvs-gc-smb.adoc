@@ -24,7 +24,7 @@ Cloud Volumes Service 支持SMB 2.1和3.x版本的协议。
 
 * 当Windows用户名请求访问Cloud Volumes Service 卷时、Cloud Volumes Service 会使用Cloud Volumes Service 管理员配置的方法查找UNIX用户名。
 * 如果配置了外部UNIX身份提供程序(LDAP)、并且Windows/UNIX用户名相同、则Windows用户名将1：1映射到UNIX用户名、而无需任何其他配置。启用LDAP后、Active Directory用于托管用户和组对象的这些UNIX属性。
-* 如果Windows名称和UNIX名称不匹配、则必须将LDAP配置为允许Cloud Volumes Service 使用LDAP名称映射配置(请参见一节) link:ncvs-gc-other-nas-infrastructure-service-dependencies.html#ldap#using-ldap-for-asymmetric-name-mapping[""使用LDAP进行非对称名称映射""]）。
+* 如果Windows名称和UNIX名称不匹配、则必须将LDAP配置为允许Cloud Volumes Service 使用LDAP名称映射配置(请参见一节) link:ncvs-gc-other-nas-infrastructure-service-dependencies.html#using-ldap-for-asymmetric-name-mapping[""使用LDAP进行非对称名称映射""]）。
 * 如果未使用LDAP、则Windows SMB用户会映射到Cloud Volumes Service 中名为`pcuser`的默认本地UNIX用户。这意味着在多协议NAS环境中、映射到`pcuser`的用户在Windows中写入的文件将UNIX所有权显示为`pcuser`。`pcuser`此处是Linux环境中的`nobody`用户(UID 65534)。
 
 
@@ -322,7 +322,7 @@ Cloud Volumes Service 中的SMB服务器使用一系列选项来定义SMB连接�
 | 传入CIFS流量需要SMB加密 | 所有共享都需要SMB加密。Cloud Volumes Service 不会使用此功能；而是按卷设置加密(请参见一节<<SMB共享安全功能>>")。 | false | 否 
 
 
-| 客户端会话安全性 | 为LDAP通信设置签名和/或密封。目前未在Cloud Volumes Service 中设置此选项、但在未来版本中可能需要执行此操作。本节将介绍由于Windows修补程序而导致的LDAP身份验证问题的修复方法 link:ncvs-gc-other-nas-infrastructure-service-dependencies.html#ldap#ldap-channel-binding[""LDAP通道绑定。""]。 | 无 | 否 
+| 客户端会话安全性 | 为LDAP通信设置签名和/或密封。目前未在Cloud Volumes Service 中设置此选项、但在未来版本中可能需要执行此操作。本节将介绍由于Windows修补程序而导致的LDAP身份验证问题的修复方法 link:ncvs-gc-other-nas-infrastructure-service-dependencies.html#ldap-channel-binding[""LDAP通道绑定。""]。 | 无 | 否 
 
 
 | SMB2为DC连接启用 | 使用SMB2进行DC连接。默认情况下处于启用状态。 | 系统默认值 | 否 
