@@ -1014,18 +1014,15 @@
   <block id="45f2cdf50f8bb89b245e814009b4244c" category="section-title">NVIDIA JarVis 多模式框架</block>
   <block id="7e3a7922ac3cd73ae37b26c0b9c99ee3" category="paragraph"><block ref="7e3a7922ac3cd73ae37b26c0b9c99ee3" category="inline-image-macro-rx" type="image"></block></block>
   <block id="7ad66827309f61fd22dc58cbbb2f8273" category="inline-link">NVIDIA JarVis</block>
-  <block id="241d985aedf9124840f9adfa9496755d" category="paragraph"><block ref="9f89431954623c8e5c580e4350b427e7" category="inline-link-rx"></block> 是一个端到端框架，用于构建对话式 AI 服务。它包括以下经过 GPU 优化的服务：</block>
   <block id="bb3e7af8136880e3a92118c172aed302" category="list-text">自动语音识别（ Automatic Speech Recognition ， As1 ）</block>
   <block id="3c07089a439435a2998f14ea97f90825" category="list-text">自然语言理解（ NLF ）</block>
   <block id="8375cc1d63ce172363c4ed9c3cddd508" category="list-text">与域特定的履行服务集成</block>
   <block id="84fb561f92aa70d5e118f429e98ee99b" category="list-text">文本语音转换（ TTS- 语音转换）</block>
   <block id="9478a4e1be70e1be0fdd56f3929bbdc2" category="list-text">基于计算机视觉（ CV ） Jarvis 的服务使用最先进的深度学习模型来应对实时对话 AI 这一复杂且极具挑战性的任务。要与最终用户进行实时自然的交互，模型需要在 300 毫秒内完成计算。自然交互具有挑战性，需要多模式感知集成。模型管道也很复杂，需要在上述服务之间进行协调。</block>
   <block id="c29efa8b1d5c9d6d647a8ce72bef1b74" category="paragraph">JarVis 是一个完全加速的应用程序框架，用于构建使用端到端深度学习管道的多模式对话 AI 服务。JARVIS 框架包括经过预先培训的人工智能对话模型，工具以及针对语音，视觉和 NLU 任务优化的端到端服务。除了 AI 服务之外， JarVis 还支持您同时融合视觉，音频和其他传感器输入，以便在虚拟助手，多用户化和呼叫中心助理等应用程序中提供多用户，多上下文对话等功能。</block>
-  <block id="dc3652fc64a2a6ea2a3cfd5c40443b16" category="paragraph"><block ref="4282ee73b9eecd67e90ed51f4f36b077" category="inline-link-rx"></block> 是一款开源 Python 工具包，用于使用易于使用的应用程序编程接口（ API ）构建，培训和微调 GPU 加速的一流对话 AI 模型。Nemo 使用 NVIDIA GPU 中的 Tensor 核心运行混合精度计算，并可轻松扩展到多个 GPU ，以提供尽可能高的训练性能。Nemo 用于为视频呼叫记录，智能视频助理以及医疗保健，金融，零售和电信等不同行业的自动呼叫中心支持等实时应用程序构建模型。</block>
   <block id="4e5ae683e2a399c166a1724b0aa6952e" category="paragraph">我们使用 Nemo 来训练模型，以便识别归档对话历史记录中用户问题的复杂意图。此培训将零售虚拟助手的功能扩展到了 Jarvis 所提供的功能之外。</block>
   <block id="053bc62e92a61e44afd338bcb27c422f" category="section-title">零售用例摘要</block>
   <block id="e1196fc000d661461f32bcaab7319c6a" category="inline-link">针对零售用例自定义状态和流程</block>
-  <block id="8b6b761738b93e745ffa4f73dd233c08" category="paragraph">我们使用 NVIDIA Jarvis 构建了一个虚拟零售助理，可接受语音或文本输入并回答有关天气，关注点和库存定价的问题。对话式 AI 系统能够记住对话流，例如，如果用户未指定天气或感兴趣点的位置，可以询问跟进问题。系统还可以识别诸如 " 泰国食品 " 或 " 笔记本电脑内存 " 等复杂实体。 它了解自然语言问题，例如 " 下星期在洛杉矶会下雨吗？ " 有关零售虚拟助手的演示，请参见<block ref="0ba395e7fb59bace5ff35ab3c02ad737" category="inline-link-rx"></block>。</block>
   <block id="c755c33dca37a8aaffbf190bdf3f5fef" category="paragraph">此解决方案是在一个 NetApp AFF A800 系统，两个 DGX-1 服务器和两个 Cisco Nexus 3232C 100GbE 交换机上实施的。每个 DGX-1 服务器都通过四个 100GbE 连接连接连接到 Nexus 交换机，这些连接可通过使用基于融合以太网（ RoCE ）的远程直接内存访问（ RDMA ）进行 GPU 间通信。NFS 存储访问的传统 IP 通信也发生在这些链路上。每个存储控制器均使用四个 100GbE 链路连接到网络交换机。下图显示了本技术报告中用于所有测试场景的 ONTAP AI 解决方案架构。</block>
   <block id="782c9fdc3f29358987c2f5b99fe9e6b9" category="paragraph"><block ref="782c9fdc3f29358987c2f5b99fe9e6b9" category="inline-image-macro-rx" type="image"></block></block>
   <block id="bf8b135ff3c775c5b9bbba1b2f7a61ce" category="section-title">此解决方案中使用的硬件</block>
@@ -1050,7 +1047,6 @@
   <block id="c0bd05e9d88cf015eac684873bfd14c7" category="paragraph">提交工作负载的研究人员必须将项目与工作负载请求相关联。运行： AI 计划程序会将请求与当前分配和项目进行比较，并确定是否可以为工作负载分配资源或是否应保持待定状态。</block>
   <block id="800f40fa67f69116bf6f38cd07456608" category="paragraph">作为系统管理员，您可以在 Run ： AI projects 选项卡中设置以下参数：</block>
   <block id="9c429f2284a95aaa299c7d85ccb16734" category="list-text">* 模拟项目。 * 为每个用户设置一个项目，为每个用户团队设置一个项目，并为每个实际组织项目设置一个项目。</block>
-  <block id="b2f1422cf0d082a495bbf865b9a5621d" category="list-text">* 项目配额。 * 每个项目都与一个 GPU 配额相关联，可以同时为此项目分配 GPU 配额。这是一个有保障的配额，因为使用此项目的研究人员无论在集群中处于何种状态，都可以获得这一数量的 GPU 。通常，项目分配总和应等于集群中的 GPU 数量。除此之外，此项目的用户还可以收到超配额。只要未使用 GPU ，使用此项目的研究人员就可以获得更多 GPU 。我们在中演示了超额配额测试场景和公平考虑事项<block ref="9563fd9ab6978412dc97d80a70e51786" category="inline-link-rx"></block>，<block ref="a8ad108feafc827856baa28b0b9070ed" category="inline-link-rx"></block>，和<block ref="be867f64efefe193012b1dfc6c82f783" category="inline-link-rx"></block>。</block>
   <block id="20a3a45fbbd9502add12fd216350d569" category="list-text">创建新项目，更新现有项目并删除现有项目。</block>
   <block id="3bf13b237342258b6ddb3f167d679a3b" category="inline-link">运行： AI 文档</block>
   <block id="77332641abf52ec5dc1af8b23b2339f3" category="list-text">* 限制作业在特定节点组上运行 * 。您可以分配仅在特定节点上运行的特定项目。如果项目团队需要专用硬件，例如具有足够内存的硬件，则此功能非常有用。或者，项目团队也可能是特定硬件的所有者，这些硬件是通过专门预算获得的，或者您可能需要直接构建或交互式工作负载来处理较弱的硬件，并将较长的培训或无人看管的工作负载定向到较快的节点。有关对节点进行分组并为特定项目设置相关性的命令，请参见 <block ref="eae60ce89b8727160634b52e7654bf73" category="inline-link-rx"></block>。</block>
@@ -1301,7 +1297,6 @@
   <block id="34274fcc13408f06acfe43c4065c3f3b" category="paragraph">作为交互式构建工作负载的扩展，在使用 Run ： AI CLI 启动容器时，您可以向容器用户显示内部端口。这对于云环境，使用 Jupyter 笔记本电脑或连接到其他微服务非常有用。<block ref="fd51448530c36b6101cc67fbacf525b9" category="inline-link-rx"></block> 允许从 Kubernetes 集群外部访问 Kubernetes 服务。您可以通过创建一组规则来配置访问，这些规则定义哪些入站连接访问哪些服务。</block>
   <block id="e7f72a2c9a0cb7337eb00a3093f846da" category="paragraph">为了更好地管理对集群中服务的外部访问，我们建议集群管理员安装<block ref="fd51448530c36b6101cc67fbacf525b9" category="inline-link-rx"></block> 并配置负载平衡器。</block>
   <block id="16d79943625573d5b80809fe2a7ddbdd" category="paragraph">要使用传入作为服务类型，请在提交工作负载时运行以下命令以设置方法类型和端口：</block>
-  <block id="79fcc0299f1a85ebab053926e2222bca" category="paragraph">容器成功启动后，执行 `runai list` 以查看用于访问 Jupyter 笔记本电脑的 `S服务 URL （ S ）` 。此 URL 由入口端点，作业名称和端口组成。例如，请参见<block ref="0309fbe8f364c8f6dfe6f383da8c46c2" category="inline-link-rx"></block>。</block>
   <block id="451b08ed1bf6f7f0a8931cff52c4c45e" category="inline-link">使用连接的端口启动交互式构建工作负载</block>
   <block id="b524842923f8cb1e38064fadc680893f" category="paragraph">有关详细信息，请参见<block ref="414875add8a18a03ddddfb14fb1c47f4" category="inline-link-rx"></block>。</block>
   <block id="f0829d8f9d70b9de9de7beae86dc2129" category="paragraph">NetApp 公司 Mike Oglesby</block>
@@ -5020,7 +5015,6 @@
   <block id="1e69a4a8adec0842d1e110e970112268" category="section-title">许可要求</block>
   <block id="7f59934b2c0edd33f0d981f3bc4d12e7" category="paragraph">SnapCenter 是 NetApp 提供的许可软件。它通常包含在内部 ONTAP 许可证中。但是，对于混合云部署，要将 CVO 作为目标数据复制目标添加到 SnapCenter ，还需要 SnapCenter 的云许可证。有关详细信息，请查看以下 SnapCenter 基于容量的标准许可证链接：</block>
   <block id="9e86ae6c96041e3cb31e88116102ee35" category="inline-link-macro">基于容量的 SnapCenter 标准版许可证</block>
-  <block id="a1d51b5b5f3258b40cbe392146bc8868" category="paragraph"><block ref="a1d51b5b5f3258b40cbe392146bc8868" category="inline-link-macro-rx"></block></block>
   <block id="85db56d490cdd7a31d40697ad1c9be3c" category="section-title">网络和安全性</block>
   <block id="254215e6d18fb5582ba78464fa468553" category="paragraph">在混合数据库操作中，如果需要一个可通过卷到云进行开发 / 测试和灾难恢复的内部生产数据库，则在设置环境并从内部数据中心连接到公有云时，网络连接和安全性是一个重要的考虑因素。</block>
   <block id="1e356fab450b44971b6cdbd1c25586b8" category="paragraph">公有云通常使用虚拟私有云（ Virtual Private Cloud ， VPC ）隔离公共云平台中的不同用户。在单个 VPC 中，可以使用安全组等措施来控制安全性，这些安全组可根据用户锁定 VPC 的需求进行配置。</block>
@@ -6514,7 +6508,6 @@
   <block id="443f53614721177f7c44df93d426a919" category="paragraph"><block ref="443f53614721177f7c44df93d426a919" category="inline-image-macro-rx" type="image"></block></block>
   <block id="36cb4e54805ffde727ffbc809183608e" category="paragraph">使用云管理员用户从此新创建的跳转主机虚拟机登录到 vCenter 。要访问凭据，请转到 Azure 门户并导航到身份（位于私有云中的 Manage 选项下）。可以从此处复制私有云 vCenter 和 NSX-T Manager 的 URL 和用户凭据。</block>
   <block id="9620acd59a8e7ad0f318754391c40c4e" category="paragraph"><block ref="9620acd59a8e7ad0f318754391c40c4e" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="73d88630b730fa00c46338a0aef4c2d3" category="paragraph">在 Windows 虚拟机中，打开浏览器并导航到 vCenter Web 客户端 URL <block ref="2db127a24dc88638a76677b404bda5a4" category="inline-link-rx"></block> 并使用管理员用户名 * cloudadmin@vsphere.local* 并粘贴复制的密码。同样，也可以使用 Web 客户端 URL 访问 NSX-T 管理器 <block ref="bb142e18a679100de3817fcefaa25b07" category="inline-link-rx"></block> 并使用管理员用户名并粘贴复制的密码以创建新分段或修改现有分层网关。</block>
   <block id="4a6e0ba5b4d42fb0f658bdfdbbea32fc" category="admonition">对于配置的每个 SDDC ， Web 客户端 URL 都不同。</block>
   <block id="49848931415b32db238a2dd1daddf3a7" category="paragraph"><block ref="49848931415b32db238a2dd1daddf3a7" category="inline-image-macro-rx" type="image"></block></block>
   <block id="87f65f698ac6bac1ada03193e1cdabb8" category="paragraph"><block ref="87f65f698ac6bac1ada03193e1cdabb8" category="inline-image-macro-rx" type="image"></block></block>
@@ -6538,7 +6531,6 @@
   <block id="e6945148d9a888e52db99c5ebce86868" category="paragraph"><block ref="e6945148d9a888e52db99c5ebce86868" category="inline-image-macro-rx" type="image"></block></block>
   <block id="5c3eb3a1c6330fe124fc0706cbdd91df" category="paragraph">使用 CloudOwner@gve.local 用户登录到 vCenter 。要访问凭据，请转到 VMware 引擎门户，转到资源并选择相应的私有云。在基本信息部分中，单击 vCenter 登录信息（ vCenter Server ， HCX Manager ）或 NSX-T 登录信息（ NSX Manager ）的查看链接。</block>
   <block id="6f32389268763bedb9e6716b5f0973d0" category="paragraph"><block ref="6f32389268763bedb9e6716b5f0973d0" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="7ec2407381a4f65d228483b566b6907f" category="paragraph">在 Windows 虚拟机中，打开浏览器并导航到 vCenter Web 客户端 URL <block ref="d325f0342d122dda054a3ca8b0c44019" category="inline-link-rx"></block> 并使用 admin 用户名 CloudOwner@gve.local 并粘贴复制的密码。同样，也可以使用 Web 客户端 URL 访问 NSX-T 管理器 <block ref="c694eb5be92097a8fdea8cdda0ad5ea5" category="inline-link-rx"></block> 并使用管理员用户名并粘贴复制的密码以创建新分段或修改现有分层网关。</block>
   <block id="3a9cff0eb1abb119c1c264dbfff216f6" category="paragraph">要从内部网络连接到 VMware Engine 私有云，请利用云 VPN 或 Cloud Interconnect 实现适当的连接，并确保所需端口处于打开状态。有关详细步骤，请按照此步骤进行操作 <block ref="6fe8ac83365e22e24c5c8eb9edc2d548" category="inline-link-macro-rx"></block>。</block>
   <block id="b433f901707e7fd0f6d64371dfca4af9" category="paragraph"><block ref="b433f901707e7fd0f6d64371dfca4af9" category="inline-image-macro-rx" type="image"></block></block>
   <block id="989afab9e0dfcc6d523ddb1d23145834" category="paragraph"><block ref="989afab9e0dfcc6d523ddb1d23145834" category="inline-image-macro-rx" type="image"></block></block>
@@ -12208,7 +12200,6 @@
   <block id="d09520ed9b4a17ada38e70314907675f" category="inline-image-macro">对1 TB数据进行排序的时间。</block>
   <block id="55fdf8b2dd620bd73dcd37db50e0f0e5" category="paragraph"><block ref="55fdf8b2dd620bd73dcd37db50e0f0e5" category="inline-image-macro-rx" type="image"></block></block>
   <block id="c2f530d95c6332b106d86a53b41e4a36" category="inline-link">TR-3969适用于Hadoop的NetApp E系列解决方案</block>
-  <block id="8cdadd1c9614abebd1b476daba691f36" category="list-text">基线NL-SAS配置使用8个计算节点和96个NL-SAS驱动器。此配置在4分38秒内生成1 TB的数据。请参见<block ref="f08cd7da48b5d74d9eaab10199016f47" category="inline-link-rx"></block> 有关集群和存储配置的详细信息。</block>
   <block id="f895fa75cdc40f4e672bba6f7a873e25" category="list-text">使用TeraGen、SSD配置生成的数据速度比NL-SAS配置快15.66倍。此外、SSD配置使用的计算节点数为计算节点数的一半、磁盘驱动器数的一半(总共24个SSD驱动器)。根据作业完成时间、该速度几乎是NL-SAS配置的两倍。</block>
   <block id="c13c2e056adb51078f3067ba570d2780" category="section-title">性能扩展—横向扩展</block>
   <block id="beb08cca1e99e0bdbf11c74ebb62d5ea" category="paragraph">如果您需要AFF 解决方案 中Hadoop集群的更多计算能力、则可以添加具有适当数量存储控制器的数据节点。NetApp建议从每个存储控制器阵列四个数据节点开始、并根据工作负载特征将每个存储控制器的数据节点数增加到八个。</block>
@@ -12551,8 +12542,6 @@
   <block id="0b053e667d8c9baa8cbb4a5402fe69e1" category="inline-image-macro">添加HCX密钥的屏幕截图。</block>
   <block id="5d9de146e997662a8510bd175e5c593a" category="paragraph"><block ref="5d9de146e997662a8510bd175e5c593a" category="inline-image-macro-rx" type="image"></block></block>
   <block id="03fc385dd3b54c80a78341c5aa2189a3" category="admonition">部署的每个内部HCX连接器都需要一个单独的密钥。</block>
-  <block id="e8edfbded2eb5193c58170d5f9073d7d" category="inline-link"><block ref="e8edfbded2eb5193c58170d5f9073d7d" category="inline-link-rx"></block></block>
-  <block id="b6d4af6a25f46f3687120681e525d833" category="list-text">登录到内部部署的VMware HCX Manager、网址为<block ref="f9ac10929d1e2f12c4fea5c57d73b3eb" category="inline-link-rx"></block> 使用管理员凭据。</block>
   <block id="b2719f92794cef282f9cd7684baca4c4" category="admonition">使用在OVA部署期间定义的密码。</block>
   <block id="a864855f2120d5c8d4793a4866b6a7bb" category="list-text">在许可中、输入从步骤3复制的密钥、然后单击*激活*。</block>
   <block id="e5c8d88f2fa7af9f1a719e04c4b17740" category="admonition">内部HCX连接器应可访问Internet。</block>
@@ -12678,8 +12667,6 @@
   <block id="51e51578490c90a69c673d41361b0070" category="list-text">从激活密钥选项卡中、单击创建激活密钥。选择System Type作为HCX Connector、然后单击Confirm以生成密钥。复制激活密钥。</block>
   <block id="e30847f53a6e375f1da81f871c44e963" category="paragraph"><block ref="e30847f53a6e375f1da81f871c44e963" category="inline-image-macro-rx" type="image"></block></block>
   <block id="c410deb9d7b04917aff523f97f944894" category="admonition">部署在内部的每个HCX连接器都需要一个单独的密钥。</block>
-  <block id="1111fa8f5187058abdce3daca03b7e32" category="inline-link"><block ref="1111fa8f5187058abdce3daca03b7e32" category="inline-link-rx"></block></block>
-  <block id="d9432955aa7705a1f97c9e94c730fdc9" category="list-text">登录到内部部署的VMware HCX Connector、网址为<block ref="ece20a9f7dc6720cdeb30c7e7733cd22" category="inline-link-rx"></block> 使用管理员凭据。</block>
   <block id="f5f8371708aa6ae3ddb84d1f4d9b5d17" category="list-text">在许可部分中、输入从步骤2复制的激活密钥、然后单击激活。</block>
   <block id="404a7c7a7d73b870628663e76e974d09" category="admonition">要成功完成激活、内部HCX Connector必须能够访问Internet。</block>
   <block id="564ed09bba79e1d4262e37fc94987fbe" category="list-text">在数据中心位置下、提供在内部安装VMware HCX Manager所需的位置。单击 Continue （继续）。</block>
@@ -13271,7 +13258,6 @@
   <block id="e482c7b116916a3d87aba2ab1365190b" category="inline-link"><block ref="e482c7b116916a3d87aba2ab1365190b" category="inline-link-rx"></block></block>
   <block id="b916fd292760d6ae01e337bf2a132edb" category="paragraph"><block ref="b916fd292760d6ae01e337bf2a132edb" category="inline-link-rx"></block></block>
   <block id="5d0dd45a93153403c2446a809dcb5fc3" category="sidebar">使用适用于NetApp ONTAP 的Amazon FSX的AWS EC2上的SQL Server</block>
-  <block id="dc406f8350f51d99347d8d026c0435a5" category="list-text">总之、从旋转磁盘过渡到全闪存可提高性能。计算节点的数量不是瓶颈。借助NetApp全闪存存储、运行时性能可进行良好扩展。</block>
   <block id="67c8804409fa1f91b1b477b7c99d1d71" category="paragraph">作者：Chris Reno、Josh Powell和Suresh ThopPay—NetApp解决方案工程部</block>
   <block id="37242160d8bbd9ad700322c3c2499272" category="section-title">假设、前提条件和组件概述</block>
   <block id="3ea8c755cca91dd6bbeec88e906263e9" category="paragraph">在部署此解决方案 之前、请查看组件概述、部署解决方案 所需的前提条件以及在记录此解决方案 时所做的假设。</block>
@@ -13283,12 +13269,8 @@
   <block id="ed8b9b5c064b716d4c1d3f30a595410f" category="example-title">Veeam Backup &amp; amp；复制</block>
   <block id="42c8c901c8d4c00c90f9f66d69df3cdb" category="example-title">Veeam Backup &amp; amp；复制服务器</block>
   <block id="17f0b02d31e76cb9b2878b4a08f19eb5" category="example-title">Veeam Backup &amp; amp；复制配置</block>
-  <block id="3107c066ea7eeb48bd5f87594a08fd7a" category="paragraph">&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;HEAD我们对使用不同存储策略的SSD和SAS驱动器的NetApp AFF 存储控制器和E系列存储控制器上的Hadoop存储分层进行了验证。采用AF-A800的Spark集群具有四个计算辅助节点、而采用E系列的集群则具有八个。这主要是为了比较固态驱动器(SSD)与硬盘驱动器(HDD)的性能。</block>
-  <block id="dba657bcaa661bcf5461e260c00e4f06" category="paragraph">我们对使用不同存储策略的SSD和SAS驱动器的NetApp AFF 存储控制器和E系列存储控制器上的Hadoop存储分层进行了验证。采用AF-A800的Spark集群具有四个计算辅助节点、而采用E系列的集群则具有八个。我们这样做的主要目的是将固态驱动器与硬盘驱动器磁盘的性能进行比较。&gt;&gt;&gt;&gt;&gt;a51c9ddf73ca69e1120ce05edc7b0b9607b96eae.</block>
-  <block id="f14f651fb8150de92c527d88344df494" category="list-text">使用TeraSort、SSD配置的1 TB数据排序速度比NL-SAS配置快1138.36倍。此外、SSD配置使用的计算节点数为计算节点数的一半、磁盘驱动器数的一半(总共24个SSD驱动器)。因此、每个驱动器的速度大约是NL-SAS配置的三倍。&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; 标题</block>
   <block id="52be2edb04819f386804af38bd53a55d" category="list-text">这种方法正在从旋转磁盘过渡到全闪存、从而提高了性能。计算节点的数量不是瓶颈。借助NetApp的全闪存存储、运行时性能可进行良好扩展。</block>
   <block id="8cc25131075ed11b8263304fceebc5c6" category="list-text">使用NFS时、数据在功能上相当于将全部池化在一起、这样可以根据您的工作负载减少计算节点的数量。更改计算节点数量时、Apache Spark集群用户无需手动重新平衡数据。</block>
-  <block id="6ed171c4fe1ca516676ea457d91105b1" category="list-text">使用NFS、数据在功能上相当于将所有数据池在一起、这样可以根据您的工作负载减少计算节点的数量。Apache Spark集群用户在更改计算节点数量时无需手动重新平衡数据。&gt;&gt;&gt;&gt;&gt;a51c9ddf73ca69e1120ce05edc7b0b9607b96eae.</block>
   <block id="839a1261c70db1f3c149f86d56e21d15" category="cell">2023年12月1日</block>
   <block id="70542da4927194cf41c777029ebe56be" category="cell">新增博客：使用NetApp SnapCenter 和适用于NetApp ONTAP 的Amazon FSx保护SQL Server工作负载</block>
   <block id="577322186c067590a18f8891be57e7e4" category="inline-link-macro">使用NetApp SnapCenter 与适用于NetApp ONTAP 的Amazon FSX保护SQL Server工作负载</block>
@@ -21599,13 +21581,10 @@ Hyper-V可以根据Hyper-V虚拟机管理程序或虚拟机组的配置自动执
   <block id="342e5632096690277d3e5722ee63c224" category="list-text"><block ref="342e5632096690277d3e5722ee63c224" category="inline-link-macro-rx"></block></block>
   <block id="cab07c82f83bf474591d490827b37481" category="list-text"><block ref="cab07c82f83bf474591d490827b37481" category="inline-link-macro-rx"></block></block>
   <block id="c0af14dc521004dca5a45c433ff8ef24" category="list-text"><block ref="c0af14dc521004dca5a45c433ff8ef24" category="inline-link-macro-rx"></block></block>
-  <block id="f38c0eae7dd74c3d6963dda7c1e87b48" category="list-text"><block ref="f38c0eae7dd74c3d6963dda7c1e87b48" category="inline-link-macro-rx"></block></block>
-  <block id="bd805076af705a74211e2c518410533b" category="list-text"><block ref="bd805076af705a74211e2c518410533b" category="inline-link-macro-rx"></block></block>
   <block id="e2d7c02872f0e78d5beb0908cfd257be" category="list-text"><block ref="e2d7c02872f0e78d5beb0908cfd257be" category="inline-link-macro-rx"></block></block>
   <block id="a5344d90ac8a779d0db5a4b089ac28f4" category="list-text">*在VI工作负载域部署期间配置并使用NFS数据存储库作为主存储。*单击
 <block ref="e9be614079c2b0a097aa71d4a0239505" category="inline-link-macro-rx"></block> 了解部署步骤。</block>
   <block id="d2827b9caa5666aaf74887862b4f40af" category="list-text">*安装并演示如何使用ONTAP工具在VI工作负载域中配置和挂载NFS数据存储库作为补充存储。*单击 <block ref="e9be614079c2b0a097aa71d4a0239505" category="inline-link-macro-rx"></block> 了解部署步骤。</block>
-  <block id="b4401abced07d8984ff1a937e351657a" category="paragraph"><block ref="b4401abced07d8984ff1a937e351657a" category="inline-link-macro-rx"></block></block>
   <block id="e8369055ef13a084bfe862383b178d5a" category="paragraph">有关采用BlueXP的3-2-1备份策略的详细信息、请访问 <block ref="ba61c7f4bb3b8cc41ae87013f20fa70c" category="inline-link-macro-rx"></block>。</block>
   <block id="f86d5e120e63fbb452d192d4ba2b73a6" category="list-text">*使用ONTAP工具在VCF管理域中部署iSCSI数据存储库*。单击 <block ref="c3f576e9586fe41ed8952cc9cc335f9b" category="inline-link-macro-rx"></block> 了解部署步骤。</block>
   <block id="a19f436f6ff6b0334734d410252fb63e" category="list-text">*使用ONTAP工具在VI工作负载域*中部署Vvol (iSCSI)数据存储库。单击 <block ref="fe3c51d9db275846940bb0aa994aa106" category="inline-link-macro-rx"></block> 了解部署步骤。</block>
@@ -22061,4 +22040,20 @@ FSx for ONTAP文件系统中的数据通过一个称为Storage Virtual Machine (
   <block id="8b1fc9cc3a9bd71ba4bd5120729ec4fb" category="inline-link-macro">使用Amazon EC2和Amazon FSx for NetApp ONTAP iSCSI协议将VMware VM迁移到AWS</block>
   <block id="5f4802621ef8e8f6c1f9683a384f1f67" category="list-text"><block ref="5f4802621ef8e8f6c1f9683a384f1f67" category="inline-link-macro-rx"></block></block>
   <block id="243ac047c39c68289309f6f7c3be1a90" category="paragraph">在Cloud Volumes Service 中、配置的Active Directory服务器用作Kerberos服务器和LDAP服务器(从RFC2307兼容模式查找用户身份)。不支持其他Kerberos或LDAP服务器。NetApp强烈建议您在Cloud Volumes Service 中使用LDAP进行身份管理。有关NFS Kerberos在数据包捕获中的显示方式的信息、请参见链接：ncs-gcCloud volume-service-architution.html#Packet nosing/trace注意事项["数据包探查/跟踪注意事项"]</block>
+  <block id="80e1ef4b7dd27a9b739806081704abf1" category="paragraph">在 Windows 虚拟机中，打开浏览器并导航到 vCenter Web 客户端 URL <block ref="de496eb6b962d520062a4732f4d9d92a" prefix="(" category="inline-code"></block>)并使用管理员用户名* cloudadmin@vsphere.local*并粘贴复制的密码。同样，也可以使用 Web 客户端 URL 访问 NSX-T 管理器 <block ref="4a133aadb633a62c4eecf5691b0ea25d" prefix="(" category="inline-code"></block>)、然后使用管理员用户名并粘贴复制的密码以创建新区块或修改现有层网关。</block>
+  <block id="c4fc7138878e803ac78cccb45d543111" category="paragraph">在 Windows 虚拟机中，打开浏览器并导航到 vCenter Web 客户端 URL <block ref="2f06cb73f297a33408090d1ca889decc" prefix="(" category="inline-code"></block>)、并使用admin用户名作为CloudOwner@gve.local、然后粘贴复制的密码。同样，也可以使用 Web 客户端 URL 访问 NSX-T 管理器 <block ref="b11b17830e20ea5c266b8449ac98d28c" prefix="(" category="inline-code"></block>)、然后使用管理员用户名并粘贴复制的密码以创建新区块或修改现有层网关。</block>
+  <block id="73bcae9b92ddae1979b9b17ab0b4317a" category="list-text">登录到内部部署的VMware HCX Manager、网址为<block ref="7b402d14ae73b3a4f503fe53e862d492" prefix=" " category="inline-code"></block> 使用管理员凭据。</block>
+  <block id="3b8692dca95008301abe71acd5ab5441" category="list-text">登录到内部部署的VMware HCX Connector、网址为<block ref="7889df67ed5a82b379c2c08c427cea55" prefix=" " category="inline-code"></block> 使用管理员凭据。</block>
+  <block id="44f715b0ff9dfb4cfaf394fa02572f80" category="paragraph"><block ref="44f715b0ff9dfb4cfaf394fa02572f80" category="inline-link-macro-rx"></block></block>
+  <block id="d0beea075f268d49a3750c8fab5a571e" category="list-text"><block ref="d0beea075f268d49a3750c8fab5a571e" category="inline-link-macro-rx"></block></block>
+  <block id="6412c325db4880a3b8693c1be6ed2ba7" category="list-text"><block ref="6412c325db4880a3b8693c1be6ed2ba7" category="inline-link-macro-rx"></block></block>
+  <block id="f74fe76a7ed72e25b4167d6575164571" category="paragraph"><block ref="f74fe76a7ed72e25b4167d6575164571" category="inline-link-macro-rx"></block></block>
+  <block id="c2398745386edbb0221cc4ee496ff79f" category="paragraph">我们对使用不同存储策略的SSD和SAS驱动器的NetApp AFF 存储控制器和E系列存储控制器上的Hadoop存储分层进行了验证。采用AF-A800的Spark集群具有四个计算辅助节点、而采用E系列的集群则具有八个。这主要是为了比较固态驱动器(SSD)与硬盘驱动器(HDD)的性能。</block>
+  <block id="bd9ad8221382748a4f008c3af02731bd" category="list-text">基线NL-SAS配置使用8个计算节点和96个NL-SAS驱动器。此配置在4分38秒内生成1 TB的数据。  请参见<block ref="264d8d379e3a34fdac32f9057509bf65" category="inline-link-rx"></block> 有关集群和存储配置的详细信息。</block>
+  <block id="459f180fc71a8f8bb773d3c879314e39" category="list-text">使用TeraSort、SSD配置的1 TB数据排序速度比NL-SAS配置快1138.36倍。此外、SSD配置使用的计算节点数为计算节点数的一半、磁盘驱动器数的一半(总共24个SSD驱动器)。因此、每个驱动器的速度大约是NL-SAS配置的三倍。</block>
+  <block id="c1be279a5ffe6e04d3a8edc40312fda8" category="paragraph"><block ref="d9cfd242f362fae9e5f2fac887a85bbf" category="inline-link-macro-rx"></block> 是一个端到端框架，用于构建对话式 AI 服务。它包括以下经过 GPU 优化的服务：</block>
+  <block id="335a47b1f668e55d9ddce9eb6da81b9e" category="paragraph"><block ref="c0e2512ff2bcfd3d37fc7640f7a458ec" category="inline-link-macro-rx"></block> 是一款开源 Python 工具包，用于使用易于使用的应用程序编程接口（ API ）构建，培训和微调 GPU 加速的一流对话 AI 模型。Nemo 使用 NVIDIA GPU 中的 Tensor 核心运行混合精度计算，并可轻松扩展到多个 GPU ，以提供尽可能高的训练性能。Nemo 用于为视频呼叫记录，智能视频助理以及医疗保健，金融，零售和电信等不同行业的自动呼叫中心支持等实时应用程序构建模型。</block>
+  <block id="cc1652ccebcfad8616956eb4a33c97dd" category="paragraph">我们使用 NVIDIA Jarvis 构建了一个虚拟零售助理，可接受语音或文本输入并回答有关天气，关注点和库存定价的问题。对话式 AI 系统能够记住对话流，例如，如果用户未指定天气或感兴趣点的位置，可以询问跟进问题。系统还可以识别诸如 " 泰国食品 " 或 " 笔记本电脑内存 " 等复杂实体。 它了解自然语言问题，例如 " 下星期在洛杉矶会下雨吗？ " 有关零售虚拟助手的演示，请参见 <block ref="0900808c9c02e43e248b7c45d7b5ffd2" category="inline-link-macro-rx"></block>。</block>
+  <block id="da26dad8e6701a1678f6461e4f8f8295" category="list-text">* 项目配额。 * 每个项目都与一个 GPU 配额相关联，可以同时为此项目分配 GPU 配额。这是一个有保障的配额，因为使用此项目的研究人员无论在集群中处于何种状态，都可以获得这一数量的 GPU 。通常，项目分配总和应等于集群中的 GPU 数量。除此之外，此项目的用户还可以收到超配额。只要未使用 GPU ，使用此项目的研究人员就可以获得更多 GPU 。我们在中演示了超额配额测试场景和公平考虑事项 <block ref="fdc629b29ea94e672f68b28bf3b661b4" category="inline-link-macro-rx"></block>， <block ref="26be59a535445b1fffeef12f5e70f3e6" category="inline-link-macro-rx"></block>，和 <block ref="2783e1454358e180d4e2876ef9492c64" category="inline-link-macro-rx"></block>。</block>
+  <block id="8fac3d4d08a90e564071e26d1fe16274" category="paragraph">容器成功启动后、执行<block ref="cfd2ddb98fc396c2e8a48e9ad76dbb58" prefix=" " category="inline-code"></block> 以查看<block ref="8d6518907bf83f7ae243a42bc2d2daba" prefix=" " category="inline-code"></block> 访问Jupyter笔记本。此 URL 由入口端点，作业名称和端口组成。</block>
 </blocks>
