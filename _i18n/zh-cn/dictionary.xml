@@ -22057,4 +22057,62 @@ FSx for ONTAP文件系统中的数据通过一个称为Storage Virtual Machine (
   <block id="c1856f13b6ce4dd1f710cf08138e0c51" category="paragraph">我们使用了<block ref="0f17ea1334fb20ed83c3ab03268616d7" category="inline-link-rx"></block> 库自<block ref="22825786ea861b373c2a5fdda9f62d81" category="inline-link-rx"></block> 从Transformer (Bert)型号加载经过预先训练的管道和双向编码器表示、包括<block ref="1a3a0057856cc0bfa7cb2c9343eb2415" category="inline-link-rx"></block> 和<block ref="ac723dc3fc44f63057a74e935ae9db52" category="inline-link-rx"></block>、大规模执行令牌化、命名实体识别、模型训练、拟合和情感分析。SPARK NLP是生产中唯一一个开源NLP库、可提供最先进的互感器、例如Bert、B俊 尔特、Electra、XNet、DistillBeert、 Roberta、DeBerta、XLM- Roberta、Longformerk、ELMOA、 通用句子编码器、Google t5、MarianMT和GPt2。该库不仅适用于Python和R、还适用于通过本机扩展Apache Spark实现规模化的JVM生态系统(Java、Scala和Kotlin)。</block>
   <block id="da5f12c7703592cd87c6fcc0c3562a22" category="list-text"><block ref="da5f12c7703592cd87c6fcc0c3562a22" category="inline-link-macro-rx"></block></block>
   <block id="2a49c11f412e3027bc302e5faaeb9604" category="paragraph">本文档演示了创建新SVM并指定IP地址信息以为NVMe/TCP流量创建多个SVM的过程。要向现有SVM添加新的SVM、请参见 <block ref="ea8d663b2747339ef53e044e31dd9c10" category="inline-link-macro-rx"></block>。</block>
+  <block id="4ca202b495a0290fe77bbd07dd46251c" category="cell">2024年6月5日</block>
+  <block id="c51bcfe943e07da3eb4d39a3966afcbe" category="cell">全新TR-4不同：《在采用NFS的NetApp C系列上简化的自动化Oracle部署》</block>
+  <block id="aa3338034e5f9917e68fbffbd38a9bde" category="summary">本解决方案简要介绍了如何在NetApp AFF C系列中将Oracle自动化部署为使用NFS协议的主数据库存储。Oracle数据库部署为启用了DNFS的容器数据库。</block>
+  <block id="11f3eb227b0ca48a26b66d16bfe3ff21" category="doc">TR-4不同：《在采用NFS的NetApp C系列上简化的自动化Oracle部署》</block>
+  <block id="4f790c1b28cfb8d37dc8b4d4bc135c13" category="paragraph">NetApp AFF C系列是一款容量闪存存储、可使统一存储更易于访问且经济实惠。对于许多第1层或第2层Oracle数据库工作负载来说、从性能角度来看、这种配置足以满足要求。AFF C系列系统由NetApp ONTAP®数据管理软件提供支持，可提供行业领先的效率、卓越的灵活性、同类最佳的数据服务和云集成，帮助您扩展IT基础架构、简化数据管理并降低存储成本和电耗。</block>
+  <block id="e5a05a44ceadf873c0a817cdfcf109c3" category="paragraph">本文档演示了如何使用自动化通过NFS挂载在NetApp C系列中简化Oracle数据库的部署。Oracle数据库部署在启用了Oracle DNFS协议的容器数据库(CDB)和可插拔数据库(PDB)配置中、以提高性能。此外、解决方案还提供了在C系列存储控制器上使用NFS协议设置存储网络和Storage Virtual Machine (SVM)的最佳实践。解决方案还包括有关使用NetApp SnapCenter UI工具快速备份、还原和克隆Oracle数据库的信息。</block>
+  <block id="f0769fc3ef89fce80ed36eb7dcf99eda" category="list-text">在NetApp C系列存储控制器上自动部署Oracle容器数据库。</block>
+  <block id="8f0161a618bc32589831b9f8bf70f6db" category="list-text">使用SnapCenter UI工具在C系列上保护和克隆Oracle数据库。</block>
+  <block id="c9b1fa3fdccdd94576d677ff3ddce437" category="list-text">希望在NetApp C系列上部署Oracle的BA。</block>
+  <block id="1e2c69e839117d54a65f89aa1060c538" category="list-text">希望在NetApp C系列上测试Oracle工作负载的数据库解决方案架构师。</block>
+  <block id="8723f9a870d9a4198ce59cc711b5f4fa" category="list-text">希望在NetApp C系列上部署和管理Oracle数据库的存储管理员。</block>
+  <block id="c6eb7a53365fcf51f5713c3c85e14f49" category="list-text">希望在NetApp C系列上建立Oracle数据库的应用程序所有者。</block>
+  <block id="fb2c46c282239d9c1f284fea93c79a3b" category="cell">NetApp C系列C400</block>
+  <block id="e0843363fa72773de427718dd92c0fc0" category="cell">ONTAP版本9.13.1P3</block>
+  <block id="32c395a2b06b9086d86d4dfe1bb80ffa" category="cell">两个磁盘架/24个磁盘、容量为278 TiB</block>
+  <block id="643264b15909ae5e928729543d262592" category="cell">用于数据库服务器的VM</block>
+  <block id="60484db4cc2fdb040058f86b98997415" category="cell">4个vCPU、16 GiB RAM</block>
+  <block id="e7ef03a019ea637cdf77b74e359ddc3d" category="cell">两个Linux VM实例、用于并发部署</block>
+  <block id="f5d8703c01271912567d6313da8dfc46" category="cell">适用于SnapCenter的VM</block>
+  <block id="a7883280fee68e09e925d0887123d673" category="cell">一个Windows VM实例</block>
+  <block id="31d042536c6a7e341bd99c1fca5d1c46" category="cell">2022 DataCenter x64第2代</block>
+  <block id="3721fcf1dad7c5c271fac2eb4f6aae73" category="cell">/u01、/u02、/u03 NFS挂载到C400卷上</block>
+  <block id="4373e4a9fb75a8ec4b82860cd3ca1909" category="list-text">*DNFS配置。*通过使用DNFS (自Oracle 11g起提供)、在DB VM上运行的Oracle数据库可以比本机NFS客户端驱动更多的I/O。默认情况下、Oracle自动化部署会在NFSv3上配置DNFS。</block>
+  <block id="ffcff30c73fd29ead74df7e471009447" category="list-text">*在C400控制器对上进行负载平衡。*将Oracle数据库卷均匀地放置在C400控制器节点上、以平衡工作负载。控制器1上的DB1、控制器2上的DB2等。将数据库卷挂载到其本地lf地址。</block>
+  <block id="9b5267ed46c15534d45129b35cae0c9b" category="paragraph">以下各节介绍了自动化Oracle 19c部署的分步过程、以及部署后Oracle数据库保护和克隆的相关信息。</block>
+  <block id="5ab526c2d8a23c39c3d68b1080ca3e89" category="inline-link">详细指南—AFF C400</block>
+  <block id="92b608ca9ce1795976c4a2bf228d2099" category="list-text">NetApp C系列存储控制器对会进行机架安装和堆栈、并安装和配置最新版本的ONTAP操作系统。如有必要、请参见本设置指南：<block ref="e88d834ba7a3375860b38af3a1d379dd" category="inline-link-rx"></block></block>
+  <block id="9ed0a0ec8afe137ee719d175c28ddf02" category="list-text">配置两个Linux VM作为Oracle数据库服务器。有关环境设置的详细信息、请参见上一节中的架构图。</block>
+  <block id="cfdfdf87e328d2403ba6f06ad54b7b47" category="paragraph">在Ansens可能 控制器和数据库VM之间启用ssh公共/专用密钥身份验证。</block>
+  <block id="5df121953eda8c31a1747dc7be05ccd5" category="list-text">从NetApp控制器管理员用户主目录中、克隆适用于NFS的Oracle部署自动化工具包的副本。</block>
+  <block id="6ee479787e15beb58f7ac04e73265440" category="list-text">Stage Follows Oracle 19c installation files on DB VM /tmp/archive directory with 777 permission</block>
+  <block id="3d3d0c1886de65e7e8cfba6499948bed" category="section-title">在适用于Oracle的C系列上配置网络和SVM</block>
+  <block id="93ce386a5a93aad444dfe4d874d861b3" category="paragraph">本部分部署指南演示了使用ONTAP System Manager UI为采用NFS协议的Oracle工作负载在C系列控制器上设置网络和Storage Virtual Machine (SVM)的最佳实践。</block>
+  <block id="e42382129810446d30b7f0e35e7ba6f2" category="list-text">登录到ONTAP系统管理器、查看在首次安装ONTAP集群后、是否已为广播域配置了正确分配给每个域的以太网端口。通常、集群应有广播域、管理应有广播域、数据等工作负载应有广播域。</block>
+  <block id="d1fa27de8d8338309cef73f4f051dfa1" category="image-alt">此图提供了c系列控制器配置的屏幕截图</block>
+  <block id="27272e370d688e62f1762f4ecfa62012" category="list-text">在"network - Ethernet Ports"(网络-以太网端口<block ref="2a7ef566e4611d5e0d698db86ff278cf" prefix=" " category="inline-code"></block> 创建LACP链路聚合组端口a0a、以便在聚合组端口中的成员端口之间实现负载平衡和故障转移。C400控制器上提供了4个数据端口—e0e、e0f、e0g和e0h。</block>
+  <block id="6d0bcaf4fdfec037d3208a91ad3123bf" category="list-text">选择组中的以太网端口、<block ref="4d6b33d75644552dcc843a5fd248e03f" prefix=" " category="inline-code"></block> 对于模式、和<block ref="60aaf44d4b562252c04db7f98497e9aa" prefix=" " category="inline-code"></block> 用于负载分布。</block>
+  <block id="0b27139ac86fb7bb1b7f301bd32f8905" category="list-text">验证已创建的LACP端口a0a和广播域<block ref="f6068daa29dbb05a7ead1e3b5a48bbee" prefix=" " category="inline-code"></block> 正在LACP端口上运行。</block>
+  <block id="8b776a52e34291c3467b7d12cb3cf707" category="list-text">from<block ref="9c20ed40366c2dc673b52748abbb3e86" prefix=" " category="inline-code"></block>下、单击<block ref="9881f82f0dd89588831f9d1682bd5492" prefix=" " category="inline-code"></block> 在每个控制器节点上为采用NFS协议的Oracle工作负载添加VLAN。</block>
+  <block id="77524ec9652ad1c3885999303318b3dd" category="list-text">通过ssh从集群管理IP登录到C系列控制器、以验证是否已正确配置网络故障转移组。ONTAP会自动创建和管理故障转移组。</block>
+  <block id="51be646d68b430236b17aabb10aedcb9" category="list-text">from<block ref="c52ccdb94b7474376c104927d53c3fc8" prefix=" " category="inline-code"></block>下、单击+Add为Oracle创建SVM。</block>
+  <block id="d48e145ef1e843250dd732d196ff81d4" category="list-text">为Oracle SVM命名、请选中<block ref="d708b594e7e0a7aa1a646a9cd21f15b9" prefix=" " category="inline-code"></block> 和<block ref="9cefa5e8e8937e8e15a5f3684fe03d50" prefix=" " category="inline-code"></block>。</block>
+  <block id="2c148577c00c1a76fece9914b4688ad7" category="list-text">添加NFS导出策略<block ref="7a1920d61156abc05a60135aefe8bc67" prefix=" " category="inline-code"></block> 规则。</block>
+  <block id="a0cdf45facf4fbfefd052d813dfab0f4" category="list-text">在中<block ref="d4e6248d7cc29f3bee70e788b0851aef" prefix=" " category="inline-code"></block>下，在每个节点上填写NFS lf地址的IP地址。</block>
+  <block id="f17d25a0a013067c4d6fb8e7e9acd6cd" category="list-text">验证适用于Oracle的SVM是否已启动/正在运行、以及NFS Lifs状态是否为活动。</block>
+  <block id="b087c50a3fa783cca91b82d2fb3098fc" category="list-text">from<block ref="f479f39e9dfbfd094f968fbbb1351938" prefix=" " category="inline-code"></block> 用于为Oracle数据库添加NFS卷的选项卡。</block>
+  <block id="8cee929dfc24fff28ebb05f7a1be1bc2" category="list-text">为卷命名、分配容量和性能级别。</block>
+  <block id="8d92a821034527d62c75eea067c9a5fe" category="list-text">在中<block ref="acfc4449202469cc3ef4bcbaffd6f5bc" prefix=" " category="inline-code"></block>下，选择从上一步创建的默认策略。取消选中<block ref="371536d7caaef32502ae7f42d2d07165" prefix=" " category="inline-code"></block> 因为我们更喜欢使用SnapCenter创建应用程序一致的快照。</block>
+  <block id="2662721ab316ab57543a07b1669e77da" category="list-text">为每个数据库服务器创建三个数据库卷：SERVER_NAME_u01 -二进制、SERVER_NAME_u02 -数据、SERVER_NAME_u03 -日志。</block>
+  <block id="6dc4458eccb6a98c7ca05ff4abbfa962" category="admonition">数据库卷命名约定应严格遵循上述格式、以确保自动化正常工作。</block>
+  <block id="d97f7e118529cec7713e262bd2a5bdc4" category="paragraph">至此、Oracle的C系列控制器配置完成。</block>
+  <block id="d6aab67e6d8a14ee71a66aabc8604134" category="paragraph">运行此操作手册后、登录到Oracle数据库服务器VM、以验证是否已安装和配置Oracle以及是否已成功创建容器数据库。以下是对DB VM ora_01或ora_02进行Oracle数据库验证的示例。</block>
+  <block id="5f9a2385583887b50c78acc681e30f8e" category="paragraph">NetApp建议使用SnapCenter UI工具来管理C系列中部署的Oracle数据库。请参阅TR-4979 <block ref="7dfdde8eaf0a7ebc5020dbcf1cd85894" category="inline-link-macro-rx"></block> 部分。<block ref="d372b360dda93a1ed98b047b474a8d14" prefix=" " category="inline-code"></block> 有关设置SnapCenter以及执行数据库备份、还原和克隆工作流的详细信息。</block>
+  <block id="8ade3a35a3bf0557e08d932870f18d3c" category="inline-link-macro"><block ref="8ade3a35a3bf0557e08d932870f18d3c" category="inline-link-rx"></block></block>
+  <block id="6fcb2d3f55aeed812951dcfdcdc97d56" category="paragraph"><block ref="6fcb2d3f55aeed812951dcfdcdc97d56" category="inline-link-macro-rx"></block></block>
+  <block id="e11e0746e73787ce707ce03083984c7d" category="inline-link-macro"><block ref="e11e0746e73787ce707ce03083984c7d" category="inline-link-rx"></block></block>
+  <block id="6d9567a77964c24a91ff8fd09e0b7376" category="paragraph"><block ref="6d9567a77964c24a91ff8fd09e0b7376" category="inline-link-macro-rx"></block></block>
+  <block id="a2dbdc551f64fb11d4fa44270223db37" category="sidebar">在采用NFS的NetApp C系列上简化的自动化Oracle部署</block>
 </blocks>

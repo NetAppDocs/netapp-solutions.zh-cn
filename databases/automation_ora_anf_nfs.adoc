@@ -217,10 +217,10 @@ Ans可 通过预定义的参数执行数据库安装和配置任务。对于此O
 +
 [source, shell]
 ----
-# Enter Oracle servers names to be deployed one by one, follow by each Oracle server public IP address, and ssh private key of azureuser for the server.
+# Enter Oracle servers names to be deployed one by one, follow by each Oracle server public IP address, and ssh private key of admin user for the server.
 [oracle]
-ora-01 ansible_host=10.61.180.21 ansible_ssh_private_key_file=ora-01.pem
-ora-02 ansible_host=10.61.180.23 ansible_ssh_private_key_file=ora-02.pem
+ora_01 ansible_host=10.61.180.21 ansible_ssh_private_key_file=ora_01.pem
+ora_02 ansible_host=10.61.180.23 ansible_ssh_private_key_file=ora_02.pem
 
 ----
 . 全局 `vars/vars.yml` 文件配置
@@ -229,21 +229,19 @@ ora-02 ansible_host=10.61.180.23 ansible_ssh_private_key_file=ora-02.pem
 ----
 ######################################################################
 ###### Oracle 19c deployment user configuration variables       ######
-###### Consolidate all variables from ANF, linux and oracle     ######
+###### Consolidate all variables from ONTAP, linux and oracle   ######
 ######################################################################
 
 ###########################################
-### ANF env specific config variables   ###
+### ONTAP env specific config variables ###
 ###########################################
 
-# Prerequisite to create three volumes in NetApp storage pool from cloud dashboard with following naming convention:
-# db_hostname-u01 - Oracle binary
-# db_hostname-u02 - Oracle data
-# db_hostname-u03 - Oracle redo
+# Prerequisite to create three volumes in NetApp ONTAP storage from System Manager or cloud dashboard with following naming convention:
+# db_hostname_u01 - Oracle binary
+# db_hostname_u02 - Oracle data
+# db_hostname_u03 - Oracle redo
 # It is important to strictly follow the name convention or the automation will fail.
 
-# NFS lif ip address to access database volumes in ANF storage pool (retrievable from cloud dashboard)
-nfs_lif: 172.30.136.68
 
 ###########################################
 ### Linux env specific config variables ###
@@ -275,6 +273,9 @@ oracle_sid: NTAP1
 
 # Enter database shared memory size or SGA. CDB is created with SGA at 75% of memory_limit, MB. The grand total of SGA should not exceed 75% available RAM on node.
 memory_limit: 8192
+
+# Local NFS lif ip address to access database volumes
+nfs_lif: 172.30.136.68
 
 ----
 
