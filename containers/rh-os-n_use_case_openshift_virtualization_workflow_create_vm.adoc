@@ -22,23 +22,44 @@ summary: 借助 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化
 
 VM 是有状态部署，需要使用卷来托管操作系统和数据。使用 CNV 时，由于 VM 作为 Pod 运行，因此 VM 由 NetApp ONTAP 上通过 Trident 托管的 PV 提供支持。这些卷作为磁盘连接并存储整个文件系统，包括虚拟机的启动源。
 
-image::redhat_openshift_image52.jpg[创建 VM 架构]
+image::redhat_openshift_image52.png[创建 VM 架构]
 
-要在 OpenShift 集群上创建虚拟机，请完成以下步骤：
+要在OpenShift集群上快速创建虚拟机、请完成以下步骤：
 
-. 导航到工作负载 > 虚拟化 > 虚拟机，然后单击创建 > 使用向导。
-. 选择所需的操作系统，然后单击下一步。
-. 如果选定操作系统未配置启动源，则必须对其进行配置。对于启动源，选择是要从 URL 还是从注册表导入操作系统映像，并提供相应的详细信息。展开高级并选择 Trident 支持的 StorageClass 。然后单击下一步。
-+
-image::redhat_openshift_image53.JPG[为 VM 创建启动源]
+. 导航到"Virtualation"(虚拟化)>"Virtual Machines"(虚拟机)、然后单击"
+. 从模板中选择。
+. 选择可用于启动源的所需操作系统。
+. 选中创建后启动虚拟机复选框。
+. 单击快速创建虚拟机。
 
-. 如果选定操作系统已配置启动源，则可以跳过上一步。
-. 在 Review and Create 窗格中，选择要在其中创建 VM 的项目并提供 VM 详细信息。确保选择了要克隆的启动源，并使用为选定操作系统分配的相应 PVC 从 CD-ROM 启动。
-+
-image::redhat_openshift_image54.JPG[创建虚拟机]
 
-. 如果要自定义虚拟机，请单击 "Customize Virtual Machine" 并修改所需的参数。
+此时将创建并启动虚拟机，使其进入*running"状态。它会使用默认存储类自动为启动磁盘创建PVC和相应的PV。为了能够在将来实时迁移虚拟机、您必须确保用于磁盘的存储类可以支持rwx卷。这是实时迁移的一项要求。对于使用相应存储类创建的卷、ONTAP NAS和ONTAP SAN (适用于iSCSI和NVMe/TCP协议的卷模式块)可以支持rwx访问模式。
+
+要在集群上配置ONONTAP SAN存储类、请参见 link:https://docs.netapp.com/us-en/netapp-solutions/containers/rh-os-n_use_case_openshift_virtualization_workflow_vm_migration_using_mtv.html["有关将VM从VMware迁移到OpenShift虚拟化的章节"]。
+
+
+NOTE: 您可以将ONTAP NAS或iSCSI设置为集群的默认存储类。单击Quick create VirtualMachine将使用默认存储类为虚拟机的可启动根磁盘创建PVC和PV。如果默认存储类不是ONTAP NAS或ONTAP SAN、则可以选择磁盘的存储类、方法是选择自定义虚拟机>自定义虚拟机参数>磁盘、然后编辑该磁盘以使用所需的存储类。
+
+通常、在配置VM磁盘时、块访问模式优于文件系统。
+
+要在选择操作系统模板后自定义虚拟机创建、请单击Customize VirtualMachine、而不是Quick create。
+
+. 如果选定操作系统配置了启动源，则可以单击*Customize VirtualMachine parameters*。
+. 如果选定操作系统未配置启动源，则必须对其进行配置。您可以查看中所示过程的详细信息 link:https://docs.openshift.com/container-platform/4.14/virt/virtual_machines/creating_vms_custom/virt-creating-vms-from-custom-images-overview.html["文档。"]。
+. 配置启动磁盘后，可以单击*Customize VirtualMachine parameters*。
+. 您可以从此页面上的选项卡自定义虚拟机。例如、单击*磁盘*选项卡，然后单击*添加磁盘*向虚拟机添加另一个磁盘。
 . 单击 Create Virtual Machine 以创建虚拟机；此操作将在后台生成相应的 Pod 。
 
 
-从 URL 或注册表为模板或操作系统配置启动源时，它会在 `OpenShift-virtual-os-images` 项目中创建一个 PVC ，并将 KVM 子映像下载到 PVC 。您必须确保模板 PVC 具有足够的已配置空间，以容纳相应操作系统的 KVM 子映像。然后，使用任何项目中的相应模板创建这些 PVC 时，这些 PVC 会克隆并作为根磁盘附加到虚拟机中。
+
+NOTE: 通过URL或注册表为模板或操作系统配置启动源后、它会在中创建一个PVC `openshift-virtualization-os-images` 将KVM子系统映像投影并下载到PVC。您必须确保模板 PVC 具有足够的已配置空间，以容纳相应操作系统的 KVM 子映像。然后、在任何项目中使用相应模板创建这些PVC时、这些PVC会被克隆并作为根磁盘连接到虚拟机。
+
+image:rh-os-n_use_case_vm_create_1.png[""]
+
+image:rh-os-n_use_case_vm_create_2.png[""]
+
+image:rh-os-n_use_case_vm_create_3.png[""]
+
+image:rh-os-n_use_case_vm_create_4.png[""]
+
+image:rh-os-n_use_case_vm_create_5.png[""]

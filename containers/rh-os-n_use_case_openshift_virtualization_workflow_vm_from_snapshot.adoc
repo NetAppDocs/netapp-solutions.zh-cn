@@ -29,7 +29,7 @@ summary: 借助 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化
 * 管理员可以使用 VolumeSnapshotClass 为 VolumeSnapshot 指定不同的属性。通过此选项，您可以为从同一卷创建的不同快照设置不同的属性。
 
 
-image::redhat_openshift_image60.jpg[Snapshot 架构中的 VM]
+image::redhat_openshift_image60.png[Snapshot 架构中的 VM]
 
 要创建虚拟机的 Snapshot ，请完成以下步骤：
 
@@ -55,7 +55,7 @@ image::redhat_openshift_image62.JPG[创建快照]
 +
 image::redhat_openshift_image63.JPG[将 Snapshot 还原到新的 PVC]
 
-. 接下来，使用此 PVC 创建一个新虚拟机。导航到工作负载 > 虚拟化 > 虚拟机，然后单击创建 > 使用 YAML 。
+. 接下来，使用此 PVC 创建一个新虚拟机。导航到"Virtualation"(虚拟化)>"Virtual Machines"(虚拟机)、然后单击"Creation"(创建)>"With
 . 在规范 > 模板 > 规范 > 卷部分中，指定从 Snapshot 创建的新 PVC ，而不是从容器磁盘创建的新 PVC 。根据您的要求提供新虚拟机的所有其他详细信息。
 +
 [source, cli]

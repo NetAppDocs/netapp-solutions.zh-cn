@@ -237,15 +237,6 @@
   <block id="2ececa2c251a851a85e976daae558c81" category="image-alt">观察集群</block>
   <block id="4e42a1e911325b5048e50f7b5ea73d1f" category="section-title">VM 实时迁移</block>
   <block id="09e113cd46b4487f140ee07899ea3359" category="image-alt">VM 实时迁移架构</block>
-  <block id="660b7fa756d01df7c4338afb9050abb1" category="paragraph">要创建绑定到具有共享 ReadWriteMany 访问权限的 PVC 的 VM ，请执行以下操作：</block>
-  <block id="416d6e9d0df33a74dd38603be60453c1" category="list-text">选择所需的操作系统，然后单击下一步。假设选定操作系统已配置了启动源。</block>
-  <block id="e1b595d3037639bdea165dde4b1f3906" category="list-text">在 Review and Create 窗格中，选择要在其中创建 VM 的项目并提供 VM 详细信息。确保选择了要克隆的启动源，并使用为选定操作系统分配的相应 PVC 从 CD-ROM 启动。</block>
-  <block id="998a8df469c318f9cd606b44664cea5d" category="list-text">单击自定义虚拟机，然后单击存储。</block>
-  <block id="ef44ba6bf4a3e677b41b361628554b88" category="image-alt">使磁盘 rwx 可访问</block>
-  <block id="2ae6b586f76075c7d71faff7ba9d2a41" category="list-text">单击 Review 并确认，然后单击 Create Virtual Machine 。</block>
-  <block id="18c830e61a7a92c60804118ef362933c" category="paragraph">要手动将虚拟机迁移到 OpenShift 集群中的另一个节点，请完成以下步骤。</block>
-  <block id="cc58a226305ad2362de0317c1fd8261b" category="list-text">对于要迁移的虚拟机，单击省略号，然后单击迁移虚拟机。</block>
-  <block id="b5839595a4132807edfc858d9f6d90ad" category="list-text">当消息弹出时，单击迁移进行确认。</block>
   <block id="d0f501bd9588700bc91fe10b7d3f761a" category="admonition">如果 evictionStrategy 设置为 LiveMigrate ，则在将原始节点置于维护模式时， OpenShift 集群中的 VM 实例会自动迁移到另一节点。</block>
   <block id="122aacda8785e42ca8fd7bd6ebce84f8" category="summary">VMware vSphere 是一个虚拟化平台，用于集中管理 ESXi 虚拟机管理程序上运行的大量虚拟化服务器和网络。</block>
   <block id="68bc8529d7c57946fe13e6b3399ee287" category="inline-link">VMware vSphere 网站</block>
@@ -501,12 +492,7 @@
   <block id="f913f3c8b073438c23eb36c9cf8237ac" category="section-title">创建虚拟机</block>
   <block id="71dd19ec5a595517b0b57750ad1a6568" category="paragraph">VM 是有状态部署，需要使用卷来托管操作系统和数据。使用 CNV 时，由于 VM 作为 Pod 运行，因此 VM 由 NetApp ONTAP 上通过 Trident 托管的 PV 提供支持。这些卷作为磁盘连接并存储整个文件系统，包括虚拟机的启动源。</block>
   <block id="e01cb9126428f7417091e42362dcb6cb" category="image-alt">创建 VM 架构</block>
-  <block id="51f24796fdd958a7a4ab9fb9a1086c9a" category="paragraph">要在 OpenShift 集群上创建虚拟机，请完成以下步骤：</block>
-  <block id="9b992d4161d9af3e77a9c4e35f9d7652" category="image-alt">为 VM 创建启动源</block>
-  <block id="fe46fcd3bb2eadd55896f6a4e9af5b05" category="list-text">如果选定操作系统已配置启动源，则可以跳过上一步。</block>
-  <block id="c119644bb97e69cc47555d48ff5ead07" category="list-text">如果要自定义虚拟机，请单击 "Customize Virtual Machine" 并修改所需的参数。</block>
   <block id="8b2c60e63de0927cca5bd9401cdd4647" category="list-text">单击 Create Virtual Machine 以创建虚拟机；此操作将在后台生成相应的 Pod 。</block>
-  <block id="ba7734e1db4ae3c0a25330f01ced054d" category="paragraph">从 URL 或注册表为模板或操作系统配置启动源时，它会在 `OpenShift-virtual-os-images` 项目中创建一个 PVC ，并将 KVM 子映像下载到 PVC 。您必须确保模板 PVC 具有足够的已配置空间，以容纳相应操作系统的 KVM 子映像。然后，使用任何项目中的相应模板创建这些 PVC 时，这些 PVC 会克隆并作为根磁盘附加到虚拟机中。</block>
   <block id="4d4480c77d84881f85763c51fb0a0ebb" category="doc">视频和演示：采用 NetApp 的 Red Hat OpenShift</block>
   <block id="4bb047f8c530785002e490ef17fa725e" category="doc">从何处查找追加信息</block>
   <block id="92637d8d513510f7c1f5bfac6e1cce9b" category="paragraph">要启用 Trident 与 NetApp ONTAP 存储系统的集成，您必须创建一个后端，以便与存储系统进行通信。</block>
@@ -3234,7 +3220,6 @@
   <block id="234ce2b9b198f2acf2193cbd06120ff2" category="admonition">如果要在 BGP 模式下配置 MetalLB ，请跳过上述步骤 6 并按照 MetalLB 文档中的操作步骤进行操作 <block ref="fed7545a9b4a70bb7835cc8b07492cba" category="inline-link-macro-rx"></block>。</block>
   <block id="dc7ec0964c3d39892e26bbe1593a79e2" category="list-text">安装在 OpenShift 集群上的 Astra Trident</block>
   <block id="e909486a42368b2659780687c3b4a31b" category="list-text">一种在 OpenShift 集群上配置的存储类，其中使用 Astra Trident 作为配置程序</block>
-  <block id="7df52e0f8b2cb2af1e107fde51d06945" category="paragraph">实时迁移是指在不停机的情况下将 VM 实例从 OpenShift 集群中的一个节点迁移到另一个节点的过程。要在 OpenShift 集群中执行实时迁移， VM 必须绑定到具有共享 ReadWriteMany 访问模式的 PVC 。在启用了 NFS 协议的 NetApp ONTAP 集群上配置了 SVM 的 Astra Trident 后端支持对 PVC 的共享 ReadWriteMany 访问。因此，对于从启用了 NFS 的 SVM 中由 Trident 配置的 StorageClasses 请求具有 PVC 的 VM ，可以在不停机的情况下进行迁移。</block>
   <block id="a0c55f3c40b8bb2d3e26f8d11ca73cbc" category="summary">本参考文档对通过安装程序配置的基础架构（ IPI ）在 NetApp 验证的多种不同数据中心环境中部署的 Red Hat OpenShift 解决方案进行了部署验证。同时，还详细介绍了如何利用 Astra Trident 存储编排程序来管理永久性存储，从而与 NetApp 存储系统实现存储集成。最后，我们还探讨并记录了许多解决方案验证和实际使用情形。</block>
   <block id="a2ac5b8f3de7c17418af38c828121a15" category="list-text">与 NetApp 存储和适用于 Kubernetes 的开源存储编排程序 Astra Trident 结合使用时，重点介绍 Red Hat OpenShift 的功能的实际配置和使用情形。</block>
   <block id="d3d8eb53a347d6ffc9fb157d9ac8398b" category="paragraph">采用 NetApp 解决方案的 Red Hat OpenShift 由以下主要组件组成：</block>
@@ -3632,7 +3617,6 @@
   <block id="8b6327b93d10679b1f412976af9d3bba" category="summary">Azure NetApp Files ，速写和 dask 可加快和简化大规模 ML 处理和培训的部署，并与 Docker 和 Kubernetes 等业务流程工具集成。通过统一端到端数据管道，此解决方案可降低许多高级计算工作负载固有的延迟和复杂性，从而有效地弥补开发和运营之间的差距。</block>
   <block id="5dc14d36063086387d2eb7cf012544aa" category="list-text">创建 VolumeSnapshotClass ，然后使用该类创建 VolumeSnapshot 。导航到 "Storage"&gt;"VolumeSnapshotClasss" ，然后单击 "Create VolumeSnapshotClass" 。</block>
   <block id="3ffbaa72c8e63f0ec3ced08d8ebf9f72" category="list-text">首先，将 Snapshot 还原到新的 PVC 中。导航到存储 &gt; 卷快照，单击要还原的快照旁边的省略号，然后单击还原为新 PVC 。</block>
-  <block id="8a4d1acf8df9931b5c42b3253f943d79" category="list-text">接下来，使用此 PVC 创建一个新虚拟机。导航到工作负载 &gt; 虚拟化 &gt; 虚拟机，然后单击创建 &gt; 使用 YAML 。</block>
   <block id="91b9a57ab88a6942f692f9f393549f6e" category="list-text">在规范 &gt; 模板 &gt; 规范 &gt; 卷部分中，指定从 Snapshot 创建的新 PVC ，而不是从容器磁盘创建的新 PVC 。根据您的要求提供新虚拟机的所有其他详细信息。</block>
   <block id="78c43863df60a7808264e8659cfa6b54" category="paragraph">Astra Trident 是一款开源且完全受支持的存储编排程序，适用于容器和 Kubernetes 分发版，包括 Red Hat OpenShift 。Trident 可与包括 NetApp ONTAP 和 Element 存储系统在内的整个 NetApp 存储产品组合配合使用，并且还支持 NFS 和 iSCSI 连接。Trident 允许最终用户从其 NetApp 存储系统配置和管理存储，而无需存储管理员干预，从而加快了 DevOps 工作流的速度。</block>
   <block id="d719c733d0cd8753c048c8c3a025fd51" category="paragraph">MetalLB 是一种安装在 OpenShift 集群上的自托管网络负载平衡器，可用于在未在云提供程序上运行的集群中创建类型为负载平衡器的 OpenShift 服务。MetalLB 可协同工作以支持负载平衡器服务的两个主要功能是地址分配和外部公告。</block>
@@ -3655,9 +3639,6 @@
   <block id="c9904a9276a489fc238c999d2ddd633f" category="list-text">所有集群中的所有 Pod 和工作负载都会根据各种筛选器进行监控和排序。单击 Pod 以查看相应数据。</block>
   <block id="7cd1c61051d3647bc47d839e0efee222" category="list-text">集群中的所有节点都会根据各种数据点进行监控和分析。单击节点可更深入地了解相应的详细信息。</block>
   <block id="4e7f54a0ebc5cd69209a17181d477e4c" category="list-text">系统会根据不同的集群资源和参数监控和组织所有集群。单击集群可查看集群详细信息。</block>
-  <block id="842f7d4793f116332f5b12b648dfd539" category="list-text">导航到工作负载 &gt; 虚拟化 &gt; 虚拟机，然后单击创建 &gt; 使用向导。</block>
-  <block id="ae024d48dbfaaf4badad7bf9c812a98f" category="list-text">单击 rootdisk 旁边的省略号，并确保已选择使用 Trident 配置的 storageclass 。展开高级，然后为访问模式选择共享访问（ rwx ）。然后单击保存。</block>
-  <block id="289f346dbeb0185de2648a24955ca887" category="list-text">导航到工作负载 &gt; 虚拟化 &gt; 虚拟机。</block>
   <block id="a542faac65568ba146d392d835d7fb33" category="list-text">* VMware vCenter Server* 。 VMware vCenter Server 可通过一个控制台统一管理所有主机和 VM ，并聚合对集群，主机和 VM 的性能监控。</block>
   <block id="46b35ead34118cb2c50327c71e4aa640" category="list-text">* 分布式资源计划程序（ DRS ）。 * 可以配置 VMware vSphere 集群，以便对其托管的 VM 的资源需求进行负载平衡。具有资源管理的 VM 可以热迁移到集群中的其他节点，以确保有足够的可用资源。</block>
   <block id="5c6371faa8d72dee8337811921707a4b" category="paragraph">NetApp 解决方案上的 Red Hat OpenShift 使用两个数据交换机提供 25 Gbps 的主数据连接。它还使用两个额外的管理交换机，这些交换机以 1 Gbps 的速度提供连接，用于存储节点的带内管理以及 IPMI 功能的带外管理。OCP 使用 VMware vSphere 上的 VM 逻辑网络进行集群管理。本节介绍解决方案中使用的每个虚拟网段的布局和用途，并概述了部署解决方案的前提条件。</block>
@@ -3735,8 +3716,6 @@
   <block id="b07934b6023389a7e3e183b45e3b7448" category="list-text">此时将显示 Jenkins 欢迎页面。由于我们使用的是 Maven 内部版本，因此请先完成 Maven 安装。导航到 Manage Jenkins &gt; Global Tool Configuration ，然后在 Maven 子标题中单击 Add Maven 。输入您选择的名称，并确保已选中自动安装选项。单击保存。</block>
   <block id="8fd32305bf380bf893ef2407eae75f5d" category="list-text">现在，您可以创建一个管道来演示 CI/CD 工作流。在主页上，单击左侧菜单中的创建新作业或新建项目。</block>
   <block id="cd55d787cacfb25983e0a24b58ba6d48" category="list-text">选择管道选项卡。从试用样本管道下拉菜单中，选择 Github + Maven 。代码将自动填充。单击保存。</block>
-  <block id="eaeef52618dbbd29ca52633c93abcbb4" category="list-text">选择所需的操作系统，然后单击下一步。</block>
-  <block id="6befc3ce0d5cbd575434f0d5e1ec1125" category="list-text">如果选定操作系统未配置启动源，则必须对其进行配置。对于启动源，选择是要从 URL 还是从注册表导入操作系统映像，并提供相应的详细信息。展开高级并选择 Trident 支持的 StorageClass 。然后单击下一步。</block>
   <block id="3d210170d7f07fe3c907e8ac619f003a" category="doc">NetApp Astra 控制中心概述</block>
   <block id="9b0d9ae1197ded2c7d52147e5056475d" category="paragraph">NetApp Astra 控制中心为部署在内部环境中并采用 NetApp 数据保护技术的有状态 Kubernetes 工作负载提供丰富的存储和应用程序感知型数据管理服务。</block>
   <block id="f0358bd53d50b55aa0509189dd381ca9" category="paragraph">NetApp Astra 控制中心可以安装在 Red Hat OpenShift 集群上，该集群已部署 Astra Trident 存储编排程序并为其配置存储类和存储后端到 NetApp ONTAP 存储系统。</block>
@@ -19040,7 +19019,6 @@ NetApp MetroCluster是一款高可用性和灾难恢复解决方案、可在两�
   <block id="168b03d713c83578e3c90be8e0a76a8e" category="list-text">格式化LUN时、请确保分区的分配单元大小设置为64K</block>
   <block id="c018e127ecd02f5fde489e4444402e79" category="section-title">使用适用于虚拟化的迁移工具包将VM从VMware迁移到OpenShift虚拟化</block>
   <block id="ed28eb7490c30b746183ce03d45078bb" category="paragraph">在本节中、我们将了解如何使用虚拟化迁移工具包(Migration Toolkit for Virtualization、Mtv)将虚拟机从VMware迁移到在OpenShift容器平台上运行并使用Asta Trident与NetApp ONTAP存储集成的OpenShift虚拟化。</block>
-  <block id="4c3578ac96eaf28e931991a1ad4f0966" category="paragraph">以下视频演示了如何使用ONTAP SAN将RHEL VM从VMware迁移到OpenShift虚拟化以实现永久性存储。</block>
   <block id="1a77203f1aab519882f2e846b9d9b719" category="video-title">使用Red Hat VtTM通过NetApp ONTAP存储将VM迁移到OpenShift虚拟化</block>
   <block id="ea79c776da84047793859d6582eb03d9" category="paragraph">下图简要展示了将VM从VMware迁移到Red Hat OpenShift虚拟化的过程。</block>
   <block id="5545f87dec77c5fda3d45b6aedaa1d06" category="paragraph"><block ref="5545f87dec77c5fda3d45b6aedaa1d06" category="inline-image-macro-rx" type="image"></block></block>
@@ -21922,19 +21900,16 @@ FSx for ONTAP文件系统中的数据通过一个称为Storage Virtual Machine (
   <block id="5f8bb3c8dda2d3aead02890ea8c54e3e" category="paragraph">本节概述如何在OpenShift虚拟化中为VM创建按需备份。</block>
   <block id="0366cc0ad13ff79b1787f5d794b5a6ad" category="paragraph">本节详细介绍如何使用Google Cloud Console在本地将应用程序部署到Anthos GKE集群。</block>
   <block id="716db73b9b512b81613a0539acfb2f78" category="paragraph">本节概述如何在OpenShift虚拟化中使用Velero删除VM的备份和恢复。</block>
-  <block id="d854e83c586f171ce5925c24dbc91644" category="paragraph">本节介绍如何在使用Red Hat OpenShift虚拟化的集群之间迁移虚拟机。</block>
   <block id="6a8477e4438b5e9239f0df0ce6503edf" category="paragraph">本节概述了OpenShift API for Data Protection (OADP) Operator的安装。</block>
   <block id="0df0b9492f8a43bd74cc574fa9b018e2" category="paragraph">本节详细介绍了如何使用NetApp ONTAP部署Red Hat OpenShift虚拟化。</block>
   <block id="cb5a90af80107b22fd8d5c8ebe2ed939" category="doc">适用于KubeNet的高级集群管理：采用NetApp的Red Hat OpenShift—概述</block>
   <block id="ccebd2b00b79fb903b47d4dd5898e280" category="paragraph">本节介绍如何使用Red Hat OpenShift虚拟化创建虚拟机。</block>
   <block id="c360342251e97ba868145c15dd090ae2" category="paragraph">本节概述如何使用NetApp FlexClone技术快速部署解决方案。</block>
-  <block id="f2d7546c64788094655ddf4ccd49d894" category="paragraph">本节介绍如何使用Red Hat OpenShift虚拟化从Snapshot创建虚拟机。</block>
   <block id="adc9a3850ff097e16ba0d7af785cd748" category="paragraph">本节介绍如何从备份还原虚拟机。</block>
   <block id="2edab6f378191e9c4bdd5225d7830871" category="paragraph">以下是使用NetApp在Red Hat OpenShift上配置多租户的前提条件。</block>
   <block id="07cdcd1b6b38fb166c7ad633fa4f4dd2" category="paragraph">本节介绍如何使用Red Hat OpenShift虚拟化克隆虚拟机。</block>
   <block id="7a36196d5d2ad9629de93bc81a4eb554" category="paragraph">本节讨论在Red Hat OpenShift虚拟化中使用Cloud Insights监控VM的情况。</block>
   <block id="fad73d4839dc21dc3d330b3940ed763f" category="paragraph">本节介绍了在使用NetApp的Red Hat OpenShift上对Kubednet进行高级集群管理的内容。</block>
-  <block id="8983ac005474481fb644c025b3d507f8" category="paragraph">本节介绍如何使用Red Hat OpenShift虚拟化迁移工具包在集群之间迁移虚拟机。</block>
   <block id="43926c4aa8574b96d6891adb8ddf6ab9" category="paragraph">对于自动配置、请使用以下脚本： <block ref="d9559d06f0afa5b213d78afb48b783e7" category="inline-xref-macro-rx"></block>。</block>
   <block id="115f63e379dcca74d5e673c7fd2c54fd" category="paragraph">本文概述了使用NetApp ONTAP AI、NetApp AI控制平台、NetApp Cloud Volumes软件和Iguazio数据科学平台的MLRun管道的解决方案。</block>
   <block id="65fe25204f25a29d6784b93a3361bbd8" category="paragraph">本节介绍NetApp的引导程序数据库解决方案。</block>
@@ -22115,4 +22090,42 @@ FSx for ONTAP文件系统中的数据通过一个称为Storage Virtual Machine (
   <block id="e11e0746e73787ce707ce03083984c7d" category="inline-link-macro"><block ref="e11e0746e73787ce707ce03083984c7d" category="inline-link-rx"></block></block>
   <block id="6d9567a77964c24a91ff8fd09e0b7376" category="paragraph"><block ref="6d9567a77964c24a91ff8fd09e0b7376" category="inline-link-macro-rx"></block></block>
   <block id="a2dbdc551f64fb11d4fa44270223db37" category="sidebar">在采用NFS的NetApp C系列上简化的自动化Oracle部署</block>
+  <block id="75cbc40f1670483bce053e5ab7dbd0bd" category="paragraph">本节介绍如何在OpenShift虚拟化中的集群节点之间迁移虚拟机。</block>
+  <block id="f8120e8a51eed2969076540a3e419852" category="paragraph">实时迁移是指在不停机的情况下将 VM 实例从 OpenShift 集群中的一个节点迁移到另一个节点的过程。要在 OpenShift 集群中执行实时迁移， VM 必须绑定到具有共享 ReadWriteMany 访问模式的 PVC 。使用ONTAP -NAS驱动程序配置的Astra三叉式后端支持对文件系统协议NFS和SMB使用rwx访问模式。请参见文档 <block ref="287ec3137b37ecd8cb34c2bf9c5faf46" category="inline-link-macro-rx"></block>。使用ONTAP SAN驱动程序配置的Astra Trident后端支持对iSCSI和NVMe/TCP协议的块卷模式使用rwx访问模式。请参见文档 <block ref="ac5b3da800276f31c41eaface19fe225" category="inline-link-macro-rx"></block>。</block>
+  <block id="b7af80d51db7ad8a314488684c6b9418" category="paragraph">因此、要成功完成实时迁移、必须使用ONTAP NAS或ONTAP SAN (卷模式：块)存储类为VM配置具有PV的磁盘(启动磁盘和其他热插拔磁盘)。创建PVC时、通过支持NFS或iSCSI的SVM、可以创建ONTAP卷。</block>
+  <block id="606dd2663bd6e4d65bbd8c4d5e09f0ee" category="paragraph">要对先前创建且处于running状态的VM执行实时迁移、请执行以下步骤：</block>
+  <block id="0b11efc3ad2d62e512ce6bcc3d79df9b" category="list-text">选择要实时迁移的虚拟机。</block>
+  <block id="d19a3467ff23747c187a5ed338d5b5a2" category="list-text">单击*Configuration*选项卡。</block>
+  <block id="f9fa84b5a132c121a6fc42f25c4fd0d6" category="list-text">确保使用可支持rwx访问模式的存储类创建虚拟机的所有磁盘。</block>
+  <block id="3efec7aa2d927f15306c4cd23b412cb4" category="list-text">单击右上角的*Actions*，然后选择*Migrate*。</block>
+  <block id="11997c538f5e8901e765ad55d3a9a1fd" category="list-text">要了解迁移的进展，请转到左侧菜单中的"虚拟化"&gt;"概述"，然后单击*Migrations*选项卡。
+虚拟机迁移将从*待定*过渡到*计划*再过渡到*成功*</block>
+  <block id="fc5147db4c0d64782866f7d13142b60c" category="image-alt">启动VM实时迁移</block>
+  <block id="b1e05f95fcee66798249d66e3101cb35" category="image-alt">VM实时迁移成功</block>
+  <block id="8b4419c217c1c238d76544c851e3f5c1" category="paragraph">本节介绍如何使用Red Hat OpenShift虚拟化迁移工具包将虚拟机从VMware迁移到OpenShift集群。</block>
+  <block id="3ed283f9db21241588275deac5e5b157" category="paragraph">以下视频演示了如何使用ONTAP SAN存储类将RHEL VM从VMware迁移到OpenShift虚拟化以实现永久性存储。</block>
+  <block id="5cc2d8a39c40eb28f4f5a1dde6e45d87" category="paragraph">要在OpenShift集群上快速创建虚拟机、请完成以下步骤：</block>
+  <block id="810b74237f09ee04a26ce74bd05ecaa0" category="list-text">导航到"Virtualation"(虚拟化)&gt;"Virtual Machines"(虚拟机)、然后单击"</block>
+  <block id="e4f33ae800d632f39f93dab29a5c4999" category="list-text">从模板中选择。</block>
+  <block id="7b25dfd6778e3247f46972cd9f152183" category="list-text">选择可用于启动源的所需操作系统。</block>
+  <block id="486f2fe5ca588e0c49ac3c0a8aa85fad" category="list-text">选中创建后启动虚拟机复选框。</block>
+  <block id="6d687356d69f72cb00b803bc4d4b2d5e" category="list-text">单击快速创建虚拟机。</block>
+  <block id="3ed11f1323f73ea0a9f4a3a18d8dd185" category="paragraph">此时将创建并启动虚拟机，使其进入*running"状态。它会使用默认存储类自动为启动磁盘创建PVC和相应的PV。为了能够在将来实时迁移虚拟机、您必须确保用于磁盘的存储类可以支持rwx卷。这是实时迁移的一项要求。对于使用相应存储类创建的卷、ONTAP NAS和ONTAP SAN (适用于iSCSI和NVMe/TCP协议的卷模式块)可以支持rwx访问模式。</block>
+  <block id="7163dd7831603426be3d962ad82f40e2" category="inline-link-macro">有关将VM从VMware迁移到OpenShift虚拟化的章节</block>
+  <block id="407bc9cd7925ed75fec8e43960f74b38" category="paragraph">要在集群上配置ONONTAP SAN存储类、请参见 <block ref="ae4aa9fbf267b2f2df76200cc07caaa4" category="inline-link-macro-rx"></block>。</block>
+  <block id="ad942e05ad905363eae2077a4462a366" category="admonition">您可以将ONTAP NAS或iSCSI设置为集群的默认存储类。单击Quick create VirtualMachine将使用默认存储类为虚拟机的可启动根磁盘创建PVC和PV。如果默认存储类不是ONTAP NAS或ONTAP SAN、则可以选择磁盘的存储类、方法是选择自定义虚拟机&gt;自定义虚拟机参数&gt;磁盘、然后编辑该磁盘以使用所需的存储类。</block>
+  <block id="a55c7942e3aa2735368d84a12e378ad6" category="paragraph">通常、在配置VM磁盘时、块访问模式优于文件系统。</block>
+  <block id="65945ccfe754ed5fe268dd17bc82c07d" category="paragraph">要在选择操作系统模板后自定义虚拟机创建、请单击Customize VirtualMachine、而不是Quick create。</block>
+  <block id="1cf1bf9a14c390aa794e49171bcad90e" category="list-text">如果选定操作系统配置了启动源，则可以单击*Customize VirtualMachine parameters*。</block>
+  <block id="3bf76f3ee2660917080c40816f19ef76" category="list-text">如果选定操作系统未配置启动源，则必须对其进行配置。您可以查看中所示过程的详细信息 <block ref="a59e83ab638c430e54abf166ab77ec1f" category="inline-link-macro-rx"></block>。</block>
+  <block id="6f29b07402139523e4d9dff414e578c1" category="list-text">配置启动磁盘后，可以单击*Customize VirtualMachine parameters*。</block>
+  <block id="dc8e8e194d1f6e45521e140382f3acdb" category="list-text">您可以从此页面上的选项卡自定义虚拟机。例如、单击*磁盘*选项卡，然后单击*添加磁盘*向虚拟机添加另一个磁盘。</block>
+  <block id="f53566a8296c52a0559713d17ee263ca" category="admonition">通过URL或注册表为模板或操作系统配置启动源后、它会在中创建一个PVC<block ref="1f9b99deb0fa755d5d42404160cfd87f" prefix=" " category="inline-code"></block> 将KVM子系统映像投影并下载到PVC。您必须确保模板 PVC 具有足够的已配置空间，以容纳相应操作系统的 KVM 子映像。然后、在任何项目中使用相应模板创建这些PVC时、这些PVC会被克隆并作为根磁盘连接到虚拟机。</block>
+  <block id="8e7f5b4a1ba749df876bf216b5316625" category="paragraph"><block ref="8e7f5b4a1ba749df876bf216b5316625" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="50391e817be0a27f82437f33af317715" category="paragraph"><block ref="50391e817be0a27f82437f33af317715" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="03733a7559bc1aa513f4edbb44f37d0f" category="paragraph"><block ref="03733a7559bc1aa513f4edbb44f37d0f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="014f8eb2daacf648b360abb8bdfe1d67" category="paragraph"><block ref="014f8eb2daacf648b360abb8bdfe1d67" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1231a20566f9dea07b73fe3eece52055" category="paragraph"><block ref="1231a20566f9dea07b73fe3eece52055" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a940b131751f6887f130fd9886e8ee51" category="paragraph">本节介绍如何使用Red Hat OpenShift虚拟化从Snapshot创建虚拟机。</block>
+  <block id="7f590382ffe351c4dfd34f07fac37a90" category="list-text">接下来，使用此 PVC 创建一个新虚拟机。导航到"Virtualation"(虚拟化)&gt;"Virtual Machines"(虚拟机)、然后单击"Creation"(创建)&gt;"With</block>
 </blocks>
