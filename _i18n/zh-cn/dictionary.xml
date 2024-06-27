@@ -7114,7 +7114,6 @@
   <block id="6ac39037a7efa2708d15c0e0e20fb188" category="sidebar">适用于自主驾驶工作负载的 StorageGRID 数据湖</block>
   <block id="eeb4980c2a89f07abf1a0b927066b23c" category="sidebar">借助 E 系列和适用于 AI 的 BeeGFS 实现数据移动</block>
   <block id="13f985aafb32ac9e387186e5a437f96e" category="sidebar">采用数据缓存的混合云 AI</block>
-  <block id="ac82c7a9ef13f3b604553ccfe1a5bd76" category="sidebar">支持和管理</block>
   <block id="447e8e0102d91009c125adb678cd7fb5" category="sidebar">与 Iguazio 的 MLRun 管道</block>
   <block id="71e6eb0dc5951ca93effe179d000f534" category="sidebar">情感分析</block>
   <block id="cfff43e76ea0e95d290a279bdb279a2e" category="sidebar">点击率预测— Azure 中的分布式培训</block>
@@ -21629,7 +21628,6 @@ Hyper-V可以根据Hyper-V虚拟机管理程序或虚拟机组的配置自动执
   <block id="c28760bef881f92a64315a8807386c1f" category="sidebar">OpenShift虚拟化安装</block>
   <block id="ad1326ca45d3d3b8d5e058c081e86bc0" category="sidebar">虚拟机创建</block>
   <block id="5d47d171ddb98655f94d130f8a461223" category="sidebar">从VMware迁移VM</block>
-  <block id="93a0cf7ceeb3f15539e82c064e667391" category="sidebar">虚拟机实时迁移</block>
   <block id="d99004a3890ab25e3117adbc82dba593" category="sidebar">从Snapshot创建虚拟机</block>
   <block id="86195c656772ab41d1dc57348d58fc4b" category="sidebar">OADP安装</block>
   <block id="0f101c6d040d3f667eafe69b01b1ab9c" category="sidebar">使用Velero进行备份</block>
@@ -22193,4 +22191,109 @@ NVIDIA DGX SuperPOD：NetApp EF600和BeeGFS
   <block id="2beda258ff23e5518f73297a56a48cff" category="sidebar">采用NetApp EF系列的NVIDIA SuperPOD</block>
   <block id="75433d9fe655198100c7a515c909e53c" category="sidebar">采用NVIDIA DGX SuperPOD的NetApp AIPod</block>
   <block id="2df96ebc1fde1185462c2aa3cb96e5e5" category="sidebar">采用NetApp EF系列的NVIDIA DGX SuperPOD</block>
+  <block id="8b8d78ae09b88ce318cbd7d3df490c71" category="summary">采用NVIDIA Nemo和NetApp的企业级RAG—简介</block>
+  <block id="b4d234640c06b80be4b6d5b0da5f0db9" category="doc">借助NetApp进行企业级恢复增强型新一代(RAG)</block>
+  <block id="a5ab535a4858ccdab6b7fa4f67994ac1" category="paragraph">NetApp 公司 Mike Oglesby
+Sathish Thyagarajan、NetApp</block>
+  <block id="fc3aaa928b8603eb41b0b3dc01f519b3" category="paragraph">生成型AI正在改变企业搜索体验。它使公司的数据用户能够发现驻留在任何位置、内部或公共云中的数据资产。开发人员是否使用生成性AI生成代码来设计现代Web应用程序、 或者、为了使用真实物理和运动数据创建动画、企业正在使用生成型AI和经过预先训练的大型语言模型(LLM)来构建变革性AI应用程序、设计新的产品功能、提高工程效率并增强客户体验。</block>
+  <block id="1660d92b382a8da1077b19626560541c" category="paragraph">但是、仅凭生成性AI和LLM无法保证业务价值。为了产生切实的业务影响、生成型AI必须利用精心设计的数据实现高质量的业务成果。因此、大型企业正在转向一种新兴的基本框架、称为检索增强生成(RAG)。在此解决方案中、我们为希望构建RAG管道的组织提供了一个架构。此解决方案可通过专用RAG管道检索上下文信息、帮助您从私有数据中发掘价值。</block>
+  <block id="7186149eb5121810e960514af049fef3" category="summary">使用NetApp的Enterprise RAG—使用Nemo NetApp的收件人来吸出现有的Nemo数据</block>
+  <block id="94656594bde6d2306cae74ee15b40f52" category="doc">使用Nemo恢复器加热现有NetApp数据</block>
+  <block id="57839fd849bc69f5f34a0333535b2e77" category="paragraph">Nemo嵌入微服务是NVIDIA Nemo检索器的一部分、可用于将数据导入RAG矢量存储/知识库。本节介绍从现有NetApp数据源中加载数据所需执行的任务。</block>
+  <block id="d17dafcd718a3e5ead412aff17738181" category="section-title">使用NVIDIA示例聊天程序加载数据</block>
+  <block id="752c4552c916a2d7a553ef08eb6eb78e" category="inline-link-macro">演示视频。</block>
+  <block id="dcac2ee61489ace044188c4f1d692958" category="paragraph">您可以使用NVIDIA Enterprise RAG LLM Operator部署的示例聊天机器人Web应用程序来加载现有文件。本节概述了使用聊天机器人Web应用程序登录现有文件的过程 <block ref="ef01a66b734b1206a65d20e953b60d85" category="inline-link-macro-rx"></block></block>
+  <block id="11acea10fb7918180eb5ab1554f6ec93" category="section-title">以编程方式导取数据</block>
+  <block id="d30cab1dcf28fed0525fa4dea2b259d1" category="paragraph">您可以使用NVIDIA Enterprise RAG LLM Operator部署的RAG查询服务器以编程方式加载大量数据。</block>
+  <block id="3fab0b9556a09f6c423beeedc729408a" category="paragraph">RAG查询服务器的API会通过Kubernetes服务自动公开、如以下命令的输出所示。</block>
+  <block id="3e33e7b29b62e9687be5335591f8e262" category="paragraph">默认情况下、服务类型为ClusterIP、因此API端点只能从Kubbernetes集群内部进行访问。可以通过修改来更改服务类型<block ref="6cf954e9c02078d4494cc47bb95344a7" prefix=" " category="inline-code"></block> 字段(例如helmpipeline_app.yaml)。</block>
+  <block id="f39909e449ffa70b1f36df95eae0083c" category="paragraph">API服务器Swagger架构可从访问<block ref="ca2a06187662f2a6eca0d407873a381e" prefix=" " category="inline-code"></block>。</block>
+  <block id="bb8a4c8fed2c1795306675f0677a30c3" category="summary">采用NetApp的企业级RAG—Nemo微服务概述</block>
+  <block id="aed61ccf69c85ead28b700c3468efcbb" category="doc">NVIDIA Nemo微服务与NetApp概述</block>
+  <block id="b0e31a68547a78d825089120b6b27a80" category="paragraph">NVIDIA Nemo是一款端到端平台、用于构建和自定义企业级生成型AI模型、这些模型可以部署在任何位置、跨云和数据中心。Nemo提供的微服务可简化大规模生成型AI开发和部署流程、使企业能够将LLM连接到其企业数据源。</block>
+  <block id="ff3fea30fbe6ba72971a863205820417" category="paragraph">我们已将NetApp的智能数据基础架构与NVIDIA Nemo Microservices配对、以便在企业中为RAG创建解决方案。此解决方案旨在为集成到组织现有环境中的完整RAG工作流奠定基础。</block>
+  <block id="3de0775c3f18ece7873f6a5b290a217a" category="image-alt">企业级增强型(RAG)</block>
+  <block id="3ba104b3b018d793716ed518b9074e6e" category="summary">采用NetApp的企业级RAG—架构</block>
+  <block id="1b93e79f74dc490f27232cfdba644f84" category="paragraph">企业级RAG部署包括三个主要组件：</block>
+  <block id="8a9a1795a27e7c425d6efbda9bda07a9" category="list-text">大型语言模型(LLM)</block>
+  <block id="f71cf7ed3e51ca8e35ad47194d6cf81b" category="list-text">矢量存储/知识库</block>
+  <block id="df15285ac5ff23a8876c0628fc180bbe" category="list-text">私有源数据</block>
+  <block id="97cd6e3d3a8af0c801a8890026b48381" category="section-title">由NetApp提供支持的企业级恢复增强型版本(RAG)</block>
+  <block id="407dd027faf195967043591935dde29b" category="paragraph">本解决方案概述了在实施NetApp智能数据基础架构的同时实施这些组件的选项、以便构建功能全面的RAG部署。此解决方案包含以下选项：</block>
+  <block id="0c01d45d745ed415da9e92bceabf76e3" category="inline-link-macro">采用NetApp的NVIDIA Nemo微服务</block>
+  <block id="5a81d2078d26a0630afa5161ee08d900" category="list-text"><block ref="5a81d2078d26a0630afa5161ee08d900" category="inline-link-macro-rx"></block></block>
+  <block id="0d1428b0bfe4c5ac8c438668a31f6243" category="summary">采用NetApp的企业级RAG—RAG知识库数据保护</block>
+  <block id="fc1bd0062f47fce76f3c57d992c49e31" category="doc">RAG知识库数据保护</block>
+  <block id="47963491ccb326e13229368f66d47411" category="paragraph">随着RAG应用程序成为重要组织工作流的关键组成部分、保护支持这些RAG应用程序的向量存储/知识库至关重要。备份向量数据库并实施灾难恢复工作流非常重要、就像对任何其他数据库一样。</block>
+  <block id="0d393a4fde8a7bde603874bc5c5e89b2" category="section-title">使用NetApp技术保护您的Nemo Rag知识库</block>
+  <block id="92d0a1aef2134a70d5c0f0279dc22ec6" category="inline-link-macro">Snapshot 副本</block>
+  <block id="4ec795aa60f8aa060117f10fc126d3b1" category="inline-link-macro">SnapMirror灾难恢复</block>
+  <block id="05d27063d429bafd0366094c1d9cfa87" category="inline-link-macro">NetApp矢量数据库解决方案文档。</block>
+  <block id="9dc706e61d5c77e937034c99e50d0daa" category="paragraph">NetApp技术、例如 <block ref="28c3c5a2e21a3950ba6f5018cf029447" category="inline-link-macro-rx"></block> 和 <block ref="fdefdac94ad7a799621cb213a2ab4116" category="inline-link-macro-rx"></block>，可用于保护您的引导程序存储/知识库。有关矢量数据库数据保护的详细信息、请参阅 <block ref="35907a8baf5a5ec6dec64deb28ee403e" category="inline-link-macro-rx"></block></block>
+  <block id="29913aede9adbe2a62b27b6f9d403818" category="summary">采用NetApp的企业级RAG—Nemo微服务部署</block>
+  <block id="4cc9a287ea2141c706a2e30d69f8b3de" category="doc">Nemo Microservices部署</block>
+  <block id="02e225482b9004d203e6d7332d1d3e6a" category="inline-link-macro">NVIDIA Enterprise RAG LLM Operator</block>
+  <block id="0b0e92e0ebf5d19c6e8dde3377121d56" category="paragraph">本节介绍在NetApp存储中部署NVIDIA Nemo微服务所需执行的任务。NVIDIA Nemo Microservices将使用部署 <block ref="23b8d8dda804054aaf815e2b3a58ac09" category="inline-link-macro-rx"></block>。</block>
+  <block id="1ab395455d6eec5b7f9c7aa3b2633c96" category="inline-link-macro">RAG LLM Operator文档。</block>
+  <block id="97ddd4b7963485b3fbadb153c7bb38fa" category="list-text">您已有一个正在运行的Kubarnetes集群、并且正在运行NVIDIA Enterprise RAG LLM Operator支持的Kubarnetes版本。有关支持的Kubernetes版本列表、请参阅 <block ref="6468dd6f9a43ce7f4f715e8805c4337c" category="inline-link-macro-rx"></block> 此Kubornetes集群可以位于内部环境、也可以位于云中。</block>
+  <block id="ab3e0fb52bf0097b7e144270f4d162b8" category="list-text">您的Kubarnetes集群至少包含NVIDIA Enterprise RAG LLM Operator支持的三个GPU。有关受支持GPU的列表、请参阅 <block ref="6468dd6f9a43ce7f4f715e8805c4337c" category="inline-link-macro-rx"></block></block>
+  <block id="bc4c6f932c43a37e6bb224df4f86018a" category="list-text">您已在Kubbernetes集群中安装并配置NetApp Asta三端存储。有关Asta三项功能的更多详细信息、请参见 <block ref="2b8a155fc083396b96b18cee0ba5eab0" category="inline-link-macro-rx"></block>。此解决方案可与任何物理存储设备、软件定义的实例或云服务兼容、这些设备均受NetApp支持。</block>
+  <block id="ccb19f338f5bed6a9e7c7ae51200cb3c" category="section-title">使用NVIDIA Enterprise RAG LLM Operator部署NVIDIA Nemo Microservices</block>
+  <block id="b7de979ac55de39c44f54800dc9363e0" category="list-text">如果您的Kubnetes集群中尚未安装NVIDIA GPU Operator、请按照中所述的说明安装NVIDIA GPU Operator <block ref="290242b7432f725747a3cb15f2e8debb" category="inline-link-macro-rx"></block></block>
+  <block id="e4705ccd9fb8e891a6b2d25294588dc0" category="list-text">按照中所述的说明安装NVIDIA Enterprise RAG LLM Operator <block ref="fc6832f399da69a301c3214c0c4c47e8" category="inline-link-macro-rx"></block></block>
+  <block id="a8be5875b131497ad56e3e6bde9a7e99" category="list-text">按照中所述的说明、使用NVIDIA Enterprise RAG LLM Operator创建RAG管道 <block ref="3d5b276683ce4e7a3a7ccd195ed1d6fd" category="inline-link-macro-rx"></block></block>
+  <block id="bb774996e66e94f151e000432e49fc9a" category="list-text">指定StorageClass时、请务必指定一个利用Astra Trdent的StorageClass。</block>
+  <block id="a41c99eb0f2f279081a70774ced4a74d" category="list-text">默认情况下、RAG管道将部署一个新的pgvector数据库、用作RAG部署的向量存储/知识库。如果要改用现有的pgvector或Milvus实例、请按照中概述的说明进行操作 <block ref="9f6101c710837846e1fee3b4dd5ee736" category="inline-link-macro-rx"></block> 有关使用NetApp运行引导程序数据库的更多信息，请参阅 <block ref="35907a8baf5a5ec6dec64deb28ee403e" category="inline-link-macro-rx"></block></block>
+  <block id="299657c4e6594b5865e5219cd8982102" category="summary">NetApp企业版RAG—概念和组件</block>
+  <block id="b983edfcaa49085078e23816f60c720b" category="section-title">生成性AI</block>
+  <block id="683a95f867fe897cba793cfdb4915497" category="paragraph">生成型AI等AI系统通过对大型数据集应用无监督或自我监督的机器学习来设计。与预测特定数据集的传统机器学习模型不同、生成型AI模型能够根据用户提示生成新内容、例如文本、代码、图像、视频或音频。因此、生成型AI系统的功能也会根据所用数据的形式或类型进行分类。它们可以是一模式或多模式。单模系统只需要一种类型的输入(例如纯文本或纯图像)、而多模式系统可以采用多种类型的输入(例如文本、图像和音频)、同时了解并生成不同形式的内容。本质上、生成性AI正在改变企业创建内容、生成新设计概念以及从现有数据中提取价值的方式。</block>
+  <block id="9ef4472b02eb87bd9baf9dc335cf7fc5" category="section-title">大型语言模型(LLM)</block>
+  <block id="4ebbb0deffbe47ed8a796b47c9da748d" category="paragraph">LLM是针对海量数据预先训练的深度学习模型、除其他任务外、它还可以识别和生成文本。LLM最初是主要侧重于语言的生成性AI的子集、但是随着多模式LLM的不断涌现、这种区别正在逐渐消失。LLM中的底层变压器引入了一种不同于RNN或CNN的新型网络架构。它有一组神经网络、由编码器和解码器组成、可帮助从一系列文本中提取含义并了解单词之间的关系。LLM可以响应自然的人类语言、并使用数据分析来处理问题解答非结构化问题。但是、LLM的可靠性只能与它们所加载的数据一样、因此容易产生因垃圾输入-垃圾输出带来的挑战而产生的幻想。如果向LLM提供虚假信息、则在用户查询时、他们可能会生成不准确的输出、只是为了适应其所构建的叙述。我们基于证据的研究表明、AI工程师依靠各种方法来消除这些幻想、一种方法是通过限制不准确结果的防护措施、另一种方法是通过RAG等技术、利用与环境相关的高质量数据对学习进行微调和转移。</block>
+  <block id="cddb203dcbb6baa6c317a00e8b612dd3" category="section-title">检索增强生成(RAG)</block>
+  <block id="713ebc0bd921a2585073dacf241eca8f" category="paragraph">对LLM进行了大量数据方面的培训、但未对您的数据进行培训。RAG通过将您的数据添加到LLM已有权访问的数据来解决此问题。RAG允许客户利用LLM的强大功能、对其数据进行培训、从而检索信息并使用该信息为生成型AI用户提供上下文信息。RAG是一种机器学习技术、是一种架构方法、可帮助减少幻想、提高LLM的效率和可靠性、加速AI应用程序的开发并增强企业搜索体验。</block>
+  <block id="b1999c0b68db3b28e7336ea0e30dcd52" category="section-title">Ragas</block>
+  <block id="f0a3232b26d0cc63aa6dc4e281da3a5f" category="inline-link">开始使用Ragas</block>
+  <block id="542a81d4705d74d1d62cbf7a75550fdf" category="paragraph">现有工具和框架可帮助您构建RAG管道、但评估和量化管道性能可能会很困难。这就是Ragas (RAG评估)的作用所在。Ragas是一个框架、可帮助您评估RAG管道。Ragas旨在创建一个开放式标准、为开发人员提供在其RAG应用程序中利用持续学习的工具和技术。有关详细信息，请参见<block ref="ec20f102c9be213e7dfe3b9130bfe867" category="inline-link-rx"></block></block>
+  <block id="0ea54264fbd1e02b89f6c524977781b4" category="section-title">LAMA 3.</block>
+  <block id="422105ad7065f5393490aaf95bd0d172" category="paragraph">Meta的Llama 3是一种仅用于解码器的转换器模型、是一种可公开访问的预训练大型语言模型(LLM)。Llama 3接受过超过15万亿令牌数据的训练、是自然语言理解(NLU)领域的变革者。它擅长了解上下文以及执行翻译和对话生成等复杂任务。llama 3有两种大小：8B用于高效部署和开发、70B用于大规模AI本机应用程序。客户可以通过Ver按照AI在Google Cloud上部署Llama 3、通过Azure AI Studio在Azure上部署、通过Amazon SagMaker在AWS上部署Llama 3。</block>
+  <block id="92bea7d7fce6a0e80cc0cfdbf2ccdb6c" category="paragraph">在我们的验证中，我们在NVIDIA DGX实例中部署了采用NVIDIA Nemo™微服务的Meta Llama模型，该实例使用NVIDIA A100 GPU进行了加速计算，用于定制和评估生成性AI用例，同时支持内部应用程序中的检索增强生成(RAG)。</block>
+  <block id="de895317d0faa5501df01a239b451297" category="section-title">开源框架</block>
+  <block id="62d856ab0369e6d568b06a131457f3fb" category="paragraph">以下有关开源技术的追加信息可能与您的部署相关。</block>
+  <block id="8de59538e5206b848891f2b0e1898dfb" category="section-title">LangChain</block>
+  <block id="18d71e3fce447f5c0596babb2641776a" category="paragraph">LangChin是一个开源集成框架、用于开发由大型语言模型(LLM)提供支持的应用程序。客户可以高效地构建RAG应用程序、因为它附带了文档加载器、向存储和各种其他软件包、因此开发人员可以灵活地构建复杂的工作流。他们还可以使用LangSmith检查、监控和评估应用程序、以便通过LangServe不断优化和将任何链部署到REST API中。LangChin对RAG应用程序的最佳实践进行编码、并为构建RAG应用程序所需的各种组件提供标准接口。</block>
+  <block id="89dd061bf2d39f455faefc9b5242eff7" category="section-title">LlamaIndex</block>
+  <block id="514d11db5b22ff6c7b900739f4f4b0fb" category="paragraph">LlamaIndex是一个简单灵活的数据框架、用于将自定义数据源连接到基于大型语言模型(LLM)的应用程序。它允许您通过灵活的数据连接器从API、数据库、PDF等中导出数据。Llama 3和GPT-4等LLMS经过了海量公共数据集的预先培训、开箱即用、具有令人难以置信的自然语言处理功能。但是、如果无法访问您自己的私有数据、则其实用程序会受到限制。LlamaIndex提供了广受欢迎的Python和打字本库、在检索增强生成(RAG)技术领域处于行业领先地位。</block>
+  <block id="23c37d139730f8f73b80a66b061d5677" category="section-title">NVIDIA Nemo Microservices</block>
+  <block id="5346d16fe88b8ccfe79d0de3193ea4b8" category="paragraph">NVIDIA Nemo是一款端到端平台、用于构建和自定义企业级生成型AI模型、这些模型可以部署在任何位置、跨云和数据中心。Nemo提供的微服务可简化大规模生成型AI开发和部署流程、使企业能够将LLM连接到其企业数据源。在撰写本文时、Nemo Microservices可通过NVIDIA的早期访问计划获得。</block>
+  <block id="2c60e321234045e1e77ce205253a84d4" category="section-title">NVIDIA Nemo Infit鉴于 微服务(NIMS)</block>
+  <block id="90356ac14d8176b99444d2c154259562" category="paragraph">NVIDIA NIMS是NVIDIA AI Enterprise的一部分、可为开发采用AI的企业级应用程序以及在生产环境中部署AI模型提供一条简化的途径。NIMS是一种容器化的推定微服务、包括行业标准API、特定于域的代码、优化的推定引擎和企业级运行时。</block>
+  <block id="dff05f944a3601407675a84ad9538999" category="section-title">NVIDIA Nemo还可以使用</block>
+  <block id="4e9700177c53651485285466eee28649" category="paragraph">NVIDIA Nemo取回器是NVIDIA Nemo框架中的最新服务、可优化RAG的嵌入和检索部分、以提供更高的准确性和更高效的响应。NVIDIA Nemo取回器是一种信息检索服务、可部署在内部或云中。它为企业提供了一条安全、简化的路径、可将企业级RAG功能集成到其定制生产AI应用程序中。</block>
+  <block id="9cc672801897463a5f86f8b39248e742" category="paragraph">NVIDIA Enterprise检修增强代(RAG)大型语言模型(LLM)操作员支持在Kubernetes中运行RAG管道所需的软件组件和服务。它可以让操作员提前访问、该操作员负责管理RAG管道关键组件的生命周期、例如NVIDIA推送微服务和NVIDIA Nemo取送器嵌入微服务。有关详细信息，请参见<block ref="5db325f64896bdf1b5700fb1df02fb19" category="inline-link-rx"></block></block>
+  <block id="f424ad1d1acd89e14d6edbd2482c4af2" category="section-title">PostgreSQL：pgvector</block>
+  <block id="29b733f31138820b9360b1fcdecf7be6" category="paragraph">由于它本机与许多经典ML算法(如XGBoost)相结合、因此使用SQL进行机器学习并不是PostgreSQL的新鲜事物。最近、PostgreSQL发布了面向向量相似性搜索的开源扩展—pgvector、从而能够存储和搜索ML生成的内置、这一功能适用于使用LLM的AI用例和应用程序。</block>
+  <block id="f98528340bd22b412030cef62cadfe3b" category="paragraph">在我们使用NVIDIA Enterprise RAG LLM运算符验证的默认示例管道中、将在Pod中启动pgvector数据库。然后，查询服务器连接到pgvector数据库以存储和检索内包。聊天机器人Web应用程序和查询服务器与微服务和向量数据库进行通信、以响应用户提示。</block>
+  <block id="3257dec16164e4b421ccd0bc9f876bff" category="inline-link">参考架构—采用NetApp的Vector Database解决方案</block>
+  <block id="3d4946ff59de4c03860ca5b7af5d7019" category="paragraph">作为一个提供API的多功能向量数据库(与MongoDB非常相似)、Milvus因支持多种数据类型和多矢量化等功能而脱颖而出、因此成为数据科学和机器学习的热门选择。它能够存储、索引和管理由深度神经网络(DNN)和机器学习(ML)模型生成的超过10亿个嵌入向量。客户可以使用Nvidia NIM &amp; Nemo微服务和Milvus作为矢量数据库来构建RAG应用程序。成功部署NVIDIA Nemo容器用于嵌入生成后、便可部署Milvus容器来存储这些嵌入。有关向量数据库和NetApp的详细信息，请参阅<block ref="68cbf98bfc8b69b241906b82f1149053" category="inline-link-rx"></block>。</block>
+  <block id="b38d7ed57d79d1a85af1d3db093d0779" category="section-title">Apache cassandr</block>
+  <block id="84cf8b459f4ed6b44a8a9e7a53ff91b5" category="paragraph">Apache cassandr®是一种开放源代码NoSQL、具有高度可扩展性和高可用性的数据库。它附带了向量搜索功能、并支持向量数据类型和向量相似性搜索功能、对于涉及LLM和专用RAG管道的AI应用程序尤其有用。</block>
+  <block id="8538dcf0cbc7480f47b73ac4c9642913" category="paragraph">NetApp Instaclinstr为Apache cassandr®提供完全托管的服务，托管在云端或内部环境中。它使NetApp客户能够通过Instaclinstr控制台或Instaclr配置API使用C#、Node.js、AWS PrivateLink和各种其他选项配置Apache cassandr®集群并连接到集群。</block>
+  <block id="2084aa9887fe8d03fc5f3ecb9bba3608" category="inline-link">使用NetApp Asta Control和ONTAP存储为DataStax Enterprise提供应用程序感知型数据管理</block>
+  <block id="ae63d344f3040ef26ddcd5198894a4b1" category="paragraph">此外、NetApp ONTAP还可以作为在KubeNet上运行的容器化Apache cassandr集群的永久性存储提供程序。NetApp Asta Control可将ONTAP的数据管理优势无缝扩展到数据丰富的Kubbernetes应用程序、例如Apache cassandr。有关详细信息、请参见<block ref="fa57c82916f4f1bbabae10f612a11354" category="inline-link-rx"></block></block>
+  <block id="1abf6351a3f93d00bd8789a48d65d324" category="section-title">NetApp安装</block>
+  <block id="96413f281fad6d66f69392b1e1832150" category="inline-link">NetApp的InstaclinstTM平台</block>
+  <block id="d35f01892642a5e43599b99776f6c189" category="paragraph">Instaclinstt通过其SaaS开源技术平台支持数据基础架构、帮助企业大规模交付应用程序。希望将语法理解嵌入其搜索应用程序的生成型AI开发人员有多种选择。InstaclinstServer for Postgre支持pgvector扩展。Instaclinstor for OpenSearch支持向量搜索、以便根据输入查询以及最近邻居函数检索相关文档。Instaclinstt for Redis可以存储向量数据、检索向量和执行向量搜索。有关详细信息、请阅读<block ref="53e4d32f6a8eb81c96cab346c44cb910" category="inline-link-rx"></block></block>
+  <block id="3878e180796265243705a46f1494ad55" category="inline-link">Cloud Insights 可以为我做什么？</block>
+  <block id="60047e7cfb1f106c7234a8ed296d7ad7" category="paragraph">NetApp Cloud Insights 是一款云基础架构监控工具，可让您深入了解整个基础架构。借助 Cloud Insights ，您可以监控，排除故障并优化所有资源，包括公有云和私有数据中心。Cloud Insights可通过数百个收集器在一个位置对异构基础架构和工作负载(包括Kubernetes)的基础架构和应用程序进行全栈可见性。有关详细信息，请参见<block ref="bb6ca35d8e41d975b995642aca0a010a" category="inline-link-rx"></block></block>
+  <block id="8727881150b0ace8b598a648cdfcd4e1" category="paragraph">NetApp StorageGRID 是一款软件定义的对象存储套件、支持公共、私有和混合多云环境中的各种用例。StorageGRID 为Amazon S3 API提供本机支持、并提供行业领先的创新技术、例如自动化生命周期管理、以便长期经济高效地存储、保护和保留非结构化数据。</block>
+  <block id="d1d107cea429958749b8a27b7870c11d" category="section-title">NetApp Spot</block>
+  <block id="73fe50d3cd6a6718e3f40d5abed6eec6" category="paragraph">Spot by NetApp可在AWS、Azure或Google Cloud中自动优化云基础架构、以尽可能低的成本提供SLA支持的可用性和性能。Spot使用机器学习和分析算法、使您能够将Spot容量用于生产和任务关键型工作负载。运行基于GPU的实例的客户可以从Spot中受益并降低计算成本。</block>
+  <block id="3ba173bffcbdd55e106647236c99f6e1" category="paragraph">Azure NetApp Files是Azure原生的第一方企业级高性能文件存储服务。它支持SMB、NFS和双协议卷、并可用于以下使用情形：</block>
+  <block id="58fc5644fc4daca15b7cb303e35279fe" category="list-text">文件共享。</block>
+  <block id="eeb551199c890324dd00b68274da519b" category="list-text">主目录。</block>
+  <block id="73b1c55c55a85a4f1cf2819f25b7f2fb" category="list-text">数据库。</block>
+  <block id="77d9dbf05ddea8aac9b04c1eb2db879b" category="list-text">高性能计算。</block>
+  <block id="89bc644b3d1c7f51b35e00f252b158cd" category="list-text">生成性AI。</block>
+  <block id="cef73c12cf88f09afbccb973a85809f8" category="paragraph">Google Cloud NetApp Volumes是一种完全托管的基于云的数据存储服务、可提供高级数据管理功能和高度可扩展的性能。NetApp托管的数据可用于Google Verpe AI平台的RAG (检索增强型生成)操作、该平台采用预览的工具包参考架构。</block>
+  <block id="bf9570f5efac22f4e7f19153e2c1edbf" category="sidebar">流程编排和管理</block>
 </blocks>

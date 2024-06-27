@@ -1,0 +1,42 @@
+---
+sidebar: sidebar 
+permalink: ai/rag_nemo_deployment.html 
+keywords: RAG, Retrieval Augmented Generation, NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, NeMo, NIM, NIMS, Hybrid, Hybrid Cloud, Hybrid Multicloud, NetApp ONTAP, FlexCache, SnapMirror, BlueXP 
+summary: 采用NetApp的企业级RAG—Nemo微服务部署 
+---
+= Nemo Microservices部署
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+本节介绍在NetApp存储中部署NVIDIA Nemo微服务所需执行的任务。NVIDIA Nemo Microservices将使用部署 link:https://docs.nvidia.com/ai-enterprise/rag-llm-operator/0.4.1/index.html["NVIDIA Enterprise RAG LLM Operator"]。
+
+
+
+== 前提条件
+
+在执行本节所述的步骤之前、我们假定您已执行以下任务：
+
+* 您已有一个正在运行的Kubarnetes集群、并且正在运行NVIDIA Enterprise RAG LLM Operator支持的Kubarnetes版本。有关支持的Kubernetes版本列表、请参阅 link:https://docs.nvidia.com/ai-enterprise/rag-llm-operator/0.4.1/platform-support.html["RAG LLM Operator文档。"] 此Kubornetes集群可以位于内部环境、也可以位于云中。
+* 您的Kubarnetes集群至少包含NVIDIA Enterprise RAG LLM Operator支持的三个GPU。有关受支持GPU的列表、请参阅 link:https://docs.nvidia.com/ai-enterprise/rag-llm-operator/0.4.1/platform-support.html["RAG LLM Operator文档。"]
+* 您已在Kubbernetes集群中安装并配置NetApp Asta三端存储。有关Asta三项功能的更多详细信息、请参见 link:https://docs.netapp.com/us-en/trident/index.html["Astra Trident 文档"]。此解决方案可与任何物理存储设备、软件定义的实例或云服务兼容、这些设备均受NetApp支持。
+
+
+
+
+== 使用NVIDIA Enterprise RAG LLM Operator部署NVIDIA Nemo Microservices
+
+. 如果您的Kubnetes集群中尚未安装NVIDIA GPU Operator、请按照中所述的说明安装NVIDIA GPU Operator link:https://docs.nvidia.com/ai-enterprise/rag-llm-operator/0.4.1/install.html#install-the-nvidia-gpu-operator["RAG LLM Operator文档。"]
+. 按照中所述的说明安装NVIDIA Enterprise RAG LLM Operator link:https://docs.nvidia.com/ai-enterprise/rag-llm-operator/0.4.1/install.html#install-the-rag-llm-operator["RAG LLM Operator文档。"]
+. 按照中所述的说明、使用NVIDIA Enterprise RAG LLM Operator创建RAG管道 link:https://docs.nvidia.com/ai-enterprise/rag-llm-operator/0.4.1/pipelines.html["RAG LLM Operator文档。"]
++
+** 指定StorageClass时、请务必指定一个利用Astra Trdent的StorageClass。
+** 默认情况下、RAG管道将部署一个新的pgvector数据库、用作RAG部署的向量存储/知识库。如果要改用现有的pgvector或Milvus实例、请按照中概述的说明进行操作 link:https://docs.nvidia.com/ai-enterprise/rag-llm-operator/0.4.1/vector-database.html["RAG LLM Operator文档。"] 有关使用NetApp运行引导程序数据库的更多信息，请参阅 link:https://docs.netapp.com/us-en/netapp-solutions/ai/vector-database-solution-with-netapp.html["NetApp矢量数据库解决方案文档。"]
+
+
+
