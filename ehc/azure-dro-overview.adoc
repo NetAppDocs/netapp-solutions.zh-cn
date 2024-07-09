@@ -26,7 +26,7 @@ summary:
 
 灾难恢复编排程序(Disaster Recovery Orchestrator、DRO)(一种具有UI的脚本解决方案)可用于无缝恢复从一个AVS SDDC复制到另一个AVS SDDC的工作负载。DRO可通过中断复制对等关系、然后将目标卷挂载为数据存储库、通过向AVS注册VM、直接在NSX-T (包括在所有AVS私有云中)上映射网络来自动恢复。
 
-image:azure-dro-image1.png["错误：缺少图形映像"]
+image:azure-dro-image1.png[""]
 
 
 
@@ -69,7 +69,7 @@ https://learn.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-in
 
 第一步是使用适当的频率和保留值为所需的数据存储库卷设置从AVS主站点到AVS二级站点的跨区域复制。
 
-image:azure-dro-image2.png["错误：缺少图形映像"]
+image:azure-dro-image2.png[""]
 
 按照中的步骤进行操作 https://learn.microsoft.com/en-us/azure/azure-netapp-files/cross-region-replication-create-peering["链接。"^] 通过创建复制对等来设置跨区域复制。目标容量池的服务级别可以与源容量池的服务级别匹配。但是、对于此特定使用情形、您可以选择标准服务级别、然后选择 https://learn.microsoft.com/en-us/azure/azure-netapp-files/dynamic-change-volume-service-level["修改服务级别"^] 发生实际灾难或灾难恢复模拟时。
 
@@ -123,7 +123,7 @@ sudo sh deploy.sh
 ** 用户名： `admin`
 ** 密码： `admin`
 +
-image:azure-dro-image3.png["错误：缺少图形映像"]
+image:azure-dro-image3.png[""]
 
 
 
@@ -156,7 +156,7 @@ image:azure-dro-image3.png["错误：缺少图形映像"]
 
 . 确认有关新凭据的详细信息、然后单击添加凭据。
 +
-image:azure-dro-image4.png["错误：缺少图形映像"]
+image:azure-dro-image4.png[""]
 
 +
 添加凭据后、即可发现主AVS站点和二级AVS站点(vCenter和Azure NetApp Files 存储帐户)并将其添加到DRO中。要添加源站点和目标站点、请完成以下步骤：
@@ -174,7 +174,7 @@ image:azure-dro-image4.png["错误：缺少图形映像"]
 ** SDDC vCenter
 ** Azure NetApp Files 存储帐户
 +
-image:azure-dro-image5.png["错误：缺少图形映像"]
+image:azure-dro-image5.png[""]
 
 
 
@@ -187,18 +187,18 @@ NOTE: 为了便于演示、本文档将介绍如何添加源站点。
 . DRO列出了该区域内的所有可用SDDC。从下拉列表中选择指定的私有云URL。
 . 输入 `cloudadmin@vsphere.local` 用户凭据。可从Azure门户访问此内容。请按照本中所述的步骤进行操作 https://learn.microsoft.com/en-us/azure/azure-vmware/tutorial-access-private-cloud["链接。"^]。完成后，单击*继续*。
 +
-image:azure-dro-image6.png["错误：缺少图形映像"]
+image:azure-dro-image6.png[""]
 
 . 通过选择Azure资源组和NetApp帐户、选择源存储详细信息(ANF)。
 . 单击*创建站点*。
 +
-image:azure-dro-image7.png["错误：缺少图形映像"]
+image:azure-dro-image7.png[""]
 
 
 
 添加后、DRO将执行自动发现、并显示具有从源站点到目标站点的相应跨区域副本的VM。DRO会自动检测VM使用的网络和网段并将其填充。
 
-image:azure-dro-image8.png["错误：缺少图形映像"]
+image:azure-dro-image8.png[""]
 
 下一步是将所需的VM作为资源组分组到其功能组中。
 
@@ -212,7 +212,7 @@ image:azure-dro-image8.png["错误：缺少图形映像"]
 
 . 访问*Resource Group*ps并单击*Create New Resource Group*。
 +
-image:azure-dro-image9.png["错误：缺少图形映像"]
+image:azure-dro-image9.png[""]
 
 . 在“新建资源组”下，从下拉列表中选择源站点，然后单击*Create*。
 . 提供资源组详细信息，然后单击*Continue*。
@@ -223,13 +223,13 @@ image:azure-dro-image9.png["错误：缺少图形映像"]
 ** Default
 ** 要启动的最后一个虚拟机
 +
-image:azure-dro-image10.png["错误：缺少图形映像"]
+image:azure-dro-image10.png[""]
 
 
 
 . 单击*创建资源组*。
 +
-image:azure-dro-image11.png["错误：缺少图形映像"]
+image:azure-dro-image11.png[""]
 
 
 
@@ -243,15 +243,15 @@ image:azure-dro-image11.png["错误：缺少图形映像"]
 
 . 导航到*复制计划*，然后单击*创建新复制计划*。
 +
-image:azure-dro-image12.png["错误：缺少图形映像"]
+image:azure-dro-image12.png[""]
 
 . 在*New Replication Plan*上，为该计划提供一个名称，并通过选择源站点、关联的vCenter、目标站点和关联的vCenter来添加恢复映射。
 +
-image:azure-dro-image13.png["错误：缺少图形映像"]
+image:azure-dro-image13.png[""]
 
 . 恢复映射完成后，选择*Cluster Mapping*。
 +
-image:azure-dro-image14.png["错误：缺少图形映像"]
+image:azure-dro-image14.png[""]
 
 . 选择*资源组详细信息*、然后单击*继续*。
 . 设置资源组的执行顺序。使用此选项可以选择存在多个资源组时的操作顺序。
@@ -262,39 +262,39 @@ image:azure-dro-image14.png["错误：缺少图形映像"]
 NOTE: 跨区域复制(CRR)在卷级别进行。因此、驻留在相应卷上的所有VM都会复制到CRR目标。请确保选择属于数据存储库的所有虚拟机、因为只会处理属于复制计划的虚拟机。
 
 +
-image:azure-dro-image15.png["错误：缺少图形映像"]
+image:azure-dro-image15.png[""]
 
 . 在VM详细信息下、您可以选择调整VM CPU和RAM参数的大小。如果您要将大型环境恢复到较小的目标集群、或者在执行灾难恢复测试时无需配置一对一物理VMware基础架构、则此功能非常有用。此外、还可以修改资源组中所有选定VM的启动顺序和启动延迟(秒)。如果需要对您在资源组引导顺序选择期间选择的内容进行任何更改，则还可以使用一个附加选项来修改引导顺序。默认情况下、系统会使用在资源组选择期间选择的引导顺序、但在此阶段可以执行任何修改。
 +
-image:azure-dro-image16.png["错误：缺少图形映像"]
+image:azure-dro-image16.png[""]
 
 . 单击*创建复制计划*。创建复制计划后，您可以根据需要执行故障转移、测试故障转移或迁移选项。
 +
-image:azure-dro-image17.png["错误：缺少图形映像"]
+image:azure-dro-image17.png[""]
 
 
 
 在故障转移和测试故障转移选项期间、将使用最新的快照、或者可以从时间点快照中选择特定快照。如果您正面临勒索软件等损坏事件、其中最新副本已被泄露或加密、则时间点选项非常有用。DRO显示所有可用的时间点。
 
-image:azure-dro-image18.png["错误：缺少图形映像"]
+image:azure-dro-image18.png[""]
 
 要使用复制计划中指定的配置触发故障转移或测试故障转移，可以单击*Failover或*Test Failover。您可以在任务菜单中监控复制计划。
 
-image:azure-dro-image19.png["错误：缺少图形映像"]
+image:azure-dro-image19.png[""]
 
 触发故障转移后、可以在二级站点AVS SDDC vCenter (VM、网络和数据存储库)中看到恢复的项目。默认情况下、VM会恢复到工作负载文件夹。
 
-image:azure-dro-image20.png["错误：缺少图形映像"]
+image:azure-dro-image20.png[""]
 
 可以在复制计划级别触发故障恢复。如果发生测试故障转移、可使用拆卸选项回滚更改并删除新创建的卷。与故障转移相关的故障恢复过程分为两步。选择复制计划并选择*反向数据同步*。
 
-image:azure-dro-image21.png["错误：缺少图形映像"]
+image:azure-dro-image21.png[""]
 
 完成此步骤后、触发故障恢复以移回主AVS站点。
 
-image:azure-dro-image22.png["错误：缺少图形映像"]
+image:azure-dro-image22.png[""]
 
-image:azure-dro-image23.png["错误：缺少图形映像"]
+image:azure-dro-image23.png[""]
 
 从Azure门户中、我们可以看到、已将作为读/写卷映射到二级站点AVS SDDC的相应卷的复制运行状况已断开。在测试故障转移期间、DRO不会映射目标卷或副本卷。相反、它会为所需的跨区域复制快照创建一个新卷、并将该卷公开为数据存储库、这样会占用容量池中的额外物理容量、并确保源卷不会被修改。值得注意的是、复制作业可以在灾难恢复测试或鉴别工作流期间继续运行。此外、此过程还可确保在发生错误或恢复损坏的数据时、可以清除恢复、而不会造成副本被销毁的风险。
 

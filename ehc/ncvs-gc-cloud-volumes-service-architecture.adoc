@@ -18,7 +18,7 @@ Cloud Volumes Service 采用与其他Google Cloud原生 服务类似的方式、
 
 下图、引用自 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/architecture?hl=en_US["架构部分"^] 显示了Cloud Volumes Service 文档的概要视图。
 
-image:ncvs-gc-image1.png["错误：缺少图形映像"]
+image:ncvs-gc-image1.png[""]
 
 虚线上方的部分显示服务的控制平面、控制卷生命周期。虚线下方的部分显示数据平面。左侧蓝色框表示用户VPC (服务使用者)、右侧蓝色框表示NetApp提供的服务生产者。两者均通过VPC对等连接。
 
@@ -58,16 +58,16 @@ Cloud Volumes Service 数据平面不会连接到外部Internet、而是连接�
 
 使用共享VPC时、使用NFS Kerberos和/或进行动态加密 link:ncvs-gc-data-encryption-in-transit.html#smb-encryption["SMB加密"] 可以屏蔽从跟踪中获取的大部分信息。但是、某些流量仍以纯文本形式发送、例如 link:ncvs-gc-other-nas-infrastructure-service-dependencies.html#dns["DNS"] 和 link:ncvs-gc-other-nas-infrastructure-service-dependencies.html#ldap-queries["LDAP查询"]。下图显示了从Cloud Volumes Service 发起的纯文本LDAP查询中捕获的数据包以及公开的潜在标识信息。Cloud Volumes Service 中的LDAP查询当前不支持加密或基于SSL的LDAP。如果Active Directory请求、CVS-Performance支持LDAP签名。CVS-SW不支持LDAP签名。
 
-image:ncvs-gc-image2.png["错误：缺少图形映像"]
+image:ncvs-gc-image2.png[""]
 
 
 NOTE: unixUserPassword由LDAP查询、不会以纯文本形式发送、而是以盐哈希形式发送。默认情况下、Windows LDAP不会填充unixUserPassword字段。只有在需要利用Windows LDAP通过LDAP交互式登录到客户端时、才需要此字段。Cloud Volumes Service 不支持对实例进行交互式LDAP登录。
 
 下图显示了通过AUTH_SYS捕获NFS旁边的NFS Kerberos对话中的数据包捕获。请注意、跟踪中提供的信息在这两者之间有何不同、以及启用动态加密如何为NAS流量提供更高的整体安全性。
 
-image:ncvs-gc-image3.png["错误：缺少图形映像"]
+image:ncvs-gc-image3.png[""]
 
-image:ncvs-gc-image4.png["错误：缺少图形映像"]
+image:ncvs-gc-image4.png[""]
 
 
 

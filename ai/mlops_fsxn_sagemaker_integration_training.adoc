@@ -40,7 +40,7 @@ Amazon FSx for NetApp ONTAP确实是AWS提供的一款完全托管的存储解�
 
 === 网络环境
 
-image:mlops_fsxn_sagemaker_integration_training_0.png["错误：网络环境"]
+image:mlops_fsxn_sagemaker_integration_training_0.png["网络环境"]
 
 FSxN (Amazon FSx for NetApp ONTAP)是一项AWS存储服务。它包括在NetApp ONTAP系统上运行的文件系统以及与其连接的AWS托管系统虚拟机(SVM)。在提供的图中、由AWS管理的NetApp ONTAP服务器位于VPC之外。SVM充当SageMaker和NetApp ONTAP系统之间的中介、接收来自SageMaker的操作请求并将其转发到底层存储。要访问FSxN、SageMaker必须与FSxN部署位于同一个VPC中。此配置可确保SageMaker和FSxN之间的通信和数据访问。
 
@@ -56,7 +56,7 @@ FSxN (Amazon FSx for NetApp ONTAP)是一项AWS存储服务。它包括在NetApp 
 
 == 集成概述
 
-image:mlops_fsxn_sagemaker_integration_training_1.png["错误：训练工作流"]
+image:mlops_fsxn_sagemaker_integration_training_1.png["培训工作流"]
 
 使用FSxN中的训练数据在SageMaker中构建深度学习模型的工作流可概括为三个主要步骤：数据加载程序定义、模型训练和部署。总体而言、这些步骤构成了MLOps管道的基础。但是、每个步骤都涉及多个详细的子步骤、以实现全面实施。这些子步骤包括各种任务、例如数据预处理、数据集拆分、模型配置、超参数调整、模型评估、 和型号部署。这些步骤可确保在SageMaker环境中使用来自FSxN的训练数据构建和部署深度学习模型的流程全面有效。
 

@@ -69,7 +69,7 @@ Jian Jian (Ken)、NetApp高级数据和应用科学人员
 
 == 架构
 
-image:mlops_fsxn_cictcd_0.png["错误：架构"]
+image:mlops_fsxn_cictcd_0.png["架构"]
 
 此MLOps管道是一种实际实施、它利用cron作业触发无服务器功能、进而执行使用生命周期回调函数注册的AWS服务。AWS EventBridge*用作cron作业。它会定期调用一个*AWS Lambad*函数，负责对模型进行重新培训和重新部署。此过程涉及到启动*AWS SageMaker笔记本*实例以执行必要的任务。
 
@@ -87,11 +87,11 @@ image:mlops_fsxn_cictcd_0.png["错误：架构"]
 
 . 要设置生命周期配置，请打开*Sager*面板，然后导航到*Admin configurations*部分下的*Lifecycle configurations*。
 +
-image:mlops_fsxn_cictcd_1.png["错误：SageMaker面板"]
+image:mlops_fsxn_cictcd_1.png["SageMaker面板"]
 
 . 选择*笔记本实例*选项卡，然后单击*创建配置*按钮
 +
-image:mlops_fsxn_cictcd_2.png["错误：生命周期配置欢迎页面"]
+image:mlops_fsxn_cictcd_2.png["生命周期配置欢迎页面"]
 
 . 将以下代码粘贴到输入区域。
 +
@@ -117,15 +117,15 @@ EOF
 ----
 . 此脚本执行Jupyter笔记本、该笔记本负责重新训练和重新部署模型以进行引用。执行完成后、笔记本电脑将在5分钟内自动关闭。要了解有关问题陈述和代码实施的更多信息、请参见 link:./mlops_fsxn_sagemaker_integration_training.html["第2部分—利用AWS FSx for NetApp ONTAP (FSxN)作为SageMaker模型训练的数据源"]。
 +
-image:mlops_fsxn_cictcd_3.png["错误：创建生命周期配置"]
+image:mlops_fsxn_cictcd_3.png["创建生命周期配置"]
 
 . 创建后，导航到“笔记本实例”，选择目标实例，然后单击“操作”下拉列表中的*更新设置*。
 +
-image:mlops_fsxn_cictcd_4.png["错误：更新设置下拉列表"]
+image:mlops_fsxn_cictcd_4.png["更新设置下拉列表"]
 
 . 选择已创建的*生命周期配置*，然后单击*更新笔记本实例*。
 +
-image:mlops_fsxn_cictcd_5.png["错误：更新笔记本电脑的生命周期配置"]
+image:mlops_fsxn_cictcd_5.png["更新笔记本电脑的生命周期配置"]
 
 
 
@@ -137,15 +137,15 @@ image:mlops_fsxn_cictcd_5.png["错误：更新笔记本电脑的生命周期配�
 
 . 要创建*AWS Lamba函数*，请导航到相应的面板，切换到*FUNCHUDENTS*选项卡，然后单击*Create FUNCHUD*。
 +
-image:mlops_fsxn_cictcd_6.png["错误：AWS兰德函数欢迎页面"]
+image:mlops_fsxn_cictcd_6.png["AWS兰德函数欢迎页面"]
 
 . 请将页面上所有必需的条目归档，并记住将运行时切换到*Python 3.10*。
 +
-image:mlops_fsxn_cictcd_7.png["错误：创建AWS兰德函数"]
+image:mlops_fsxn_cictcd_7.png["创建AWS兰德函数"]
 
 . 请验证指定角色是否具有所需的权限*Amazon SageMakerFullAccess*，然后单击*Create Function (创建功能)*按钮。
 +
-image:mlops_fsxn_cictcd_8.png["错误：选择执行角色"]
+image:mlops_fsxn_cictcd_8.png["选择执行角色"]
 
 . 选择创建的Lamb编制 函数。在代码选项卡中、将以下代码复制并粘贴到文本区域中。此代码将启动名为*fsxn-ONTAP的笔记本实例。
 +
@@ -165,15 +165,15 @@ def lambda_handler(event, context):
 ----
 . 单击*DEPLE*按钮以应用此代码更改。
 +
-image:mlops_fsxn_cictcd_9.png["错误：部署"]
+image:mlops_fsxn_cictcd_9.png["部署"]
 
 . 要指定如何触发此AWS Lambar函数、请单击添加触发器按钮。
 +
-image:mlops_fsxn_cictcd_10.png["错误：添加AWS函数触发器"]
+image:mlops_fsxn_cictcd_10.png["添加AWS功能触发器"]
 
 . 从下拉菜单中选择EventBridge、然后单击标有创建新规则的单选按钮。在计划表达式字段中、输入 `rate(1 day)`，然后单击添加按钮以创建此新的cron作业规则并将其应用于AWS Lamb另 一个函数。
 +
-image:mlops_fsxn_cictcd_11.png["错误：完成触发"]
+image:mlops_fsxn_cictcd_11.png["完成触发"]
 
 
 

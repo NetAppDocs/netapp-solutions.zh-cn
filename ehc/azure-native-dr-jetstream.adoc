@@ -78,15 +78,15 @@ Jetstream灾难恢复软件由三个主要组件组成：Jetstream灾难恢复�
 . 向MSA注册vCenter Server。要执行安装、请完成以下详细步骤：
 . 部署Jetstream DR MSA并注册vCenter Server后、请使用vSphere Web Client访问Jetstream DR插件。可通过导航到"数据中心">"配置">"Jetstream DR"来完成此操作。
 +
-image:vmware-dr-image8.png["错误：缺少图形映像"]
+image:vmware-dr-image8.png[""]
 
 . 从Jetstream灾难恢复界面中、选择相应的集群。
 +
-image:vmware-dr-image9.png["错误：缺少图形映像"]
+image:vmware-dr-image9.png[""]
 
 . 使用I/O筛选器软件包配置集群。
 +
-image:vmware-dr-image10.png["错误：缺少图形映像"]
+image:vmware-dr-image10.png[""]
 
 . 添加位于恢复站点的Azure Blob Storage。
 . 从设备选项卡部署灾难恢复虚拟设备(DR Virtual Appliance、DRVA)。
@@ -97,14 +97,14 @@ NOTE: DvA可以由CPT自动创建、但对于POC试用、我们建议手动配�
 
 Jetstream DRVA是一个虚拟设备、可促进数据复制过程中的关键功能。受保护集群必须至少包含一个DRVA、通常每个主机配置一个DRVA。每个DRVA都可以管理多个受保护域。
 
-image:vmware-dr-image11.png["错误：缺少图形映像"]
+image:vmware-dr-image11.png[""]
 
 在此示例中、为80个虚拟机创建了四个DRVA。
 
 . 使用VMDK从可用的数据存储库或独立的共享iSCSI存储池为每个DRVA创建复制日志卷。
 . 在受保护域选项卡中、使用Azure Blob Storage站点、DRVA实例和复制日志的相关信息创建所需数量的受保护域。受保护域定义集群中一个或一组一起受保护的特定虚拟机、并为故障转移/故障恢复操作分配优先级顺序。
 +
-image:vmware-dr-image12.png["错误：缺少图形映像"]
+image:vmware-dr-image12.png[""]
 
 . 选择要保护的VM并启动受保护域的VM保护。此时将开始向指定的Blob Store复制数据。
 
@@ -115,7 +115,7 @@ NOTE: 验证受保护域中的所有VM是否使用相同的保护模式。
 
 NOTE: 回写(VMDK)模式可以提供更高的性能。
 
-image:vmware-dr-image13.png["错误：缺少图形映像"]
+image:vmware-dr-image13.png[""]
 
 验证复制日志卷是否放置在高性能存储上。
 
@@ -153,15 +153,15 @@ NOTE: Azure VMware解决方案 中的默认CloudAdmin用户没有足够的权限
 以下屏幕截图显示了使用基于DHCP的IP地址进行安装的情况。
 
 +
-image:vmware-dr-image14.png["错误：缺少图形映像"]
+image:vmware-dr-image14.png[""]
 
 . 完成适用于AVS的Jetstream DR安装后、刷新浏览器。要访问Jetstream DR UI、请转到SDDC Datacenter >配置> Jetstream DR。
 +
-image:vmware-dr-image15.png["错误：缺少图形映像"]
+image:vmware-dr-image15.png[""]
 
 . 从Jetstream DR界面中、添加用于将内部集群作为存储站点进行保护的Azure Blob Storage帐户、然后运行扫描域选项。
 +
-image:vmware-dr-image16.png["错误：缺少图形映像"]
+image:vmware-dr-image16.png[""]
 
 . 导入受保护域后、部署DRVA设备。在此示例中、可以使用Jetstream DR UI从恢复站点手动启动持续再水化。
 +
@@ -171,7 +171,7 @@ NOTE: 也可以使用CPT创建的计划自动执行这些步骤。
 . 使用可用的vSAN或ANF数据存储库创建复制日志卷。
 . 导入受保护域并配置恢复VA以使用ANF数据存储库放置VM。
 +
-image:vmware-dr-image17.png["错误：缺少图形映像"]
+image:vmware-dr-image17.png[""]
 
 +
 
@@ -179,7 +179,7 @@ NOTE: 确保选定网段上已启用DHCP、并且有足够的可用IP。在恢�
 
 . 选择相应的故障转移选项(持续故障转移或故障转移)。在此示例中、选择了持续再融合(持续故障转移)。
 +
-image:vmware-dr-image18.png["错误：缺少图形映像"]
+image:vmware-dr-image18.png[""]
 
 
 
@@ -201,17 +201,17 @@ NOTE: CPT可用于执行故障转移计划、以便将虚拟机从Azure Blob Sto
 NOTE: 在AVS中启动受保护的VM后进行故障转移(针对持续或标准再融合)、保护将自动恢复、Jetstream DR将继续将其数据复制到Azure Blob Storage中的相应/原始容器中。
 
 +
-image:vmware-dr-image19.png["错误：缺少图形映像"]
+image:vmware-dr-image19.png[""]
 
 +
-image:vmware-dr-image20.png["错误：缺少图形映像"]
+image:vmware-dr-image20.png[""]
 
 +
 任务栏显示故障转移活动的进度。
 
 . 任务完成后、访问已恢复的VM、业务将继续正常进行。
 +
-image:vmware-dr-image21.png["错误：缺少图形映像"]
+image:vmware-dr-image21.png[""]
 
 +
 主站点启动并重新运行后、可以执行故障恢复。VM保护将恢复、应检查数据一致性。
@@ -223,7 +223,7 @@ NOTE: 注意：可使用Automation Toolkit中提供的`recovery_utility_prepare_
 
 . 访问已还原的内部环境、转到Jetstream DR UI、然后选择相应的受保护域。受保护站点准备好进行故障恢复后、在UI中选择故障恢复选项。
 +
-image:vmware-dr-image22.png["错误：缺少图形映像"]
+image:vmware-dr-image22.png[""]
 
 
 
@@ -244,4 +244,4 @@ NOTE: 指定在恢复站点暂停VM并在受保护站点重新启动后的最大
 
 Jetstream DR for AVS与Azure NetApp Files 数据存储库可通过允许组织从可用时间点恢复来解决这些问题、以便在需要时将工作负载恢复到正常运行的隔离网络。通过恢复、应用程序可以相互运行并进行通信、同时不会使它们暴露在北-南流量中、从而为安全团队提供一个安全的地方来执行取证和其他必要的修复。
 
-image:vmware-dr-image23.png["错误：缺少图形映像"]
+image:vmware-dr-image23.png[""]

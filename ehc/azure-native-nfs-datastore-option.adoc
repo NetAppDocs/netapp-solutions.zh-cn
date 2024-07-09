@@ -41,7 +41,7 @@ NOTE: 请联系Azure和NetApp解决方案 架构师、以规划和调整存储�
 
 从高层面来看、此架构介绍了如何跨内部环境和Azure实现混合云连接和应用程序可移植性。此外、还介绍了如何使用Azure NetApp Files 作为补充NFS数据存储库以及Azure VMware解决方案 上托管的子虚拟机的子系统内存储选项。
 
-image:vmware-dr-image1.png["错误：缺少图形映像"]
+image:vmware-dr-image1.png[""]
 
 
 
@@ -151,12 +151,12 @@ az extension add --name vmware
 . 登录到Azure门户并访问Azure NetApp Files。使用`az provider register``-namespace Microsoft.NetApp–wait`命令验证对Azure NetApp Files 服务的访问并注册Azure NetApp Files 资源提供程序。注册后、创建一个NetApp帐户。请参见此部分 https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-create-netapp-account["链接。"^] 了解详细步骤。
 
 
-image:vmware-dr-image2.png["错误：缺少图形映像"]
+image:vmware-dr-image2.png[""]
 
 . 创建NetApp帐户后、使用所需的服务级别和大小设置容量池。有关详细信息、请参见此 https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-set-up-capacity-pool["链接。"^]。
 
 
-image:vmware-dr-image3.png["错误：缺少图形映像"]
+image:vmware-dr-image3.png[""]
 
 |===
 | 需要记住的要点 
@@ -172,7 +172,7 @@ image:vmware-dr-image3.png["错误：缺少图形映像"]
 . 使用容量池刀片下的卷刀片为数据存储库添加NFS卷。
 
 
-image:vmware-dr-image4.png["错误：缺少图形映像"]
+image:vmware-dr-image4.png[""]
 
 要了解按大小或配额显示的Azure NetApp Files 卷性能、请参见 link:https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-performance-considerations["Azure NetApp Files 的性能注意事项"^]。
 
@@ -212,7 +212,7 @@ C：\Users\Niyaz>AZ VMware数据存储库列表-resource-group anfavsval2 -clust
 . 建立必要的连接后、这些卷将作为数据存储库挂载。
 
 
-image:vmware-dr-image5.png["错误：缺少图形映像"]
+image:vmware-dr-image5.png[""]
 
 ====
 
@@ -226,7 +226,7 @@ Azure NetApp Files 支持三种服务级别：标准（每 TB 16 MBps ），高�
 * 容量池的服务质量（ QoS ）类型（自动或手动）
 
 
-image:vmware-dr-image6.png["错误：缺少图形映像"]
+image:vmware-dr-image6.png[""]
 
 有关详细信息，请参见 https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-service-levels["Azure NetApp Files 的服务级别"^]。
 
@@ -319,7 +319,7 @@ NOTE: 对于ANF数据存储库、可以使用还原到新卷选项克隆整个�
 
 NOTE: 借助Azure NetApp Files Snapshot技术、备份和恢复速度非常快。
 
-image:vmware-dr-image7.png["错误：缺少图形映像"]
+image:vmware-dr-image7.png[""]
 
 =====
 .使用Azure NetApp Files 、Jetstream DR和Azure VMware解决方案 进行灾难恢复

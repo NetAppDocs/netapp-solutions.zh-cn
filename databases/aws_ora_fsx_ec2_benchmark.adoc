@@ -33,7 +33,7 @@ keywords: HA, DR, database, Oracle, RDS, AWS, SnapCenter
 
 我们部署了一个EC2 M5实例、该实例具有8个vCPU、32 G RAM和10 Gps网络带宽。
 
-image:aws_ora_fsx_ec2_inst_10.PNG["错误：缺少图形映像"]
+image:aws_ora_fsx_ec2_inst_10.PNG[""]
 
 
 
@@ -48,7 +48,7 @@ image:aws_ora_fsx_ec2_inst_10.PNG["错误：缺少图形映像"]
 
 我们为一个关键控制文件保留了两个副本、以实现冗余。
 
-image:aws_ora_fsx_ec2_stor_15.PNG["错误：缺少图形映像"]
+image:aws_ora_fsx_ec2_stor_15.PNG[""]
 
 FSX文件系统配置了80、000 IOPS容量和2 GiBps I/O吞吐量。
 
@@ -60,7 +60,7 @@ FSX文件系统配置了80、000 IOPS容量和2 GiBps I/O吞吐量。
 
 该数据库部署为一个包含三个PDB的容器化数据库。我们使用一个PDB实例进行性能测试。下图显示了NFS挂载点上的Oracle存储大小调整。
 
-image:aws_ora_fsx_ec2_inst_11.PNG["错误：缺少图形映像"]
+image:aws_ora_fsx_ec2_inst_11.PNG[""]
 
 
 
@@ -72,7 +72,7 @@ image:aws_ora_fsx_ec2_inst_11.PNG["错误：缺少图形映像"]
 
 以下屏幕截图显示了Swingbench Windows UI中的工作负载配置文件和典型事务运行指标。
 
-image:aws_ora_fsx_ec2_swin_01.PNG["错误：缺少图形映像"]
+image:aws_ora_fsx_ec2_swin_01.PNG[""]
 
 如此图所示、在整个测试运行期间、事务级别始终保持在同一级别。
 
@@ -88,17 +88,16 @@ image:aws_ora_fsx_ec2_swin_01.PNG["错误：缺少图形映像"]
 
 我们根据事务运行期间的并发用户数量绘制了用户事务卷、用户响应时间和Oracle前几个等待事件的图表。结果如下所示：
 
-image:aws_ora_fsx_ec2_swin_02.PNG["错误：缺少图形映像"]
+image:aws_ora_fsx_ec2_swin_02.PNG[""]
 
 这些结果表明、我们可以通过增加并发用户数量来稳定地增加用户事务卷、同时保持稳定的低I/O延迟和用户响应时间、这对于Oracle应用程序来说是合适的性能。
 
 当我们达到128个并发用户时、I/O延迟和用户响应时间开始有所增加。这是预期的、因为EC2实例接近全满服务器容量、如下图所示：
 
-image:aws_ora_fsx_ec2_swin_03.PNG["错误：缺少图形映像"]
+image:aws_ora_fsx_ec2_swin_03.PNG[""]
 
 同样、下图显示了当时执行用户事务卷时相应的FSX IOPS和吞吐量。
 
-image:aws_ora_fsx_ec2_swin_04.PNG["错误：缺少图形映像"]
-image:aws_ora_fsx_ec2_swin_05.PNG["错误：缺少图形映像"]
+image:aws_ora_fsx_ec2_swin_04.PNG[""] image:aws_ora_fsx_ec2_swin_05.PNG[""]
 
 当Oracle服务器EC2实例成为限制因素时、以IOPS或吞吐量表示、我们未达到配置的FSX存储容量。因此、您必须根据用户应用程序级别的事务卷正确估算计算和存储的大小、如一节所示 link:aws_ora_fsx_ec2_factors.html["部署Oracle数据库时需要考虑的因素。"]

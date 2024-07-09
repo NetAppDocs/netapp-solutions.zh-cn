@@ -41,26 +41,26 @@ NetApp SnapCenter 工具是一款基于 Windows 的应用程序，通常在 Wind
 
 对于虚拟化数据库工作负载，通过 NFS 或 iSCSI 将存储 LUN 直接连接到子虚拟机通常比通过 VMDK 分配的存储性能更高。NetApp 建议采用下图所示的 LUN 上的大型 SQL Server 数据库的存储布局。
 
-image:storage_layout_sqlsvr_large.PNG["错误：缺少图形映像"]
+image:storage_layout_sqlsvr_large.PNG[""]
 
 下图显示了 NetApp 为 LUN 上的小型或中型 SQL Server 数据库建议的存储布局。
 
-image:storage_layout_sqlsvr_smallmedium.PNG["错误：缺少图形映像"]
+image:storage_layout_sqlsvr_smallmedium.PNG[""]
 
 
 NOTE: 日志目录专用于 SnapCenter ，用于执行事务日志汇总以恢复数据库。对于超大型数据库，可以为一个卷分配多个 LUN ，以提高性能。
 
 对于 Oracle 数据库工作负载， SnapCenter 支持以 ONTAP 存储为后盾的数据库环境，这些环境作为物理设备或虚拟设备挂载到主机上。您可以根据环境的严重性将整个数据库托管在一个或多个存储设备上。通常，客户会将专用存储上的数据文件与控制文件，重做文件和归档日志文件等所有其他文件隔离。这有助于管理员在几秒到几分钟内使用 Snapshot 技术快速还原（ ONTAP 单文件 SnapRestore ）或克隆大型关键数据库（ PB 级）。
 
-image:storage_layout_oracle_typical.PNG["错误：缺少图形映像"]
+image:storage_layout_oracle_typical.PNG[""]
 
 对于对延迟敏感的任务关键型工作负载，应将专用存储卷部署到不同类型的 Oracle 文件，以尽可能实现最佳延迟。对于大型数据库，应为数据文件分配每个卷的多个 LUN （ NetApp 建议最多八个）。
 
-image:storage_layout_oracle_dedicated.PNG["错误：缺少图形映像"]
+image:storage_layout_oracle_dedicated.PNG[""]
 
 对于较小的 Oracle 数据库， SnapCenter 支持共享存储布局，在此布局中，您可以在同一个存储卷或 LUN 上托管多个数据库或数据库的一部分。作为此布局的一个示例，您可以将所有数据库的数据文件托管在 +data ASM 磁盘组或卷组上。其余文件（重做，归档日志和控制文件）可以托管在另一个专用磁盘组或卷组（ LVM ）上。此类部署场景如下所示。
 
-image:storage_layout_oracle_shared.PNG["错误：缺少图形映像"]
+image:storage_layout_oracle_shared.PNG[""]
 
 为了便于重新定位 Oracle 数据库， Oracle 二进制文件应安装在常规备份策略中包含的单独 LUN 上。这样可以确保在将数据库重新定位到新服务器主机时，可以启动 Oracle 堆栈进行恢复，而不会因 Oracle 二进制文件不同步而出现任何潜在问题。
 
