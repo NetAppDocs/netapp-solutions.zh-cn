@@ -16,11 +16,11 @@ summary: 此页面介绍了NetApp StorageGRID 控制器上的Splunk SmartStore�
 [role="lead"]
 本节介绍NetApp StorageGRID 控制器上的Splunk SmartStore性能。Splunk SmartStore可将热数据移动到远程存储、在这种情况下、是性能验证中的StorageGRID 对象存储。
 
-image:stgr-splunkss-image10.png[""]
+image::stgr-splunkss-image10.png[stgrs splUN肯 斯image10.]
 
 我们将EF600用于热/缓存存储、而StorageGRID 6060用于远程存储。我们使用以下架构进行性能验证。我们使用了两个搜索头、四个重磅转发器将数据转发到索引器、使用七个Splunk事件生成器(Eventgens)生成实时数据、使用18个索引器存储数据。
 
-image:stgr-splunkss-image11.png[""]
+image::stgr-splunkss-image11.png[stgrs splUN肯 斯image11.]
 
 
 
@@ -57,7 +57,7 @@ image:stgr-splunkss-image11.png[""]
 
 此图显示了一天内载入的数据。
 
-image:stgr-splunkss-image12.png[""]
+image::stgr-splunkss-image12.png[stgrg splUN肯 斯image12.]
 
 我们从集群主节点运行以下命令(索引名称为`eventgen-test`)。然后、我们会通过SmartStore监控控制台信息板捕获每个实例和整个部署范围的峰值和平均上传吞吐量。
 
@@ -140,15 +140,15 @@ rtp-cm01:~ #
 ....
 我们在搜索头上运行以下搜索查询以收集性能列表。
 
-image:stgr-splunkss-image13.png[""]
+image::stgr-splunkss-image13.png[stgrg splUN肯 斯image13.]
 
 我们从集群主节点收集性能信息。峰值性能为61.34 GBps。
 
-image:stgr-splunkss-image14.png[""]
+image::stgr-splunkss-image14.png[stgrs splUN肯 斯image14.]
 
 平均性能约为29 GBps。
 
-image:stgr-splunkss-image15.png[""]
+image::stgr-splunkss-image15.png[stgrg splUN肯 斯image15.]
 
 
 
@@ -159,11 +159,11 @@ SmartStore性能基于从大量数据中搜索特定模式和字符串。在此�
 
 NOTE: 绿色显示命中数据、橙色显示未命中数据。
 
-image:stgr-splunkss-image16.png[""]
+image::stgr-splunkss-image16.png[stgrs splUN肯 斯image16.]
 
 在StorageGRID 上运行查询以搜索时、下图显示了从StorageGRID 检索S3速率的时间。
 
-image:stgr-splunkss-image17.png[""]
+image::stgr-splunkss-image17.png[stgrg splUN肯 斯image17.]
 
 
 
@@ -171,7 +171,7 @@ image:stgr-splunkss-image17.png[""]
 
 StorageGRID 实例具有一个负载平衡器和三个StorageGRID 控制器。所有这三个控制器的CPU利用率从75%到100%不等。
 
-image:stgr-splunkss-image18.png[""]
+image::stgr-splunkss-image18.png[stgrg splUN肯 斯image18.]
 
 
 

@@ -50,31 +50,31 @@ NOTE: 部署 Cloud Manager 和 Cloud Volumes ONTAP 的方法有多种；此方�
 
 . 导航到 https://cloud.netapp.com/cloud-manager["NetApp Cloud Central"^] 并登录或注册。
 +
-image:cloud_central_login_page.PNG[""]
+image::cloud_central_login_page.PNG[Cloud Central登录页面]
 
 . 登录后，您应转到 " 画布 " 。
 +
-image:cloud_central_canvas_page.PNG[""]
+image::cloud_central_canvas_page.PNG[Cloud Central画布页面]
 
 . 单击 " 添加工作环境 " ，然后在 AWS 中选择 Cloud Volumes ONTAP 。您还可以在此处选择是要部署单节点系统还是高可用性对。我已选择部署高可用性对。
 +
-image:cloud_central_add_we.PNG[""]
+image::cloud_central_add_we.PNG[Cloud Central增加了我们的优势]
 
 . 如果尚未创建连接器，则会显示一个弹出窗口，要求您创建连接器。
 +
-image:cloud_central_add_conn_1.PNG[""]
+image::cloud_central_add_conn_1.PNG[Cloud Central添加连接1]
 
 . 单击 " 让我们开始 " ，然后选择 "AWS" 。
 +
-image:cloud_central_add_conn_3.PNG[""]
+image::cloud_central_add_conn_3.PNG[Cloud Central添加连接3]
 
 . 输入您的机密密钥和访问密钥。确保您的用户具有上所述的正确权限 https://mysupport.netapp.com/site/info/cloud-manager-policies["NetApp 策略页面"^]。
 +
-image:cloud_central_add_conn_4.PNG[""]
+image::cloud_central_add_conn_4.PNG[Cloud Central添加连接4.]
 
 . 为连接器指定一个名称，并使用上所述的预定义角色 https://mysupport.netapp.com/site/info/cloud-manager-policies["NetApp 策略页面"^] 或者要求 Cloud Manager 为您创建角色。
 +
-image:cloud_central_add_conn_5.PNG[""]
+image::cloud_central_add_conn_5.PNG[Cloud Central添加连接5.]
 
 . 提供部署连接器所需的网络信息。验证是否已通过以下方式启用出站 Internet 访问：
 +
@@ -82,25 +82,25 @@ image:cloud_central_add_conn_5.PNG[""]
 .. 为连接器提供一个代理以供其使用
 .. 为连接器提供通过 Internet 网关到公有 Internet 的路由
 +
-image:cloud_central_add_conn_6.PNG[""]
+image::cloud_central_add_conn_6.PNG[Cloud Central添加连接6]
 
 
 
 . 通过提供安全组或创建新的安全组，通过 SSH ， HTTP 和 HTTPS 提供与连接器的通信。我已启用仅从 IP 地址访问此连接器的功能。
 +
-image:cloud_central_add_conn_7.PNG[""]
+image::cloud_central_add_conn_7.PNG[Cloud Central添加连接7]
 
 . 查看摘要页面上的信息，然后单击添加以部署连接器。
 +
-image:cloud_central_add_conn_8.PNG[""]
+image::cloud_central_add_conn_8.PNG[Cloud Central增加连接8]
 
 . 现在，此连接器将使用云形成堆栈进行部署。您可以从 Cloud Manager 或通过 AWS 监控其进度。
 +
-image:cloud_central_add_conn_9.PNG[""]
+image::cloud_central_add_conn_9.PNG[Cloud Central添加连接9]
 
 . 部署完成后，将显示一个成功页面。
 +
-image:cloud_central_add_conn_10.PNG[""]
+image::cloud_central_add_conn_10.PNG[Cloud Central添加连接10]
 
 
 
@@ -110,39 +110,39 @@ image:cloud_central_add_conn_10.PNG[""]
 
 . 根据您的要求选择 AWS 和部署类型。
 +
-image:cloud_central_add_we_1.PNG[""]
+image::cloud_central_add_we_1.PNG[Cloud Central增加了我们1]
 
 . 如果尚未分配任何订阅，而您希望使用 PAYGO 购买，请选择编辑凭据。
 +
-image:cloud_central_add_we_2.PNG[""]
+image::cloud_central_add_we_2.PNG[Cloud Central增加了2个]
 
 . 选择添加订阅。
 +
-image:cloud_central_add_we_3.PNG[""]
+image::cloud_central_add_we_3.PNG[Cloud Central增加了我们3]
 
 . 选择要订阅的合同类型。我选择了按需购买。
 +
-image:cloud_central_add_we_4.PNG[""]
+image::cloud_central_add_we_4.PNG[Cloud Central增加了4个]
 
 . 系统会将您重定向到 AWS ；选择 Continue to Subscribe 。
 +
-image:cloud_central_add_we_5.PNG[""]
+image::cloud_central_add_we_5.PNG[Cloud Central增加了5个]
 
 . 订阅后，您将重定向回 NetApp Cloud Central 。如果您已订阅，但未被重定向，请选择 " 单击此处 " 链接。
 +
-image:cloud_central_add_we_6.PNG[""]
+image::cloud_central_add_we_6.PNG[Cloud Central增加了我们6]
 
 . 系统会将您重定向到 Cloud Central ，您必须在其中为订阅命名并将其分配给 Cloud Central 帐户。
 +
-image:cloud_central_add_we_7.PNG[""]
+image::cloud_central_add_we_7.PNG[Cloud Central增加了7个]
 
 . 成功后，将显示一个复选标记页面。导航回 Cloud Manager 选项卡。
 +
-image:cloud_central_add_we_8.PNG[""]
+image::cloud_central_add_we_8.PNG[Cloud Central增加了8个]
 
 . 现在，此订阅将显示在 Cloud Central 中。单击应用以继续。
 +
-image:cloud_central_add_we_9.PNG[""]
+image::cloud_central_add_we_9.PNG[Cloud Central增加了我们9]
 
 . 输入工作环境详细信息，例如：
 +
@@ -150,25 +150,25 @@ image:cloud_central_add_we_9.PNG[""]
 .. Cluster password
 .. AWS 标记（可选）
 +
-image:cloud_central_add_we_10.PNG[""]
+image::cloud_central_add_we_10.PNG[Cloud Central增加了10个]
 
 
 
 . 选择要部署的其他服务。要了解有关这些服务的更多信息，请访问 https://cloud.netapp.com["NetApp Cloud 主页"^]。
 +
-image:cloud_central_add_we_11.PNG[""]
+image::cloud_central_add_we_11.PNG[Cloud Central增加了我们11]
 
 . 选择是部署在多个可用性区域中（即三个子网，每个子网位于不同的 AZ 中），还是部署一个可用性区域。我选择了多个 AZs 。
 +
-image:cloud_central_add_we_12.PNG[""]
+image::cloud_central_add_we_12.PNG[Cloud Central增加了12个]
 
 . 选择要部署到的集群的区域， VPC 和安全组。在本节中，您还可以为每个节点（和调解器）分配可用性分区以及它们所占用的子网。
 +
-image:cloud_central_add_we_13.PNG[""]
+image::cloud_central_add_we_13.PNG[Cloud Central增加了我们13]
 
 . 选择节点和调解器的连接方法。
 +
-image:cloud_central_add_we_14.PNG[""]
+image::cloud_central_add_we_14.PNG[Cloud Central增加了我们14个]
 
 
 
@@ -177,47 +177,47 @@ TIP: 调解器需要与 AWS API 进行通信。只要在部署调解器 EC2 实�
 
 . 浮动 IP 地址用于访问 Cloud Volumes ONTAP 使用的各种 IP 地址，包括集群管理和数据提供 IP 。这些地址必须是您的网络中尚未可路由的地址，并且已添加到 AWS 环境中的路由表中。要在故障转移期间为 HA 对启用一致的 IP 地址，需要使用这些地址。有关浮动 IP 地址的详细信息，请参见 https://docs.netapp.com/us-en/occm/reference_networking_aws.html#requirements-for-ha-pairs-in-multiple-azs["NetApp Cloud 文档"^]。
 +
-image:cloud_central_add_we_15.PNG[""]
+image::cloud_central_add_we_15.PNG[Cloud Central增加了15个]
 
 . 选择将浮动 IP 地址添加到的路由表。客户端使用这些路由表与 Cloud Volumes ONTAP 进行通信。
 +
-image:cloud_central_add_we_16.PNG[""]
+image::cloud_central_add_we_16.PNG[Cloud Central增加了我们16个]
 
 . 选择是启用 AWS 托管加密还是启用 AWS KMS 对 ONTAP 根磁盘，启动磁盘和数据磁盘进行加密。
 +
-image:cloud_central_add_we_17.PNG[""]
+image::cloud_central_add_we_17.PNG[Cloud Central增加了17个]
 
 . 选择您的许可模式。如果您不知道选择哪种，请联系您的 NetApp 代表。
 +
-image:cloud_central_add_we_18.PNG[""]
+image::cloud_central_add_we_18.PNG[Cloud Central增加了我们18.]
 
 . 选择最适合您的用例的配置。这与 " 前提条件 " 页面中所述的规模估算注意事项相关。
 +
-image:cloud_central_add_we_19.PNG[""]
+image::cloud_central_add_we_19.PNG[Cloud Central增加了我们19.]
 
 . 也可以创建卷。这不是必需的，因为后续步骤使用 SnapMirror ，这将为我们创建卷。
 +
-image:cloud_central_add_we_20.PNG[""]
+image::cloud_central_add_we_20.PNG[Cloud Central增加了20个]
 
 . 查看所做的选择并勾选相应的复选框，确认您了解 Cloud Manager 是否已将资源部署到 AWS 环境中。准备好后，单击 "Go" 。
 +
-image:cloud_central_add_we_21.PNG[""]
+image::cloud_central_add_we_21.PNG[Cloud Central增加了我们21.]
 
 . Cloud Volumes ONTAP 现在开始其部署过程。Cloud Manager 使用 AWS API 和云构成堆栈来部署 Cloud Volumes ONTAP 。然后，它会根据您的规格对系统进行配置，为您提供一个可立即使用的即用系统。此过程的时间安排因所做的选择而异。
 +
-image:cloud_central_add_we_22.PNG[""]
+image::cloud_central_add_we_22.PNG[Cloud Central增加了我们22.]
 
 . 您可以通过导航到时间线来监控进度。
 +
-image:cloud_central_add_we_23.PNG[""]
+image::cloud_central_add_we_23.PNG[Cloud Central增加了我们23]
 
 . 时间线可作为对 Cloud Manager 中执行的所有操作的审核。您可以查看 Cloud Manager 在设置到 AWS 和 ONTAP 集群期间发出的所有 API 调用。此外，还可以有效地使用此功能对您遇到的任何问题进行故障排除。
 +
-image:cloud_central_add_we_24.PNG[""]
+image::cloud_central_add_we_24.PNG[Cloud Central增加了我们24个]
 
 . 部署完成后， CVO 集群将显示在当前容量所在的 Canvas 上。处于当前状态的 ONTAP 集群已完全配置，可以实现真正的即装即用体验。
 +
-image:cloud_central_add_we_25.PNG[""]
+image::cloud_central_add_we_25.PNG[Cloud Central增加了我们25个]
 
 
 
@@ -231,62 +231,62 @@ image:cloud_central_add_we_25.PNG[""]
 
 . 单击源 ONTAP 系统（内部），然后将其拖放到目标，选择复制 > 启用或选择复制 > 菜单 > 复制。
 +
-image:cloud_central_replication_1.png[""]
+image::cloud_central_replication_1.png[云中央复制1.]
 
 +
 选择启用。
 
 +
-image:cloud_central_replication_2.png[""]
+image::cloud_central_replication_2.png[云中央复制2.]
 
 +
 或选项。
 
 +
-image:cloud_central_replication_3.png[""]
+image::cloud_central_replication_3.png[云中央复制3.]
 
 +
 复制。
 
 +
-image:cloud_central_replication_4.png[""]
+image::cloud_central_replication_4.png[云中央复制4.]
 
 . 如果未拖放，请选择要复制到的目标集群。
 +
-image:cloud_central_replication_5.png[""]
+image::cloud_central_replication_5.png[云中央复制5.]
 
 . 选择要复制的卷。我们复制了数据和所有日志卷。
 +
-image:cloud_central_replication_6.png[""]
+image::cloud_central_replication_6.png[云中央复制6.]
 
 . 选择目标磁盘类型和分层策略。对于灾难恢复，我们建议使用 SSD 作为磁盘类型，并保持数据分层。数据分层可将镜像数据分层为低成本的对象存储，并节省使用本地磁盘的成本。中断关系或克隆卷时，数据将使用快速的本地存储。
 +
-image:cloud_central_replication_7.png[""]
+image::cloud_central_replication_7.png[云中央复制7.]
 
 . 选择目标卷名称： we chose ` [source_volume_name]_dr` 。
 +
-image:cloud_central_replication_8.png[""]
+image::cloud_central_replication_8.png[云中央复制8.]
 
 . 选择复制的最大传输速率。这样，如果您与云的连接带宽较低，例如 VPN ，则可以节省带宽。
 +
-image:cloud_central_replication_9.png[""]
+image::cloud_central_replication_9.png[云中央复制9.]
 
 . 定义复制策略。我们选择了镜像，它会获取最新的数据集并将其复制到目标卷。您也可以根据自己的要求选择其他策略。
 +
-image:cloud_central_replication_10.png[""]
+image::cloud_central_replication_10.png[云中央复制10.]
 
 . 选择触发复制的计划。NetApp 建议为数据卷设置 " 每日 " 计划，并为日志卷设置 " 每小时 " 计划，但可以根据要求进行更改。
 +
-image:cloud_central_replication_11.png[""]
+image::cloud_central_replication_11.png[云中央复制11.]
 
 . 查看输入的信息，单击 Go 以触发集群对等方和 SVM 对等方（如果这是您首次在两个集群之间复制），然后实施并初始化 SnapMirror 关系。
 +
-image:cloud_central_replication_12.png[""]
+image::cloud_central_replication_12.png[云中央复制12.]
 
 . 继续对数据卷和日志卷执行此过程。
 . 要检查所有关系，请导航到 Cloud Manager 中的复制选项卡。您可以在此处管理您的关系并检查其状态。
 +
-image:cloud_central_replication_13.png[""]
+image::cloud_central_replication_13.png[云中央复制13.]
 
 . 复制完所有卷后，您将处于稳定状态，并准备好继续执行灾难恢复和开发 / 测试工作流。
 

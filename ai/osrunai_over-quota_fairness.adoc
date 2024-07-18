@@ -28,7 +28,7 @@ summary:
 
 根据部分提交所有作业时 link:osrunai_testing_details_for_section_410.html["第 4.10 节的测试详细信息"]，则系统信息板会显示此信息 `team-a`， `team-b`，和 `team-c` 所有处理器都具有比其预设配额更多的GPU。 `team-a` 所占用的GPU比其预设的软配额(四个)多四个、而 `team-b` 和 `team-c` 每个CPU占用的GPU比其软配额多两个(两个)。分配的过度配额 GPU 的比率等于其预设配额的比率。这是因为系统使用预设配额作为优先级的参考，并在多个团队请求更多 GPU ，超过其配额时相应地进行配置。当企业数据科学团队积极参与 AI 模型的开发和生产时，这种自动负载平衡可以实现公平和优先级划分。
 
-image:osrunai_image10.png[""]
+image::osrunai_image10.png[osrunai image10.]
 
 此测试场景的结果如下：
 
@@ -56,4 +56,4 @@ image:osrunai_image10.png[""]
 |===
 下图显示了各个部分的 Run ： AI Analytics 信息板中每个项目在一段时间内的 GPU 分配情况 link:osrunai_achieving_high_cluster_utilization_with_over-uota_gpu_allocation.html["通过过度配额 GPU 分配实现高集群利用率"]， link:osrunai_basic_resource_allocation_fairness.html["基本资源分配公平"]，和 link:osrunai_over-quota_fairness.html["配额过度公平"]。图中的每一行表示在任何时间为给定数据科学团队配置的 GPU 数量。我们可以看到，系统会根据提交的工作负载动态分配 GPU 。这样，当集群中存在可用 GPU 时，团队可以超过配额，然后根据公平原则抢占作业，最后达到所有四个团队的稳定状态。
 
-image:osrunai_image11.png[""]
+image::osrunai_image11.png[osrunai image11.]

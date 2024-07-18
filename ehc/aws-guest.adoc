@@ -50,22 +50,22 @@ NOTE: 适用于 NetApp ONTAP 的 Amazon FSx 和基于 AWS 的 VMware Cloud 必�
 . 在选择文件系统类型页面上，选择适用于 NetApp ONTAP 的 Amazon FSx ，然后选择下一步。此时将显示创建文件系统页面。
 
 
-image:aws-fsx-guest-1.png[""]
+image::aws-fsx-guest-1.png[AWS FSx子系统1]
 
 . 在网络部分中，对于虚拟私有云（ Virtual Private Cloud ， VPC ），选择适当的 VPC 和首选子网以及路由表。在这种情况下，将从下拉列表中选择 vmcfsx2.vPC 。
 
 
-image:aws-fsx-guest-2.png[""]
+image::aws-fsx-guest-2.png[AWS FSx子系统2]
 
 . 对于创建方法，请选择标准创建。您也可以选择 " 快速创建 " ，但本文档使用 " 标准创建 " 选项。
 
 
-image:aws-fsx-guest-3.png[""]
+image::aws-fsx-guest-3.png[AWS FSx子系统3]
 
 . 在网络部分中，对于虚拟私有云（ Virtual Private Cloud ， VPC ），选择适当的 VPC 和首选子网以及路由表。在这种情况下，将从下拉列表中选择 vmcfsx2.vPC 。
 
 
-image:aws-fsx-guest-4.png[""]
+image::aws-fsx-guest-4.png[AWS FSx子系统4.]
 
 
 NOTE: 在网络部分中，对于虚拟私有云（ Virtual Private Cloud ， VPC ），选择适当的 VPC 和首选子网以及路由表。在这种情况下，将从下拉列表中选择 vmcfsx2.vPC 。
@@ -73,25 +73,27 @@ NOTE: 在网络部分中，对于虚拟私有云（ Virtual Private Cloud ， VP
 . 在安全性和加密部分中，对于加密密钥，选择用于保护文件系统空闲数据的 AWS 密钥管理服务（ AWS KMS ）加密密钥。对于文件系统管理密码，输入 fsxadmin 用户的安全密码。
 
 
-image:aws-fsx-guest-5.png[""]
+image::aws-fsx-guest-5.png[AWS FSx子系统5.]
 
 . 在虚拟机中，并指定与 vsadmin 结合使用的密码，以便使用 REST API 或 CLI 管理 ONTAP 。如果未指定密码，则可以使用 fsxadmin 用户来管理 SVM 。在 Active Directory 部分中，确保将 Active Directory 加入 SVM 以配置 SMB 共享。在默认 Storage Virtual Machine 配置部分中，在此验证中提供存储的名称， SMB 共享使用自管理的 Active Directory 域进行配置。
 
 
-image:aws-fsx-guest-6.png[""]
+image::aws-fsx-guest-6.png[AWS FSx子系统6.]
 
 . 在默认卷配置部分中，指定卷名称和大小。这是一个 NFS 卷。对于存储效率，请选择启用以启用 ONTAP 存储效率功能（数据压缩，重复数据删除和数据缩减），或者选择禁用以禁用这些功能。
 
 
-image:aws-fsx-guest-7.png[""]
+image::aws-fsx-guest-7.png[AWS FSx子系统7.]
 
 . 查看创建文件系统页面上显示的文件系统配置。
 . 单击创建文件系统。
 
 
-image:aws-fsx-guest-8.png[""]
-image:aws-fsx-guest-9.png[""]
-image:aws-fsx-guest-10.png[""]
+image::aws-fsx-guest-8.png[AWS FSx子系统8.]
+
+image::aws-fsx-guest-9.png[AWS FSx子系统9.]
+
+image::aws-fsx-guest-10.png[AWS FSx子系统10.]
 
 有关更多详细信息，请参见 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/getting-started.html["适用于 NetApp ONTAP 的 Amazon FSX 入门"]。
 
@@ -106,7 +108,7 @@ image:aws-fsx-guest-10.png[""]
 
 出于演示目的，本节创建了一个 NFS 卷，可以轻松地挂载在 AWS 上的 VMware 云上运行的 VM 上。nfsdemovol01 创建如下：
 
-image:aws-fsx-guest-11.png[""]
+image::aws-fsx-guest-11.png[AWS FSx子系统11.]
 
 ====
 .在 Linux 客户端上挂载 FSX ONTAP 卷
@@ -124,12 +126,12 @@ image:aws-fsx-guest-11.png[""]
  sudo mount -t nfs nfsvers=4.1,198.19.254.239:/nfsdemovol01 /fsx/nfsdemovol01
 
 
-image:aws-fsx-guest-20.png[""]
+image::aws-fsx-guest-20.png[AWS FSx子系统20.]
 
 . 执行后，运行 df 命令以验证挂载。
 
 
-image:aws-fsx-guest-21.png[""]
+image::aws-fsx-guest-21.png[AWS FSx子系统21.]
 
 .在 Linux 客户端上挂载 FSX ONTAP 卷
 video::c3befe1b-4f32-4839-a031-b01200fb6d60[panopto]
@@ -147,25 +149,26 @@ video::c3befe1b-4f32-4839-a031-b01200fb6d60[panopto]
 
 NOTE: TP 可在 Amazon FSX 控制台上找到 SVM 的 DNS 名称，选择 Storage Virtual Machine ，选择 SVM ，然后向下滚动到端点以查找 SMB DNS 名称。单击确定。Amazon FSX 文件系统将显示在共享文件夹列表中。
 
-image:aws-fsx-guest-22.png[""]
+image::aws-fsx-guest-22.png[AWS FSx子系统22.]
 
 . 在共享文件夹工具中，选择左窗格中的共享以查看 Amazon FSX 文件系统的活动共享。
 
 
-image:aws-fsx-guest-23.png[""]
+image::aws-fsx-guest-23.png[AWS FSx子系统23.]
 
 . 现在，选择一个新共享并完成创建共享文件夹向导。
 
 
-image:aws-fsx-guest-24.png[""]
-image:aws-fsx-guest-25.png[""]
+image::aws-fsx-guest-24.png[AWS FSx子系统24.]
+
+image::aws-fsx-guest-25.png[AWS FSx子系统25.]
 
 要了解有关在 Amazon FSX 文件系统上创建和管理 SMB 共享的详细信息，请参见 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/create-smb-shares.html["创建 SMB 共享"]。
 
 . 建立连接后，可以连接 SMB 共享并将其用于应用程序数据。为此，请复制共享路径并使用映射网络驱动器选项将卷挂载到 AWS SDDC 上在 VMware Cloud 上运行的虚拟机上。
 
 
-image:aws-fsx-guest-26.png[""]
+image::aws-fsx-guest-26.png[AWS FSx子系统26.]
 
 ====
 .使用 iSCSI 将适用于 NetApp ONTAP LUN 的 FSX 连接到主机
@@ -252,7 +255,7 @@ vmcfsxval2svm
 
 NOTE: Windows 主机必须与集群中的每个节点建立 iSCSI 连接。原生 DSM 会选择要使用的最佳路径。
 
-image:aws-fsx-guest-30.png[""]
+image::aws-fsx-guest-30.png[AWS FSx子系统30.]
 
 Storage Virtual Machine （ SVM ）上的 LUN 在 Windows 主机中显示为磁盘。主机不会自动发现添加的任何新磁盘。通过完成以下步骤触发手动重新扫描以发现磁盘：
 
@@ -262,7 +265,7 @@ Storage Virtual Machine （ SVM ）上的 LUN 在 Windows 主机中显示为磁�
 . 单击操作 > 重新扫描磁盘。
 
 
-image:aws-fsx-guest-31.png[""]
+image::aws-fsx-guest-31.png[AWS FSx子系统31]
 
 当新 LUN 首次由 Windows 主机访问时，它没有分区或文件系统。通过完成以下步骤初始化 LUN ，并可选择使用文件系统格式化 LUN ：
 
@@ -271,7 +274,7 @@ image:aws-fsx-guest-31.png[""]
 . 按照向导中的说明进行操作。在此示例中，驱动器 F ：已挂载。
 
 
-image:aws-fsx-guest-32.png[""]
+image::aws-fsx-guest-32.png[AWS FSx子系统32.]
 
 ====
 
@@ -303,72 +306,72 @@ NOTE: 使用 link:https://cloud.netapp.com/cvo-sizer["Cloud Volumes ONTAP 规模
 . 登录到 NetApp Cloud Central ；此时将显示 Fabric View 屏幕。找到 Cloud Volumes ONTAP 选项卡，然后选择转到 Cloud Manager 。登录后，将显示 " 画布 " 屏幕。
 
 
-image:aws-cvo-guest-1.png[""]
+image::aws-cvo-guest-1.png[AWS CVO子系统1]
 
 . 在 Cloud Manager 主页上，单击添加工作环境，然后选择 AWS 作为云以及系统配置的类型。
 
 
-image:aws-cvo-guest-2.png[""]
+image::aws-cvo-guest-2.png[AWS CVO子系统2]
 
 . 提供要创建的环境的详细信息，包括环境名称和管理员凭据。单击 Continue （继续）。
 
 
-image:aws-cvo-guest-3.png[""]
+image::aws-cvo-guest-3.png[AWS CVO子系统3]
 
 . 为Cloud Volumes ONTAP部署选择附加服务、包括BlueXP分类、BlueXP备份和恢复以及Cloud Insights。单击 Continue （继续）。
 
 
-image:aws-cvo-guest-4.png[""]
+image::aws-cvo-guest-4.png[AWS CVO子系统4.]
 
 . 在 HA 部署模式页面上，选择多个可用性区域配置。
 
 
-image:aws-cvo-guest-5.png[""]
+image::aws-cvo-guest-5.png[AWS CVO子系统5.]
 
 . 在区域和 VPC 页面上，输入网络信息，然后单击继续。
 
 
-image:aws-cvo-guest-6.png[""]
+image::aws-cvo-guest-6.png[AWS CVO子系统6.]
 
 . 在“ Connectivity and SSH Authentication ”（连接和 SSH 身份验证）页上、为 HA 对和调解器选择连接方法。
 
 
-image:aws-cvo-guest-7.png[""]
+image::aws-cvo-guest-7.png[AWS CVO子系统7.]
 
 . 指定浮动 IP 地址，然后单击继续。
 
 
-image:aws-cvo-guest-8.png[""]
+image::aws-cvo-guest-8.png[AWS CVO子系统8.]
 
 . 选择适当的路由表以包含指向浮动 IP 地址的路由，然后单击继续。
 
 
-image:aws-cvo-guest-9.png[""]
+image::aws-cvo-guest-9.png[AWS CVO子系统9.]
 
 . 在数据加密页面上，选择 AWS 管理的加密。
 
 
-image:aws-cvo-guest-10.png[""]
+image::aws-cvo-guest-10.png[AWS CVO子系统10.]
 
 . 选择许可证选项：按需购买或自带许可证以使用现有许可证。在此示例中，将使用按需购买选项。
 
 
-image:aws-cvo-guest-11.png[""]
+image::aws-cvo-guest-11.png[AWS CVO子系统11.]
 
 . 根据要在 AWS SDDC 上的 VMware 云上运行的 VM 上部署的工作负载类型，在多个预配置的软件包之间进行选择。
 
 
-image:aws-cvo-guest-12.png[""]
+image::aws-cvo-guest-12.png[AWS CVO子系统12.]
 
 . 在审核和批准页面上，查看并确认所做的选择。要创建 Cloud Volumes ONTAP 实例，请单击执行。
 
 
-image:aws-cvo-guest-13.png[""]
+image::aws-cvo-guest-13.png[AWS CVO子系统13.]
 
 . 配置 Cloud Volumes ONTAP 后，它将在 " 画布 " 页面的工作环境中列出。
 
 
-image:aws-cvo-guest-14.png[""]
+image::aws-cvo-guest-14.png[AWS CVO子系统14.]
 
 ====
 .SMB 卷的其他配置
@@ -377,24 +380,25 @@ image:aws-cvo-guest-14.png[""]
 . 准备好工作环境后，请确保为 CIFS 服务器配置了适当的 DNS 和 Active Directory 配置参数。要创建 SMB 卷，必须执行此步骤。
 
 
-image:aws-cvo-guest-20.png[""]
+image::aws-cvo-guest-20.png[AWS CVO子系统20.]
 
 . 选择要创建卷的 CVO 实例，然后单击创建卷选项。选择适当的大小， Cloud Manager 选择包含的聚合或使用高级分配机制将其放置在特定聚合上。在此演示中，选择 SMB 作为协议。
 
 
-image:aws-cvo-guest-21.png[""]
+image::aws-cvo-guest-21.png[AWS CVO子系统21.]
 
 . 配置卷后，此卷将显示在卷窗格下。由于已配置 CIFS 共享，因此您应向用户或组授予对文件和文件夹的权限，并验证这些用户是否可以访问此共享并创建文件。
 
 
-image:aws-cvo-guest-22.png[""]
+image::aws-cvo-guest-22.png[AWS CVO子系统22.]
 
 . 创建卷后，使用 mount 命令从 AWS SDDC 主机中 VMware Cloud 上运行的虚拟机连接到共享。
 . 复制以下路径并使用映射网络驱动器选项将卷挂载到 AWS SDDC 中 VMware Cloud 上运行的虚拟机上。
 
 
-image:aws-cvo-guest-23.png[""]
-image:aws-cvo-guest-24.png[""]
+image::aws-cvo-guest-23.png[AWS CVO子系统23.]
+
+image::aws-cvo-guest-24.png[AWS CVO子系统24]
 
 ====
 .将 LUN 连接到主机
@@ -406,8 +410,9 @@ image:aws-cvo-guest-24.png[""]
 . 单击添加卷 > 新建卷，选择 iSCSI ，然后单击创建启动程序组。单击 Continue （继续）。
 
 
-image:aws-cvo-guest-30.png[""]
-image:aws-cvo-guest-31.png[""]
+image::aws-cvo-guest-30.png[AWS CVO子系统30.]
+
+image::aws-cvo-guest-31.png[AWS CVO子系统31]
 
 . 配置卷后，选择卷，然后单击目标 IQN 。要复制 iSCSI 限定名称（ IQN ），请单击复制。设置从主机到 LUN 的 iSCSI 连接。
 
@@ -424,7 +429,7 @@ image:aws-cvo-guest-31.png[""]
 
 NOTE: Windows 主机必须与集群中的每个节点建立 iSCSI 连接。原生 DSM 会选择要使用的最佳路径。
 
-image:aws-cvo-guest-32.png[""]
+image::aws-cvo-guest-32.png[AWS CVO子系统32.]
 
 SVM 中的 LUN 在 Windows 主机中显示为磁盘。主机不会自动发现添加的任何新磁盘。通过完成以下步骤触发手动重新扫描以发现磁盘：
 
@@ -434,7 +439,7 @@ SVM 中的 LUN 在 Windows 主机中显示为磁盘。主机不会自动发现�
 . 单击操作 > 重新扫描磁盘。
 
 
-image:aws-cvo-guest-33.png[""]
+image::aws-cvo-guest-33.png[AWS CVO子系统33]
 
 当新 LUN 首次由 Windows 主机访问时，它没有分区或文件系统。初始化 LUN ；也可以通过完成以下步骤使用文件系统格式化 LUN ：
 
@@ -443,7 +448,7 @@ image:aws-cvo-guest-33.png[""]
 . 按照向导中的说明进行操作。在此示例中，驱动器 F ：已挂载。
 
 
-image:aws-cvo-guest-34.png[""]
+image::aws-cvo-guest-34.png[AWS CVO子系统34]
 
 在 Linux 客户端上，确保 iSCSI 守护进程正在运行。配置 LUN 后，请参阅有关适用于 Linux 分发版的 iSCSI 配置的详细指导。例如，可以找到 Ubuntu iSCSI 配置 link:https://ubuntu.com/server/docs/service-iscsi["此处"]。要进行验证，请从 shell 运行 lsblk cmd 。
 
@@ -463,7 +468,8 @@ image:aws-cvo-guest-34.png[""]
  sudo mount -t nfs nfsvers=4.1,172.16.0.2:/nfsdemovol01 /fsxcvotesting01/nfsdemovol01
 
 
-image:aws-cvo-guest-40.png[""]
-image:aws-cvo-guest-41.png[""]
+image::aws-cvo-guest-40.png[AWS CVO子系统40]
+
+image::aws-cvo-guest-41.png[AWS CVO子系统41]
 
 ====

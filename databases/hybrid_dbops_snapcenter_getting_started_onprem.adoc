@@ -36,7 +36,7 @@ SnapCenter 支持的每个数据库平台都有一个专用的管理员用户 ID
 . 导航到设置和用户下的访问选项卡，然后单击添加以添加新用户。新用户 ID 将链接到步骤 1 中在 Windows Active Directory 中创建的管理员用户。。根据需要为用户分配适当的角色。根据需要向管理员用户分配资源。
 
 
-image:snapctr_admin_users.PNG[""]
+image::snapctr_admin_users.PNG[snapctr管理员用户]
 
 
 
@@ -84,7 +84,7 @@ NOTE: 在尝试在云数据库服务器实例上安装 SnapCenter 插件之前�
 
 导航到设置 > 全局设置。在 Hypervisor Settings 下选择 "VM have iSCSI direct attached disks or NFS for all the hosts" ，然后单击 Update 。
 
-image:snapctr_vmware_global.PNG[""]
+image::snapctr_vmware_global.PNG[snapctr vmware global]
 
 
 
@@ -94,23 +94,23 @@ image:snapctr_vmware_global.PNG[""]
 . 单击左侧菜单中的主机选项卡，然后单击添加以打开添加主机工作流。
 . 选择 Windows 作为主机类型；主机名可以是主机名或 IP 地址。主机名必须从 SnapCenter 主机解析为正确的主机 IP 地址。选择在步骤 2 中创建的主机凭据。选择 Microsoft Windows 和 Microsoft SQL Server 作为要安装的插件软件包。
 +
-image:snapctr_add_windows_host_01.PNG[""]
+image::snapctr_add_windows_host_01.PNG[snapctr add windows host 01]
 
 . 在 Windows 主机上安装此插件后，其整体状态将显示为 "Configure log directory" 。
 +
-image:snapctr_add_windows_host_02.PNG[""]
+image::snapctr_add_windows_host_02.PNG[snapctr add windows host 02.]
 
 . 单击主机名以打开 SQL Server 日志目录配置。
 +
-image:snapctr_add_windows_host_03.PNG[""]
+image::snapctr_add_windows_host_03.PNG[snapctr add windows host 03.]
 
 . 单击 " 配置日志目录 " 以打开 " 为 SQL Server 配置插件 " 。
 +
-image:snapctr_add_windows_host_04.PNG[""]
+image::snapctr_add_windows_host_04.PNG[snapctr add windows host 04.]
 
 . 单击浏览以发现 NetApp 存储，以便可以设置日志目录； SnapCenter 使用此日志目录来汇总 SQL Server 事务日志文件。然后单击保存。
 +
-image:snapctr_add_windows_host_05.PNG[""]
+image::snapctr_add_windows_host_05.PNG[snapctr add windows host 05.]
 
 +
 
@@ -118,14 +118,14 @@ NOTE: 要发现配置到数据库主机的 NetApp 存储，必须将存储（内
 
 . 配置日志目录后， Windows 主机插件的整体状态将更改为正在运行。
 +
-image:snapctr_add_windows_host_06.PNG[""]
+image::snapctr_add_windows_host_06.PNG[snapctr add windows host 06.]
 
 . 要将主机分配给数据库管理用户 ID ，请导航到 " 设置和用户 " 下的 " 访问 " 选项卡，单击数据库管理用户 ID （在我们的情况下，是指需要将主机分配到的 sqldba ），然后单击 " 保存 " 完成主机资源分配。
 +
-image:snapctr_add_windows_host_07.PNG[""]
+image::snapctr_add_windows_host_07.PNG[snapctr add windows host 07.]
 
 +
-image:snapctr_add_windows_host_08.PNG[""]
+image::snapctr_add_windows_host_08.PNG[snapctr add windows host 08.]
 
 
 
@@ -137,26 +137,26 @@ image:snapctr_add_windows_host_08.PNG[""]
 . 单击左侧菜单中的主机选项卡，然后单击添加以打开添加主机工作流。
 . 选择 Linux 作为主机类型。主机名可以是主机名或 IP 地址。但是，必须解析主机名，以更正 SnapCenter 主机的主机 IP 地址。选择在步骤 2 中创建的主机凭据。主机凭据需要 sudo 权限。选中 Oracle Database 作为要安装的插件，该插件将同时安装 Oracle 和 Linux 主机插件。
 +
-image:snapctr_add_linux_host_01.PNG[""]
+image::snapctr_add_linux_host_01.PNG[snapctr add Linux host 01]
 
 . 单击更多选项并选择 " 跳过预安装检查 " 。 系统会提示您确认是否跳过预安装检查。单击是，然后单击保存。
 +
-image:snapctr_add_linux_host_02.PNG[""]
+image::snapctr_add_linux_host_02.PNG[snapctr添加Linux主机02]
 
 . 单击提交以开始安装插件。系统将提示您确认指纹，如下所示。
 +
-image:snapctr_add_linux_host_03.PNG[""]
+image::snapctr_add_linux_host_03.PNG[snapctr add Linux host 03.]
 
 . SnapCenter 将执行主机验证和注册，然后该插件将安装在 Linux 主机上。状态将从 " 正在安装插件 " 更改为 " 正在运行 " 。
 +
-image:snapctr_add_linux_host_04.PNG[""]
+image::snapctr_add_linux_host_04.PNG[snapctr add Linux host 04.]
 
 . 将新添加的主机分配给正确的数据库管理用户 ID （在我们的案例中为 oradba ）。
 +
-image:snapctr_add_linux_host_05.PNG[""]
+image::snapctr_add_linux_host_05.PNG[snapctr add Linux host 05.]
 
 +
-image:snapctr_add_linux_host_06.PNG[""]
+image::snapctr_add_linux_host_06.PNG[snapctr add Linux host 06.]
 
 
 
@@ -166,23 +166,23 @@ image:snapctr_add_linux_host_06.PNG[""]
 
 成功安装插件后，可以立即发现主机上的数据库资源。单击左侧菜单中的 "Resources" 选项卡。根据数据库平台的类型，可以使用多种视图，例如数据库，资源组等。如果未发现和显示主机上的资源，则可能需要单击刷新资源选项卡。
 
-image:snapctr_resources_ora.PNG[""]
+image::snapctr_resources_ora.PNG[snapctr资源ora]
 
 首次发现数据库时，整体状态显示为 " 不受保护 " 。 上一屏幕截图显示了一个尚未受备份策略保护的 Oracle 数据库。
 
 设置备份配置或策略并执行备份后，数据库的整体状态会将备份状态显示为 " 备份成功 " ，并显示上次备份的时间戳。以下屏幕截图显示了 SQL Server 用户数据库的备份状态。
 
-image:snapctr_resources_sql.PNG[""]
+image::snapctr_resources_sql.PNG[snapctr资源SQL]
 
 如果未正确设置数据库访问凭据，则红色锁定按钮表示数据库不可访问。例如，如果 Windows 凭据不具有对数据库实例的 sysadmin 访问权限，则必须重新配置数据库凭据以解除红色锁定。
 
-image:snapctr_add_windows_host_09.PNG[""]
+image::snapctr_add_windows_host_09.PNG[snapctr add windows host 01.]
 
-image:snapctr_add_windows_host_10.PNG[""]
+image::snapctr_add_windows_host_10.PNG[snapctr add windows host 10.]
 
 在 Windows 级别或数据库级别配置相应的凭据后，红色锁定将消失，并收集和查看 SQL Server 类型信息。
 
-image:snapctr_add_windows_host_11.PNG[""]
+image::snapctr_add_windows_host_11.PNG[snapctr add windows host 11.]
 
 
 
@@ -195,13 +195,13 @@ image:snapctr_add_windows_host_11.PNG[""]
 内部集群：
 
 +
-image:snapctr_cluster_replication_01.PNG[""]
+image::snapctr_cluster_replication_01.PNG[snapctr集群复制01]
 
 +
 目标 CVO 集群：
 
 +
-image:snapctr_cluster_replication_02.PNG[""]
+image::snapctr_cluster_replication_02.PNG[snapctr集群复制02]
 
 . 配置集群间 LIF 后，可以使用 NetApp Cloud Manager 中的拖放功能设置集群对等和卷复制。请参见 link:hybrid_dbops_snapcenter_getting_started_aws.html#aws-public-cloud["入门— AWS 公有云"] 了解详细信息。
 +
@@ -209,19 +209,19 @@ image:snapctr_cluster_replication_02.PNG[""]
 
 . 登录到 ONTAP 系统管理器。导航到集群 > 设置，然后单击对等集群，以便与云中的 CVO 实例建立集群对等关系。
 +
-image:snapctr_vol_snapmirror_00.PNG[""]
+image::snapctr_vol_snapmirror_00.PNG[snapcdr vol snapsnapsnapsnapvol 00]
 
 . 转到卷选项卡。选择要复制的数据库卷，然后单击保护。
 +
-image:snapctr_vol_snapmirror_01.PNG[""]
+image::snapctr_vol_snapmirror_01.PNG[snapcdr vol snapsnapsnapsnapsnap1]
 
 . 将保护策略设置为异步。选择目标集群和 Storage SVM 。
 +
-image:snapctr_vol_snapmirror_02.PNG[""]
+image::snapctr_vol_snapmirror_02.PNG[snapctr vol snapsnapsnapsnap2]
 
 . 验证卷是否已在源和目标之间同步，以及复制关系是否运行正常。
 +
-image:snapctr_vol_snapmirror_03.PNG[""]
+image::snapctr_vol_snapmirror_03.PNG[snapctr vol snapsnapsnap3]
 
 
 
@@ -232,15 +232,15 @@ image:snapctr_vol_snapmirror_03.PNG[""]
 . 使用具有 SnapCenterAdmin 权限的用户 ID 登录到 SnapCenter 。
 . 从菜单中单击存储系统选项卡，然后单击新建将托管复制的目标数据库卷的 CVO 存储 SVM 添加到 SnapCenter 。在存储系统字段中输入集群管理 IP ，然后输入相应的用户名和密码。
 +
-image:snapctr_add_cvo_svm_01.PNG[""]
+image::snapctr_add_cvo_svm_01.PNG[snapctr add CVO SVM 01]
 
 . 单击更多选项以打开其他存储配置选项。在平台字段中，选择 Cloud Volumes ONTAP ，选中二级，然后单击保存。
 +
-image:snapctr_add_cvo_svm_02.PNG[""]
+image::snapctr_add_cvo_svm_02.PNG[snapctr add CVO SVM 02]
 
 . 将存储系统分配给 SnapCenter 数据库管理用户 ID ，如所示 <<3. SnapCenter 主机插件安装>>。
 +
-image:snapctr_add_cvo_svm_03.PNG[""]
+image::snapctr_add_cvo_svm_03.PNG[snapctr add CVO SVM 03]
 
 
 
@@ -256,35 +256,35 @@ image:snapctr_add_cvo_svm_03.PNG[""]
 
 . 以数据库管理用户 ID 身份登录到 SnapCenter ，单击设置，然后单击策略。
 +
-image:snapctr_ora_policy_data_01.PNG[""]
+image::snapctr_ora_policy_data_01.PNG[snapctr ora策略数据01]
 
 . 单击 " 新建 " 启动新的备份策略创建工作流或选择要修改的现有策略。
 +
-image:snapctr_ora_policy_data_02.PNG[""]
+image::snapctr_ora_policy_data_02.PNG[snapctr ora策略数据02]
 
 . 选择备份类型和计划频率。
 +
-image:snapctr_ora_policy_data_03.PNG[""]
+image::snapctr_ora_policy_data_03.PNG[snapctr ora策略数据03.]
 
 . 设置备份保留设置。此选项用于定义要保留的完整数据库备份副本数。
 +
-image:snapctr_ora_policy_data_04.PNG[""]
+image::snapctr_ora_policy_data_04.PNG[snapctr ora策略数据04.]
 
 . 选择二级复制选项以将要复制到云中二级位置的本地主快照备份推送到云中。
 +
-image:snapctr_ora_policy_data_05.PNG[""]
+image::snapctr_ora_policy_data_05.PNG[snapctr ora策略数据05.]
 
 . 指定在备份运行前后运行的任何可选脚本。
 +
-image:snapctr_ora_policy_data_06.PNG[""]
+image::snapctr_ora_policy_data_06.PNG[snapctr ora策略数据06.]
 
 . 根据需要运行备份验证。
 +
-image:snapctr_ora_policy_data_07.PNG[""]
+image::snapctr_ora_policy_data_07.PNG[snapctr ora策略数据07.]
 
 . 摘要
 +
-image:snapctr_ora_policy_data_08.PNG[""]
+image::snapctr_ora_policy_data_08.PNG[snapctr ora policy data 08.]
 
 
 
@@ -295,31 +295,31 @@ image:snapctr_ora_policy_data_08.PNG[""]
 . 使用数据库管理用户 ID 登录到 SnapCenter ，单击设置，然后单击策略。
 . 单击 " 新建 " 启动新的备份策略创建工作流，或者选择现有策略进行修改。
 +
-image:snapctr_ora_policy_log_01.PNG[""]
+image::snapctr_ora_policy_log_01.PNG[snapctr ora策略日志01]
 
 . 选择备份类型和计划频率。
 +
-image:snapctr_ora_policy_log_02.PNG[""]
+image::snapctr_ora_policy_log_02.PNG[snapctr ora策略日志02]
 
 . 设置日志保留期限。
 +
-image:snapctr_ora_policy_log_03.PNG[""]
+image::snapctr_ora_policy_log_03.PNG[snapctr ora策略日志03.]
 
 . 启用复制到公有云中的二级位置。
 +
-image:snapctr_ora_policy_log_04.PNG[""]
+image::snapctr_ora_policy_log_04.PNG[snapctr ora策略日志04]
 
 . 指定在日志备份前后运行的任何可选脚本。
 +
-image:snapctr_ora_policy_log_05.PNG[""]
+image::snapctr_ora_policy_log_05.PNG[snapctr ora策略日志05.]
 
 . 指定任何备份验证脚本。
 +
-image:snapctr_ora_policy_log_06.PNG[""]
+image::snapctr_ora_policy_log_06.PNG[snapctr ora策略日志06.]
 
 . 摘要
 +
-image:snapctr_ora_policy_log_07.PNG[""]
+image::snapctr_ora_policy_log_07.PNG[snapctr ora策略日志07]
 
 
 
@@ -329,35 +329,35 @@ image:snapctr_ora_policy_log_07.PNG[""]
 
 . 使用数据库管理用户 ID 登录到 SnapCenter ，单击设置，然后单击策略。
 +
-image:snapctr_sql_policy_data_01.PNG[""]
+image::snapctr_sql_policy_data_01.PNG[snapctr SQL策略数据01]
 
 . 单击 " 新建 " 启动新的备份策略创建工作流，或者选择现有策略进行修改。
 +
-image:snapctr_sql_policy_data_02.PNG[""]
+image::snapctr_sql_policy_data_02.PNG[snapctr SQL策略数据02]
 
 . 定义备份选项和计划频率。对于配置了可用性组的 SQL Server ，可以设置首选备份副本。
 +
-image:snapctr_sql_policy_data_03.PNG[""]
+image::snapctr_sql_policy_data_03.PNG[snapctr SQL策略数据03.]
 
 . 设置备份保留期限。
 +
-image:snapctr_sql_policy_data_04.PNG[""]
+image::snapctr_sql_policy_data_04.PNG[snapctr SQL策略数据04.]
 
 . 启用备份副本复制到云中的二级位置。
 +
-image:snapctr_sql_policy_data_05.PNG[""]
+image::snapctr_sql_policy_data_05.PNG[snapctr SQL策略数据05.]
 
 . 指定在备份作业之前或之后运行的任何可选脚本。
 +
-image:snapctr_sql_policy_data_06.PNG[""]
+image::snapctr_sql_policy_data_06.PNG[snapctr SQL策略数据06.]
 
 . 指定用于运行备份验证的选项。
 +
-image:snapctr_sql_policy_data_07.PNG[""]
+image::snapctr_sql_policy_data_07.PNG[snapctr SQL策略数据07]
 
 . 摘要
 +
-image:snapctr_sql_policy_data_08.PNG[""]
+image::snapctr_sql_policy_data_08.PNG[snapctr SQL策略数据08.]
 
 
 
@@ -367,27 +367,27 @@ image:snapctr_sql_policy_data_08.PNG[""]
 
 . 使用数据库管理用户 ID 登录到 SnapCenter ，单击 " 设置 ">" 策略 " ，然后单击 " 新建 " 以启动新的策略创建工作流。
 +
-image:snapctr_sql_policy_log_01.PNG[""]
+image::snapctr_sql_policy_log_01.PNG[snapctr SQL策略日志01]
 
 . 定义日志备份选项和计划频率。对于配置了可用性组的 SQL Server ，可以设置首选备份副本。
 +
-image:snapctr_sql_policy_log_02.PNG[""]
+image::snapctr_sql_policy_log_02.PNG[snapctr SQL策略日志02]
 
 . SQL Server 数据备份策略定义日志备份保留；接受此处的默认值。
 +
-image:snapctr_sql_policy_log_03.PNG[""]
+image::snapctr_sql_policy_log_03.PNG[snapctr SQL策略日志03]
 
 . 启用日志备份复制到云中的二级卷。
 +
-image:snapctr_sql_policy_log_04.PNG[""]
+image::snapctr_sql_policy_log_04.PNG[snapctr SQL策略日志04]
 
 . 指定在备份作业之前或之后运行的任何可选脚本。
 +
-image:snapctr_sql_policy_log_05.PNG[""]
+image::snapctr_sql_policy_log_05.PNG[snapctr SQL策略日志05]
 
 . 摘要
 +
-image:snapctr_sql_policy_log_06.PNG[""]
+image::snapctr_sql_policy_log_06.PNG[snapctr SQL策略日志06.]
 
 
 
@@ -403,35 +403,35 @@ SnapCenter 使用资源组以数据库资源的逻辑分组形式备份数据库
 
 . 使用数据库管理用户 ID 登录到 SnapCenter ，然后导航到资源选项卡。在视图下拉列表中，选择数据库或资源组以启动资源组创建工作流。
 +
-image:snapctr_ora_rgroup_full_01.PNG[""]
+image::snapctr_ora_rgroup_full_01.PNG[snapctr ora rgroup Full 01]
 
 . 提供资源组的名称和标记。您可以为 Snapshot 副本定义命名格式，并绕过冗余归档日志目标（如果已配置）。
 +
-image:snapctr_ora_rgroup_full_02.PNG[""]
+image::snapctr_ora_rgroup_full_02.PNG[snapctr ora rgroup Full 02]
 
 . 将数据库资源添加到资源组。
 +
-image:snapctr_ora_rgroup_full_03.PNG[""]
+image::snapctr_ora_rgroup_full_03.PNG[snapctr ora rgroup Full 03]
 
 . 从下拉列表中选择在第 7 节中创建的完整备份策略。
 +
-image:snapctr_ora_rgroup_full_04.PNG[""]
+image::snapctr_ora_rgroup_full_04.PNG[snapctr ora rgroup Full 04]
 
 . 单击（ + ）号可配置所需的备份计划。
 +
-image:snapctr_ora_rgroup_full_05.PNG[""]
+image::snapctr_ora_rgroup_full_05.PNG[snapctr ora rgroup Full 05]
 
 . 单击 Load Locators 以加载源卷和目标卷。
 +
-image:snapctr_ora_rgroup_full_06.PNG[""]
+image::snapctr_ora_rgroup_full_06.PNG[snapctr ora rgroup Full 06.]
 
 . 如果需要，配置 SMTP 服务器以发送电子邮件通知。
 +
-image:snapctr_ora_rgroup_full_07.PNG[""]
+image::snapctr_ora_rgroup_full_07.PNG[snapctr ora rgroup Full 07]
 
 . 摘要
 +
-image:snapctr_ora_rgroup_full_08.PNG[""]
+image::snapctr_ora_rgroup_full_08.PNG[snapctr ora rgroup Full 08]
 
 
 
@@ -441,35 +441,35 @@ image:snapctr_ora_rgroup_full_08.PNG[""]
 
 . 使用数据库管理用户 ID 登录到 SnapCenter ，然后导航到资源选项卡。在视图下拉列表中，选择数据库或资源组以启动资源组创建工作流。
 +
-image:snapctr_ora_rgroup_log_01.PNG[""]
+image::snapctr_ora_rgroup_log_01.PNG[snapctr ora rgroup日志01]
 
 . 提供资源组的名称和标记。您可以为 Snapshot 副本定义命名格式，并绕过冗余归档日志目标（如果已配置）。
 +
-image:snapctr_ora_rgroup_log_02.PNG[""]
+image::snapctr_ora_rgroup_log_02.PNG[snapctr ora rgroup日志02]
 
 . 将数据库资源添加到资源组。
 +
-image:snapctr_ora_rgroup_log_03.PNG[""]
+image::snapctr_ora_rgroup_log_03.PNG[snapctr ora rgroup日志03]
 
 . 从下拉列表中选择在第 7 节中创建的日志备份策略。
 +
-image:snapctr_ora_rgroup_log_04.PNG[""]
+image::snapctr_ora_rgroup_log_04.PNG[snapctr ora rgroup日志04]
 
 . 单击（ + ）号可配置所需的备份计划。
 +
-image:snapctr_ora_rgroup_log_05.PNG[""]
+image::snapctr_ora_rgroup_log_05.PNG[snapctr ora rgroup日志05.]
 
 . 如果配置了备份验证，则会显示在此处。
 +
-image:snapctr_ora_rgroup_log_06.PNG[""]
+image::snapctr_ora_rgroup_log_06.PNG[snapctr ora rgroup日志06.]
 
 . 如果需要，配置用于电子邮件通知的 SMTP 服务器。
 +
-image:snapctr_ora_rgroup_log_07.PNG[""]
+image::snapctr_ora_rgroup_log_07.PNG[snapctr ora rgroup日志07]
 
 . 摘要
 +
-image:snapctr_ora_rgroup_log_08.PNG[""]
+image::snapctr_ora_rgroup_log_08.PNG[snapctr ora rgroup日志08]
 
 
 
@@ -479,31 +479,31 @@ image:snapctr_ora_rgroup_log_08.PNG[""]
 
 . 使用数据库管理用户 ID 登录到 SnapCenter ，然后导航到资源选项卡。在视图下拉列表中，选择数据库或资源组以启动资源组创建工作流。提供资源组的名称和标记。您可以为 Snapshot 副本定义命名格式。
 +
-image:snapctr_sql_rgroup_full_01.PNG[""]
+image::snapctr_sql_rgroup_full_01.PNG[snapctr SQL rgroup Full 01]
 
 . 选择要备份的数据库资源。
 +
-image:snapctr_sql_rgroup_full_02.PNG[""]
+image::snapctr_sql_rgroup_full_02.PNG[snapctr SQL rgroup Full 02]
 
 . 选择在第 7 节中创建的完整 SQL 备份策略。
 +
-image:snapctr_sql_rgroup_full_03.PNG[""]
+image::snapctr_sql_rgroup_full_03.PNG[snapctr SQL rgroup Full 03]
 
 . 添加准确的备份时间以及频率。
 +
-image:snapctr_sql_rgroup_full_04.PNG[""]
+image::snapctr_sql_rgroup_full_04.PNG[snapctr SQL rgroup Full 04]
 
 . 如果要执行备份验证，请在二级系统上为备份选择验证服务器。单击加载定位器以填充二级存储位置。
 +
-image:snapctr_sql_rgroup_full_05.PNG[""]
+image::snapctr_sql_rgroup_full_05.PNG[snapctr SQL rgroup Full 05]
 
 . 如果需要，配置 SMTP 服务器以发送电子邮件通知。
 +
-image:snapctr_sql_rgroup_full_06.PNG[""]
+image::snapctr_sql_rgroup_full_06.PNG[snapctr SQL rgroup Full 06.]
 
 . 摘要
 +
-image:snapctr_sql_rgroup_full_07.PNG[""]
+image::snapctr_sql_rgroup_full_07.PNG[snapctr SQL rgroup Full 07]
 
 
 
@@ -513,31 +513,31 @@ image:snapctr_sql_rgroup_full_07.PNG[""]
 
 . 使用数据库管理用户 ID 登录到 SnapCenter ，然后导航到资源选项卡。在视图下拉列表中，选择数据库或资源组以启动资源组创建工作流。提供资源组的名称和标记。您可以为 Snapshot 副本定义命名格式。
 +
-image:snapctr_sql_rgroup_log_01.PNG[""]
+image::snapctr_sql_rgroup_log_01.PNG[snapctr SQL rgroup日志01]
 
 . 选择要备份的数据库资源。
 +
-image:snapctr_sql_rgroup_log_02.PNG[""]
+image::snapctr_sql_rgroup_log_02.PNG[snapctr SQL rgroup日志02]
 
 . 选择在第 7 节中创建的 SQL 日志备份策略。
 +
-image:snapctr_sql_rgroup_log_03.PNG[""]
+image::snapctr_sql_rgroup_log_03.PNG[snapctr SQL rgroup日志03]
 
 . 添加准确的备份时间以及频率。
 +
-image:snapctr_sql_rgroup_log_04.PNG[""]
+image::snapctr_sql_rgroup_log_04.PNG[snapctr SQL rgroup日志04]
 
 . 如果要执行备份验证，请在二级系统上为备份选择验证服务器。单击负载定位器以填充二级存储位置。
 +
-image:snapctr_sql_rgroup_log_05.PNG[""]
+image::snapctr_sql_rgroup_log_05.PNG[snapctr SQL rgroup日志05.]
 
 . 如果需要，配置 SMTP 服务器以发送电子邮件通知。
 +
-image:snapctr_sql_rgroup_log_06.PNG[""]
+image::snapctr_sql_rgroup_log_06.PNG[snapctr SQL rgroup日志06]
 
 . 摘要
 +
-image:snapctr_sql_rgroup_log_07.PNG[""]
+image::snapctr_sql_rgroup_log_07.PNG[snapctr SQL rgroup日志07]
 
 
 
@@ -547,10 +547,10 @@ image:snapctr_sql_rgroup_log_07.PNG[""]
 
 创建数据库备份资源组以保护数据库资源后，备份作业将根据预定义的计划运行。在监控选项卡下检查作业执行状态。
 
-image:snapctr_job_status_sql.PNG[""]
+image::snapctr_job_status_sql.PNG[snapctr作业状态SQL]
 
 转到资源选项卡，单击数据库名称以查看数据库备份的详细信息，然后在本地副本和镜像副本之间切换，以验证 Snapshot 备份是否已复制到公有云中的二级位置。
 
-image:snapctr_job_status_ora.PNG[""]
+image::snapctr_job_status_ora.PNG[snaptr"作业状态ora"]
 
 此时，云中的数据库备份副本已做好克隆准备，可以运行开发 / 测试流程，或者在发生主故障时进行灾难恢复。

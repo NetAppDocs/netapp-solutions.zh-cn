@@ -23,22 +23,22 @@ keywords: hybrid cloud, database, solutions, dev/test, workflow
 
 . 使用适用于 Oracle 的数据库管理用户 ID 登录到 SnapCenter 。导航到资源选项卡，其中显示了受 SnapCenter 保护的 Oracle 数据库。
 +
-image:snapctr_ora_clone_01.PNG[""]
+image::snapctr_ora_clone_01.PNG[snapctr ora克隆01]
 
 . 单击备份拓扑和详细视图的预期内部数据库名称。如果启用了二级复制位置，则会显示链接镜像备份。
 +
-image:snapctr_ora_clone_02.PNG[""]
+image::snapctr_ora_clone_02.PNG[snapctr ora克隆02]
 
 . 通过单击镜像备份切换到镜像备份视图。然后显示二级镜像备份。
 +
-image:snapctr_ora_clone_03.PNG[""]
+image::snapctr_ora_clone_03.PNG[snapctr ora克隆03]
 
 . 选择要克隆的镜像二级数据库备份副本，并按时间和系统更改编号或 SCN 确定恢复点。通常，恢复点应是完整数据库备份时间的末尾，或者要克隆的 SCN 。确定恢复点后，必须挂载所需的日志文件备份以进行恢复。日志文件备份应挂载到要托管克隆数据库的目标数据库服务器。
 +
-image:snapctr_ora_clone_04.PNG[""]
+image::snapctr_ora_clone_04.PNG[snapctr ora克隆04]
 
 +
-image:snapctr_ora_clone_05.PNG[""]
+image::snapctr_ora_clone_05.PNG[snapctr ora克隆05]
 
 +
 
@@ -46,42 +46,42 @@ NOTE: 如果启用了日志修剪，并且恢复点扩展到上次日志修剪�
 
 . 突出显示要克隆的完整数据库备份副本，然后单击克隆按钮以启动数据库克隆工作流。
 +
-image:snapctr_ora_clone_06.PNG[""]
+image::snapctr_ora_clone_06.PNG[snapctr ora克隆06]
 
 . 为完整的容器数据库或 CDB 克隆选择正确的克隆数据库 SID 。
 +
-image:snapctr_ora_clone_07.PNG[""]
+image::snapctr_ora_clone_07.PNG[snapctr ora克隆07]
 
 . 选择云中的目标克隆主机，数据文件，控制文件和重做日志目录将通过克隆工作流创建。
 +
-image:snapctr_ora_clone_08.PNG[""]
+image::snapctr_ora_clone_08.PNG[snapctr ora克隆08]
 
 . 无凭据名称用于基于操作系统的身份验证，这会使数据库端口变得不相关。按照目标克隆数据库服务器中的配置填写正确的 Oracle 主目录， Oracle 操作系统用户和 Oracle 操作系统组。
 +
-image:snapctr_ora_clone_09.PNG[""]
+image::snapctr_ora_clone_09.PNG[snapctr ora克隆09]
 
 . 指定克隆操作前要运行的脚本。更重要的是，可以在此处调整或定义数据库实例参数。
 +
-image:snapctr_ora_clone_10.PNG[""]
+image::snapctr_ora_clone_10.PNG[snapctr ora克隆10.]
 
 . 按日期和时间或 SCN 指定恢复点。直到 " 取消 " 将数据库恢复到可用的归档日志为止。从挂载归档日志卷的目标主机指定外部归档日志位置。如果目标服务器 Oracle 所有者与内部生产服务器不同，请验证目标服务器 Oracle 所有者是否可以读取归档日志目录。
 +
-image:snapctr_ora_clone_11.PNG[""]
+image::snapctr_ora_clone_11.PNG[snapctr ora克隆11.]
 
 +
-image:snapctr_ora_clone_12.PNG[""]
+image::snapctr_ora_clone_12.PNG[snapctr ora克隆12.]
 
 . 如果需要，配置 SMTP 服务器以发送电子邮件通知。
 +
-image:snapctr_ora_clone_13.PNG[""]
+image::snapctr_ora_clone_13.PNG[snapctr ora克隆13.]
 
 . 克隆摘要。
 +
-image:snapctr_ora_clone_14.PNG[""]
+image::snapctr_ora_clone_14.PNG[snapctr ora克隆14.]
 
 . 您应在克隆后进行验证，以确保克隆的数据库正常运行。可以在开发 / 测试数据库上执行一些附加任务，例如启动侦听器或关闭数据库日志归档模式。
 +
-image:snapctr_ora_clone_15.PNG[""]
+image::snapctr_ora_clone_15.PNG[snapctr ora克隆15.]
 
 
 
@@ -91,46 +91,46 @@ image:snapctr_ora_clone_15.PNG[""]
 
 . 使用 SQL Server 的数据库管理用户 ID 登录到 SnapCenter 。导航到 " 资源 " 选项卡，其中显示了受 SnapCenter 保护的 SQL Sever 用户数据库以及公有云中的目标备用 SQL 实例。
 +
-image:snapctr_sql_clone_01.PNG[""]
+image::snapctr_sql_clone_01.PNG[snapctr SQL克隆01]
 
 . 单击备份拓扑和详细视图的预期内部 SQL Server 用户数据库名称。如果启用了二级复制位置，则会显示链接镜像备份。
 +
-image:snapctr_sql_clone_02.PNG[""]
+image::snapctr_sql_clone_02.PNG[snapctr SQL克隆02]
 
 . 通过单击镜像备份切换到镜像备份视图。然后显示二级镜像备份。由于 SnapCenter 会将 SQL Server 事务日志备份到专用驱动器进行恢复，因此此处仅显示完整的数据库备份。
 +
-image:snapctr_sql_clone_03.PNG[""]
+image::snapctr_sql_clone_03.PNG[snapctr SQL克隆03]
 
 . 选择备份副本，然后单击克隆按钮以启动从备份克隆工作流。
 +
-image:snapctr_sql_clone_04_1.PNG[""]
+image::snapctr_sql_clone_04_1.PNG[snapctr SQL克隆04 1.]
 
 +
-image:snapctr_sql_clone_04.PNG[""]
+image::snapctr_sql_clone_04.PNG[snapctr SQL克隆04]
 
 . 选择一个云服务器作为目标克隆服务器，克隆实例名称和克隆数据库名称。选择自动分配挂载点或用户定义的挂载点路径。
 +
-image:snapctr_sql_clone_05.PNG[""]
+image::snapctr_sql_clone_05.PNG[snapctr SQL克隆05]
 
 . 按日志备份时间或特定日期和时间确定恢复点。
 +
-image:snapctr_sql_clone_06.PNG[""]
+image::snapctr_sql_clone_06.PNG[snapctr SQL克隆06]
 
 . 指定在克隆操作前后运行的可选脚本。
 +
-image:snapctr_sql_clone_07.PNG[""]
+image::snapctr_sql_clone_07.PNG[snapctr SQL克隆07]
 
 . 如果需要电子邮件通知，请配置 SMTP 服务器。
 +
-image:snapctr_sql_clone_08.PNG[""]
+image::snapctr_sql_clone_08.PNG[snapctr SQL克隆08]
 
 . 克隆摘要。
 +
-image:snapctr_sql_clone_09.PNG[""]
+image::snapctr_sql_clone_09.PNG[snapctr SQL克隆09]
 
 . 监控作业状态并验证目标用户数据库是否已连接到云克隆服务器中的目标 SQL 实例。
 +
-image:snapctr_sql_clone_10.PNG[""]
+image::snapctr_sql_clone_10.PNG[snapctr SQL克隆10]
 
 
 

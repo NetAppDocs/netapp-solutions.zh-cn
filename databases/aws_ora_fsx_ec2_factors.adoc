@@ -37,11 +37,11 @@ NetApp建议采用以下存储布局：
 
 * 对于NFS存储、建议的卷布局为三个卷：一个用于Oracle二进制文件；一个用于Oracle数据和一个重复的控制文件；一个用于Oracle活动日志、归档日志和控制文件。
 +
-image:aws_ora_fsx_ec2_stor_12.PNG[""]
+image::aws_ora_fsx_ec2_stor_12.PNG[AWS ora FSx EC2或12.]
 
 * 对于iSCSI存储、建议的卷布局为三个卷：一个用于Oracle二进制文件；一个用于Oracle数据和一个重复的控制文件；一个用于Oracle活动日志、归档日志和控制文件。但是、理想情况下、每个数据卷和日志卷都应包含四个LUN。在HA集群节点上、LUN的平衡性最佳。
 +
-image:aws_ora_fsx_ec2_stor_13.PNG[""]
+image::aws_ora_fsx_ec2_stor_13.PNG[AWS ora FSx EC2或13.]
 
 * 对于存储IOPS和吞吐量、您可以为FSX存储集群的已配置IOPS和吞吐量选择阈值、并且可以随时在工作负载发生变化时动态调整这些参数。
 +
@@ -74,7 +74,7 @@ sysctl -a | grep tcp.*.slot_table
 ----
 * 下表提供了适用于Linux NFSv3 -单个实例的建议NFS挂载选项。
 +
-image:aws_ora_fsx_ec2_nfs_01.PNG[""]
+image::aws_ora_fsx_ec2_nfs_01.PNG[AWS ora FSx EC2 NFS 01]
 
 
 

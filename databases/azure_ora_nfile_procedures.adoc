@@ -53,36 +53,38 @@ Azure虚拟网络(vNet)是Azure中专用网络的基本组件。VNet支持Azure�
 
 . 在Azure VM页面中、单击*创建*、然后选择* Azure虚拟机*。
 +
-image:db_ora_azure_anf_vm_01.PNG["此屏幕截图显示了可用Azure虚拟机的列表。"]
+image::db_ora_azure_anf_vm_01.PNG[此屏幕截图显示了可用Azure虚拟机的列表。]
 
 . 选择部署的订阅ID、然后选择资源组、区域、主机名、VM映像、大小、和身份验证方法。转到磁盘页面。
 +
-image:db_ora_azure_anf_vm_02-1.PNG["此屏幕截图显示了\"Create a Virtual Machine\"页面的输入。"]
-image:db_ora_azure_anf_vm_02-2.PNG["此屏幕截图显示了\"Create a Virtual Machine\"页面的其他输入。"]
+image::db_ora_azure_anf_vm_02-1.PNG[此屏幕截图显示了"Create a Virtual Machine"页面的输入。]
+
++
+image::db_ora_azure_anf_vm_02-2.PNG[此屏幕截图显示了"Create a Virtual Machine"页面的其他输入。]
 
 . 选择*高级SSD*以实现操作系统本地冗余、并将数据磁盘留空、因为数据磁盘是从ANF存储挂载的。转到网络连接页面。
 +
-image:db_ora_azure_anf_vm_03.PNG["此屏幕截图显示了\"Create a Virtual Machine Disks\"页面的输入。"]
+image::db_ora_azure_anf_vm_03.PNG[此屏幕截图显示了"Create a Virtual Machine Disks"页面的输入。]
 
 . 选择vNet和子网。为外部VM访问分配公共IP。然后转到"管理"页面。
 +
-image:db_ora_azure_anf_vm_04.PNG["此屏幕截图显示了创建虚拟机页面的其他输入。"]
+image::db_ora_azure_anf_vm_04.PNG[此屏幕截图显示了创建虚拟机页面的其他输入。]
 
 . 保留Management的所有默认值、然后转到Advanced页面。
 +
-image:db_ora_azure_anf_vm_05.PNG["此屏幕截图显示了\"Create a Virtual Machine Management\"页面的输入。"]
+image::db_ora_azure_anf_vm_05.PNG[此屏幕截图显示了"Create a Virtual Machine Management"页面的输入。]
 
 . 保留"高级"页面的所有默认值、除非您需要在使用自定义脚本部署后自定义VM。然后转到"标记"页面。
 +
-image:db_ora_azure_anf_vm_06.PNG["此屏幕截图显示了\"Create a Virtual Machine Advanced\"页面的输入。"]
+image::db_ora_azure_anf_vm_06.PNG[此屏幕截图显示了"Create a Virtual Machine Advanced"页面的输入。]
 
 . 如果需要、为虚拟机添加一个标记。然后、转到Review + create页面。
 +
-image:db_ora_azure_anf_vm_07.PNG["此屏幕截图显示了\"Create a Virtual Machine Tags \"页面的输入。"]
+image::db_ora_azure_anf_vm_07.PNG[此屏幕截图显示了"Create a Virtual Machine Tags "页面的输入。]
 
 . 部署工作流将对配置运行验证、如果验证通过、请单击*创建*以创建虚拟机。
 +
-image:db_ora_azure_anf_vm_08.PNG["\"此屏幕截图显示了\"Create a Virtual Machine review and create\"页面的输入。"]
+image::db_ora_azure_anf_vm_08.PNG[此屏幕截图显示了"Create a Virtual Machine Review and creation"页面的输入内容]
 
 
 
@@ -94,28 +96,30 @@ image:db_ora_azure_anf_vm_08.PNG["\"此屏幕截图显示了\"Create a Virtual M
 
 . 在Azure控制台中的Azure服务列表下、单击Azure NetApp Files 以打开卷创建工作流。如果您有多个ANF存储帐户、请单击要从中配置卷的帐户。
 +
-image:db_ora_azure_anf_vols_00.PNG["此屏幕截图显示了Azure服务页面、其中ANF突出显示。"]
+image::db_ora_azure_anf_vols_00.PNG[此屏幕截图显示了Azure服务页面、其中ANF突出显示。]
 
 . 在NetApp存储帐户下、单击*卷*、然后单击*添加卷*以创建新的Oracle卷。
 +
-image:db_ora_azure_anf_vols_01_1.PNG["此屏幕截图显示了NetApp存储帐户的登录屏幕。"]
-image:db_ora_azure_anf_vols_01.PNG["此屏幕截图显示了可用于NetApp存储帐户的卷。"]
+image::db_ora_azure_anf_vols_01_1.PNG[此屏幕截图显示了NetApp存储帐户的登录屏幕。]
+
++
+image::db_ora_azure_anf_vols_01.PNG[此屏幕截图显示了可用于NetApp存储帐户的卷。]
 
 . 作为一种良好做法、请先确定使用VM主机名作为前缀的Oracle卷、然后再确定主机上的挂载点、例如、对于Oracle二进制文件、可以使用u01表示Oracle数据、可以使用u02表示Oracle数据、也可以使用u03表示Oracle日志。为卷选择与VM相同的vNet。单击*下一步：协议>*。
 +
-image:db_ora_azure_anf_vols_02.PNG["卷创建屏幕。"]
+image::db_ora_azure_anf_vols_02.PNG[卷创建屏幕。]
 
 . 选择NFS协议、将Oracle主机IP地址添加到允许的客户端、然后删除允许所有IP地址0.0.0.0/0的默认策略。然后单击*下一步：标记>*。
 +
-image:db_ora_azure_anf_vols_03.PNG["卷创建屏幕上的协议输入。"]
+image::db_ora_azure_anf_vols_03.PNG[卷创建屏幕上的协议输入。]
 
 . 根据需要添加卷标记。然后单击*审阅+创建>*。
 +
-image:db_ora_azure_anf_vols_04.PNG["卷创建屏幕上的标记输入。"]
+image::db_ora_azure_anf_vols_04.PNG[卷创建屏幕上的标记输入。]
 
 . 如果验证通过、请单击*创建*以创建卷。
 +
-image:db_ora_azure_anf_vols_05.PNG["查看并创建卷创建屏幕的阶段。"]
+image::db_ora_azure_anf_vols_05.PNG[查看并创建卷创建屏幕的阶段。]
 
 
 

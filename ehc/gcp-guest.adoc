@@ -44,45 +44,45 @@ NOTE: 使用 ... link:https://cloud.netapp.com/cvo-sizer["Cloud Volumes ONTAP �
 
 . 登录到 NetApp Cloud Central —此时将显示 Fabric View 屏幕。找到 Cloud Volumes ONTAP 选项卡，然后选择转到 Cloud Manager 。登录后，将显示 " 画布 " 屏幕。
 +
-image:gcve-cvo-guest-1.png[""]
+image::gcve-cvo-guest-1.png[管理CVO子系统1]
 
 . 在 Cloud Manager 的 " 画布 " 选项卡上，单击添加工作环境，然后选择 Google Cloud Platform 作为云以及系统配置的类型。然后，单击下一步。
 +
-image:gcve-cvo-guest-2.png[""]
+image::gcve-cvo-guest-2.png[管理CVO子系统2.]
 
 . 提供要创建的环境的详细信息，包括环境名称和管理员凭据。完成后，单击 Continue 。
 +
-image:gcve-cvo-guest-3.png[""]
+image::gcve-cvo-guest-3.png[管理CVO子系统3.]
 
 . 选择或取消选择 Cloud Volumes ONTAP 部署的附加服务，包括数据感知与合规性或备份到云。然后，单击 Continue 。
 +
 提示：停用附加服务时，将显示验证弹出消息。可以在部署 CVO 后添加 / 删除附加服务，如果不需要，请考虑从一开始就取消选择这些附加服务，以避免成本。
 
 +
-image:gcve-cvo-guest-4.png[""]
+image::gcve-cvo-guest-4.png[管理CVO子系统4.]
 
 . 选择一个位置，选择一个防火墙策略，然后选中此复选框以确认与 Google Cloud 存储的网络连接。
 +
-image:gcve-cvo-guest-5.png[""]
+image::gcve-cvo-guest-5.png[管理CVO子系统5.]
 
 . 选择许可证选项：按需购买或自带许可证以使用现有许可证。在此示例中，使用了 freemium 选项。然后，单击 Continue 。
 +
-image:gcve-cvo-guest-6.png[""]
+image::gcve-cvo-guest-6.png[安装CVO子系统6.]
 
 . 根据要部署在 AWS SDDC 上的 VMware 云上运行的 VM 上的工作负载类型，在多个预配置的软件包之间进行选择。
 +
 提示：将鼠标悬停在图块上可查看详细信息，或者单击更改配置来自定义 CVO 组件和 ONTAP 版本。
 
 +
-image:gcve-cvo-guest-7.png[""]
+image::gcve-cvo-guest-7.png[管理CVO子系统7.]
 
 . 在审核和批准页面上，查看并确认所做的选择。要创建 Cloud Volumes ONTAP 实例，请单击执行。
 +
-image:gcve-cvo-guest-8.png[""]
+image::gcve-cvo-guest-8.png[管理CVO子系统8.]
 
 . 配置 Cloud Volumes ONTAP 后，它将在 " 画布 " 页面的工作环境中列出。
 +
-image:gcve-cvo-guest-9.png[""]
+image::gcve-cvo-guest-9.png[管理CVO子系统9.]
 
 
 
@@ -95,32 +95,32 @@ image:gcve-cvo-guest-9.png[""]
 提示：单击菜单图标（ º ），选择高级以显示更多选项，然后选择 CIFS 设置。
 
 +
-image:gcve-cvo-guest-10.png[""]
+image::gcve-cvo-guest-10.png[管理CVO子系统10.]
 
 . 创建 SMB 卷的过程非常简单。在 " 画布 " 中，双击 Cloud Volumes ONTAP 工作环境以创建和管理卷，然后单击创建卷选项。选择适当的大小， Cloud Manager 选择包含的聚合或使用高级分配机制将其放置在特定聚合上。在此演示中，选择 CIFS/SMB 作为协议。
 +
-image:gcve-cvo-guest-11.png[""]
+image::gcve-cvo-guest-11.png[管理CVO子系统11.]
 
 . 配置卷后，卷将显示在卷窗格下。由于已配置 CIFS 共享，因此请为用户或组授予对文件和文件夹的权限，并验证这些用户是否可以访问此共享并创建文件。如果从内部环境复制卷，则不需要执行此步骤，因为文件和文件夹权限均会在 SnapMirror 复制过程中保留。
 +
 提示：单击卷菜单（ º ）可显示其选项。
 
 +
-image:gcve-cvo-guest-12.png[""]
+image::gcve-cvo-guest-12.png[Gcve CVO来宾12.]
 
 . 创建卷后，使用 mount 命令显示卷连接说明，然后从 Google Cloud VMware Engine 上的 VM 连接到共享。
 +
-image:gcve-cvo-guest-13.png[""]
+image::gcve-cvo-guest-13.png[管理CVO子系统13.]
 
 . 复制以下路径并使用映射网络驱动器选项将卷挂载到 Google Cloud VMware 引擎上运行的虚拟机上。
 +
-image:gcve-cvo-guest-14.png[""]
+image::gcve-cvo-guest-14.png[管理CVO子系统14.]
 
 +
 映射后，可以轻松访问该文件，并相应地设置 NTFS 权限。
 
 +
-image:gcve-cvo-guest-15.png[""]
+image::gcve-cvo-guest-15.png[Gcve CVO来宾15.]
 
 
 
@@ -133,8 +133,10 @@ image:gcve-cvo-guest-15.png[""]
 . 在 " 画布 " 页面上，双击 Cloud Volumes ONTAP 工作环境以创建和管理卷。
 . 单击 "Add Volume" （添加卷） >"New Volume" （新卷），然后选择 "iSCSI" ，然后单击 "Create Initiator Group" （单击 Continue （继续）。
 +
-image:gcve-cvo-guest-16.png[""]
-image:gcve-cvo-guest-17.png[""]
+image::gcve-cvo-guest-16.png[管理CVO子系统16.]
+
++
+image::gcve-cvo-guest-17.png[Gcve CVO来宾17.]
 
 . 配置卷后，选择卷菜单（ º ），然后单击目标 IQN 。要复制 iSCSI 限定名称（ IQN ），请单击复制。设置从主机到 LUN 的 iSCSI 连接。
 
@@ -151,7 +153,7 @@ image:gcve-cvo-guest-17.png[""]
 NOTE: Windows 主机必须与集群中的每个节点建立 iSCSI 连接。原生 DSM 会选择要使用的最佳路径。
 
 +
-image:gcve-cvo-guest-18.png[""]
+image::gcve-cvo-guest-18.png[Gcve CVO来宾18.]
 
 +
 Storage Virtual Machine （ SVM ）上的 LUN 在 Windows 主机中显示为磁盘。主机不会自动发现添加的任何新磁盘。通过完成以下步骤触发手动重新扫描以发现磁盘：
@@ -162,7 +164,7 @@ Storage Virtual Machine （ SVM ）上的 LUN 在 Windows 主机中显示为磁�
 .. 单击磁盘管理。
 .. 单击操作 > 重新扫描磁盘。
 +
-image:gcve-cvo-guest-19.png[""]
+image::gcve-cvo-guest-19.png[处理CVO访客19.]
 
 +
 当新 LUN 首次由 Windows 主机访问时，它没有分区或文件系统。初始化 LUN ；也可以通过完成以下步骤使用文件系统格式化 LUN ：
@@ -174,12 +176,13 @@ image:gcve-cvo-guest-19.png[""]
 
 
 
-image:gcve-cvo-guest-20.png[""]
+image::gcve-cvo-guest-20.png[管理CVO子系统20.]
 
 在 Linux 客户端上，确保 iSCSI 守护进程正在运行。配置 LUN 后，请参见有关使用 Ubuntu 进行 iSCSI 配置的详细指南，作为示例。要进行验证，请从 shell 运行 lsblk cmd 。
 
-image:gcve-cvo-guest-21.png[""]
-image:gcve-cvo-guest-22.png[""]
+image::gcve-cvo-guest-21.png[处理CVO访客21.]
+
+image::gcve-cvo-guest-22.png[处理CVO子系统22.]
 
 ====
 .在 Linux 客户端上挂载 Cloud Volumes ONTAP NFS 卷
@@ -192,11 +195,11 @@ image:gcve-cvo-guest-22.png[""]
 . 在 Volumes （卷）选项卡中，单击 Create New Volume （创建新卷）。
 . 在 "Create New Volume" 页面上，选择卷类型：
 +
-image:gcve-cvo-guest-23.png[""]
+image::gcve-cvo-guest-23.png[处理CVO子系统23.]
 
 . 在卷选项卡中，将鼠标光标置于卷上方，选择菜单图标（ º ），然后单击挂载命令。
 +
-image:gcve-cvo-guest-24.png[""]
+image::gcve-cvo-guest-24.png[gcve CVO来宾24.]
 
 . 单击复制。
 . 连接到指定的 Linux 实例。
@@ -205,14 +208,16 @@ image:gcve-cvo-guest-24.png[""]
 +
  $ sudo mkdir /cvogcvetst
 +
-image:gcve-cvo-guest-25.png[""]
+image::gcve-cvo-guest-25.png[管理CVO子系统25.]
 
 . 将 Cloud Volumes ONTAP NFS 卷挂载到上一步创建的目录。
 +
  sudo mount 10.0.6.251:/cvogcvenfsvol01 /cvogcvetst
 +
-image:gcve-cvo-guest-26.png[""]
-image:gcve-cvo-guest-27.png[""]
+image::gcve-cvo-guest-26.png[处理CVO访客26.]
+
++
+image::gcve-cvo-guest-27.png[处理CVO访客27.]
 
 
 
@@ -246,49 +251,49 @@ Cloud Volume Service 和 Google Cloud VMware Engine 私有云必须位于同一�
 
 . 从 Google 云控制台中的合作伙伴解决方案访问 Cloud Volumes 。
 +
-image:gcve-cvs-guest-1.png[""]
+image::gcve-cvs-guest-1.png[配置CVS子系统1]
 
 . 在 Cloud Volumes Console 中，转到 Volumes 页面，然后单击 Create 。
 +
-image:gcve-cvs-guest-2.png[""]
+image::gcve-cvs-guest-2.png[gcve CVS子系统2.]
 
 . 在创建文件系统页面上，根据成本分摊机制的需要指定卷名称和计费标签。
 +
-image:gcve-cvs-guest-3.png[""]
+image::gcve-cvs-guest-3.png[GCVE CVS子系统3.]
 
 . 选择相应的服务。对于 GCVE ，请选择 CVS-Performance 和所需的服务级别，以根据应用程序工作负载要求提高延迟和性能。
 +
-image:gcve-cvs-guest-4.png[""]
+image::gcve-cvs-guest-4.png[gcve CVS子系统4.]
 
 . 为卷和卷路径指定 Google Cloud 区域（卷路径必须在项目中的所有云卷之间是唯一的）
 +
-image:gcve-cvs-guest-5.png[""]
+image::gcve-cvs-guest-5.png[gcve CVS子系统5.]
 
 . 选择卷的性能级别。
 +
-image:gcve-cvs-guest-6.png[""]
+image::gcve-cvs-guest-6.png[GCVE CVS子系统6.]
 
 . 指定卷的大小和协议类型。在此测试中，将使用 NFSv3 。
 +
-image:gcve-cvs-guest-7.png[""]
+image::gcve-cvs-guest-7.png[GCVE CVS子系统7.]
 
 . 在此步骤中，选择可从中访问卷的 VPC 网络。确保已建立 VPC 对等关系。
 +
 提示：如果尚未建立 VPC 对等关系，则会显示一个弹出按钮，用于指导您完成对等命令。打开 Cloud Shell 会话并执行相应的命令，将您的 VPC 与 Cloud Volumes Service 生产者建立对等关系。如果您决定事先准备 VPC 对等关系，请参见以下说明。
 
 +
-image:gcve-cvs-guest-8.png[""]
+image::gcve-cvs-guest-8.png[gcve CVS子系统8.]
 
 . 通过添加相应的规则来管理导出策略规则，然后选中相应 NFS 版本对应的复选框。
 +
 注意：除非添加导出策略，否则无法访问 NFS 卷。
 
 +
-image:gcve-cvs-guest-9.png[""]
+image::gcve-cvs-guest-9.png[gcve CVS子系统9.]
 
 . 单击保存以创建卷。
 +
-image:gcve-cvs-guest-10.png[""]
+image::gcve-cvs-guest-10.png[gcve CVS子系统10.]
 
 
 
@@ -323,14 +328,16 @@ image:gcve-cvs-guest-10.png[""]
 +
  sudo mkdir /nimCVSNFSol01
 +
-image:gcve-cvs-guest-20.png[""]
+image::gcve-cvs-guest-20.png[gcve CVS子系统20.]
 
 . 使用相应的命令挂载卷。以下是实验室命令示例：
 +
  sudo mount -t nfs -o rw,hard,rsize=65536,wsize=65536,vers=3,tcp 10.53.0.4:/nimCVSNFSol01 /nimCVSNFSol01
 +
-image:gcve-cvs-guest-21.png[""]
-image:gcve-cvs-guest-22.png[""]
+image::gcve-cvs-guest-21.png[Gcve CVS子系统21.]
+
++
+image::gcve-cvs-guest-22.png[gcve CVS子系统22.]
 
 
 
@@ -340,41 +347,41 @@ image:gcve-cvs-guest-22.png[""]
 ====
 对于 SMB 卷，请确保在创建 SMB 卷之前已配置 Active Directory 连接。
 
-image:gcve-cvs-guest-30.png[""]
+image::gcve-cvs-guest-30.png[gcve CVS子系统30.]
 
 建立 AD 连接后，创建具有所需服务级别的卷。除了选择适当的协议之外，这些步骤与创建 NFS 卷类似。
 
 . 在 Cloud Volumes Console 中，转到 Volumes 页面，然后单击 Create 。
 . 在创建文件系统页面上，根据成本分摊机制的需要指定卷名称和计费标签。
 +
-image:gcve-cvs-guest-31.png[""]
+image::gcve-cvs-guest-31.png[gcve CVS子系统31]
 
 . 选择相应的服务。对于 GCVE ，请选择 CVS-Performance 和所需的服务级别，以根据工作负载要求提高延迟和性能。
 +
-image:gcve-cvs-guest-32.png[""]
+image::gcve-cvs-guest-32.png[gcve CVS子系统32.]
 
 . 为卷和卷路径指定 Google Cloud 区域（卷路径必须在项目中的所有云卷之间是唯一的）
 +
-image:gcve-cvs-guest-33.png[""]
+image::gcve-cvs-guest-33.png[gcve CVS子系统33]
 
 . 选择卷的性能级别。
 +
-image:gcve-cvs-guest-34.png[""]
+image::gcve-cvs-guest-34.png[gcve CVS子系统34]
 
 . 指定卷的大小和协议类型。在此测试中，使用 SMB 。
 +
-image:gcve-cvs-guest-35.png[""]
+image::gcve-cvs-guest-35.png[gcve CVS子系统35]
 
 . 在此步骤中，选择可从中访问卷的 VPC 网络。确保已建立 VPC 对等关系。
 +
 提示：如果尚未建立 VPC 对等关系，则会显示一个弹出按钮，用于指导您完成对等命令。打开 Cloud Shell 会话并执行相应的命令，将您的 VPC 与 Cloud Volumes Service 生产者建立对等关系。如果您决定事先准备 VPC 对等关系，请参见以下内容 link:https://cloud.google.com/architecture/partners/netapp-cloud-volumes/setting-up-private-services-access?hl=en["说明"]。
 
 +
-image:gcve-cvs-guest-36.png[""]
+image::gcve-cvs-guest-36.png[gcve CVS子系统36]
 
 . 单击保存以创建卷。
 +
-image:gcve-cvs-guest-37.png[""]
+image::gcve-cvs-guest-37.png[gcve CVS子系统37]
 
 
 
@@ -395,14 +402,14 @@ image:gcve-cvs-guest-37.png[""]
 +
  \\nimsmb-3830.nimgcveval.com\nimCVSMBvol01
 +
-image:gcve-cvs-guest-38.png[""]
+image::gcve-cvs-guest-38.png[gcve CVS子系统38]
 
 +
 要在每次登录到计算机时进行连接，请选中登录时重新连接复选框。
 
 . 单击完成。
 +
-image:gcve-cvs-guest-39.png[""]
+image::gcve-cvs-guest-39.png[gcve CVS子系统39]
 
 
 

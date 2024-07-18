@@ -52,14 +52,14 @@ summary: 基于AWS云中的性能对存储层挂载在NetApp NFS上的Kafka集�
 
 . 对于Cloud Volumes ONTAP HA对、我们在每个存储控制器的每个聚合上创建了两个聚合、其中包含三个卷。对于单个Cloud Volumes ONTAP 节点、我们会在一个聚合中创建六个卷。
 +
-image:kafka-nfs-image25.png["此图显示了aggr3和aggr22的属性。"]
+image::kafka-nfs-image25.png[此图显示了aggr3和aggr22的属性。]
 
 +
-image:kafka-nfs-image26.png["此图显示了aggr2的属性。"]
+image::kafka-nfs-image26.png[此图显示了aggr2的属性。]
 
 . 为了提高网络性能、我们为HA对和单个节点启用了高速网络连接。
 +
-image:kafka-nfs-image27.png["此图显示了如何启用高速网络连接。"]
+image::kafka-nfs-image27.png[此图显示了如何启用高速网络连接。]
 
 . 我们注意到ONTAP NVRAM的IOPS较多、因此将Cloud Volumes ONTAP 根卷的IOPS更改为2350。Cloud Volumes ONTAP 中的根卷磁盘大小为47 GB。以下ONTAP 命令适用于HA对、同一步骤适用于单个节点。
 +
@@ -88,7 +88,7 @@ Scope: kafka_nfs_cvo_ha1-02
 kafka_nfs_cvo_ha1::*>
 ....
 +
-image:kafka-nfs-image28.png["此图显示了如何修改卷属性。"]
+image::kafka-nfs-image28.png[此图显示了如何修改卷属性。]
 
 
 
@@ -99,7 +99,7 @@ image:kafka-nfs-image28.png["此图显示了如何修改卷属性。"]
 * *存储。*我们使用了一个HA对Cloud Volumes ONTAP 实例、该实例上挂载了一个6 TB的GP3 AWS-EBS卷。然后、该卷会通过NFS挂载导出到Kafka代理。
 
 
-image:kafka-nfs-image29.png["此图显示了基于NAS的Kafka集群的架构。"]
+image::kafka-nfs-image29.png[此图显示了基于NAS的Kafka集群的架构。]
 
 
 
@@ -362,8 +362,8 @@ sudo bin/benchmark –drivers driver-kafka/kafka-throughput.yaml workloads/1-top
 
 这些吞吐量数字是为给定的AWS配置生成的。为了满足更高的性能要求、可以进一步扩展和调整实例类型、以提高吞吐量。总吞吐量或总速率是生产者和使用者速率的组合。
 
-image:kafka-nfs-image30.png["此处显示了四个不同的图形。CVO-HA对吞吐量驱动程序。CVO-HA对Sync驱动程序。CVO单节点吞吐量驱动程序。CVO单节点同步驱动程序。"]
+image::kafka-nfs-image30.png[此处显示了四个不同的图形。CVO-HA对吞吐量驱动程序。CVO-HA对Sync驱动程序。CVO单节点吞吐量驱动程序。CVO单节点同步驱动程序。]
 
 在执行吞吐量或同步驱动程序基准测试时、请务必检查存储吞吐量。
 
-image:kafka-nfs-image31.png["此图显示了延迟、IOPS和吞吐量方面的性能。"]
+image::kafka-nfs-image31.png[此图显示了延迟、IOPS和吞吐量方面的性能。]

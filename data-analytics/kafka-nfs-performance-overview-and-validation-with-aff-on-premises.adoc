@@ -18,7 +18,7 @@ summary: 在内部部署中、我们使用NetApp AFF A900存储控制器和ONTAP
 
 我们使用Confluent Kafka 6.2.0对AFF A900进行了评估。集群具有八个代理节点和三个Zookeeper节点。在性能测试中、我们使用了五个OMB辅助节点。
 
-image:kafka-nfs-image32.png[""]
+image::kafka-nfs-image32.png[Kafka NFS image32.]
 
 
 
@@ -121,11 +121,11 @@ sudo bin/benchmark --drivers driver-kafka/kafka-throughput.yaml workloads/1-topi
 
 借助Confluent Kafka和AFF A900实现稳定的状态性能、生产者和使用者的平均吞吐量均超过3.4 GBps。在整个Kafka集群中、此消息超过340万条。通过直观地显示BrokerTopicMetrics的持续吞吐量(以字节/秒为单位)、我们可以看到AFF A900所支持的出色稳定状态性能和流量。
 
-image:kafka-nfs-image33.png["此图显示了代理网络吞吐量。"]
+image::kafka-nfs-image33.png[此图显示了代理网络吞吐量。]
 
 这与每个主题所传送消息的视图非常一致。下图按主题显示了细分情况。在测试的配置中、我们在四个主题中看到了每个主题近900、000条消息。
 
-image:kafka-nfs-image34.png["此图显示了代理网络吞吐量。"]
+image::kafka-nfs-image34.png[此图显示了代理网络吞吐量。]
 
 
 
@@ -137,7 +137,7 @@ image:kafka-nfs-image34.png["此图显示了代理网络吞吐量。"]
 
 在本次测量中、我们发现、在仅用于生产商的部分、峰值吞吐量会突破A900性能的限制(此时、其他代理资源不会饱和地为生产商和消费者提供服务)。
 
-image:kafka-nfs-image35.png[""]
+image::kafka-nfs-image35.png[Kafka NFS image35]
 
 
 NOTE: 我们将此度量值的消息大小增加到16k、以限制每条消息的开销、并最大程度地提高NFS挂载点的存储吞吐量。

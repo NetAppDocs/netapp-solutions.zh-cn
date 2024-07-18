@@ -44,7 +44,7 @@ summary:
 
 为SQL Server备份配置凭据、并使用sysadmin权限还原用户。
 
-image:sqlsb-aws-image1.png[""]
+image::sqlsb-aws-image1.png[sqlsb AWS image1.]
 
 NetApp建议使用基于角色的访问控制(Role-Based Access Control、RBAC)将数据保护和管理功能委派给SnapCenter 和Window主机中的各个用户。用户必须有权访问托管数据库的SQL Server。对于多个主机、不同主机的用户名和密码必须相同。此外、要使SnapCenter 能够在SQL Server主机上部署所需的插件、您必须为SnapCenter 注册域信息以验证凭据和主机。
 
@@ -55,11 +55,11 @@ NetApp建议使用基于角色的访问控制(Role-Based Access Control、RBAC)�
 ====
 进入*Settings*，选择*凭证*，然后单击(*+*)。
 
-image:sqlsb-aws-image2.png[""]
+image::sqlsb-aws-image2.png[sqlsb AWS image2.]
 
 新用户必须对SQL Server主机具有管理员权限。
 
-image:sqlsb-aws-image3.png[""]
+image::sqlsb-aws-image3.png[sqlsb AWS image3.]
 
 ====
 .配置存储
@@ -70,15 +70,15 @@ image:sqlsb-aws-image3.png[""]
 . 在SnapCenter UI中，选择*Storage Systems*。存储类型有两种：* ONTAP SVM*和* ONTAP Cluster*。默认情况下，存储类型为* ONTAP SVM*。
 . 单击(*+*)添加存储系统信息。
 +
-image:sqlsb-aws-image4.png[""]
+image::sqlsb-aws-image4.png[sqlsb AWS image4.]
 
 . 提供*FSx for ONTAP 管理*端点。
 +
-image:sqlsb-aws-image5.png[""]
+image::sqlsb-aws-image5.png[sqlsb AWS image5.]
 
 . 现在、已在SnapCenter 中配置SVM。
 +
-image:sqlsb-aws-image6.png[""]
+image::sqlsb-aws-image6.png[sqlsb AWS image6.]
 
 
 
@@ -90,7 +90,7 @@ image:sqlsb-aws-image6.png[""]
 
 . 在主机选项卡中，单击(*+*)以添加Microsoft SQL Server主机。
 +
-image:sqlsb-aws-image7.png[""]
+image::sqlsb-aws-image7.png[sqlsb AWS image7.]
 
 . 提供远程主机的完全限定域名(FQDN)或IP地址。
 +
@@ -99,17 +99,17 @@ NOTE: 默认情况下、这些凭据会进行填充。
 
 . 选择Microsoft Windows和Microsoft SQL Server的选项、然后选择提交。
 +
-image:sqlsb-aws-image8.png[""]
+image::sqlsb-aws-image8.png[sqlsb AWS image8.]
 
 
 
 此时将安装SQL Server软件包。
 
-image:sqlsb-aws-image9.png[""]
+image::sqlsb-aws-image9.png[sqlsb AWS image9.]
 
 . 安装完成后，转到*Resource*选项卡以验证所有FSx for ONTAP iSCSI卷是否都存在。
 +
-image:sqlsb-aws-image10.png[""]
+image::sqlsb-aws-image10.png[sqlsb AWS image10.]
 
 
 
@@ -121,25 +121,25 @@ image:sqlsb-aws-image10.png[""]
 
 . 单击复选框。此时将打开一个新选项卡。
 +
-image:sqlsb-aws-image11.png[""]
+image::sqlsb-aws-image11.png[sqlsb AWS image11.]
 
 . 单击*configure log directory*链接。
 +
-image:sqlsb-aws-image12.png[""]
+image::sqlsb-aws-image12.png[sqlsb AWS image12.]
 
 . 为主机日志目录和FCI实例日志目录选择驱动器。单击 * 保存 * 。对集群中的第二个节点重复相同过程。关闭窗口。
 +
-image:sqlsb-aws-image13.png[""]
+image::sqlsb-aws-image13.png[sqlsb AWS image13.]
 
 
 
 主机现在处于running状态。
 
-image:sqlsb-aws-image14.png[""]
+image::sqlsb-aws-image14.png[sqlsb AWS image14.]
 
 . 在“*资源*”选项卡中，我们有所有的服务器和数据库。
 +
-image:sqlsb-aws-image15.png[""]
+image::sqlsb-aws-image15.png[sqlsb AWS image15.]
 
 
 
@@ -159,39 +159,39 @@ image:sqlsb-aws-image15.png[""]
 
 . 进入*Settings*并选择左上方的*Policies*。然后单击*New*。
 +
-image:sqlsb-aws-image16.png[""]
+image::sqlsb-aws-image16.png[sqlsb AWS image16.]
 
 . 输入策略名称和问题描述。单击 * 下一步 * 。
 +
-image:sqlsb-aws-image17.png[""]
+image::sqlsb-aws-image17.png[sqlsb AWS image17.]
 
 . 选择*完整备份*作为备份类型。
 +
-image:sqlsb-aws-image18.png[""]
+image::sqlsb-aws-image18.png[sqlsb AWS image18.]
 
 . 选择计划频率(此频率基于公司SLA)。单击 * 下一步 * 。
 +
-image:sqlsb-aws-image19.png[""]
+image::sqlsb-aws-image19.png[sqlsb AWS image19.]
 
 . 配置备份的保留设置。
 +
-image:sqlsb-aws-image20.png[""]
+image::sqlsb-aws-image20.png[sqlsb AWS image20.]
 
 . 配置复制选项。
 +
-image:sqlsb-aws-image21.png[""]
+image::sqlsb-aws-image21.png[sqlsb AWS image21.]
 
 . 指定要在运行备份作业之前和之后运行的运行脚本(如果有)。
 +
-image:sqlsb-aws-image22.png[""]
+image::sqlsb-aws-image22.png[sqlsb AWS image22.]
 
 . 根据备份计划运行验证。
 +
-image:sqlsb-aws-image23.png[""]
+image::sqlsb-aws-image23.png[sqlsb AWS image23.]
 
 . “*摘要*”页面提供了备份策略的详细信息。可以在此处更正任何错误。
 +
-image:sqlsb-aws-image24.png[""]
+image::sqlsb-aws-image24.png[sqlsb AWS image24]
 
 
 
@@ -202,26 +202,26 @@ image:sqlsb-aws-image24.png[""]
 
 . 设置备份策略的开始日期和到期日期。
 +
-image:sqlsb-aws-image25.png[""]
+image::sqlsb-aws-image25.png[sqlsb AWS image25.]
 
 . 定义备份计划。为此，请单击(*+*)配置一个计划。输入*开始日期*和*到期日期*日期。根据公司的SLA设置时间。
 +
-image:sqlsb-aws-image26.png[""]
+image::sqlsb-aws-image26.png[sqlsb AWS image26.]
 
 . 配置验证服务器。从下拉菜单中选择服务器。
 +
-image:sqlsb-aws-image27.png[""]
+image::sqlsb-aws-image27.png[sqlsb AWS image27.]
 
 . 单击加号确认已配置的计划、然后进行确认。
 . 提供电子邮件通知信息。单击 * 下一步 * 。
 +
-image:sqlsb-aws-image28.png[""]
+image::sqlsb-aws-image28.png[sqlsb AWS image28]
 
 
 
 现在、SQL Server数据库的备份策略摘要已配置完毕。
 
-image:sqlsb-aws-image29.png[""]
+image::sqlsb-aws-image29.png[sqlsb AWS image29.]
 
 
 
@@ -231,15 +231,15 @@ image:sqlsb-aws-image29.png[""]
 
 . 从*资源*视图中，选择资源并选择*立即备份*。
 +
-image:sqlsb-aws-image30.png[""]
+image::sqlsb-aws-image30.png[sqlsb AWS image30.]
 
 . 在*Backup*对话框中，单击*Backup*。
 +
-image:sqlsb-aws-image31.png[""]
+image::sqlsb-aws-image31.png[sqlsb AWS image31]
 
 . 此时将显示确认屏幕。单击*是*进行确认。
 +
-image:sqlsb-aws-image32.png[""]
+image::sqlsb-aws-image32.png[sqlsb AWS image32.]
 
 
 
@@ -249,10 +249,10 @@ image:sqlsb-aws-image32.png[""]
 
 . 从*Monitor*选项卡中，单击作业并选择右侧的*Details*以查看作业。
 +
-image:sqlsb-aws-image33.png[""]
+image::sqlsb-aws-image33.png[sqlsb AWS image33]
 
 +
-image:sqlsb-aws-image34.png[""]
+image::sqlsb-aws-image34.png[sqlsb AWS image34]
 
 
 
@@ -266,15 +266,15 @@ image:sqlsb-aws-image34.png[""]
 
 . 在*View*菜单的*Resources*选项卡中，使用下拉菜单更改为资源组。
 +
-image:sqlsb-aws-image35.png[""]
+image::sqlsb-aws-image35.png[sqlsb AWS image35]
 
 . 单击(*+*)可选择新的资源组。
 +
-image:sqlsb-aws-image36.png[""]
+image::sqlsb-aws-image36.png[sqlsb AWS image36]
 
 . 请提供名称和标记。单击 * 下一步 * 。
 +
-image:sqlsb-aws-image37.png[""]
+image::sqlsb-aws-image37.png[sqlsb AWS image37]
 
 . 将资源添加到资源组：
 +
@@ -282,47 +282,47 @@ image:sqlsb-aws-image37.png[""]
 ** *Resource type.*从下拉菜单中选择*Database。
 ** *SQL Server实例。*选择服务器。
 +
-image:sqlsb-aws-image38.png[""]
+image::sqlsb-aws-image38.png[sqlsb AWS image38]
 
 +
 默认情况下，已选中*option * Auto select all the Resources from the sall Storage Volumes*。清除该选项并仅选择需要添加到资源组的数据库，单击要添加的箭头并单击*Next*。
 
 +
-image:sqlsb-aws-image39.png[""]
+image::sqlsb-aws-image39.png[sqlsb AWS image39]
 
 
 
 . 在策略上，单击(*+*)。
 +
-image:sqlsb-aws-image40.png[""]
+image::sqlsb-aws-image40.png[sqlsb AWS image40]
 
 . 输入资源组策略名称。
 +
-image:sqlsb-aws-image41.png[""]
+image::sqlsb-aws-image41.png[sqlsb AWS image41]
 
 . 根据贵公司的SLA，选择*完整备份*和计划频率。
 +
-image:sqlsb-aws-image42.png[""]
+image::sqlsb-aws-image42.png[sqlsb AWS image42]
 
 . 配置保留设置。
 +
-image:sqlsb-aws-image43.png[""]
+image::sqlsb-aws-image43.png[sqlsb AWS image43]
 
 . 配置复制选项。
 +
-image:sqlsb-aws-image44.png[""]
+image::sqlsb-aws-image44.png[sqlsb AWS image44]
 
 . 配置要在执行备份之前运行的脚本。单击 * 下一步 * 。
 +
-image:sqlsb-aws-image45.png[""]
+image::sqlsb-aws-image45.png[sqlsb AWS image45]
 
 . 确认验证以下备份计划。
 +
-image:sqlsb-aws-image46.png[""]
+image::sqlsb-aws-image46.png[sqlsb AWS image46]
 
 . 在*Summary (摘要)*页上，验证信息，然后单击*Finish (完成)*。
 +
-image:sqlsb-aws-image47.png[""]
+image::sqlsb-aws-image47.png[sqlsb AWS image47]
 
 
 
@@ -332,28 +332,28 @@ image:sqlsb-aws-image47.png[""]
 
 . 单击(*+*)符号以配置开始日期和到期日期。
 +
-image:sqlsb-aws-image48.png[""]
+image::sqlsb-aws-image48.png[sqlsb AWS image48]
 
 . 设置时间。
 +
-image:sqlsb-aws-image49.png[""]
+image::sqlsb-aws-image49.png[sqlsb AWS image49]
 
 +
-image:sqlsb-aws-image50.png[""]
+image::sqlsb-aws-image50.png[sqlsb AWS image50]
 
 . 从*验证*选项卡中，选择服务器，配置计划，然后单击*下一步*。
 +
-image:sqlsb-aws-image51.png[""]
+image::sqlsb-aws-image51.png[sqlsb AWS image51]
 
 . 配置通知以发送电子邮件。
 +
-image:sqlsb-aws-image52.png[""]
+image::sqlsb-aws-image52.png[sqlsb AWS image52]
 
 
 
 现在、该策略已配置为备份多个SQL Server数据库。
 
-image:sqlsb-aws-image53.png[""]
+image::sqlsb-aws-image53.png[sqlsb AWS image53]
 
 
 
@@ -361,20 +361,20 @@ image:sqlsb-aws-image53.png[""]
 
 . 从*Resource*选项卡中，选择“查看”。从下拉菜单中选择*Resource Group*。
 +
-image:sqlsb-aws-image54.png[""]
+image::sqlsb-aws-image54.png[sqlsb AWS image54]
 
 . 选择资源组名称。
 . 单击右上角的*立即备份*。
 +
-image:sqlsb-aws-image55.png[""]
+image::sqlsb-aws-image55.png[sqlsb AWS image55]
 
 . 此时将打开一个新窗口。单击*备份后验证*复选框，然后单击备份。
 +
-image:sqlsb-aws-image56.png[""]
+image::sqlsb-aws-image56.png[sqlsb AWS image56]
 
 . 此时将显示一条确认消息。单击 * 是 * 。
 +
-image:sqlsb-aws-image57.png[""]
+image::sqlsb-aws-image57.png[sqlsb AWS image57]
 
 
 
@@ -384,11 +384,11 @@ image:sqlsb-aws-image57.png[""]
 
 从左侧导航栏中，单击*Monitor*，选择备份作业，然后单击*Details*以查看作业进度。
 
-image:sqlsb-aws-image58.png[""]
+image::sqlsb-aws-image58.png[sqlsb AWS image58]
 
 单击*Resource*选项卡查看完成备份所需的时间。
 
-image:sqlsb-aws-image59.png[""]
+image::sqlsb-aws-image59.png[sqlsb AWS image59]
 
 
 
@@ -400,49 +400,49 @@ SnapCenter 支持完整、庞大日志记录和简单恢复模式。简单恢复
 
 . 从*Reseres*选项卡中，将“视图”菜单从*Database *更改为*Resource group*。
 +
-image:sqlsb-aws-image60.png[""]
+image::sqlsb-aws-image60.png[sqlsb AWS image60]
 
 . 选择已创建的资源组备份策略。
 . 选择右上角的*修改资源组*。
 +
-image:sqlsb-aws-image61.png[""]
+image::sqlsb-aws-image61.png[sqlsb AWS image61.]
 
 . 默认情况下，*Name*部分使用备份策略名称和标记。单击 * 下一步 * 。
 +
 "*Resores*(资源*)"选项卡突出显示要配置事务备份策略的基准。
 
 +
-image:sqlsb-aws-image62.png[""]
+image::sqlsb-aws-image62.png[sqlsb AWS image62.]
 
 . 输入策略名称。
 +
-image:sqlsb-aws-image63.png[""]
+image::sqlsb-aws-image63.png[sqlsb AWS image63.]
 
 . 选择SQL Server备份选项。
 . 选择日志备份。
 . 根据公司的RTO设置计划频率。单击 * 下一步 * 。
 +
-image:sqlsb-aws-image64.png[""]
+image::sqlsb-aws-image64.png[sqlsb AWS image64]
 
 . 配置日志备份保留设置。单击 * 下一步 * 。
 +
-image:sqlsb-aws-image65.png[""]
+image::sqlsb-aws-image65.png[sqlsb AWS image65]
 
 . (可选)配置复制选项。
 +
-image:sqlsb-aws-image66.png[""]
+image::sqlsb-aws-image66.png[sqlsb AWS image66]
 
 . (可选)配置要在执行备份作业之前运行的任何脚本。
 +
-image:sqlsb-aws-image67.png[""]
+image::sqlsb-aws-image67.png[sqlsb AWS image67]
 
 . (可选)配置备份验证。
 +
-image:sqlsb-aws-image68.png[""]
+image::sqlsb-aws-image68.png[sqlsb AWS image68]
 
 . 在“*摘要*”页上，单击“*完成*”。
 +
-image:sqlsb-aws-image69.png[""]
+image::sqlsb-aws-image69.png[sqlsb AWS image69]
 
 
 
@@ -452,28 +452,28 @@ image:sqlsb-aws-image69.png[""]
 
 . 单击新创建的事务日志备份策略。
 +
-image:sqlsb-aws-image70.png[""]
+image::sqlsb-aws-image70.png[sqlsb AWS image70]
 
 . 设置*开始日期*和*到期日期*日期。
 . 根据SLA、RTP和RPO输入日志备份策略的频率。单击确定。
 +
-image:sqlsb-aws-image71.png[""]
+image::sqlsb-aws-image71.png[sqlsb AWS image71.]
 
 . 您可以看到这两个策略。单击 * 下一步 * 。
 +
-image:sqlsb-aws-image72.png[""]
+image::sqlsb-aws-image72.png[sqlsb AWS image72.]
 
 . 配置验证服务器。
 +
-image:sqlsb-aws-image73.png[""]
+image::sqlsb-aws-image73.png[sqlsb AWS image73.]
 
 . 配置电子邮件通知。
 +
-image:sqlsb-aws-image74.png[""]
+image::sqlsb-aws-image74.png[sqlsb AWS image72.]
 
 . 在“*摘要*”页上，单击“*完成*”。
 +
-image:sqlsb-aws-image75.png[""]
+image::sqlsb-aws-image75.png[sqlsb AWS image75]
 
 
 
@@ -485,16 +485,16 @@ image:sqlsb-aws-image75.png[""]
 
 . 在新创建的策略页面上，选择页面右上角的*立即备份*。
 +
-image:sqlsb-aws-image76.png[""]
+image::sqlsb-aws-image76.png[sqlsb AWS image7６]
 
 . 从*Policy*选项卡的弹出窗口中，选择下拉菜单，选择备份策略，然后配置事务日志备份。
 +
-image:sqlsb-aws-image77.png[""]
+image::sqlsb-aws-image77.png[sqlsb AWS image77]
 
 . 单击 * 备份 * 。此时将显示一个新窗口。
 . 单击*Yes*确认备份策略。
 +
-image:sqlsb-aws-image78.png[""]
+image::sqlsb-aws-image78.png[sqlsb AWS image78]
 
 
 
@@ -504,7 +504,7 @@ image:sqlsb-aws-image78.png[""]
 
 移动到*Monitoring*选项卡并监控备份作业的进度。
 
-image:sqlsb-aws-image79.png[""]
+image::sqlsb-aws-image79.png[sqlsb AWS image79]
 
 
 
@@ -527,34 +527,34 @@ image:sqlsb-aws-image79.png[""]
 
 . 以下屏幕截图显示了SQL Server数据库在删除表之前的初始状态。
 +
-image:sqlsb-aws-image80.png[""]
+image::sqlsb-aws-image80.png[sqlsb AWS image80]
 
 +
 屏幕截图显示已从表中删除20行。
 
 +
-image:sqlsb-aws-image81.png[""]
+image::sqlsb-aws-image81.png[sqlsb AWS image81.]
 
 . 登录到SnapCenter 服务器。从*Resues*选项卡中，选择数据库。
 +
-image:sqlsb-aws-image82.png[""]
+image::sqlsb-aws-image82.png[sqlsb AWS image82.]
 
 . 选择最新的备份。
 . 在右侧，选择*Restore*。
 +
-image:sqlsb-aws-image83.png[""]
+image::sqlsb-aws-image83.png[sqlsb AWS image83.]
 
 . 此时将显示一个新窗口。选择*Restore*选项。
 . 将数据库还原到创建备份的同一主机。单击 * 下一步 * 。
 +
-image:sqlsb-aws-image84.png[""]
+image::sqlsb-aws-image84.png[sqlsb AWS image84.]
 
 . 对于*恢复类型*，请选择*所有日志备份*。单击 * 下一步 * 。
 +
-image:sqlsb-aws-image85.png[""]
+image::sqlsb-aws-image85.png[sqlsb AWS image81.]
 
 +
-image:sqlsb-aws-image86.png[""]
+image::sqlsb-aws-image86.png[sqlsb AWS image86]
 
 
 
@@ -562,7 +562,7 @@ image:sqlsb-aws-image86.png[""]
 
 . 选择选项*在还原期间覆盖同名数据库*。单击 * 下一步 * 。
 +
-image:sqlsb-aws-image87.png[""]
+image::sqlsb-aws-image87.png[sqlsb AWS image87]
 
 
 
@@ -570,15 +570,15 @@ image:sqlsb-aws-image87.png[""]
 
 . 选择选项*可操作、但不可用于还原其他事务日志*。单击 * 下一步 * 。
 +
-image:sqlsb-aws-image88.png[""]
+image::sqlsb-aws-image88.png[sqlsb AWS image88]
 
 . 提供电子邮件设置。单击 * 下一步 * 。
 +
-image:sqlsb-aws-image89.png[""]
+image::sqlsb-aws-image89.png[sqlsb AWS image89]
 
 . 在“*摘要*”页上，单击“*完成*”。
 +
-image:sqlsb-aws-image90.png[""]
+image::sqlsb-aws-image90.png[sqlsb AWS image90]
 
 
 
@@ -588,15 +588,15 @@ image:sqlsb-aws-image90.png[""]
 
 . 在*监控*选项卡中，单击恢复作业详细信息以查看恢复作业的进度。
 +
-image:sqlsb-aws-image91.png[""]
+image::sqlsb-aws-image91.png[sqlsb AWS image91]
 
 . 还原作业详细信息。
 +
-image:sqlsb-aws-image92.png[""]
+image::sqlsb-aws-image92.png[sqlsb AWS image92]
 
 . 返回到SQL Server主机>数据库>表存在。
 +
-image:sqlsb-aws-image93.png[""]
+image::sqlsb-aws-image93.png[sqlsb AWS image93]
 
 
 

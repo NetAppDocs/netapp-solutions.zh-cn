@@ -215,7 +215,7 @@ image::bxp-scv-hybrid-48.png[查看并继续]
 
 . 在ONTAP 系统管理器中、导航到"网络概述"页面、然后检索类型为"集群间"的IP地址、这些IP地址配置为与安装了FSX的AWS VPC进行通信。
 +
-image:dr-vmc-aws-image10.png[""]
+image::dr-vmc-aws-image10.png[灾难恢复vmc AWS image10]
 
 . 要使用命令行界面检索集群间IP地址、请运行以下命令：
 +
@@ -239,7 +239,7 @@ Confirm the passphrase:
 ....
 . 在源集群上、您可以使用ONTAP 系统管理器或命令行界面建立集群对等关系。在ONTAP 系统管理器中、导航到"保护">"概述"、然后选择"对等集群"。
 +
-image:dr-vmc-aws-image12.png[""]
+image::dr-vmc-aws-image12.png[灾难恢复vmc AWS image12]
 
 . 在对等集群对话框中、填写所需信息：
 +
@@ -248,7 +248,7 @@ image:dr-vmc-aws-image12.png[""]
 .. 输入目标ONTAP集群的集群间LIF IP地址。
 .. 单击启动集群对等以完成此过程。
 +
-image:dr-vmc-aws-image13.png[""]
+image::dr-vmc-aws-image13.png[灾难恢复vmc AWS image13]
 
 
 
@@ -273,7 +273,7 @@ ONTAP-Dest::> vserver peer create -vserver DestSVM -peer-vserver Backup -peer-cl
 . 在源ONTAP 集群中、接受与ONTAP 系统管理器或命令行界面的对等关系。
 . 在ONTAP 系统管理器中、转到"保护">"概述"、然后在"Storage VM对等方"下选择"对等Storage VM"。
 +
-image:dr-vmc-aws-image15.png[""]
+image::dr-vmc-aws-image15.png[灾难恢复vmc AWS image15]
 
 . 在对等Storage VM的对话框中、填写必填字段：
 +
@@ -281,7 +281,7 @@ image:dr-vmc-aws-image15.png[""]
 ** 目标集群
 ** 目标Storage VM
 +
-image:dr-vmc-aws-image16.png[""]
+image::dr-vmc-aws-image16.png[灾难恢复vmc AWS image16]
 
 
 
@@ -301,7 +301,7 @@ NOTE: 在二级存储上、这些标签与与与目标卷关联的策略规则�
 
 以下示例显示了一个SnapMirror标签、该标签位于作为SQL Server数据库和日志卷每日备份策略一部分生成的所有快照上。
 
-image:dr-vmc-aws-image17.png[""]
+image::dr-vmc-aws-image17.png[灾难恢复vmc AWS image17]
 
 有关为SQL Server数据库创建SnapCenter 策略的详细信息、请参见 https://docs.netapp.com/us-en/snapcenter/protect-scsql/task_create_backup_policies_for_sql_server_databases.html["SnapCenter 文档"^]。
 

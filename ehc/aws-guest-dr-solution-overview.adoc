@@ -26,7 +26,7 @@ NetApp与VMware集成的历史很长、成千上万的客户选择NetApp作为�
 
 在子系统连接的存储中、子系统VMDK部署在VMware配置的数据存储库上、应用程序数据存储在iSCSI或NFS上并直接映射到虚拟机。Oracle和MS SQL应用程序用于演示灾难恢复场景、如下图所示。
 
-image:dr-vmc-aws-image1.png[""]
+image::dr-vmc-aws-image1.png[灾难恢复vmc AWS image1]
 
 
 
@@ -66,7 +66,7 @@ NOTE: 请参见 https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/ONTAPGuide.pdf
 
 . 在ONTAP 系统管理器中、导航到"网络概述"页面、然后检索类型为"集群间"的IP地址、这些IP地址配置为与安装了FSX的AWS VPC进行通信。
 +
-image:dr-vmc-aws-image10.png[""]
+image::dr-vmc-aws-image10.png[灾难恢复vmc AWS image10]
 
 . 要检索FSX的集群间IP地址、请登录到命令行界面并运行以下命令：
 +
@@ -74,7 +74,7 @@ image:dr-vmc-aws-image10.png[""]
 FSx-Dest::> network interface show -role intercluster
 ....
 +
-image:dr-vmc-aws-image11.png[""]
+image::dr-vmc-aws-image11.png[灾难恢复vmc AWS image11]
 
 
 
@@ -93,7 +93,7 @@ Confirm the passphrase:
 ....
 . 在源集群上、您可以使用ONTAP 系统管理器或命令行界面建立集群对等关系。在ONTAP 系统管理器中、导航到"保护">"概述"、然后选择"对等集群"。
 +
-image:dr-vmc-aws-image12.png[""]
+image::dr-vmc-aws-image12.png[灾难恢复vmc AWS image12]
 
 . 在对等集群对话框中、填写所需信息：
 +
@@ -102,7 +102,7 @@ image:dr-vmc-aws-image12.png[""]
 .. 输入目标FSX集群的集群间LIF IP地址。
 .. 单击启动集群对等以完成此过程。
 +
-image:dr-vmc-aws-image13.png[""]
+image::dr-vmc-aws-image13.png[灾难恢复vmc AWS image13]
 
 
 
@@ -112,7 +112,7 @@ image:dr-vmc-aws-image13.png[""]
 FSx-Dest::> cluster peer show
 ....
 +
-image:dr-vmc-aws-image14.png[""]
+image::dr-vmc-aws-image14.png[灾难恢复vmc AWS image14]
 
 
 
@@ -130,7 +130,7 @@ FSx-Dest::> vserver peer create -vserver DestSVM -peer-vserver Backup -peer-clus
 . 在源ONTAP 集群中、接受与ONTAP 系统管理器或命令行界面的对等关系。
 . 在ONTAP 系统管理器中、转到"保护">"概述"、然后在"Storage VM对等方"下选择"对等Storage VM"。
 +
-image:dr-vmc-aws-image15.png[""]
+image::dr-vmc-aws-image15.png[灾难恢复vmc AWS image15]
 
 . 在对等Storage VM的对话框中、填写必填字段：
 +
@@ -138,7 +138,7 @@ image:dr-vmc-aws-image15.png[""]
 ** 目标集群
 ** 目标Storage VM
 +
-image:dr-vmc-aws-image16.png[""]
+image::dr-vmc-aws-image16.png[灾难恢复vmc AWS image16]
 
 
 
@@ -158,7 +158,7 @@ NOTE: 在二级存储上、这些标签与与与目标卷关联的策略规则�
 
 以下示例显示了一个SnapMirror标签、该标签位于作为SQL Server数据库和日志卷每日备份策略一部分生成的所有快照上。
 
-image:dr-vmc-aws-image17.png[""]
+image::dr-vmc-aws-image17.png[灾难恢复vmc AWS image17]
 
 有关为SQL Server数据库创建SnapCenter 策略的详细信息、请参见 https://docs.netapp.com/us-en/snapcenter/protect-scsql/task_create_backup_policies_for_sql_server_databases.html["SnapCenter 文档"^]。
 
@@ -240,15 +240,15 @@ SnapCenter 软件可从获取 https://mysupport.netapp.com["此链接。"^]。
 
 . 从左侧菜单中、选择存储系统、然后单击新建开始将存储控制器添加到SnapCenter 的过程。
 +
-image:dr-vmc-aws-image18.png[""]
+image::dr-vmc-aws-image18.png[灾难恢复vmc AWS image18]
 
 . 在添加存储系统对话框中、添加本地内部ONTAP 集群的管理IP地址以及用户名和密码。然后单击提交开始发现存储系统。
 +
-image:dr-vmc-aws-image19.png[""]
+image::dr-vmc-aws-image19.png[灾难恢复vmc AWS image19]
 
 . 重复此过程将FSX ONTAP 系统添加到SnapCenter。在这种情况下、请选择添加存储系统窗口底部的更多选项、然后单击二级复选框、将FSX系统指定为使用SnapMirror副本或主备份快照更新的二级存储系统。
 +
-image:dr-vmc-aws-image20.png[""]
+image::dr-vmc-aws-image20.png[灾难恢复vmc AWS image20]
 
 
 
@@ -263,11 +263,11 @@ image:dr-vmc-aws-image20.png[""]
 . 从左侧菜单中、选择主机、然后单击添加开始向SnapCenter 添加存储控制器的过程。
 . 在添加主机窗口中、添加主机类型、主机名和主机系统凭据。选择插件类型。对于SQL Server、选择Microsoft Windows和Microsoft SQL Server插件。
 +
-image:dr-vmc-aws-image21.png[""]
+image::dr-vmc-aws-image21.png[灾难恢复vmc AWS image21]
 
 . 对于Oracle、请在添加主机对话框中填写必填字段、然后选中Oracle数据库插件对应的复选框。然后、单击提交开始发现过程、并将主机添加到SnapCenter。
 +
-image:dr-vmc-aws-image22.png[""]
+image::dr-vmc-aws-image22.png[灾难恢复vmc AWS image22]
 
 
 
@@ -279,7 +279,7 @@ image:dr-vmc-aws-image22.png[""]
 
 您可以在SnapCenter Web客户端的"设置"部分访问策略。
 
-image:dr-vmc-aws-image23.png[""]
+image::dr-vmc-aws-image23.png[灾难恢复vmc AWS image23]
 
 有关为SQL Server备份创建策略的完整信息、请参见 https://docs.netapp.com/us-en/snapcenter/protect-scsql/task_create_backup_policies_for_sql_server_databases.html["SnapCenter 文档"^]。
 
@@ -294,7 +294,7 @@ image:dr-vmc-aws-image23.png[""]
 
 下图显示了上述选项及其在备份策略向导中的显示方式。
 
-image:dr-vmc-aws-image24.png[""]
+image::dr-vmc-aws-image24.png[灾难恢复vmc AWS image24]
 
 ====
 .创建SnapCenter 资源组
@@ -306,7 +306,7 @@ image:dr-vmc-aws-image24.png[""]
 . 在窗口顶部、选择要使用的资源类型(此处为Microsoft SQL Server)、然后单击新建资源组。
 
 
-image:dr-vmc-aws-image25.png[""]
+image::dr-vmc-aws-image25.png[灾难恢复vmc AWS image25]
 
 SnapCenter 文档介绍了为SQL Server和Oracle数据库创建资源组的分步详细信息。
 
@@ -339,32 +339,32 @@ SnapCenter 文档介绍了为SQL Server和Oracle数据库创建资源组的分�
 
 . 打开Veeam控制台并登录。导航到存储基础架构、然后选择添加存储。
 +
-image:dr-vmc-aws-image26.png[""]
+image::dr-vmc-aws-image26.png[灾难恢复vmc AWS image26]
 
 . 在添加存储向导中、选择NetApp作为存储供应商、然后选择Data ONTAP。
 . 输入管理IP地址并选中NAS文件器复选框。单击下一步。
 +
-image:dr-vmc-aws-image27.png[""]
+image::dr-vmc-aws-image27.png[灾难恢复vmc AWS image27]
 
 . 添加凭据以访问ONTAP 集群。
 +
-image:dr-vmc-aws-image28.png[""]
+image::dr-vmc-aws-image28.png[灾难恢复vmc AWS image28]
 
 . 在NAS文件管理器页面上、选择要扫描的协议、然后选择下一步。
 +
-image:dr-vmc-aws-image29.png[""]
+image::dr-vmc-aws-image29.png[灾难恢复vmc AWS image29]
 
 . 完成向导的"Apply"和"Summary"页面、然后单击"Finish"开始存储发现过程。扫描完成后、ONTAP 集群将与NAS存储器一起添加为可用资源。
 +
-image:dr-vmc-aws-image30.png[""]
+image::dr-vmc-aws-image30.png[灾难恢复vmc AWS image30]
 
 . 使用新发现的NAS共享创建备份存储库。从备份基础架构中、选择备份存储库、然后单击添加存储库菜单项。
 +
-image:dr-vmc-aws-image31.png[""]
+image::dr-vmc-aws-image31.png[灾难恢复vmc AWS image31]
 
 . 按照"新建备份存储库向导"中的所有步骤创建存储库。有关创建Veeam备份存储库的详细信息、请参见 https://www.veeam.com/documentation-guides-datasheets.html["Veeam文档"^]。
 +
-image:dr-vmc-aws-image32.png[""]
+image::dr-vmc-aws-image32.png[灾难恢复vmc AWS image32]
 
 
 
@@ -376,16 +376,16 @@ image:dr-vmc-aws-image32.png[""]
 
 . 导航到备份基础架构>备份存储库。单击添加存储库。
 +
-image:dr-vmc-aws-image33.png[""]
+image::dr-vmc-aws-image33.png[灾难恢复vmc AWS image33]
 
 . 在添加备份存储库向导中、选择对象存储、然后选择Amazon S3。此时将启动"新建对象存储库"向导。
 +
-image:dr-vmc-aws-image34.png[""]
+image::dr-vmc-aws-image34.png[灾难恢复vmc AWS image34]
 
 . 提供对象存储库的名称、然后单击下一步。
 . 在下一节中、提供您的凭据。您需要AWS访问密钥和机密密钥。
 +
-image:dr-vmc-aws-image35.png[""]
+image::dr-vmc-aws-image35.png[灾难恢复vmc AWS image35]
 
 . 加载Amazon配置后、选择您的数据中心、存储分段和文件夹、然后单击应用。最后、单击完成以关闭向导。
 
@@ -398,17 +398,17 @@ image:dr-vmc-aws-image35.png[""]
 
 . 在备份基础架构中、选择横向扩展存储库、然后单击添加横向扩展存储库菜单项。
 +
-image:dr-vmc-aws-image37.png[""]
+image::dr-vmc-aws-image37.png[灾难恢复vmc AWS image37]
 
 . 在New Scale-Out Backup Repository中、为SOBR提供一个名称、然后单击Next。
 . 对于性能层、选择包含驻留在本地ONTAP 集群上的SMB共享的备份存储库。
 +
-image:dr-vmc-aws-image38.png[""]
+image::dr-vmc-aws-image38.png[灾难恢复vmc AWS image38]
 
 . 对于放置策略、根据您的要求选择数据位置或性能。选择"下一步"。
 . 对于容量层、我们使用Amazon S3对象存储扩展了SOBR。为了实现灾难恢复、请在创建备份后立即选择将其复制到对象存储、以确保及时交付我们的二级备份。
 +
-image:dr-vmc-aws-image39.png[""]
+image::dr-vmc-aws-image39.png[灾难恢复vmc AWS image39]
 
 . 最后、选择应用并完成以完成创建SOBR。
 
@@ -520,19 +520,19 @@ SnapCenter 提供了一个Web客户端界面、用于执行REST API命令。有�
 
 . 访问SnapCenter Swagger API网页、网址为：//https://<SnapCenter Server IP>：8146/swagger /_。
 +
-image:dr-vmc-aws-image40.png[""]
+image::dr-vmc-aws-image40.png[灾难恢复vmc AWS image40]
 
 . 展开"Auth"部分、然后单击Try it out。
 +
-image:dr-vmc-aws-image41.png[""]
+image::dr-vmc-aws-image41.png[灾难恢复vmc AWS image41]
 
 . 在用户操作文本区域中、填写SnapCenter 凭据和角色、然后单击执行。
 +
-image:dr-vmc-aws-image42.png[""]
+image::dr-vmc-aws-image42.png[灾难恢复vmc AWS image42]
 
 . 在下面的响应正文中、您可以看到令牌。执行备份过程时、复制令牌文本以进行身份验证。
 +
-image:dr-vmc-aws-image43.png[""]
+image::dr-vmc-aws-image43.png[灾难恢复vmc AWS image43]
 
 
 
@@ -544,11 +544,11 @@ image:dr-vmc-aws-image43.png[""]
 
 . 单击"Disaster Recovery"区域、将其展开。
 +
-image:dr-vmc-aws-image44.png[""]
+image::dr-vmc-aws-image44.png[灾难恢复vmc AWS image44]
 
 . 展开`/4.6/disasterrecovery/server/backup`部分、然后单击Try it out。
 +
-image:dr-vmc-aws-image45.png[""]
+image::dr-vmc-aws-image45.png[灾难恢复vmc AWS image45]
 
 . 在SmDRBackupRequest部分中、添加正确的本地目标路径并选择执行以启动SnapCenter 数据库和配置的备份。
 +
@@ -556,7 +556,7 @@ image:dr-vmc-aws-image45.png[""]
 NOTE: 备份过程不允许直接备份到NFS或CIFS文件共享。
 
 +
-image:dr-vmc-aws-image46.png[""]
+image::dr-vmc-aws-image46.png[灾难恢复vmc AWS image46]
 
 
 
@@ -566,7 +566,7 @@ image:dr-vmc-aws-image46.png[""]
 =====
 在启动数据库还原过程时、登录到SnapCenter 以查看日志文件。在"Monitor"部分下、您可以查看SnapCenter 服务器灾难恢复备份的详细信息。
 
-image:dr-vmc-aws-image47.png[""]
+image::dr-vmc-aws-image47.png[灾难恢复vmc AWS image47]
 
 =====
 .使用XCOPY实用程序将数据库备份文件复制到SMB共享
@@ -619,19 +619,19 @@ SnapCenter 允许备份和还原其MySQL数据库和配置文件、从而支持�
 . 导航到二级SnapCenter 服务器的Swagger API网页、然后按照前面的说明获取授权令牌。
 . 导航到Swagger页面的Disaster Recovery部分、选择`/4.6/disasterrecovery/server/restore`、然后单击Try it out。
 +
-image:dr-vmc-aws-image48.png[""]
+image::dr-vmc-aws-image48.png[灾难恢复vmc AWS image48]
 
 . 粘贴您的授权令牌、然后在"SmDRResterRequest"部分中、将备份名称和二级SnapCenter 服务器上的本地目录粘贴。
 +
-image:dr-vmc-aws-image49.png[""]
+image::dr-vmc-aws-image49.png[灾难恢复vmc AWS image49]
 
 . 选择执行按钮以启动还原过程。
 . 在SnapCenter 中、导航到Monitor部分以查看还原作业的进度。
 +
-image:dr-vmc-aws-image50.png[""]
+image::dr-vmc-aws-image50.png[灾难恢复vmc AWS image50]
 
 +
-image:dr-vmc-aws-image51.png[""]
+image::dr-vmc-aws-image51.png[灾难恢复vmc AWS image51]
 
 . 要从二级存储启用SQL Server还原、必须将SnapCenter 数据库切换为灾难恢复模式。此操作将作为单独的操作执行、并在Swagger API网页上启动。
 +
@@ -640,7 +640,7 @@ image:dr-vmc-aws-image51.png[""]
 .. 在SmSetDisasterRecoverySettingsRequest部分中、将`EnableDisasterRecover`更改为`true`。
 .. 单击执行为SQL Server启用灾难恢复模式。
 +
-image:dr-vmc-aws-image52.png[""]
+image::dr-vmc-aws-image52.png[灾难恢复vmc AWS image52]
 
 +
 
@@ -664,23 +664,23 @@ NOTE: 请参见有关其他过程的注释。
 
 . 转到备份存储库、然后单击顶部菜单中的添加存储库以启动添加备份存储库向导。在向导的第一页上、选择对象存储作为备份存储库类型。
 +
-image:dr-vmc-aws-image53.png[""]
+image::dr-vmc-aws-image53.png[灾难恢复vmc AWS image53]
 
 . 选择Amazon S3作为对象存储类型。
 +
-image:dr-vmc-aws-image54.png[""]
+image::dr-vmc-aws-image54.png[灾难恢复vmc AWS image54]
 
 . 从Amazon Cloud Storage Services列表中、选择Amazon S3。
 +
-image:dr-vmc-aws-image55.png[""]
+image::dr-vmc-aws-image55.png[灾难恢复vmc AWS image55]
 
 . 从下拉列表中选择预先输入的凭据、或者添加用于访问云存储资源的新凭据。单击下一步继续。
 +
-image:dr-vmc-aws-image56.png[""]
+image::dr-vmc-aws-image56.png[灾难恢复vmc AWS image56]
 
 . 在存储分段页面上、输入数据中心、存储分段、文件夹以及任何所需选项。单击应用。
 +
-image:dr-vmc-aws-image57.png[""]
+image::dr-vmc-aws-image57.png[灾难恢复vmc AWS image57]
 
 . 最后、选择完成以完成此过程并添加存储库。
 
@@ -693,15 +693,15 @@ image:dr-vmc-aws-image57.png[""]
 
 . 在S3备份存储库中、选择导入备份以启动导入备份向导。
 +
-image:dr-vmc-aws-image58.png[""]
+image::dr-vmc-aws-image58.png[灾难恢复vmc AWS image58]
 
 . 为导入创建数据库记录后、在摘要屏幕上选择下一步、然后选择完成以启动导入过程。
 +
-image:dr-vmc-aws-image59.png[""]
+image::dr-vmc-aws-image59.png[灾难恢复vmc AWS image59]
 
 . 导入完成后、您可以将虚拟机还原到VMware Cloud集群中。
 +
-image:dr-vmc-aws-image60.png[""]
+image::dr-vmc-aws-image60.png[灾难恢复vmc AWS image60]
 
 
 
@@ -713,30 +713,30 @@ image:dr-vmc-aws-image60.png[""]
 
 . 从Veeam主页页面中、选择包含导入备份的对象存储、选择要还原的VM、然后右键单击并选择还原整个VM。
 +
-image:dr-vmc-aws-image61.png[""]
+image::dr-vmc-aws-image61.png[灾难恢复vmc AWS image61]
 
 . 在完整虚拟机还原向导的第一页上、根据需要修改要备份的虚拟机、然后选择下一步。
 +
-image:dr-vmc-aws-image62.png[""]
+image::dr-vmc-aws-image62.png[灾难恢复vmc AWS image62]
 
 . 在还原模式页面上、选择还原到新位置或使用不同设置。
 +
-image:dr-vmc-aws-image63.png[""]
+image::dr-vmc-aws-image63.png[灾难恢复vmc AWS image63]
 
 . 在主机页面上、选择要将虚拟机还原到的目标ESXi主机或集群。
 +
-image:dr-vmc-aws-image64.png[""]
+image::dr-vmc-aws-image64.png[灾难恢复vmc AWS image64]
 
 . 在Datastores页面上、为配置文件和硬盘选择目标数据存储库位置。
 +
-image:dr-vmc-aws-image65.png[""]
+image::dr-vmc-aws-image65.png[灾难恢复vmc AWS image65]
 
 . 在网络页面上、将虚拟机上的原始网络映射到新目标位置中的网络。
 +
-image:dr-vmc-aws-image66.png[""]
+image::dr-vmc-aws-image66.png[灾难恢复vmc AWS image66]
 
 +
-image:dr-vmc-aws-image67.png[""]
+image::dr-vmc-aws-image67.png[灾难恢复vmc AWS image67]
 
 . 选择是否扫描已还原的虚拟机中的恶意软件、查看摘要页面、然后单击完成以开始还原。
 
@@ -802,22 +802,22 @@ FSx-Dest::> lun mapping create -vserver DestSVM -path LUNPath igroup igroupName
 . 打开iSCSI启动程序属性实用程序、并清除发现、收藏的目标和目标选项卡上的旧连接设置。
 . 找到用于访问FSX实例/集群上的iSCSI逻辑接口的IP地址。您可以在AWS控制台中的Amazon FSx > ONTAP > Storage Virtual Machine下找到此选项。
 +
-image:dr-vmc-aws-image68.png[""]
+image::dr-vmc-aws-image68.png[灾难恢复vmc AWS image68]
 
 . 在发现选项卡中、单击发现门户、然后输入FSX iSCSI目标的IP地址。
 +
-image:dr-vmc-aws-image69.png[""]
+image::dr-vmc-aws-image69.png[灾难恢复vmc AWS image69]
 
 +
-image:dr-vmc-aws-image70.png[""]
+image::dr-vmc-aws-image70.png[灾难恢复vmc AWS image70]
 
 . 在目标选项卡上、单击连接、根据您的配置选择启用多路径、然后单击确定连接到目标。
 +
-image:dr-vmc-aws-image71.png[""]
+image::dr-vmc-aws-image71.png[灾难恢复vmc AWS image71]
 
 . 打开计算机管理实用程序并使磁盘联机。确认它们保留的驱动器号与先前相同。
 +
-image:dr-vmc-aws-image72.png[""]
+image::dr-vmc-aws-image72.png[灾难恢复vmc AWS image72]
 
 
 
@@ -827,16 +827,16 @@ image:dr-vmc-aws-image72.png[""]
 ====
 . 从SQL Server VM中、打开Microsoft SQL Server Management Studio并选择Attach以开始连接到数据库的过程。
 +
-image:dr-vmc-aws-image73.png[""]
+image::dr-vmc-aws-image73.png[灾难恢复vmc AWS image73]
 
 . 单击添加并导航到包含SQL Server主数据库文件的文件夹、将其选中、然后单击确定。
 +
-image:dr-vmc-aws-image74.png[""]
+image::dr-vmc-aws-image74.png[灾难恢复vmc AWS image74]
 
 . 如果事务日志位于单独的驱动器上、请选择包含事务日志的文件夹。
 . 完成后、单击确定以连接数据库。
 +
-image:dr-vmc-aws-image75.png[""]
+image::dr-vmc-aws-image75.png[灾难恢复vmc AWS image75]
 
 
 
@@ -854,7 +854,7 @@ image:dr-vmc-aws-image75.png[""]
 
 要确认SnapCenter 处于灾难恢复模式、请在SnapCenter Web客户端中导航到设置。转到全局设置选项卡、然后单击灾难恢复。确保启用"启用灾难恢复"复选框。
 
-image:dr-vmc-aws-image76.png[""]
+image::dr-vmc-aws-image76.png[灾难恢复vmc AWS image76]
 
 ====
 
@@ -880,7 +880,7 @@ image:dr-vmc-aws-image76.png[""]
 FSx-Dest::> volume show -volume VolumeName*
 ....
 +
-image:dr-vmc-aws-image77.png[""]
+image::dr-vmc-aws-image77.png[灾难恢复vmc AWS image77]
 
 . 运行以下命令以中断现有SnapMirror关系。
 +
@@ -888,15 +888,15 @@ image:dr-vmc-aws-image77.png[""]
 FSx-Dest::> snapmirror break -destination-path DestSVM:DestVolName
 ....
 +
-image:dr-vmc-aws-image78.png[""]
+image::dr-vmc-aws-image78.png[灾难恢复vmc AWS image78]
 
 . 更新Amazon FSX Web客户端中的接合路径：
 +
-image:dr-vmc-aws-image79.png[""]
+image::dr-vmc-aws-image79.png[灾难恢复vmc AWS image79]
 
 . 添加接合路径名称、然后单击更新。从Oracle服务器挂载NFS卷时、请指定此接合路径。
 +
-image:dr-vmc-aws-image80.png[""]
+image::dr-vmc-aws-image80.png[灾难恢复vmc AWS image80]
 
 
 
@@ -908,14 +908,14 @@ image:dr-vmc-aws-image80.png[""]
 
 . 在Cloud Manager中、访问FSX集群的卷列表。
 +
-image:dr-vmc-aws-image81.png[""]
+image::dr-vmc-aws-image81.png[灾难恢复vmc AWS image81]
 
 . 从操作菜单中、选择挂载命令以查看并复制要在Oracle Linux服务器上使用的挂载命令。
 +
-image:dr-vmc-aws-image82.png[""]
+image::dr-vmc-aws-image82.png[灾难恢复vmc AWS image82]
 
 +
-image:dr-vmc-aws-image83.png[""]
+image::dr-vmc-aws-image83.png[灾难恢复vmc AWS image83]
 
 . 将NFS文件系统挂载到Oracle Linux Server。Oracle Linux主机上已存在用于挂载NFS共享的目录。
 . 在Oracle Linux服务器上、使用mount命令挂载NFS卷。

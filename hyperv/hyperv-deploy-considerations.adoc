@@ -68,18 +68,18 @@ SMB 3.0文件共享可用作Hyper-V的共享存储ONTAP支持通过适用于Hype
 . 验证是否已在Storage Virtual Machine (SVM)上启用所需的CIFS服务器选项
 . 应将以下选项设置为true：smb2-enabled smb3-enabled copy-offload-enabled scopy-enabled是-多通道-启用是-大型-MTU-enabled
 +
-image:hyperv-deploy-image03.png["SMB卷设置的图像"]
+image::hyperv-deploy-image03.png[SMB卷设置的图像]
 
 . 在Storage Virtual Machine (SVM)上创建NTFS数据卷、然后配置持续可用的共享以用于Hyper-V
 +
-image:hyperv-deploy-image04.png["NTFS数据卷设置的图像"]
+image::hyperv-deploy-image04.png[NTFS数据卷设置的图像]
 
 +
 *注意*：除非将配置中使用的卷创建为NTFS安全模式卷、否则基于SMB的Hyper-V不会正常运行。
 
 . 在共享上启用持续可用并配置NTFS权限、以包括具有完全控制权的Hyper-V节点。
 +
-image:hyperv-deploy-image05.png["NTFS权限设置的图像"]
+image::hyperv-deploy-image05.png[NTFS权限设置的图像]
 
 
 
@@ -127,7 +127,7 @@ image:hyperv-deploy-image05.png["NTFS权限设置的图像"]
 . 浏览并选择要在其中创建LUN的指定SVM、此时将显示创建LUN向导。
 . 在常规属性页面上、为包含Hyper-V虚拟机虚拟硬盘(Virtual Hard Disk、VHD)的LUN选择Hyper-V。
 +
-image:hyperv-deploy-image06.png["用于创建Hyper-V LUN的\"General Properties\"(常规属性)页面的图像"]
+image::hyperv-deploy-image06.png[用于创建Hyper-V LUN的"General Properties"(常规属性)页面的图像]
 
 . <单击更多选项>在"LUN Container"页面上、选择现有FlexVol卷、否则将创建新卷。
 . <单击更多选项>在启动程序映射页面上、单击添加启动程序组、在常规选项卡上输入所需信息、然后在启动程序选项卡上输入主机的iSCSI启动程序节点名称。
@@ -146,7 +146,7 @@ image:hyperv-deploy-image06.png["用于创建Hyper-V LUN的\"General Properties\
 . 此时、磁盘将分配给可用存储组。
 . 完成后、选择刚刚分配给可用存储的磁盘、右键单击所选内容、然后选择添加到集群共享卷。
 +
-image:hyperv-deploy-image07.png["添加到集群共享卷界面的图像"]
+image::hyperv-deploy-image07.png[添加到集群共享卷界面的图像]
 
 . 磁盘现在已分配给集群中的集群共享卷组。磁盘作为编号卷(挂载点)公开给每个集群节点、位于%SystemDrive%ClusterStorage文件夹下。这些卷将显示在CSVFS文件系统中。
 

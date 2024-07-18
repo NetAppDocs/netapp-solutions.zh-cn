@@ -89,14 +89,14 @@ NOTE: 部署VI工作负载域时、VCF会验证与NFS服务器的连接。在使
 . 登录到VCF管理域的vCenter设备。
 . 在vCenter设备界面中，右键单击管理集群，然后选择*Deploy OVF Template…*
 +
-image:vmware-vcf-aff-image21.png["部署OVF模板..."]
+image::vmware-vcf-aff-image21.png[部署OVF模板...]
 
 +
 ｛｛｝
 
 . 在“*部署OVF模板*”向导中，单击“*本地文件*”单选按钮，然后选择在上一步中下载的ONTAP工具OVA文件。
 +
-image:vmware-vcf-aff-image22.png["选择OVA文件"]
+image::vmware-vcf-aff-image22.png[选择OVA文件]
 
 +
 ｛｛｝
@@ -104,14 +104,14 @@ image:vmware-vcf-aff-image22.png["选择OVA文件"]
 . 对于向导的第2步到第5步、为虚拟机选择一个名称和文件夹、选择计算资源、查看详细信息并接受许可协议。
 . 对于配置和磁盘文件的存储位置、请选择VCF管理域集群的vSAN数据存储库。
 +
-image:vmware-vcf-aff-image23.png["选择OVA文件"]
+image::vmware-vcf-aff-image23.png[选择OVA文件]
 
 +
 ｛｛｝
 
 . 在Select network页面上、选择用于管理流量的网络。
 +
-image:vmware-vcf-aff-image24.png["选择网络"]
+image::vmware-vcf-aff-image24.png[选择网络]
 
 +
 ｛｛｝
@@ -129,10 +129,10 @@ image:vmware-vcf-aff-image24.png["选择网络"]
 完成后，单击“*下一步*”继续。
 
 +
-image:vmware-vcf-aff-image25.png["自定义OTV模板1."]
+image::vmware-vcf-aff-image25.png[自定义OTV模板1.]
 
 +
-image:vmware-vcf-aff-image26.png["自定义OTV模板2."]
+image::vmware-vcf-aff-image26.png[自定义OTV模板2.]
 
 +
 ｛｛｝
@@ -151,16 +151,16 @@ image:vmware-vcf-aff-image26.png["自定义OTV模板2."]
 . 导航到以访问Swagger用户界面 https://otv_ip:8143/api/rest/swagger-ui.html[] 在Web浏览器中。
 . 向下滚动到*用户身份验证：用于用户身份验证的API *，然后选择*Post /2.0/VCF/user/login"。
 +
-image:vmware-vcf-aff-image27.png["POST /2.0/VCF/user/login"]
+image::vmware-vcf-aff-image27.png[POST /2.0/VCF/user/login]
 
 . 在*parameter content type*下，将内容类型切换为*application/json*。
 . 在*vcfLog应 请求*下，输入OTV设备的用户名和密码。
 +
-image:vmware-vcf-aff-image28.png["输入OTV用户名和密码"]
+image::vmware-vcf-aff-image28.png[输入OTV用户名和密码]
 
 . 单击*试用！*按钮，然后在*响应标题*下复制*"authorization"：*文本字符串。
 +
-image:vmware-vcf-aff-image29.png["复制授权响应标题"]
+image::vmware-vcf-aff-image29.png[复制授权响应标题]
 
 
 
@@ -172,12 +172,12 @@ image:vmware-vcf-aff-image29.png["复制授权响应标题"]
 
 . 在Swagger UI中、找到*安全性：与证书相关的API *、然后选择*获取/3.0/securation/certificates/｛host｝/server-certificates*。
 +
-image:vmware-vcf-aff-image30.png["获取/3.0/secury/certificates/｛host｝/server-certificates"]
+image::vmware-vcf-aff-image30.png[获取/3.0/secury/certificates/｛host｝/server-certificates]
 
 . 在*enAppliance－API-Tendo*字段中，粘贴上一步中获得的文本字符串。
 . 在*host*字段中，键入要从中获取公共ONTAP证书的SSL存储系统的IP地址。
 +
-image:vmware-vcf-aff-image31.png["复制公共SSL证书"]
+image::vmware-vcf-aff-image31.png[复制公共SSL证书]
 
 
 
@@ -191,7 +191,7 @@ image:vmware-vcf-aff-image31.png["复制公共SSL证书"]
 . 在设备-API-令牌 字段中、填写上一步中获取的VCF令牌。请注意、令牌最终将过期、因此可能需要定期获取新令牌。
 . 在*ControllerQuest*文本框中，提供在上一步中获得的ONTAP存储系统IP地址、用户名、密码和公共SSL证书。
 +
-image:vmware-vcf-aff-image32.png["提供信息以添加存储系统"]
+image::vmware-vcf-aff-image32.png[提供信息以添加存储系统]
 
 . 单击*试用！*按钮将存储系统添加到OTV。
 
@@ -204,7 +204,7 @@ image:vmware-vcf-aff-image32.png["提供信息以添加存储系统"]
 
 . 在Swagger UI中、滚动到Container：APIS related to containers、然后选择Post /2.0/admin/containers。
 +
-image:vmware-vcf-aff-image33.png["/2.0/admin/containers"]
+image::vmware-vcf-aff-image33.png[/2.0/admin/containers]
 
 . 在*Appliance－API-TOAMOD*字段中，填写上一步中获得的VCF令牌。请注意、令牌最终将过期、因此可能需要定期获取新令牌。
 . 在container请求框中、填写以下必填字段：
@@ -219,7 +219,7 @@ image:vmware-vcf-aff-image33.png["/2.0/admin/containers"]
 
 
 
-image:vmware-vcf-aff-image34.png["vvol container请求表单"]
+image::vmware-vcf-aff-image34.png[vvol container请求表单]
 
 4单击“*试用！*”以执行该指令并创建VVOV容器。
 

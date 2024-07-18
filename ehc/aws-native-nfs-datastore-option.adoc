@@ -32,14 +32,14 @@ NOTE: 您不能在已连接的VPC中部署适用于ONTAP 的FSX。而是必须�
 . 打开位于`https://console.aws.amazon.com/fsx/`的Amazon FSX控制台、然后选择*创建文件系统*以启动*文件系统创建*向导。
 . 在选择文件系统类型页面上、选择*适用于NetApp ONTAP 的Amazon FSx *、然后单击*下一步*。此时将显示*创建文件系统*页面。
 +
-image:fsx-nfs-image2.png[""]
+image::fsx-nfs-image2.png[FSx NFS image2.]
 
 . 对于创建方法、请选择*标准创建*。
 +
-image:fsx-nfs-image3.png[""]
+image::fsx-nfs-image3.png[FSx NFS image3.]
 
 +
-image:fsx-nfs-image4.png[""]
+image::fsx-nfs-image4.png[FSx NFS image4]
 
 +
 
@@ -55,11 +55,11 @@ NOTE: 确保此VPC为新的指定VPC、而不是已连接的VPC。
 NOTE: 默认情况下、ONTAP 的FSX使用198.19.0.0/16作为文件系统的默认端点IP地址范围。确保端点IP地址范围不会与AWS SDDC上的VMC、关联的VPC子网和内部基础架构相冲突。如果不确定、请使用不存在冲突的非重叠范围。
 
 +
-image:fsx-nfs-image5.png[""]
+image::fsx-nfs-image5.png[FSx NFS image5]
 
 . 在加密密钥的*安全性和加密*部分中、选择用于保护文件系统空闲数据的AWS密钥管理服务(AWS KMS)加密密钥。对于*文件系统管理密码*、输入fsxadmin用户的安全密码。
 +
-image:fsx-nfs-image6.png[""]
+image::fsx-nfs-image6.png[FSx NFS image6]
 
 . 在*默认Storage Virtual Machine配置*部分中、指定SVM的名称。
 +
@@ -67,7 +67,7 @@ image:fsx-nfs-image6.png[""]
 NOTE: 自GA起、支持四个NFS数据存储库。
 
 +
-image:fsx-nfs-image7.png[""]
+image::fsx-nfs-image7.png[FSx NFS image7]
 
 . 在*默认卷配置*部分中、指定数据存储库所需的卷名称和大小、然后单击*下一步*。此卷应为NFSv3卷。对于*存储效率*、选择*已启用*以启用ONTAP 存储效率功能(数据压缩、重复数据删除和数据缩减)。创建后、使用Shell使用*卷modify_*修改卷参数、如下所示：
 +
@@ -123,10 +123,10 @@ volume modify -vserver FSxONTAPDatastoreSVM -volume DemoDS002 -space-mgmt-try-fi
 volume modify -vserver FSxONTAPDatastoreSVM -volume DemoDS002 -autosize-mode grow
 ....
 +
-image:fsx-nfs-image8.png[""]
+image::fsx-nfs-image8.png[FSx NFS版本8]
 
 +
-image:fsx-nfs-image9.png[""]
+image::fsx-nfs-image9.png[FSx NFS image9]
 
 +
 
@@ -135,10 +135,10 @@ NOTE: 在初始迁移场景中、默认快照策略可能会出现发生原因 �
 . 查看*创建文件系统*页面上显示的文件系统配置。
 . 单击*创建文件系统*。
 +
-image:fsx-nfs-image10.png[""]
+image::fsx-nfs-image10.png[FSx NFS image10]
 
 +
-image:fsx-nfs-image11.png[""]
+image::fsx-nfs-image11.png[FSx NFS image11]
 
 +
 
@@ -159,11 +159,11 @@ NOTE: 重复上述步骤、根据容量和性能要求创建更多的Storage Vir
 . 在* SDDC组*选项卡上、单击*操作*并选择*创建SDDC组*。出于演示目的、SDDC组称为`FSxONTAPDatastoreGrp`。
 . 在成员网格中、选择要包括为组成员的SDDC。
 +
-image:fsx-nfs-image12.png[""]
+image::fsx-nfs-image12.png[FSx NFS image12]
 
 . 验证是否已选中"为您的组配置VMware Transit Connect将对每个附件和数据传输产生费用"、然后选择*创建组*。完成此过程可能需要几分钟时间。
 +
-image:fsx-nfs-image13.png[""]
+image::fsx-nfs-image13.png[FSx NFS image13.]
 
 
 
@@ -173,7 +173,7 @@ image:fsx-nfs-image13.png[""]
 ====
 . 将新创建的指定VPC附加到SDDC组。选择*外部VPC*选项卡、然后按照进行操作 https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-operations/GUID-A3D03968-350E-4A34-A53E-C0097F5F26A9.html["将外部VPC连接到组的说明"^]。此过程可能需要10到15分钟才能完成。
 +
-image:fsx-nfs-image14.png[""]
+image::fsx-nfs-image14.png[FSx NFS image14]
 
 . 单击*添加帐户*。
 +
@@ -183,7 +183,7 @@ image:fsx-nfs-image14.png[""]
 
 . 返回AWS控制台、登录到同一个AWS帐户并导航到*资源访问管理器*服务页面。您可以通过一个按钮来接受资源共享。
 +
-image:fsx-nfs-image15.png[""]
+image::fsx-nfs-image15.png[FSx NFS image15]
 
 +
 
@@ -191,7 +191,7 @@ NOTE: 在外部VPC过程中、系统会通过AWS控制台通过资源访问管�
 
 . 单击*接受资源共享*。
 +
-image:fsx-nfs-image16.png[""]
+image::fsx-nfs-image16.png[FSx NFS image16]
 
 . 回到VMC控制台、您现在可以看到外部VPC处于关联状态。此操作可能需要几分钟时间才能显示出来。
 
@@ -203,18 +203,18 @@ image:fsx-nfs-image16.png[""]
 . 在AWS控制台中、转至VPC服务页面并导航到用于配置FSX文件系统的VPC。在此、您可以单击右侧导航窗格上的*传输网关附件*来创建传输网关附件。
 . 在* VPC附件*下、确保已选中DNS支持、并选择部署了FSX for ONTAP 的VPC。
 +
-image:fsx-nfs-image17.png[""]
+image::fsx-nfs-image17.png[FSx NFS image17.]
 
 . 单击*创建**传输网关附件*。
 +
-image:fsx-nfs-image18.png[""]
+image::fsx-nfs-image18.png[FSx NFS image18]
 
 . 返回VMware Cloud Console、导航回SDDC组>外部VPC选项卡。选择用于FSX的AWS帐户ID、然后单击VPC并单击*接受*。
 +
-image:fsx-nfs-image19.png[""]
+image::fsx-nfs-image19.png[FSx NFS image19]
 
 +
-image:fsx-nfs-image20.png[""]
+image::fsx-nfs-image20.png[FSx NFS image20]
 
 +
 
@@ -225,10 +225,10 @@ NOTE: 此选项可能需要几分钟才能显示。
 ** 适用于NetApp ONTAP 浮动IP的Amazon FSX浮动IP范围的路由。
 ** 新创建的外部 VPC 地址空间的路由。
 +
-image:fsx-nfs-image21.png[""]
+image::fsx-nfs-image21.png[FSx NFS image21.]
 
 +
-image:fsx-nfs-image22.png[""]
+image::fsx-nfs-image22.png[FSx NFS image22.]
 
 
 
@@ -241,16 +241,16 @@ image:fsx-nfs-image22.png[""]
 . 在AWS控制台中、通过在VPC服务页面中找到VPC并选择VPC的*主*路由表来创建返回SDDC的路由。
 . 浏览到下部面板中的路由表、然后单击*编辑路由*。
 +
-image:fsx-nfs-image23.png[""]
+image::fsx-nfs-image23.png[FSx NFS image23]
 
 . 在*编辑路由*面板中、单击*添加路由*、然后通过选择*传输网关*以及关联的TGWID输入SDDC基础架构的CIDR。单击 * 保存更改 * 。
 +
-image:fsx-nfs-image24.png[""]
+image::fsx-nfs-image24.png[FSx NFS image24]
 
 . 下一步是验证关联VPC中的安全组是否已使用正确的SDDC组CIDR入站规则进行更新。
 . 使用SDDC基础架构的CIDR块更新入站规则。
 +
-image:fsx-nfs-image25.png[""]
+image::fsx-nfs-image25.png[FSx NFS image25]
 
 +
 
@@ -272,7 +272,7 @@ NOTE: 更新安全组以接受NFS流量。
 
 . 在VMC控制台中、打开SDDC的*存储*选项卡。
 +
-image:fsx-nfs-image27.png[""]
+image::fsx-nfs-image27.png[FSx NFS image27]
 
 . 单击*附加数据存储库*并填写所需的值。
 +
@@ -280,15 +280,15 @@ image:fsx-nfs-image27.png[""]
 NOTE: NFS服务器地址是NFS IP地址、可在AWS控制台中的FSX > Storage Virtual Machine选项卡>端点下找到。
 
 +
-image:fsx-nfs-image28.png[""]
+image::fsx-nfs-image28.png[FSx NFS image28]
 
 . 单击*连接数据存储库*将数据存储库连接到集群。
 +
-image:fsx-nfs-image29.png[""]
+image::fsx-nfs-image29.png[FSx NFS image29]
 
 . 通过访问vCenter验证NFS数据存储库、如下所示：
 +
-image:fsx-nfs-image30.png[""]
+image::fsx-nfs-image30.png[FSx NFS image30]
 
 
 

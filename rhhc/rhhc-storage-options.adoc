@@ -18,17 +18,17 @@ summary:
 
 下图展示了可使用NetApp Asta Dent与OpenShift集群集成的各种后端NetApp存储。
 
-image:a-w-n_astra_trident.png[""]
+image::a-w-n_astra_trident.png[A w w a sta trdent]
 
 ONTAP Storage Virtual Machine (SVM)可提供安全多租户。一个OpenShift集群可以连接到一个或多个SVM、甚至可以连接到多个ONTAP 集群。存储类会根据参数或标签筛选后端存储。存储管理员可定义使用三级联后端配置连接到存储系统所需的参数。成功建立连接后、它将创建三项技术后端并填充存储类可以筛选的信息。
 
 存储器和后端之间的关系如下所示。
 
-image:rhhc-storage-options-sc2ontap.png["存储类到ONTAP 关系"]
+image::rhhc-storage-options-sc2ontap.png[存储类到ONTAP 关系]
 
 应用程序所有者使用存储类请求永久性卷。存储类用于筛选后端存储。POD与后端存储之间的关系如下所示。
 
-image:rhhc_storage_opt_pod2vol.png["POD与ONTAP 卷之间的关系"]
+image::rhhc_storage_opt_pod2vol.png[POD与ONTAP 卷之间的关系]
 
 
 
@@ -58,8 +58,6 @@ image:rhhc_storage_opt_pod2vol.png["POD与ONTAP 卷之间的关系"]
 
 对于VMware CSI和Asta三端CSI、ONTAP 均支持对NFS使用nconnect、会话中继、Kerberos等、对块协议使用多路径、chap身份验证等。
 
-在AWS中、FSx for NetApp ONTAP (FSxN)可以部署在单个可用性区域(AZ)或多个可用性区域(AZ)中。对于需要高可用性的生产工作负载、与单个AZ相比、多可用性可提供分区级容错、并具有更好的NVMe读取缓存。有关详细信息、请查看 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/performance.html["AWS性能准则"]。
-为了节省灾难恢复站点的成本、可以使用一个AZ FSx ONTAP。
-image:rhhc_storage_options_fsxn_options.png["在多可用性分区和单可用性分区之间进行复制"]
+在AWS中、FSx for NetApp ONTAP (FSxN)可以部署在单个可用性区域(AZ)或多个可用性区域(AZ)中。对于需要高可用性的生产工作负载、与单个AZ相比、多可用性可提供分区级容错、并具有更好的NVMe读取缓存。有关详细信息，请查看 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/performance.html["AWS性能准则"]。为了节省灾难恢复站点的成本、可以使用一个AZ FSx ONTAP。 图像：：rhhc_storage_options选项_fsxn_options．png["Replication between Multi-AZ and Singly-AZ"]
 
 有关FSx ONTAP 支持的SVM数量、请参见 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/managing-svms.html#max-svms["管理FSx ONTAP Storage Virtual Machine"]
