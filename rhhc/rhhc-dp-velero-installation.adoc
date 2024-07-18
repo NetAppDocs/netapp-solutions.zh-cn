@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
-permalink: containers/rh-os-n_use_case_openshift_virtualization_dataprotection_installation.html 
-keywords: OpenShift, OCP, Astra Trident, NetApp ONTAP, Red Hat OpenShift, OpenShift Virtualization, CNV, Container Native Virtualization, Red Hat OpenShift Virtualization, OADP operator, Openshift Data Protection Application operator, velero 
-summary: 借助NetApp ONTAP实现Red Hat OpenShift虚拟化数据保护 
+permalink: rhhc/rhhc-dp-velero-installation.html 
+keywords: OpenShift, OCP, Astra Trident, NetApp ONTAP, Red Hat OpenShift, OADP operator, Openshift Data Protection Application operator, Velero 
+summary: 使用NetApp ONTAP实现Red Hat OpenShift容器应用程序数据保护 
 ---
 = 安装OpenShift API for Data Protection (OADP) Operator
 :hardbreaks:
@@ -27,13 +27,9 @@ summary: 借助NetApp ONTAP实现Red Hat OpenShift虚拟化数据保护
 * 在集群上创建的三项Snapshot类
 * 对 Red Hat OpenShift 集群的集群管理员访问
 * 对 NetApp ONTAP 集群的管理员访问权限
-* 已安装并配置OpenShift虚拟化操作员
-* 部署在OpenShift虚拟化上的命名空间中的VM
+* 集群上部署的应用程序、例如PostgreSQL
 * 安装了 tridentctl 和 oc 工具并将其添加到 $path 中的管理工作站
 
-
-
-NOTE: 如果要在VM处于running状态时为其创建备份、则必须在该虚拟机上安装QEMu子代理。如果使用现有模板安装VM、则会自动安装QEMU代理。通过QEMu、子代理可以在快照过程中将子操作系统中的传输中数据置于静机状态、并避免可能发生的数据损坏。如果未安装QEMu、则可以先停止虚拟机、然后再创建备份。
 
 
 
@@ -87,9 +83,9 @@ image::redhat_openshift_OADP_install_image5.png[为S3用户凭据创建密码]
 
 要通过命令行界面创建名为SG-S3-cred据 的机密、您可以使用以下命令。
 
-image::redhat_openshift_OADP_install_image6.png[使用命令行界面为S3用户凭据创建机密]
+image::redhat_openshift_OADP_install_image6.png[使用命令行界面为Storage Grid S3用户凭据创建机密]
 
-* 接下来，要配置Velero，请从Operators下的菜单项中选择Installed Operators，单击OADP Operator，然后选择Data分别 保护应用程序选项卡。
+* 接下来，要配置Velero，请从Operators下的菜单项中选择Installed Operators，单击OADP Operator，然后选择**DataSetionApplication**选项卡。
 
 
 image::redhat_openshift_OADP_install_image7.jpg[DataSetionApplication]
@@ -110,15 +106,16 @@ spec:
           insecureSkipTLSVerify: 'false' ->use this for https communication with ONTAP S3
           profile: default
           region: us-east-1
-          s3ForcePathStyle: 'True' ->This allows use of IP in s3URL
-          s3Url: 'https://10.xx.xx.xx' ->LIF to access S3. Ensure TLS certificate for S3 is configured
+          s3ForcePathStyle: 'true'  ->This allows use of IP in s3URL
+          s3Url: 'https://10.61.181.161' ->Ensure TLS certificate for S3 is configured
         credential:
           key: cloud
-          name: ontap-s3-credentials ->previously created secret
+          name: ontap-s3-credentials -> previously created secret
         default: true
         objectStorage:
-          bucket: velero ->Your bucket name previously created in S3 for backups
-          prefix: demobackup ->The folder that will be created in the bucket
+          bucket: velero -> Your bucket name previously created in S3 for backups
+          prefix: container-demo-backup ->The folder that will be created in the bucket
+          caCert: <base64 encoded CA Certificate installed on ONTAP Cluster with the SVM Scope where the bucker exists>
         provider: aws
   configuration:
     nodeAgent:
@@ -127,12 +124,12 @@ spec:
       #default Data Mover uses Kopia to move snapshots to Object Storage
     velero:
       defaultPlugins:
-        - csi ->Add this plugin
+        - csi ->This plugin to use CSI snapshots
         - openshift
         - aws
-        - kubevirt ->Add this plugin
+        - kubevirt -> This plugin to use Velero with OIpenShift Virtualization
 ....
-**用StorageGRID S3作为备份位置和快照位置来配置Velero的YAML文件样本**
+**用StorageGRID S3作为备份位置来配置Velero的YAML文件样本**
 
 ....
 spec:
@@ -196,8 +193,8 @@ image::redhat_openshift_OADP_install_image10.jpg[应将卷SnapshotClass删除策
 
 确保已创建Data놣 rotionApplication且其状态为"病 况：已调节"。
 
-image::redhat_openshift_OADP_install_image11.jpg[已创建DataSetionApplication对象]
+image::redhat_openshift_OADP_install_image11.png[已创建DataSetionApplication对象]
 
 OADP操作员将创建相应的备份存储位置。创建备份时将使用此位置。
 
-image::redhat_openshift_OADP_install_image12.jpg[已创建备份存储位置]
+image::redhat_openshift_OADP_install_image12.png[已创建备份存储位置]

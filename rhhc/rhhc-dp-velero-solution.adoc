@@ -1,0 +1,51 @@
+---
+sidebar: sidebar 
+permalink: rhhc/rhhc-dp-velero-solution.html 
+keywords: OpenShift, OCP, Astra Trident, NetApp ONTAP, Red Hat OpenShift, OADP operator, Openshift Data Protection Application operator, Velero, app data protection, Containers 
+summary: 使用NetApp ONTAP实现Red Hat OpenShift容器应用程序数据保护 
+---
+= 使用OpenShift API实现数据保护(OADP)、在OpenShift容器平台中为容器应用程序提供数据保护
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+作者：Banu Sunzhar、NetApp
+
+[role="lead"]
+本参考文档的这一部分详细介绍了如何在NetApp ONTAP S3或NetApp StorageGRID S3上使用用于数据保护的OpenShift API (OADP)和Velero创建容器应用的备份。命名空间范围的资源(包括应用程序的永久性卷(PV))的备份是使用CSI Asta三端Snapshot创建的。
+
+容器应用程序的永久性存储可通过集成到OpenShift集群的ONTAP存储提供支持 link:https://docs.netapp.com/us-en/trident/["Astra三端CSI"]。在本节中、我们使用 link:https://docs.openshift.com/container-platform/4.14/backup_and_restore/application_backup_and_restore/installing/installing-oadp-ocs.html["用于数据保护的OpenShift API (OADP)"] 将应用程序(包括其数据卷)备份到
+
+* ONTAP对象存储
+* StorageGRID
+
+
+然后、我们会根据需要从备份中还原。请注意、该应用程序只能还原到创建备份所在的集群。
+
+通过OADP、可以对OpenShift集群上的应用程序进行备份、还原和灾难恢复。可以使用OADP保护的数据包括Kubbernetes资源对象、永久性卷和内部映像。
+
+image::redhat_openshift_OADP_image1.jpg[用于数据保护的OpenShift API]
+
+Red Hat OpenShift利用了OpenSource社区开发的解决方案来实现数据保护。 link:https://velero.io/["Velero"] 是一款开源工具、用于安全备份和还原、执行灾难恢复以及迁移Kubbernetes集群资源和永久性卷。为了轻松使用Velero、OpenShift开发了OADP运算符和Velero插件、以便与CSI存储驱动程序集成。公开的OADP API的核心基于Velero API。安装并配置OADP操作程序后、可以执行的备份/还原操作将基于Velero API公开的操作。
+
+image::redhat_openshift_OADP_image2.jpg[用于数据保护的OpenShift API]
+
+OADP 1.3可从OpenShift集群的操作中心进行下载、版本为：它具有内置的Data Mover、可将CSI卷快照移动到远程对象存储。这样可以在备份期间将快照移动到对象存储位置、从而提高可移植性和持久性。灾难发生后、快照可供还原。
+
+**以下是本节中的示例所使用的各种组件的版本**
+
+* OpenShift集群4.14.
+* OADP Operator 1.13由Red Hat提供
+* 适用于Linux的Velero CLI 1.13
+* Astra三端到子24.02
+* ONTAP 9.12.
+* 使用Helm安装PostgreSQL。
+
+
+link:https://docs.netapp.com/us-en/trident/["Astra三端CSI"]
+link:https://docs.openshift.com/container-platform/4.14/backup_and_restore/application_backup_and_restore/installing/installing-oadp-ocs.html["用于数据保护的OpenShift API (OADP)"]
+link:https://velero.io/["Velero"]

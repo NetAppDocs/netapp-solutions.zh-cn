@@ -18409,7 +18409,6 @@ DGX H100 CPU托盘的后部端口如下所示。其中四个OSFP端口为InfiniB
   <block id="028e770dafec7bc4c1b2a094baa8b902" category="inline-link-macro">Velero文档</block>
   <block id="322658ed277e33b7084d15bfea1f8654" category="paragraph">按照中的说明下载命令行界面 <block ref="4084f117acec9d1e358ff87bedc14e4b" category="inline-link-macro-rx"></block>。</block>
   <block id="44698d5b7f33a7bf2307285b2bd76a50" category="paragraph">使用Velero命令行界面执行以下删除命令</block>
-  <block id="5c71ba464067f7274098a1ad207e5185" category="paragraph">您也可以使用Velero命令行界面删除恢复CR</block>
   <block id="62493b3471e85f7b7102c1acae457868" category="paragraph">您可以使用oc命令以及UI删除还原CR</block>
   <block id="aa865fc0a71e354cb5438761f6a6c9ba" category="inline-link-macro">InstaclCluster监控API</block>
   <block id="dff788a6c7c858a053eeffb9e4595122" category="paragraph">下面是一些可与VMware A拨 集成的其他资源。
@@ -22294,4 +22293,57 @@ Sathish Thyagarajan、NetApp</block>
   <block id="26f83dd1426c53500a8a01700eab29d2" category="paragraph"><block ref="26f83dd1426c53500a8a01700eab29d2" category="inline-image-macro-rx" type="image"></block></block>
   <block id="aa996ba396779d32540b480c40cdda2c" category="paragraph"><block ref="aa996ba396779d32540b480c40cdda2c" category="inline-image-macro-rx" type="image"></block></block>
   <block id="f60b55436b1ee93b2978208735d99222" category="paragraph"><block ref="f60b55436b1ee93b2978208735d99222" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="386516d20f942ea44530abce3a0d6658" category="section-title">删除还原</block>
+  <block id="7d1b1dead1b5c837eb4e8627adae0e1b" category="paragraph">您可以使用Velero命令行界面删除恢复CR</block>
+  <block id="7a9d54f11a08f06fafb146a95a28fcae" category="doc">使用第三方工具为容器应用程序和VM提供数据保护</block>
+  <block id="a78517d99e4cf029d76c3e543b762f94" category="paragraph">本解决方案介绍了如何在Red Hat OpenShift容器平台中使用与OADP操作员集成的Velero来执行容器和VM的数据保护操作。</block>
+  <block id="4d5df57594a363ae7bcabfa617f91daf" category="list-text">有关在OpenShift容器平台中为容器应用程序创建备份和从备份还原的详细信息，请参见 <block ref="98253c3bef4daa21c3f33a05179d479e" category="inline-link-macro-rx"></block>。</block>
+  <block id="b11d85269a08be593137c8fc343c91b4" category="list-text">有关在OpenShift容器平台上部署的OpenShift虚拟化中为VM创建备份和从备份还原的详细信息，请参见 <block ref="f49286bcb7efcc86590bef389631c8ec" category="inline-link-macro-rx"></block>。</block>
+  <block id="b0882fac343b83c07e70ae44cfcd2ef8" category="summary">使用NetApp ONTAP实现Red Hat OpenShift容器应用程序数据保护</block>
+  <block id="4a5341a679bcb2b1186ec4b6f6c6d388" category="doc">在OpenShift容器平台中为应用程序创建按需备份</block>
+  <block id="c072e8c0e577f288f9b33f2e15d40ea2" category="section-title">创建应用程序备份的步骤</block>
+  <block id="27fce95cab4e8e1be8870bf42a5493e3" category="paragraph">要创建应用程序的按需备份(应用程序元数据和应用程序的永久性卷)、请单击**备份**选项卡以创建备份自定义资源(CR)。提供了一个示例YAML以创建备份CR。使用此YAML、将备份指定命名空间中的应用及其永久性存储。其它参数可按中所示进行设置 <block ref="45bf4fcb30cb666d5b02b54fb671e73b" category="inline-link-macro-rx"></block>。</block>
+  <block id="61c783a93fa3ff977cadb409ff31ae78" category="paragraph">CSI将创建指定命名空间中永久性卷和应用程序资源的快照。此快照将存储在YAML中指定的备份位置。备份将在系统中保留30天、如TTL中所指定。</block>
+  <block id="a0f41fa46ad36bfea71df2ef78fea614" category="paragraph">您可以借助S3浏览器应用程序检查对象存储中的备份。备份路径显示在已配置的分段中、前缀名称为(velero/container-demo-backup)。您可以查看备份内容、包括卷快照、日志和应用程序的其他元数据。</block>
+  <block id="b1284a4149f4a6a2d67ade3e2a6b6644" category="section-title">为应用程序创建计划备份</block>
+  <block id="6b73e902a80a65c6a9ad7530f4c8c0fc" category="paragraph">要按计划创建备份、您需要创建计划CR。该计划只是一个cron表达式、允许您指定创建备份的时间。下面显示了创建计划CR的YAML示例。</block>
+  <block id="52650bd193472143f0b7b4f37dd84c5b" category="image-alt">已完成计划备份</block>
+  <block id="5e9fbbb34601f5bd47ea224466ae90e8" category="paragraph">本节概述如何使用Velero在OpenShift容器平台中删除应用程序的备份和恢复。</block>
+  <block id="5bb50a92f07e651d4b6beb5559f2b947" category="section-title">列出所有备份</block>
+  <block id="789cff9853007c26839249dd008598cd" category="paragraph">您可以使用OC CLI工具或Velero CLI工具列出所有备份CRS。按照中的说明下载Velero CLI <block ref="4084f117acec9d1e358ff87bedc14e4b" category="inline-link-macro-rx"></block>。</block>
+  <block id="bff932458007b3f10c9d0b5cc84046f8" category="image-alt">列出备份</block>
+  <block id="cb0528aa7393199d4d0d9a0a229d8b02" category="paragraph">您可以使用OC命令行界面工具删除备份CR而不删除对象存储数据。备份将从命令行界面/控制台输出中删除。但是、由于相应的备份不会从对象存储中删除、因此它将重新显示在命令行界面/控制台输出中。</block>
+  <block id="4df851e6bd6d6562dc094e394c994efc" category="image-alt">删除备份</block>
+  <block id="23e75dadb59ba07bde412b14a9b68f0c" category="paragraph">**如果要删除备份CR和关联的对象存储数据，可以使用Velero CLI工具。**</block>
+  <block id="90803619cda888b61a62e32b24d71962" category="image-alt">删除备份和关联对象存储</block>
+  <block id="2ea8c1a8bd8c26028ae6617e7bd1b811" category="section-title">删除还原</block>
+  <block id="edcbe499e3356bd9d1275cc9b876f59f" category="paragraph">您可以使用OC CLI或Velero CLI删除Restore CR对象</block>
+  <block id="bfca8c639cb1fe604c852ab0e40ff52d" category="image-alt">删除还原</block>
+  <block id="1d17c98343dea80aa898eb026ce8c8af" category="list-text">集群上部署的应用程序、例如PostgreSQL</block>
+  <block id="3909e410f324c88a2e50ff8fbeb0856b" category="image-alt">使用命令行界面为Storage Grid S3用户凭据创建机密</block>
+  <block id="5f4b81444ae8880ac0b7c16d6bd4dd02" category="list-text">接下来，要配置Velero，请从Operators下的菜单项中选择Installed Operators，单击OADP Operator，然后选择**DataSetionApplication**选项卡。</block>
+  <block id="dfa397f2ac1d683df8999e23752b1cd5" category="paragraph">**用StorageGRID S3作为备份位置来配置Velero的YAML文件样本**</block>
+  <block id="985c27e5baf8e0c8ce4281d2228357b4" category="doc">从备份还原应用程序</block>
+  <block id="b12575b620ef2eefc5a795f21acab9ae" category="paragraph">本节介绍如何从备份还原应用程序。</block>
+  <block id="199e19d7340a86d0049ca9e8c3e76e69" category="paragraph">要从备份中还原、我们假定应用程序所在的命名空间已被意外删除。</block>
+  <block id="dc10c0e9cbe76dfe32384430dfaa0783" category="image-alt">已删除应用程序</block>
+  <block id="cb9d44efcb91bddb93de587d2409719a" category="paragraph">当阶段显示完成时、您可以看到应用程序已还原到创建快照时的状态。应用程序将还原到同一命名空间。</block>
+  <block id="be4659d2fc10bfec011a47b4fa4315e6" category="image-alt">已还原到同一命名空间</block>
+  <block id="aa4c6a604e0b2e7ab4dd0fc8fbc5660d" category="paragraph">要将应用程序还原到其他命名空间、您可以在还原CR的YAML定义中提供一个命名空间映射。</block>
+  <block id="be12f70d60d71d9c28ef41419b60e5ef" category="paragraph">以下示例YAML文件创建了一个还原CR、用于将应用程序及其永久性存储从PostgreSQL命名空间还原到新命名空间PostgreSQL还原。</block>
+  <block id="bb10e438cedfbf92a1eeeac9743e8d38" category="paragraph">当阶段显示完成时、您可以看到应用程序已还原到创建快照时的状态。应用程序将还原到YAML中指定的其他命名空间。</block>
+  <block id="57c00e39a3ebeb5cd8ef5f487235617a" category="paragraph">在以下示例中、此应用程序在部署期间使用ONTAP NAS作为其永久性卷的存储类。此时将创建名为backup-postgrest-ontaps3的应用程序的备份。</block>
+  <block id="7ea11f8c9893f38c0a6d811cd7f5beef" category="paragraph">卸载应用程序、模拟应用程序丢失。</block>
+  <block id="07958a1f55913ea192d31e6689c9ace1" category="paragraph">在OpenShift-ADP命名空间中创建配置映射(控制台)、如下所示：填写屏幕截图中所示的详细信息：Select namep命名 空间：OpenShift-ADP名称：change-ONTAP SC (可以是任意名称)密钥：change-ONTAP SC-config.yaml：value：</block>
+  <block id="263b51f3c1622e52f7ffcf9b3608e677" category="paragraph">应用程序将还原到使用存储类ONTAP NAS生态创建的永久性卷声明所在的命名空间中。</block>
+  <block id="00f874d8af909509f17db70678d32c8a" category="doc">使用OpenShift API实现数据保护(OADP)、在OpenShift容器平台中为容器应用程序提供数据保护</block>
+  <block id="e0a99e08423ba118842b06bb49066c0b" category="paragraph">本参考文档的这一部分详细介绍了如何在NetApp ONTAP S3或NetApp StorageGRID S3上使用用于数据保护的OpenShift API (OADP)和Velero创建容器应用的备份。命名空间范围的资源(包括应用程序的永久性卷(PV))的备份是使用CSI Asta三端Snapshot创建的。</block>
+  <block id="013ef03150a557b95219827b41a0c4a4" category="paragraph">容器应用程序的永久性存储可通过集成到OpenShift集群的ONTAP存储提供支持 <block ref="062873b3d48316bca3a2c248dcd88de0" category="inline-link-macro-rx"></block>。在本节中、我们使用 <block ref="aae2b983a17c22c7bfaf66419d8e0186" category="inline-link-macro-rx"></block> 将应用程序(包括其数据卷)备份到</block>
+  <block id="93a85f81fe97cee8e13b0ca36564d827" category="paragraph">然后、我们会根据需要从备份中还原。请注意、该应用程序只能还原到创建备份所在的集群。</block>
+  <block id="cbb196f192ae4249989f2ccc43af86e2" category="list-text">使用Helm安装PostgreSQL。</block>
+  <block id="228cd64fd5d38dfdf6f0f49f520bc64e" category="sidebar">使用第三方工具保护容器应用程序的数据</block>
+  <block id="8e0d22e820bab1da521a2ba45fb75d7c" category="sidebar">使用Velero备份容器应用程序</block>
+  <block id="03f8054e6e3b04f701dcab41b6df357e" category="sidebar">使用Velero从备份中恢复</block>
+  <block id="57d7d56e39b559db1e1feee2c5969599" category="sidebar">使用第三方工具保护数据</block>
+  <block id="3362fe331f4245dbf60f2b33efd7d690" category="sidebar">使用第三方工具保护容器应用程序的数据</block>
 </blocks>
