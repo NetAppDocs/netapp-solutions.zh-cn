@@ -1,0 +1,87 @@
+---
+sidebar: sidebar 
+permalink: virtualization/virt-overview.html 
+keywords: virtualization, overview, compute, storage, vmware, openshift, hyper-v 
+summary: 本文档从计算、网络和存储角度概述了虚拟化。 
+---
+= 虚拟化简介
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+几十年来、虚拟化的普及推动了业务成果的取得。从大型机的早期发展到当今存储密集型用例时代以及对AI就绪系统的需求、虚拟化已成为每个客户环境不可或缺的组成部分。
+
+
+
+== 概述
+
+传统上、数据中心由物理服务器、网络连接和存储组成、每个数据中心都专用于特定任务。这种方法会形成资源孤岛、而这些资源往往未得到充分利用。从核心来看、虚拟化涉及将物理资源与组织的要求和职能分离。这可以通过创建三个主要基础架构组件的虚拟表示来实现：*网络*、*计算*和*存储*。通过部署虚拟基础架构、企业可以通过这些逻辑结构提高底层物理资源的利用率。
+
+image::virt-overview-image1.png[计算、网络和存储虚拟化组件示意图]
+
+虚拟化是指通过自动化、策略驱动型工作流和可扩展性实现整体大于部分之和的情形。通过提高效率、灵活性并降低IT基础架构的TCO、虚拟化使企业能够更好地优化其技术资源。由NetApp提供支持的虚拟基础架构继承了ONTAP的主要优势：
+
+* 借助行业领先的插件和集成实现配置、备份和数据保护
+* 企业级存储效率
+* 多协议支持、可满足各种工作负载需求
+* 策略驱动型存储配置和自适应QoS
+* 通过一个存储操作系统支持应用程序和工作负载、无论是内部环境还是公共云
+
+
+要了解有关NetApp ONTAP的详细信息、请参见以下内容：
+
+* link:https://www.netapp.com/data-management/ontap-data-management-software/["ONTAP：领先的统一存储操作系统"]
+
+
+
+
+== 网络虚拟化
+
+网络虚拟化是指将物理网络组件(交换机、路由器、防火墙、接口等)抽象为逻辑结构。这些逻辑结构独立于底层物理基础架构运行、可在客户端、存储和网络中的其他组件之间提供安全通信。网络虚拟化是业务运营的关键、因为它允许共享资源、同时允许根据策略限制网络流量。
+
+网络虚拟化可以将多个物理网络组合成一个虚拟网络结构、也可以将一个物理网络划分为单独的、独立的虚拟网络。可以创建和自定义多个网络、以满足特定的IT要求。网络虚拟化通常指基于以太网的用例、但在许多情况下、虚拟网络结构的配置取决于交换机制造商的功能。无论是采用虚拟LAN还是虚拟SAN、企业都可以通过网络虚拟化提高运营效率并提高整体网络性能。
+
+有关网络虚拟化的详细信息、请参见以下内容：
+
+* link:https://www.cisco.com/c/en/us/products/switches/virtual-networking/index.html["Cisco虚拟网络"]
+* link:https://www.vmware.com/topics/glossary/content/virtual-networking.html["VMware虚拟网络"]
+
+
+
+
+== 计算虚拟化
+
+计算或服务器虚拟化可能是最广为人知的虚拟化形式。通过计算虚拟化、虚拟机管理程序可以模拟物理服务器的功能、从而使运营团队能够在一个物理节点上运行多个虚拟机。通过计算虚拟化、可以共享服务器内存和CPU等资源。通过这种共享、可以超额预订底层资源、而这种超额预订的程度可为所部署的工作负载和应用程序所接受。
+
+通过计算虚拟化、每个虚拟机都有自己的操作系统以及安装的应用程序和资源；它们彼此独立运行。计算虚拟化的众多优势包括：提高服务器利用率、降低硬件支出、使用虚拟机管理程序的用户界面(User Interface、UI)简化管理以及改进灾难恢复功能。此外、借助虚拟机管理程序插件、还可以配置存储管理、备份和保护关系、以进一步简化操作任务。
+
+有关计算虚拟化的详细信息、请参见以下内容：
+
+* link:https://www.vmware.com/solutions/virtualization.html["VMware vSphere"]
+* link:https://www.redhat.com/en/technologies/cloud-computing/openshift/virtualization["Red Hat OpenShift虚拟化"]
+* link:https://learn.microsoft.com/en-us/windows-server/virtualization/hyper-v/hyper-v-on-windows-server["Microsoft Hyper-V"]
+
+
+
+
+== 存储虚拟化
+
+与网络和计算虚拟化非常相似、存储虚拟化对于现代数据中心非常重要。NetApp ONTAP可通过Storage Virtual Machine (SVM)为客户端和主机提供数据来促进存储虚拟化。SVM是逻辑实体、可使存储资源不与物理介质绑定。可以根据工作负载类型、应用程序需求和组织组来部署SVM以供访问。
+
+有多种类型的SVM可协助执行数据访问、管理以及集群和系统级别的任务。数据SVM通过一个或多个网络逻辑接口(Logical Interface、Logical Interface、这些卷和LIP是逻辑结构、并映射到存储聚合以及物理或逻辑网络端口。通过这种逻辑数据访问、可以在维护场景或资源重新平衡期间移动卷或LIFs、这一点与计算虚拟机非常相似。
+
+有关存储虚拟化的详细信息、请参见以下内容：
+
+* link:https://docs.netapp.com/us-en/ontap/concepts/storage-virtualization-concept.html["ONTAP存储虚拟化概述"]
+
+
+
+
+== 结束
+
+此处所述的虚拟基础架构组件：网络、计算和存储可提供与典型物理资源相同的功能、但只能通过软件实现。通过在物理资源上分配虚拟资源、可以加快实现价值的速度、并支持策略驱动型资源配置。通过将ONTAP与计算和网络虚拟化配对、客户端和主机可以通过软件定义的虚拟基础架构访问资源。
