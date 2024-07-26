@@ -17938,7 +17938,6 @@ Cloud Insights还支持电报作为其收集集成数据的代理。Telegraf 是
   <block id="2c1d400031827c3d65ce20bdbb3dc8e6" category="image-alt">已创建DataSetionApplication对象</block>
   <block id="910eb46960200452a3b203a9e0ccdc76" category="paragraph">OADP操作员将创建相应的备份存储位置。创建备份时将使用此位置。</block>
   <block id="3a11516868032de940e8bc2e948be30e" category="image-alt">已创建备份存储位置</block>
-  <block id="5d2d4303446e0c5e9645e0b2422a1ad8" category="sidebar">OpenShift虚拟化的数据保护</block>
   <block id="9efbc1b64cbf1bbaf08130fd4c478321" category="paragraph"><block ref="9efbc1b64cbf1bbaf08130fd4c478321" category="inline-link-rx"></block></block>
   <block id="7150e1290a17ad9e4549acb1a4f4a888" category="example-title">还原到其他存储类</block>
   <block id="a6b055a2f62dc049defeb05a7d186312" category="paragraph">Velero提供了一种在恢复期间通过指定json修补程序来修改资源的通用功能。json修补程序会在还原之前应用于资源。json修补程序在configmap中指定、而configmap则在restore命令中引用。通过此功能、您可以使用不同的存储类进行还原。</block>
@@ -21840,4 +21839,34 @@ NVIDIA DGX SuperPOD：NetApp EF600和BeeGFS
   <block id="749421dacfb7ee7b18a89b9c1b603eb5" category="list-text"><block ref="749421dacfb7ee7b18a89b9c1b603eb5" category="inline-link-macro-rx"></block></block>
   <block id="5c8de6f894682fdb1786037b2040a26e" category="section-title">结束</block>
   <block id="098ed79118698312d23be3ccb1fd1f65" category="paragraph">此处所述的虚拟基础架构组件：网络、计算和存储可提供与典型物理资源相同的功能、但只能通过软件实现。通过在物理资源上分配虚拟资源、可以加快实现价值的速度、并支持策略驱动型资源配置。通过将ONTAP与计算和网络虚拟化配对、客户端和主机可以通过软件定义的虚拟基础架构访问资源。</block>
+  <block id="6a261d61ae81dc4c71a330200d96b572" category="doc">将应用程序从一个集群迁移到另一个集群</block>
+  <block id="f03d87a61805cb8ba09a252c7110b14c" category="paragraph">Velero的备份和恢复功能使其成为在集群之间迁移数据的重要工具。本节介绍如何在对象存储中从一个集群创建应用程序备份、然后将应用程序从同一对象存储还原到另一个集群、从而将应用程序从一个集群迁移到另一个集群。。</block>
+  <block id="3a5f25b1fd11221b4a8fd60126e6d9e8" category="example-title">从第一个集群备份</block>
+  <block id="6e7659d39d17452e021998d6ff8b125e" category="paragraph">**集群1**上的前提条件</block>
+  <block id="44cece782487085c0983c0a1369e363d" category="list-text">集群上必须安装Astra三端存储。</block>
+  <block id="986cd6c4ba4f2fc22b0154dd8a7e3231" category="list-text">必须创建一个三级存储后端和存储类。</block>
+  <block id="46e0b7f056e4b0c3f7a11c32f8f62b09" category="list-text">集群上必须安装OADP操作员。</block>
+  <block id="838da85dea5569ceda94e1deede8c0d0" category="list-text">应配置DataSetionApplication。</block>
+  <block id="81d9b6599aa2cbd0d4790e7616a75c8f" category="paragraph">使用以下规范配置DataSetionApplication对象。</block>
+  <block id="b6d6341c5bf0058885f6f44f015cd014" category="list-text">在集群上创建一个应用程序、并为此应用程序创建备份。例如，安装postgres应用程序。</block>
+  <block id="b673d3ca3c249a7e20ebf41146db308c" category="image-alt">安装postgres应用程序</block>
+  <block id="13e465f32c73f55ada2112a0d53928ed" category="list-text">对备份CR使用以下规范：</block>
+  <block id="bc95269aadba6630a3da6ed64e13bc9b" category="paragraph">您可以单击“**所有实例**”选项卡，查看正在创建的不同对象，并通过不同的阶段最终进入备份**已完成**阶段。</block>
+  <block id="73cc5747f0d766ed8e149d9c39fecebc" category="paragraph">命名空间PostgreSQL中资源的备份将存储在OADP规范的备份位置中指定的对象存储位置(ONTAP S3)中。</block>
+  <block id="7b039b5439cf5416a797ae1f59bd477e" category="example-title">还原到第二个集群</block>
+  <block id="4bca2b379a756b59120144a0e8d80327" category="paragraph">**集群2**上的前提条件</block>
+  <block id="fd1f175b9dee9a8c9151f482c23d808f" category="list-text">必须在集群2上安装Asta三端磁盘。</block>
+  <block id="a0bfdfd0c7e4c7978b468e1a503cdf45" category="list-text">PostgreSQL应用程序必须尚未安装在PostgreSQL命名空间中。</block>
+  <block id="a71c25c6aafae34c33a19dd56a1252d9" category="list-text">OADP操作员必须安装在集群2上、并且备份存储位置必须指向从第一个集群存储备份的同一对象存储位置。</block>
+  <block id="0865f83e2a94ccff3765a92f6b5821c0" category="list-text">备份CR必须在第二个集群中可见。</block>
+  <block id="0c99325785e021700473ab300d9716a8" category="image-alt">已安装｛\f270</block>
+  <block id="32743a81ac4ac7466d8ac98a4b665d85" category="image-alt">尚未安装Postgre</block>
+  <block id="e6a2f7088ea083c675de55b9d93954ca" category="image-alt">集群2上已安装OADP</block>
+  <block id="e7ebfa7f095dc53634bee65db5911a81" category="image-alt">指向同一对象存储的备份存储位置</block>
+  <block id="a23bb45a42abb4540f006f800caf5fb3" category="paragraph">从此备份还原此集群上的应用程序。使用以下YAML创建还原CR。</block>
+  <block id="ecd6ee2c36599a461878090582caf088" category="paragraph">还原完成后、您将看到PostgreSQL应用程序正在此集群上运行、并且与PVC和相应的PV关联。应用程序的状态与创建备份时相同。</block>
+  <block id="1e4893ac529002bf1b162bdc579ddf85" category="image-alt">还原成功</block>
+  <block id="3a23272a496763c7f752c56c20303caf" category="image-alt">Postgre已迁移</block>
+  <block id="c98c318132403238c3f6444c6687d1c4" category="sidebar">迁移应用程序</block>
+  <block id="06d2688772b44f073f44a2b7644b35f7" category="sidebar">使用第三方工具保护VM的数据</block>
 </blocks>

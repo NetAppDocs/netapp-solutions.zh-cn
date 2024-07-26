@@ -1,0 +1,126 @@
+---
+sidebar: sidebar 
+permalink: rhhc/rhhc-dp-velero-migrate.html 
+keywords: OpenShift, OCP, Astra Trident, NetApp ONTAP, Red Hat OpenShift, OADP operator, Openshift Data Protection Application operator, Velero 
+summary: 使用NetApp ONTAP实现Red Hat OpenShift容器应用程序数据保护 
+---
+= 将应用程序从一个集群迁移到另一个集群
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+Velero的备份和恢复功能使其成为在集群之间迁移数据的重要工具。本节介绍如何在对象存储中从一个集群创建应用程序备份、然后将应用程序从同一对象存储还原到另一个集群、从而将应用程序从一个集群迁移到另一个集群。。
+
+.从第一个集群备份
+[%collapsible]
+====
+**集群1**上的前提条件
+
+* 集群上必须安装Astra三端存储。
+* 必须创建一个三级存储后端和存储类。
+* 集群上必须安装OADP操作员。
+* 应配置DataSetionApplication。
+
+
+使用以下规范配置DataSetionApplication对象。
+
+....
+spec:
+  backupLocations:
+    - velero:
+        config:
+          insecureSkipTLSVerify: 'false'
+          profile: default
+          region: us-east-1
+          s3ForcePathStyle: 'true'
+          s3Url: 'https://10.61.181.161'
+        credential:
+          key: cloud
+          name: ontap-s3-credentials
+        default: true
+        objectStorage:
+          bucket: velero
+          caCert: <base-64 encoded tls certificate>
+          prefix: container-backup
+        provider: aws
+  configuration:
+    nodeAgent:
+      enable: true
+      uploaderType: kopia
+    velero:
+      defaultPlugins:
+        - csi
+        - openshift
+        - aws
+        - kubevirt
+....
+* 在集群上创建一个应用程序、并为此应用程序创建备份。例如，安装postgres应用程序。
+
+
+image::redhat_openshift_OADP_migrate_image1.png[安装postgres应用程序]
+
+* 对备份CR使用以下规范：
+
+
+....
+spec:
+  csiSnapshotTimeout: 10m0s
+  defaultVolumesToFsBackup: false
+  includedNamespaces:
+    - postgresql
+  itemOperationTimeout: 4h0m0s
+  snapshotMoveData: true
+  storageLocation: velero-sample-1
+  ttl: 720h0m0s
+....
+image::redhat_openshift_OADP_migrate_image2.png[安装postgres应用程序]
+
+您可以单击“**所有实例**”选项卡，查看正在创建的不同对象，并通过不同的阶段最终进入备份**已完成**阶段。
+
+命名空间PostgreSQL中资源的备份将存储在OADP规范的备份位置中指定的对象存储位置(ONTAP S3)中。
+
+====
+.还原到第二个集群
+[%collapsible]
+====
+**集群2**上的前提条件
+
+* 必须在集群2上安装Asta三端磁盘。
+* PostgreSQL应用程序必须尚未安装在PostgreSQL命名空间中。
+* OADP操作员必须安装在集群2上、并且备份存储位置必须指向从第一个集群存储备份的同一对象存储位置。
+* 备份CR必须在第二个集群中可见。
+
+
+image::redhat_openshift_OADP_migrate_image3.png[已安装｛\f270]
+
+image::redhat_openshift_OADP_migrate_image4.png[尚未安装Postgre]
+
+image::redhat_openshift_OADP_migrate_image5.png[集群2上已安装OADP]
+
+image::redhat_openshift_OADP_migrate_image6.png[指向同一对象存储的备份存储位置]
+
+从此备份还原此集群上的应用程序。使用以下YAML创建还原CR。
+
+....
+apiVersion: velero.io/v1
+kind: Restore
+apiVersion: velero.io/v1
+metadata:
+  name: restore
+  namespace: openshift-adp
+spec:
+  backupName: backup
+  restorePVs: true
+....
+还原完成后、您将看到PostgreSQL应用程序正在此集群上运行、并且与PVC和相应的PV关联。应用程序的状态与创建备份时相同。
+
+image::redhat_openshift_OADP_migrate_image7.png[还原成功]
+
+image::redhat_openshift_OADP_migrate_image7.png[Postgre已迁移]
+
+====
