@@ -21869,4 +21869,204 @@ NVIDIA DGX SuperPOD：NetApp EF600和BeeGFS
   <block id="3a23272a496763c7f752c56c20303caf" category="image-alt">Postgre已迁移</block>
   <block id="c98c318132403238c3f6444c6687d1c4" category="sidebar">迁移应用程序</block>
   <block id="06d2688772b44f073f44a2b7644b35f7" category="sidebar">使用第三方工具保护VM的数据</block>
+  <block id="217e50ee48d3bba6e43c8c5618902e3e" category="cell">2024年7月31日</block>
+  <block id="b39418d0ecfb19ff9350df6227a218c6" category="cell">新TR-4996：《使用VVO尔 在VCF中部署和保护Oracle SI》</block>
+  <block id="ed7da1d98db2a5f56b9b51c80676689c" category="summary">该解决方案提供了有关在VMware Cloud Foundation (VCF)中使用vSphere虚拟卷(VVOl)作为主数据库存储和在单实例(Single Instance、SI)配置中使用Oracle数据库进行Oracle部署和保护的概述和详细信息。</block>
+  <block id="7771b3227f6011277af7c6f86381981f" category="doc">TR-4996：《使用VVO尔 在VCF中部署和保护Oracle SI》</block>
+  <block id="63187ee661198eecd7fe25cff775a86a" category="paragraph">该解决方案提供了有关在VMware Cloud Foundation (VCF)中使用vSphere虚拟卷(VVOl)作为主数据库存储和在单实例(SI)配置中使用Oracle数据库进行Oracle部署和保护的概述和详细信息。</block>
+  <block id="ac91541ff82c6ee76b58150eca1250c7" category="paragraph">VMware vSphere虚拟卷(vvol)是一个SAN/NAS管理和集成框架、可将虚拟磁盘公开为本机存储对象、并可在虚拟磁盘级别执行基于阵列的操作。换言之、Vvol可使SAN/NAS设备具有VM感知能力、并在单个虚拟磁盘粒度范围内通过以VM为中心的方法充分利用基于阵列的数据服务。 利用虚拟卷、客户可以充分利用当前存储投资的独特功能、并在不中断系统运行的情况下过渡到针对适用于所有存储类型的虚拟环境而优化的更简单、更高效的运营模式。</block>
+  <block id="54c64849cbb768c12543c38fa3342f0f" category="paragraph">本文档演示了如何在VMware Cloud Foundation环境中部署和保护Oracle单实例数据库、并将vvol作为NetApp ONTAP存储集群中的主数据库存储。Oracle数据库的配置就像部署在本地存储系统的本地文件系统中一样。本技术报告重点介绍在适用于Oracle的VCF部署中创建VVO尔 的步骤。此外、我们还演示了如何使用NetApp SnapCenter UI工具备份、还原和克隆Oracle数据库以用于开发或测试、或者在VCF中使用其他使用情形以实现高效存储数据库操作。</block>
+  <block id="4c7d4a60b738b4714cddcc488009b210" category="list-text">在VCF中部署Oracle SI数据库、并将NetApp ONTAP AFF上的VVO尔 数据存储库用作主数据库存储</block>
+  <block id="eb3a7a665b2ee606d74bf7d4657d5f1e" category="list-text">使用NetApp SnapCenter UI工具在VCF中使用VVO尔 数据存储库进行Oracle数据库备份和还原</block>
+  <block id="25f2a359e29ebc505f92bc2118d15bec" category="list-text">使用NetApp SnapCenter UI工具在VCF中为开发/测试或其他使用情形使用VVOLs数据存储库的Oracle数据库克隆</block>
+  <block id="3b17c15a96e90a03f424ba8ff84edda9" category="list-text">希望在VCF中部署Oracle并将VVO尔 数据存储库部署在NetApp ONTAP AFF上作为主数据库存储的数据库主管</block>
+  <block id="d349eb44120afd2a733ed0cca1af1bb6" category="list-text">希望在VCF中使用NetApp ONTAP AFF存储上的VVO尔 数据存储库测试Oracle工作负载的数据库解决方案架构师</block>
+  <block id="1b7115ed74fb7546fe9b3aaf8e5001c8" category="list-text">希望部署和管理已部署到VCF且NetApp ONTAP AFF存储上具有VVO尔 数据存储库的Oracle数据库的存储管理员</block>
+  <block id="ee657e8e58545003d830b6e8249dfef8" category="list-text">希望在VCF中使用VVOV数据存储库建立Oracle数据库的应用程序所有者</block>
+  <block id="514383da7989f9a243a928e30fa946eb" category="paragraph">此解决方案的测试和验证是在一个实验室环境中执行的、其中VCF的VVOs数据存储库位于NetApp ONTAP AFF存储上、而此数据存储库可能与最终部署环境不匹配。有关详细信息，请参阅一节 <block ref="a5cbf5f16a1fba6d9697a814ff593254" category="inline-xref-macro-rx"></block>。</block>
+  <block id="ad4ac6db8d9decf0eb775290a8c971cb" category="cell">NetApp ONTAP AFF A300</block>
+  <block id="e5de8dc14dd3942120c44d5982b5a825" category="cell">版本9.14.1P4</block>
+  <block id="0d4078e1e13a983e4de55aa01e5ad590" category="cell">带有24个NVMe磁盘的DS224磁盘架、总容量为35.2 TiB</block>
+  <block id="92950a7604605975794d500e05f4c7eb" category="cell">VMware vSphere集群</block>
+  <block id="6e22cffc6ebecbdd7f47bd5d00e45b99" category="cell">8.02版</block>
+  <block id="bc5d0a2c32203fc25813789555247ee7" category="cell">12个CPU x Intel (R) Xeon (R) Gold 5218 CPU @ 2.30GHz、8个节点(4个管理域和4个工作负载域)</block>
+  <block id="c6ab07ee1aab16fa0a20d509cdf7b072" category="cell">托管Oracle数据库服务器、部署RedHat订阅以进行测试</block>
+  <block id="ceebe4fc3acd82fd3188cded15f1d864" category="cell">CentOS Linux 8.5.2111版</block>
+  <block id="2d33ab49719ed91ddb197340eb32a2db" category="cell">托管Ans负责 控制器</block>
+  <block id="f7dc6582169de1adc76cc1bd4479d98f" category="cell">6.0版</block>
+  <block id="0a8382f1a17329bbc921d30dfa2a2515" category="cell">作为一个ova虚拟机部署到vSphere集群</block>
+  <block id="a75e60f152424197f37afc9c5e9a5c2d" category="cell">适用于VMware vSphere的ONTAP工具</block>
+  <block id="117158dddb508cb9387d41bfdbfe579b" category="cell">9.13版</block>
+  <block id="5ce8d13929389b81584b3a78c447b524" category="cell">版本java-11-OpenJDK-11.0.23.0.9-3.el8.x86_64</block>
+  <block id="338b2420dac1e34d75bddea18c33a6ed" category="section-title">VCF中的Oracle数据库配置</block>
+  <block id="0db665f03cbb89d625759cc113d29320" category="cell">NTAP1 (NTAP1_pdb1、NTAP1_pdb2、NTAP1_pdb3)</block>
+  <block id="847c86000821f4308a632844393be895" category="cell">NetApp ONTAP AFF A300上的虚拟卷数据存储库</block>
+  <block id="fdd523ab1355a652be7785ec356296ce" category="cell">NTAP2 (NTAP2_pdb1、NTAP2_pdb2、NTAP2_pdb3)、NTAP1CLN</block>
+  <block id="e833c850593670a5e6671378fcfddf3a" category="list-text">*用于将ONTAP与Svol建立集群连接的协议。*NFS或iSCSI是不错的选择。这些性能级别是等效的。在此解决方案演示中、我们使用NFS作为存储协议、以便将ONTAP连接到带下划线的存储集群。如果VCF基础架构支持、则NetApp ONTAP上的VVO尔 数据存储库也支持FC/FCoE、NVMe/FC协议。</block>
+  <block id="038f6eed09324a5254381f8e80a54f3d" category="list-text">*在虚拟卷数据存储库上的Oracle存储布局。*在测试和验证中、我们为Oracle二进制文件、Oracle数据和Oracle日志文件部署了三个虚拟卷数据存储库。最好将不同类型的Oracle文件分隔到其数据存储库中、以便可以轻松管理和执行数据库备份、恢复或克隆。为大型数据库创建专用的卷、并为具有类似QoS配置文件的小型数据库或数据库共享此类卷。 </block>
+  <block id="3ed99aa53a2f633957eb421708c54e40" category="list-text">*用于ONTAP存储身份验证的凭据。*请仅使用ONTAP集群级别凭据进行ONTAP存储集群身份验证、包括通过SnapCenter连接到ONTAP存储集群或通过ONTAP工具连接到ONTAP存储集群。</block>
+  <block id="a6d88ee32eb46635dfd1330ee9c755dd" category="list-text">*将存储从Vvol数据存储库配置到数据库虚拟机。*从Vvol数据存储库一次只向数据库VM添加一个磁盘。目前不支持同时从卷数据存储库添加多个磁盘。  </block>
+  <block id="935faab0c1724a6292faa21145fa1f7a" category="list-text">*数据库保护。*NetApp提供了一个SnapCenter软件套件、可通过用户友好的UI界面进行数据库备份、还原和克隆。NetApp建议实施此类管理工具、以实现快速(不到一分钟)的快照备份、快速(几分钟)的数据库还原和数据库克隆。</block>
+  <block id="3ff3605993898c98bf107a74c1104b5c" category="paragraph">以下各节提供了在VCF中部署Oracle 19c的分步过程、其中、在Oracle单实例配置中、VVO尔 数据存储库位于NetApp ONTAP存储上。</block>
+  <block id="a12fb51e6a26df58be980a0d67dc8ef0" category="list-text">已设置VMware VCF。有关如何创建VCF的信息或说明，请参阅VMware文档 <block ref="59168b7ce3f6dbe18036b34793095689" category="inline-link-macro-rx"></block>。</block>
+  <block id="b6949bfe28e58311adf72973f39b19e4" category="list-text">在VCF工作负载域中配置三个Linux VM、两个VM用于Oracle数据库、一个VM用于Ansv可 控制器。配置一个Windows服务器VM以运行NetApp SnapCenter服务器。有关为自动化Oracle数据库部署设置Ans得 控制器的信息，请参阅以下资源 <block ref="d1250df0700152003f00dbe5bac89608" category="inline-link-macro-rx"></block>。</block>
+  <block id="abef732dd483cfddd1aaa364ad7fef69" category="list-text">VCF中已部署适用于VMware vSphere的SnapCenter插件6.0版。有关插件部署的信息，请参见以下资源： <block ref="b0d40f86037388f17d222087e64d79a3" category="inline-link-macro-rx"></block>。</block>
+  <block id="26ffc687a7267f96a389530199971cd1" category="inline-link-macro">适用于VMware vSphere的ONTAP工具文档</block>
+  <block id="70f233bf52a3a33941dc2ecd693f03ae" category="list-text">适用于VMware vSphere的ONTAP工具已部署在VCF中。有关适用于VMware vSphere的ONTAP工具部署的信息、请参见以下资源： <block ref="124f85081ad68c1408c62c0c72a9a0d0" category="inline-link-macro-rx"></block></block>
+  <block id="ba5602a7d83e50db49caf0853dacb46a" category="section-title">创建存储功能配置文件</block>
+  <block id="574f4871a7f478f5bcc72e03eef4a96f" category="paragraph">首先、为托管此虚拟卷数据存储库的带下划线的ONTAP存储创建一个自定义存储功能配置文件。</block>
+  <block id="ffb7e150691b98e078662c7a23f4adbe" category="list-text">从vSphere客户端快捷方式中、打开NetApp ONTAP工具。确保已在ONTAP工具部署过程中将ONTAP存储集群添加到中<block ref="5c6ab1284b6b7a5a7102854a969c99be" prefix=" " category="inline-code"></block> 。</block>
+  <block id="ce0f28375029ece59ae6afd04718446f" category="inline-image-macro">显示自定义存储功能配置文件配置的屏幕截图。</block>
+  <block id="5f8ba8657c042c4d9f6f7740686c841c" category="paragraph"><block ref="5b9f80c29b620bf58e5ed2a5d29006ed" category="inline-image-macro-rx" type="image"></block> <block ref="b228a446ea927eefc221ca999ed611df" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="93b2d42abda9af2775a45e3d82033a4c" category="list-text">单击<block ref="5671a8cbfb87337b09f7c0b3f03c48ec" prefix=" " category="inline-code"></block> 以添加Oracle的自定义配置文件。为配置文件命名并添加简要说明。</block>
+  <block id="65ea7f5a1b773db97b0599252dc6ce2a" category="paragraph"><block ref="65ea7f5a1b773db97b0599252dc6ce2a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f7c1e70b93b043a558fd33a60b2b9a4f" category="list-text">选择存储控制器类别：性能、容量或混合。</block>
+  <block id="3ec83ca4b2416c2566139223cf187018" category="paragraph"><block ref="3ec83ca4b2416c2566139223cf187018" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6208541b7c69092d9c6007ae118c5a02" category="list-text">选择协议。</block>
+  <block id="665ba1dffc47d22b149e515b215aa629" category="paragraph"><block ref="665ba1dffc47d22b149e515b215aa629" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="40b8327c5adffbb8fd939d1e60225518" category="list-text">根据需要定义QoS策略。</block>
+  <block id="e77c0819dc094ffb099c56b9609b4522" category="paragraph"><block ref="e77c0819dc094ffb099c56b9609b4522" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f248abccd937c20eb587021d08cf5665" category="list-text">配置文件的其他存储属性。如果要使用加密功能、请确保已在NetApp控制器上启用加密、否则在应用配置文件时可能会导致问题。</block>
+  <block id="14fd25d551bdd0488519e54d4746cea1" category="paragraph"><block ref="14fd25d551bdd0488519e54d4746cea1" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d8259b9d166c6def0c94e28529b07408" category="list-text">查看摘要并完成存储功能配置文件创建。</block>
+  <block id="ee05b53a559e28e30b48fab2f470edc2" category="paragraph"><block ref="ee05b53a559e28e30b48fab2f470edc2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="dff98535475eb3bdfc270946dfc29280" category="section-title">创建和配置卷数据存储库</block>
+  <block id="08c0ac84a22cfe0e83d0056cdd1fa92c" category="paragraph">完成前提条件后、以管理员用户身份通过vSphere客户端登录到VCF、导航到工作负载域。请勿使用内置的VMware存储选项创建vvol。请改用NetApp ONTAP工具创建虚拟卷。以下说明了创建和配置卷的过程。</block>
+  <block id="067d6c9f3530bf26b24a96375614a55b" category="list-text">可以从ONTAP工具界面或VCF工作负载域集群触发VVOLs创建工作流。</block>
+  <block id="d3e1d44cc16d5e3186aa6459e33c27e4" category="inline-image-macro">显示了Svol数据存储库配置的屏幕截图。</block>
+  <block id="5a1c0d819e1f351d407e912a595fb0bc" category="paragraph"><block ref="5a1c0d819e1f351d407e912a595fb0bc" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c6ae8a9ea78f7380a3618d316c7f50bc" category="paragraph"><block ref="c6ae8a9ea78f7380a3618d316c7f50bc" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5988bd65b90ceb685034d86d3495df44" category="list-text">填写数据存储库的常规信息、包括配置目标、类型、名称和协议。</block>
+  <block id="46aac037341a1bc4b8c56eb65d5f36cf" category="paragraph"><block ref="46aac037341a1bc4b8c56eb65d5f36cf" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8eba6077a8d57ff41f9729a6edb1283e" category="list-text">选择从上一步创建的自定义存储功能配置文件，即<block ref="f31303ddb8ada38aed08c2bb8f9d8e6c" prefix=" " category="inline-code"></block>，和<block ref="541b6c1ab6b503c34fc7cd5ed7105896" prefix=" " category="inline-code"></block>，要在其中创建虚拟卷。</block>
+  <block id="247127144b8215f9abc549adaf24f6ed" category="paragraph"><block ref="247127144b8215f9abc549adaf24f6ed" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f8639edb08078b0872af987ffcb3c41a" category="list-text">选择<block ref="088758c5f1801338b7483d3a2cda15aa" prefix=" " category="inline-code"></block>，填写卷名称和大小，然后单击，再单击<block ref="9eeb52badb613229884838847294b90d" prefix=" " category="inline-code"></block><block ref="47559fb833ff58321570e5e877b467f6" prefix=" " category="inline-code"></block> 以移动到摘要页面。</block>
+  <block id="a36caf94459cf7534c7f012cdef45952" category="paragraph"><block ref="a36caf94459cf7534c7f012cdef45952" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1dbcab7480e5628accc586b51e7ae14a" category="admonition">为了提高性能、您可以向一个数据存储库添加多个卷、也可以跨多个ONTAP控制器节点分布一个FlexVol数据存储库卷。</block>
+  <block id="6879b520f65a093360e318970237ae41" category="list-text">单击<block ref="a20ddccbb6f808ec42cd66323e6c6061" prefix=" " category="inline-code"></block> 此选项可为Oracle二进制文件创建虚拟卷数据存储库。</block>
+  <block id="c71f2df3a743b7214704759d668e5242" category="paragraph"><block ref="c71f2df3a743b7214704759d668e5242" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f623a471bae2cf02f80bfc265f6c3d5f" category="list-text">重复相同过程为Oracle数据和日志创建卷数据存储库。</block>
+  <block id="3bf988cf8b10a47295e1f0a4937d6c89" category="paragraph"><block ref="3bf988cf8b10a47295e1f0a4937d6c89" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c49449890c4bc83acd8f37c4b0c8c760" category="admonition">请注意、在克隆Oracle数据库时、数据的另一个虚拟卷会添加到虚拟卷列表中。</block>
+  <block id="53805fd039c130e4639961665f4d52c7" category="section-title">根据存储功能配置文件创建VM存储策略</block>
+  <block id="8597b3e29b3bfd1a6d11508383239d6f" category="paragraph">在将存储从Vvol数据存储库配置到数据库VM之前、请根据上一步创建的存储功能配置文件添加VM存储策略。以下是过程。</block>
+  <block id="0cac31d91fd3c9b2951a23b3238222ba" category="list-text">从vSphere Client菜单中，打开<block ref="618825ca73695fc2a237f6dcf99e5c27" prefix=" " category="inline-code"></block> 并突出显示<block ref="9f1893d8db5ceaf62726d1a0aa228224" prefix=" " category="inline-code"></block>。单击<block ref="686e697538050e4664636337cc3b834f" prefix=" " category="inline-code"></block> 以打开<block ref="9f1893d8db5ceaf62726d1a0aa228224" prefix=" " category="inline-code"></block> 工作流。</block>
+  <block id="9a6d57df0589e3632c8c0f69749dfbb0" category="inline-image-macro">显示虚拟机存储策略配置的屏幕截图。</block>
+  <block id="23fff1b59bd8ced7c1561fb424757737" category="paragraph"><block ref="23fff1b59bd8ced7c1561fb424757737" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3c1b50b4d689fb35a32cefabc42b21c7" category="list-text">为VM存储策略命名。</block>
+  <block id="e71ee680eb16cfcd9e5aba4f1ce601f4" category="paragraph"><block ref="e71ee680eb16cfcd9e5aba4f1ce601f4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="19fbb3187befaa8e7ddf2ee168778b40" category="list-text">在中<block ref="e06edd159cb29fd25e7a6b6ca07b5c45" prefix=" " category="inline-code"></block>，选中<block ref="e4cbdedd5072d1d5bf70b96942a75033" prefix=" " category="inline-code"></block></block>
+  <block id="697ba6f03a62707dce19bfce6a6eb7f2" category="paragraph"><block ref="697ba6f03a62707dce19bfce6a6eb7f2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d1fd9dc94d502a651207949123c63c43" category="list-text">对于NetApp.Clustered.Data.ONTAP．VP．vvol规则<block ref="ae13e51f99f3be623a6d44d7439d9bb5" prefix=" " category="inline-code"></block>，请选择上一步创建的自定义存储容量配置文件。</block>
+  <block id="09a2e6ae862ebc13ff0f450002fe8b80" category="paragraph"><block ref="09a2e6ae862ebc13ff0f450002fe8b80" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8f6f104c16849aecc74ac68cf09c0c24" category="list-text">对于NetApp.Clustered.Data.ONTAP．VP．vvol规则，请选择是否不复制vVol<block ref="8c340dc334134096f68b880b42a8692c" prefix=" " category="inline-code"></block><block ref="b9f5c797ebbf55adccdd8539a65a0241" prefix=" " category="inline-code"></block> 。</block>
+  <block id="2cc654c45c53cd3514167a3547325dc0" category="paragraph"><block ref="2cc654c45c53cd3514167a3547325dc0" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="37da436400640cf811c491c3a99d576c" category="list-text">存储兼容性页面显示VCF环境中的兼容VVO尔 数据存储库。</block>
+  <block id="6b9b2ed83f16d43d7929b873f2f6662f" category="paragraph"><block ref="6b9b2ed83f16d43d7929b873f2f6662f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4a923ac6fb99ee5d0fc17211d1c3eec5" category="list-text">查看并完成VM存储策略的创建。</block>
+  <block id="31382336c2b4b43d10fc249565e76b54" category="paragraph"><block ref="31382336c2b4b43d10fc249565e76b54" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="818749afba521c90e53181fd57b26e4f" category="list-text">验证刚刚创建的虚拟机存储策略。</block>
+  <block id="2324a9c4065f220fd3949efa85ceaa08" category="paragraph"><block ref="2324a9c4065f220fd3949efa85ceaa08" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3d9aaa275a447e9d31c528981b4f80a9" category="section-title">从Vvol数据存储库为DB VM分配磁盘并配置DB存储</block>
+  <block id="0148fef951b21df8e50803feb861c17f" category="paragraph">在vSphere Client中、通过编辑Vvol设置将三个磁盘从VVM数据存储库添加到数据库VM中。然后、登录到VM以格式化磁盘并将其挂载到挂载点/u01、/u02和/u03。以下内容展示了确切的步骤和任务。</block>
+  <block id="8a594a4062120343f6d1214b060c990e" category="list-text">向VM添加磁盘以用于Oracle二进制存储。</block>
+  <block id="bd7a11e9ebe1d463ea78c92b8e7ae29a" category="inline-image-macro">显示VM存储配置的屏幕截图。</block>
+  <block id="5e7034027c0b98719758707afc4777b6" category="paragraph"><block ref="5e7034027c0b98719758707afc4777b6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f7b26f1b39d7f1134b617c758271388d" category="list-text">向VM添加磁盘以用于Oracle数据存储。</block>
+  <block id="86c2af552ea1dd2b8ce9e9705db0e1ca" category="paragraph"><block ref="86c2af552ea1dd2b8ce9e9705db0e1ca" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9688034f93bd59a451be614f54b3bd31" category="list-text">将磁盘添加到VM以用于Oracle日志存储。</block>
+  <block id="6f1daa8d6a5a7f37fde5c5dbf2960f16" category="paragraph"><block ref="6f1daa8d6a5a7f37fde5c5dbf2960f16" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="20494f43a704174a7c66937c434822c8" category="list-text">在VM中<block ref="21b14bb4c76726ee1f508919a7a313cc" prefix=" " category="inline-code"></block><block ref="c9d7eedc8be4380c02106619824b8449" prefix=" " category="inline-code"></block>，添加具有值的属性<block ref="786ce2a862b7971f5d75434b768ebdbe" prefix=" " category="inline-code"></block><block ref="c0d83f0b82a6b30de8811e69e6d95c61" prefix=" " category="inline-code"></block>。要添加高级参数、需要关闭虚拟机。通过设置此选项、SnapCenter可以准确识别您环境中的VVOV。</block>
+  <block id="8fc315e8054c1f846e9415239e2f7c8e" category="paragraph"><block ref="8fc315e8054c1f846e9415239e2f7c8e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="665639cc3720d39b6e081d6894c32ad9" category="list-text">现在、重新启动虚拟机。以管理员用户身份通过ssh登录到VM、以查看新添加的磁盘驱动器。</block>
+  <block id="5c74da629f32767926f7ad7166336d3d" category="list-text">只需接受默认选项、即可将驱动器分区为主分区和单个分区。</block>
+  <block id="092b3ded0c71a57dc9e6c900236e8802" category="list-text">将分区磁盘格式化为xfs文件系统。</block>
+  <block id="81529182dc2ad74d9f7dad30c6854f7a" category="list-text">将驱动器挂载到挂载点/u01、/u02和/u03。</block>
+  <block id="5c14ee5bcebed05ca6f36737fa926611" category="list-text">将挂载点添加到/etc/fstab中、以便在虚拟机重新启动时挂载磁盘驱动器。</block>
+  <block id="25f25999e7ae6cad40283a3ef624517a" category="section-title">在VCF中部署Oracle数据库</block>
+  <block id="62faa4afd2a124411cf5f4884cc66e99" category="paragraph">建议利用NetApp自动化工具包在VCF中使用VVO尔 部署Oracle。有关在xfs文件系统上执行Oracle自动部署的详细参考信息，请参阅TR-4不同 的文档： <block ref="d16fedc336069e9d6785250562f78c68" category="inline-link-macro-rx"></block>。虽然TR-4处于 使用NFS的NetApp C系列上的Oracle自动部署范围、但如果绕过挂载到数据库VM的NFS文件系统、则它与使用VVOR的VCF中的Oracle部署方式相同。我们只需使用特定标记即可跳过该步骤。下面是分步过程。</block>
+  <block id="18221967648c6cef9becffedbdba6e84" category="list-text">以管理员用户身份通过ssh登录到Ands得以 控制器VM、并克隆NFS上适用于Oracle的自动化工具包副本。</block>
+  <block id="1ac10c3f57c4a31176d5de142e164d21" category="list-text">将以下Oracle安装文件暂存到数据库VM上的/tmp/archive文件夹中。该文件夹应允许具有777权限的所有用户访问。</block>
+  <block id="b5b23334cc5e9529e7b119f8d9fcfba0" category="list-text">根据TR-4不同 的本节中的说明，配置部署目标文件-主机、全局变量文件- vars/vars.yml和本地数据库VM变量文件- host_vars/host_name.yml <block ref="e638563d255ae842e2c00881aa7e9185" category="inline-link-macro-rx"></block>。从本地DB VM变量文件中注释掉NFS_lf变量。</block>
+  <block id="24171804df1cf0c75810555078f5363a" category="list-text">在Ans得 控制器和数据库VM之间设置ssh无密钥身份验证、这需要生成ssh密钥对并将公共密钥复制到数据库VM管理员用户根目录.ssh folder authorized_keys文件。</block>
+  <block id="f04a957e840ec1a63abf180d46387d50" category="list-text">从Ans负责人 的控制器克隆的自动化工具包主目录/HOME/admin/na_oracle_DEP_Nn中、执行前提条件操作手册。</block>
+  <block id="6ae4f18884244011c1af48b055b81490" category="list-text">执行Linux配置操作手册。</block>
+  <block id="7bf1e8acde5c2dc40b02275ed5e2cc1d" category="list-text">执行Oracle部署操作手册。</block>
+  <block id="a7119acd29a953169996c6cd5828ae0e" category="list-text">此外、还可以从一次运行中执行上述所有操作手册。</block>
+  <block id="3380790c6b6607b8bdbb4dc491a193a6" category="list-text">成功执行操作手册后、登录到EM Express以验证Oracle。</block>
+  <block id="5afe58c129643433adc50a2af141f9f9" category="inline-image-macro">显示Oracle EM Express配置的屏幕截图。</block>
+  <block id="1c04f20d675f7d8015401ff8bb09f92b" category="paragraph"><block ref="20609e3f0e516e319472d94df8904555" category="inline-image-macro-rx" type="image"></block> <block ref="1418dd89cc39d2d8c1a065a0a76e86c4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="17fa3d33636f0f23f65c8d49f2592f2a" category="list-text">(可选)执行销毁操作手册、从DB VM中删除数据库。</block>
+  <block id="7a1924f25fed25748daead1d2d5b01e9" category="section-title">使用SnapCenter在VCF中执行Oracle备份、还原和克隆</block>
+  <block id="9884c3c5b6856de90af08a8c26b025bd" category="paragraph">与版本5相比、SnapCenter版本6具有许多增强功能、包括对VMware Vvol数据存储库的支持。SnapCenter依靠数据库VM上的主机端插件来执行应用程序感知型数据保护管理活动。有关适用于Oracle的NetApp SnapCenter插件的详细信息，请参阅本文档 <block ref="7a6b1ddf3a0731d31936d6522df7c6ca" category="inline-link-macro-rx"></block>。下面简要介绍了在VCF中为Oracle数据库备份、恢复和克隆设置SnapCenter版本6的步骤。</block>
+  <block id="db870e382c718288732e8cddc579b13c" category="list-text">从NetApp支持站点下载SnapCenter软件版本6： <block ref="3cca19c7256555824970f142627f53d3" category="inline-link-macro-rx"></block>。</block>
+  <block id="9535205879e21b3b44dc228f092b815c" category="list-text">以管理员身份登录到托管Windows VM的SnapCenter。SnapCenter 6.0的安装前提条件。</block>
+  <block id="14aae9a2299009444cb9a8fdd1043241" category="inline-image-macro">显示SnapCenter 6.0前提条件的屏幕截图。</block>
+  <block id="329e0559e0ff375d76da7b2ec5051349" category="paragraph"><block ref="329e0559e0ff375d76da7b2ec5051349" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8586c002ab45881c90190837b88451c2" category="list-text">以管理员身份从安装最新的Java JDK <block ref="1a0bb7a886be273015991771cf1b1190" category="inline-link-macro-rx"></block>。</block>
+  <block id="873c1ffff3970b65dab9f01f031bac07" category="paragraph"><block ref="873c1ffff3970b65dab9f01f031bac07" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="212969042f73c7fab7539a4425462c46" category="list-text">如果您是新用户、请查看<block ref="e0c4332e8c13be976552a059f106354f" prefix=" " category="inline-code"></block> 菜单以快速了解SnapCenter。</block>
+  <block id="cf8617e823e5d613ca1cbbca2003f336" category="paragraph"><block ref="cf8617e823e5d613ca1cbbca2003f336" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="85672e90c98085f57c2ae3c44917712f" category="paragraph"><block ref="85672e90c98085f57c2ae3c44917712f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="dfed4c63c22e68017be86717e681a47d" category="list-text">使用集群管理IP将ONTAP存储集群添加到<block ref="5c6ab1284b6b7a5a7102854a969c99be" prefix=" " category="inline-code"></block> 、并通过集群管理员用户ID进行身份验证。</block>
+  <block id="0ca7fc57e7ee91b28c2328255a267362" category="paragraph"><block ref="add13078eec5cbad72fc190e7c53b44c" category="inline-image-macro-rx" type="image"></block> <block ref="e35aed9f9d4e218deb47ecf2dc292045" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b4368c5bff67fcdd30ed15befeb0bb5d" category="list-text">添加数据库VM和vSphere插件VM<block ref="03bc142e6422dbb9b288ad2cabee08c7" prefix=" " category="inline-code"></block> 、以便通过SnapCenter访问DB VM和vSphere插件VM。此凭据应在Linux VM上具有sudo权限。您可以为VM的不同管理用户ID创建不同的凭据。</block>
+  <block id="5e17eda957603128db38ebd2ac85c948" category="paragraph"><block ref="5e17eda957603128db38ebd2ac85c948" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="59d5938e76d240d7dd6bc36a5b63bc74" category="list-text">使用在上一步中创建的数据库VM凭据将VCF中的Oracle数据库VM添加到<block ref="8124579383e90243e4b06323d2b37f8d" prefix=" " category="inline-code"></block> 。</block>
+  <block id="13ed1a1d28080020cff957a6a19cbdb4" category="paragraph"><block ref="bcf2d2b9d1e4b2ea4a564934ed2b47e5" category="inline-image-macro-rx" type="image"></block> <block ref="1d78c58ecfae2a3e5bf326a4eb3b9426" category="inline-image-macro-rx" type="image"></block> <block ref="d9d7c839b5ab1ed111426cc0032985b4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="532bf73956152aae1e31d71a303110bb" category="list-text">同样、使用在上一步中创建的vSphere插件VM凭据将NetApp VMware插件VM添加到<block ref="8124579383e90243e4b06323d2b37f8d" prefix=" " category="inline-code"></block> 。</block>
+  <block id="81bfb64985c4b5753d14a675301697d7" category="paragraph"><block ref="c1f71beb19a9697d359c7cf755a074c5" category="inline-image-macro-rx" type="image"></block> <block ref="c5e59b945d462f512b221fab4a9d6ab2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="836e220077eef7f134a2eca3d11dd42a" category="list-text">最后、在DB VM上发现Oracle数据库后、返回<block ref="f4f70727dc34561dfde1a3c529b6205c" prefix=" " category="inline-code"></block><block ref="9e476387322a5c250893cf9c5c4ce78c" prefix="-" category="inline-code"></block> 以创建Oracle数据库备份策略。理想情况下、请创建一个单独的归档日志备份策略、以便更频繁地进行备份、从而最大限度地减少发生故障时的数据丢失。</block>
+  <block id="b7807a41275760e1b78e468d71930135" category="paragraph"><block ref="b7807a41275760e1b78e468d71930135" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9042135e15b7d736f2926087cc1cbac4" category="admonition">确保可以将SnapCenter服务器名称解析为DB VM和vSphere插件VM中的IP地址。同样、数据库虚拟机名称和vSphere插件虚拟机名称也可以从SnapCenter服务器解析为IP地址。</block>
+  <block id="f2f5ea20fbc62b491869c43a522dcf59" category="paragraph">与基于RMAN的传统方法相比、SnapCenter利用ONTAP卷快照加快数据库备份、还原或克隆速度。由于数据库在创建快照之前处于Oracle备份模式、因此这些快照是应用程序一致的。</block>
+  <block id="79e20df40dc05e1037eba6d109dd384a" category="paragraph"><block ref="79e20df40dc05e1037eba6d109dd384a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d86fa67cb5a60379e561235b1bbcf1a2" category="list-text">单击数据库以启动工作流、从而为数据库启用保护。</block>
+  <block id="c079f62c04e142d42eed7aaa19c1edd9" category="paragraph"><block ref="c079f62c04e142d42eed7aaa19c1edd9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0a32086592e3e98e202dec84f5352e6b" category="list-text">应用备份策略、根据需要设置计划。</block>
+  <block id="a881d7b40bd2544e143a5ffd3b90266b" category="paragraph"><block ref="a881d7b40bd2544e143a5ffd3b90266b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d9550848b32d2fbf200fe1071ca3cfa4" category="list-text">根据需要设置备份作业通知。</block>
+  <block id="f48e09224cf0800e96461a1affd1cd43" category="paragraph"><block ref="f48e09224cf0800e96461a1affd1cd43" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5dad3646303c6a4e4f76cc956dddef68" category="list-text">查看摘要并完成以启用数据库保护。</block>
+  <block id="563484224391e52c21ca2de29a49d028" category="paragraph"><block ref="563484224391e52c21ca2de29a49d028" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="60b30cb13078f340c18a220e2cbe412f" category="list-text">单击可触发按需备份作业<block ref="9af892ad254c844922acba8e89078d6d" prefix=" " category="inline-code"></block>。</block>
+  <block id="63a48ce6ee79127b4b0bf2f4cd13947e" category="paragraph"><block ref="409bb0e73ae61573dd12ec3b82f87b73" category="inline-image-macro-rx" type="image"></block> <block ref="3bc198a317000daf98af109d3078049c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4c3be4dc2013feff06f74360f3c27d06" category="paragraph"><block ref="4c3be4dc2013feff06f74360f3c27d06" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="812d6325185d3c54cc9fdb6993aa88d5" category="list-text">单击数据库以查看为每个数据库完成的备份集。</block>
+  <block id="4daf7ce1f96ae311d123196e7dee68c9" category="paragraph"><block ref="4daf7ce1f96ae311d123196e7dee68c9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4c978f8cd51a54f6f818224c07b37081" category="section-title">数据库还原/恢复</block>
+  <block id="2fa8dc10d20419afc3a60bdeb1b193be" category="paragraph">SnapCenter为Oracle数据库提供了许多从快照备份还原和恢复选项。在此示例中、我们演示了如何从较早的快照备份进行还原、然后将数据库前滚到最后一个可用日志。</block>
+  <block id="ac8a46d614401dc313c8dfdc41d3b6ad" category="list-text">首先、运行快照备份。然后、创建一个测试表并在表中插入一行、以便在创建测试表重新进入测试表之前验证从Snapshot映像恢复的数据库。</block>
+  <block id="4de3a9d50c6a6b2be148858c04496ca7" category="list-text">从SnapCenter选项卡中<block ref="ddcf50c29294d4414f3f7c1bbc892cb5" prefix=" " category="inline-code"></block> 、打开数据库NTAP1备份拓扑页面。在创建测试表之前、突出显示Snapshot数据备份集。单击<block ref="2bd339d85ee3b33e513359ce781b60cc" prefix=" " category="inline-code"></block> 以启动还原-恢复工作流。</block>
+  <block id="eb3eb9065c03e56376dbd8dea23b727c" category="paragraph"><block ref="eb3eb9065c03e56376dbd8dea23b727c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="20b922bf6eebee2c6cba59ad35c08dd5" category="paragraph"><block ref="20b922bf6eebee2c6cba59ad35c08dd5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4b2e47b0bb47c8052c2ba29b2a019287" category="list-text">选择恢复范围至<block ref="eeb41be937965dcb49c6d428805a16ba" prefix=" " category="inline-code"></block>。</block>
+  <block id="9caf33d150971c75036003aa251fe60a" category="paragraph"><block ref="9caf33d150971c75036003aa251fe60a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e405aaf66719a0dff5100fb5b4e88290" category="paragraph"><block ref="e405aaf66719a0dff5100fb5b4e88290" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="af1581dd889b9e1ebc7a3b1c0c51b76e" category="paragraph"><block ref="af1581dd889b9e1ebc7a3b1c0c51b76e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f9db43474b8f28fcaabfc0290f5a2323" category="paragraph"><block ref="f9db43474b8f28fcaabfc0290f5a2323" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0bd3e56aa4508b544aa009dfbe51b814" category="paragraph"><block ref="0bd3e56aa4508b544aa009dfbe51b814" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3c456dbad942ca6a362faf0f52bab308" category="paragraph"><block ref="3c456dbad942ca6a362faf0f52bab308" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0c199d70e7019bbaed298c974d51a440" category="list-text">从DB VM ora_01中、验证成功还原/恢复数据库是否前滚到其最新状态并恢复测试表。</block>
+  <block id="e902731ca71b8d6f3fd85319cfab2a70" category="paragraph">在此示例中、最新的备份集用于克隆数据库、该数据库位于不同软件安装的DB VM ora_02上、而在VCF中则用于克隆oracle_home。</block>
+  <block id="11ca26aa1b6ef9aa055d3bbfa787304e" category="list-text">再次打开数据库NTAP1备份列表。选择最新的数据备份集、单击<block ref="ff24590464659ee8cdec688128c35f89" prefix=" " category="inline-code"></block> 按钮以启动数据库克隆工作流。</block>
+  <block id="6eca64ac5a70bc0866f0fcc7903f697b" category="paragraph"><block ref="6eca64ac5a70bc0866f0fcc7903f697b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f35a938ca4be3f182a6bd37047a83198" category="paragraph"><block ref="f35a938ca4be3f182a6bd37047a83198" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="900b3b01b70ff3dfa061c370394c20d1" category="list-text">在VCF中选择ora_02作为目标数据库克隆主机。主机上应已安装并配置相同的Oracle数据库软件。</block>
+  <block id="8e65bd523170787dd7f65227f65954bf" category="paragraph"><block ref="8e65bd523170787dd7f65227f65954bf" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="66090207553058305d836b680f846cca" category="paragraph"><block ref="66090207553058305d836b680f846cca" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="facd55edf242677ab9c6bd42674e871d" category="list-text">您可以更改克隆数据库参数、以满足克隆数据库的配置或资源要求。</block>
+  <block id="53a8b3558508dcbd3c51a1a1b341e894" category="paragraph"><block ref="53a8b3558508dcbd3c51a1a1b341e894" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1658b88c38f74d919ec28d5100272f91" category="paragraph"><block ref="1658b88c38f74d919ec28d5100272f91" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="41f4168f87d76a7a66089456e7311faa" category="paragraph"><block ref="41f4168f87d76a7a66089456e7311faa" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="46aefba3caa5d8637eeea9599bdf122d" category="paragraph"><block ref="46aefba3caa5d8637eeea9599bdf122d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="74d8d13339ed22f8c315968eee95b773" category="paragraph"><block ref="74d8d13339ed22f8c315968eee95b773" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="74c1617600b118b68903b6dbbc37362b" category="list-text">在DB VM ora_02中、验证克隆的数据库并查询测试表。</block>
+  <block id="d0caaae21ff57a6da3b954572e19d5fc" category="paragraph">至此、我们完成了在VCF中对Oracle数据库进行SnapCenter备份、还原和克隆的演示。</block>
+  <block id="35e76d8007b778ea52cd0191d5ee85eb" category="inline-link-macro"><block ref="35e76d8007b778ea52cd0191d5ee85eb" category="inline-link-rx"></block></block>
+  <block id="1f17f6aa903970c3dd54090e0a72032a" category="paragraph"><block ref="1f17f6aa903970c3dd54090e0a72032a" category="inline-link-macro-rx"></block></block>
+  <block id="0ea07c4d6ae7a4a776aa9c64f76fafca" category="list-text">SnapCenter 软件 6.0</block>
+  <block id="25f98198bfdb79ada56af7b1c6b93a30" category="inline-link-macro"><block ref="25f98198bfdb79ada56af7b1c6b93a30" category="inline-link-rx"></block></block>
+  <block id="be304928a6169b258c942fd969af51fa" category="paragraph"><block ref="be304928a6169b258c942fd969af51fa" category="inline-link-macro-rx"></block></block>
+  <block id="836cb906f52ed0e393be18cb078522a3" category="sidebar">使用VVO尔 在VCF中部署和保护Oracle SI</block>
 </blocks>

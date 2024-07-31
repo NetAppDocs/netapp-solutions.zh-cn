@@ -1,0 +1,867 @@
+---
+sidebar: sidebar 
+permalink: databases/vcf_ora_si_vvol.html 
+keywords: Database, Oracle, AWS, FSx ONTAP, VMC, VMware 
+summary: '该解决方案提供了有关在VMware Cloud Foundation (VCF)中使用vSphere虚拟卷(VVOl)作为主数据库存储和在单实例(Single Instance、SI)配置中使用Oracle数据库进行Oracle部署和保护的概述和详细信息。' 
+---
+= TR-4996：《使用VVO尔 在VCF中部署和保护Oracle SI》
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+NetApp公司Allen Cao、Niyaz Mohamed
+
+[role="lead"]
+该解决方案提供了有关在VMware Cloud Foundation (VCF)中使用vSphere虚拟卷(VVOl)作为主数据库存储和在单实例(SI)配置中使用Oracle数据库进行Oracle部署和保护的概述和详细信息。
+
+
+
+== 目的
+
+VMware vSphere虚拟卷(vvol)是一个SAN/NAS管理和集成框架、可将虚拟磁盘公开为本机存储对象、并可在虚拟磁盘级别执行基于阵列的操作。换言之、Vvol可使SAN/NAS设备具有VM感知能力、并在单个虚拟磁盘粒度范围内通过以VM为中心的方法充分利用基于阵列的数据服务。 利用虚拟卷、客户可以充分利用当前存储投资的独特功能、并在不中断系统运行的情况下过渡到针对适用于所有存储类型的虚拟环境而优化的更简单、更高效的运营模式。
+
+本文档演示了如何在VMware Cloud Foundation环境中部署和保护Oracle单实例数据库、并将vvol作为NetApp ONTAP存储集群中的主数据库存储。Oracle数据库的配置就像部署在本地存储系统的本地文件系统中一样。本技术报告重点介绍在适用于Oracle的VCF部署中创建VVO尔 的步骤。此外、我们还演示了如何使用NetApp SnapCenter UI工具备份、还原和克隆Oracle数据库以用于开发或测试、或者在VCF中使用其他使用情形以实现高效存储数据库操作。
+
+此解决方案 可解决以下使用情形：
+
+* 在VCF中部署Oracle SI数据库、并将NetApp ONTAP AFF上的VVO尔 数据存储库用作主数据库存储
+* 使用NetApp SnapCenter UI工具在VCF中使用VVO尔 数据存储库进行Oracle数据库备份和还原
+* 使用NetApp SnapCenter UI工具在VCF中为开发/测试或其他使用情形使用VVOLs数据存储库的Oracle数据库克隆
+
+
+
+
+== audience
+
+此解决方案 适用于以下人员：
+
+* 希望在VCF中部署Oracle并将VVO尔 数据存储库部署在NetApp ONTAP AFF上作为主数据库存储的数据库主管
+* 希望在VCF中使用NetApp ONTAP AFF存储上的VVO尔 数据存储库测试Oracle工作负载的数据库解决方案架构师
+* 希望部署和管理已部署到VCF且NetApp ONTAP AFF存储上具有VVO尔 数据存储库的Oracle数据库的存储管理员
+* 希望在VCF中使用VVOV数据存储库建立Oracle数据库的应用程序所有者
+
+
+
+
+== 解决方案 测试和验证环境
+
+此解决方案的测试和验证是在一个实验室环境中执行的、其中VCF的VVOs数据存储库位于NetApp ONTAP AFF存储上、而此数据存储库可能与最终部署环境不匹配。有关详细信息，请参阅一节 <<部署注意事项的关键因素>>。
+
+
+
+=== 架构
+
+image::vcf_ora_si_vvols_architecture.png[此图详细展示了AWS公共云中使用iSCSI和ASM的Oracle部署配置。]
+
+
+
+=== 硬件和软件组件
+
+[cols="33%, 33%, 33%"]
+|===
+
+
+3+| * 硬件 * 
+
+
+| NetApp ONTAP AFF A300 | 版本9.14.1P4 | 带有24个NVMe磁盘的DS224磁盘架、总容量为35.2 TiB 
+
+
+| VMware vSphere集群 | 8.02版 | 12个CPU x Intel (R) Xeon (R) Gold 5218 CPU @ 2.30GHz、8个节点(4个管理域和4个工作负载域) 
+
+
+3+| *软件* 
+
+
+| RedHat Linux | rell-8.6、4.18.0-372.9.1.el8.x86_64内核 | 托管Oracle数据库服务器、部署RedHat订阅以进行测试 
+
+
+| Windows服务器 | 2022标准版、10.0.20348内部版本20348 | 托管SnapCenter服务器 
+
+
+| CentOS Linux | CentOS Linux 8.5.2111版 | 托管Ans负责 控制器 
+
+
+| Oracle 数据库 | 版本19.18 | 已应用RU修补程序p34765931_190000_Linux-x86-64.zip 
+
+
+| Oracle OPatch | 版本12.2.0.1.36 | 最新修补程序p6880880_190000_Linux-x86-64.zip 
+
+
+| SnapCenter 服务器 | 6.0版 | 工作组部署 
+
+
+| 适用于 VMware vSphere 的 SnapCenter 插件 | 6.0版 | 作为一个ova虚拟机部署到vSphere集群 
+
+
+| 适用于VMware vSphere的ONTAP工具 | 9.13版 | 作为一个ova虚拟机部署到vSphere集群 
+
+
+| 打开JDK | 版本java-11-OpenJDK-11.0.23.0.9-3.el8.x86_64 | DB VM上的SnapCenter插件要求 
+|===
+
+
+=== VCF中的Oracle数据库配置
+
+[cols="33%, 33%, 33%"]
+|===
+
+
+3+|  
+
+
+| * 服务器 * | * 数据库 * | *DB存储* 
+
+
+| ORA_01 | NTAP1 (NTAP1_pdb1、NTAP1_pdb2、NTAP1_pdb3) | NetApp ONTAP AFF A300上的虚拟卷数据存储库 
+
+
+| ORA_02 | NTAP2 (NTAP2_pdb1、NTAP2_pdb2、NTAP2_pdb3)、NTAP1CLN | NetApp ONTAP AFF A300上的虚拟卷数据存储库 
+|===
+
+
+=== 部署注意事项的关键因素
+
+* *用于将ONTAP与Svol建立集群连接的协议。*NFS或iSCSI是不错的选择。这些性能级别是等效的。在此解决方案演示中、我们使用NFS作为存储协议、以便将ONTAP连接到带下划线的存储集群。如果VCF基础架构支持、则NetApp ONTAP上的VVO尔 数据存储库也支持FC/FCoE、NVMe/FC协议。
+* *在虚拟卷数据存储库上的Oracle存储布局。*在测试和验证中、我们为Oracle二进制文件、Oracle数据和Oracle日志文件部署了三个虚拟卷数据存储库。最好将不同类型的Oracle文件分隔到其数据存储库中、以便可以轻松管理和执行数据库备份、恢复或克隆。为大型数据库创建专用的卷、并为具有类似QoS配置文件的小型数据库或数据库共享此类卷。 
+* *用于ONTAP存储身份验证的凭据。*请仅使用ONTAP集群级别凭据进行ONTAP存储集群身份验证、包括通过SnapCenter连接到ONTAP存储集群或通过ONTAP工具连接到ONTAP存储集群。
+* *将存储从Vvol数据存储库配置到数据库虚拟机。*从Vvol数据存储库一次只向数据库VM添加一个磁盘。目前不支持同时从卷数据存储库添加多个磁盘。  
+* *数据库保护。*NetApp提供了一个SnapCenter软件套件、可通过用户友好的UI界面进行数据库备份、还原和克隆。NetApp建议实施此类管理工具、以实现快速(不到一分钟)的快照备份、快速(几分钟)的数据库还原和数据库克隆。
+
+
+
+
+== 解决方案 部署
+
+以下各节提供了在VCF中部署Oracle 19c的分步过程、其中、在Oracle单实例配置中、VVO尔 数据存储库位于NetApp ONTAP存储上。
+
+
+
+=== 部署的前提条件
+
+[%collapsible]
+====
+部署需要满足以下前提条件。
+
+. 已设置VMware VCF。有关如何创建VCF的信息或说明，请参阅VMware文档 link:https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html["VMware Cloud Foundation文档"^]。
+. 在VCF工作负载域中配置三个Linux VM、两个VM用于Oracle数据库、一个VM用于Ansv可 控制器。配置一个Windows服务器VM以运行NetApp SnapCenter服务器。有关为自动化Oracle数据库部署设置Ans得 控制器的信息，请参阅以下资源 link:https://docs.netapp.com/us-en/netapp-solutions/automation/getting-started.html["NetApp解决方案 自动化入门"^]。
+. VCF中已部署适用于VMware vSphere的SnapCenter插件6.0版。有关插件部署的信息，请参见以下资源： link:https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/["适用于 VMware vSphere 的 SnapCenter 插件文档"^]。
+. 适用于VMware vSphere的ONTAP工具已部署在VCF中。有关适用于VMware vSphere的ONTAP工具部署的信息、请参见以下资源： link:https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html["适用于VMware vSphere的ONTAP工具文档"^]
+
+
+
+NOTE: 确保已在Oracle VM根卷中至少分配50G、以便有足够的空间来暂存Oracle安装文件。
+
+====
+
+
+=== 创建存储功能配置文件
+
+[%collapsible]
+====
+首先、为托管此虚拟卷数据存储库的带下划线的ONTAP存储创建一个自定义存储功能配置文件。
+
+. 从vSphere客户端快捷方式中、打开NetApp ONTAP工具。确保已在ONTAP工具部署过程中将ONTAP存储集群添加到中 `Storage Systems` 。
++
+image:vcf_ora_vvol_scp_01.png["显示自定义存储功能配置文件配置的屏幕截图。"] image:vcf_ora_vvol_scp_00.png["显示自定义存储功能配置文件配置的屏幕截图。"]
+
+. 单击 `Storage capability profile` 以添加Oracle的自定义配置文件。为配置文件命名并添加简要说明。
++
+image:vcf_ora_vvol_scp_02.png["显示自定义存储功能配置文件配置的屏幕截图。"]
+
+. 选择存储控制器类别：性能、容量或混合。
++
+image:vcf_ora_vvol_scp_03.png["显示自定义存储功能配置文件配置的屏幕截图。"]
+
+. 选择协议。
++
+image:vcf_ora_vvol_scp_04.png["显示自定义存储功能配置文件配置的屏幕截图。"]
+
+. 根据需要定义QoS策略。
++
+image:vcf_ora_vvol_scp_05.png["显示自定义存储功能配置文件配置的屏幕截图。"]
+
+. 配置文件的其他存储属性。如果要使用加密功能、请确保已在NetApp控制器上启用加密、否则在应用配置文件时可能会导致问题。
++
+image:vcf_ora_vvol_scp_06.png["显示自定义存储功能配置文件配置的屏幕截图。"]
+
+. 查看摘要并完成存储功能配置文件创建。
++
+image:vcf_ora_vvol_scp_07.png["显示自定义存储功能配置文件配置的屏幕截图。"]
+
+
+
+====
+
+
+=== 创建和配置卷数据存储库
+
+[%collapsible]
+====
+完成前提条件后、以管理员用户身份通过vSphere客户端登录到VCF、导航到工作负载域。请勿使用内置的VMware存储选项创建vvol。请改用NetApp ONTAP工具创建虚拟卷。以下说明了创建和配置卷的过程。
+
+. 可以从ONTAP工具界面或VCF工作负载域集群触发VVOLs创建工作流。
++
+image:vcf_ora_vvol_datastore_01.png["显示了Svol数据存储库配置的屏幕截图。"]
+
++
+image:vcf_ora_vvol_datastore_01_2.png["显示了Svol数据存储库配置的屏幕截图。"]
+
+. 填写数据存储库的常规信息、包括配置目标、类型、名称和协议。
++
+image:vcf_ora_vvol_datastore_02.png["显示了Svol数据存储库配置的屏幕截图。"]
+
+. 选择从上一步创建的自定义存储功能配置文件，即 `Storage system`，和 `Storage VM`，要在其中创建虚拟卷。
++
+image:vcf_ora_vvol_datastore_03.png["显示了Svol数据存储库配置的屏幕截图。"]
+
+. 选择 `Create new volumes`，填写卷名称和大小，然后单击，再单击 `ADD` `NEXT` 以移动到摘要页面。
++
+image:vcf_ora_vvol_datastore_04.png["显示了Svol数据存储库配置的屏幕截图。"]
+
++
+
+NOTE: 为了提高性能、您可以向一个数据存储库添加多个卷、也可以跨多个ONTAP控制器节点分布一个FlexVol数据存储库卷。
+
+. 单击 `Finish` 此选项可为Oracle二进制文件创建虚拟卷数据存储库。
++
+image:vcf_ora_vvol_datastore_05.png["显示了Svol数据存储库配置的屏幕截图。"]
+
+. 重复相同过程为Oracle数据和日志创建卷数据存储库。
++
+image:vcf_ora_vvol_datastore_06.png["显示了Svol数据存储库配置的屏幕截图。"]
+
+
+
+
+NOTE: 请注意、在克隆Oracle数据库时、数据的另一个虚拟卷会添加到虚拟卷列表中。
+
+====
+
+
+=== 根据存储功能配置文件创建VM存储策略
+
+[%collapsible]
+====
+在将存储从Vvol数据存储库配置到数据库VM之前、请根据上一步创建的存储功能配置文件添加VM存储策略。以下是过程。
+
+. 从vSphere Client菜单中，打开 `Policies and Profiles` 并突出显示 `VM Storage Policies`。单击 `Create` 以打开 `VM Storage Policies` 工作流。
++
+image:vcf_ora_vvol_vm_policy_01.png["显示虚拟机存储策略配置的屏幕截图。"]
+
+. 为VM存储策略命名。
++
+image:vcf_ora_vvol_vm_policy_02.png["显示虚拟机存储策略配置的屏幕截图。"]
+
+. 在中 `Datastore specific rules`，选中 `Enable rules for "NetAPP.clustered.Data.ONTAP.VP.vvol" storage`
++
+image:vcf_ora_vvol_vm_policy_03.png["显示虚拟机存储策略配置的屏幕截图。"]
+
+. 对于NetApp.Clustered.Data.ONTAP．VP．vvol规则 `Placement`，请选择上一步创建的自定义存储容量配置文件。
++
+image:vcf_ora_vvol_vm_policy_04.png["显示虚拟机存储策略配置的屏幕截图。"]
+
+. 对于NetApp.Clustered.Data.ONTAP．VP．vvol规则，请选择是否不复制vVol `Replication` `Disabled` 。
++
+image:vcf_ora_vvol_vm_policy_04_1.png["显示虚拟机存储策略配置的屏幕截图。"]
+
+. 存储兼容性页面显示VCF环境中的兼容VVO尔 数据存储库。
++
+image:vcf_ora_vvol_vm_policy_05.png["显示虚拟机存储策略配置的屏幕截图。"]
+
+. 查看并完成VM存储策略的创建。
++
+image:vcf_ora_vvol_vm_policy_06.png["显示虚拟机存储策略配置的屏幕截图。"]
+
+. 验证刚刚创建的虚拟机存储策略。
++
+image:vcf_ora_vvol_vm_policy_07.png["显示虚拟机存储策略配置的屏幕截图。"]
+
+
+
+====
+
+
+=== 从Vvol数据存储库为DB VM分配磁盘并配置DB存储
+
+[%collapsible]
+====
+在vSphere Client中、通过编辑Vvol设置将三个磁盘从VVM数据存储库添加到数据库VM中。然后、登录到VM以格式化磁盘并将其挂载到挂载点/u01、/u02和/u03。以下内容展示了确切的步骤和任务。
+
+. 向VM添加磁盘以用于Oracle二进制存储。
++
+image:vcf_ora_vvol_vm_bins.png["显示VM存储配置的屏幕截图。"]
+
+. 向VM添加磁盘以用于Oracle数据存储。
++
+image:vcf_ora_vvol_vm_data.png["显示VM存储配置的屏幕截图。"]
+
+. 将磁盘添加到VM以用于Oracle日志存储。
++
+image:vcf_ora_vvol_vm_logs.png["显示VM存储配置的屏幕截图。"]
+
+. 在VM中 `Edit Settings` `Advanced Parameters`，添加具有值的属性 `disk.enableuuid` `TRUE`。要添加高级参数、需要关闭虚拟机。通过设置此选项、SnapCenter可以准确识别您环境中的VVOV。
++
+image:vcf_ora_vvol_vm_uuid.png["显示VM存储配置的屏幕截图。"]
+
+. 现在、重新启动虚拟机。以管理员用户身份通过ssh登录到VM、以查看新添加的磁盘驱动器。
++
+....
+[admin@ora_01 ~]$ sudo fdisk -l
+
+Disk /dev/sdb: 50 GiB, 53687091200 bytes, 104857600 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+Disk /dev/sdc: 100 GiB, 107374182400 bytes, 209715200 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+Disk /dev/sdd: 100 GiB, 107374182400 bytes, 209715200 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+.
+.
+.
+....
+. 只需接受默认选项、即可将驱动器分区为主分区和单个分区。
++
+[source, cli]
+----
+sudo fdisk /dev/sdb
+----
++
+[source, cli]
+----
+sudo fdisk /dev/sdc
+----
++
+[source, cli]
+----
+sudo fdisk /dev/sdd
+----
+. 将分区磁盘格式化为xfs文件系统。
++
+[source, cli]
+----
+sudo mkfs.xfs /dev/sdb1
+----
++
+[source, cli]
+----
+sudo mkfs.xfs /dev/sdc1
+----
++
+[source, cli]
+----
+sudo mkfs.xfs /dev/sdd1
+----
+. 将驱动器挂载到挂载点/u01、/u02和/u03。
++
+[source, cli]
+----
+sudo mount -t xfs /dev/sdb1 /u01
+----
++
+[source, cli]
+----
+sudo mount -t xfs /dev/sdc1 /u02
+----
++
+[source, cli]
+----
+sudo mount -t xfs /dev/sdd1 /u03
+----
++
+....
+[admin@ora_01 ~]$ df -h
+Filesystem             Size  Used Avail Use% Mounted on
+devtmpfs               7.7G     0  7.7G   0% /dev
+tmpfs                  7.8G     0  7.8G   0% /dev/shm
+tmpfs                  7.8G  782M  7.0G  10% /run
+tmpfs                  7.8G     0  7.8G   0% /sys/fs/cgroup
+/dev/mapper/rhel-root   44G   19G   26G  43% /
+/dev/sda1             1014M  258M  757M  26% /boot
+tmpfs                  1.6G   12K  1.6G   1% /run/user/42
+tmpfs                  1.6G  4.0K  1.6G   1% /run/user/1000
+/dev/sdb1               50G  390M   50G   1% /u01
+/dev/sdc1              100G  746M  100G   1% /u02
+/dev/sdd1              100G  746M  100G   1% /u03
+
+....
+. 将挂载点添加到/etc/fstab中、以便在虚拟机重新启动时挂载磁盘驱动器。
++
+[source, cli]
+----
+sudo vi /etc/fstab
+----
++
+....
+[oracle@ora_01 ~]$ cat /etc/fstab
+
+#
+# /etc/fstab
+# Created by anaconda on Wed Oct 18 19:43:31 2023
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk/'.
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info.
+#
+# After editing this file, run 'systemctl daemon-reload' to update systemd
+# units generated from this file.
+#
+/dev/mapper/rhel-root   /                       xfs     defaults        0 0
+UUID=aff942c4-b224-4b62-807d-6a5c22f7b623 /boot                   xfs     defaults        0 0
+/dev/mapper/rhel-swap   none                    swap    defaults        0 0
+/root/swapfile swap swap defaults 0 0
+/dev/sdb1               /u01                    xfs     defaults        0 0
+/dev/sdc1               /u02                    xfs     defaults        0 0
+/dev/sdd1               /u03                    xfs     defaults        0 0
+....
+
+
+====
+
+
+=== 在VCF中部署Oracle数据库
+
+[%collapsible]
+====
+建议利用NetApp自动化工具包在VCF中使用VVO尔 部署Oracle。有关在xfs文件系统上执行Oracle自动部署的详细参考信息，请参阅TR-4不同 的文档： link:https://docs.netapp.com/us-en/netapp-solutions/databases/automation_ora_c-series_nfs.html["在采用NFS的NetApp C系列上简化的自动化Oracle部署"^]。虽然TR-4处于 使用NFS的NetApp C系列上的Oracle自动部署范围、但如果绕过挂载到数据库VM的NFS文件系统、则它与使用VVOR的VCF中的Oracle部署方式相同。我们只需使用特定标记即可跳过该步骤。下面是分步过程。
+
+. 以管理员用户身份通过ssh登录到Ands得以 控制器VM、并克隆NFS上适用于Oracle的自动化工具包副本。
++
+[source, cli]
+----
+git clone https://bitbucket.ngage.netapp.com/scm/ns-bb/na_oracle_deploy_nfs.git
+----
+. 将以下Oracle安装文件暂存到数据库VM上的/tmp/archive文件夹中。该文件夹应允许具有777权限的所有用户访问。
++
+....
+LINUX.X64_193000_db_home.zip
+p34765931_190000_Linux-x86-64.zip
+p6880880_190000_Linux-x86-64.zip
+....
+. 根据TR-4不同 的本节中的说明，配置部署目标文件-主机、全局变量文件- vars/vars.yml和本地数据库VM变量文件- host_vars/host_name.yml link:https://docs.netapp.com/us-en/netapp-solutions/databases/automation_ora_c-series_nfs.html#parameter-files-configuration["参数文件配置"^]。从本地DB VM变量文件中注释掉NFS_lf变量。
+. 在Ans得 控制器和数据库VM之间设置ssh无密钥身份验证、这需要生成ssh密钥对并将公共密钥复制到数据库VM管理员用户根目录.ssh folder authorized_keys文件。
++
+[source, cli]
+----
+ssh-keygen
+----
+. 从Ans负责人 的控制器克隆的自动化工具包主目录/HOME/admin/na_oracle_DEP_Nn中、执行前提条件操作手册。
++
+[source, cli]
+----
+ansible-playbook -i hosts 1-ansible_requirements.yml
+----
+. 执行Linux配置操作手册。
++
+[source, cli]
+----
+ansible-playbook -i hosts 2-linux_config.yml -u admin -e @vars/vars.yml
+----
+. 执行Oracle部署操作手册。
++
+[source, cli]
+----
+ansible-playbook -i hosts 4-oracle_config.yml -u admin -e @vars/vars.yml --skip-tags "ora_mount_points,enable_dnfs_client"
+----
+. 此外、还可以从一次运行中执行上述所有操作手册。
++
+[source, cli]
+----
+ansible-playbook -i hosts 0-all_playbook.yml -u admin -e @vars/vars.yml --skip-tags "ora_mount_points,enable_dnfs_client"
+----
+. 成功执行操作手册后、登录到EM Express以验证Oracle。
++
+image:vcf_ora_vvol_em_02.png["显示Oracle EM Express配置的屏幕截图。"] image:vcf_ora_vvol_em_01.png["显示Oracle EM Express配置的屏幕截图。"]
+
+. (可选)执行销毁操作手册、从DB VM中删除数据库。
++
+[source, cli]
+----
+ansible-playbook -i hosts 5-destroy.yml -u admin -e @vars/vars.yml
+----
+
+
+====
+
+
+=== 使用SnapCenter在VCF中执行Oracle备份、还原和克隆
+
+
+
+==== SnapCenter设置
+
+[%collapsible]
+====
+与版本5相比、SnapCenter版本6具有许多增强功能、包括对VMware Vvol数据存储库的支持。SnapCenter依靠数据库VM上的主机端插件来执行应用程序感知型数据保护管理活动。有关适用于Oracle的NetApp SnapCenter插件的详细信息，请参阅本文档 link:https://docs.netapp.com/us-en/snapcenter/protect-sco/concept_what_you_can_do_with_the_snapcenter_plug_in_for_oracle_database.html["您可以使用适用于 Oracle 数据库的插件执行什么操作"^]。下面简要介绍了在VCF中为Oracle数据库备份、恢复和克隆设置SnapCenter版本6的步骤。
+
+. 从NetApp支持站点下载SnapCenter软件版本6： link:https://mysupport.netapp.com/site/downloads["NetApp 支持下载"^]。
+. 以管理员身份登录到托管Windows VM的SnapCenter。SnapCenter 6.0的安装前提条件。
++
+image:vcf_ora_vvol_snapctr_prerequisites.png["显示SnapCenter 6.0前提条件的屏幕截图。"]
+
+. 以管理员身份从安装最新的Java JDK link:https://www.java.com/en/["获取适用于桌面应用程序的Java"^]。
++
+
+NOTE: 如果Windows服务器部署在域环境中、请将域用户添加到SnapCenter服务器本地管理员组、然后使用域用户运行SnapCenter安装。
+
+. 以安装用户身份通过HTTPS端口8846登录到SnapCenter UI、以配置适用于Oracle的SnapCenter。
++
+image:vcf_ora_vvol_snapctr_deploy_01.png["显示SnapCenter配置的屏幕截图。"]
+
+. 如果您是新用户、请查看 `Get Started` 菜单以快速了解SnapCenter。
++
+image:vcf_ora_vvol_snapctr_deploy_02.png["显示SnapCenter配置的屏幕截图。"]
+
+. 更新 `Hypervisor Settings` 在全局设置中。
++
+image:aws_ora_fsx_vmc_snapctr_01.png["显示SnapCenter配置的屏幕截图。"]
+
+. 使用集群管理IP将ONTAP存储集群添加到 `Storage Systems` 、并通过集群管理员用户ID进行身份验证。
++
+image:vcf_ora_vvol_snapctr_deploy_06.png["显示SnapCenter配置的屏幕截图。"] image:vcf_ora_vvol_snapctr_deploy_07.png["显示SnapCenter配置的屏幕截图。"]
+
+. 添加数据库VM和vSphere插件VM `Credential` 、以便通过SnapCenter访问DB VM和vSphere插件VM。此凭据应在Linux VM上具有sudo权限。您可以为VM的不同管理用户ID创建不同的凭据。
++
+image:aws_ora_fsx_vmc_snapctr_03.png["显示SnapCenter配置的屏幕截图。"]
+
+. 使用在上一步中创建的数据库VM凭据将VCF中的Oracle数据库VM添加到 `Hosts` 。
++
+image:vcf_ora_vvol_snapctr_deploy_08.png["显示SnapCenter配置的屏幕截图。"] image:vcf_ora_vvol_snapctr_deploy_09.png["显示SnapCenter配置的屏幕截图。"] image:vcf_ora_vvol_snapctr_deploy_10.png["显示SnapCenter配置的屏幕截图。"]
+
+. 同样、使用在上一步中创建的vSphere插件VM凭据将NetApp VMware插件VM添加到 `Hosts` 。
++
+image:vcf_ora_vvol_snapctr_deploy_11.png["显示SnapCenter配置的屏幕截图。"] image:vcf_ora_vvol_snapctr_deploy_12.png["显示SnapCenter配置的屏幕截图。"]
+
+. 最后、在DB VM上发现Oracle数据库后、返回 `Settings`-`Policies` 以创建Oracle数据库备份策略。理想情况下、请创建一个单独的归档日志备份策略、以便更频繁地进行备份、从而最大限度地减少发生故障时的数据丢失。
++
+image:aws_ora_fsx_vmc_snapctr_02.png["显示SnapCenter配置的屏幕截图。"]
+
+
+
+
+NOTE: 确保可以将SnapCenter服务器名称解析为DB VM和vSphere插件VM中的IP地址。同样、数据库虚拟机名称和vSphere插件虚拟机名称也可以从SnapCenter服务器解析为IP地址。
+
+====
+
+
+==== 数据库备份
+
+[%collapsible]
+====
+与基于RMAN的传统方法相比、SnapCenter利用ONTAP卷快照加快数据库备份、还原或克隆速度。由于数据库在创建快照之前处于Oracle备份模式、因此这些快照是应用程序一致的。
+
+. 从 `Resources` 选项卡中、将虚拟机添加到SnapCenter后、系统会自动发现虚拟机上的任何数据库。最初、数据库状态显示为 `Not protected`。
++
+image:vcf_ora_vvol_snapctr_bkup_01.png["显示SnapCenter配置的屏幕截图。"]
+
+. 单击数据库以启动工作流、从而为数据库启用保护。
++
+image:vcf_ora_vvol_snapctr_bkup_02.png["显示SnapCenter配置的屏幕截图。"]
+
+. 应用备份策略、根据需要设置计划。
++
+image:vcf_ora_vvol_snapctr_bkup_03.png["显示SnapCenter配置的屏幕截图。"]
+
+. 根据需要设置备份作业通知。
++
+image:vcf_ora_vvol_snapctr_bkup_05.png["显示SnapCenter配置的屏幕截图。"]
+
+. 查看摘要并完成以启用数据库保护。
++
+image:vcf_ora_vvol_snapctr_bkup_06.png["显示SnapCenter配置的屏幕截图。"]
+
+. 单击可触发按需备份作业 `Back up Now`。
++
+image:vcf_ora_vvol_snapctr_bkup_07.png["显示SnapCenter配置的屏幕截图。"] image:vcf_ora_vvol_snapctr_bkup_08.png["显示SnapCenter配置的屏幕截图。"]
+
+. 可通过监控备份作业 `Monitor` 选项卡、单击正在运行的作业。
++
+image:vcf_ora_vvol_snapctr_bkup_09.png["显示SnapCenter配置的屏幕截图。"]
+
+. 单击数据库以查看为每个数据库完成的备份集。
++
+image:vcf_ora_vvol_snapctr_bkup_10.png["显示SnapCenter配置的屏幕截图。"]
+
+
+
+====
+
+
+==== 数据库还原/恢复
+
+[%collapsible]
+====
+SnapCenter为Oracle数据库提供了许多从快照备份还原和恢复选项。在此示例中、我们演示了如何从较早的快照备份进行还原、然后将数据库前滚到最后一个可用日志。
+
+. 首先、运行快照备份。然后、创建一个测试表并在表中插入一行、以便在创建测试表重新进入测试表之前验证从Snapshot映像恢复的数据库。
++
+....
+[oracle@ora_01 ~]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Wed Jul 17 10:20:10 2024
+Version 19.18.0.0.0
+
+Copyright (c) 1982, 2022, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.18.0.0.0
+
+SQL> sho pdbs
+
+    CON_ID CON_NAME                       OPEN MODE  RESTRICTED
+---------- ------------------------------ ---------- ----------
+         2 PDB$SEED                       READ ONLY  NO
+         3 NTAP1_PDB1                     READ WRITE NO
+         4 NTAP1_PDB2                     READ WRITE NO
+         5 NTAP1_PDB3                     READ WRITE NO
+SQL> alter session set container=ntap1_pdb1;
+
+SQL> select * from test;
+
+no rows selected
+
+
+SQL> insert into test values (1, sysdate, 'test oracle backup/restore/clone on VMware Cloud Foundation vVols');
+
+1 row created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select * from test;
+
+        ID
+----------
+DT
+---------------------------------------------------------------------------
+EVENT
+--------------------------------------------------------------------------------
+         1
+18-JUL-24 11.15.03.000000 AM
+test oracle backup/restore/clone on VMware Cloud Foundation vVols
+
+
+SQL>
+
+
+....
+. 从SnapCenter选项卡中 `Resources` 、打开数据库NTAP1备份拓扑页面。在创建测试表之前、突出显示Snapshot数据备份集。单击 `Restore` 以启动还原-恢复工作流。
++
+image:vcf_ora_vvol_snapctr_restore_01.png["显示SnapCenter配置的屏幕截图。"]
+
+. 选择还原范围。
++
+image:vcf_ora_vvol_snapctr_restore_02.png["显示SnapCenter配置的屏幕截图。"]
+
+. 选择恢复范围至 `All Logs`。
++
+image:vcf_ora_vvol_snapctr_restore_03.png["显示SnapCenter配置的屏幕截图。"]
+
+. 指定要运行的任何可选预处理脚本。
++
+image:vcf_ora_vvol_snapctr_restore_04.png["显示SnapCenter配置的屏幕截图。"]
+
+. 指定要运行的任何可选后处理脚本。
++
+image:vcf_ora_vvol_snapctr_restore_05.png["显示SnapCenter配置的屏幕截图。"]
+
+. 根据需要发送作业报告。
++
+image:vcf_ora_vvol_snapctr_restore_06.png["显示SnapCenter配置的屏幕截图。"]
+
+. 查看摘要、然后单击 `Finish` 启动还原和恢复。
++
+image:vcf_ora_vvol_snapctr_restore_07.png["显示SnapCenter配置的屏幕截图。"]
+
+. from `Monitor` 选项卡中、打开作业以查看详细信息。
++
+image:vcf_ora_vvol_snapctr_restore_08.png["显示SnapCenter配置的屏幕截图。"]
+
+. 从DB VM ora_01中、验证成功还原/恢复数据库是否前滚到其最新状态并恢复测试表。
++
+....
+
+[oracle@ora_01 ~]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Thu Jul 18 11:42:58 2024
+Version 19.18.0.0.0
+
+Copyright (c) 1982, 2022, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.18.0.0.0
+
+SQL> select name, open_mode from v$database;
+
+NAME      OPEN_MODE
+--------- --------------------
+NTAP1     READ WRITE
+
+SQL> alter session set container=ntap1_pdb1;
+
+Session altered.
+
+SQL> select * from test;
+
+        ID
+----------
+DT
+---------------------------------------------------------------------------
+EVENT
+--------------------------------------------------------------------------------
+         1
+18-JUL-24 11.15.03.000000 AM
+test oracle backup/restore/clone on VMware Cloud Foundation vVols
+
+
+SQL>
+
+
+....
+
+
+====
+
+
+==== 数据库克隆
+
+[%collapsible]
+====
+在此示例中、最新的备份集用于克隆数据库、该数据库位于不同软件安装的DB VM ora_02上、而在VCF中则用于克隆oracle_home。
+
+. 再次打开数据库NTAP1备份列表。选择最新的数据备份集、单击 `Clone` 按钮以启动数据库克隆工作流。
++
+image:vcf_ora_vvol_snapctr_clone_01.png["显示SnapCenter配置的屏幕截图。"]
+
+. 将克隆数据库命名为SID。
++
+image:vcf_ora_vvol_snapctr_clone_02.png["显示SnapCenter配置的屏幕截图。"]
+
+. 在VCF中选择ora_02作为目标数据库克隆主机。主机上应已安装并配置相同的Oracle数据库软件。
++
+image:vcf_ora_vvol_snapctr_clone_03.png["显示SnapCenter配置的屏幕截图。"]
+
+. 在目标主机上选择正确的oracle_home、用户和组。保留默认凭据。
++
+image:vcf_ora_vvol_snapctr_clone_04.png["显示SnapCenter配置的屏幕截图。"]
+
+. 您可以更改克隆数据库参数、以满足克隆数据库的配置或资源要求。
++
+image:vcf_ora_vvol_snapctr_clone_05.png["显示SnapCenter配置的屏幕截图。"]
+
+. 选择恢复范围。 `Until Cancel` 将克隆恢复到备份集中最后一个可用日志文件。
++
+image:vcf_ora_vvol_snapctr_clone_06.png["显示SnapCenter配置的屏幕截图。"]
+
+. 查看摘要并启动克隆作业。
++
+image:vcf_ora_vvol_snapctr_clone_08.png["显示SnapCenter配置的屏幕截图。"]
+
+. 通过监控克隆作业的执行情况 `Monitor` 选项卡。
++
+image:vcf_ora_vvol_snapctr_clone_09.png["显示SnapCenter配置的屏幕截图。"]
+
+. 克隆的数据库会立即注册到SnapCenter中。
++
+image:vcf_ora_vvol_snapctr_clone_10.png["显示SnapCenter配置的屏幕截图。"]
+
+. 在DB VM ora_02中、验证克隆的数据库并查询测试表。
++
+....
+[oracle@ora_02 ~]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Thu Jul 18 12:06:48 2024
+Version 19.18.0.0.0
+
+Copyright (c) 1982, 2022, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.18.0.0.0
+
+SQL> select name, open_mode, log_mode from v$database;
+
+NAME      OPEN_MODE            LOG_MODE
+--------- -------------------- ------------
+NTAP1CLN  READ WRITE           ARCHIVELOG
+
+SQL> select instance_name, host_name from v$instance;
+
+INSTANCE_NAME
+----------------
+HOST_NAME
+----------------------------------------------------------------
+NTAP1CLN
+ora_02
+
+
+SQL> show pdbs
+
+    CON_ID CON_NAME                       OPEN MODE  RESTRICTED
+---------- ------------------------------ ---------- ----------
+         2 PDB$SEED                       READ ONLY  NO
+         3 NTAP1_PDB1                     READ WRITE NO
+         4 NTAP1_PDB2                     READ WRITE NO
+         5 NTAP1_PDB3                     READ WRITE NO
+SQL> alter session set container=ntap1_pdb1
+  2  ;
+
+Session altered.
+
+SQL> select * from test;
+
+        ID
+----------
+DT
+---------------------------------------------------------------------------
+EVENT
+--------------------------------------------------------------------------------
+         1
+18-JUL-24 11.15.03.000000 AM
+test oracle backup/restore/clone on VMware Cloud Foundation vVols
+
+
+SQL>
+
+....
+
+
+至此、我们完成了在VCF中对Oracle数据库进行SnapCenter备份、还原和克隆的演示。
+
+====
+
+
+== 从何处查找追加信息
+
+要了解有关本文档中所述信息的更多信息，请查看以下文档和 / 或网站：
+
+* VMware Cloud Foundation
++
+link:https://www.vmware.com/products/cloud-infrastructure/vmware-cloud-foundation["https://www.vmware.com/products/cloud-infrastructure/vmware-cloud-foundation"^]
+
+* NetApp企业数据库解决方案
++
+link:https://docs.netapp.com/us-en/netapp-solutions/databases/index.html["https://docs.netapp.com/us-en/netapp-solutions/databases/index.html"^]
+
+* SnapCenter 软件 6.0
++
+link:https://docs.netapp.com/us-en/snapcenter/concept/concept_snapcenter_overview.html["https://docs.netapp.com/us-en/snapcenter/concept/concept_snapcenter_overview.html"^]
+
+
