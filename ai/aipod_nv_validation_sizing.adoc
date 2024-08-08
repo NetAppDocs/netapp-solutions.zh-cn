@@ -22,20 +22,46 @@ summary: 采用NVIDIA DGX系统的NetApp AIPod—解决方案验证和大小指�
 
 此解决方案中的存储配置已通过使用开源工具FIO的一系列综合工作负载进行验证。这些测试包括用于模拟由执行深度学习培训作业的DGX系统生成的存储工作负载的读写I/O模式。存储配置已通过一个双插槽CPU服务器集群进行验证、该集群可同时运行FIO工作负载、以模拟一个DGX系统集群。每个客户端都配置了与前文所述相同的网络配置、并添加了以下详细信息。
 
-此验证使用了以下挂载选项-
-•VERS=4.1. #启用pNFS以并行访问多个存储节点
-•proto = RDMA #将传输协议设置为RDMA、而不是默认TCP
-•端口=20049 #为RDMA NFS服务指定正确的端口
-•max_connect = 16 #启用NFS会话中继以聚合存储端口带宽
-•write=eager #可提高缓冲写入的写入性能
-•rsize=262144、wsize=262144 #将I/O传输大小设置为256k
+此验证使用了以下挂载选项：
 
-此外、还为客户端配置了NFS max_sSession_狭 缝值1024。在使用基于RDMA的NFS对解决方案进行测试时、存储网络端口配置了主动/被动绑定。在这项验证中使用了以下绑定参数-
-•mode=active-backup #将绑定设置为主动/被动模式
-主卷=<interface name> #所有客户端的主接口都分布在交换机之间
-•MII-monitor-interval=100 #指定100毫秒的监控间隔
-•故障转移-mac-policy=active #指定活动链路的MAC地址是绑定的MAC。要通过绑定接口正确运行RDMA、必须执行此操作。
+[cols="30%, 70%"]
+|===
 
+
+| VERS=4.1 | 启用pNFS以并行访问多个存储节点 
+
+
+| proto = RDMA | 将传输协议设置为RDMA、而不是默认TCP 
+
+
+| 端口=20049 | 为RDMA NFS服务指定正确的端口 
+
+
+| max_connect = 16 | 启用NFS会话中继以聚合存储端口带宽 
+
+
+| write=eager | 提高缓冲写入的写入性能 
+
+
+| rsize=262144 ， wsize=262144 | 将I/O传输大小设置为256k 
+|===
+此外、还为客户端配置了NFS max_sSession_狭 缝值1024。在使用基于RDMA的NFS对解决方案进行测试时、存储网络端口配置了主动/被动绑定。此验证使用了以下绑定参数：
+
+[cols="30%, 70%"]
+|===
+
+
+| Mode=active-backup | 将绑定设置为主动/被动模式 
+
+
+| Primary =<interface name> | 所有客户端的主接口均分布在交换机之间 
+
+
+| mII-monitor-interval=100 | 指定监控间隔为100毫秒 
+
+
+| fail-over-mac-policy=active | 指定活动链路的MAC地址为绑定的MAC。要通过绑定接口正确运行RDMA、必须执行此操作。 
+|===
 存储系统按照所述进行配置、配置有两个A900 HA对(4个控制器)、其中两个NS224磁盘架、每个HA对连接有24个1.9 TB NVMe磁盘驱动器。如架构部分所述、所有控制器的存储容量均使用FlexGroup卷进行合并、所有客户端的数据分布在集群中的所有控制器上。
 
 
@@ -44,4 +70,6 @@ summary: 采用NVIDIA DGX系统的NetApp AIPod—解决方案验证和大小指�
 
 NetApp已成功完成DGX BasePOD认证、经测试的两个A900 HA对可轻松支持由八个DGX H100系统组成的集群。对于存储性能要求较高的大型部署、可以在一个集群中向NetApp ONTAP集群添加更多AFF系统、最多可添加12个HA对(24个节点)。使用本解决方案中所述的FlexGroup技术、一个24节点集群可以在一个命名空间中提供超过40 PB的吞吐量和高达300 Gbps的吞吐量。其他NetApp存储系统(例如AFF A400、A250和C800)以更低的成本为小型部署提供了更低的性能和/或更高的容量选项。由于ONTAP 9支持混合模式集群、因此客户可以先减少初始占用空间、然后随着容量和性能要求的增长向集群添加更多或更大的存储系统。下表显示了每个AFF型号所支持的A100和H100 GPU数量的粗略估计。
 
-_aipod_nv NetApp存储系统规模估算指南_ image：：aipod_sessing_new.png[]
+_ NetApp存储系统规模估算指南_
+
+image::aipod_nv_sizing_new.png[aipod NV规模估算新增功能]
