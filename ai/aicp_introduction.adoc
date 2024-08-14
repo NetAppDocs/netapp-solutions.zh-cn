@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: ai/aicp_introduction.html 
-keywords: tr-4798, tr4798, 4798, NetApp AI, Machine, Deep learning, introduction 
+keywords: tr-4798, tr4798, 4798, MLOps, Trident, ONTAP, containers, AI, Kubernetes, Kubeflow, Jupyter, Airflow, MLflow, JupyterHub 
 summary: 本解决方案旨在演示可整合到MLOps工作流中的多种不同开源工具和框架。这些不同的工具和框架可以结合使用、也可以单独使用、具体取决于要求和用例。 
 ---
 = NetApp的开源MLOps
@@ -13,18 +13,33 @@ summary: 本解决方案旨在演示可整合到MLOps工作流中的多种不同
 :imagesdir: ./../media/
 
 
-NetApp 公司 Mike Oglesby
-NetApp公司的Mohan Acharya先生
+Mike Oglesby、NetApp Sufian Ahmad、NetApp Rick Huang、NetApp Mohan Acharya、NetApp
 
 [role="lead"]
-各行各业各种规模的企业和组织都在转向人工智能（ AI ），机器学习（ ML ）和深度学习（ DL ），以解决实际问题，提供创新产品和服务，并在竞争日益激烈的市场中占据优势。随着企业越来越多地使用 AI ， ML 和 DL ，他们面临着许多挑战，包括工作负载可扩展性和数据可用性。本解决方案演示了如何通过将NetApp数据管理功能与常用开源工具和框架结合使用来应对这些挑战。
+各行各业、各种规模的公司和组织都在转向人工智能(AI)来解决实际问题、提供创新产品和服务、并在竞争日益激烈的市场中占据优势。许多企业纷纷转向开源MLOps工具、以跟上行业创新的快速步伐。这些开源工具可提供高级功能和尖端功能、但通常不考虑数据可用性和数据安全性。遗憾的是、这意味着技能娴熟的数据科学家不得不花费大量时间等待数据访问或等待完成与数据相关的基本操作。通过将常用开源MLOps工具与NetApp的智能数据基础架构相结合、企业可以加快数据管道的速度、进而加快AI计划的速度。他们可以从数据中释放价值、同时确保数据始终受到保护和安全。该解决方案演示了NetApp数据管理功能与多种常用开源工具和框架的配对、以应对这些挑战。
 
-本解决方案旨在演示可整合到MLOps工作流中的多种不同开源工具和框架。这些不同的工具和框架可以结合使用、也可以单独使用、具体取决于要求和用例。
+以下列表重点介绍了此解决方案支持的一些关键功能：
 
-此解决方案涵盖以下工具/框架：
-
-* link:https://airflow.apache.org["Apache 气流"]
-* link:https://www.kubeflow.org["Kubeflow"]
+* 用户可以快速配置新的高容量数据卷和开发工作空间、这些数据卷和工作空间由高性能横向扩展NetApp存储提供支持。
+* 用户可以近乎瞬时地克隆高容量数据卷和开发工作空间、以便进行实验或快速迭代。
+* 用户可以近乎瞬时地为高容量数据卷和开发工作空间保存快照、以便进行备份和/或可追溯性/基线化。
 
 
 image::aicp_image1.png[aicp image1]
+
+典型的MLOps工作流包含开发工作空间、通常采用以下形式： link:https://jupyter.org["Jupyter笔记本电脑"^]；实验跟踪；自动化训练管道；数据管道；以及推入/部署。本解决方案重点介绍了几种不同的工具和框架、这些工具和框架可独立使用、也可结合使用来处理工作流的不同方面。此外、我们还演示了NetApp数据管理功能与其中每种工具的配对情况。该解决方案旨在提供一些组件、组织可以利用这些组件构建针对其使用情形和要求的自定义MLOps工作流。
+
+此解决方案涵盖以下工具/框架：
+
+* link:https://airflow.apache.org["Apache 气流"^]
+* link:https://jupyter.org/hub["JupyterHub"^]
+* link:https://www.kubeflow.org["Kubeflow"^]
+* link:https://www.mlflow.org["MLflow"^]
+
+
+以下列表介绍了单独或结合使用这些工具的常见部署模式。
+
+* 同时部署JupyterHub、MLflow和Apache Airflow—适用于的JupyterHub、用于 link:https://jupyter.org["Jupyter笔记本电脑"^]实验跟踪的MLflow以及用于自动化训练和数据管道的Apache Airflow。
+* 同时部署Kubeflow和Apache Airflow—适用于的Kubeflow link:https://jupyter.org["Jupyter笔记本电脑"^]、实验跟踪、自动化训练管道和推导；以及适用于数据管道的Apache Airflow。
+* 将Kubeflow部署为一体化MLOps平台解决方案、用于 link:https://jupyter.org["Jupyter笔记本电脑"^]、实验跟踪、自动化训练和数据管道以及推入。
+

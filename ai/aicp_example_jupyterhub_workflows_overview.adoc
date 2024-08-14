@@ -1,0 +1,83 @@
+---
+sidebar: sidebar 
+permalink: ai/aicp_example_jupyterhub_workflows_overview.html 
+keywords: AI, control plane, MLOps, JupyterHub 
+summary: NetApp中的开源MLOps—将NetApp DataOps工具包与JupyterHub结合使用 
+---
+= 将NetApp数据操作工具包与JupyterHub结合使用
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+ https://github.com/NetApp/netapp-dataops-toolkit/tree/main/netapp_dataops_k8s["适用于Kubernetes的NetApp DataOps工具包"^]可以与JupyterHub结合使用。通过将NetApp数据操作工具包与JupyterHub结合使用、最终用户可以直接从Jupyter笔记本电脑中创建卷快照、以实现工作空间备份和/或数据集到模型的可追溯性。
+
+
+
+== 初始设置
+
+在将DataOps工具包与JupyterHub结合使用之前、您必须为JupyterHub分配给单个用户Jupyter笔记本服务器Pod的Kubernetes服务帐户授予适当的权限。JupyterHub将使用JupyterHub Helm图表配置文件中的变量指定的服务帐户 `singleuser.serviceAccountName` 。
+
+
+
+=== 为DataOps工具包创建集群角色
+
+首先、创建一个名为"netap-dataops"的集群角色、该角色具有创建卷快照所需的Kubarnetes API权限。
+
+[source]
+----
+$ vi clusterrole-netapp-dataops-snapshots.yaml
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: netapp-dataops-snapshots
+rules:
+- apiGroups: [""]
+  resources: ["persistentvolumeclaims", "persistentvolumeclaims/status", "services"]
+  verbs: ["get", "list"]
+- apiGroups: ["snapshot.storage.k8s.io"]
+  resources: ["volumesnapshots", "volumesnapshots/status", "volumesnapshotcontents", "volumesnapshotcontents/status"]
+  verbs: ["get", "list", "create"]
+
+$ kubectl create -f clusterrole-netapp-dataops-snapshots.yaml
+clusterrole.rbac.authorization.k8s.io/netapp-dataops-snapshots created
+----
+
+
+=== 将集群角色分配给笔记本服务器服务帐户
+
+创建一个角色绑定、将"NetApp-dataops-Snaps"集群角色分配给相应命名空间中的相应服务帐户。例如、如果您将JupyterHub安装在"jupyterhub"命名空间中、并通过变量指定了"default"服务帐户 `singleuser.serviceAccountName` 、则应将"NetApp-dataops-Snapshows"集群角色分配给"jupyterhub"命名空间中的"default"服务帐户、如以下示例所示。
+
+[source]
+----
+$ vi rolebinding-jupyterhub-netapp-dataops-snapshots.yaml
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: jupyterhub-netapp-dataops-snapshots
+  namespace: jupyterhub # Replace with you JupyterHub namespace
+subjects:
+- kind: ServiceAccount
+  name: default # Replace with your JupyterHub singleuser.serviceAccountName
+  namespace: jupyterhub # Replace with you JupyterHub namespace
+roleRef:
+  kind: ClusterRole
+  name: netapp-dataops-snapshots
+  apiGroup: rbac.authorization.k8s.io
+
+$ kubectl create -f ./rolebinding-jupyterhub-netapp-dataops-snapshots.yaml
+rolebinding.rbac.authorization.k8s.io/jupyterhub-netapp-dataops-snapshots created
+----
+
+
+== 在Jupyter笔记本中创建卷快照
+
+现在、JupyterHub用户可以使用NetApp数据操作工具包直接从Jupyter笔记本中创建卷快照、如以下示例所示。
+
+image::aicp_jhub_dotk_nb.png[aicp jhub网络注]

@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: ai/aicp_concepts_and_components.html 
-keywords: Trident, DeepOps, ONTAP, FlexClone, containers, AI, Kubernetes, Kubeflow, Jupyter, Airflow 
+keywords: MLOps, Trident, ONTAP, containers, AI, Kubernetes, Kubeflow, Jupyter, Airflow, MLflow, JupyterHub 
 summary: 采用NetApp的开源MLOps—技术概述 
 ---
 = 技术概述
@@ -49,19 +49,55 @@ Kubernetes 是一款开源分布式容器编排平台，最初由 Google 设计�
 
 == NetApp Astra Trident
 
-Asta Trident支持在公有云或内部环境中的所有常见NetApp存储平台上使用和管理存储资源、包括ONTAP (AFF、FAS、Select、云、 Amazon FSx for NetApp ONTAP)、Element软件(NetApp HCI、SolidFire)、Azure NetApp Files服务以及Google Cloud上的Cloud Volumes Service。Asta Trident是一款符合容器存储接口(CSI)的动态存储编排程序、可与Kubbernetes本机集成。
+link:https://docs.netapp.com/us-en/trident/index.html["Astra Trident"^] 支持在所有常见的NetApp存储平台上使用和管理存储资源、无论是公有云还是内部环境、包括ONTAP (AFF、FAS、Select、Cloud、 Amazon FSx for NetApp ONTAP)、Azure NetApp Files服务和Google Cloud NetApp卷。Asta Trident是一款符合容器存储接口(CSI)的动态存储编排程序、可与Kubbernetes本机集成。
 
 
 
 == NetApp DataOps 工具包
 
-。 link:https://github.com/NetApp/netapp-dataops-toolkit["NetApp DataOps 工具包"] 是一款基于Python的工具、可简化由高性能横向扩展NetApp存储提供支持的开发/培训工作空间和参考服务器的管理。主要功能包括：
+link:https://github.com/NetApp/netapp-dataops-toolkit["NetApp DataOps 工具包"^]是一款基于Python的工具、可简化由高性能横向扩展NetApp存储提供支持的开发/培训工作空间和参考服务器的管理。主要功能包括：
 
 * 快速配置以高性能横向扩展NetApp存储为后盾的新的高容量工作空间。
 * 近乎即时地克隆高容量工作空间、以便进行实验或快速迭代。
 * 近乎即时地保存高容量工作空间的快照、以便进行备份和/或可追溯性/基线化。
 * 近乎即时地配置、克隆和快照高容量、高性能数据卷。
 
+
+
+
+== Apache 气流
+
+Apache Airflow 是一个开源工作流管理平台，支持对复杂的企业工作流进行编程创作，计划和监控。它通常用于自动执行 ETL 和数据管道工作流，但不限于这些类型的工作流。气流项目由 Airbnb 发起，但此后在业内备受欢迎，现在由 Apache 软件基金会赞助。气流采用 Python 编写，气流工作流通过 Python 脚本创建，气流是按照 " 配置即代码 " 原则设计的。 现在，许多企业级气流用户都在 Kubernetes 上运行 Airflow 。
+
+
+
+=== 定向循环图（ DAG ）
+
+在气流模式下，工作流称为定向环比图（ DAG ）。DAG 由按顺序，并行或两者的组合执行的任务组成，具体取决于 DAG 定义。气流计划程序会根据 DAG 定义中指定的任务级别依赖关系对一组工作负载执行各个任务。DAG 是通过 Python 脚本定义和创建的。
+
+
+
+== Jupyter 笔记本电脑
+
+Jupyter笔记本是类似维基的文档、包含实时代码以及描述性文本。Jupyter 笔记本电脑在 AI 和 ML 社区中广泛使用，可用于记录，存储和共享 AI 和 ML 项目。有关Jupyter笔记本电脑的详细信息，请访问 http://www.jupyter.org/["Jupyter 网站"^]。
+
+
+
+=== Jupyter 笔记本电脑服务器
+
+Jupyter笔记本服务器是一个开放源代码Web应用程序、允许用户创建Jupyter笔记本。
+
+
+
+== JupyterHub
+
+JupyterHub是一个多用户应用程序、支持单个用户配置和访问自己的Jupyter笔记本服务器。有关JupyterHub的详细信息，请访问 https://jupyter.org/hub["JupyterHub网站"^]。
+
+
+
+== MLflow
+
+MLflow是一款广受欢迎的开源AI生命周期管理平台。MLflow的主要功能包括AI/ML实验跟踪和AI/ML模型存储库。有关MLflow的详细信息，请访问 https://www.mlflow.org/["MLflow网站"^]。
 
 
 
@@ -77,27 +113,15 @@ Kubeflow 管道是 Kubeflow 的一个关键组件。Kubeflow 管道是一个平�
 
 
 
-=== Jupyter 笔记本电脑服务器
+=== Kubeflow笔记本电脑
 
-Jupyter 笔记本电脑服务器是一款开源 Web 应用程序，数据科学家可以利用它创建类似于维基的文档，这些文档称为 Jupyter 笔记本电脑，其中包含实时代码以及描述性测试。Jupyter 笔记本电脑在 AI 和 ML 社区中广泛使用，可用于记录，存储和共享 AI 和 ML 项目。Kubeflow 可简化 Kubernetes 上 Jupyter 笔记本电脑服务器的配置和部署。有关 Jupyter 笔记本电脑的详细信息，请访问 http://www.jupyter.org/["Jupyter 网站"^]。有关 Kubeflow 环境中 Jupyter 笔记本电脑的详细信息，请参见 https://www.kubeflow.org/docs/components/notebooks/overview/["Kubeflow 官方文档"^]。
+Kubeflow 可简化 Kubernetes 上 Jupyter 笔记本电脑服务器的配置和部署。有关Kubeflow上下文中Jupyter笔记本的详细信息，请参见 https://www.kubeflow.org/docs/components/notebooks/overview/["Kubeflow 官方文档"^]。
 
 
 
 === Katb.
 
 Katis是一个用于自动化机器学习(AutoML)的Kubornetes原生项目。Katb支持超参数调整、早期停止和神经架构搜索(NAS)。Katis是一个与机器学习(ML)框架无关的项目。它可以调整以用户选择的任何语言编写的应用程序的超参数、并本机支持许多ML框架、例如TensorFlow、MXNet、PyTorch、XGBoost、 等。Katib"支持许多各种AutoML算法、例如贝叶斯优化、帕森树估算器、随机搜索、协方差矩阵自适应进化策略、超频带、高效神经架构搜索、可区分架构搜索等。有关 Kubeflow 环境中 Jupyter 笔记本电脑的详细信息，请参见 https://www.kubeflow.org/docs/components/katib/overview/["Kubeflow 官方文档"^]。
-
-
-
-== Apache 气流
-
-Apache Airflow 是一个开源工作流管理平台，支持对复杂的企业工作流进行编程创作，计划和监控。它通常用于自动执行 ETL 和数据管道工作流，但不限于这些类型的工作流。气流项目由 Airbnb 发起，但此后在业内备受欢迎，现在由 Apache 软件基金会赞助。气流采用 Python 编写，气流工作流通过 Python 脚本创建，气流是按照 " 配置即代码 " 原则设计的。 现在，许多企业级气流用户都在 Kubernetes 上运行 Airflow 。
-
-
-
-=== 定向循环图（ DAG ）
-
-在气流模式下，工作流称为定向环比图（ DAG ）。DAG 由按顺序，并行或两者的组合执行的任务组成，具体取决于 DAG 定义。气流计划程序会根据 DAG 定义中指定的任务级别依赖关系对一组工作负载执行各个任务。DAG 是通过 Python 脚本定义和创建的。
 
 
 
@@ -136,7 +160,7 @@ ONTAP 可提供卓越的性能和数据保护、并通过以下方式扩展这�
 
 ONTAP 可通过以下功能满足不断变化的苛刻业务需求：
 
-* 无缝扩展和无中断运行。ONTAP 支持无中断地向现有控制器和横向扩展集群添加容量。客户可以升级到 NVMe 和 32 Gb FC 等最新技术，而无需进行成本高昂的数据迁移或中断。
+* 无缝扩展和无中断运行。ONTAP 支持无中断地向现有控制器和横向扩展集群添加容量。客户可以升级到最新技术、而无需进行成本高昂的数据迁移或中断。
 * 云连接。ONTAP是云互联程度最高的存储管理软件、可在所有公有云中选择软件定义的存储和云原生实例。
 * 与新兴应用程序集成。ONTAP 通过使用支持现有企业应用程序的相同基础架构、为下一代平台和应用程序(例如自动驾驶汽车、智能城市和行业4.0)提供企业级数据服务。
 
@@ -173,7 +197,7 @@ SnapMirror 软件通过仅通过网络发送更改的块来利用 NetApp ONTAP �
 
 == NetApp BlueXP复制和同步
 
-BlueXP复制和同步是一项NetApp服务、用于快速安全地同步数据。无论您是需要在内部NFS还是SMB文件共享、NetApp StorageGRID、NetApp ONTAP S3、NetApp Cloud Volumes Service、Azure NetApp Files、AWS S3、AWS EFS、Azure Blb、 Google Cloud Storage或IBM Cloud Object Storage、BlueXP Copy and Sync可将文件快速安全地移动到您需要的位置。
+link:https://bluexp.netapp.com/cloud-sync-service["BlueXP复制和同步"^] 是一项NetApp服务、用于快速安全地同步数据。无论您是需要在内部NFS还是SMB文件共享、NetApp StorageGRID、NetApp ONTAP S3、NetApp Cloud Volumes Service、Azure NetApp Files、AWS S3、AWS EFS、Azure Blb、 Google Cloud Storage或IBM Cloud Object Storage、BlueXP Copy and Sync可将文件快速安全地移动到您需要的位置。
 
 数据传输完成后，即可在源和目标上完全使用。BlueXP复制和同步功能可以在触发更新时按需同步数据、也可以根据预定义的计划持续同步数据。不管怎样、BlueXP复制和同步功能只会移动增量、因此可以最大限度地减少数据复制所需的时间和资金。
 
@@ -183,11 +207,7 @@ BlueXP Copy and Sync是一款软件即服务(SaaS)工具、设置和使用极其
 
 == NetApp XCP
 
-NetApp XCP 是一款基于客户端的软件，可用于任意到 NetApp 以及 NetApp 到 NetApp 的数据迁移和文件系统洞察。XCP 旨在通过利用所有可用系统资源来处理大容量数据集和高性能迁移来实现扩展和最大性能。XCP 可通过生成报告的选项帮助您全面了解文件系统。
-
-NetApp XCP 可通过一个软件包提供，该软件包支持 NFS 和 SMB 协议。XCP 包括一个适用于 NFS 数据集的 Linux 二进制文件和一个适用于 SMB 数据集的 Windows 可执行文件。
-
-NetApp XCP 文件分析是一款基于主机的软件，可检测文件共享，对文件系统运行扫描并提供用于文件分析的信息板。XCP 文件分析与 NetApp 和非 NetApp 系统兼容，并可在 Linux 或 Windows 主机上运行，以便为 NFS 和 SMB 导出的文件系统提供分析。
+link:https://xcp.netapp.com/["NetApp XCP"^] 是一款基于客户端的软件、可用于任何到NetApp以及从NetApp到NetApp的数据迁移和文件系统洞察。XCP 旨在通过利用所有可用系统资源来处理大容量数据集和高性能迁移来实现扩展和最大性能。XCP 可通过生成报告的选项帮助您全面了解文件系统。
 
 
 

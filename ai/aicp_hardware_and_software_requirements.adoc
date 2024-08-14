@@ -14,19 +14,65 @@ summary: 采用NetApp的开源MLOps—架构
 
 
 [role="lead"]
-此解决方案不依赖于特定硬件。解决方案与 Trident 支持的任何 NetApp 物理存储设备，软件定义的实例或云服务兼容。例如、NetApp AFF存储系统、Amazon FSx for NetApp ONTAP、Azure NetApp Files或NetApp Cloud Volumes ONTAP实例。此外、只要Kubeflow和NetApp Asta三端技术支持所使用的Kubenetes版本、解决方案就可以在任何Kubenetes集群上实施。有关 Kubeflow 支持的 Kubernetes 版本列表，请参见 https://www.kubeflow.org/docs/started/getting-started/["Kubeflow 官方文档"^]。有关 Trident 支持的 Kubernetes 版本列表，请参见 https://docs.netapp.com/us-en/trident/index.html["Trident 文档"^]。有关用于验证解决方案的环境的详细信息，请参见下表。
+此解决方案不依赖于特定硬件。该解决方案与NetApp Astra Trident支持的任何NetApp物理存储设备、软件定义的实例或云服务兼容。例如、NetApp AFF存储系统、Amazon FSx for NetApp ONTAP、Azure NetApp Files、Google Cloud NetApp卷或NetApp Cloud Volumes ONTAP实例。此外、只要NetApp Asta Trident和正在实施的其他解决方案组件支持所使用的Kubbernetes版本、该解决方案就可以在任何Kubbernetes集群上实施。有关Trident支持的Kubernetes版本列表，请参见 https://docs.netapp.com/us-en/trident/index.html["Trident 文档"^]。有关用于验证此解决方案各个组件的环境的详细信息、请参见下表。
+
+
+
+== Apache Airflow验证环境
 
 |===
 | 软件组件 | version 
 
 
-| Apache 气流 | 2.0.1 
+| Apache 气流 | 2.0.1、通过8.0.8部署 link:https://artifacthub.io/packages/helm/airflow-helm/airflow["Apache Airflow Helm图表"^] 
 
 
-| Apache 气流 Helm 图表 | 8.0.8 
+| Kubernetes | 1.18 
 
 
-| Kubeflow | 1.7、通过部署 link:https://www.deploykf.org["部署KF"] 0.1.1. 
+| NetApp Astra Trident | 21.01 
+|===
+
+
+== JupyterHub验证环境
+
+|===
+| 软件组件 | version 
+
+
+| JupyterHub | 4.1.5、通过3.3.7部署 link:https://hub.jupyter.org/helm-chart/["JupyterHub Helm图表"^] 
+
+
+| Kubernetes | 1.29 
+
+
+| NetApp Astra Trident | 24.02. 
+|===
+
+
+== MLflow验证环境
+
+|===
+| 软件组件 | version 
+
+
+| MLflow | 2.14.1、通过 link:https://artifacthub.io/packages/helm/bitnami/mlflow["MLflow Helm图表"^] 1.4.12 
+
+
+| Kubernetes | 1.29 
+
+
+| NetApp Astra Trident | 24.02. 
+|===
+
+
+== Kubeflow验证环境
+
+|===
+| 软件组件 | version 
+
+
+| Kubeflow | 1.7、通过0.1.1部署 link:https://www.deploykf.org["部署KF"^] 
 
 
 | Kubernetes | 1.26. 
@@ -38,4 +84,4 @@ summary: 采用NetApp的开源MLOps—架构
 
 == 支持
 
-NetApp不为Apache Airflow、Kubeflow或Kubenetes提供企业级支持。如果您对完全受支持的MLOps平台感兴趣、 link:https://www.netapp.com/us/contact-us/index.aspx?for_cr=us["请联系 NetApp"] 关于NetApp与合作伙伴联合提供的完全受支持的MLOps解决方案。
+NetApp不为Apache Airflow、JupyterHub、MLflow、Kubeflow或Kubernetes提供企业级支持。如果您对完全受支持的MLOps平台感兴趣、 link:https://www.netapp.com/us/contact-us/index.aspx?for_cr=us["请联系 NetApp"^] 请了解NetApp与合作伙伴联合提供的完全受支持的MLOps解决方案。

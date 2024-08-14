@@ -1,0 +1,102 @@
+---
+sidebar: sidebar 
+permalink: ai/aicp_mlflow_deployment.html 
+keywords: AI, control plane, MLOps, MLflow 
+summary: 使用NetApp的开源MLOps—MLflow部署 
+---
+= MLflow部署
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+本节介绍在Kubbernetes集群中部署MLflow所需完成的任务。
+
+
+NOTE: 可以在Kubnetes以外的平台上部署MLflow。在Kubbernetes以外的平台上部署MLflow不在此解决方案讨论范围之内。
+
+
+
+== 前提条件
+
+在执行本节所述的部署练习之前，我们假定您已执行以下任务：
+
+. 您已有一个工作正常的 Kubernetes 集群。
+. 您已在Kubbernetes集群中安装并配置NetApp Asta三端存储。有关Astra Trident的详细信息，请参阅 link:https://docs.netapp.com/us-en/trident/index.html["Astra Trident 文档"^]。
+
+
+
+
+== 安装 Helm
+
+MLflow使用Helm进行部署、Helm是Kubernetes常用的软件包管理器。在部署MLflow之前、您必须在Kubelnetes控制节点上安装Helm。要安装Helm、请按照官方Helm文档中的进行操作 https://helm.sh/docs/intro/install/["安装说明"^] 。
+
+
+
+== 设置默认 Kubernetes StorageClass
+
+在部署MLflow之前、您必须在Kubbernetes集群中指定一个默认StorageClass。要在集群中指定默认StorageClass、请按照一节中所述的说明进行操作 link:aicp_kubeflow_deployment_overview.html["Kubeflow 部署"] 。如果已在集群中指定默认 StorageClass ，则可以跳过此步骤。
+
+
+
+== 部署MLflow
+
+满足前提条件后、您可以使用Helm图表开始MLflow部署。
+
+
+
+=== 配置MLflow Helm Chart部署。
+
+在使用Helm图表部署MLflow之前，我们可以使用*config.yaml*文件将部署配置为使用NetApp Trident存储类并根据需要更改其他参数。有关*config.yaml文件的示例，请访问： https://github.com/bitnami/charts/blob/main/bitnami/mlflow/values.yaml[]
+
+
+NOTE: 您可以在config.yaml文件中的*。global.defaultStorageClass*参数下设置Trident存储类(例如、存储类："ONTAP FlexVol ")。
+
+
+
+=== 安装Helm图表
+
+使用以下命令，可以将Helm图表与MLflow的自定义*config.yaml*文件一起安装：
+
+[source, shell]
+----
+helm install oci://registry-1.docker.io/bitnamicharts/mlflow -f config.yaml --generate-name --namespace jupyterhub
+----
+
+NOTE: 命令通过提供的*config.yaml*文件在自定义配置中的Kubernetes集群上部署MLflow。MLflow部署在给定命名空间中、并通过Kubnetes为此版本随机指定版本名称。
+
+
+
+=== 检查部署
+
+完成Helm图表部署后、您可以使用以下命令检查此服务是否可访问：
+
+[source, shell]
+----
+kubectl get service -n jupyterhub
+----
+
+NOTE: 将*jupyterhub*替换为部署期间使用的命名空间。
+
+您应看到以下服务：
+
+[source, shell]
+----
+NAME                              TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)           AGE
+mlflow-1719843029-minio           ClusterIP   10.233.22.4     <none>        80/TCP,9001/TCP   25d
+mlflow-1719843029-postgresql      ClusterIP   10.233.5.141    <none>        5432/TCP          25d
+mlflow-1719843029-postgresql-hl   ClusterIP   None            <none>        5432/TCP          25d
+mlflow-1719843029-tracking        NodePort    10.233.2.158    <none>        30002:30002/TCP   25d
+----
+
+NOTE: 我们编辑了config.yaml文件以使用NodePort服务访问端口30002上的MLflow。
+
+
+
+=== 访问MLflow
+
+当所有与MLflow相关的服务都启动并运行后，您可以使用给定的nodePort或负载平衡器IP地址(例如)访问它 http://10.61.181.109:30002[]。

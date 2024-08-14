@@ -1,0 +1,154 @@
+---
+sidebar: sidebar 
+permalink: ai/aicp_jupyterhub_deployment.html 
+keywords: AI, control plane, MLOps, JupyterHub 
+summary: NetApp的开源MLOps—JupyterHub部署 
+---
+= JupyterHub部署
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+本节介绍在Kubernetes集群中部署JupyterHub必须完成的任务。
+
+
+NOTE: 可以在Kubernetes以外的平台上部署JupyterHub。在Kubernetes以外的平台上部署JupyterHub不在此解决方案讨论范围之内。
+
+
+
+== 前提条件
+
+在执行本节所述的部署练习之前，我们假定您已执行以下任务：
+
+. 您已有一个工作正常的 Kubernetes 集群。
+. 您已在Kubbernetes集群中安装并配置NetApp Asta三端存储。有关Astra Trident的详细信息，请参阅 link:https://docs.netapp.com/us-en/trident/index.html["Astra Trident 文档"^]。
+
+
+
+
+== 安装 Helm
+
+JupyterHub是使用Helm部署的、Helm是Kubernetes常用的软件包管理器。在部署JupyterHub之前、您必须在Kubernetes控制节点上安装Helm。要安装Helm、请按照官方Helm文档中的进行操作 https://helm.sh/docs/intro/install/["安装说明"^] 。
+
+
+
+== 设置默认 Kubernetes StorageClass
+
+在部署JupyterHub之前、您必须在Kubernetes集群中指定一个默认StorageClass。要在集群中指定默认StorageClass、请按照一节中所述的说明进行操作 link:aicp_kubeflow_deployment_overview.html["Kubeflow 部署"] 。如果已在集群中指定默认 StorageClass ，则可以跳过此步骤。
+
+
+
+== 部署JupyterHub
+
+完成上述步骤后、即可开始部署JupyterHub。JupyterHub部署需要执行以下步骤：
+
+
+
+=== 配置JupyterHub部署
+
+在部署之前、最好针对您的环境优化JupyterHub部署。您可以创建一个*config.yaml文件，并在部署期间使用Helm图表来使用它。
+
+可以在中找到*config.yaml文件的示例  https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/HEAD/jupyterhub/values.yaml[]
+
+
+NOTE: 在此config.yaml文件中，您可以为NetApp Trident存储类设置*(singleuser.storage.dynamic．storageClass)*参数。此存储类将用于为各个用户工作空间配置卷。
+
+
+
+=== 正在添加共享卷
+
+如果要对所有JupyterHub用户使用共享卷，可以相应地调整*config.yaml。例如、如果您有一个名为jupyterhub-shared-volume的共享持久卷、则可以在所有用户Pod中将其挂载为/home / shared、如下所示：
+
+[source, shell]
+----
+singleuser:
+  storage:
+    extraVolumes:
+      - name: jupyterhub-shared
+        persistentVolumeClaim:
+          claimName: jupyterhub-shared-volume
+    extraVolumeMounts:
+      - name: jupyterhub-shared
+        mountPath: /home/shared
+----
+
+NOTE: 这是一个可选步骤、您可以根据需要调整这些参数。
+
+
+
+=== 使用Helm Chart部署JupyterHub
+
+使Helm了解JupyterHub Helm图表存储库。
+
+[source, shell]
+----
+helm repo add jupyterhub https://hub.jupyter.org/helm-chart/
+helm repo update
+----
+此命令显示的输出应如下所示：
+
+[source, shell]
+----
+Hang tight while we grab the latest from your chart repositories...
+...Skip local chart repository
+...Successfully got an update from the "stable" chart repository
+...Successfully got an update from the "jupyterhub" chart repository
+Update Complete. ⎈ Happy Helming!⎈
+----
+现在、通过从包含config.yaml的目录运行以下命令来安装由config.yaml配置的图表：
+
+[source, shell]
+----
+helm upgrade --cleanup-on-fail \
+  --install my-jupyterhub jupyterhub/jupyterhub \
+  --namespace my-namespace \
+  --create-namespace \
+  --values config.yaml
+----
+
+NOTE: 在此示例中：
+
+<helm-release-name>已设置为my-jupyterhub、此名称将是JupyterHub版本的名称。<k8s-namespace>设置为my-命名 空间、即要安装JupyterHub的命名空间。如果命名空间尚不存在、则使用--cree-命名 空间标志创建命名空间。--values"标志指定包含所需配置选项的config.yaml文件。
+
+
+
+=== 检查部署
+
+在运行第2步时、您可以使用以下命令查看正在创建的Pod：
+
+[source, shell]
+----
+kubectl get pod --namespace <k8s-namespace>
+----
+等待集线器和代理Pod进入运行状态。
+
+[source, shell]
+----
+NAME                    READY     STATUS    RESTARTS   AGE
+hub-5d4ffd57cf-k68z8    1/1       Running   0          37s
+proxy-7cb9bc4cc-9bdlp   1/1       Running   0          37s
+----
+
+
+=== 访问JupyterHub
+
+查找可用于访问JupyterHub的IP。运行以下命令、直到proxy-public服务的外部IP可用、如示例输出中所示。
+
+
+NOTE: 我们在config.yaml文件中使用了节点端口服务、您可以根据您的设置(例如负载平衡器)调整您的环境。
+
+[source, shell]
+----
+kubectl --namespace <k8s-namespace> get service proxy-public
+----
+[source, shell]
+----
+NAME           TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)        AGE
+proxy-public   NodePort   10.51.248.230   104.196.41.97   80:30000/TCP   1m
+----
+要使用JupyterHub、请在浏览器中输入代理公共服务的外部IP。
