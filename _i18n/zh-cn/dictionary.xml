@@ -22175,4 +22175,113 @@ NVIDIA DGX SuperPOD：NetApp EF600和BeeGFS
   <block id="26d3848da8e43d9e68369a6adb8a24a5" category="paragraph">当所有与MLflow相关的服务都启动并运行后，您可以使用给定的nodePort或负载平衡器IP地址(例如)访问它<block ref="5730155f0021c6fc553086ce017a87bf" category="inline-link-rx"></block>。</block>
   <block id="80bb08fb1b40876176f39de36cb7188e" category="sidebar">采用NVIDIA的NetApp AIPod</block>
   <block id="043774815e3806ded716086e0c8c3d03" category="paragraph">但是、如果您需要更多存储容量或更快的网络速度、则应使用NetApp AFF A220或NetApp AFF A250存储系统。此外， NetApp EF280 系统的最大容量为 1.5 PB ，带宽为 10 Gbps ，也用于此解决方案验证。如果您希望使用更多的存储容量和更高的带宽、<block ref="ab4f2e0c1e56faa457a7a1f93253a647" category="inline-link-rx"></block> 可以使用。</block>
+  <block id="34fd97d0487efaacb8dc98024d287c11" category="doc">具有SnapMirror活动同步的VMware vSphere Metro存储集群</block>
+  <block id="58486898b4fe52f80d7a134d74186a4c" category="inline-link-macro">VMware vSphere 城域存储集群（ VMSC ）</block>
+  <block id="64be9dc3192d85bf262f0fd8c72111ab" category="paragraph"><block ref="e62009d2c2685d27a0ddbcad228400cb" category="inline-link-macro-rx"></block> 是跨不同容错域的延伸型集群解决方案、可在可用性区域或站点之间*移动工作负载。*避免停机*避免灾难*快速恢复</block>
+  <block id="e4477dbdacf897f1fd6ddb6154724776" category="inline-link-macro">SnapMirror活动同步(SM-AS)</block>
+  <block id="d5fd89f78e809a516f541d8d812e7ad3" category="paragraph">本文档提供了有关使用System Manager和ONTAP工具的VMSC实施详细信息 <block ref="b19e84faca3d459410a7dfd95ee53089" category="inline-link-macro-rx"></block> 。此外、它还显示了如何通过复制到第三个站点来保护虚拟机并使用适用于VMware vSphere的SnapCenter插件进行管理。</block>
+  <block id="716b3c806e9b7312a6121d2b1bb825d4" category="image-alt">采用SnapMirror主动同步架构的VMSC</block>
+  <block id="918d32b75f0ab883abba3a8dc0c3ae8d" category="inline-link-macro">互操作性表工具</block>
+  <block id="da160308e3b4b4a80bf1b72b5bdbedb8" category="inline-link-macro">Hardware Universe</block>
+  <block id="515fd2ebe46e8157304f89248b32081d" category="paragraph">SnapMirror主动同步支持ASA、AFF和FAS存储阵列。建议在两个容错域上使用相同类型(性能/容量模型)。目前、仅支持FC和iSCSI等块协议。有关更多支持准则、请参见 <block ref="0a02ba054dd64e9eaa32b9dc7efab2b1" category="inline-link-macro-rx"></block> 和 <block ref="6ec228dfe84ccdb5f038627d2fe43701" category="inline-link-macro-rx"></block></block>
+  <block id="f103bd91cb89830fea75f3163d4e0507" category="paragraph">VMSC支持两种不同的部署模式、分别称为"统一主机访问"和"非统一主机访问"。在统一主机访问配置中、集群上的每个主机都可以访问这两个容错域上的LUN。它通常用于同一数据中心的不同可用性区域。</block>
+  <block id="d7334f3be2455925c79cffbea59bf0c6" category="inline-image-macro">VMSC统一与非统一主机访问模式</block>
+  <block id="ef8027ef36249d7d86517ecee55a9092" category="paragraph"><block ref="ef8027ef36249d7d86517ecee55a9092" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c86c97b6ed8c96d86db43caa5cdd42b0" category="paragraph">在非一致主机访问配置中、主机只能访问本地容错域。它通常用于不同站点、在这些站点中、跨容错域运行多条缆线是一种限制性选项。</block>
+  <block id="b7c2a4e9e77a5067363b655db0166be8" category="admonition">在非一致主机访问模式下、VM将通过vSphere HA在其他容错域中重新启动。应用程序可用性将根据其设计受到影响。只有ONTAP 9.15及更高版本才支持非统一主机访问模式。</block>
+  <block id="a1eb25267046ac19d0ea3b13584e4978" category="inline-link-macro">每个主机部署有双存储网络结构(两个HBA或iSCSI的双VLAN)的VMware vSphere主机</block>
+  <block id="7bfecff5de64fbdced15725730f57bdc" category="list-text"><block ref="273e208fa39dbee98649b0aa84d82835" category="inline-link-macro-rx"></block>(英文)</block>
+  <block id="3b139a51f67a8ee244f1a3df373dd4d1" category="inline-link-macro">存储阵列可为数据端口部署链路聚合(适用于iSCSI)</block>
+  <block id="f9bbff26a0766ed0e97f3a8efc66aec3" category="list-text"><block ref="9af1ad391201480ac4f7b26fe77631be" category="inline-link-macro-rx"></block>(英文)</block>
+  <block id="0d20a986845bf59a4b372d98653bea19" category="inline-link-macro">Storage VM和SVM均可用</block>
+  <block id="1cfa44d933a771af91723c94a75e913c" category="list-text"><block ref="1cfa44d933a771af91723c94a75e913c" category="inline-link-macro-rx"></block></block>
+  <block id="054e2b4fe6cda66efb08e77a403e8429" category="inline-link-macro">集群间延迟往返时间必须小于10毫秒</block>
+  <block id="5c549f3d1b5920eb5699f3fd18f4ff5b" category="list-text"><block ref="dae019c6d50cf2c7aba3ae53719694d2" category="inline-link-macro-rx"></block>(英文)</block>
+  <block id="a2bbe654598934679d75bfe153a6a5d3" category="inline-link-macro">ONTAP调解器VM部署在不同的故障域上</block>
+  <block id="a8de517d5054abc35e72e60b9acdb768" category="list-text"><block ref="a8de517d5054abc35e72e60b9acdb768" category="inline-link-macro-rx"></block></block>
+  <block id="cf2ce31e52aaf9efea83f861f0a81de0" category="inline-link-macro">已建立集群对等关系</block>
+  <block id="5ae138ed3e7910f4a6852440746b09d1" category="list-text"><block ref="5ae138ed3e7910f4a6852440746b09d1" category="inline-link-macro-rx"></block></block>
+  <block id="6e03f188a3f61f126e519dbff57c83bc" category="inline-link-macro">已建立SVM对等关系</block>
+  <block id="e393eaa9840812af50ebef3587ef024c" category="list-text"><block ref="e393eaa9840812af50ebef3587ef024c" category="inline-link-macro-rx"></block></block>
+  <block id="ce7a3224ca943e5cc221c005cc7e60c0" category="inline-link-macro">ONTAP调解器已注册到ONTAP集群</block>
+  <block id="eaee03aa41ec9df43533f5db5bb2ba44" category="list-text"><block ref="eaee03aa41ec9df43533f5db5bb2ba44" category="inline-link-macro-rx"></block></block>
+  <block id="5db0c98d55e94f756e266bdac15c576f" category="admonition">如果使用自签名证书、则可以从&lt;installation path&gt;调解器VM上的CA/ONta_调解 器/server-config/ca.crt检索CA证书。</block>
+  <block id="d440508ae7e609721b5110d7e039c2ef" category="section-title">使用ONTAP系统管理器UI进行VMSC非一致主机访问。</block>
+  <block id="ea6c6e8d950e0162c04cb71e8d423b2c" category="paragraph">注意：可以使用ONTAP工具10.2或更高版本配置具有非一致主机访问模式的延伸型数据存储库、而无需切换多个用户界面。本节仅供未使用ONTAP工具时参考。</block>
+  <block id="7a6ad0c2bdb056ce230af0c5b8cbbdd3" category="inline-image-macro">System Manager iSCSI LUN</block>
+  <block id="250278a75998669cfa62399b8146a731" category="list-text">记下本地容错域存储阵列中的一个iSCSI数据lf IP地址。 <block ref="7c733574c933248f50a0c7b1162bf912" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="40996682d513c35b0c4047998b3bdfbf" category="inline-image-macro">添加iSCSI服务器以进行动态发现</block>
+  <block id="1f8f4b2d8241e66266b7f8b81525b97b" category="list-text">在vSphere主机iSCSI Storage Adapter上、在动态发现选项卡下添加该iSCSI IP。 <block ref="aa747262873c391da497ccb912baff69" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="56aef556733a201b5e2a4e11e36db420" category="admonition">对于统一访问模式、需要提供源和目标容错域iSCSI数据lf地址。</block>
+  <block id="f534d234c4800b321e87346242a41052" category="list-text">在vSphere主机上对另一个容错域重复上述步骤、并在动态发现选项卡上添加其本地iSCSI数据LIFIP。</block>
+  <block id="abb37f04bfa608971b2c1b6d32dbdcb5" category="inline-image-macro">iSCSI连接信息</block>
+  <block id="0b0f1ea722e32c77162bde7f673d22df" category="list-text">如果网络连接正确、则每个vSphere主机应具有四个iSCSI连接、并且每个存储控制器具有两个iSCSI VMKernel NIC和两个iSCSI数据LUN。 <block ref="c51433da4a2f97d1851a78382468f872" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="72db752a6a36e9d60e7b38950bff5431" category="inline-image-macro">使用AutomatedFailOver双 工创建LUN</block>
+  <block id="e00ec01290945a6960558a816b7c80dc" category="list-text">使用ONTAP系统管理器创建SnapMirror、使用复制策略AutomatedFailOver双 工设置LUN、选取主机启动程序并设置主机接近度。 <block ref="3526e86b0946dcb6cbce67572cbda330" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="861e37935260a1cfc2aaed5161ab0638" category="inline-image-macro">SAN启动程序组</block>
+  <block id="643dee3d46a26957fa79eabb00f799a9" category="list-text">在其他容错域存储阵列上、使用其vSphere主机启动程序创建SAN启动程序组、并设置主机接近度。 <block ref="8ce910f9922ca4c75fbfed0da02f7acc" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a95b052361af1fe2d309364f309ab46e" category="admonition">对于统一访问模式、可以从源容错域复制igrop。</block>
+  <block id="46492800838ddbb9130619bb75b86bd4" category="inline-image-macro">LUN映射ID</block>
+  <block id="61b2fd670835ca9005e021f1913b73a6" category="list-text">使用与源容错域中相同的映射ID映射复制的LUN。 <block ref="5e406d7c05a58aa8180f107a6f65197b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="850388b805ee9d89fc11c4cec8ca9a14" category="inline-image-macro">重新扫描存储</block>
+  <block id="c51ea56e6dafdb1292b8b9dc5c0e960e" category="list-text">在vCenter上、右键单击vSphere集群、然后选择重新执行存储选项。 <block ref="6930ef8ccf8c0ee83af38ebfb53ae8ca" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="73081ec2696dca86d95749186e402328" category="inline-image-macro">vSphere主机上的iSCSI设备列表</block>
+  <block id="770808abd03566255747a4c243b543c9" category="list-text">在集群中的一个vSphere主机上、检查新创建的设备是否显示数据存储库未使用。 <block ref="f0864d9d785550b719672d32b1de80c4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="03da7c8f83d089216b6def8eecb1d8e1" category="inline-image-macro">新建数据存储库</block>
+  <block id="de6515e121b06c1d6a99f264db0ced98" category="list-text">在vCenter上、右键单击vSphere集群、然后选择新建数据存储库选项。 <block ref="c00f2ed4d6bc3d40b166bcee20941ea9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="39f8f32a044e4a51c1ba31542f7e6be5" category="inline-image-macro">在iSCSI设备上创建数据存储库</block>
+  <block id="79e0884c477fa5dca0cd2d09df0c032c" category="list-text">在向导上、请务必提供数据存储库名称、并选择具有正确容量和设备ID的设备。 <block ref="c4d7fdc0efb4415cfbcecba1c6b76a6d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9439be65684144698b143fbed4ebaac6" category="inline-image-macro">源主机上的数据存储库</block>
+  <block id="fa0e2b543129f3ca636d26696b0fd84e" category="list-text">验证是否已在两个容错域中的集群上的所有主机上挂载数据存储库。 <block ref="4d299b16eb5c36c6f17ac715f962d1a2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5174ce06fd5746beeab9093873aefad7" category="inline-image-macro">目标主机上的数据存储库</block>
+  <block id="7d2327e03be872e7b74c83cfebd089cf" category="paragraph"><block ref="7d2327e03be872e7b74c83cfebd089cf" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="bb670fd40e7ab2e78319915e8b44d490" category="admonition">上述屏幕截图显示了自我们使用AFF以来单个控制器上的活动I/O。对于ASA、所有路径上都有活动IO。</block>
+  <block id="604352c5ba1889965babef0c8158663e" category="inline-image-macro">CG保护策略</block>
+  <block id="7e9ad0a86ea2653cfeaf3665a16fb998" category="list-text">添加其他数据存储库时、需要记住扩展现有一致性组、以使其在整个vSphere集群中保持一致。 <block ref="9ff0132d06a7ec05d04b497f57728e31" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6f453aa15e5ff0b4eb721cdad8f17bef" category="section-title">使用ONTAP工具的VMSC统一主机访问模式。</block>
+  <block id="04593b02a432541da827b2b6752834ba" category="inline-image-macro">已向vCenter注册ONTAP工具插件</block>
+  <block id="1fdb2532315071a9680adbd6c0a72bcf" category="inline-link-macro">ONTAP工具部署</block>
+  <block id="369b7f4a91b08a79d37197d5f45d696f" category="inline-link-macro">添加vCenter Server实例</block>
+  <block id="6d7b594b051b6822ae7376f5a2da174a" category="list-text">确保已部署NetApp ONTAP工具并将其注册到vCenter。<block ref="af0eee35d19fec1ebd1909262ef4f2c6" category="inline-image-macro-rx" type="image"></block> 如果不是、请遵循 <block ref="fbcc4e5529f469c2a6c695eaf0a2bc5e" category="inline-link-macro-rx"></block> 和 <block ref="d873b14c2c5cdecdf438a360ca036bf3" category="inline-link-macro-rx"></block></block>
+  <block id="3a54d0f2f8ac16a58ed8a452c0abaaef" category="inline-image-macro">已注册存储后端</block>
+  <block id="354f1289739e8ece60bc2d74d64477eb" category="inline-link-macro">使用vSphere客户端UI添加存储后端</block>
+  <block id="5e2fb8ab7e1dfb677dfe3b8b955f48cf" category="list-text">确保ONTAP存储系统已注册到ONTAP工具。这包括容错域存储系统、以及用于异步远程复制的第三个容错域存储系统、用于通过适用于VMware vSphere的SnapCenter插件保护VM。<block ref="bc2cb41435e0b0c8dfc1f5ceab695828" category="inline-image-macro-rx" type="image"></block> 如果不是、请遵循 <block ref="b59c00edbcac992082dcfa6c68f3b16c" category="inline-link-macro-rx"></block></block>
+  <block id="2ff8b29f2ba9fff19bb4ff78734fff7d" category="inline-image-macro">更新主机数据</block>
+  <block id="e181db3cbeda87f260358c64db781b1c" category="inline-link-macro">创建数据存储库</block>
+  <block id="596b8224963a68b1d311b08544b8141a" category="list-text">更新主机数据以与ONTAP工具同步，然后， <block ref="0b13d42f0de3e7e83cc4165d9e12b307" category="inline-link-macro-rx"></block>。 <block ref="a85e00e2abc3cdd1d46f85dd55ba9831" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="20d3fb60a8e495c4395fb4efbcb157c0" category="list-text">要启用SM-AS、请右键单击vSphere集群、然后在NetApp ONTAP工具上选择"保护集群"(请参阅上面的屏幕截图)</block>
+  <block id="af177368a8a7a1a5e11fc3ced1e77f66" category="inline-image-macro">保护集群</block>
+  <block id="8224901e217bc4bcdca14a39e2bd117f" category="list-text">它将显示该集群的现有数据存储库以及SVM详细信息。默认CG名称为&lt;vSphere集群名称&gt;_CG &lt;SVM name&gt;。单击添加关系按钮。 <block ref="9969e373d6b4d5492d0f82f983fb31d8" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1bd743276324af2fe3a5be030f2585d5" category="inline-image-macro">添加SnapMirror关系</block>
+  <block id="4881b10c8dcb57b7fed95ec00840634a" category="list-text">为SM-AS选择目标SVM并将策略设置为AutomatedFailOver双 工。统一主机配置有一个切换开关。设置每台主机的距离。 <block ref="b9a59c6f5e70fff82ae6801d936a7ddb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="589d6f8113bb29b207c6f70ce56409e3" category="inline-image-macro">添加关系</block>
+  <block id="393a5b83b30d94de659f675b5c414cbd" category="list-text">验证主机能力信息和其他详细信息。如果需要、使用复制策略异步向第三个站点添加另一个关系。然后、单击保护。<block ref="e58119c8ac449b5d67b23f048f33a5e0" category="inline-image-macro-rx" type="image"></block> 注意：如果计划使用适用于VMware vSphere 6.0的SnapCenter插件、则需要在卷级别(而不是一致性组级别)设置复制。</block>
+  <block id="40a6fd38a751b6f08cdcef3834ea7a2f" category="inline-image-macro">iSCSI多路径信息</block>
+  <block id="ae54fc27027d27a0bd753252b6d29812" category="list-text">使用统一主机访问时、主机可通过iSCSI连接到两个容错域存储阵列。<block ref="4ae75cfe682cfa3b09db25c24c5c627a" category="inline-image-macro-rx" type="image"></block> 注意：上述屏幕截图来自AFF。如果为ASA、则活动I/O应位于具有正确网络连接的所有路径中。</block>
+  <block id="d2492bcb0931b65a3f581f4c6d3cb6ce" category="inline-image-macro">卷保护状态</block>
+  <block id="f9ebf24e63c12268553a14a08d4aa9e9" category="list-text">ONTAP工具插件还会指示卷是否受保护。 <block ref="8dc80456bc9bf7785a7057126639770f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e29140e3bf39cdec980098e775848097" category="inline-image-macro">主机集群关系</block>
+  <block id="b8aac8f072ed4efb8dc7a1c3506c361e" category="list-text">有关更多详细信息以及更新主机邻近信息、可以使用ONTAP工具下的主机集群关系选项。 <block ref="e14370715f4edc42f7e2e806158d1f31" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="73a7b5e698fb4fe3a34d358d36f751d6" category="section-title">使用适用于VMware vSphere的SnapCenter插件保护VM。</block>
+  <block id="92d07b80b15b85305b3cae638ecf5e14" category="paragraph">适用于VMware vSphere (SCV) 6.0或更高版本的SnapCenter插件支持SnapMirror主动同步、并可与异步SnapMirror结合使用来复制到第三个容错域。</block>
+  <block id="f8b9c0522fa0f8e6c3a1afdf3ed9c467" category="inline-image-macro">三站点拓扑</block>
+  <block id="bba92a390460e029d55235d609643c01" category="paragraph"><block ref="bba92a390460e029d55235d609643c01" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2ff7796d84d03de19015be7dbfa58e37" category="inline-image-macro">具有async故障转移的三站点拓扑</block>
+  <block id="c5bd75145fcab223b499d9e95890f53c" category="paragraph"><block ref="c5bd75145fcab223b499d9e95890f53c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="76253c184f3bf2e7a3b986dcc1d9dbd5" category="paragraph">支持的用例包括：*从SnapMirror活动同步的任一容错域备份和还原虚拟机或数据存储库。*从第三个故障域还原资源。</block>
+  <block id="6aee63ca24aefba800af701527e19cb5" category="inline-image-macro">注册存储阵列</block>
+  <block id="09b0c696ef15fddb3d69ae4a1b726ae3" category="list-text">添加计划用于选择控制阀的所有ONTAP存储系统。 <block ref="996d6c6e723b85524c599c55a1975416" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="aba2342f4c11084ef2aa3a569ac8125e" category="inline-image-macro">备份策略</block>
+  <block id="a85b899f51a8630636d20bd15bee2982" category="list-text">创建策略。确保在为SM-AS检查备份后更新SnapMirror、并在备份后更新SnapVault以将异步复制到第三个故障域。 <block ref="69dae01d1f84348bfe140f5bfc9f6499" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="dd23acac46f17cbfd4d5541f8ee3c7a1" category="inline-image-macro">Resource Group</block>
+  <block id="64cb18579a7a0d1468fed69b14782a40" category="list-text">创建资源组、其中包含需要保护并与策略和计划关联的所需项目。<block ref="0ca2ae76dc187a7df68bf45027593c64" category="inline-image-macro-rx" type="image"></block> 注意：SM-AS不支持以_Recent结尾的快照名称。</block>
+  <block id="aa84c9af51ab8e51a21eaceee6300eab" category="inline-image-macro">SCV 信息板</block>
+  <block id="2bde70c0bea8a0bcf28585e485c008d7" category="inline-image-macro">数据存储库的资源备份信息</block>
+  <block id="fccc429309a6737d81187f17bd624e63" category="inline-image-macro">虚拟机的资源备份信息</block>
+  <block id="e5bf2469e4f70e994b3de20f27d234e7" category="list-text">备份根据与资源组关联的策略在计划的时间进行。可以从信息板作业监控器或这些资源上的备份信息监控作业。 <block ref="657a0a3d61337ad802a8c7a7b7a81a06" category="inline-image-macro-rx" type="image"></block> <block ref="ce922a606ddec6dac25ffe867e0acfcb" category="inline-image-macro-rx" type="image"></block> <block ref="c8e6a76f1897b0987fb13fd85f3bd694" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="573f9a5ce80dcdd71118a9f93babcd1f" category="inline-image-macro">VM还原位置选项</block>
+  <block id="c3684107dbff9d1d2f2a5131096b4b64" category="list-text">可以从主容错域上的SVM或从一个二级位置将VM还原到同一个或备用vCenter。 <block ref="23048c8f8b3a7a007722276d9ee49601" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d73d29fc15215ae568cfc4eb7a504537" category="inline-image-macro">数据存储库还原位置选项</block>
+  <block id="74ca3c695cd7675dfb0412209f2ef22f" category="list-text">数据存储库挂载操作也可使用类似选项。 <block ref="523db55def0a941e814c46c1f7e232c4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2a4ea2aaa4acda87b1ce787b2f66a66c" category="paragraph">有关选择控制阀其它操作的帮助，参见 <block ref="d1ce1c1059b8df281300d28c6a9c8880" category="inline-link-macro-rx"></block></block>
 </blocks>
