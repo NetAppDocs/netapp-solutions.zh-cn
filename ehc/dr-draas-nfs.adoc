@@ -1,0 +1,294 @@
+---
+sidebar: sidebar 
+permalink: ehc/dr-draas-nfs.html 
+keywords: dr, draas, bluexp, disaster recovery, nfs datastore 
+summary: 本节介绍如何配置BlueXP  DRaaS、以便为内部VMware VM设置灾难恢复、并将灾难恢复设置到另一个指定站点。 
+---
+= 使用BlueXP  DRaaS对NFS数据存储库执行灾难恢复
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+通过从生产站点到灾难恢复站点的块级复制实施灾难恢复是一种具有故障恢复能力且经济高效的方法、可保护工作负载免受站点中断和数据损坏事件(例如勒索软件攻击)的影响。通过使用NetApp SnapMirror复制、可以将使用NFS数据存储库的内部ONTAP系统上运行的VMware工作负载复制到同时部署了VMware的指定恢复数据中心内的另一个ONTAP存储系统。
+
+本节介绍如何配置BlueXP  DRaaS、以便为内部VMware VM设置灾难恢复、并将灾难恢复设置到另一个指定站点。在此设置过程中、BlueXP  帐户BlueXP  Connector是在BlueXP  工作空间中添加的ONTAP阵列、用于实现从VMware vCenter到ONTAP存储的通信。此外、本文档还详细介绍了如何在站点之间配置复制以及如何设置和测试恢复计划。最后一节介绍了如何执行完整站点故障转移以及如何在主站点恢复并联机购买后进行故障恢复。
+
+利用集成到NetApp BlueXP  控制台中的BlueXP  灾难恢复服务、企业可以轻松发现其内部VMware vCenter和ONTAP存储。然后、组织可以创建资源组、创建灾难恢复计划、将其与资源组关联以及测试或执行故障转移和故障恢复。SnapMirror可提供存储级别的块复制功能、使两个站点在进行增量更改时保持最新、从而使恢复点目标(RPO)最长为5分钟。此外、还可以在不影响生产或产生额外存储成本的情况下模拟灾难恢复过程。
+
+BlueXP  灾难恢复利用ONTAP的FlexClone技术从灾难恢复站点上最后复制的Snapshot创建节省空间的NFS数据存储库副本。完成灾难恢复测试后、客户可以轻松删除测试环境、而不会影响实际复制的生产资源。在实际发生故障转移时、BlueXP  灾难恢复服务会编排所有必要的步骤、只需单击几下鼠标、即可自动启动指定灾难恢复站点上受保护的虚拟机。该服务还会根据需要反转与主站点的SnapMirror关系、并将所做的任何更改从二级站点复制到主站点、以便执行故障恢复操作。与其他知名替代产品相比、所有这些功能的成本都只有后者的一小部分。
+
+image::dr-draas-nfs-image1.png[DR DRaaS NFS image1]
+
+
+
+== 入门
+
+要开始使用BlueXP  灾难恢复、请使用BlueXP  控制台、然后访问该服务。
+
+. 登录到BlueXP。
+. 从BlueXP  左侧导航栏中、选择"Protection (保护)">" Disaster Recovery (灾难恢复)"。
+. 此时将显示BlueXP  灾难恢复信息板。
++
+image::dr-draas-nfs-image2.png[DR DRaaS NFS image2.]
+
+
+
+在配置灾难恢复计划之前、请确保满足以下前提条件：
+
+* BlueXP  连接器已在NetApp BlueXP  中设置。
+* BlueXP  连接器实例可连接到源和目标vCenter及存储系统。
+* NetApp Data ONTAP集群以提供存储NFS数据存储库。
+* 在BlueXP  中添加了托管VMware NFS数据存储库的内部NetApp存储系统。
+* 使用DNS名称时、应进行DNS解析。否则、请使用vCenter的IP地址。
+* 已为基于NFS的指定数据存储库卷配置SnapMirror复制。
+* 确保环境具有受支持的vCenter Server和ESXi服务器版本。
+
+
+在源站点和目标站点之间建立连接后、请继续执行配置步骤、该步骤只需单击几下鼠标、大约3到5分钟即可完成。
+
+
+NOTE: NetApp建议将BlueXP  Connector部署在目标站点或第三个站点中、以便BlueXP  Connector可以通过网络与源和目标资源进行通信。
+
+image::dr-draas-nfs-image3.png[DR DRaaS NFS image3]
+
+
+
+== BlueXP  灾难恢复配置
+
+准备灾难恢复的第一步是发现内部vCenter和存储资源并将其添加到BlueXP  灾难恢复中。
+
+打开BlueXP  控制台并从左侧导航栏中选择*保护>灾难恢复*。选择*发现vCenter服务器*或使用顶部菜单、选择*站点>添加>添加vCenter *。
+
+image::dr-draas-nfs-image4.png[DR DRaaS NFS image4.]
+
+添加以下平台：
+
+* *来源*。内部vCenter。
++
+image::dr-draas-nfs-image5.png[DR DRaaS NFS image5]
+
+* *目的地*。VMC SDDC vCenter。
++
+image::dr-draas-nfs-image6.png[DR DRaaS NFS image6]
+
+
+
+添加完vCenter后、将触发自动发现。
+
+
+
+== 在源站点阵列和目标站点阵列之间配置存储复制
+
+SnapMirror可在NetApp环境中提供数据复制功能。SnapMirror复制基于NetApp Snapshot®技术构建，效率极高，因为它仅复制自上次更新以来更改或添加的块。SnapMirror可通过NetApp OnCommand®System Manager或ONTAP命令行界面轻松进行配置。BlueXP  DRaaS还会创建SnapMirror关系、前提是事先配置集群和SVM对等。
+
+如果主存储未完全丢失、则SnapMirror可提供一种高效的方式来重新同步主站点和灾难恢复站点。SnapMirror可以重新同步这两个站点、只需反转SnapMirror关系、即可将更改过的数据或新数据从灾难恢复站点传输回主站点。这意味着、在故障转移后、无需重新复制整个卷、即可在任一方向上重新同步BlueXP  DRaaS中的复制计划。如果反向重新同步某个关系、则只会将自上次成功同步Snapshot副本以来写入的新数据发送回目标。
+
+
+NOTE: 如果已通过命令行界面或System Manager为卷配置SnapMirror关系、则BlueXP  DRaaS将接管该关系并继续执行其余工作流操作。
+
+
+
+== 如何针对VMware灾难恢复进行设置
+
+对于任何给定应用程序、创建SnapMirror复制的过程都保持不变。此过程可以手动执行、也可以自动执行。最简单的方法是利用BlueXP  配置SnapMirror复制、方法是将环境中的源ONTAP系统简单地拖放到目标上、以触发向导来完成其余过程。
+
+image::dr-draas-nfs-image7.png[DR DRaaS NFS image7]
+
+如果满足以下两个条件、BlueXP  DRaaS还可以实现相同的自动化：
+
+* 源集群和目标集群具有对等关系。
+* 源SVM和目标SVM具有对等关系。
++
+image::dr-draas-nfs-image8.png[DR DRaaS NFS版本8.]
+
+
+
+
+NOTE: 如果已通过命令行界面为卷配置SnapMirror关系、则BlueXP  DRaaS将接管该关系并继续执行其余工作流操作。
+
+
+
+== BlueXP  灾难恢复可以为您做什么？
+
+添加源站点和目标站点后、BlueXP  灾难恢复将执行自动深度发现、并显示VM以及关联的元数据。BlueXP  灾难恢复还会自动检测VM使用的网络和端口组并将其填充。
+
+image::dr-draas-nfs-image9.png[DR DRaaS NFS image9]
+
+添加站点后、可以将VM分组到资源组中。通过BlueXP  灾难恢复资源组、您可以将一组相关VM分组到逻辑组中、这些逻辑组包含其启动顺序以及恢复后可以执行的启动延迟。要开始创建资源组，请导航到*Resource Groups*并单击*Create New Resource Group*。
+
+image::dr-draas-nfs-image10.png[DR DRaaS NFS image10]
+
+image::dr-draas-nfs-image11.png[DR DRaaS NFS image11.]
+
+
+NOTE: 也可以在创建复制计划时创建资源组。
+
+在创建资源组期间、可以使用简单的拖放机制来定义或修改VM的启动顺序。
+
+image::dr-draas-nfs-image12.png[DR DRaaS NFS image12.]
+
+创建资源组后、下一步是创建执行蓝图或计划、以便在发生灾难时恢复虚拟机和应用程序。如前提条件中所述、可以事先配置SnapMirror复制、也可以使用创建复制计划期间指定的RPO和保留计数来配置DRaaS。
+
+image::dr-draas-nfs-image13.png[灾难恢复DRaaS NFS image13.]
+
+image::dr-draas-nfs-image14.png[灾难恢复DRaaS NFS image14.]
+
+通过从下拉列表中选择源和目标vCenter平台来配置复制计划、然后选择要包含在该计划中的资源组、并分组应用程序的还原和启动方式以及集群和网络的映射。要定义恢复计划，请导航到*复制计划*选项卡，然后单击*添加计划*。
+
+首先、选择源vCenter、然后选择目标vCenter。
+
+image::dr-draas-nfs-image15.png[DR DRaaS NFS image15.]
+
+下一步是选择现有资源组。如果未创建任何资源组、则该向导会根据恢复目标帮助对所需的虚拟机进行分组(基本上是创建功能资源组)。这还有助于定义应如何还原应用程序虚拟机的操作顺序。
+
+image::dr-draas-nfs-image16.png[DR DRaaS NFS image16.]
+
+
+NOTE: 资源组允许使用拖放功能设置引导顺序。它可用于轻松修改恢复过程中VM的启动顺序。
+
+
+NOTE: 资源组中的每个虚拟机将根据顺序依次启动。两个资源组并行启动。
+
+以下屏幕截图显示了一个选项、用于根据组织要求筛选虚拟机或特定数据存储库(如果事先未创建资源组)。
+
+image::dr-draas-nfs-image17.png[DR DRaaS NFS的图解17]
+
+选择资源组后、创建故障转移映射。在此步骤中、指定源环境中的资源与目标之间的映射方式。其中包括计算资源、虚拟网络。IP自定义、前处理脚本和后处理脚本、启动延迟、应用程序一致性等。有关详细信息，请参见link:https://docs.netapp.com/us-en/bluexp-disaster-recovery/use/drplan-create.html#select-applications-to-replicate-and-assign-resource-groups["创建复制计划"]。
+
+image::dr-draas-nfs-image18.png[灾难恢复DRaaS NFS的印象18.]
+
+
+NOTE: 默认情况下、测试和故障转移操作会使用相同的映射参数。要为测试环境设置不同的映射、请在取消选中相应复选框后选择Test Mapping选项、如下所示：
+
+image::dr-draas-nfs-image19.png[DR DRaaS NFS的图解19]
+
+完成资源映射后、单击"Next"(下一步)。
+
+image::dr-draas-nfs-image20.png[DR DRaaS NFS image20]
+
+选择重复类型。简而言之、请选择迁移(使用故障转移进行一次性迁移)或重复连续复制选项。在此逐步介绍中、已选择"复件"选项。
+
+image::dr-draas-nfs-image21.png[灾难恢复DRaaS NFS image21.]
+
+完成后，查看创建的映射，然后单击*Add pland*。
+
+
+NOTE: 复制计划中可以包含来自不同卷和SVM的VM。根据虚拟机的放置方式(是位于同一个卷上、还是位于同一个SVM中的不同卷、以及位于不同SVM上的不同卷)、BlueXP  灾难恢复会创建一致性组快照。
+
+image::dr-draas-nfs-image22.png[灾难恢复DRaaS NFS image22.]
+
+image::dr-draas-nfs-image23.png[灾难恢复DRaaS NFS image23]
+
+BlueXP  DRaaS由以下工作流组成：
+
+* 测试故障转移(包括定期自动模拟)
+* 清理故障转移测试
+* 故障转移
+* 故障恢复
+
+
+
+
+== 测试故障转移
+
+BlueXP  DRaaS中的测试故障转移是一个操作过程、可使VMware管理员在不中断生产环境的情况下全面验证其恢复计划。
+
+image::dr-draas-nfs-image24.png[DR DRaaS NFS image24]
+
+BlueXP  DRaaS可以在测试故障转移操作中选择快照作为可选功能。通过此功能、VMware管理员可以验证环境中最近所做的任何更改是否已复制到目标站点、从而在测试期间是否存在。此类更改包括对VM子操作系统的修补程序
+
+image::dr-draas-nfs-image25.png[DR DRaaS NFS image25]
+
+当VMware管理员运行测试故障转移操作时、BlueXP  DRaaS会自动执行以下任务：
+
+* 触发SnapMirror关系、以便使用近期在生产站点所做的任何更改来更新目标站点上的存储。
+* 在灾难恢复存储阵列上创建FlexVol卷的NetApp FlexClone卷。
+* 将FlexClone卷中的NFS数据存储库连接到灾难恢复站点的ESXi主机。
+* 将VM网络适配器连接到映射期间指定的测试网络。
+* 按照灾难恢复站点上为网络定义的方式重新配置VM子操作系统网络设置。
+* 执行复制计划中存储的任何自定义命令。
+* 按照复制计划中定义的顺序启动VM。
++
+image::dr-draas-nfs-image26.png[DR DRaaS NFS的印象26.]
+
+
+
+
+
+== 清理故障转移测试操作
+
+清理故障转移测试操作会在复制计划测试完成后进行、并且VMware管理员会对清理提示做出响应。
+
+image::dr-draas-nfs-image27.png[DR DRaaS NFS的印象27.]
+
+此操作会将虚拟机(VM)和复制计划的状态重置为就绪状态。
+
+当VMware管理员执行恢复操作时、BlueXP  DRaaS将完成以下过程：
+
+. 它会关闭FlexClone副本中用于测试的每个已恢复VM的电源。
+. 它会删除测试期间用于显示已恢复VM的FlexClone卷。
+
+
+
+
+== 计划内迁移和故障转移
+
+BlueXP  DRaaS具有两种执行实际故障转移的方法：计划内迁移和故障转移。第一种方法是计划内迁移、该方法将虚拟机关闭和存储复制同步纳入到该过程中、以恢复或有效地将虚拟机移动到目标站点。计划内迁移需要访问源站点。第二种方法是故障转移、这是计划内/计划外故障转移、其中VM将从上次能够完成的存储复制间隔在目标站点上恢复。根据解决方案中设计的RPO、在灾难恢复场景中可能会出现一定程度的数据丢失。
+
+image::dr-draas-nfs-image28.png[DR DRaaS NFS image28]
+
+当VMware管理员执行故障转移操作时、BlueXP  DRaaS会自动执行以下任务：
+
+* 中断并故障转移NetApp SnapMirror关系。
+* 将复制的NFS数据存储库连接到灾难恢复站点的ESXi主机。
+* 将VM网络适配器连接到相应的目标站点网络。
+* 按照为目标站点上的网络定义的方式重新配置VM子操作系统网络设置。
+* 执行复制计划中存储的所有自定义命令(如果有)。
+* 按照复制计划中定义的顺序启动VM。
+
+
+image::dr-draas-nfs-image29.png[DR DRaaS NFS的图解29]
+
+
+
+== 故障恢复
+
+故障恢复是一个可选过程、用于在恢复后还原源站点和目标站点的原始配置。
+
+image::dr-draas-nfs-image30.png[DR DRaaS NFS image30]
+
+VMware管理员可以在准备将服务还原到原始源站点时配置并运行故障恢复过程。
+
+*注：* BlueXP  DRaaS会在反转复制方向之前将所有更改复制(重新同步)回原始源虚拟机。此过程从已完成故障转移到目标的关系开始、涉及以下步骤：
+
+* 关闭和取消注册目标站点上的虚拟机和卷将被卸载。
+* 中断初始源上的SnapMirror关系将中断、以使其变为读/写状态。
+* 重新同步SnapMirror关系以反转复制。
+* 在源上挂载卷、启动并注册源虚拟机。
+
+
+有关访问和配置BlueXP  DRaaS的详细信息，请参见link:https://docs.netapp.com/us-en/bluexp-disaster-recovery/get-started/dr-intro.html["了解适用于VMware的BlueXP  灾难恢复"]。
+
+
+
+== 监控和信息板
+
+在BlueXP  或ONTAP命令行界面中、您可以监控相应数据存储库卷的复制运行状况、并可通过作业监控功能跟踪故障转移或测试故障转移的状态。
+
+image::dr-draas-nfs-image31.png[灾难恢复DRaaS NFS image31]
+
+
+NOTE: 如果作业当前正在进行中或已排队、而您希望将其停止、则可以选择将其取消。
+
+借助BlueXP  灾难恢复信息板、可以信心十足地评估灾难恢复站点和复制计划的状态。这样、管理员便可快速确定运行正常、断开连接或降级的站点和计划。
+
+image::dr-draas-nfs-image32.png[灾难恢复DRaaS NFS image32.]
+
+这是一款功能强大的解决方案、可用于处理定制和自定义的灾难恢复计划。发生灾难并决定激活灾难恢复站点时、只需单击按钮、即可按计划故障转移或故障转移的形式完成故障转移。
+
+要了解有关此过程的详细信息，请随时观看详细的演示视频或使用link:https://netapp.github.io/bluexp-draas-simulator/?frame-1["解决方案模拟器"]。

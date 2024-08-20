@@ -1,0 +1,32 @@
+---
+sidebar: sidebar 
+permalink: ehc/dr-draas-overview.html 
+keywords: dr, draas, bluexp, disaster recovery, vmfs datastore, nfs datastore, overview 
+summary: 本节介绍如何配置BlueXP  DRaaS、以便为内部VMware VM设置灾难恢复、并将灾难恢复设置到另一个指定站点。 
+---
+= 概述
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+灾难恢复是每个VMware管理员最关注的问题。由于VMware会将整个服务器封装到构成虚拟机的一系列文件中、因此管理员可以利用基于块存储的技术(例如克隆、快照和副本)来保护这些虚拟机。ONTAP阵列提供内置复制功能、可将卷数据以及指定数据存储库LUN上的虚拟机从一个站点传输到另一个站点。BlueXP  DRaaS可与vSphere集成并自动执行整个工作流、以便在发生灾难时实现无缝故障转移和故障恢复。通过将存储复制与智能自动化相结合、管理员现在不仅可以轻松地配置、自动化和测试灾难恢复计划、还可以在发生灾难时轻松运行这些计划。
+
+在VMware vSphere环境中、灾难恢复故障转移最耗时的部分是执行必要的步骤来清点、注册、重新配置和启动灾难恢复站点上的VM。理想的解决方案既具有较低的RPO (以分钟为单位)、又具有较低的RTO (以分钟到小时为单位)。在灾难恢复解决方案中、一个经常被忽略的因素是定期有效测试灾难恢复解决方案的能力。
+
+在设计灾难恢复解决方案时、请牢记以下因素：
+
+* 恢复时间目标(Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time恢复时间是指企业从灾难中恢复的速度、或者更具体地说、恢复过程需要多长时间才能使业务服务再次恢复可用。
+* 恢复点目标(RPO)。RPO是指恢复数据可用后的时长(相对于灾难发生时间)。
+* 可扩展性和适应性。这一因素包括能够随着需求的增加逐步增加存储资源。
+
+
+有关可用解决方案的更多技术信息、请参见：
+
+* link:dr-draas-nfs.html["使用BlueXP  DRaaS对NFS数据存储库执行灾难恢复"]
+* link:dr-draas-vmfs.html["使用BlueXP  DRaaS对VMFS数据存储库执行灾难恢复"]
+
