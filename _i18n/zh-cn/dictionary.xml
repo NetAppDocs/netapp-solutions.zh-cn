@@ -22493,4 +22493,131 @@ NVIDIA DGX SuperPOD：NetApp EF600和BeeGFS
   <block id="f19e283cc114e93124d859c5d7bb4dcc" category="sidebar">使用BlueXP  DRaaS进行灾难恢复</block>
   <block id="0ac7b741609397f8aa92eb68c26a397b" category="sidebar">NFS数据存储库的灾难恢复</block>
   <block id="b601380042d5d2716f62b262c1591606" category="sidebar">VMFS数据存储库的灾难恢复</block>
+  <block id="a61bacf2c62afc90e1e8006f95318bfd" category="doc">使用ONTAP的VMware虚拟卷</block>
+  <block id="b74272fd89b8b060d210f06790547058" category="paragraph">VMware虚拟卷(vvol)可满足应用程序特定的要求、以推动存储配置决策、同时利用存储阵列提供的一组丰富功能。通过vSphere存储感知API (vSphere API for Storage A感知、VASA)、VM管理员可以轻松地使用配置VM所需的任何存储功能、而无需与其存储团队进行交互。在使用VASA之前、VM管理员可以定义VM存储策略、但必须与其存储管理员一起确定适当的数据存储库、通常使用文档或命名约定。通过使用VASA、具有适当权限的vCenter管理员可以定义一系列存储功能、然后vCenter用户可以使用这些功能来配置VM。通过在VM存储策略和数据存储库存储功能配置文件之间进行映射、vCenter可以显示兼容数据存储库列表以供选择、并支持Aria (以前称为vReise) Automation或Tanzu Kubernetes Grid等其他技术自动从分配的策略中选择存储。这种方法称为基于存储策略的管理。虽然存储功能配置文件和策略也可用于传统数据存储库、但我们在此重点关注的是虚拟卷数据存储库。适用于ONTAP的ONTAP提供程序作为适用于VMware vSphere的VMware工具的一部分提供。</block>
+  <block id="9b1b912996f336d89924a9ec7d6edec5" category="paragraph">将VASA Provider置于存储阵列之外的优势包括：</block>
+  <block id="dfe16ca745299ae3cfbae5a9be342a8c" category="list-text">单个实例可以管理多个存储阵列。</block>
+  <block id="d97fe9dbb8392bf7fe5c12e3b569064b" category="list-text">发布周期不必取决于存储操作系统版本。</block>
+  <block id="f757dba881ab4e2ec2fca0a4e18b6c95" category="list-text">存储阵列上的资源非常昂贵。</block>
+  <block id="107417c7b10874be6a3725087cbb8472" category="paragraph">每个VVOR数据存储库都由存储容器提供支持、存储容器是一个逻辑条目、用于在VASA提供程序中定义存储容量。使用ONTAP工具的存储容器是使用ONTAP卷构建的。可以通过在同一个SVM中添加ONTAP卷来扩展存储容器。</block>
+  <block id="082234f805f05a649ee31556c02c31d8" category="paragraph">协议端点(PE)主要由ONTAP工具管理。如果使用基于iSCSI的VVOL、则会为该存储容器或VVOL数据 存储库中的每个ONTAP卷创建一个PE。适用于iSCSI的PE是一个小型LUN (9.x为4 MiB、10.x为2 GiB)、它会提供给vSphere主机、并会对PE应用多路径策略。</block>
+  <block id="44deb868a70fa7585bb1a2373ab17882" category="inline-image-macro">iSCSI PE架构</block>
+  <block id="fa8e85bf71c56615f2f726b93a558b6e" category="paragraph"><block ref="fa8e85bf71c56615f2f726b93a558b6e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7f53696f20b7f406363533a9f9910787" category="inline-image-macro">通过命令行界面设置iSCSI PE大小</block>
+  <block id="49e0327d49a3f45c1ab4573909c2fc43" category="paragraph"><block ref="49e0327d49a3f45c1ab4573909c2fc43" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0abff73999de46ad023db3f8d1a73174" category="paragraph">对于NFS、系统会为根文件系统导出创建一个PE、其中包含存储容器或VVOV数据存储库所在的SVM上的每个NFS数据LIP。</block>
+  <block id="5287d151135e8d459b4d5b25ea4b932b" category="inline-image-macro">NFS PE架构</block>
+  <block id="9d2ffe43c96ab2d05c8bf3956ec43425" category="paragraph"><block ref="9d2ffe43c96ab2d05c8bf3956ec43425" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8a7cf323586718d5e189d1656c819ff7" category="inline-image-macro">从vSphere UI访问NFS PE</block>
+  <block id="e87be1ba3013289a69038cb7b67c94c2" category="paragraph"><block ref="e87be1ba3013289a69038cb7b67c94c2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="14d9fca999fd304e516a89d34f142834" category="paragraph">ONTAP工具可管理PE的生命周期、还可用于vSphere主机与vSphere集群的扩展和收缩进行通信。ONTAP工具API可与现有自动化工具集成。</block>
+  <block id="d4b448a1facbe4821c387edbb4e8b0b7" category="paragraph">目前、适用于VMware vSphere的ONTAP工具有两个版本。</block>
+  <block id="857630d12e6a6e0db6095d112a77bd6c" category="section-title">ONTAP工具9.x</block>
+  <block id="34a0f937c21f09796b3e8b66bfe736ff" category="list-text">需要为NVMe/FC提供vVol支持时</block>
+  <block id="edd5bd1611f7ba37a94ca1f18e9be8f5" category="list-text">美国联邦或欧盟法规要求</block>
+  <block id="f26d6df2fcfdf8d5b5fb4885ceca0984" category="list-text">与适用于VMware vSphere的SnapCenter插件集成的更多用例</block>
+  <block id="748922f9b87a21d1d82cd54c6bad9218" category="section-title">ONTAP工具10.x</block>
+  <block id="a52d8fd444535a81821372ae3361144d" category="list-text">高可用性</block>
+  <block id="08061c765228f998eb55b78218211344" category="list-text">多租户</block>
+  <block id="b807a5ec45f6acd2828cababbd48fa6a" category="list-text">大规模</block>
+  <block id="40e7076fffefe899264596eadc140b6a" category="list-text">SnapMirror主动同步支持VMFS数据存储库</block>
+  <block id="6be05c257194e49da44c269b140acc14" category="list-text">即将针对特定使用情形与适用于VMware vSphere的SnapCenter插件进行集成</block>
+  <block id="559c19bea25ae94d8a805a3324887511" category="section-title">为什么选择使用这些卷？</block>
+  <block id="dfda05a8653c20ddd59ef991dc916356" category="paragraph">VMware虚拟卷(vvol)具有以下优势：</block>
+  <block id="5a64f546afd625cae35c212e6468f33f" category="list-text">简化配置(无需担心每个vSphere主机的最大LUN限制、也无需为每个卷创建NFS导出)</block>
+  <block id="bd37c2118995ee3324b176d9aaf0068a" category="list-text">最大限度地减少iSCSI/FC路径数(对于基于块SCSI的VVOV)</block>
+  <block id="fd7bbaae1930e0d12f9fcd9c17cd29ef" category="list-text">快照、克莱内斯和其他存储操作通常会卸载到存储阵列、并且执行速度会更快。</block>
+  <block id="20ae5653ecd32d6fb2147ab59161ce66" category="list-text">简化VM的数据迁移(无需与同一LUN中的其他VM所有者进行协调)</block>
+  <block id="965fd56fef9b11296041d237e7f3daca" category="list-text">QoS策略应用于VM磁盘级别、而不是卷级别。</block>
+  <block id="0be49ff0e952c5a5231bc3e5abce8b2b" category="list-text">操作简单(存储供应商在VASA Provider中提供了不同的功能)</block>
+  <block id="13846b822201fcf68348e7081e092b7e" category="list-text">支持大规模VM。</block>
+  <block id="055a497c3923f62d52042b4d408790cc" category="list-text">支持在vCenter之间迁移vVol复制。</block>
+  <block id="81980493a183a1ae830eeebae1901084" category="list-text">存储管理员可以选择在虚拟机磁盘级别进行监控。</block>
+  <block id="8686e26fae52fde4332de14c34ebdef8" category="paragraph">通常建议对存储网络使用双网络结构环境、以实现高可用性、性能和容错。iSCSI、FC、NFS3和NVMe/FC均支持vvol。注：<block ref="dcdf7e81edb29307d6ac3dd78fedc23b" category="inline-link-macro-rx"></block>有关支持的ONTAP工具版本、请参见</block>
+  <block id="1ea9028e569897470bd7b89ea885bb75" category="inline-image-macro">iSCSI网络</block>
+  <block id="39fa32cc5e97b0f39563482f91c54d07" category="paragraph">连接选项与VMFS数据存储库或NFS数据存储库选项保持一致。下面显示了iSCSI和NFS的参考vSphere网络示例。<block ref="6918b19e9846ccb45686e5162cf55655" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d4dcf0340b35abc2bf44beef42c12c35" category="inline-image-macro">NFS网络</block>
+  <block id="c527b09faedcc5cb4cc2e40ea8fdf0c3" category="paragraph"><block ref="c527b09faedcc5cb4cc2e40ea8fdf0c3" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5a915a8215e9a66bcff0f034e8adff18" category="section-title">使用适用于 VMware vSphere 的 ONTAP 工具进行配置</block>
+  <block id="21fdbce0284aa54769921ddd8210e97b" category="paragraph">可以使用ONTAP工具配置vVol数据存储库、使其类似于VMFS或NFS数据存储库。如果ONTAP工具插件在vSphere客户端UI上不可用、请参阅下面的"如何开始使用"部分。</block>
+  <block id="87daff908ee19a9633e69585458a7255" category="section-title">使用ONTAP工具9.13.</block>
+  <block id="5492e2530947f0abd680fbe74fd5db92" category="list-text">右键单击vSphere集群或主机、然后在NetApp ONTAP工具下选择配置数据存储库。</block>
+  <block id="9f2ea42a9a4acd0945edbd06666dbc5d" category="inline-image-macro">使用9.13的iSCSI VVOV数据存储库</block>
+  <block id="1f12876f220811997f7e7392566e4252" category="list-text">将类型保留为"vols"、提供数据存储库的名称并选择所需的协议<block ref="8dad28d44056b2e18e8e95f681741bac" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="54f4a4ccd72d2b470e60a1fe1009dfaa" category="inline-image-macro">使用9.13的NFS VVOV数据存储库</block>
+  <block id="08ae4bc9cb065d7d39c4662ff6af1343" category="paragraph"><block ref="08ae4bc9cb065d7d39c4662ff6af1343" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f7be1d5cccaa2b07536fc322c6b0d307" category="inline-image-macro">使用9.13的存储系统和SVM</block>
+  <block id="8b5e094882576181941d442502447b79" category="list-text">选择所需的存储功能配置文件、然后选择存储系统和SVM。<block ref="604887b83d7029723225cd463f45bb3e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d5ee5c5198056cbae9b4fcb27816aa93" category="inline-image-macro">使用9.13的VVOV卷</block>
+  <block id="f5640eab834f65a3d5f9e0ff5714d34c" category="list-text">创建新的ONTAP卷或为VVOV数据存储库选择现有卷。<block ref="6d5a6ba4ef8568bab09690ebe471ff73" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c3cf1b4f3a7982647fa88017295081bb" category="paragraph">稍后可以使用数据存储库选项查看或更改ONTAP卷。</block>
+  <block id="5c95976ce87e5cc07609b9724eec4c1b" category="inline-image-macro">使用9.13扩展vVol</block>
+  <block id="5362937671ddd8528029a64b9d6db433" category="paragraph"><block ref="5362937671ddd8528029a64b9d6db433" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="45b51a4e3616e83110c157254bdae8f9" category="inline-image-macro">使用9.13的iSCSI VVOV数据存储库摘要</block>
+  <block id="f4b99e3d9d13e0a8037ac01d4e04fc74" category="list-text">查看摘要、然后单击"Finish (完成)"以创建VVOV数据存储库。<block ref="df025db3b1c0531841e1ec048cf855c0" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="db9197ef5c4eee4a012e62e59c0e2f10" category="inline-image-macro">VVOV VM存储策略</block>
+  <block id="f604a71466738b9f215de615cbe9a90d" category="list-text">创建VVOR数据存储库后、可以像使用任何其他数据存储库一样使用该数据存储库。以下示例介绍了如何根据虚拟机存储策略将数据存储库分配给即将创建的虚拟机。<block ref="78c5284fb4d837d8135b1f84936c2edd" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="dde5007536102fe318eba21a211e5edb" category="inline-image-macro">9.13的VASA提供程序信息</block>
+  <block id="8ef64db574a08bc78639efbfd24304c5" category="list-text">可以使用基于Web的命令行界面检索vVol详细信息。此门户的URL与不带文件名version.xml的VASA提供程序URL相同。<block ref="a1c4b99a82e3bbc45e891ea6cdb1c1a3" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="47174b178263367ecd7d0bbe3baf133b" category="inline-image-macro">VASA客户端用户界面</block>
+  <block id="00e2a197210da582cedc53b8702db08d" category="paragraph">此凭据应与配置ONTAP工具期间使用的信息匹配<block ref="334eede69abf3710f5d50d9fffc36887" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3250cb3eebdc1afc5ad9e1c442e5e6f5" category="inline-image-macro">ONTAP工具控制台UI</block>
+  <block id="aa79ee1afffa6cdb1c0a9f5b08d3a4e1" category="inline-image-macro">ONTAP工具控制台</block>
+  <block id="9e95f63fe4f39ff35cbbefcad5052ce8" category="inline-image-macro">使用9.13显示vvol信息</block>
+  <block id="44fcfbea5e3fed2168c48278530edc42" category="inline-image-macro">使用ONTAP命令行界面显示VVOLLUN信息</block>
+  <block id="a2f737910982d763b8c66a3f8dfe7e7c" category="inline-image-macro">System Manager中的VVOLLUN信息</block>
+  <block id="142fcf4a98404d3e4ee486d630c26b98" category="inline-image-macro">System Manager中的vVol NFS信息</block>
+  <block id="33afff70d702131f79cc7caea533644c" category="paragraph">或者在ONTAP工具维护控制台中使用更新后的密码。<block ref="1fd4fb3f4ac3a67f19d3ae4bf849d9cb" category="inline-image-macro-rx" type="image"></block>选择基于Web的命令行界面。<block ref="eca32b63d8b871d9ff17d812e91330a1" category="inline-image-macro-rx" type="image"></block>从可用命令列表中键入所需命令。要列出vVol详细信息以及基础存储信息、请尝试<block ref="c4122ec225cb73d9055f6eea65f152db" category="inline-image-macro-rx" type="image"></block>使用vvol list -verbose = true (对于基于LUN)、也可以使用ONTAP命令行界面或System Manager。<block ref="bb6d2ab6046963c6c5cfade630610085" category="inline-image-macro-rx" type="image"></block><block ref="c53400ca2fecad9e2bebd66f3959a549" category="inline-image-macro-rx" type="image"></block> 对于基于NFS的、可以使用System Manager浏览数据存储库。<block ref="01edcecacf3522da9d2fa02b2fb21611" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4a28bcc93d646969a9b30c4b3b8557ac" category="section-title">使用ONTAP工具10.1</block>
+  <block id="bbba63cf74c080e6393cf98651834351" category="list-text">右键单击vSphere集群或主机、然后在NetApp ONTAP工具下选择创建数据存储库(10.1)。</block>
+  <block id="d636e130c282f86563abce18e89c9efb" category="inline-image-macro">使用10.1选择VVOV数据存储库</block>
+  <block id="0b4cb4a4201bb7e84261730abf91dc1d" category="inline-image-macro">向10.1注册了VASA</block>
+  <block id="cfd9807ce2b45d4eb2eaf0ace976c1d1" category="list-text">选择数据存储库类型作为"vols"。<block ref="6c3103dabc657a48f51d083ba3bffdb2" category="inline-image-macro-rx" type="image"></block>如果vvol选项不可用、请确保已注册此vasa提供程序。<block ref="df77a2ec92b2ec26c11d1f30384e150b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e47f7d780874a13b0108f1c571b39691" category="inline-image-macro">使用10.1的VVOV数据存储库名称和传输协议</block>
+  <block id="d3973f1b6ea778b55bf6aec1d5332ba2" category="list-text">提供VVOV数据存储库名称并选择传输协议。<block ref="ee4639e8749ecb8d47fad221810ef909" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="35eab914b053cd0bb7d1fb4c89839d26" category="inline-image-macro">使用10.1选择VVOV数据存储库SVM</block>
+  <block id="674389bd786b3d6d455ebc635d071e2c" category="list-text">选择平台和Storage VM。<block ref="49b1440cb72f480250e98dc415d758d5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="366d1ff41d418c1ab939b2fdeb14a0c1" category="inline-image-macro">使用10.1选择VVOV数据存储库卷</block>
+  <block id="0323631e30e212e83f0ca7f85b51422d" category="inline-image-macro">使用10.1扩展vVol数据存储库</block>
+  <block id="0d90a3a0cb015f6b19bf56e2b7677714" category="list-text">为VVOV数据存储库创建或使用现有ONTAP卷。<block ref="1f3b297076d09a0bb5bd9d662d37bc8c" category="inline-image-macro-rx" type="image"></block>稍后可以从数据存储库配置中查看或更新ONTAP卷。<block ref="799a146e1016423a65ed7f40fc27521d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c7299b97ca17ce89e403b8cc468b0137" category="list-text">配置VVOR数据存储库后、可以像使用任何其他数据存储库一样使用该数据存储库。</block>
+  <block id="8d4d33c5b8fef63021d30e9e7a14fc45" category="inline-image-macro">使用10.1的VM报告</block>
+  <block id="9c89f96d124827b91c2d804a5c80fe39" category="inline-image-macro">使用10.1的数据存储库报告</block>
+  <block id="35dc1ef1bcba61534d9eef518a1e2a58" category="list-text">ONTAP工具可提供虚拟机和数据存储库报告。<block ref="5cfc4f697e4ea7ccd609c412ed0c10d1" category="inline-image-macro-rx" type="image"></block> <block ref="04ae573e278e3f2ff625ad23c6d68761" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="abb7ce68721f311149a684e6d6cf39b9" category="section-title">对VVOV数据存储库上的虚拟机进行数据保护</block>
+  <block id="f1532ef5f2857d03f6ba975b776fdffb" category="inline-link-macro">保护卷</block>
+  <block id="581f906df677492ee5ab37e5dd71c18b" category="paragraph">有关VVOV数据存储库上虚拟机的数据保护概述，请参见<block ref="d0658d01ca1ae54b64af649232d745fc" category="inline-link-macro-rx"></block>。</block>
+  <block id="c0433b0408b37992b980972ac1a92e60" category="inline-image-macro">用选择控制阀注册存储系统</block>
+  <block id="08250e514cc894915a2e8a9630ce08c1" category="list-text">注册托管VVOV数据存储库的存储系统以及任何复制配对节点。<block ref="43ae9cb8c3ab59cb16316ea17c2890d6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="bbe6cdd1edc4e24e2579aa43ada71e32" category="inline-image-macro">使用选择控制阀创建策略</block>
+  <block id="2075b329a01360bcaedfc42ff7b0112d" category="list-text">创建具有所需属性的策略。<block ref="ab847b79aa820699389329a63a7b16cc" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e5619d7943d7dbe09865e62eaa8d1d08" category="inline-image-macro">使用选择控制阀创建资源组</block>
+  <block id="717a94093ded2a2592fa8768607d6926" category="list-text">创建一个资源组并将其与一个或多个策略关联。<block ref="0bc287639489bf68ef4defbc876860c9" category="inline-image-macro-rx" type="image"></block>注意：对于VVOV数据存储库、需要使用虚拟机、标记或文件夹进行保护。VVOV数据存储库不能包含在资源组中。</block>
+  <block id="2ac8fcfaa25fa846845cabd0f71234d7" category="inline-image-macro">具有选择控制阀的VM的备份状态</block>
+  <block id="66db5c2f82eb41c913818c4ea32c4a1e" category="list-text">可以从其配置选项卡查看特定虚拟机备份状态。<block ref="83e33aba6dd632cc8f8153195bc58f80" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="dc7f650e201be8f62fac2812d1e0f1f2" category="list-text">可以从主位置或二级位置还原虚拟机。</block>
+  <block id="bea29f5e49ce5e4960ff0a65ce022f2e" category="inline-link-macro">SnapCenter插件文档</block>
+  <block id="da3e4c384f5e40d76113530203e7aa47" category="paragraph"><block ref="c20034e9d364d9216dbe3a95f4b3cc48" category="inline-link-macro-rx"></block>有关其他使用情形、请参见。</block>
+  <block id="60dc6ec93419ef452808f08a0f3c18db" category="section-title">将虚拟机从传统数据存储库迁移到VVOV数据存储库</block>
+  <block id="ba1ca334a6fd0787eead33c62412c11c" category="inline-link-macro">将VM迁移到ONTAP数据存储库</block>
+  <block id="a3d9d6182e81732e8a0d0ef1a723e794" category="paragraph">要将虚拟机从其他数据存储库迁移到VVOR数据存储库、可以根据具体情况使用各种选项。从简单的Storage vMotion操作到使用HCX进行迁移、操作可能会有所不同。<block ref="5c5a591f71b674147fb905c405375db4" category="inline-link-macro-rx"></block>有关详细信息、请参见。</block>
+  <block id="3012754a1fed48335f285435ad984097" category="section-title">在VVOV数据存储库之间迁移虚拟机</block>
+  <block id="e0a416a8697a3b23c028cba15e2a8c4e" category="paragraph">要在VVOV数据存储库之间批量迁移VM，请检查<block ref="5c5a591f71b674147fb905c405375db4" category="inline-link-macro-rx"></block>。</block>
+  <block id="684a4c87b529836345bdcb5094d6a8d6" category="section-title">参考架构示例</block>
+  <block id="dc46d052d2efceb1457a788c4057c337" category="paragraph">适用于VMware vSphere和选择控制阀的ONTAP工具可以安装在IT所管理的同一vCenter上、也可以安装在不同的vCenter Server上。最好避免在所管理的VVOV数据存储库上托管。</block>
+  <block id="20ed3a647f09aa635e8863c78f02bc16" category="inline-image-macro">每个vCenter一个ONTAP工具</block>
+  <block id="6d389adc41d72b0d417e67d7208b7bf6" category="paragraph"><block ref="6d389adc41d72b0d417e67d7208b7bf6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1972037e76eac063e833c5fc5aeee39d" category="paragraph">由于许多客户将其vCenter服务器托管在不同的一个上、而不是由IT管理、因此也建议对ONTAP工具和选择控制阀采用类似的方法。</block>
+  <block id="5fa120db508df81e388a1b1b2135cf22" category="inline-image-macro">管理vCenter上的ONTAP工具</block>
+  <block id="4b468cf3c0a98f3733ff17af95af66fd" category="paragraph"><block ref="4b468cf3c0a98f3733ff17af95af66fd" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b15e0c5837fcec98429b97a04c0d02c8" category="paragraph">借助ONTAP工具10.x、一个实例可以管理多个vCenter环境。存储系统将使用集群凭据进行全局注册、并将SVM分配给每个租户vCenter服务器。</block>
+  <block id="fc483723d2ad62ea2981ae075e0ebaf9" category="inline-image-macro">ONTAP工具10.x支持多vCenter</block>
+  <block id="0babb659955d94859a1de8e095eb6c8c" category="paragraph"><block ref="0babb659955d94859a1de8e095eb6c8c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="12359a5e373d019efd3dfe5edf07180f" category="paragraph">此外、还支持混合使用专用模式和共享模式。</block>
+  <block id="68c58131a3059ea56c2b7acd502b69d7" category="inline-image-macro">混合使用共享和专用ONTAP工具</block>
+  <block id="2d0dc906bc31e5e966beb634ae44790d" category="paragraph"><block ref="2d0dc906bc31e5e966beb634ae44790d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="07e1d66babe77070cc76a4e637c9f26d" category="section-title">如何开始使用</block>
+  <block id="9d2169c1c2855b78a7aeaa4f42d27dc7" category="inline-link-macro">NetApp 支持站点</block>
+  <block id="3f28c38f16353f5963072fc69d2da8db" category="inline-link-macro">将ONTAP与虚拟卷结合使用</block>
+  <block id="3d8dbb92b636bb821607ad3964f5609d" category="paragraph">如果您的环境中未安装ONTAP工具，请从下载<block ref="7c1a86981b39918f036f2778fc5b5ca6" category="inline-link-macro-rx"></block>并按照上提供的说明<block ref="8cf89dfe852bac578b5653affb6d877d" category="inline-link-macro-rx"></block>进行操作。</block>
 </blocks>
