@@ -1,0 +1,448 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmfs-deployment.html 
+keywords: vmware, vmfs, deployment, 
+summary: 该解决方案展示了使用ONTAP SAN技术和OFFTAP工具为当前和未来的企业提供基本IT服务的最佳方法。对于在SAN设置中运行VMware vSphere的虚拟化环境来说、这些优势尤其有用。 
+---
+= VMFS部署指南
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./../media/
+
+
+[role="lead"]
+NetApp的存储解决方案和产品支持客户充分利用虚拟化基础架构的优势。借助NetApp解决方案、客户可以高效实施全面的数据管理软件、确保自动化、效率、数据保护和安全功能、从而有效满足苛刻的性能要求。将ONTAP软件与VMware vSphere相结合、可以降低主机硬件和VMware许可费用、确保以更低的成本保护数据、并提供稳定一致的高性能。
+
+
+
+== 简介
+
+虚拟化工作负载具有移动性。因此、管理员可以使用VMware Storage vMotion在VMware虚拟机文件系统(VMFS)、NFS或Vvol数据存储库之间移动虚拟机、这些数据存储库都位于同一个存储系统中、因此、如果使用全闪存系统或使用最新的ASA型号并结合SAN创新技术、则可以探索不同的存储方法、从而提高成本效益。
+
+此处的关键信息是、迁移到ONTAP不仅可以改善客户体验和应用程序性能、还可以灵活地在FCP、iSCSI、NVMe/FC和NVMe/TCP之间迁移数据和应用程序。对于在VMware vSphere上投入了大量资金的企业来说、在当前市场条件下、使用ONTAP存储是一种经济高效的选择、因为这种情况提供了独特的机会。如今、企业面临着现代SAN方法可以简单快速地解决的新要务。下面介绍了NetApp现有客户和新客户通过ONTAP增加价值的一些方式。
+
+* 成本效益—集成存储效率功能可帮助ONTAP显著降低存储成本。NetApp ASA系统可以在生产环境中运行所有存储效率功能、而不会影响性能。NetApp提供最有效的担保、让您可以轻松规划这些效率优势。
+* 数据保护—使用快照的SnapCenter软件可为VM配置中部署的各种企业级应用程序提供高级VM和应用程序级数据保护。
+* 安全性—使用Snapshot副本防范恶意软件和勒索软件。通过使用Snapshot锁定和NetApp SnapLock®软件使Snapshot副本不可变成固定副本来增强保护。
+* 云—ONTAP提供广泛的混合云选项、支持企业将公有云和私有云相结合、从而提供灵活性并降低基础架构管理开销。基于ONTAP产品的补充数据存储库支持允许使用基于Azure、AWS和Google的VMware Cloud进行TCO优化部署、数据保护和业务连续性、同时避免受制于供应商。
+* 灵活性—ONTAP设备齐全、可满足现代企业快速变化的需求。借助ONTAP One、所有这些功能均标配ONTAP系统、无需额外费用。
+
+
+
+
+== 合理调整和优化
+
+随着许可变更的临近、企业正在积极应对总拥有成本(Total Cost of拥有成本、TCO)可能增加的问题。他们正在通过积极的资源管理和规模估算从战略上优化VMware基础架构、以提高资源利用率并简化容量规划。通过有效使用专用工具、企业可以高效识别和回收浪费的资源、从而减少核心数量和整体许可费用。必须强调的是、许多企业已经在将这些实践集成到云评估中、展示了这些流程和工具如何有效地缓解内部环境中的成本顾虑、并消除向替代虚拟机管理程序迁移的不必要费用。
+
+
+
+=== TCO估算工具
+
+NetApp创建了一个简单的TCO估算工具、可以作为开启此优化之旅的基石。TCO估算器使用RVtools或手动输入方法轻松预测给定部署所需的主机数量、并计算节省量、以便使用NetApp ONTAP存储系统优化部署。请记住、这是基石。
+
+
+NOTE: NetApp现场团队和合作伙伴只能访问TCO估算器。与NetApp客户团队合作、评估您的现有环境。
+
+下面是TCO估算器的屏幕截图。
+
+image::vmfs-deploy-image1.png[VMFS Deploy image1]
+
+
+
+=== Cloud Insights
+
+估算器显示可能的节省量(对于任何给定组织都是如此)后、便可利用实时指标深入分析虚拟机之间的工作负载IO性能特征了。为此、NetApp提供了Cloud Insights。通过为VM回收提供详细的分析和建议、Cloud Insights可以帮助企业做出明智的决策来优化其VM环境。它可以确定哪些资源可以回收或停用主机、而对生产的影响微乎其微、从而帮助企业以深思熟虑的战略性方式应对Broadcom收购VMware所带来的变化。换言之、Cloud Insight可帮助企业摆脱这种情绪。他们可以利用Cloud Insights工具提供的洞察力制定合理的战略决策、在成本优化与运营效率和生产率之间取得平衡、而不是对变化做出惊慌或沮丧的反应。
+
+下面是Cloud Insights的屏幕截图。
+
+image::vmfs-deploy-image2.png[VMFS Deploy image2]
+
+image::vmfs-deploy-image3.png[VMFS Deploy image3]
+
+
+NOTE: 定期进行评估、以确定VMware集群中未充分利用的资源、提高虚拟机密度和利用率、从而控制与新订阅许可证相关的不断增长的成本。考虑在购买新服务器时将每个CPU的核心数减少到16个，以适应VMware许可模式的变化。
+
+借助NetApp、您可以合理调整虚拟化环境的规模、并引入经济高效的闪存存储性能以及简化的数据管理和勒索软件解决方案、以确保企业在优化现有IT资源的同时、为新的订阅模式做好准备。
+
+
+
+== 适用于 VMware vSphere 的 NetApp ONTAP 工具
+
+为了进一步增强和简化VMware集成、NetApp提供了多种OFFTAP工具、可与NetApp ONTAP和VMware vSphere结合使用来高效管理虚拟化环境。本节将重点介绍适用于VMware的ONTAP工具。适用于VMware vSphere 10的ONTAP工具提供了一套全面的工具、用于虚拟机生命周期管理、可简化存储管理、增强效率功能、提高可用性并降低存储成本和运营开销。这些工具可与VMware生态系统无缝集成、便于配置数据存储库、并为虚拟机提供基本保护。适用于VMware vSphere的ONTAP工具10.x版包含可水平扩展的事件驱动型微服务、这些微服务作为开放式虚拟设备(OVA)进行部署、并遵循为块和NFS存储环境配置数据存储库和优化ESXi主机设置的最佳实践。考虑到这些优势、建议在运行ONTAP软件的系统中使用OTV作为最佳实践。
+
+
+
+=== 入门
+
+在部署和配置适用于VMware的ONTAP工具之前、请确保满足前提条件。完成后、部署单节点配置。
+
+
+NOTE: 部署需要三个IP地址—一个用于负载平衡器、一个用于Kubirnetes控制平台、一个用于节点。
+
+
+
+=== 步骤
+
+. 登录到vSphere服务器。
+. 导航到要部署OVA的集群或主机。
+. 右键单击所需位置、然后选择部署OVF模板。
++
+.. 输入.ova文件的URL或浏览到保存.ova文件的文件夹、然后选择下一步。
+
+
+. 选择虚拟机的名称、文件夹、集群/主机、然后选择"Next"(下一步)。
+. 在配置窗口中、选择Easy Deployment (S)、Easy Deployment (M)或Advanced Deployment (S)或Advanced Deployment (M) configuration。
++
+
+NOTE: 本逐步介绍将使用易于部署的选项。
+
++
+image::vmfs-deploy-image4.png[VMFS Deploy image4]
+
+. 选择要部署OVA的数据存储库以及源网络和目标网络。完成后、选择下一步。
+. 现在是时候自定义模板>系统配置窗口了。
++
+image::vmfs-deploy-image5.png[VMFS Deploy image5]
+
++
+image::vmfs-deploy-image6.png[VMFS Deploy image6]
+
++
+image::vmfs-deploy-image7.png[VMFS Deploy image7]
+
+
+
+成功安装后、Web控制台将显示适用于VMware vSphere的ONTAP工具的状态。
+
+image::vmfs-deploy-image8.png[VMFS Deploy image8]
+
+image::vmfs-deploy-image9.png[VMFS Deploy image9]
+
+
+NOTE: 数据存储库创建向导支持配置VMFS、NFS和VMware数据存储库。
+
+现在是时候配置基于iSCSI的VMFS数据存储库了、以便进行此逐步介绍。
+
+. 使用登录到vSphere Client https://vcenterip/ui[]
+. 右键单击主机、主机集群或数据存储库、然后选择NetApp ONTAP工具>创建数据存储库。
++
+image::vmfs-deploy-image10.png[VMFS Deploy image10]
+
+. 在类型窗格中、在数据存储库类型中选择VMFS。
++
+image::vmfs-deploy-image11.png[VMFS Deploy image11]
+
+. 在名称和协议窗格中、输入数据存储库名称、大小和协议信息。如果要将此数据存储库添加到、请在窗格的高级选项部分中选择数据存储库集群。
++
+image::vmfs-deploy-image12.png[VMFS Deploy image12]
+
+. 在存储窗格中选择平台和Storage VM。在窗格的高级选项部分中提供自定义启动程序组名称(可选)。您可以为此数据存储库选择一个现有igrop、也可以使用自定义名称创建一个新的igrop。
++
+image::vmfs-deploy-image13.png[VMFS Deploy image13]
+
+. 从存储属性窗格的下拉菜单中选择聚合。根据需要从高级选项部分中选择空间预留、卷选项和启用QoS选项。
++
+image::vmfs-deploy-image14.png[VMFS Deploy image14]
+
+. 在摘要窗格中查看数据存储库详细信息、然后单击完成。此时将创建VMFS数据存储库并将其挂载到所有主机上。
++
+image::vmfs-deploy-image15.png[VMFS Deploy image15]
+
+
+
+有关VVOL、FC、NVMe/TCP数据存储库配置、请参见这些链接。
+
+
+
+== VAAI负载分流
+
+VAAI基本功能可用于创建、克隆、迁移、启动和停止VM等例行vSphere操作。为了简便起见、可以通过vSphere客户端执行这些操作、也可以从命令行执行脚本或获得更准确的计时。ESX本机支持适用于SAN的VAAI。VAAI始终在受支持的NetApp存储系统上启用、并为SAN存储上的以下VAAI操作提供本机支持：
+
+* 副本卸载
+* 原子测试和设置(Atomic Test & Set、ATS)锁定
+* 相同写入
+* 空间不足条件处理
+* 空间回收
+
+
+image::vmfs-deploy-image16.png[VMFS Deploy image16]
+
+
+NOTE: 确保已通过ESX高级配置选项启用HardwareAcceleratedMove。
+
+
+NOTE: 确保LUN已启用"空间分配"。如果未启用、请启用此选项并重新扫描所有HBA。
+
+image::vmfs-deploy-image17.png[VMFS Deploy image17]
+
+
+NOTE: 这些值可使用适用于VMware vSphere的ONTAP工具轻松设置。从概述信息板中、转到ESXi主机合规性卡、然后选择应用建议设置选项。在应用建议的主机设置窗口中、选择主机、然后单击下一步以应用NetApp建议的主机设置。
+
+image::vmfs-deploy-image18.png[VMFS Deploy image18]
+
+查看的详细指导link:https://docs.netapp.com/us-en/ontap-apps-dbs/vmware/vmware-vsphere-settings.html["建议的 ESXi 主机和其他 ONTAP 设置"]。
+
+
+
+== 数据保护
+
+适用于vSphere的ONTAP的主要优势包括高效备份VMFS数据存储库上的VM并快速恢复这些VM。通过与vCenter集成，NetApp SnapCenter®软件可为VM提供广泛的备份和恢复功能。它可以为VM、数据存储库和VMDK提供快速、节省空间、崩溃状态一致和VM一致的备份和还原操作。它还可以与SnapCenter服务器配合使用、以便使用SnapCenter应用程序专用插件在VMware环境中支持基于应用程序的备份和还原操作。利用Snapshot副本可以快速创建虚拟机或数据存储库的副本，而不会对性能产生任何影响，并可使用NetApp SnapMirror®或NetApp SnapVault®技术实现长期异地数据保护。
+
+image::vmfs-deploy-image19.png[VMFS Deploy image19]
+
+工作流非常简单。添加主存储系统和SnapMirror (如果需要SVM/SVM、则添加辅存储系统和SnapVault)。
+
+部署和配置的高级步骤：
+
+. 下载适用于VMware插件OVA的SnapCenter
+. 使用vSphere Client凭据登录
+. 部署OVF模板以启动VMware Deploy向导并完成安装
+. 要访问此插件、请从菜单中选择适用于VMware vSphere的SnapCenter插件
+. 添加存储
+. 创建备份策略
+. 创建资源组
+. 备份资源组
+. 还原整个虚拟机或特定虚拟磁盘
+
+
+
+
+== 为VM设置适用于VMware的SnapCenter插件
+
+要保护托管VM和iSCSI数据存储库的VM、必须部署适用于VMware的SnapCenter插件。这是一个简单的OVF导入。
+
+部署步骤如下：
+
+. 从NetApp支持站点下载开放虚拟设备(OVA)。
+. 登录到vCenter。
+. 在vCenter中、右键单击任何清单对象、例如数据中心、文件夹、集群或主机、然后选择部署OVF模板。
+. 选择适当的设置(包括存储、网络)并自定义模板以更新vCenter及其凭据。查看后、单击"Finish (完成)"。
+. 等待VF导入和部署任务完成。
+. 成功部署适用于VMware的SnapCenter插件后、该插件将在vCenter中注册。可以通过访问"管理">"客户端插件"来验证这种情况
++
+image::vmfs-deploy-image20.png[VMFS Deploy image20]
+
+. 要访问此插件、请导航到vCenter Web客户端页面的左侧边栏、选择适用于VMware的SnapCenter插件。
++
+image::vmfs-deploy-image21.png[VMFS Deploy image21]
+
+
+
+
+
+== 添加存储、创建策略和资源组
+
+
+
+=== 正在添加存储系统
+
+下一步是添加存储系统。要备份或还原VM、应将集群管理端点或Storage Virtual Machine (SVM)管理端点IP添加为存储系统。通过添加存储、适用于VMware的SnapCenter插件可以识别和管理vCenter中的备份和还原操作。
+
+这一进程是直接的。
+
+. 在左侧导航栏中、选择适用于VMware的SnapCenter插件。
+. 选择存储系统。
+. 选择添加以添加"存储"详细信息。
+. 使用凭据作为身份验证方法、输入用户名及其密码、然后单击添加以保存设置。
++
+image::vmfs-deploy-image22.png[VMFS Deploy image22]
+
++
+image::vmfs-deploy-image23.png[VMFS Deploy image23]
+
+
+
+
+
+=== 创建备份策略
+
+全面的备份策略包括备份时间、备份内容以及备份保留时间等因素。可以每小时或每天触发一次快照、以备份整个数据存储库。此方法不仅可以捕获数据存储库、还可以备份和还原这些数据存储库中的VM和VMDK。
+
+备份VM和数据存储库之前、必须创建备份策略和资源组。备份策略包括计划和保留策略等设置。按照以下步骤创建备份策略。
+
+. 在适用于VMware的SnapCenter插件的左侧导航器窗格中、单击策略。
+. 在策略页面上、单击创建以启动向导。
++
+image::vmfs-deploy-image24.png[VMFS Deploy image24]
+
+. 在"New Backup Policy"页面上、输入策略名称。
+. 指定保留、频率设置和复制。
++
+
+NOTE: 要将Snapshot副本复制到镜像或存储二级存储系统、必须事先配置这些关系。
+
++
+
+NOTE: 要启用VM一致的备份、必须安装并运行VMware工具。选中虚拟机一致性复选框后、系统会先暂停虚拟机、然后VMware执行虚拟机一致的快照(不包括内存)、最后适用于VMware的SnapCenter插件执行备份操作、最后恢复虚拟机操作。
+
++
+image::vmfs-deploy-image25.png[VMFS Deploy image25]
+
++
+创建策略后、下一步是创建资源组、该资源组将定义应备份的相应iSCSI数据存储库和VM。创建资源组后、是时候触发备份了。
+
+
+
+
+
+=== 创建资源组
+
+资源组是需要保护的VM和数据存储库的容器。可以随时将这些资源添加或删除到资源组中。
+
+按照以下步骤创建资源组。
+
+. 在适用于VMware的SnapCenter插件的左侧导航器窗格中、单击资源组。
+. 在资源组页面上、单击创建以启动向导。
++
+另一种创建资源组的方法是、选择单个虚拟机或数据存储库并分别创建一个资源组。
+
++
+image::vmfs-deploy-image26.png[VMFS Deploy image26]
+
+. 在资源页面上、选择范围(虚拟机或数据存储库)和数据中心。
++
+image::vmfs-deploy-image27.png[VMFS Deploy image27]
+
+. 在生成磁盘页面上、为跨多个数据存储库具有多个VMDK的虚拟机选择一个选项
+. 下一步是关联备份策略。选择现有策略或创建新的备份策略。
+. 在计划页面上、为每个选定策略配置备份计划。
++
+image::vmfs-deploy-image28.png[VMFS Deploy image28]
+
++
+.. 选择适当的选项后、单击完成。
++
+这将创建新的资源组并添加到资源组列表中。
+
++
+image::vmfs-deploy-image29.png[VMFS Deploy image29]
+
+
+
+
+
+
+
+== 备份资源组
+
+现在是时候触发备份了。备份操作将对资源组中定义的所有资源执行。如果资源组附加了策略并配置了计划，则会根据该计划自动进行备份。
+
+. 在vCenter Web Client页面的左侧导航栏中、选择适用于VMware的SnapCenter插件>资源组、然后选择指定的资源组。选择立即运行以启动临时备份。
++
+image::vmfs-deploy-image30.png[VMFS Deploy image30]
+
+. 如果资源组配置了多个策略，请在立即备份对话框中选择用于备份操作的策略。
+. 选择确定以启动备份。
++
+image::vmfs-deploy-image31.png[VMFS Deploy image31]
+
++
+要监控操作进度、请选择窗口底部的近期任务、或者在信息板作业监控器上查看更多详细信息。
+
+
+
+
+
+== 从备份还原VM
+
+通过适用于VMware的SnapCenter插件、可以将虚拟机(VM)还原到vCenter。还原虚拟机时、可以将其还原到原始ESXi主机上挂载的原始数据存储库、这样会使用选定的备份副本覆盖现有内容、或者可以从备份副本还原已删除/重命名的虚拟机(此操作会覆盖原始虚拟磁盘中的数据)。要执行还原、请执行以下步骤：
+
+. 在VMware vSphere Web Client图形用户界面中、选择工具栏中的菜单。选择[清单(Inventory)]，然后选择[虚拟机和模板(Virtual Machine and
+. 在左侧导航栏中、选择虚拟机、然后选择配置选项卡、在适用于VMware的SnapCenter插件下选择备份。单击需要从中还原虚拟机的备份作业。
++
+image::vmfs-deploy-image32.png[VMFS Deploy image32]
+
+. 选择需要从备份中还原的虚拟机。
++
+image::vmfs-deploy-image33.png[VMFS Deploy image33]
+
+. 在Select Scope页面上、在Restore Scope字段中选择Entire Virtual Machine、然后选择Restore location、并输入应挂载备份的目标ESXi信息。如果在执行还原操作后需要打开VM的电源、请启用重新启动VM复选框。
++
+image::vmfs-deploy-image34.png[VMFS Deploy image34]
+
+. 在选择位置页面上、选择主位置的位置。
++
+image::vmfs-deploy-image35.png[VMFS Deploy image35]
+
+. 查看摘要页面、然后选择完成。
++
+image::vmfs-deploy-image36.png[VMFS Deploy image36]
+
++
+选择屏幕底部的近期任务、以监控操作进度。
+
+
+
+
+NOTE: 虽然VM已还原、但它们不会自动添加到以前的资源组中。因此、如果需要保护已还原的VM、请手动将这些VM添加到相应的资源组中。
+
+如果删除了原始虚拟机、该怎么办？使用适用于VMware的SnapCenter插件、这是一项简单的任务。可以从数据存储库级别对已删除的VM执行还原操作。转至相应的数据存储库>配置>备份、然后选择已删除的虚拟机并选择还原。
+
+image::vmfs-deploy-image37.png[VMFS Deploy image37]
+
+总之、在使用ONTAP ASA存储优化VMware部署的TCO时、请使用适用于VMware的SnapCenter插件作为备份VM的简单高效的方法。它可以无缝快速地备份和还原VM、因为快照备份只需几秒钟即可完成。
+
+请参见本指南link:https://docs.netapp.com/us-en/netapp-solutions/ehc/bxp-scv-hybrid-solution.html#restoring-virtual-machines-in-the-case-of-data-loss["解决方案指南"]、link:https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_get_started_overview.html["产品文档"]了解SnapCenter配置、备份、从主存储系统或二级存储系统甚至从存储在对象存储上的备份进行还原以供长期保留。
+
+为了降低存储成本、可以启用FabricPool卷分层、以便自动将Snapshot副本的数据移动到成本较低的存储层。Snapshot副本通常会使用超过10%的已分配存储。虽然这些时间点副本对于数据保护和灾难恢复非常重要、但很少使用、而且不能高效利用高性能存储。借助FabricPool的"仅快照"策略、您可以轻松释放高性能存储上的空间。启用此策略后、卷中未由活动文件系统使用的非活动Snapshot副本块将移至对象层、读取后、Snapshot副本将移至本地层以恢复VM或整个数据存储库。此对象层可以采用私有云(如NetApp StorageGRID)或公共云(如AWS或Azure)的形式。
+
+image::vmfs-deploy-image38.png[VMFS Deploy image38]
+
+查看的详细指导link:https://docs.netapp.com/us-en/ontap-apps-dbs/vmware/vmware-vsphere-overview.html["采用ONTAP的VMware vSphere"]。
+
+
+
+== 勒索软件保护
+
+勒索软件攻击保护的最有效方法之一是实施多层安全措施。驻留在数据存储库上的每个虚拟机都托管一个标准操作系统。确保安装并定期更新企业服务器反恶意软件产品套件、这是多层勒索软件保护策略的重要组成部分。同时、利用NetApp快照技术实施数据保护、确保从勒索软件攻击中快速可靠地恢复。
+
+勒索软件攻击越来越多地将备份和快照恢复点作为目标、在开始加密文件之前尝试将其删除。但是、使用ONTAP、可以通过link:https://docs.netapp.com/us-en/ontap/snaplock/snapshot-lock-concept.html["NetApp Snapshot™副本锁定"]在ONTAP中的主系统或二级系统上创建防篡改快照来防止这种情况发生。勒索软件攻击者或恶意管理员不能删除或更改这些Snapshot副本、因此即使在遭受攻击后也可以访问这些副本。您可以在几秒钟内恢复虚拟机数据、从而最大限度地减少组织的停机时间。此外、您还可以灵活地选择适合您的组织的Snapshot计划和锁定持续时间。
+
+image::vmfs-deploy-image39.png[VMFS Deploy image39]
+
+在添加多层方法的过程中、还提供了一个内置的本机ONTAP解决方案、用于防止未经授权删除备份Snapshot副本。它称为多管理员验证(ONTAP 9)、在MAV 11.1及更高版本中提供。理想的方法是、对MAV特定操作使用查询。
+
+要了解有关MAV以及如何配置其保护功能的更多信息，请参见link:https://docs.netapp.com/us-en/ontap/multi-admin-verify/index.html#how-multi-admin-approval-works["多管理员验证概述"]。
+
+
+
+== migration
+
+在转型阶段、许多IT组织都在采用混合云优先的方法。客户正在评估其当前IT基础架构、并根据此评估和发现结果将工作负载迁移到云。迁移到云的原因各不相同、可能包括弹性和突发、数据中心退出、数据中心整合、生命周期结束情形、合并、收购等因素。每个组织的迁移原因都取决于其特定的业务优先级、而成本优化是最高优先级。在迁移到混合云时、选择合适的云存储至关重要、因为它可以充分发挥云部署和弹性的潜能。
+
+通过在每个超大型存储上集成由NetApp提供支持的1P服务、企业可以通过简单的迁移方法实现基于vSphere的云解决方案、无需重新构建平台、无需更改IP、也无需更改架构。此外，通过这种优化，您可以扩展存储占用空间，同时将主机数量保持在 vSphere 所需的最低水平，但不会更改可用的存储层次结构，安全性或文件。
+
+* 查看的详细指导link:https://docs.netapp.com/us-en/netapp-solutions/ehc/aws-migrate-vmware-hcx.html["将工作负载迁移到FSx for ONTAP数据存储库"]。
+* 查看的详细指导link:https://docs.netapp.com/us-en/netapp-solutions/ehc/azure-migrate-vmware-hcx.html["将工作负载迁移到Azure NetApp Files数据存储库"]。
+* 查看的详细指导link:https://docs.netapp.com/us-en/netapp-solutions/ehc/gcp-migrate-vmware-hcx.html["将工作负载迁移到Google Cloud NetApp卷数据存储库"]。
+
+
+
+
+== 灾难恢复
+
+
+
+=== 内部站点之间的灾难恢复
+
+有关详细信息、请访问link:../ehc/dr-draas-vmfs.html["使用BlueXP  DRaaS对VMFS数据存储库执行灾难恢复"]
+
+
+
+=== 在任何超频存储中的内部环境和VMware Cloud之间进行灾难恢复
+
+对于希望将任何超规模存储上的VMware Cloud用作灾难恢复目标的客户、可以使用由ONTAP存储提供支持的数据存储库(Azure NetApp Files、FSx for ONTAP、Google Cloud NetApp卷)从内部复制数据、方法是使用任何经验证的第三方解决方案来提供VM复制功能。通过添加由ONTAP存储提供支持的数据存储库、可以在使用较少ESXi主机的目标上实现成本优化的灾难恢复。这样、还可以在内部环境中停用二级站点、从而显著节省成本。
+
+* 查看的详细指导link:https://docs.netapp.com/us-en/netapp-solutions/ehc/veeam-fsxn-dr-to-vmc.html["对FSx for ONTAP数据存储库进行灾难恢复"]。
+* 查看的详细指导link:https://docs.netapp.com/us-en/netapp-solutions/ehc/azure-native-dr-jetstream.html["对Azure NetApp Files数据存储库进行灾难恢复"]。
+* 查看的详细指导link:https://docs.netapp.com/us-en/netapp-solutions/ehc/gcp-app-dr-sc-cvs-veeam.html["对Google Cloud NetApp卷数据存储库进行灾难恢复"]。
+
+
+
+
+== 结论
+
+该解决方案展示了使用ONTAP SAN技术和OFFTAP工具为当前和未来的企业提供基本IT服务的最佳方法。对于在SAN设置中运行VMware vSphere的虚拟化环境来说、这些优势尤其有用。凭借NetApp存储系统的灵活性和可扩展性、企业可以为更新和调整其基础架构奠定基础、使其能够满足不断变化的业务需求。此系统可以处理当前工作负载并提高基础架构效率、从而降低运营成本并为未来工作负载做好准备。
