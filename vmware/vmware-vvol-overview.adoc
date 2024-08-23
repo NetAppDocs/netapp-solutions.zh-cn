@@ -1,0 +1,189 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmware-vvol-overview.html 
+keywords: netapp, vmware, getting, started, vvol, ONTAP tools 
+summary:  
+---
+= 使用ONTAP的VMware虚拟卷
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+VMware虚拟卷(vvol)可满足应用程序特定的要求、以推动存储配置决策、同时利用存储阵列提供的一组丰富功能。通过vSphere存储感知API (vSphere API for Storage A感知、VASA)、VM管理员可以轻松地使用配置VM所需的任何存储功能、而无需与其存储团队进行交互。在使用VASA之前、VM管理员可以定义VM存储策略、但必须与其存储管理员一起确定适当的数据存储库、通常使用文档或命名约定。通过使用VASA、具有适当权限的vCenter管理员可以定义一系列存储功能、然后vCenter用户可以使用这些功能来配置VM。通过在VM存储策略和数据存储库存储功能配置文件之间进行映射、vCenter可以显示兼容数据存储库列表以供选择、并支持Aria (以前称为vReise) Automation或Tanzu Kubernetes Grid等其他技术自动从分配的策略中选择存储。这种方法称为基于存储策略的管理。虽然存储功能配置文件和策略也可用于传统数据存储库、但我们在此重点关注的是虚拟卷数据存储库。适用于ONTAP的ONTAP提供程序作为适用于VMware vSphere的VMware工具的一部分提供。
+
+将VASA Provider置于存储阵列之外的优势包括：
+
+* 单个实例可以管理多个存储阵列。
+* 发布周期不必取决于存储操作系统版本。
+* 存储阵列上的资源非常昂贵。
+
+
+每个VVOR数据存储库都由存储容器提供支持、存储容器是一个逻辑条目、用于在VASA提供程序中定义存储容量。使用ONTAP工具的存储容器是使用ONTAP卷构建的。可以通过在同一个SVM中添加ONTAP卷来扩展存储容器。
+
+协议端点(PE)主要由ONTAP工具管理。如果使用基于iSCSI的VVOL、则会为该存储容器或VVOL数据 存储库中的每个ONTAP卷创建一个PE。适用于iSCSI的PE是一个小型LUN (9.x为4 MiB、10.x为2 GiB)、它会提供给vSphere主机、并会对PE应用多路径策略。
+
+image:vmware-vvol-overview-image01.png["iSCSI PE架构"]
+
+image:vmware-vvol-overview-image05.png["通过命令行界面设置iSCSI PE大小"]
+
+对于NFS、系统会为根文件系统导出创建一个PE、其中包含存储容器或VVOV数据存储库所在的SVM上的每个NFS数据LIP。
+
+image:vmware-vvol-overview-image02.png["NFS PE架构"]
+
+image:vmware-vvol-overview-image06.png["从vSphere UI访问NFS PE"]
+
+ONTAP工具可管理PE的生命周期、还可用于vSphere主机与vSphere集群的扩展和收缩进行通信。ONTAP工具API可与现有自动化工具集成。
+
+目前、适用于VMware vSphere的ONTAP工具有两个版本。
+
+
+
+== ONTAP工具9.x
+
+* 需要为NVMe/FC提供vVol支持时
+* 美国联邦或欧盟法规要求
+* 与适用于VMware vSphere的SnapCenter插件集成的更多用例
+
+
+
+
+== ONTAP工具10.x
+
+* 高可用性
+* 多租户
+* 大规模
+* SnapMirror主动同步支持VMFS数据存储库
+* 即将针对特定使用情形与适用于VMware vSphere的SnapCenter插件进行集成
+
+
+
+
+== 为什么选择使用这些卷？
+
+VMware虚拟卷(vvol)具有以下优势：
+
+* 简化配置(无需担心每个vSphere主机的最大LUN限制、也无需为每个卷创建NFS导出)
+* 最大限度地减少iSCSI/FC路径数(对于基于块SCSI的VVOV)
+* 快照、克莱内斯和其他存储操作通常会卸载到存储阵列、并且执行速度会更快。
+* 简化VM的数据迁移(无需与同一LUN中的其他VM所有者进行协调)
+* QoS策略应用于VM磁盘级别、而不是卷级别。
+* 操作简单(存储供应商在VASA Provider中提供了不同的功能)
+* 支持大规模VM。
+* 支持在vCenter之间迁移vVol复制。
+* 存储管理员可以选择在虚拟机磁盘级别进行监控。
+
+
+
+
+== 连接选项
+
+通常建议对存储网络使用双网络结构环境、以实现高可用性、性能和容错。iSCSI、FC、NFS3和NVMe/FC均支持vvol。注：link:https://imt.netapp.com/matrix["互操作性表工具（ IMT ）"]有关支持的ONTAP工具版本、请参见
+
+连接选项与VMFS数据存储库或NFS数据存储库选项保持一致。下面显示了iSCSI和NFS的参考vSphere网络示例。image:vmware-vvol-overview-image03.png["iSCSI网络"]
+
+image:vmware-vvol-overview-image04.png["NFS网络"]
+
+
+
+== 使用适用于 VMware vSphere 的 ONTAP 工具进行配置
+
+可以使用ONTAP工具配置vVol数据存储库、使其类似于VMFS或NFS数据存储库。如果ONTAP工具插件在vSphere客户端UI上不可用、请参阅下面的"如何开始使用"部分。
+
+
+
+=== 使用ONTAP工具9.13.
+
+. 右键单击vSphere集群或主机、然后在NetApp ONTAP工具下选择配置数据存储库。
+. 将类型保留为"vols"、提供数据存储库的名称并选择所需的协议image:vmware-vvol-overview-image07.png["使用9.13的iSCSI VVOV数据存储库"]
++
+image:vmware-vvol-overview-image08.png["使用9.13的NFS VVOV数据存储库"]
+
+. 选择所需的存储功能配置文件、然后选择存储系统和SVM。image:vmware-vvol-overview-image09.png["使用9.13的存储系统和SVM"]
+. 创建新的ONTAP卷或为VVOV数据存储库选择现有卷。image:vmware-vvol-overview-image10.png["使用9.13的VVOV卷"]
++
+稍后可以使用数据存储库选项查看或更改ONTAP卷。
+
++
+image:vmware-vvol-overview-image11.png["使用9.13扩展vVol"]
+
+. 查看摘要、然后单击"Finish (完成)"以创建VVOV数据存储库。image:vmware-vvol-overview-image12.png["使用9.13的iSCSI VVOV数据存储库摘要"]
+. 创建VVOR数据存储库后、可以像使用任何其他数据存储库一样使用该数据存储库。以下示例介绍了如何根据虚拟机存储策略将数据存储库分配给即将创建的虚拟机。image:vmware-vvol-overview-image13.png["VVOV VM存储策略"]
+. 可以使用基于Web的命令行界面检索vVol详细信息。此门户的URL与不带文件名version.xml的VASA提供程序URL相同。image:vmware-vvol-overview-image14.png["9.13的VASA提供程序信息"]
++
+此凭据应与配置ONTAP工具期间使用的信息匹配image:vmware-vvol-overview-image15.png["VASA客户端用户界面"]
+
++
+或者在ONTAP工具维护控制台中使用更新后的密码。image:vmware-vvol-overview-image16.png["ONTAP工具控制台UI"]选择基于Web的命令行界面。image:vmware-vvol-overview-image17.png["ONTAP工具控制台"]从可用命令列表中键入所需命令。要列出vVol详细信息以及基础存储信息、请尝试image:vmware-vvol-overview-image18.png["使用9.13显示vvol信息"]使用vvol list -verbose = true (对于基于LUN)、也可以使用ONTAP命令行界面或System Manager。image:vmware-vvol-overview-image19.png["使用ONTAP命令行界面显示VVOLLUN信息"]image:vmware-vvol-overview-image20.png["System Manager中的VVOLLUN信息"] 对于基于NFS的、可以使用System Manager浏览数据存储库。image:vmware-vvol-overview-image21.png["System Manager中的vVol NFS信息"]
+
+
+
+
+
+=== 使用ONTAP工具10.1
+
+. 右键单击vSphere集群或主机、然后在NetApp ONTAP工具下选择创建数据存储库(10.1)。
+. 选择数据存储库类型作为"vols"。image:vmware-vvol-overview-image22.png["使用10.1选择VVOV数据存储库"]如果vvol选项不可用、请确保已注册此vasa提供程序。image:vmware-vvol-overview-image23.png["向10.1注册了VASA"]
+. 提供VVOV数据存储库名称并选择传输协议。image:vmware-vvol-overview-image24.png["使用10.1的VVOV数据存储库名称和传输协议"]
+. 选择平台和Storage VM。image:vmware-vvol-overview-image25.png["使用10.1选择VVOV数据存储库SVM"]
+. 为VVOV数据存储库创建或使用现有ONTAP卷。image:vmware-vvol-overview-image26.png["使用10.1选择VVOV数据存储库卷"]稍后可以从数据存储库配置中查看或更新ONTAP卷。image:vmware-vvol-overview-image27.png["使用10.1扩展vVol数据存储库"]
+. 配置VVOR数据存储库后、可以像使用任何其他数据存储库一样使用该数据存储库。
+. ONTAP工具可提供虚拟机和数据存储库报告。image:vmware-vvol-overview-image28.png["使用10.1的VM报告"] image:vmware-vvol-overview-image29.png["使用10.1的数据存储库报告"]
+
+
+
+
+== 对VVOV数据存储库上的虚拟机进行数据保护
+
+有关VVOV数据存储库上虚拟机的数据保护概述，请参见link:https://docs.netapp.com/us-en/ontap-apps-dbs/vmware/vmware-vvols-protect.html["保护卷"]。
+
+. 注册托管VVOV数据存储库的存储系统以及任何复制配对节点。image:vmware-vvol-overview-image30.png["用选择控制阀注册存储系统"]
+. 创建具有所需属性的策略。image:vmware-vvol-overview-image31.png["使用选择控制阀创建策略"]
+. 创建一个资源组并将其与一个或多个策略关联。image:vmware-vvol-overview-image32.png["使用选择控制阀创建资源组"]注意：对于VVOV数据存储库、需要使用虚拟机、标记或文件夹进行保护。VVOV数据存储库不能包含在资源组中。
+. 可以从其配置选项卡查看特定虚拟机备份状态。image:vmware-vvol-overview-image33.png["具有选择控制阀的VM的备份状态"]
+. 可以从主位置或二级位置还原虚拟机。
+
+
+link:https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_attach_vmdks_to_a_vm.html["SnapCenter插件文档"]有关其他使用情形、请参见。
+
+
+
+== 将虚拟机从传统数据存储库迁移到VVOV数据存储库
+
+要将虚拟机从其他数据存储库迁移到VVOR数据存储库、可以根据具体情况使用各种选项。从简单的Storage vMotion操作到使用HCX进行迁移、操作可能会有所不同。link:https://docs.netapp.com/us-en/netapp-solutions/vmware/migrate-vms-to-ontap-datastore.html["将VM迁移到ONTAP数据存储库"]有关详细信息、请参见。
+
+
+
+== 在VVOV数据存储库之间迁移虚拟机
+
+要在VVOV数据存储库之间批量迁移VM，请检查link:https://docs.netapp.com/us-en/netapp-solutions/vmware/migrate-vms-to-ontap-datastore.html["将VM迁移到ONTAP数据存储库"]。
+
+
+
+== 参考架构示例
+
+适用于VMware vSphere和选择控制阀的ONTAP工具可以安装在IT所管理的同一vCenter上、也可以安装在不同的vCenter Server上。最好避免在所管理的VVOV数据存储库上托管。
+
+image:vmware-vvol-overview-image34.png["每个vCenter一个ONTAP工具"]
+
+由于许多客户将其vCenter服务器托管在不同的一个上、而不是由IT管理、因此也建议对ONTAP工具和选择控制阀采用类似的方法。
+
+image:vmware-vvol-overview-image35.png["管理vCenter上的ONTAP工具"]
+
+借助ONTAP工具10.x、一个实例可以管理多个vCenter环境。存储系统将使用集群凭据进行全局注册、并将SVM分配给每个租户vCenter服务器。
+
+image:vmware-vvol-overview-image36.png["ONTAP工具10.x支持多vCenter"]
+
+此外、还支持混合使用专用模式和共享模式。
+
+image:vmware-vvol-overview-image37.png["混合使用共享和专用ONTAP工具"]
+
+
+
+== 如何开始使用
+
+如果您的环境中未安装ONTAP工具，请从下载link:https://support.netapp.com["NetApp 支持站点"]并按照上提供的说明link:https://docs.netapp.com/us-en/ontap-apps-dbs/vmware/vmware-vvols-ontap.html["将ONTAP与虚拟卷结合使用"]进行操作。

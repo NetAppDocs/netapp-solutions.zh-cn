@@ -22620,4 +22620,107 @@ NVIDIA DGX SuperPOD：NetApp EF600和BeeGFS
   <block id="9d2169c1c2855b78a7aeaa4f42d27dc7" category="inline-link-macro">NetApp 支持站点</block>
   <block id="3f28c38f16353f5963072fc69d2da8db" category="inline-link-macro">将ONTAP与虚拟卷结合使用</block>
   <block id="3d8dbb92b636bb821607ad3964f5609d" category="paragraph">如果您的环境中未安装ONTAP工具，请从下载<block ref="7c1a86981b39918f036f2778fc5b5ca6" category="inline-link-macro-rx"></block>并按照上提供的说明<block ref="8cf89dfe852bac578b5653affb6d877d" category="inline-link-macro-rx"></block>进行操作。</block>
+  <block id="ee21150e66f16dbad5ec4e2b35515848" category="cell">2024年8月23日</block>
+  <block id="741a029b58a83ce65b64a5d4cef48290" category="cell">新TR-4997：《使用VVO尔 在VCF中部署和保护Oracle RAC》</block>
+  <block id="fe9155886965f88b4bb029103061156b" category="summary">该解决方案简要介绍了在VMware Cloud Foundation (VCF)中使用vSphere虚拟卷(VVOl)作为主数据库存储以及在Real Application Clusters (RAC)配置中使用Oracle数据库进行Oracle部署和保护的详细信息。</block>
+  <block id="d04e05cc6f5337608b6ccfaae12a4905" category="doc">TR-4997：《使用VVO尔 在VCF中部署和保护Oracle RAC》</block>
+  <block id="77cb41e2baadb036dc6e4ed432367f90" category="inline-link-macro">TR-4996</block>
+  <block id="6442f4c2db32226ccfd6fc3a8274be13" category="paragraph">在中<block ref="478d9f2c9e3a4437c673d3d82ef230a6" category="inline-link-macro-rx"></block>，我们演示了使用VVO尔 在VCF中部署和保护单实例Oracle数据库的过程。本文档演示了如何在VMware Cloud Foundation环境中部署和保护Oracle RAC数据库、并将vvol作为NetApp ONTAP存储集群中的主数据库存储。Oracle RAC数据库的配置就像部署在本地存储系统的本地文件系统中一样。本技术报告重点介绍在适用于Oracle RAC部署的VCF中创建VVO尔 的步骤。我们还演示了如何使用NetApp自动化工具包在VVO尔 上的VCF中部署Oracle RAC数据库、以及如何使用NetApp SnapCenter UI工具保护RAC数据库。</block>
+  <block id="f21a9288a8dbb6dc5e01f87371a1796f" category="list-text">在VCF中部署Oracle RAC数据库、并将NetApp ONTAP AFF上的VVO尔 数据存储库用作主数据库存储</block>
+  <block id="ba926686ab6ce2f50a39841cb91cf855" category="list-text">希望在VCF中部署Oracle RAC并将VVO尔 数据存储库部署在NetApp ONTAP AFF上作为主数据库存储的数据库主管</block>
+  <block id="8e1c769a51ea82515d72b8676691e34f" category="list-text">希望在VCF中使用NetApp ONTAP AFF存储上的VVO尔 数据存储库测试Oracle RAC工作负载的数据库解决方案架构师</block>
+  <block id="f4498db90eae07fa4265e83f899ed7fb" category="list-text">希望部署和管理已部署到VCF且在NetApp ONTAP AFF存储上具有VVO尔 数据存储库的Oracle RAC数据库的存储管理员</block>
+  <block id="ea94460ea59d1791e128c063e36a3f19" category="list-text">希望在VCF中使用VVOV数据存储库建立Oracle RAC数据库的应用程序所有者</block>
+  <block id="e433a0f4d7802525d03be3ae89b7a1ff" category="paragraph">此解决方案的测试和验证是在VCF中的实验室环境中执行的、其中VVOs数据存储库位于NetApp ONTAP AFF存储上、而此数据存储库可能与最终部署环境不匹配。有关详细信息，请参阅一节 <block ref="a5cbf5f16a1fba6d9697a814ff593254" category="inline-xref-macro-rx"></block>。</block>
+  <block id="dd2b4d4faabc0fc80eacfaa74bf5a62d" category="section-title">VCF中的Oracle RAC数据库配置</block>
+  <block id="087c943fce6420f1490d5fc4bb4d400f" category="cell">*RAC节点*</block>
+  <block id="cdd29859f51951ed5dd9535ccabf7075" category="cell">ora01</block>
+  <block id="71f37500421f11ce0f41f795e618b625" category="cell">NTAP)(NTAP_pdb1、NTAP_pdb2、NTAP_pdb3)</block>
+  <block id="2d100c6ae63b5a20bd943bcf20dc9391" category="cell">NetApp ONTAP AFF A300上的VVOS数据存储库(VCF_ORA_bins、VCF_ORA_CRS、VCF_ORA_DAT1、VCF_ORA_DAT2、VCF_ORA_LOGS)</block>
+  <block id="13ea1c308c536ce3317611dcb43ba74f" category="cell">ora02</block>
+  <block id="d3d99bd870c856c58acfb8243d399b8b" category="list-text">*用于将ONTAP与Svol建立集群连接的协议。*NFS或iSCSI是不错的选择。这些性能级别是等效的。在此解决方案演示中、我们使用iSCSI作为存储协议、以便将ONTAP连接到带下划线的存储集群。如果VCF基础架构支持、则NetApp ONTAP上的VVO尔 数据存储库也支持FC/FCoE、NVMe/FC协议。</block>
+  <block id="18531131659005f729763c4bffd5f157" category="list-text">*在虚拟卷数据存储库上的Oracle存储布局。*在测试和验证中、我们为Oracle二进制文件、Oracle集群注册表/投票、Oracle数据和Oracle日志文件部署了五个虚拟卷数据存储库。最好将不同类型的Oracle文件分隔到各自的数据存储库中、以便可以轻松管理和执行数据库备份、恢复或克隆。为大型数据库创建专用的卷、并为具有类似QoS配置文件的小型数据库或数据库共享此类卷。 </block>
+  <block id="406ce3af2ccd70d558c48b5e4f0e9cb5" category="list-text">* Oracle存储冗余。*<block ref="5aaa25223f67673cf29042a34b88e27e" prefix=" " category="inline-code"></block>用于关键Oracle RAC集群注册表/投票文件、以便三个ASM磁盘故障组上的三个投票文件提供最佳集群保护、并在ASM磁盘故障组之间镜像集群注册表。<block ref="1f9ad4982cbae9fb459c61ba4e63bac9" prefix=" " category="inline-code"></block>用于Oracle二进制文件、数据文件和日志文件、以优化存储利用率。<block ref="1f9ad4982cbae9fb459c61ba4e63bac9" prefix=" " category="inline-code"></block>使用时、带下划线的ONTAP RAID-DP可提供数据保护。</block>
+  <block id="d1d4875856254459ea4c9c715e096d52" category="list-text">*数据库保护。*NetApp提供了一个SnapCenter软件套件、用于通过用户友好的UI界面进行数据库备份和还原。NetApp建议实施此类管理工具、以实现快速快照备份、快速数据库还原和恢复。</block>
+  <block id="3a05b8d15001b422dfd704ad762eb5cc" category="paragraph">以下各节介绍了在VCF中使用VVO尔 数据存储库在Oracle RAC配置中的NetApp ONTAP存储上部署Oracle 19c数据库的分步过程。</block>
+  <block id="defcc6840a7298a35b18f1d517fad596" category="list-text">在VCF工作负载域中配置三个Linux VM、两个VM用于Oracle RAC数据库集群、一个VM用于Ansv可 控制器。配置一个Windows服务器VM以运行NetApp SnapCenter服务器。有关为自动化Oracle数据库部署设置Ans得 控制器的信息，请参阅以下资源 <block ref="d1250df0700152003f00dbe5bac89608" category="inline-link-macro-rx"></block>。</block>
+  <block id="90d497d59ee5d1ed30bf4e510c2643ac" category="list-text">Oracle RAC数据库VM应至少配置两个网络接口—一个用于Oracle RAC专用互连、另一个用于应用程序或公共数据流量。</block>
+  <block id="b0939cba2335350d5ff94243490a833e" category="paragraph"><block ref="b0939cba2335350d5ff94243490a833e" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4501caa097bfc20131bfc53bb9ee09fc" category="paragraph"><block ref="4501caa097bfc20131bfc53bb9ee09fc" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="202d97696e70ef6f96ba41242f98d64e" category="paragraph"><block ref="6f419963d734c05d046b4853297feca6" category="inline-image-macro-rx" type="image"></block> <block ref="c3c043eb5d1aebce8c20d3fccab1d0ab" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="88c44ffab4660baf2b84e0e35c703d16" category="paragraph"><block ref="88c44ffab4660baf2b84e0e35c703d16" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="93661ffe65302224a0ead77d9b4edad1" category="list-text">为Oracle集群注册表或CRS创建数据存储库。</block>
+  <block id="08e362e8270703de9cbfaf4571ac9dff" category="paragraph"><block ref="08e362e8270703de9cbfaf4571ac9dff" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="c63205151dd92ee20affd76d5bfb792e" category="admonition">您可以向一个数据存储库添加多个卷、也可以跨多个ONTAP控制器节点跨多个VMware数据存储库卷来提高性能或实现冗余。</block>
+  <block id="17f1e06e290e3a19906298c1d44152f2" category="list-text">为Oracle数据创建数据存储库。理想情况下、请在每个ONTAP控制器节点上创建单独的数据存储库、并使用Oracle ASM跨控制器节点对数据进行条带化、以最大程度地提高ONTAP存储集群容量的利用率。</block>
+  <block id="21f9669ea7023a0034252223e8cc9f47" category="paragraph"><block ref="9a137bfcf76bbfaca6d497f5331d5eea" category="inline-image-macro-rx" type="image"></block> <block ref="31a6ca5f44dfb3505214b17802545232" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="09f886aa0490a78c38eebcf984caafb7" category="list-text">为Oracle日志创建数据存储库。鉴于Oracle日志写入的顺序性、最好将其放置在一个ONTAP控制器节点上。</block>
+  <block id="37ebe206bb9b63032b76732bbc2f5713" category="paragraph"><block ref="37ebe206bb9b63032b76732bbc2f5713" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="98485cfae59d0d91d7e5836355cda9f1" category="list-text">部署后验证Oracle数据存储库。</block>
+  <block id="93f19bd83d27ba366efd4168d84acfb9" category="paragraph"><block ref="93f19bd83d27ba366efd4168d84acfb9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="05b3f6b57cf99e9432ab121ae8a2df42" category="paragraph"><block ref="05b3f6b57cf99e9432ab121ae8a2df42" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1abdd6a035215ba0bbd05f64107eba8b" category="section-title">从Vvol数据存储库为RAC VM分配磁盘并配置数据库存储</block>
+  <block id="1694a0fa71dd4bf27eb32be743d62229" category="paragraph">在vSphere Client中、通过编辑Vvol数据存储库设置将所需磁盘添加到数据库VM。然后、登录到VM以格式化二进制磁盘、并将其挂载到挂载点/u01。以下内容展示了确切的步骤和任务。</block>
+  <block id="671c65f2aaf6e342c3dc64e10e4c1de7" category="list-text">在将磁盘从数据存储库分配到数据库虚拟机之前、请登录到VMware ESXi主机以验证并确保在ESXi级别启用了多写入程序(将"AllowMW"值设置为1)。</block>
+  <block id="13ab15eddd890290ff1ab6c3369c5105" category="list-text">添加一个新的专用SCSI控制器、用于Oracle RAC磁盘。禁用SCSI总线共享。</block>
+  <block id="47603b7d28eefa9dbffe527a3e3c953a" category="paragraph"><block ref="47603b7d28eefa9dbffe527a3e3c953a" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="97583967fb763c3e123e7d04b518fc1d" category="list-text">从RAC节点1—ora01中、向VM添加一个磁盘以用于Oracle二进制存储、而不进行共享。</block>
+  <block id="832533f18a6a8562c77108b45b2b7044" category="paragraph"><block ref="832533f18a6a8562c77108b45b2b7044" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="53c2a1ff3fee6b5a708dd1e2272923a0" category="list-text">从RAC节点1中、向VM添加三个磁盘以用于Oracle RAC CRS存储、并启用多写入程序共享。</block>
+  <block id="7592987dc878a0fc0d76f954f66d7bc1" category="paragraph"><block ref="8312084922277eef0ccbf5e3af013928" category="inline-image-macro-rx" type="image"></block> <block ref="c27aa5ce8d290bee4da69002a1c5d2ab" category="inline-image-macro-rx" type="image"></block> <block ref="abb23d5a05f075d8126dedfb2fb4e5b2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9eece672ad02e005280b550f41a48a30" category="list-text">从RAC节点1中、从每个数据存储库向VM添加两个磁盘、用于存储数据、以供共享Oracle数据存储使用。</block>
+  <block id="e5a2608de90bb5a8433b0f0dabbdbe5b" category="paragraph"><block ref="3c3ed414648f1bc9d74c3f65404c11ee" category="inline-image-macro-rx" type="image"></block> <block ref="9eef4de64a1bbdbd755a364a506dedc4" category="inline-image-macro-rx" type="image"></block> <block ref="d42f82e799a29fb07e4c190af47c4da3" category="inline-image-macro-rx" type="image"></block> <block ref="da7da0fa07609cc1b848e6e6d426a7e4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1359af07f8950bb57fd01d7cb00ae87d" category="list-text">从RAC节点1中、从日志数据存储库向VM添加两个磁盘、用于共享Oracle日志文件存储。</block>
+  <block id="ec5661bc7e0a149001229cf732e00d45" category="paragraph"><block ref="8f4e0a632603637b70e60886f88a377b" category="inline-image-macro-rx" type="image"></block> <block ref="76ae8b7b487a736a17df77b9dfc167eb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a49c9fafad9c156d258b0cfaa9465b32" category="list-text">从RAC节点2中、向VM添加一个磁盘以实现Oracle二进制存储、而无需共享。</block>
+  <block id="bed13b54c27d8237c0b46b2f11086116" category="paragraph"><block ref="bed13b54c27d8237c0b46b2f11086116" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="b675282a475ed2d6ad7cf98f616e6501" category="list-text">在RAC节点2中、通过选择<block ref="6aed226660dfd7b887814d05152d2b27" prefix=" " category="inline-code"></block>选项来添加其他共享磁盘、并为每个共享磁盘启用多写入程序共享。</block>
+  <block id="476f8e35a7fb82b3ef77a8b399705abd" category="paragraph"><block ref="4a4523be7ddf62ef1ad5a51bde9b8f08" category="inline-image-macro-rx" type="image"></block> <block ref="372ed6636d4b9da28315b0b0b8dc6279" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2693086f370c879a2082d4d3d7dab372" category="list-text">在VM中<block ref="21b14bb4c76726ee1f508919a7a313cc" prefix=" " category="inline-code"></block><block ref="c9d7eedc8be4380c02106619824b8449" prefix=" " category="inline-code"></block>，添加具有值的属性<block ref="786ce2a862b7971f5d75434b768ebdbe" prefix=" " category="inline-code"></block><block ref="c0d83f0b82a6b30de8811e69e6d95c61" prefix=" " category="inline-code"></block>。要添加高级参数、需要关闭虚拟机。通过设置此选项、SnapCenter可以准确识别您环境中的VVOV。应在所有RAC节点上执行此操作。</block>
+  <block id="a0d946a1dd4f8686c8eb7d38dfac9fce" category="list-text">在每个RAC节点中、只需接受默认选项、即可将Oracle二进制磁盘(/dev/sdb)作为主分区和单个分区进行分区。</block>
+  <block id="bb3b392e1475d9424bf707a161d5e269" category="list-text">将磁盘挂载到挂载点/u01。</block>
+  <block id="9a05743b08fa1f2a741732b4dcc91133" category="section-title">在VCF中部署Oracle RAC</block>
+  <block id="adcafa77c4aa4f4efd0db63c6320a0c5" category="paragraph">建议利用NetApp自动化工具包在VCF中使用VVO尔 部署Oracle RAC。请仔细阅读附带的说明(自述文件)、并按照工具包中的说明配置部署参数文件、例如部署目标文件—hosts、全局变量文件—vars/vars.yml和本地数据库VM变量文件—host_vars/host_name.yml。下面是分步过程。</block>
+  <block id="4a5abe82a7fae2eaf788dd6f9951e913" category="list-text">以管理员用户身份通过ssh登录到Andsv得以 控制器VM、然后克隆一份自动化工具包副本、以便在VCF中使用VVOL部署Oracle RAC。</block>
+  <block id="8cbbbb19113497bb9e98082d50559d57" category="list-text">将以下Oracle安装文件暂存到RAC节点1数据库VM上的/tmp/archive文件夹中。该文件夹应允许具有777权限的所有用户访问。</block>
+  <block id="728193b5c7846573379d02085e909342" category="list-text">配置用户定义的目标主机参数文件。以下是目标主机文件hosts的典型配置示例。</block>
+  <block id="69e161901e08e482a784be5dc7f0a651" category="list-text">配置用户定义的本地主机专用参数文件。以下是本地host_name.yml文件(ora01.yml)的典型配置示例。</block>
+  <block id="f58c2ca9903ffc6f561b9a0ad4d259ce" category="list-text">配置用户定义的全局参数文件。以下是全局参数文件vars.yml的典型配置示例</block>
+  <block id="e24b23c25dcec5be6339809014c3bdcd" category="list-text">从Andsute控制器克隆的自动化工具包主目录/HOME/admin/na_oracle_DEP_RAC中、执行前提条件操作手册以设置Andsute前提条件。</block>
+  <block id="f72bad29aa332450a1473c4ee42daca5" category="section-title">在VCF中验证Oracle RAC部署</block>
+  <block id="6837977f570679b216db78e041f5750c" category="paragraph">本节详细介绍了如何在VCF中进行Oracle RAC部署验证、以确保所有Oracle RAC资源均已完全部署、配置并按预期正常运行。</block>
+  <block id="44f80d3b64dcf0f0f6d4874745b23da8" category="list-text">以管理员用户身份登录到RAC VM以验证Oracle网格基础架构。</block>
+  <block id="b8a929b95bdc686f95e0bbb3ccdb7465" category="list-text">列出集群节点。</block>
+  <block id="bfd716e1e7ec88f5c5b5066291adc63e" category="list-text">验证OCR/投票。</block>
+  <block id="da3a1bafa7ba4c1638c7b89315232c57" category="list-text">更改为Oracle用户以验证集群模式数据库。</block>
+  <block id="7513062e80b0ae42ada4bcb96f44b96c" category="list-text">或者、在成功执行操作手册后、登录到EM Express以验证RAC数据库。</block>
+  <block id="462ce662466457ccb0dbc0ef81c58a33" category="paragraph"><block ref="ed508aae1e79ce8b827093d423baa137" category="inline-image-macro-rx" type="image"></block> <block ref="699e6577c2d20dbf140197dcd2c23bbb" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7b1814436c2f5e378f75bf1540169449" category="section-title">使用SnapCenter在VCF中进行Oracle RAC数据库备份和恢复</block>
+  <block id="75e3c73d79159eb8120f96e67738c1e4" category="paragraph">与版本5相比、SnapCenter版本6具有许多增强功能、包括对VMware Vvol数据存储库的支持。SnapCenter依靠数据库VM上的主机端插件来执行应用程序感知型数据保护管理活动。有关适用于Oracle的NetApp SnapCenter插件的详细信息，请参阅本文档 <block ref="7a6b1ddf3a0731d31936d6522df7c6ca" category="inline-link-macro-rx"></block>。下面简要介绍了在VCF中为Oracle RAC数据库备份和恢复设置SnapCenter版本6的步骤。</block>
+  <block id="9be829820801059aa2e6f8032dedcb5b" category="list-text">添加Oracle RAC数据库VM和vSphere插件VM<block ref="03bc142e6422dbb9b288ad2cabee08c7" prefix=" " category="inline-code"></block>、以便通过SnapCenter访问DB VM和vSphere插件VM。此凭据应在Linux VM上具有sudo权限。您可以为VM的不同管理用户ID创建不同的凭据。vShpere插件VM管理用户ID是在vCenter中部署插件VM时定义的。</block>
+  <block id="4f27b1e39049720a171ec680e3ecb615" category="list-text"><block ref="8124579383e90243e4b06323d2b37f8d" prefix=" " category="inline-code"></block>使用在上一步中创建的数据库VM凭据、在VCF中将Oracle RAC数据库VM添加到。</block>
+  <block id="b3106b6079d464531fb67ffaf7db239a" category="paragraph"><block ref="cdd67a94d0ee20aae509b9f296afef77" category="inline-image-macro-rx" type="image"></block> <block ref="282970aa6f17e5879bcb39291d05d1dc" category="inline-image-macro-rx" type="image"></block> <block ref="88d3e6c7592f605d9dd9c5a48c69d7e6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="8a0e88eb92c70dc9484e9dfb6711047c" category="paragraph"><block ref="c1f71beb19a9697d359c7cf755a074c5" category="inline-image-macro-rx" type="image"></block> <block ref="27b71f9fc4d6af6b82a41d86d34da6cc" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="ee302a0e3b394c1d3253a706d61c5fc2" category="paragraph"><block ref="ee302a0e3b394c1d3253a706d61c5fc2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="39fc713e6a3694bbfa2bb47eb7260d53" category="paragraph"><block ref="39fc713e6a3694bbfa2bb47eb7260d53" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a463601910972df203c00aa018e27ae3" category="paragraph"><block ref="a463601910972df203c00aa018e27ae3" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0d3c05e705d19dd9c14c576577f2ec18" category="paragraph"><block ref="0d3c05e705d19dd9c14c576577f2ec18" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9e05df8c51e04abad3285de8e76d0711" category="paragraph"><block ref="9e05df8c51e04abad3285de8e76d0711" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="62059f2f98cb91ea0b13612513362277" category="paragraph"><block ref="417138601c4c226dd5325fd3286f305f" category="inline-image-macro-rx" type="image"></block> <block ref="c29adf7adc12f1ef9b74177a5f96bde9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2255bbcb77bd79c333dc0a1fbdd8ed02" category="paragraph"><block ref="2255bbcb77bd79c333dc0a1fbdd8ed02" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="bf4113b041da79313c635fc0fc15a81f" category="list-text">单击数据库以查看为RAC数据库完成的备份集。</block>
+  <block id="c416dcf0d7b8466599ed23e88f4d2c7b" category="paragraph">SnapCenter为Oracle RAC数据库提供了许多从快照备份还原和恢复选项。在此示例中、我们演示了如何从较早的快照备份进行还原、然后将数据库前滚到最后一个可用日志。</block>
+  <block id="516bbb855bac93422a0befab9b7f2cc7" category="list-text">从SnapCenter选项卡中<block ref="ddcf50c29294d4414f3f7c1bbc892cb5" prefix=" " category="inline-code"></block> 、打开数据库NTAP1备份拓扑页面。突出显示3天前创建的快照数据备份集。单击<block ref="2bd339d85ee3b33e513359ce781b60cc" prefix=" " category="inline-code"></block> 以启动还原-恢复工作流。</block>
+  <block id="af47beb0040a02105f05f0c6dbd03fc5" category="paragraph"><block ref="af47beb0040a02105f05f0c6dbd03fc5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2707f0a4652e1219d78c27517ef4519c" category="paragraph"><block ref="2707f0a4652e1219d78c27517ef4519c" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1d4d78bf84eabb17e672432f49a17851" category="paragraph"><block ref="1d4d78bf84eabb17e672432f49a17851" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="0a162ae7777dc0e1f9dfa89da2f8f915" category="paragraph"><block ref="0a162ae7777dc0e1f9dfa89da2f8f915" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2e917087a35d1c82e5bdc0b35250be7b" category="paragraph"><block ref="2e917087a35d1c82e5bdc0b35250be7b" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="5804362c1cf599b4d04a87a5411871c4" category="paragraph"><block ref="5804362c1cf599b4d04a87a5411871c4" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="785d0edfb9246ea1b2f29f2876246545" category="paragraph"><block ref="785d0edfb9246ea1b2f29f2876246545" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a8a920caceb0dfbf3270fa19b5faafdc" category="list-text">从RAC DB VM ora01中、验证成功还原/恢复数据库是否已前滚到其最新状态、并恢复了3天后创建的测试表。</block>
+  <block id="5af876911ef89b1e7c4739bf87f4c28a" category="paragraph">至此、我们完成了使用VVO尔 在VCF中对Oracle RAC数据库进行SnapCenter备份、还原和恢复的演示。</block>
+  <block id="f5e36ef553b69a34ed00c99f9b3fee04" category="inline-link-macro"><block ref="f5e36ef553b69a34ed00c99f9b3fee04" category="inline-link-rx"></block></block>
+  <block id="96db2e2d27c6c89e23054744820829d1" category="paragraph"><block ref="96db2e2d27c6c89e23054744820829d1" category="inline-link-macro-rx"></block></block>
+  <block id="9f61fd2b757f5758c07d0a9a117098f0" category="sidebar">使用VVO尔 在VCF中部署和保护Oracle RAC</block>
 </blocks>
