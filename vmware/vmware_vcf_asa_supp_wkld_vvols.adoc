@@ -14,7 +14,7 @@ summary:
 
 
 [role="lead"]
-在此情景中、我们将演示如何部署和使用适用于VMware vSphere的ONTAP工具(OTV)为VCF工作负载域配置* vvol数据存储库*。
+在此情景中、我们将演示如何部署和使用适用于VMware vSphere的ONTAP工具为VCF工作负载域配置*vvol数据存储库*。
 
 *iSCSI*用作虚拟卷数据存储库的存储协议。
 
@@ -213,16 +213,16 @@ image::vmware-vcf-asa-image34.png[查看VMkernel选择]
 
 ==== 部署并使用ONTAP工具配置存储
 
-以下步骤将使用vSphere客户端在VCF管理域集群上执行、涉及部署OTV、创建VVOs iSCSI数据存储库以及将管理VM迁移到新数据存储库。
+以下步骤将使用vSphere客户端在VCF管理域集群上执行、其中包括部署ONTAP工具、创建VVOLS iSCSI数据存储库以及将管理VM迁移到新数据存储库。
 
-对于VI工作负载域、OTV会安装到VCF管理集群中、但会注册到与VI工作负载域关联的vCenter中。
+对于VI工作负载域、ONTAP工具会安装到VCF管理集群中、但会注册到与VI工作负载域关联的vCenter中。
 
 有关在多vCenter环境中部署和使用ONTAP工具的追加信息、请参见 link:https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/configure/concept_requirements_for_registering_vsc_in_multiple_vcenter_servers_environment.html["在多vCenter Server环境中注册ONTAP工具的要求"]。
 
 .部署适用于VMware vSphere的ONTAP工具
 [%collapsible]
 ====
-适用于VMware vSphere的ONTAP工具(OTV)部署为一个VM设备、可通过一个集成的vCenter UI来管理ONTAP存储。
+适用于VMware vSphere的ONTAP工具部署为VM设备、可通过集成的vCenter UI来管理ONTAP存储。
 
 完成以下操作以部署适用于VMware vSphere的ONTAP工具：
 
@@ -259,10 +259,10 @@ image::vmware-vcf-aff-image24.png[选择网络]
 
 . 在"自定义模板"页面上、填写所有必需信息：
 +
-** 用于对OTV进行管理访问的密码。
+** 用于以管理员身份访问ONTAP工具的密码。
 ** NTP服务器IP地址。
-** OTV维护帐户密码。
-** OTV Derby数据库密码。
+** ONTAP工具维护帐户密码。
+** ONTAP工具Derby数据库密码。
 ** 不要选中*启用VMware Cloud Foundation (VCF)*复选框。部署补充存储不需要vcf模式。
 ** *VI工作负载域*的vCenter设备的FQDN或IP地址
 ** *VI工作负载域*的vCenter设备的凭据
@@ -281,7 +281,7 @@ image::vmware-vcf-asa-image35.png[自定义OTV模板2.]
 
 
 
-. 查看即将完成页面上的所有信息、然后单击完成开始部署OTV设备。
+. 查看即将完成页面上的所有信息、然后单击完成开始部署ONTAP工具设备。
 
 
 ====
@@ -295,7 +295,7 @@ image::vmware-asa-image6.png[NetApp ONTAP工具]
 +
 ｛｛｝
 
-. 从ONTAP工具界面的*实例*下拉菜单中、选择与要管理的工作负载域关联的OTV实例。
+. 从ONTAP工具界面的*实例*下拉菜单中、选择与要管理的工作负载域关联的ONTAP工具实例。
 +
 image::vmware-vcf-asa-image36.png[选择OTV Instance]
 
