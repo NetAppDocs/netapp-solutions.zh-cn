@@ -13,10 +13,6 @@ summary:
 :imagesdir: ./../media/
 
 
-
-
-== 使用ONTAP工具10为vSphere 8配置NFS数据存储库
-
 [role="lead"]
 适用于VMware vSphere 10的ONTAP工具采用下一代架构、可为VASA Provider实现本机高可用性和可扩展性(支持iSCSI和NFS VVO尔)。这样可以简化多个VMware vCenter Server和ONTAP集群的管理。
 
@@ -24,7 +20,7 @@ summary:
 
 
 
-=== 解决方案概述
+== 解决方案概述
 
 此情景包括以下高级步骤：
 
@@ -37,7 +33,7 @@ summary:
 
 
 
-=== 架构
+== 架构
 
 下图显示了适用于VMware vSphere 10的ONTAP工具实施的架构组件。
 
@@ -45,7 +41,7 @@ image::vmware-nfs-otv10-image29.png[otv10架构]
 
 
 
-=== 前提条件
+== 前提条件
 
 此解决方案需要以下组件和配置：
 
@@ -64,13 +60,13 @@ NetApp建议为NFS采用冗余网络设计、以便为存储系统、交换机�
 
 
 
-=== 部署步骤
+== 部署步骤
 
 要部署ONTAP工具10并使用它在VCF管理域上创建NFS数据存储库、请完成以下步骤：
 
 
 
-==== 在ONTAP存储系统上创建SVM和SVM
+=== 在ONTAP存储系统上创建SVM和SVM
 
 以下步骤将在ONTAP系统管理器中执行。
 
@@ -110,7 +106,7 @@ image::vmware-vcf-asa-image04.png[启用SVM帐户并完成]
 ====
 
 
-==== 在ESXi主机上为NFS设置网络连接
+=== 在ESXi主机上为NFS设置网络连接
 
 使用vSphere客户端在VI Workload Domain集群上执行以下步骤。在这种情况下、使用的是vCenter单点登录、因此vSphere客户端在管理域和工作负载域中通用。
 
@@ -196,7 +192,7 @@ image::vmware-nfs-otv10-image06.png[查看VMkernel选择]
 ====
 
 
-==== 部署并使用ONTAP工具10来配置存储
+=== 部署并使用ONTAP工具10来配置存储
 
 以下步骤将使用vSphere客户端在vSphere 8集群上执行、其中涉及部署OTV、配置ONTAP Tools Manager以及创建Vvol NFS数据存储库。
 
@@ -441,7 +437,7 @@ image::vmware-nfs-otv10-image32.png[近期任务窗格]
 ====
 
 
-=== 追加信息
+== 追加信息
 
 有关适用于VMware vSphere 10的ONTAP工具资源的完整列表，请参见 https://www.netapp.com/support-and-training/documentation/ontap-tools-for-vmware-vsphere-documentation/["适用于VMware vSphere的ONTAP工具文档资源"]。
 

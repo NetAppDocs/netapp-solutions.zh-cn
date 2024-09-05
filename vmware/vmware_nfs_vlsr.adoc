@@ -13,10 +13,6 @@ summary:
 :imagesdir: ./../media/
 
 
-
-
-== 使用VMware Site Recovery Manager对NFS数据存储库进行灾难恢复
-
 [role="lead"]
 将适用于VMware vSphere 10的ONTAP工具和站点复制适配器(SRA)与VMware Site Recovery Manager (SRM)结合使用、可以为灾难恢复工作带来显著价值。ONTAP工具10可提供强大的存储功能、包括适用于VASA Provider的本机高可用性和可扩展性、并支持iSCSI和NFS VVO尔。这样可以确保数据可用性、并简化多个VMware vCenter Server和ONTAP集群的管理。通过将SRA与VMware Site Recovery Manager结合使用、企业可以在站点之间无缝复制和故障转移虚拟机和数据、从而实现高效的灾难恢复过程。ONTAP工具与SRA相结合、使企业能够在发生意外事件或灾难时保护关键工作负载、最大限度地减少停机时间并保持业务连续性。
 
@@ -28,7 +24,7 @@ SRA 与 SRM 结合使用，用于管理传统 VMFS 和 NFS 数据存储库的生
 
 
 
-=== 方案概述
+== 方案概述
 
 此情景包括以下高级步骤：
 
@@ -42,7 +38,7 @@ SRA 与 SRM 结合使用，用于管理传统 VMFS 和 NFS 数据存储库的生
 
 
 
-=== 架构
+== 架构
 
 下图显示了一个典型的VMware站点恢复架构、该架构采用三节点高可用性配置、其中包含适用于VMware vSphere 10的ONTAP工具。
 
@@ -52,7 +48,7 @@ image::vmware-nfs-srm-image05.png[配置设备]
 
 
 
-=== 前提条件
+== 前提条件
 
 此方案需要以下组件和配置：
 
@@ -76,13 +72,13 @@ NetApp建议为NFS采用冗余网络设计、以便为存储系统、交换机�
 
 
 
-=== 部署步骤
+== 部署步骤
 
 以下各节概述了使用ONTAP存储系统实施和测试VMware Site Recovery Manager配置的部署步骤。
 
 
 
-==== 在ONTAP存储系统之间创建SnapMirror关系
+=== 在ONTAP存储系统之间创建SnapMirror关系
 
 要保护数据存储库卷、必须在源和目标ONTAP存储系统之间建立SnapMirror关系。
 
@@ -92,7 +88,7 @@ NetApp建议为NFS采用冗余网络设计、以便为存储系统、交换机�
 
 
 
-==== 配置SRM设备
+=== 配置SRM设备
 
 完成以下步骤以配置SRM设备和SRA适配器。
 
@@ -101,7 +97,7 @@ NetApp建议为NFS采用冗余网络设计、以便为存储系统、交换机�
 ====
 主站点和二级站点都必须完成以下步骤。
 
-. 在Web浏览器中，导航到 https://<SRM_appliance_IP>:5480[]并登录。单击*配置设备*开始使用。
+. 在Web浏览器中，导航到 https://<SRM_appliance_IP>:5480*[]并登录。单击*配置设备*开始使用。
 +
 image::vmware-nfs-srm-image01.png[配置设备]
 
@@ -146,7 +142,7 @@ image::vmware-nfs-srm-image04.png[添加新的SRM适配器]
 ====
 
 
-==== 为SRM配置Site Recovery
+=== 为SRM配置Site Recovery
 
 完成以下步骤以配置站点配对、创建保护组、
 
@@ -328,7 +324,7 @@ image::vmware-nfs-srm-image26.png[测试网络]
 ====
 
 
-=== 使用SRM执行灾难恢复操作
+== 使用SRM执行灾难恢复操作
 
 本节将介绍在SRM中使用灾难恢复的各种功能、包括测试故障转移、执行故障转移、执行重新保护和故障恢复。
 
@@ -394,7 +390,7 @@ image::vmware-nfs-srm-image32.png[Filover已完成]
 
 
 
-=== 追加信息
+== 追加信息
 
 有关将ONTAP存储与VMware SRM结合使用的NetApp文档、请参见 https://docs.netapp.com/us-en/ontap-apps-dbs/vmware/vmware-srm-overview.html#why-use-ontap-with-srm["采用ONTAP的VMware Site Recovery Manager"]
 
