@@ -34,7 +34,7 @@ summary:
 * 确保 CIDR 范围不会与任何内部或云子网重叠。CIDR 范围必须为 /27 或更高。
 
 
-image::gcve-deploy-1.png[创建Deploy 1]
+image:gcve-deploy-1.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 注意：创建私有云可能需要 30 分钟到 2 小时。
 
@@ -46,19 +46,19 @@ image::gcve-deploy-1.png[创建Deploy 1]
 
 这将确保运行 Cloud Volumes ONTAP 实例的 VPC 网络能够与 GCVE 私有云进行通信。要执行此操作，请按照 link:https://cloud.google.com/architecture/partners/netapp-cloud-volumes/quickstart["GCP 文档"]。对于云卷服务，通过在租户主机项目之间执行一次性对等操作，在 VMware 引擎和 Cloud Volumes Service 之间建立连接。有关详细步骤，请按照此步骤进行操作 link:https://cloud.google.com/vmware-engine/docs/vmware-ecosystem/howto-cloud-volumes-service["链接。"]。
 
-image::gcve-access-1.png[Gcve访问1]
+image:gcve-access-1.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 使用 CloudOwner@gve.local 用户登录到 vCenter 。要访问凭据，请转到 VMware 引擎门户，转到资源并选择相应的私有云。在基本信息部分中，单击 vCenter 登录信息（ vCenter Server ， HCX Manager ）或 NSX-T 登录信息（ NSX Manager ）的查看链接。
 
-image::gcve-access-2.png[Gcve访问2.]
+image:gcve-access-2.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 在 Windows 虚拟机中，打开浏览器并导航到 vCenter Web 客户端 URL (`"https://10.0.16.6/"`)、并使用admin用户名作为CloudOwner@gve.local、然后粘贴复制的密码。同样，也可以使用 Web 客户端 URL 访问 NSX-T 管理器 (`"https://10.0.16.11/"`)、然后使用管理员用户名并粘贴复制的密码以创建新区块或修改现有层网关。
 
 要从内部网络连接到 VMware Engine 私有云，请利用云 VPN 或 Cloud Interconnect 实现适当的连接，并确保所需端口处于打开状态。有关详细步骤，请按照此步骤进行操作 link:https://ubuntu.com/server/docs/service-iscsi["链接。"]。
 
-image::gcve-access-3.png[Gcve访问3.]
+image:gcve-access-3.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-image::gcve-access-4.png[Gcve访问4.]
+image:gcve-access-4.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 ====
 .将NetApp云卷服务补充数据存储库部署到GCVe

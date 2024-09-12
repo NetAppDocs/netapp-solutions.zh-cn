@@ -1,0 +1,47 @@
+---
+sidebar: sidebar 
+keywords: Cyber vault, cybervault, cyber-vault, data protection, security, ransomware, ONTAP, hardening 
+permalink: /cyber-vault/ontap-cyber-vault-interoperability.html 
+summary: 网络存储互操作性 
+---
+= 网络存储互操作性
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP硬件和软件可用于创建网络存储配置。
+
+
+
+== ONTAP硬件建议
+
+所有ONTAP统一物理阵列均可用于网络存储实施。
+
+* FAS混合存储可提供最经济高效的解决方案。
+* AFF C系列可提供最高效的功耗和密度。
+* AFF A系列是性能最高的平台、可提供最佳的故障转移恢复(RTO)。随着我们最近发布的最新AFF A系列、此平台将在不影响性能的情况下提供最佳存储效率。
+
+
+
+
+== ONTAP软件建议
+
+从Snap照.14.1开始、您可以在SnapMirror关系的SnapMirror策略中为特定SnapMirror标签指定保留期限、以便从源卷复制到目标卷的ONTAP 9副本在规则中指定的保留期限内得以保留。如果未指定保留期限、则会使用目标卷的default-保留 期限。
+
+从Snap照.13.1开始、您可以通过创建ONTAP 9 FlexClone并将类型选项设置为"NON-SnapVault"、然后在执行卷克隆创建操作时将SnapLock副本指定为"parner-SnapVault"来瞬时还原SnapLock存储关系的目标SnapLock卷上锁定的SnapLock副本。详细了解 link:../../ontap/volumes/create-flexclone-task.html?q=volume+clone["创建SnapLock 类型的FlexClone卷"^]。
+
+
+
+== MetroCluster 配置
+
+对于 MetroCluster 配置，您应注意以下事项：
+
+* 您只能在 sync-source SVM 之间创建 SnapVault 关系，而不能在 sync-source SVM 与 sync-destination SVM 之间创建此关系。
+* 您可以创建从 sync-source SVM 上的卷到提供数据的 SVM 的 SnapVault 关系。
+* 您可以创建从提供数据的 SVM 上的卷到 sync-source SVM 上的 DP 卷的 SnapVault 关系。
+

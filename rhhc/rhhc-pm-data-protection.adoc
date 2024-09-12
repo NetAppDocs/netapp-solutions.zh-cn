@@ -97,7 +97,7 @@ video::36ecf505-5d1d-4e99-a6f8-b11c00341793[panopto]
 
 此命令将提供如下输出。使用登录到集群 `oc login` 命令。
 
-image::rhhc-rosa-cluster-admin-create.png[rhhc rosa cluster admin create]
+image:rhhc-rosa-cluster-admin-create.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 NOTE: 您也可以使用令牌登录到集群。如果您在创建集群时已创建管理员用户、则可以使用管理员用户凭据从Red Hat OpenShift Hybrid Cloud控制台登录到集群。然后、通过单击右上角显示已登录用户名称的、您可以获取 `oc login` 命令(令牌登录)。
@@ -114,17 +114,15 @@ NOTE: 您也可以使用令牌登录到集群。如果您在创建集群时已�
 
 在ROSA集群上安装Asta Trident (最新版本)。要执行此操作、您可以按照给定的任一过程进行操作 link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html["此处"]。要从集群控制台使用Helm安装Trident、请先创建一个名为Trident的项目。
 
-image::rhhc-trident-project-create.png[rhhc trdent项目创建]
+image:rhhc-trident-project-create.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 然后、在"开发工具"视图中、创建Helm图表存储库。对于URL字段、请使用 `'https://netapp.github.io/trident-helm-chart'`。然后为三端操作员创建舵版本。
 
-image::rhhc-helm-repo-create.png[rhhc helm repo create]
-
-image::rhhc-helm-release-create.png[rhhc舵释放创建]
+image:rhhc-helm-repo-create.png["图中显示了输入/输出对话框或表示已写入内容"] image:rhhc-helm-release-create.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 返回控制台上的"Administrator view"(管理员视图)、然后在三级工程中选择Pod、以验证所有三级工程模块是否正在运行。
 
-image::rhhc-trident-installed.png[安装了rhhc trdent]
+image:rhhc-trident-installed.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -135,7 +133,7 @@ image::rhhc-trident-installed.png[安装了rhhc trdent]
 
 NOTE: 您可以使用命令行创建对象、也可以从混合云控制台使用YAML文件创建对象。
 
-image::rhhc-fsx-details.png[rhhc FSx详细信息]
+image:rhhc-fsx-details.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 **Trident后端配置**
 
@@ -192,13 +190,13 @@ deletionPolicy: Delete
 ----
 发出下面所示的命令、验证是否已创建后端、存储类和trdent-snapshotclass对象。
 
-image::rhhc-tbc-sc-verify.png[rhhc tbc sc verify]
+image:rhhc-tbc-sc-verify.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 此时、您需要进行的一项重要修改是将ONTAP NAS设置为默认存储类、而不是GP3、以便您稍后部署的PostgreSQL应用程序可以使用默认存储类。在集群的OpenShift控制台中、在"Storage"下选择"StorageClasses"。将当前默认类的标注编辑为false、并将ONTAP NAS存储类的标注storageclass.Kubernetes.io/is-default-class设置为true。
 
-image::rhhc-change-default-sc.png[rhhc更改默认SC]
+image:rhhc-change-default-sc.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-image::rhhc-default-sc.png[rhhc缺省SC]
+image:rhhc-default-sc.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -208,22 +206,22 @@ image::rhhc-default-sc.png[rhhc缺省SC]
 
 `helm install postgresql bitnami/postgresql -n postgresql --create-namespace`
 
-image::rhhc-postgres-install.png[rhhc postgres安装]
+image:rhhc-postgres-install.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
-NOTE: 如果您看不到应用程序Pod正在运行、则可能是由于安全上下文约束而导致错误。 image:rhhc-scc-error.png[]通过编辑对象中的和字段以及命令输出中的uid来修复此错误， `runAsUser` `fsGroup` `statefuleset.apps/postgresql` `oc get project` 如下所示。 图像：rhhc-scc-fix.png[]
+NOTE: 如果您看不到应用程序Pod正在运行、则可能是由于安全上下文约束而导致错误。image:rhhc-scc-error.png["图中显示了输入/输出对话框或表示已写入内容"] `runAsUser` `fsGroup` `statefuleset.apps/postgresql`使用 `oc get project`命令输出中的uid编辑对象中的和字段以修复此错误、如下所示。image:rhhc-scc-fix.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 PostgreSQL应用程序应正在运行、并使用Amazon FSx支持的永久性卷作为NetApp ONTAP存储。
 
-image::rhhc-postgres-running.png[rhhc postgres正在运行]
+image:rhhc-postgres-running.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-image::rhhc-postgres-pvc.png[rhhc postgres PVC]
+image:rhhc-postgres-pvc.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
 ==== **6.创建数据库并添加记录**
 
-image::rhhc-postgres-db-create.png[rhhc postgres db create]
+image:rhhc-postgres-db-create.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -231,11 +229,11 @@ image::rhhc-postgres-db-create.png[rhhc postgres db create]
 
 登录到ACS。选择cluster、然后单击Add。选择其他并上传或粘贴kubeconfig.
 
-image::rhhc-acs-add-1.png[rhhc ACS添加1]
+image:rhhc-acs-add-1.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 单击*Next*并选择ONTAP－NAS作为ACS的默认存储类。单击*Next*(下一步*)，查看详细信息，然后单击*Add*(添加)群集。
 
-image::rhhc-acs-add-2.png[rhhc ACS添加2]
+image:rhhc-acs-add-2.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -243,7 +241,7 @@ image::rhhc-acs-add-2.png[rhhc ACS添加2]
 
 在ACS中定义PostgreSQL应用程序。在登录页面中，选择*Applications*、*Define*并填写相应的详细信息。单击“*下一步*”几次，查看详细信息，然后单击“*定义*”。应用程序将添加到ACS。
 
-image::rhhc-acs-add-2.png[rhhc ACS添加2]
+image:rhhc-acs-add-2.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -253,9 +251,9 @@ image::rhhc-acs-add-2.png[rhhc ACS添加2]
 
 只需单击*创建快照*、提供名称、查看详细信息并单击*快照*、即可创建按需快照。操作完成后、快照状态将更改为"运行状况良好"。
 
-image::rhhc-snapshot-create.png[rhhc快照创建]
+image:rhhc-snapshot-create.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-image::rhhc-snapshot-on-demand.png[rhhc Snapshot on demand]
+image:rhhc-snapshot-on-demand.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -263,7 +261,7 @@ image::rhhc-snapshot-on-demand.png[rhhc Snapshot on demand]
 
 重新登录到PostgreSQL、列出可用数据库、删除先前创建的数据库并重新列出、以确保数据库已被删除。
 
-image::rhhc-postgres-db-delete.png[rhhc postgres db delete]
+image:rhhc-postgres-db-delete.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -271,11 +269,11 @@ image::rhhc-postgres-db-delete.png[rhhc postgres db delete]
 
 要从快照还原应用程序、请转到ACS UI登录页面、选择应用程序、然后选择还原。您需要选择要从中还原的快照或备份。(通常、您会根据所配置的策略创建多个)。在接下来的几个屏幕中做出适当的选择，然后单击*Restore*。从快照还原后、应用程序状态将从还原变为可用。
 
-image::rhhc-app-restore-1.png[rhhc app restore 1.]
+image:rhhc-app-restore-1.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-image::rhhc-app-restore-2.png[rhhc app restore 2.]
+image:rhhc-app-restore-2.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-image::rhhc-app-restore-3.png[rhhc app restore 3.]
+image:rhhc-app-restore-3.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -283,4 +281,4 @@ image::rhhc-app-restore-3.png[rhhc app restore 3.]
 
 登录到PostgreSQL客户端、您现在应该可以看到表以及以前的表中的记录。  就是这样。只需单击一个按钮、您的应用程序便已恢复到先前的状态。这就是我们使用Astra Control为客户实现的简单体验。
 
-image::rhhc-app-restore-verify.png[rhhc app restore verify]
+image:rhhc-app-restore-verify.png["图中显示了输入/输出对话框或表示已写入内容"]

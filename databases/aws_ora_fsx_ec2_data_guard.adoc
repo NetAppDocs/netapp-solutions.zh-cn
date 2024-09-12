@@ -54,7 +54,7 @@ Oracle Data Guard可确保主数据库和备用数据库复制配置中企业数
 
 === 架构
 
-image::aws_ora_fsx_data_guard_architecture.png[此图详细展示了使用FSxN在AWS中实施的Oracle Data Guard。]
+image:aws_ora_fsx_data_guard_architecture.png["此图详细展示了使用FSxN在AWS中实施的Oracle Data Guard。"]
 
 
 
@@ -863,15 +863,15 @@ ip-172-30-15-45.ec2.internal
 ....
 . 将FSx存储集群添加到 `Storage Systems` 在具有FSx集群管理IP和fsxadmin凭据的SnapCenter中。
 +
-image::aws_ora_fsx_data_guard_clone_01.png[在图形用户界面中显示此步骤的屏幕截图。]
+image:aws_ora_fsx_data_guard_clone_01.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 将AWS EC2-user添加到 `Credential` 在中 `Settings`。
 +
-image::aws_ora_fsx_data_guard_clone_02.png[在图形用户界面中显示此步骤的屏幕截图。]
+image:aws_ora_fsx_data_guard_clone_02.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 添加备用EC2数据库实例并将EC2数据库实例克隆到 `Hosts`。
 +
-image::aws_ora_fsx_data_guard_clone_03.png[在图形用户界面中显示此步骤的屏幕截图。]
+image:aws_ora_fsx_data_guard_clone_03.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 +
 
@@ -879,51 +879,51 @@ NOTE: 克隆EC2数据库实例应安装和配置类似的Oracle软件堆栈。�
 
 . 创建为脱机/挂载完整数据库备份而定制的备份策略。
 +
-image::aws_ora_fsx_data_guard_clone_04.png[在图形用户界面中显示此步骤的屏幕截图。]
+image:aws_ora_fsx_data_guard_clone_04.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 在中应用备份策略以保护备用数据库 `Resources` 选项卡。
 +
-image::aws_ora_fsx_data_guard_clone_05.png[在图形用户界面中显示此步骤的屏幕截图。]
+image:aws_ora_fsx_data_guard_clone_05.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 单击数据库名称以打开数据库备份页面。选择要用于数据库克隆的备份、然后单击 `Clone` 用于启动克隆工作流的按钮。
 +
-image::aws_ora_fsx_data_guard_clone_06.png[在图形用户界面中显示此步骤的屏幕截图。]
+image:aws_ora_fsx_data_guard_clone_06.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 选择 ... `Complete Database Clone` 并将克隆实例命名为SID。
 +
-image::aws_ora_fsx_data_guard_clone_07.png[在图形用户界面中显示此步骤的屏幕截图。]
+image:aws_ora_fsx_data_guard_clone_07.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 选择克隆主机、此主机用于托管备用数据库中的克隆数据库。接受数据文件、控制文件和重做日志的默认设置。将在克隆主机上创建两个ASM磁盘组、它们与备用数据库上的磁盘组对应。
 +
-image::aws_ora_fsx_data_guard_clone_08.png[在图形用户界面中显示此步骤的屏幕截图。]
+image:aws_ora_fsx_data_guard_clone_08.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 基于操作系统的身份验证不需要数据库凭据。将Oracle主目录设置与克隆EC2数据库实例上配置的设置进行匹配。
 +
-image::aws_ora_fsx_data_guard_clone_09.png[在图形用户界面中显示此步骤的屏幕截图。]
+image:aws_ora_fsx_data_guard_clone_09.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 根据需要更改克隆数据库参数、并指定要在回放之前运行的脚本(如果有)。
 +
-image::aws_ora_fsx_data_guard_clone_10.png[在图形用户界面中显示此步骤的屏幕截图。]
+image:aws_ora_fsx_data_guard_clone_10.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 输入要在克隆后运行的SQL。在演示中、我们执行了一些命令来关闭开发/测试/报告数据库的数据库归档模式。
 +
-image::aws_ora_fsx_data_guard_clone_11.png[在图形用户界面中显示此步骤的屏幕截图。]
+image:aws_ora_fsx_data_guard_clone_11.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 根据需要配置电子邮件通知。
 +
-image::aws_ora_fsx_data_guard_clone_12.png[在图形用户界面中显示此步骤的屏幕截图。]
+image:aws_ora_fsx_data_guard_clone_12.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 查看摘要、单击 `Finish` 以启动克隆。
 +
-image::aws_ora_fsx_data_guard_clone_13.png[在图形用户界面中显示此步骤的屏幕截图。]
+image:aws_ora_fsx_data_guard_clone_13.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 在中监控克隆作业 `Monitor` 选项卡。我们发现、克隆数据库卷大小约为300 GB的数据库大约需要8分钟。
 +
-image::aws_ora_fsx_data_guard_clone_14.png[在图形用户界面中显示此步骤的屏幕截图。]
+image:aws_ora_fsx_data_guard_clone_14.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 验证SnapCenter中的克隆数据库、该数据库会立即注册到中 `Resources` 克隆操作后立即单击选项卡。
 +
-image::aws_ora_fsx_data_guard_clone_15.png[在图形用户界面中显示此步骤的屏幕截图。]
+image:aws_ora_fsx_data_guard_clone_15.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
 . 从克隆EC2实例查询克隆数据库。我们验证了主数据库中发生的测试事务已向下遍历到克隆数据库。
 +

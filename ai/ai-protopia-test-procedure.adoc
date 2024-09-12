@@ -77,29 +77,29 @@ To access workspace, navigate to http://192.168.0.152:32721
 ....
 . 使用`create jupyterlab`命令输出中指定的URL访问JupyterLab工作空间。数据目录表示已挂载到工作空间的永久性卷。
 +
-image::ai-protopia-image3.png[AI质子样影3.]
+image:ai-protopia-image3.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 打开`data`目录并上传要执行推理的文件。将文件上传到数据目录时、这些文件会自动存储在挂载到工作空间的永久性卷上。要上传文件、请单击上传文件图标、如下图所示。
 +
-image::ai-protopia-image4.png[AI质子图4.]
+image:ai-protopia-image4.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 返回顶级目录并创建新的笔记本。
 +
-image::ai-protopia-image5.png[AI质子样影5.]
+image:ai-protopia-image5.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 向笔记本电脑添加推理代码。以下示例显示了图像检测用例的推理代码。
 +
-image::ai-protopia-image6.png[AI质子样影6.]
+image:ai-protopia-image6.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
-image::ai-protopia-image7.png[AI质子样影7.]
+image:ai-protopia-image7.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 将Protopia混淆添加到推理代码中。Protopia直接与客户合作、提供特定于使用情形的文档、不在本技术报告的范围内。以下示例显示了添加了Protopia混淆的图像检测用例的推理代码。
 +
-image::ai-protopia-image8.png[AI质子样影8.]
+image:ai-protopia-image8.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
-image::ai-protopia-image9.png[AI质子图9.]
+image:ai-protopia-image9.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -147,7 +147,7 @@ spec:
           medium: Memory
       containers:
       - name: inference
-        image:: netapp-protopia-inference:latest
+        image: netapp-protopia-inference:latest
         imagePullPolicy: IfNotPresent
         command: ["python3", "run-accuracy-measurement.py", "--dataset", "/data/netapp-face-detection/FDDB"]
         resources:
@@ -209,7 +209,7 @@ spec:
           medium: Memory
       containers:
       - name: inference
-        image:: netapp-protopia-inference:latest
+        image: netapp-protopia-inference:latest
         imagePullPolicy: IfNotPresent
         env:
         - name: ALPHA

@@ -1,0 +1,48 @@
+---
+sidebar: sidebar 
+keywords: Cyber vault, cybervault, cyber-vault, data protection, security, ransomware, ONTAP 
+permalink: /cyber-vault/ontap-cyber-vault-overview.html 
+summary: 本文档简要介绍了由SnapLock Compliance提供支持的NetApp ONTAP网络存储解决方案、用于实现不可变和不可删除的数据保留。 
+---
+= ONTAP网络存储概述
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+需要实施网络存储的主要驱动威胁是网络攻击(尤其是勒索软件和数据泄露)日益流行且日益复杂。link:https://www.verizon.com/business/resources/reports/dbir/["网络钓鱼的兴起"^]而且、越来越复杂的凭据窃取方法、用于发起勒索软件攻击的凭据可以随后用于访问基础架构系统。在这些情况下、即使是加固的基础架构系统也有可能受到攻击。防止系统受损的唯一方法是保护您的数据并将其隔离在网络存储中。
+
+
+NOTE: 从2024年7月开始、以前以PDF格式发布的技术报告中的内容已与ONTAP产品文档集成。此外、本文档等新技术报告(TR)将不再获得技术报告编号。
+
+
+
+== 什么是网络保险？
+
+网络存储是一种特定的数据保护技术、涉及将关键数据存储在独立于主IT基础架构的隔离环境中。
+
+"空中映射"、*不可变*和*不可变*数据存储库、可免受影响主网络的威胁、例如恶意软件、勒索软件甚至内部威胁。可通过*不可变*和*不可变*快照实现网络储存。
+
+使用传统方法的空载备份涉及到创建空间以及物理分离主介质和二级介质。通过将介质移至异地和/或断开连接、不良行为者将无法访问数据。这样可以保护数据、但可能会导致恢复时间变慢。
+
+
+
+== NetApp的网络存储方法
+
+NetApp网络存储参考架构的主要功能包括：
+
+* 安全的隔离存储基础架构(例如、带气隙的存储系统)
+* 数据副本必须无一例外地为*不可变*和*不可变*
+* 严格的访问控制和多因素身份验证
+* 快速数据恢复功能
+
+
+您可以利用将NetApp存储与ONTAP结合使用link:../../ontap/snaplock/commit-snapshot-copies-worm-concept.html["SnapLock Compliance到WORM保护Snapshot副本"^]，将其用作空中连接的网络存储。您可以在网络存储上执行所有基本SnapLock Compliance任务。配置后、网络存储卷将自动受到保护、无需手动将Snapshot副本提交到WORM。有关逻辑气隙的详细信息、请参见link:https://www.netapp.com/blog/ransomware-protection-snaplock/["博客"^]
+
+SnapLock Compliance用于遵守《银行和财务条例》SEC 70-A-4 (f)、《金融交易条例》4511 (c)和《金融交易条例》1.31 (c)-(d)。它已通过Cohasset Associates的认证、符合这些法规(审计报告可根据要求提供)。通过将SnapLock Compliance与此认证结合使用、您可以获得一种强化的数据空中拍拍机制、全球最大的金融机构都依靠这种机制来确保银行记录的保留和检索。
+
+image:ontap-cyber-vault-logical-air-gap.png["使用NetApp ONTAP实现逻辑上的空中隔离网络存储"]

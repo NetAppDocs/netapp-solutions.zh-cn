@@ -26,7 +26,7 @@ NetApp 公司 Niyaz Mohamed
 
 可以使用灾难恢复协调器(DRO；具有UI的脚本式解决方案)无缝恢复从内部复制到FSX for ONTAP 的工作负载。DRO可通过VM注册到VMC自动从SnapMirror级别恢复到直接在NSX-T上进行的网络映射所有VMC环境都包含此功能。
 
-image::dro-vmc-image1.png[此图展示了内部数据中心、AWS SDDC实例上的VMware云和适用于NetApp ONTAP 的Amazon FSx之间的结构和互连。其中包括SnapMirror复制、DRaaS操作流量、互联网或直接连接以及VMware Transit Connect。]
+image:dro-vmc-image1.png["此图展示了内部数据中心、AWS SDDC实例上的VMware云和适用于NetApp ONTAP 的Amazon FSx之间的结构和互连。其中包括SnapMirror复制、DRaaS操作流量、互联网或直接连接以及VMware Transit Connect。"]
 
 
 
@@ -53,7 +53,7 @@ NOTE: 在初始版本中、DRO支持现有的试用集群。即将发布的版�
 
 下一步是使用NetApp BlueXP并发现在AWS实例上为ONTAP 配置的FSX、并以适当的频率将所需的数据存储库卷从内部环境复制到适用于ONTAP 的FSX并保留NetApp Snapshot副本：
 
-image::dro-vmc-image2.png[此图描绘了BlueXP画布关系映射、其中显示了已启用服务之间的各种交互。]
+image:dro-vmc-image2.png["此图描绘了BlueXP画布关系映射、其中显示了已启用服务之间的各种交互。"]
 
 按照此链接中的步骤配置BlueXP。您也可以使用NetApp ONTAP 命令行界面计划通过此链接进行复制。
 
@@ -140,7 +140,7 @@ Password: admin
 
 NOTE: 可以使用"更改密码"选项更改密码。
 
-image::dro-vmc-image3.png[Disaster Recovery Orchestrator登录屏幕。]
+image:dro-vmc-image3.png["Disaster Recovery Orchestrator登录屏幕。"]
 
 
 
@@ -166,13 +166,13 @@ NetApp建议在AWS中部署DRO代理、并将其部署到部署了FSX for ONTAP 
 
 
 
-image::dro-vmc-image4.png[临时占位符图像问题描述。]
+image:dro-vmc-image4.png["临时占位符图像问题描述。"]
 
-image::dro-vmc-image5.png[包含源站点和目标站点的DRO站点概述页面。]
+image:dro-vmc-image5.png["包含源站点和目标站点的DRO站点概述页面。"]
 
 添加后、DRO将执行自动发现、并显示具有从源存储到适用于ONTAP 的FSX的相应SnapMirror副本的VM。DRO会自动检测VM使用的网络和端口组并对其进行填充。
 
-image::dro-vmc-image6.png[包含219个VM和10个数据存储库的自动发现屏幕。]
+image:dro-vmc-image6.png["包含219个VM和10个数据存储库的自动发现屏幕。"]
 
 下一步是将所需的VM分组到功能组中、以用作资源组。
 
@@ -198,7 +198,7 @@ image::dro-vmc-image6.png[包含219个VM和10个数据存储库的自动发现�
 . 单击*创建资源组*。
 
 
-image::dro-vmc-image7.png[包含两个条目的资源组列表的屏幕截图：Test和DemoRG1。]
+image:dro-vmc-image7.png["包含两个条目的资源组列表的屏幕截图：Test和DemoRG1。"]
 
 
 
@@ -210,15 +210,15 @@ image::dro-vmc-image7.png[包含两个条目的资源组列表的屏幕截图：
 
 . 访问*复制计划*、然后单击*创建新复制计划*。
 +
-image::dro-vmc-image8.png[复制计划屏幕的屏幕截图、其中包含一个名为DemoRP的计划。]
+image:dro-vmc-image8.png["复制计划屏幕的屏幕截图、其中包含一个名为DemoRP的计划。"]
 
 . 在*新复制计划*下、为计划提供一个名称、并通过选择源站点、关联的vCenter、目标站点和关联的vCenter来添加恢复映射。
 +
-image::dro-vmc-image9.png[复制计划详细信息的屏幕截图、包括恢复映射。]
+image:dro-vmc-image9.png["复制计划详细信息的屏幕截图、包括恢复映射。"]
 
 . 恢复映射完成后、选择集群映射。
 +
-image::dro-vmc-image10.png[临时占位符图像问题描述。]
+image:dro-vmc-image10.png["临时占位符图像问题描述。"]
 
 . 选择*资源组详细信息*、然后单击*继续*。
 . 设置资源组的执行顺序。使用此选项可以选择存在多个资源组时的操作顺序。
@@ -229,47 +229,41 @@ image::dro-vmc-image10.png[临时占位符图像问题描述。]
 NOTE: SnapMirror处于卷级别。因此、所有VM都会复制到复制目标。确保选择属于数据存储库的所有VM。如果未选择这些虚拟机、则仅会处理属于复制计划的虚拟机。
 
 +
-image::dro-vmc-image11.png[临时占位符图像问题描述。]
+image:dro-vmc-image11.png["临时占位符图像问题描述。"]
 
 . 在VM详细信息下、您可以选择调整VM的CPU和RAM参数大小；在将大型环境恢复到较小的目标集群或执行灾难恢复测试而无需配置一对一物理VMware基础架构时、这会非常有用。此外、您还可以修改资源组中所有选定虚拟机的启动顺序和启动延迟(秒)。如果需要对资源组启动顺序选择期间选择的启动顺序进行任何更改、还可以选择修改启动顺序。默认情况下、系统会使用在选择资源组期间选择的启动顺序；但是、在此阶段可以执行任何修改。
 +
-image::dro-vmc-image12.png[临时占位符图像问题描述。]
+image:dro-vmc-image12.png["临时占位符图像问题描述。"]
 
 . 单击*创建复制计划*。
 +
-image::dro-vmc-image13.png[临时占位符图像问题描述。]
+image:dro-vmc-image13.png["临时占位符图像问题描述。"]
 
 
 
 创建复制计划后、可以根据需要使用故障转移选项、test-failover选项或migrate选项。在故障转移和测试-故障转移选项期间、将使用最新的SnapMirror Snapshot副本、或者可以从时间点Snapshot副本中选择特定的Snapshot副本(按照SnapMirror的保留策略)。如果您遇到勒索软件等损坏事件、而最新副本已被泄露或加密、则时间点选项可能会非常有用。DRO显示所有可用时间点。要使用复制计划中指定的配置触发故障转移或测试故障转移、可以单击*故障转移*或*测试故障转移*。
 
-image::dro-vmc-image14.png[临时占位符图像问题描述。]
-
-image::dro-vmc-image15.png[在此屏幕中、系统会为您提供卷快照详细信息、您可以在使用最新快照和选择特定快照之间进行选择。]
+image:dro-vmc-image14.png["临时占位符图像问题描述。"] image:dro-vmc-image15.png["在此屏幕中、系统会为您提供卷快照详细信息、您可以在使用最新快照和选择特定快照之间进行选择。"]
 
 可以在任务菜单中监控复制计划：
 
-image::dro-vmc-image16.png[任务菜单显示复制计划的所有作业和选项、还允许您查看日志。]
+image:dro-vmc-image16.png["任务菜单显示复制计划的所有作业和选项、还允许您查看日志。"]
 
 触发故障转移后、可以在VMC vCenter中看到恢复的项目(VM、网络、数据存储库)。默认情况下、VM将恢复到工作负载文件夹。
 
-image::dro-vmc-image17.png[临时占位符图像问题描述。]
+image:dro-vmc-image17.png["临时占位符图像问题描述。"]
 
 可以在复制计划级别触发故障恢复。对于测试故障转移、可以使用卸载选项回滚更改并删除FlexClone关系。与故障转移相关的故障恢复过程分为两步。选择复制计划并选择*反向数据同步*。
 
-image::dro-vmc-image18.png[复制计划概述的屏幕截图、其中包含Reverse Data Sync选项的下拉列表。]
-
-image::dro-vmc-image19.png[临时占位符图像问题描述。]
+image:dro-vmc-image18.png["复制计划概述的屏幕截图、其中包含Reverse Data Sync选项的下拉列表。"] image:dro-vmc-image19.png["临时占位符图像问题描述。"]
 
 完成后、您可以触发故障恢复以移回原始生产站点。
 
-image::dro-vmc-image20.png[复制计划概述的屏幕截图、其中包含故障恢复选项的下拉列表。]
-
-image::dro-vmc-image21.png[原始生产站点已启动且正在运行的DRO摘要页面的屏幕截图。]
+image:dro-vmc-image20.png["复制计划概述的屏幕截图、其中包含故障恢复选项的下拉列表。"] image:dro-vmc-image21.png["原始生产站点已启动且正在运行的DRO摘要页面的屏幕截图。"]
 
 在NetApp BlueXP中、我们可以看到相应卷(已映射到VMC的读写卷)的复制运行状况已中断。在测试故障转移期间、DRO不会映射目标卷或副本卷。相反、它会为所需的SnapMirror (或Snapshot)实例创建一个FlexClone副本、并公开FlexClone实例、这样不会占用适用于ONTAP 的FSX的额外物理容量。此过程可确保卷不会被修改、并且即使在灾难恢复测试或鉴别工作流期间、副本作业也可以继续执行。此外、此过程还可确保在发生错误或恢复损坏的数据时、可以清理恢复过程、而不会造成副本被销毁的风险。
 
-image::dro-vmc-image22.png[临时占位符图像问题描述。]
+image:dro-vmc-image22.png["临时占位符图像问题描述。"]
 
 
 

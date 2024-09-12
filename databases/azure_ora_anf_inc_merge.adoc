@@ -55,7 +55,7 @@ NetApp公司Allen Cao、Niyaz Mohamed
 
 === 架构
 
-image::azure_ora_anf_vldb_architecture.png[此图详细展示了使用ANF在Azure公共云中实施的Oracle VLDB增量合并。]
+image:azure_ora_anf_vldb_architecture.png["此图详细展示了使用ANF在Azure公共云中实施的Oracle VLDB增量合并。"]
 
 
 
@@ -139,27 +139,27 @@ NOTE: 确保您已在Azure VM根卷中至少分配128 G、以便有足够的空�
 
 . 首先、从Azure门户控制台导航到用于暂存Oracle VLDB映像副本的ANF容量池。
 +
-image::azure_ora_anf_vldb_vol_01.png[此图提供了使用Azure门户控制台的ANF卷配置屏幕]
+image:azure_ora_anf_vldb_vol_01.png["此图提供了使用Azure门户控制台的ANF卷配置屏幕"]
 
 . 从选定容量池- `database`下、单击 `Volumes` 然后、 `Add volume` 以启动添加卷工作流。
 +
-image::azure_ora_anf_vldb_vol_02.png[此图提供了使用Azure门户控制台的ANF卷配置屏幕]
+image:azure_ora_anf_vldb_vol_02.png["此图提供了使用Azure门户控制台的ANF卷配置屏幕"]
 
 . 填写 `Volume name`， `Quota`， `Virtual network`，和 `Delegated subnet` 移动到 `Protocol` 页面。
 +
-image::azure_ora_anf_vldb_vol_03.png[此图提供了使用Azure门户控制台的ANF卷配置屏幕]
+image:azure_ora_anf_vldb_vol_03.png["此图提供了使用Azure门户控制台的ANF卷配置屏幕"]
 
 . 记下文件路径、输入允许的客户端CIDR范围、然后启用 `Root Access` 卷。
 +
-image::azure_ora_anf_vldb_vol_04.png[此图提供了使用Azure门户控制台的ANF卷配置屏幕]
+image:azure_ora_anf_vldb_vol_04.png["此图提供了使用Azure门户控制台的ANF卷配置屏幕"]
 
 . 根据需要添加卷标记。
 +
-image::azure_ora_anf_vldb_vol_05.png[此图提供了使用Azure门户控制台的ANF卷配置屏幕]
+image:azure_ora_anf_vldb_vol_05.png["此图提供了使用Azure门户控制台的ANF卷配置屏幕"]
 
 . 查看并创建卷。
 +
-image::azure_ora_anf_vldb_vol_06.png[此图提供了使用Azure门户控制台的ANF卷配置屏幕]
+image:azure_ora_anf_vldb_vol_06.png["此图提供了使用Azure门户控制台的ANF卷配置屏幕"]
 
 . 以具有sudo权限的用户身份登录到主Oracle VLDB服务器、然后挂载从ANF存储导出的NFS卷。根据需要更改ANF NFS服务器IP地址和文件路径。可以从ANF卷控制台页面检索ANF NFS服务器IP地址。
 +

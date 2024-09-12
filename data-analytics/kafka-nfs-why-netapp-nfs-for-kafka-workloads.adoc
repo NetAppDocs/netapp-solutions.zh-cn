@@ -59,7 +59,7 @@ summary: 现在、在使用Kafka的NFS存储中、有一个解决方案 用于�
 
 此测试案例中使用的基准测试工具是 https://openmessaging.cloud/["Open消息 传送"^] 框架。Openmessaging不受供应商限制、不受语言限制；它为金融、电子商务、物联网和大数据提供行业指导；它有助于跨异构系统和平台开发消息传送和流式传输应用程序。下图展示了Open消息 客户端与Kafka集群的交互。
 
-image::kafka-nfs-image8.png[此图显示了Open消息 客户端与Kafka集群的交互。]
+image:kafka-nfs-image8.png["此图显示了Open消息 客户端与Kafka集群的交互。"]
 
 * *计算。*我们使用了一个三节点Kafka集群、其中三节点Zookeeper集合在专用服务器上运行。每个代理都通过一个专用LIF将两个NFSv4.1挂载点连接到NetApp CVO实例上的一个卷。
 * *监控。*我们将两个节点用于Prometheus-Grafana组合。为了生成工作负载、我们提供了一个单独的三节点集群、该集群可以生成并使用此Kafka集群。
@@ -71,12 +71,12 @@ image::kafka-nfs-image8.png[此图显示了Open消息 客户端与Kafka集群的
 
 
 
-image::kafka-nfs-image9.png[此图显示了为Kafka代理选择的规格。]
+image:kafka-nfs-image9.png["此图显示了为Kafka代理选择的规格。"]
 
 * 提供了以下规格：* Open消息 基准测试(OMB)工作负载配置*。我们指定了一个目标生产者比率、并在下面重点说明了这一比率。
 
 
-image::kafka-nfs-image10.png[此图显示了为Open消息 基准工作负载配置选择的规格。]
+image:kafka-nfs-image10.png["此图显示了为Open消息 基准工作负载配置选择的规格。"]
 
 
 
@@ -113,15 +113,15 @@ sudo bin/benchmark --drivers driver-kafka/kafka-group-all.yaml workloads/1-topic
 * *在较高的生产率下、CPU利用率漂移减少了三倍。*正如预期的那样、随着生产率的增加、CPU利用率的增加也出现了上升趋势。但是、使用DAS的Kafka代理的CPU利用率从较低生产率的31%上升到较高生产率的70%、即增加39%。但是、在NFS存储后端、CPU利用率从26%上升到38%、增加了12%。
 
 
-image::kafka-nfs-image11.png[此图显示了基于DAS的集群的行为。]
+image:kafka-nfs-image11.png["此图显示了基于DAS的集群的行为。"]
 
-image::kafka-nfs-image12.png[此图显示了基于NFS的集群的行为。]
+image:kafka-nfs-image12.png["此图显示了基于NFS的集群的行为。"]
 
 此外、当消息达到100、000时、DAS显示的CPU利用率比NFS集群高。
 
-image::kafka-nfs-image13.png[此图显示了一个基于DAS的集群在收到100、000条消息时的行为。]
+image:kafka-nfs-image13.png["此图显示了一个基于DAS的集群在收到100、000条消息时的行为。"]
 
-image::kafka-nfs-image14.png[此图显示了一个基于NFS的集群在收到100、000条消息时的行为。]
+image:kafka-nfs-image14.png["此图显示了一个基于NFS的集群在收到100、000条消息时的行为。"]
 
 
 
@@ -156,7 +156,7 @@ image::kafka-nfs-image14.png[此图显示了一个基于NFS的集群在收到100
 |===
 下图展示了基于NAS的Kafka集群的架构。
 
-image::kafka-nfs-image8.png[此图显示了基于NAS的Kafka集群的架构。]
+image:kafka-nfs-image8.png["此图显示了基于NAS的Kafka集群的架构。"]
 
 * *计算。*一种三节点Kafka集群、其中三节点zookeeper集合在专用服务器上运行。每个代理都有两个NFS挂载点、可通过专用LIF连接到NetApp CVO实例上的一个卷。
 * *监控。* Prometheus-Grafana组合的两个节点。在生成工作负载时、我们会使用一个单独的三节点集群来生成此Kafka集群并将其使用。
@@ -164,7 +164,7 @@ image::kafka-nfs-image8.png[此图显示了基于NAS的Kafka集群的架构。]
 * *代理配置。*本测试用例中的一个可配置元素是Kafka代理。为Kafka代理选择了以下规格。。 `replica.lag.time.mx.ms` 设置为高值、因为这决定了从ISR列表中删除特定节点的速度。在不良节点和运行状况良好的节点之间切换时、您不希望从ISR列表中排除该代理ID。
 
 
-image::kafka-nfs-image15.png[此图显示了为Kafka代理选择的规格。]
+image:kafka-nfs-image15.png["此图显示了为Kafka代理选择的规格。"]
 
 
 
@@ -182,7 +182,7 @@ image::kafka-nfs-image15.png[此图显示了为Kafka代理选择的规格。]
 ** 基于* EC2的集群。*已映射Kafka代理数据目录 `/mnt/data-2` (在下图中、为cluster1的Broker-1 (左端子)。
 ** *基于NetApp NFS的集群。* Kafka代理数据目录挂载在NFS点上 `/mnt/data` (在下图中、为cluster2的Broker-1 [右端子])。
 +
-image::kafka-nfs-image16.png[此图显示了两个终端屏幕。]
+image:kafka-nfs-image16.png["此图显示了两个终端屏幕。"]
 
 
 
@@ -215,11 +215,11 @@ Kafka代理恢复速度几乎是原来的九倍。我们发现、与在Kafka集�
 
 . 备份节点从08：55：53、730开始。
 +
-image::kafka-nfs-image17.png[此图显示了基于DAS的集群的日志输出。]
+image:kafka-nfs-image17.png["此图显示了基于DAS的集群的日志输出。"]
 
 . 数据重建过程于09：05：24、860结束。处理110 GB的数据大约需要10分钟。
 +
-image::kafka-nfs-image18.png[此图显示了基于DAS的集群的日志输出。]
+image:kafka-nfs-image18.png["此图显示了基于DAS的集群的日志输出。"]
 
 
 
@@ -229,17 +229,17 @@ image::kafka-nfs-image18.png[此图显示了基于DAS的集群的日志输出。
 
 . 备份节点的启动时间为09：39：17、213。下面突出显示了起始日志条目。
 +
-image::kafka-nfs-image19.png[此图显示了基于NFS的集群的日志输出。]
+image:kafka-nfs-image19.png["此图显示了基于NFS的集群的日志输出。"]
 
 . 数据重建过程于09：42：29、115结束。处理110 GB的数据大约需要3分钟。
 +
-image::kafka-nfs-image20.png[此图显示了基于NFS的集群的日志输出。]
+image:kafka-nfs-image20.png["此图显示了基于NFS的集群的日志输出。"]
 
 +
 对于包含大约1 TB数据的代理、重复执行此测试、对于DAS、此测试需要大约48分钟、对于NFS、此测试需要3分钟。下图显示了这些结果。
 
 +
-image::kafka-nfs-image21.png[此图显示了根据基于DAS的集群或基于NFS的集群的代理上加载的数据量进行代理恢复所需的时间。]
+image:kafka-nfs-image21.png["此图显示了根据基于DAS的集群或基于NFS的集群的代理上加载的数据量进行代理恢复所需的时间。"]
 
 
 
@@ -275,7 +275,7 @@ image::kafka-nfs-image21.png[此图显示了根据基于DAS的集群或基于NFS
 |===
 下图展示了基于NAS的Kafka集群的架构。
 
-image::kafka-nfs-image8.png[此图显示了基于NAS的Kafka集群的架构。]
+image:kafka-nfs-image8.png["此图显示了基于NAS的Kafka集群的架构。"]
 
 * *计算。*我们使用了一个三节点Kafka集群、其中三节点Zookeeper集合在专用服务器上运行。每个代理都通过一个专用LIF在NetApp CVO实例上有两个NFS挂载点到一个卷。
 * *监控。*我们将两个节点用于Prometheus-Grafana组合。为了生成工作负载、我们使用了一个单独的三节点集群、该集群可能会生成此Kafka集群并将其占用。
@@ -300,8 +300,8 @@ image::kafka-nfs-image8.png[此图显示了基于NAS的Kafka集群的架构。]
 
 对于使用OMB工具生成的数据、我们发现空间节省~33%、存储效率比率为1.70：1。如下图所示、生成的数据所使用的逻辑空间为420.3 GB、用于存放数据的物理空间为281.7 GB。
 
-image::kafka-nfs-image22.png[此图显示了VMDISK中的空间节省。]
+image:kafka-nfs-image22.png["此图显示了VMDISK中的空间节省。"]
 
-image::kafka-nfs-image23.png[屏幕截图]
+image:kafka-nfs-image23.png["屏幕截图"]
 
-image::kafka-nfs-image24.png[屏幕截图]
+image:kafka-nfs-image24.png["屏幕截图"]

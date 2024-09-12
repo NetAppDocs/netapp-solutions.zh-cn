@@ -196,7 +196,7 @@ https://docs.aws.amazon.com/cli/latest/reference/fsx/update-file-system.html[]
 下图显示了基于Kafka集群的FSx for NetApp ONTAP的最终架构：
 
 +
-image::aws-fsx-kafka-arch1.png[此图显示了基于FSxN的Kafka集群的架构。]
+image:aws-fsx-kafka-arch1.png["此图显示了基于FSxN的Kafka集群的架构。"]
 
 +
 ** 计算。我们使用了一个三节点Kafka集群、其中一个三节点Zookeer集合运行在专用服务器上。每个代理都有六个NFS挂载点、指向FSx for NetApp ONTAP实例上的六个卷。
@@ -254,12 +254,12 @@ sudo bin/benchmark –drivers driver-kafka/kafka-throughput.yaml workloads/1-top
 
 这些吞吐量数字是为给定的AWS配置生成的。为了满足更高的性能要求、可以进一步扩展和调整实例类型、以提高吞吐量。总吞吐量或总速率是生产者和使用者速率的组合。
 
-image::aws-fsxn-performance-rf-1-rf-3.png[此图显示了Kafka与RF1和RF3的性能]
+image:aws-fsxn-performance-rf-1-rf-3.png["此图显示了Kafka与RF1和RF3的性能"]
 
 下图显示了NetApp ONTAP的2 GB/秒FSx和Kafka复制因子3的4 GB/秒性能。复制因子3在FSx for NetApp ONTAP存储上执行三次读取和写入操作。吞吐量驱动程序的总速率为881 MB/秒、在NetApp ONTAP文件系统的2 GB/秒FSx上执行读取和写入Kafka操作的速率约为2.64 GB/秒、吞吐量驱动程序的总速率为1328 MB/秒、执行读取和写入Kafka操作的速率约为3.98 GB/秒。Kafka的性能是线性的、可根据FSx for NetApp ONTAP吞吐量进行扩展。
 
-image::aws-fsxn-2gb-4gb-scale.png[此图显示了2 GB/秒和4 GB/秒的横向扩展性能。]
+image:aws-fsxn-2gb-4gb-scale.png["此图显示了2 GB/秒和4 GB/秒的横向扩展性能。"]
 
 下图显示了EC2实例与FSx for NetApp ONTAP之间的性能(Kafka复制因子：3)
 
-image::aws-fsxn-ec2-fsxn-comparition.png[此图显示了RF3中EC2与FSxN的性能比较。]
+image:aws-fsxn-ec2-fsxn-comparition.png["此图显示了RF3中EC2与FSxN的性能比较。"]

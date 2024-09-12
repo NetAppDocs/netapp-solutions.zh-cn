@@ -22,12 +22,12 @@ keywords: NetApp Astra Control, Astra Control Center, Application, Trident, Astr
 
 . 第一步是将Tanzu Kubernetes集群添加到Astra控制中心并对其进行管理。转至Clusters并单击Add a Cluster、上传Tanzu Kubernetes集群的kubeconfig文件、然后单击Select Storage。
 +
-image::vtwn_image09.jpg[Astra 控制中心创建集群]
+image:vtwn_image09.jpg["Astra 控制中心创建集群"]
 
 . Astra 控制中心会检测符合条件的存储类。现在，选择使用 NetApp ONTAP 上由 SVM 支持的 Trident 配置卷的 storageclass 方式，然后单击查看。在下一个窗格中，验证详细信息，然后单击 Add Cluster 。
 . 添加集群后、集群将变为"正在发现"状态、而Astra控制中心将对其进行检查并安装必要的代理。成功注册后、集群状态将更改为`Healthy`。
 +
-image::vtwn_image10.jpg[提供 Astra 控制中心集群]
+image:vtwn_image10.jpg["提供 Astra 控制中心集群"]
 
 +
 
@@ -35,18 +35,18 @@ NOTE: 在受管集群上安装的代理从该注册表中提取映像时、由As
 
 . 将 ONTAP 集群作为存储资源导入，以便由 Astra 控制中心作为后端进行管理。在将Tanzu Kubernetes集群添加到Astra并配置了storageclass后、它会自动发现并检查支持该storageclass的ONTAP 集群、但不会将其导入到要管理的Astra控制中心中。
 +
-image::vtwn_image11.jpg[Astra 控制中心后端发现]
+image:vtwn_image11.jpg["Astra 控制中心后端发现"]
 
 . 要导入ONTAP 集群、请导航到后端、单击下拉列表、然后选择要管理的ONTAP 集群旁边的管理。输入 ONTAP 集群凭据，单击查看信息，然后单击导入存储后端。
 +
-image::vtwn_image12.jpg[Astra 控制中心创建后端]
+image:vtwn_image12.jpg["Astra 控制中心创建后端"]
 
 . 添加后端后，状态将更改为 Available 。现在、这些后端可提供有关Tanzu Kubernetes集群中的永久性卷以及ONTAP 系统上的相应卷的信息。
 +
-image::vtwn_image13.jpg[提供 Astra 控制中心后端]
+image:vtwn_image13.jpg["提供 Astra 控制中心后端"]
 
 . 要使用Astra控制中心在Tanzu Kubernetes集群之间进行备份和还原、您必须配置支持S3协议的对象存储分段。当前支持的选项包括ONTAP S3、StorageGRID 、AWS S3和Microsoft Azure Blob Storage。为此，我们将配置一个 AWS S3 存储分段。转到 " 分段 " ，单击 " 添加分段 " ，然后选择 " 通用 S3" 。输入有关S3存储分段和凭据的详细信息以访问它、单击复选框将此存储分段设置为云的默认存储分段、然后单击添加。
 +
-image::vtwn_image14.jpg[Astra 控制中心创建存储分段]
+image:vtwn_image14.jpg["Astra 控制中心创建存储分段"]
 
 

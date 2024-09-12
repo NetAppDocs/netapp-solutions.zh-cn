@@ -20,7 +20,7 @@ keywords: architecture, Oracle RDS, RDS, FSx ONTAP, FSx, AWS, Oracle, HA, DR
 
 而FSX卷上的Oracle数据库存储则通过AWS FSX控制台或CLI进行部署。随后、Oracle二进制卷、数据卷或日志卷将显示并挂载到EC2实例Linux主机上。根据使用的底层存储协议、每个数据或日志卷可以分配多个LUN。
 
-image::aws_ora_fsx_ec2_arch.PNG[此图显示了一个架构图示例、其中包括主HA集群-备用HA集群-管理节点以及相关连接节点。]
+image:aws_ora_fsx_ec2_arch.png["此图显示了一个架构图示例、其中包括主HA集群-备用HA集群-管理节点以及相关连接节点。"]
 
 FSX存储集群采用双冗余设计、因此主存储集群和备用存储集群都部署在两个不同的可用性区域中。对于所有Oracle二进制卷、数据卷和日志卷、数据库卷会按用户可配置的间隔从主FSX集群复制到备用FSX集群。
 

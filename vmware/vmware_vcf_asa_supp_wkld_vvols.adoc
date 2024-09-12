@@ -46,7 +46,7 @@ summary:
 
 NetApp建议为iSCSI设计完全冗余的网络。下图展示了一个冗余配置示例、用于为存储系统、交换机、网络适配器和主机系统提供容错功能。请参阅NetApp link:https://docs.netapp.com/us-en/ontap/san-config/index.html["SAN 配置参考"] 适用于追加信息 。
 
-image::vmware-vcf-asa-image74.png[NVMe-TCP网络设计]
+image:vmware-vcf-asa-image74.png["NVMe-TCP网络设计"]
 
 ｛｛｝
 
@@ -78,14 +78,14 @@ TIP: 如果在同一IP网络上配置了多个VMkernel适配器、建议在ESXi�
 
 . 从ONTAP系统管理器导航到左侧菜单中的*存储VM*、然后单击*+ Add*开始。
 +
-image::vmware-vcf-asa-image01.png[单击+Add开始创建SVM]
+image:vmware-vcf-asa-image01.png["单击+Add开始创建SVM"]
 
 +
 ｛｛｝
 
 . 在*添加Storage VM*向导中为SVM提供*名称*，选择* IP空间*，然后在*访问协议*下，单击*iSCSI*选项卡并选中*启用iSCSI*复选框。
 +
-image::vmware-vcf-asa-image02.png[添加Storage VM向导—启用iSCSI]
+image:vmware-vcf-asa-image02.png["添加Storage VM向导—启用iSCSI"]
 
 +
 ｛｛｝
@@ -96,14 +96,14 @@ image::vmware-vcf-asa-image02.png[添加Storage VM向导—启用iSCSI]
 NOTE: 对于多路径和多路径故障转移、NetApp建议在单独的以太网网络中为iSCSI配置中的所有SVM的每个存储节点至少配置两个LUN。
 
 +
-image::vmware-vcf-asa-image03.png[填写lifs的网络信息]
+image:vmware-vcf-asa-image03.png["填写lifs的网络信息"]
 
 +
 ｛｛｝
 
 . 选择是否启用Storage VM管理帐户(对于多租户环境)、然后单击*保存*以创建SVM。
 +
-image::vmware-vcf-asa-image04.png[启用SVM帐户并完成]
+image:vmware-vcf-asa-image04.png["启用SVM帐户并完成"]
 
 
 
@@ -121,7 +121,7 @@ image::vmware-vcf-asa-image04.png[启用SVM帐户并完成]
 
 . 从vSphere Client中，导航到工作负载域的*Inventory > Networking*。导航到现有分布式交换机并选择要创建*新分布式端口组...*的操作。
 +
-image::vmware-vcf-asa-image22.png[选择创建新端口组]
+image:vmware-vcf-asa-image22.png["选择创建新端口组"]
 
 +
 ｛｛｝
@@ -129,7 +129,7 @@ image::vmware-vcf-asa-image22.png[选择创建新端口组]
 . 在“*新分布式端口组*”向导中，填写新端口组的名称，然后单击“*下一步*”继续。
 . 在*Configure settings (配置设置)*页面上填写所有设置。如果使用的是VLAN、请确保提供正确的VLAN ID。单击“*下一步*”继续。
 +
-image::vmware-vcf-asa-image23.png[填写VLAN ID]
+image:vmware-vcf-asa-image23.png["填写VLAN ID"]
 
 +
 ｛｛｝
@@ -138,18 +138,18 @@ image::vmware-vcf-asa-image23.png[填写VLAN ID]
 . 重复此过程为所使用的第二个iSCSI网络创建分布式端口组，并确保输入正确的*VLAN ID*。
 . 创建两个端口组后，请导航到第一个端口组并选择操作*编辑设置...*。
 +
-image::vmware-vcf-asa-image24.png[DPG—编辑设置]
+image:vmware-vcf-asa-image24.png["DPG—编辑设置"]
 
 +
 ｛｛｝
 
 . 在“*分布式端口组-编辑设置*”页面上，导航到左侧菜单中的*分组和故障转移*，然后单击*uplink2*将其下移到“*未使用的上行链路*”。
 +
-image::vmware-vcf-asa-image25.png[将Uplink2移至未使用]
+image:vmware-vcf-asa-image25.png["将Uplink2移至未使用"]
 
 . 对第二个iSCSI端口组重复此步骤。但是，这次将*Uplink1*下移到*unused uplines*。
 +
-image::vmware-vcf-asa-image26.png[将Uplink1移至未使用]
+image:vmware-vcf-asa-image26.png["将Uplink1移至未使用"]
 
 
 
@@ -161,42 +161,42 @@ image::vmware-vcf-asa-image26.png[将Uplink1移至未使用]
 
 . 从vSphere客户端导航到工作负载域清单中的一个ESXi主机。从*配置*选项卡中选择*VMkernel适配器*，然后单击*添加网络...*开始。
 +
-image::vmware-vcf-asa-image30.png[启动添加网络向导]
+image:vmware-vcf-asa-image30.png["启动添加网络向导"]
 
 +
 ｛｛｝
 
 . 在“*选择连接类型*”窗口中，选择*VMkernel网络适配器*，然后单击“*下一步*”继续。
 +
-image::vmware-vcf-asa-image08.png[选择VMkernel Network Adapter]
+image:vmware-vcf-asa-image08.png["选择VMkernel Network Adapter"]
 
 +
 ｛｛｝
 
 . 在*选择目标设备*页上，为先前创建的iSCSI选择一个分布式端口组。
 +
-image::vmware-vcf-asa-image31.png[选择目标端口组]
+image:vmware-vcf-asa-image31.png["选择目标端口组"]
 
 +
 ｛｛｝
 
 . 在*Port properties*页上保留默认值，然后单击*Next*继续。
 +
-image::vmware-vcf-asa-image32.png[VMkernel端口属性]
+image:vmware-vcf-asa-image32.png["VMkernel端口属性"]
 
 +
 ｛｛｝
 
 . 在*IPv4设置*页面上，填写*IP地址*、*Subnet mask *，并提供新的网关IP地址(仅在需要时才提供)。单击“*下一步*”继续。
 +
-image::vmware-vcf-asa-image33.png[VMkernel IPv4设置]
+image:vmware-vcf-asa-image33.png["VMkernel IPv4设置"]
 
 +
 ｛｛｝
 
 . 在*Ready to Complete*(准备完成)页面上查看您选择的内容，然后单击*Complete*(完成)以创建VMkernel适配器。
 +
-image::vmware-vcf-asa-image34.png[查看VMkernel选择]
+image:vmware-vcf-asa-image34.png["查看VMkernel选择"]
 
 +
 ｛｛｝
@@ -226,14 +226,14 @@ image::vmware-vcf-asa-image34.png[查看VMkernel选择]
 . 登录到VCF管理域的vCenter设备。
 . 在vCenter设备界面中，右键单击管理集群，然后选择*Deploy OVF Template…*
 +
-image::vmware-vcf-aff-image21.png[部署OVF模板...]
+image:vmware-vcf-aff-image21.png["部署OVF模板..."]
 
 +
 ｛｛｝
 
 . 在“*部署OVF模板*”向导中，单击“*本地文件*”单选按钮，然后选择在上一步中下载的ONTAP工具OVA文件。
 +
-image::vmware-vcf-aff-image22.png[选择OVA文件]
+image:vmware-vcf-aff-image22.png["选择OVA文件"]
 
 +
 ｛｛｝
@@ -241,14 +241,14 @@ image::vmware-vcf-aff-image22.png[选择OVA文件]
 . 对于向导的第2步到第5步、为虚拟机选择一个名称和文件夹、选择计算资源、查看详细信息并接受许可协议。
 . 对于配置和磁盘文件的存储位置、请选择VCF管理域集群的vSAN数据存储库。
 +
-image::vmware-vcf-aff-image23.png[选择OVA文件]
+image:vmware-vcf-aff-image23.png["选择OVA文件"]
 
 +
 ｛｛｝
 
 . 在Select network页面上、选择用于管理流量的网络。
 +
-image::vmware-vcf-aff-image24.png[选择网络]
+image:vmware-vcf-aff-image24.png["选择网络"]
 
 +
 ｛｛｝
@@ -267,10 +267,10 @@ image::vmware-vcf-aff-image24.png[选择网络]
 单击“*下一步*”继续。
 
 +
-image::vmware-vcf-aff-image25.png[自定义OTV模板1.]
+image:vmware-vcf-aff-image25.png["自定义OTV模板1."]
 
 +
-image::vmware-vcf-asa-image35.png[自定义OTV模板2.]
+image:vmware-vcf-asa-image35.png["自定义OTV模板2."]
 
 +
 ｛｛｝
@@ -286,21 +286,21 @@ image::vmware-vcf-asa-image35.png[自定义OTV模板2.]
 ====
 . 从vSphere Client的主菜单中选择NetApp ONTAP工具、以访问此工具。
 +
-image::vmware-asa-image6.png[NetApp ONTAP工具]
+image:vmware-asa-image6.png["NetApp ONTAP工具"]
 
 +
 ｛｛｝
 
 . 从ONTAP工具界面的*实例*下拉菜单中、选择与要管理的工作负载域关联的ONTAP工具实例。
 +
-image::vmware-vcf-asa-image36.png[选择OTV Instance]
+image:vmware-vcf-asa-image36.png["选择OTV Instance"]
 
 +
 ｛｛｝
 
 . 在ONTAP工具中，从左侧菜单中选择*Storage Systems*，然后按*Add*。
 +
-image::vmware-vcf-asa-image37.png[添加存储系统]
+image:vmware-vcf-asa-image37.png["添加存储系统"]
 
 +
 ｛｛｝
@@ -311,7 +311,7 @@ image::vmware-vcf-asa-image37.png[添加存储系统]
 NOTE: vVol需要ONTAP集群凭据、而不是SVM凭据。有关详细信息、请参见 https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/configure/task_add_storage_systems.html["添加存储系统"] 在ONTAP工具文档中。
 
 +
-image::vmware-vcf-asa-image38.png[提供存储系统凭据]
+image:vmware-vcf-asa-image38.png["提供存储系统凭据"]
 
 
 
@@ -325,31 +325,31 @@ image::vmware-vcf-asa-image38.png[提供存储系统凭据]
 
 . 在ONTAP工具中，从左侧菜单中选择*存储功能配置文件*，然后按*Create*。
 +
-image::vmware-vcf-asa-image39.png[存储功能配置文件]
+image:vmware-vcf-asa-image39.png["存储功能配置文件"]
 
 . 在*创建存储功能配置文件*向导中，提供配置文件的名称和问题描述，然后单击*下一步*。
 +
-image::vmware-asa-image10.png[为SCP添加名称]
+image:vmware-asa-image10.png["为SCP添加名称"]
 
 . 选择平台类型，并将存储系统设置为纯闪存SAN阵列*A对称*为false。
 +
-image::vmware-asa-image11.png[SCP平台]
+image:vmware-asa-image11.png["SCP平台"]
 
 . 接下来，选择协议选项或*ANY*以允许所有可能的协议。单击 * 下一步 * 继续。
 +
-image::vmware-asa-image12.png[SCP协议]
+image:vmware-asa-image12.png["SCP协议"]
 
 . "*性能"页面允许以允许的最小和最大IOPS的形式设置服务质量。
 +
-image::vmware-asa-image13.png[适用于SCP的QoS]
+image:vmware-asa-image13.png["适用于SCP的QoS"]
 
 . 完成*存储属性*页面、根据需要选择存储效率、空间预留、加密和任何分层策略。
 +
-image::vmware-asa-image14.png[SCP的属性]
+image:vmware-asa-image14.png["SCP的属性"]
 
 . 最后、查看摘要、然后单击完成以创建配置文件。
 +
-image::vmware-vcf-asa-image40.png[SCP摘要]
+image:vmware-vcf-asa-image40.png["SCP摘要"]
 
 
 
@@ -361,23 +361,23 @@ image::vmware-vcf-asa-image40.png[SCP摘要]
 
 . 在ONTAP工具中选择*Overview*，然后从*Getting Started*选项卡中单击*ProVision *以启动向导。
 +
-image::vmware-vcf-asa-image41.png[配置数据存储库]
+image:vmware-vcf-asa-image41.png["配置数据存储库"]
 
 . 在新建数据存储库向导的*常规*页面上、选择vSphere数据中心或集群目标。选择*vols*作为数据存储库类型，填写数据存储库的名称，然后选择*iSCSI*作为协议。单击“*下一步*”继续。
 +
-image::vmware-vcf-asa-image42.png[常规页面]
+image:vmware-vcf-asa-image42.png["常规页面"]
 
 . 在*存储系统*页面上选择存储功能配置文件、存储系统和SVM。单击“*下一步*”继续。
 +
-image::vmware-vcf-asa-image43.png[存储系统]
+image:vmware-vcf-asa-image43.png["存储系统"]
 
 . 在*Storage attributes*页面上，选择为数据存储库创建新卷，然后填写要创建的卷的存储属性。单击*Add*(添加)创建卷，然后单击*Next*(下一步)继续。
 +
-image::vmware-vcf-asa-image44.png[存储属性]
+image:vmware-vcf-asa-image44.png["存储属性"]
 
 . 最后、查看此摘要并单击*完成*以启动VVOV数据存储库创建过程。
 +
-image::vmware-vcf-asa-image45.png[摘要页面]
+image:vmware-vcf-asa-image45.png["摘要页面"]
 
 
 

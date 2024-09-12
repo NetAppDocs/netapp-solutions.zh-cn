@@ -40,7 +40,7 @@ Veeam Backup & Replication支持通过现场和远程复制实现灾难恢复(Di
 
 执行故障转移时、复制的虚拟机将接管原始虚拟机的角色。可以将故障转移到副本的最新状态或任何已知正常的还原点。这样便可根据需要进行勒索软件恢复或隔离测试。在Veeam Backup & Replication中、故障转移和故障恢复是临时的中间步骤、应进一步完成。Veeam Backup & Replication提供了多种选项来处理不同的灾难恢复场景。
 
-image::dr-veeam-fsx-image1.png[使用Veeam Replication和FSx ONTAP for VMC的灾难恢复场景示意图]
+image:dr-veeam-fsx-image1.png["使用Veeam Replication和FSx ONTAP for VMC的灾难恢复场景示意图"]
 
 
 
@@ -87,38 +87,38 @@ Veeam Backup & Replication利用VMware vSphere快照功能、在复制期间、V
 ** 如果AWS SDDC上VMware Cloud上的区块与内部站点网络不匹配、请选中网络重新映射(适用于具有不同网络的AWS VMC站点)复选框。
 ** 如果内部生产站点中的IP地址方案与AWS VMC站点中的方案不同、请选中"副 本重新IP (适用于具有不同IP地址方案的灾难恢复站点)"复选框。
 +
-image::dr-veeam-fsx-image2.png[灾难恢复Veeam FSx版本2]
+image:dr-veeam-fsx-image2.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
 . 在*虚拟机*步骤中、选择需要复制到连接到AWS SDDC上的VMware Cloud的FSx for ONTAP数据存储库的VM。可以将虚拟机放置在vSAN上、以填满可用的vSAN数据存储库容量。在指示灯集群中、3节点集群的可用容量将受到限制。其余数据可以复制到FSx for ONTAP数据存储库。单击*Add*，然后在*Add Object*窗口中选择所需的VM或VM容器，然后单击*Add*。单击 * 下一步 * 。
 +
-image::dr-veeam-fsx-image3.png[灾难恢复Veeam FSx版本3]
+image:dr-veeam-fsx-image3.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 之后、选择目标作为AWS SDDC上的VMware Cloud集群/主机、并为VM副本选择相应的资源池、VM文件夹和FSx for ONTAP数据存储库。然后单击*Next*。
 +
-image::dr-veeam-fsx-image4.png[灾难恢复Veeam FSx版本4]
+image:dr-veeam-fsx-image4.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在下一步中、根据需要创建源虚拟网络与目标虚拟网络之间的映射。
 +
-image::dr-veeam-fsx-image5.png[灾难恢复Veeam FSx版本5]
+image:dr-veeam-fsx-image5.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在*作业设置*步骤中，指定要存储VM副本元数据、保留策略等的备份存储库。
 . 在“*数据传输*”步骤中更新*Source*和*Target*代理服务器，保留“*自动*选择”(默认)并保持“*直接*”选项处于选中状态，然后单击“*下一步*”。
 . 在*Guest Processing*步骤中，根据需要选择*Enable application-aware processing*选项。单击 * 下一步 * 。
 +
-image::dr-veeam-fsx-image6.png[灾难恢复Veeam FSx版本6]
+image:dr-veeam-fsx-image6.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 选择复制计划以定期运行复制作业。
 . 在向导的*摘要*步骤中，查看复制作业的详细信息。要在关闭向导后立即启动作业，请选中*单击完成时运行作业*复选框，否则不要选中该复选框。然后单击*完成*关闭向导。
 +
-image::dr-veeam-fsx-image7.png[灾难恢复Veeam FSx版本7]
+image:dr-veeam-fsx-image7.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
 复制作业启动后、目标VMC SDDC集群/主机上将填充具有指定后缀的VM。
 
-image::dr-veeam-fsx-image8.png[灾难恢复Veeam FSx版本8]
+image:dr-veeam-fsx-image8.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 有关追加信息for Veeam复制的信息、请参见 link:https://helpcenter.veeam.com/docs/backup/vsphere/replication_process.html?ver=120["复制的工作原理"]。
 
@@ -144,11 +144,11 @@ NOTE: 在故障转移过程中、源VM不会关闭。
 . 在主页视图中，选择*故障转移计划> VMware vSphere。
 . 接下来、提供计划的名称和问题描述。可以根据需要添加故障转移前和故障转移后脚本。例如、在启动复制的VM之前、请运行一个脚本来关闭VM。
 +
-image::dr-veeam-fsx-image9.png[灾难恢复Veeam FSx版本9]
+image:dr-veeam-fsx-image9.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 将VM添加到计划中、并修改VM启动顺序和启动延迟、以满足应用程序依赖关系。
 +
-image::dr-veeam-fsx-image10.png[灾难恢复Veeam FSx版本10]
+image:dr-veeam-fsx-image10.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -165,17 +165,17 @@ NOTE: 确保网络分段到位、以避免灾难恢复期间发生IP冲突。
 
 要启动故障转移计划，只需单击*故障转移计划*选项卡，然后右键单击故障转移计划。选择 * 开始 * 。此操作将使用虚拟机副本的最新还原点进行故障转移。要故障转移到VM副本的特定还原点，请选择*Start to *。
 
-image::dr-veeam-fsx-image11.png[灾难恢复Veeam FSx image11]
+image:dr-veeam-fsx-image11.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-image::dr-veeam-fsx-image12.png[DR Veeam FSx版本12]
+image:dr-veeam-fsx-image12.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 VM副本的状态将从"准备就绪"更改为"故障转移"、VM将在AWS SDDC集群/主机上的目标VMware Cloud上启动。
 
-image::dr-veeam-fsx-image13.png[灾难恢复Veeam FSx版本13.]
+image:dr-veeam-fsx-image13.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 故障转移完成后、VM的状态将更改为"故障转移"。
 
-image::dr-veeam-fsx-image14.png[DR Veeam FSx版本14.]
+image:dr-veeam-fsx-image14.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 NOTE: Veeam Backup & Replication会停止源VM的所有复制活动、直到其副本恢复到就绪状态为止。
@@ -200,21 +200,21 @@ NOTE: 执行故障恢复时、只会传输更改、但不会发布更改。如�
 
 在此演示中、我们选择了故障恢复到生产环境。在向导的目标步骤中选择了故障恢复到原始虚拟机、并启用了"Power On VM after Restoring"(还原后启动虚拟机)复选框。
 
-image::dr-veeam-fsx-image15.png[灾难恢复Veeam FSx版本15]
+image:dr-veeam-fsx-image15.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-image::dr-veeam-fsx-image16.png[DR Veeam FSx版本16]
+image:dr-veeam-fsx-image16.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 提交故障恢复是完成故障恢复操作的方法之一。提交故障恢复后、它会确认发送到故障恢复虚拟机(生产虚拟机)的更改是否按预期工作。完成提交操作后、Veeam Backup & Replication将恢复生产虚拟机的复制活动。
 
 有关故障恢复过程的详细信息、请参见的Veeam文档 link:https://helpcenter.veeam.com/docs/backup/vsphere/failover_failback.html?ver=120["故障转移和故障恢复以进行复制"]。
 
-image::dr-veeam-fsx-image17.png[DR Veeam FSx版本17.]
+image:dr-veeam-fsx-image17.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-image::dr-veeam-fsx-image18.png[DR Veeam FSx版本18.]
+image:dr-veeam-fsx-image18.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 成功故障恢复到生产环境后、所有VM都会还原回原始生产站点。
 
-image::dr-veeam-fsx-image19.png[DR Veeam FSx版本19]
+image:dr-veeam-fsx-image19.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 ====
 

@@ -43,21 +43,21 @@ EC2/FSX Oracle数据库会按用户配置的间隔定期备份。用户也可以
 
 . 登录到SnapCenter UI、然后单击左侧菜单中的"Resources"。从视图下拉列表中、更改为资源组视图。
 +
-image::aws_rds_custom_deploy_snp_10.PNG[AWS RDS自定义部署SNP 10]
+image:aws_rds_custom_deploy_snp_10.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 单击完整备份资源名称、然后单击立即备份图标以启动附加临时备份。
 +
-image::aws_rds_custom_deploy_snp_11.PNG[AWS RDS自定义部署SNP 11]
+image:aws_rds_custom_deploy_snp_11.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 单击备份、然后确认备份以启动完整数据库备份。
 +
-image::aws_rds_custom_deploy_snp_12.PNG[AWS RDS自定义部署SNP 12]
+image:aws_rds_custom_deploy_snp_12.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 从数据库的资源视图中、打开数据库托管备份副本页面、验证一次性备份是否已成功完成。完整数据库备份会创建两个快照：一个用于数据卷、一个用于日志卷。
 
 +
-image::aws_rds_custom_deploy_snp_13.PNG[AWS RDS自定义部署SNP 13.]
+image:aws_rds_custom_deploy_snp_13.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -69,21 +69,21 @@ image::aws_rds_custom_deploy_snp_13.PNG[AWS RDS自定义部署SNP 13.]
 
 . 登录到SnapCenter UI、然后单击左侧菜单栏中的"Resources"选项卡。从视图下拉列表中、更改为资源组视图。
 +
-image::aws_rds_custom_deploy_snp_10.PNG[AWS RDS自定义部署SNP 10]
+image:aws_rds_custom_deploy_snp_10.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 单击日志备份资源名称、然后单击立即备份图标为归档日志启动附加临时备份。
 +
-image::aws_rds_custom_deploy_snp_14.PNG[AWS RDS自定义部署SNP 14.]
+image:aws_rds_custom_deploy_snp_14.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 单击备份、然后确认备份以启动归档日志备份。
 +
-image::aws_rds_custom_deploy_snp_15.PNG[AWS RDS自定义部署SNP 15]
+image:aws_rds_custom_deploy_snp_15.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 从数据库的资源视图中、打开数据库托管备份副本页面、验证一次性归档日志备份是否已成功完成。归档日志备份会为日志卷创建一个快照。
 
 +
-image::aws_rds_custom_deploy_snp_16.PNG[AWS RDS自定义部署SNP 16]
+image:aws_rds_custom_deploy_snp_16.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -95,26 +95,23 @@ image::aws_rds_custom_deploy_snp_16.PNG[AWS RDS自定义部署SNP 16]
 
 . 在SnapCenter 资源选项卡>数据库视图中、单击数据库名称以打开数据库备份。
 +
-image::aws_rds_custom_deploy_snp_17.PNG[AWS RDS自定义部署SNP 17.]
+image:aws_rds_custom_deploy_snp_17.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 选择数据库备份副本以及要还原的所需时间点。同时、记下时间点对应的SCN编号。可以使用时间或SCN执行时间点还原。
 +
-image::aws_rds_custom_deploy_snp_18.PNG[AWS RDS自定义部署SNP 18.]
+image:aws_rds_custom_deploy_snp_18.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 突出显示日志卷快照、然后单击挂载按钮挂载此卷。
 +
-image::aws_rds_custom_deploy_snp_19.PNG[AWS RDS自定义部署SNP 19.]
+image:aws_rds_custom_deploy_snp_19.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 选择要挂载日志卷的主EC2实例。
 +
-image::aws_rds_custom_deploy_snp_20.PNG[AWS RDS自定义部署SNP 20]
+image:aws_rds_custom_deploy_snp_20.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 验证挂载作业是否已成功完成。另外、请检查EC2实例主机以查看该日志卷已挂载以及挂载点路径。
 +
-image::aws_rds_custom_deploy_snp_21_1.PNG[AWS RDS自定义部署SNP 21 1.]
-
-+
-image::aws_rds_custom_deploy_snp_21_2.PNG[AWS RDS自定义部署SNP 21 2.]
+image:aws_rds_custom_deploy_snp_21_1.png["图中显示了输入/输出对话框或表示已写入内容"] image:aws_rds_custom_deploy_snp_21_2.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 将归档日志从挂载的日志卷复制到当前归档日志目录。
 +
@@ -124,39 +121,39 @@ image::aws_rds_custom_deploy_snp_21_2.PNG[AWS RDS自定义部署SNP 21 2.]
 ----
 . 返回到SnapCenter 资源选项卡>数据库备份页面、突出显示数据快照副本、然后单击还原按钮以启动数据库还原工作流。
 +
-image::aws_rds_custom_deploy_snp_22.PNG[AWS RDS自定义部署SNP 22.]
+image:aws_rds_custom_deploy_snp_22.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 选中"所有数据文件"和"根据还原和恢复需要更改数据库状态"、然后单击下一步。
 +
-image::aws_rds_custom_deploy_snp_23.PNG[AWS RDS自定义部署SNP 23.]
+image:aws_rds_custom_deploy_snp_23.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 使用SCN或时间选择所需的恢复范围。挂载的归档日志路径可以在"指定外部归档日志文件位置"中列出以供恢复、而不是像第6步所示将挂载的归档日志复制到当前日志目录。
 +
-image::aws_rds_custom_deploy_snp_24_1.PNG[AWS RDS自定义部署SNP 24 1.]
+image:aws_rds_custom_deploy_snp_24_1.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 如有必要、指定要运行的可选预处理程序。
 +
-image::aws_rds_custom_deploy_snp_25.PNG[AWS RDS自定义部署SNP 25]
+image:aws_rds_custom_deploy_snp_25.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 指定一个可选的后处理脚本、以便在必要时运行。恢复后检查打开的数据库。
 +
-image::aws_rds_custom_deploy_snp_26.PNG[AWS RDS自定义部署SNP 26.]
+image:aws_rds_custom_deploy_snp_26.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 如果需要作业通知、请提供SMTP服务器和电子邮件地址。
 +
-image::aws_rds_custom_deploy_snp_27.PNG[AWS RDS自定义部署SNP 27.]
+image:aws_rds_custom_deploy_snp_27.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 还原作业摘要。单击完成以启动还原作业。
 +
-image::aws_rds_custom_deploy_snp_28.PNG[AWS RDS自定义部署SNP 28]
+image:aws_rds_custom_deploy_snp_28.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 验证是否已从SnapCenter 还原。
 +
-image::aws_rds_custom_deploy_snp_29_1.PNG[AWS RDS自定义部署SNP 29 1.]
+image:aws_rds_custom_deploy_snp_29_1.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 验证从EC2实例主机还原的情况。
 +
-image::aws_rds_custom_deploy_snp_29_2.PNG[AWS RDS自定义部署SNP 29 2.]
+image:aws_rds_custom_deploy_snp_29_2.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 要卸载还原日志卷、请反转步骤4中的步骤。
 
@@ -169,56 +166,53 @@ image::aws_rds_custom_deploy_snp_29_2.PNG[AWS RDS自定义部署SNP 29 2.]
 
 . 使用完整备份资源组从SnapCenter 为主数据库创建完整快照备份。
 +
-image::aws_rds_custom_deploy_replica_02.PNG[AWS RDS自定义Deploy副本02]
+image:aws_rds_custom_deploy_replica_02.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 从SnapCenter 资源选项卡>数据库视图中、打开要从中创建副本的主数据库的数据库备份管理页面。
 +
-image::aws_rds_custom_deploy_replica_04.PNG[AWS RDS自定义Deploy副本04]
+image:aws_rds_custom_deploy_replica_04.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 将步骤4中创建的日志卷快照挂载到备用EC2实例主机。
 +
-image::aws_rds_custom_deploy_replica_13.PNG[AWS RDS自定义部署副本13.]
-
-+
-image::aws_rds_custom_deploy_replica_14.PNG[AWS RDS自定义部署副本14.]
+image:aws_rds_custom_deploy_replica_13.png["图中显示了输入/输出对话框或表示已写入内容"] image:aws_rds_custom_deploy_replica_14.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 突出显示要为副本克隆的Snapshot副本、然后单击克隆按钮启动克隆操作步骤。
 +
-image::aws_rds_custom_deploy_replica_05.PNG[AWS RDS自定义Deploy副本05]
+image:aws_rds_custom_deploy_replica_05.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 更改副本副本名称、使其与主数据库名称不同。单击下一步。
 +
-image::aws_rds_custom_deploy_replica_06.PNG[AWS RDS自定义Deploy副本06]
+image:aws_rds_custom_deploy_replica_06.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 将克隆主机更改为备用EC2主机、接受默认命名、然后单击下一步。
 +
-image::aws_rds_custom_deploy_replica_07.PNG[AWS RDS自定义部署副本07]
+image:aws_rds_custom_deploy_replica_07.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 更改Oracle主设置以与为目标Oracle服务器主机配置的设置相匹配、然后单击下一步。
 +
-image::aws_rds_custom_deploy_replica_08.PNG[AWS RDS自定义部署副本08]
+image:aws_rds_custom_deploy_replica_08.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 使用时间或SCN和挂载的归档日志路径指定恢复点。
 +
-image::aws_rds_custom_deploy_replica_15.PNG[AWS RDS自定义部署副本15]
+image:aws_rds_custom_deploy_replica_15.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 根据需要发送SMTP电子邮件设置。
 +
-image::aws_rds_custom_deploy_replica_11.PNG[AWS RDS自定义部署副本11]
+image:aws_rds_custom_deploy_replica_11.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 克隆作业摘要、然后单击完成以启动克隆作业。
 +
-image::aws_rds_custom_deploy_replica_12.PNG[AWS RDS自定义部署副本12]
+image:aws_rds_custom_deploy_replica_12.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 通过查看克隆作业日志来验证副本克隆。
 +
-image::aws_rds_custom_deploy_replica_17.PNG[AWS RDS自定义部署副本17]
+image:aws_rds_custom_deploy_replica_17.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 克隆的数据库会立即在SnapCenter 中注册。
 
 +
-image::aws_rds_custom_deploy_replica_18.PNG[AWS RDS自定义部署副本18]
+image:aws_rds_custom_deploy_replica_18.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 关闭Oracle归档日志模式。以Oracle用户身份登录到EC2实例并执行以下命令：
 +

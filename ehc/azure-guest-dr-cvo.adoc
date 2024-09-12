@@ -25,7 +25,7 @@ summary: 将灾难恢复到云是一种具有弹性且经济高效的方式、�
  This covers application data; however, what about the actual VMs themselves. Disaster recovery should cover all dependent components, including virtual machines, VMDKs, application data, and more. To accomplish this, SnapMirror along with Jetstream can be used to seamlessly recover workloads replicated from on-premises to Cloud Volumes ONTAP while using vSAN storage for VM VMDKs.
 本文档提供了使用NetApp SnapMirror、Jetstream和Azure VMware解决方案 (AVS)设置和执行灾难恢复的分步方法。
 
-image::dr-cvo-avs-image1.png[灾难恢复CVO AVS image1]
+image:dr-cvo-avs-image1.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -75,7 +75,7 @@ NOTE: 将内部数据中心连接到Azure有多种选项、这使我们无法在
 ====
 第一步是Cloud Volumes ONTAP在Azure (link:azure-guest.html["链接。"^])并使用所需的频率和快照保留将所需的卷复制到Cloud Volumes ONTAP。
 
-image::dr-cvo-avs-image2.png[灾难恢复CVO AVS image2]
+image:dr-cvo-avs-image2.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 ====
 .配置AVS主机和CVO数据访问
@@ -104,17 +104,17 @@ Jetstream灾难恢复软件由三个主要组件组成：Jetstream灾难恢复�
 . 向MSA注册vCenter Server。
 . 部署Jetstream DR MSA并注册vCenter Server后、导航到vSphere Web Client中的Jetstream DR插件。可通过导航到"数据中心">"配置">"Jetstream DR"来完成此操作。
 +
-image::dr-cvo-avs-image3.png[灾难恢复CVO AVS image3]
+image:dr-cvo-avs-image3.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在Jetstream DR界面中、完成以下任务：
 +
 .. 使用I/O筛选器软件包配置集群。
 +
-image::dr-cvo-avs-image4.png[灾难恢复CVO AVS image4]
+image:dr-cvo-avs-image4.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 .. 添加位于恢复站点的Azure Blob存储。
 +
-image::dr-cvo-avs-image5.png[DR CVO AVS image5]
+image:dr-cvo-avs-image5.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -124,21 +124,21 @@ image::dr-cvo-avs-image5.png[DR CVO AVS image5]
 NOTE: 使用容量规划工具估计所需的DRBA数量。
 
 +
-image::dr-cvo-avs-image6.png[DR CVO AVS image6]
+image:dr-cvo-avs-image6.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
-image::dr-cvo-avs-image7.png[灾难恢复CVO AVS image7]
+image:dr-cvo-avs-image7.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 使用可用数据存储库或独立的共享iSCSI存储池中的VMDK为每个DRVA创建复制日志卷。
 +
-image::dr-cvo-avs-image8.png[灾难恢复CVO AVS版本8]
+image:dr-cvo-avs-image8.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在受保护域选项卡中、使用Azure Blob Storage站点、DRVA实例和复制日志的相关信息创建所需数量的受保护域。受保护域定义集群中一个或一组同时受保护的应用程序VM、并为故障转移/故障恢复操作分配优先级顺序。
 +
-image::dr-cvo-avs-image9.png[灾难恢复CVO AVS image9]
+image:dr-cvo-avs-image9.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
-image::dr-cvo-avs-image10.png[灾难恢复CVO AVS image10]
+image:dr-cvo-avs-image10.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 选择要保护的VM、并根据依赖关系将这些VM分组到应用程序组中。通过应用程序定义、您可以将VM集分组到逻辑组中、这些逻辑组包含其启动顺序、启动延迟以及可在恢复时执行的可选应用程序验证。
 +
@@ -150,19 +150,19 @@ NOTE: 确保对受保护域中的所有VM使用相同的保护模式。
 NOTE: 回写(VMDK)模式可提供更高的性能。
 
 +
-image::dr-cvo-avs-image11.png[灾难恢复CVO AVS image11]
+image:dr-cvo-avs-image11.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 确保将复制日志卷放置在高性能存储上。
 +
-image::dr-cvo-avs-image12.png[灾难恢复CVO AVS image12.]
+image:dr-cvo-avs-image12.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 完成后、单击受保护域的开始保护。此时将开始将选定虚拟机的数据复制到指定的Blob存储。
 +
-image::dr-cvo-avs-image13.png[灾难恢复CVO AVS image13.]
+image:dr-cvo-avs-image13.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 复制完成后、虚拟机保护状态将标记为可恢复。
 +
-image::dr-cvo-avs-image14.png[DR CVO AVS image14.]
+image:dr-cvo-avs-image14.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 
@@ -170,7 +170,7 @@ NOTE: 可以对故障转移运行手册进行配置、以便对VM (称为恢复�
 
 . 单击设置、然后单击运行手册配置链接以配置运行手册组。
 +
-image::dr-cvo-avs-image15.png[灾难恢复CVO AVS image15.]
+image:dr-cvo-avs-image15.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 单击创建组按钮开始创建新的运行手册组。
 +
@@ -178,22 +178,22 @@ image::dr-cvo-avs-image15.png[灾难恢复CVO AVS image15.]
 NOTE: 如果需要、请在屏幕下部应用自定义预脚本和后脚本、以便在运行手册组执行操作之前和之后自动运行。确保Runbook脚本驻留在管理服务器上。
 
 +
-image::dr-cvo-avs-image16.png[DR CVO AVS image16]
+image:dr-cvo-avs-image16.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 根据需要编辑VM设置。指定用于恢复VM的参数、包括启动顺序、启动延迟(以秒为单位指定)、CPU数量以及要分配的内存量。单击向上或向下箭头更改VM的启动顺序。此外、还提供了用于保留MAC的选项。
 +
-image::dr-cvo-avs-image17.png[灾难恢复CVO AVS image17.]
+image:dr-cvo-avs-image17.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 可以为组中的各个VM手动配置静态IP地址。单击虚拟机的NIC视图链接以手动配置其IP地址设置。
 +
-image::dr-cvo-avs-image18.png[灾难恢复CVO AVS image18.]
+image:dr-cvo-avs-image18.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 单击配置按钮以保存相应虚拟机的NIC设置。
 +
-image::dr-cvo-avs-image19.png[灾难恢复CVO AVS image19]
+image:dr-cvo-avs-image19.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
-image::dr-cvo-avs-image20.png[灾难恢复CVO AVS image20]
+image:dr-cvo-avs-image20.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -227,24 +227,24 @@ NOTE: Azure VMware解决方案 的默认CloudAdmin用户没有足够的权限来
 以下屏幕截图显示了使用基于DHCP的IP地址进行安装的情况。
 
 +
-image::dr-cvo-avs-image21.png[灾难恢复CVO AVS image21.]
+image:dr-cvo-avs-image21.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 完成适用于AVS的Jetstream DR安装后、刷新浏览器。要访问Jetstream DR UI、请转到SDDC Datacenter >配置> Jetstream DR。
 +
-image::dr-cvo-avs-image22.png[灾难恢复CVO AVS image22.]
+image:dr-cvo-avs-image22.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在Jetstream DR界面中、完成以下任务：
 +
 .. 添加用于将内部集群作为存储站点进行保护的Azure Blob Storage帐户、然后运行扫描域选项。
 .. 在显示的弹出对话框窗口中、选择要导入的受保护域、然后单击其导入链接。
 +
-image::dr-cvo-avs-image23.png[DR CVO AVS image23]
+image:dr-cvo-avs-image23.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
 . 已导入此域以进行恢复。转到"受保护域"选项卡并验证是否已选择目标域、或者从"选择受保护域"菜单中选择所需域。此时将显示受保护域中可恢复的VM列表。
 +
-image::dr-cvo-avs-image24.png[DR CVO AVS image24]
+image:dr-cvo-avs-image24.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 导入受保护域后、部署DRVA设备。
 +
@@ -254,7 +254,7 @@ NOTE: 也可以使用CPT创建的计划自动执行这些步骤。
 . 使用可用的vSAN或ANF数据存储库创建复制日志卷。
 . 导入受保护域并配置恢复VA以使用ANF数据存储库放置VM。
 +
-image::dr-cvo-avs-image25.png[DR CVO AVS image25]
+image:dr-cvo-avs-image25.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 
@@ -266,7 +266,7 @@ NOTE: 确保选定网段上已启用DHCP、并且有足够的可用IP。在恢�
 NOTE: 尽管执行配置时的持续故障转移和故障转移模式有所不同、但这两种故障转移模式都使用相同的步骤进行配置。在发生灾难事件时、可以同时配置和执行故障转移步骤。可以随时配置持续故障转移、然后允许在正常系统运行期间在后台运行。发生灾难事件后、将完成持续故障转移、以便立即将受保护VM的所有权转移到恢复站点(接近零的RTO)。
 
 +
-image::dr-cvo-avs-image26.png[灾难恢复CVO AVS image26.]
+image:dr-cvo-avs-image26.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -278,10 +278,10 @@ image::dr-cvo-avs-image26.png[灾难恢复CVO AVS image26.]
 ====
 . 在内部环境的受保护集群发生灾难(部分或完整故障)后、您可以在中断相应应用程序卷的SnapMirror关系后使用Jetstream为VM触发故障转移。
 +
-image::dr-cvo-avs-image27.png[DR CVO AVS image27.]
+image:dr-cvo-avs-image27.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
-image::dr-cvo-avs-image28.png[灾难恢复CVO AVS image28]
+image:dr-cvo-avs-image28.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 
@@ -292,19 +292,19 @@ NOTE: 此步骤可以轻松地自动执行、以便于恢复过程。
 在完成故障转移时显示的对话框窗口中、可以按计划或假定强制指定故障转移任务。
 
 +
-image::dr-cvo-avs-image29.png[DR CVO AVS image29.]
+image:dr-cvo-avs-image29.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
-image::dr-cvo-avs-image30.png[DR CVO AVS image30]
+image:dr-cvo-avs-image30.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 强制故障转移假定主站点不再可访问、并且恢复站点应直接接管受保护域的所有权。
 
 +
-image::dr-cvo-avs-image31.png[DR CVO AVS image31]
+image:dr-cvo-avs-image31.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
-image::dr-cvo-avs-image32.png[DR CVO AVS image32.]
+image:dr-cvo-avs-image32.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 持续故障转移完成后、将显示一条消息、确认任务完成。任务完成后、访问已恢复的VM以配置iSCSI或NFS会话。
 +
@@ -316,20 +316,20 @@ NOTE: 故障转移模式将更改为在故障转移中运行、并且VM状态可
 NOTE: 要验证故障转移配置和基础架构、可以在测试模式(测试故障转移选项)下运行Jetstream DR、以观察虚拟机及其数据从对象存储恢复到测试恢复环境的过程。在测试模式下执行故障转移操作步骤 时、其操作类似于实际的故障转移过程。
 
 +
-image::dr-cvo-avs-image33.png[DR CVO AVS image33]
+image:dr-cvo-avs-image33.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 恢复虚拟机后、请对子系统中的存储使用存储灾难恢复。要演示此过程、请在此示例中使用SQL Server。
 . 登录到AVS SDDC上已恢复的SnapCenter VM并启用灾难恢复模式。
 +
 .. 使用browserN访问SnapCenter UI。
 +
-image::dr-cvo-avs-image34.png[灾难恢复CVO AVS image34]
+image:dr-cvo-avs-image34.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 .. 在设置页面中、导航到设置>全局设置>灾难恢复。
 .. 选择启用灾难恢复。
 .. 单击应用。
 +
-image::dr-cvo-avs-image35.png[灾难恢复CVO AVS image35]
+image:dr-cvo-avs-image35.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 .. 单击"监控">"作业"以验证是否已启用灾难恢复作业。
 +
@@ -340,27 +340,27 @@ NOTE: 应使用NetApp SnapCenter 4.6或更高版本进行存储灾难恢复。�
 
 . 确保SnapMirror关系已断开。
 +
-image::dr-cvo-avs-image36.png[灾难恢复CVO AVS image36]
+image:dr-cvo-avs-image36.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 使用相同的驱动器号将LUN从Cloud Volumes ONTAP 连接到已恢复的SQL子虚拟机。
 +
-image::dr-cvo-avs-image37.png[DR CVO AVS image37]
+image:dr-cvo-avs-image37.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 打开iSCSI启动程序、清除先前已断开连接的会话、然后为复制的Cloud Volumes ONTAP 卷添加新目标以及多路径。
 +
-image::dr-cvo-avs-image38.png[灾难恢复CVO AVS image38]
+image:dr-cvo-avs-image38.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 确保使用DR之前使用的相同驱动器盘符连接所有磁盘。
 +
-image::dr-cvo-avs-image39.png[DR CVO AVS image39]
+image:dr-cvo-avs-image39.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 重新启动MSSQL服务器服务。
 +
-image::dr-cvo-avs-image40.png[DR CVO AVS image40]
+image:dr-cvo-avs-image40.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 确保SQL资源重新联机。
 +
-image::dr-cvo-avs-image41.png[DR CVO AVS image41]
+image:dr-cvo-avs-image41.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 
@@ -384,30 +384,30 @@ NOTE: 在NSX-T端、可以创建一个单独的专用第1层网关来模拟故�
 NOTE: CPT生成的故障恢复计划还可用于启动VM及其数据从对象存储返回到原始VMware环境的操作。
 
 +
-image::dr-cvo-avs-image42.png[灾难恢复CVO AVS image42]
+image:dr-cvo-avs-image42.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 
 NOTE: 指定暂停恢复站点中的VM并在受保护站点中重新启动VM后的最大延迟。完成此过程所需的时间包括：停止故障转移VM后完成复制、清理恢复站点所需的时间以及在受保护站点中重新创建VM所需的时间。NetApp建议10分钟。
 
 +
-image::dr-cvo-avs-image43.png[灾难恢复CVO AVS image43]
+image:dr-cvo-avs-image43.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 完成故障恢复过程、然后确认虚拟机保护恢复和数据一致性。
 +
-image::dr-cvo-avs-image44.png[灾难恢复CVO AVS image44]
+image:dr-cvo-avs-image44.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 恢复VM后、断开二级存储与主机的连接并连接到主存储。
 +
-image::dr-cvo-avs-image45.png[灾难恢复CVO AVS image45]
+image:dr-cvo-avs-image45.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
-image::dr-cvo-avs-image46.png[DR CVO AVS image46]
+image:dr-cvo-avs-image46.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 重新启动MSSQL服务器服务。
 . 验证SQL资源是否已恢复联机。
 +
-image::dr-cvo-avs-image47.png[灾难恢复CVO AVS image47]
+image:dr-cvo-avs-image47.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 

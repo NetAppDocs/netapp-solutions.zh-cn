@@ -54,7 +54,7 @@ NetApp SnapCenter 软件是一款易于使用的企业平台，可安全地协�
 
 === 架构
 
-image::automation_ora_anf_nfs_archit.png[此图详细展示了AWS公共云中使用iSCSI和ASM的Oracle部署配置。]
+image:automation_ora_anf_nfs_archit.png["此图详细展示了AWS公共云中使用iSCSI和ASM的Oracle部署配置。"]
 
 
 
@@ -204,58 +204,43 @@ video::960fb370-c6e0-4406-b6d5-b110014130e8[panopto,width=360]
 . 从SnapCenter Windows服务器中、从NetApp 支持站点 下载并安装最新版本(当前版本为5.0)的SnapCenter安装可执行文件： link:https://mysupport.netapp.com/site/["NetApp |支持"^]。
 . 安装SnapCenter服务器后、启动浏览器以使用Windows本地管理员用户或域用户凭据通过端口8146登录到SnapCenter。
 +
-image::snapctr_ora_azure_anf_setup_01.png[此图提供了SnapCenter服务器的登录屏幕]
+image:snapctr_ora_azure_anf_setup_01.png["此图提供了SnapCenter服务器的登录屏幕"]
 
 . 请查看 `Get Started` 在线菜单。
 +
-image::snapctr_ora_azure_anf_setup_02.png[此图提供SnapCenter服务器的联机菜单]
+image:snapctr_ora_azure_anf_setup_02.png["此图提供SnapCenter服务器的联机菜单"]
 
 . 在中 `Settings-Global Settings`，检查 `Hypervisor Settings` 然后单击更新。
 +
-image::snapctr_ora_azure_anf_setup_03.png[此图提供了SnapCenter服务器的虚拟机管理程序设置]
+image:snapctr_ora_azure_anf_setup_03.png["此图提供了SnapCenter服务器的虚拟机管理程序设置"]
 
 . 根据需要进行调整 `Session Timeout` 将SnapCenter UI设置为所需间隔。
 +
-image::snapctr_ora_azure_anf_setup_04.png[此图提供SnapCenter服务器的会话超时]
+image:snapctr_ora_azure_anf_setup_04.png["此图提供SnapCenter服务器的会话超时"]
 
 . 根据需要向SnapCenter添加其他用户。
 +
-image::snapctr_ora_azure_anf_setup_06.png[此图提供SnapCenter服务器的设置-用户和访问权限]
+image:snapctr_ora_azure_anf_setup_06.png["此图提供SnapCenter服务器的设置-用户和访问权限"]
 
 . 。 `Roles` 选项卡列出了可分配给不同SnapCenter用户的内置角色。具有所需权限的管理员用户也可以创建自定义角色。
 +
-image::snapctr_ora_azure_anf_setup_07.png[此图提供了SnapCenter服务器的角色]
+image:snapctr_ora_azure_anf_setup_07.png["此图提供了SnapCenter服务器的角色"]
 
 . from `Settings-Credential`，创建SnapCenter管理目标的凭据。在此演示用例中、他们是Linux用户、可登录到Azure VM、并可通过ANF凭据访问容量池。
 +
-image::snapctr_ora_azure_anf_setup_08.png[此图提供SnapCenter服务器的凭据]
-
-+
-image::snapctr_ora_azure_anf_setup_09.png[此图提供SnapCenter服务器的凭据]
-
-+
-image::snapctr_ora_azure_anf_setup_10.png[此图提供SnapCenter服务器的凭据]
+image:snapctr_ora_azure_anf_setup_08.png["此图提供SnapCenter服务器的凭据"] image:snapctr_ora_azure_anf_setup_09.png["此图提供SnapCenter服务器的凭据"] image:snapctr_ora_azure_anf_setup_10.png["此图提供SnapCenter服务器的凭据"]
 
 . from `Storage Systems` 选项卡、添加 `Azure NetApp Files` 凭据。
 +
-image::snapctr_ora_azure_anf_setup_11.png[此图提供了适用于SnapCenter服务器的Azure NetApp Files]
-
-+
-image::snapctr_ora_azure_anf_setup_12.png[此图提供了适用于SnapCenter服务器的Azure NetApp Files]
+image:snapctr_ora_azure_anf_setup_11.png["此图提供了适用于SnapCenter服务器的Azure NetApp Files"] image:snapctr_ora_azure_anf_setup_12.png["此图提供了适用于SnapCenter服务器的Azure NetApp Files"]
 
 . from `Hosts` 选项卡上、添加Azure DB VM、此操作将在Linux上安装适用于Oracle的SnapCenter插件。
 +
-image::snapctr_ora_azure_anf_setup_13.png[此映像提供了SnapCenter服务器的主机]
-
-+
-image::snapctr_ora_azure_anf_setup_14.png[此映像提供了SnapCenter服务器的主机]
-
-+
-image::snapctr_ora_azure_anf_setup_15.png[此映像提供了SnapCenter服务器的主机]
+image:snapctr_ora_azure_anf_setup_13.png["此映像提供了SnapCenter服务器的主机"] image:snapctr_ora_azure_anf_setup_14.png["此映像提供了SnapCenter服务器的主机"] image:snapctr_ora_azure_anf_setup_15.png["此映像提供了SnapCenter服务器的主机"]
 
 . 在数据库服务器VM上安装主机插件后、系统会自动发现主机上的数据库、并在中显示这些数据库 `Resources` 选项卡。返回到 `Settings-Polices`，为Oracle数据库完全联机备份和仅归档日志备份创建备份策略。请参阅本文档 link:https://docs.netapp.com/us-en/snapcenter/protect-sco/task_create_backup_policies_for_oracle_database.html["为 Oracle 数据库创建备份策略"^] 了解详细的分步过程。
 +
-image::snapctr_ora_azure_anf_setup_05.png[此图提供了SnapCenter服务器的设置策略]
+image:snapctr_ora_azure_anf_setup_05.png["此图提供了SnapCenter服务器的设置策略"]
 
 
 
@@ -270,57 +255,51 @@ NetApp快照备份会为数据库卷创建一个时间点映像、您可以在�
 
 . 导航到 `Resources` 选项卡、其中列出了在数据库VM上安装SnapCenter插件后发现的数据库。最初、是 `Overall Status` 的数据库显示为 `Not protected`。
 +
-image::snapctr_ora_azure_anf_bkup_01.png[此映像提供SnapCenter服务器的数据库备份]
+image:snapctr_ora_azure_anf_bkup_01.png["此映像提供SnapCenter服务器的数据库备份"]
 
 . 单击 `View` 下拉列表以更改为 `Resource Group`。单击 `Add` 在右侧签名以添加资源组。
 +
-image::snapctr_ora_azure_anf_bkup_02.png[此映像提供SnapCenter服务器的数据库备份]
+image:snapctr_ora_azure_anf_bkup_02.png["此映像提供SnapCenter服务器的数据库备份"]
 
 . 为资源组、标记和任何自定义命名命名命名。
 +
-image::snapctr_ora_azure_anf_bkup_03.png[此映像提供SnapCenter服务器的数据库备份]
+image:snapctr_ora_azure_anf_bkup_03.png["此映像提供SnapCenter服务器的数据库备份"]
 
 . 将资源添加到 `Resource Group`。对类似资源进行分组可以简化大型环境中的数据库管理。
 +
-image::snapctr_ora_azure_anf_bkup_04.png[此映像提供SnapCenter服务器的数据库备份]
+image:snapctr_ora_azure_anf_bkup_04.png["此映像提供SnapCenter服务器的数据库备份"]
 
 . 选择备份策略并单击下方的"+"符号设置计划 `Configure Schedules`。
 +
-image::snapctr_ora_azure_anf_bkup_05.png[此映像提供SnapCenter服务器的数据库备份]
-
-+
-image::snapctr_ora_azure_anf_bkup_06.png[此映像提供SnapCenter服务器的数据库备份]
+image:snapctr_ora_azure_anf_bkup_05.png["此映像提供SnapCenter服务器的数据库备份"] image:snapctr_ora_azure_anf_bkup_06.png["此映像提供SnapCenter服务器的数据库备份"]
 
 . 如果未在策略中配置备份验证、请按原样保留验证页面。
 +
-image::snapctr_ora_azure_anf_bkup_07.png[此映像提供SnapCenter服务器的数据库备份]
+image:snapctr_ora_azure_anf_bkup_07.png["此映像提供SnapCenter服务器的数据库备份"]
 
 . 要通过电子邮件发送备份报告和通知、环境中需要SMTP邮件服务器。或者、如果未设置邮件服务器、则将其留为黑色。
 +
-image::snapctr_ora_azure_anf_bkup_08.png[此映像提供SnapCenter服务器的数据库备份]
+image:snapctr_ora_azure_anf_bkup_08.png["此映像提供SnapCenter服务器的数据库备份"]
 
 . 新资源组摘要。
 +
-image::snapctr_ora_azure_anf_bkup_09.png[此映像提供SnapCenter服务器的数据库备份]
+image:snapctr_ora_azure_anf_bkup_09.png["此映像提供SnapCenter服务器的数据库备份"]
 
 . 重复上述过程、使用相应的备份策略创建仅限数据库归档日志的备份。
 +
-image::snapctr_ora_azure_anf_bkup_10_1.png[此映像提供SnapCenter服务器的数据库备份]
+image:snapctr_ora_azure_anf_bkup_10_1.png["此映像提供SnapCenter服务器的数据库备份"]
 
 . 单击资源组以显示其包含的资源。除了计划的备份作业之外、单击还可以触发一次性备份 `Backup Now`。
 +
-image::snapctr_ora_azure_anf_bkup_10.png[此映像提供SnapCenter服务器的数据库备份]
-
-+
-image::snapctr_ora_azure_anf_bkup_11.png[此映像提供SnapCenter服务器的数据库备份]
+image:snapctr_ora_azure_anf_bkup_10.png["此映像提供SnapCenter服务器的数据库备份"] image:snapctr_ora_azure_anf_bkup_11.png["此映像提供SnapCenter服务器的数据库备份"]
 
 . 单击正在运行的作业可打开一个监控窗口、操作员可通过该窗口实时跟踪作业进度。
 +
-image::snapctr_ora_azure_anf_bkup_12.png[此映像提供SnapCenter服务器的数据库备份]
+image:snapctr_ora_azure_anf_bkup_12.png["此映像提供SnapCenter服务器的数据库备份"]
 
 . 成功完成备份作业后、Snapshot备份集将显示在数据库拓扑下。完整数据库备份集包括数据库数据卷的快照和数据库日志卷的快照。仅日志备份仅包含数据库日志卷的快照。
 +
-image::snapctr_ora_azure_anf_bkup_13.png[此映像提供SnapCenter服务器的数据库备份]
+image:snapctr_ora_azure_anf_bkup_13.png["此映像提供SnapCenter服务器的数据库备份"]
 
 
 
@@ -335,35 +314,35 @@ image::snapctr_ora_azure_anf_bkup_13.png[此映像提供SnapCenter服务器的�
 
 . from `Resources` 选项卡上、打开数据库 `Primary Backup(s)` 页面。选择数据库数据卷的快照、然后单击 `Restore` 用于启动数据库恢复工作流的按钮。如果要使用Oracle scn或时间戳运行恢复、请记下备份集中的scn编号或时间戳。
 +
-image::snapctr_ora_azure_anf_restore_01.png[此映像提供SnapCenter服务器的数据库还原]
+image:snapctr_ora_azure_anf_restore_01.png["此映像提供SnapCenter服务器的数据库还原"]
 
 . 选择 ... `Restore Scope`。对于容器数据库、SnapCenter可以灵活地执行完整容器数据库(所有数据文件)、可插拔数据库或表空间级别还原。
 +
-image::snapctr_ora_azure_anf_restore_02.png[此映像提供SnapCenter服务器的数据库还原]
+image:snapctr_ora_azure_anf_restore_02.png["此映像提供SnapCenter服务器的数据库还原"]
 
 . 选择 ... `Recovery Scope`。 `All logs` 表示应用备份集中所有可用的归档日志。还可以使用scn或时间戳进行时间点恢复。
 +
-image::snapctr_ora_azure_anf_restore_03.png[此映像提供SnapCenter服务器的数据库还原]
+image:snapctr_ora_azure_anf_restore_03.png["此映像提供SnapCenter服务器的数据库还原"]
 
 . 。 `PreOps` 允许在还原/恢复操作之前对数据库执行脚本。
 +
-image::snapctr_ora_azure_anf_restore_04.png[此映像提供SnapCenter服务器的数据库还原]
+image:snapctr_ora_azure_anf_restore_04.png["此映像提供SnapCenter服务器的数据库还原"]
 
 . 。 `PostOps` 允许在还原/恢复操作后对数据库执行脚本。
 +
-image::snapctr_ora_azure_anf_restore_05.png[此映像提供SnapCenter服务器的数据库还原]
+image:snapctr_ora_azure_anf_restore_05.png["此映像提供SnapCenter服务器的数据库还原"]
 
 . 如果需要、可通过电子邮件发送通知。
 +
-image::snapctr_ora_azure_anf_restore_06.png[此映像提供SnapCenter服务器的数据库还原]
+image:snapctr_ora_azure_anf_restore_06.png["此映像提供SnapCenter服务器的数据库还原"]
 
 . 还原作业摘要
 +
-image::snapctr_ora_azure_anf_restore_07.png[此映像提供SnapCenter服务器的数据库还原]
+image:snapctr_ora_azure_anf_restore_07.png["此映像提供SnapCenter服务器的数据库还原"]
 
 . 单击正在运行的作业以打开 `Job Details` 窗口。也可以从打开和查看作业状态 `Monitor` 选项卡。
 +
-image::snapctr_ora_azure_anf_restore_08.png[此映像提供SnapCenter服务器的数据库还原]
+image:snapctr_ora_azure_anf_restore_08.png["此映像提供SnapCenter服务器的数据库还原"]
 
 
 
@@ -378,43 +357,43 @@ image::snapctr_ora_azure_anf_restore_08.png[此映像提供SnapCenter服务器�
 
 . from `Resources` 选项卡上、打开数据库 `Primary Backup(s)` 页面。选择数据库数据卷的快照、然后单击 `clone` 用于启动数据库克隆工作流的按钮。
 +
-image::snapctr_ora_azure_anf_clone_01.png[此映像为SnapCenter服务器提供了数据库克隆]
+image:snapctr_ora_azure_anf_clone_01.png["此映像为SnapCenter服务器提供了数据库克隆"]
 
 . 将克隆数据库命名为SID。(可选)对于容器数据库、也可以在PDB级别执行克隆。
 +
-image::snapctr_ora_azure_anf_clone_02.png[此映像为SnapCenter服务器提供了数据库克隆]
+image:snapctr_ora_azure_anf_clone_02.png["此映像为SnapCenter服务器提供了数据库克隆"]
 
 . 选择要放置克隆数据库副本的数据库服务器。保留默认文件位置、除非您要以不同的方式命名它们。
 +
-image::snapctr_ora_azure_anf_clone_03.png[此映像为SnapCenter服务器提供了数据库克隆]
+image:snapctr_ora_azure_anf_clone_03.png["此映像为SnapCenter服务器提供了数据库克隆"]
 
 . 应已在克隆数据库主机上安装和配置与源数据库中相同的Oracle软件堆栈。保留默认凭据、但进行更改 `Oracle Home Settings` 与克隆数据库主机上的设置匹配。
 +
-image::snapctr_ora_azure_anf_clone_04.png[此映像为SnapCenter服务器提供了数据库克隆]
+image:snapctr_ora_azure_anf_clone_04.png["此映像为SnapCenter服务器提供了数据库克隆"]
 
 . 。 `PreOps` 允许在执行克隆操作之前执行脚本。与生产数据库相比、可以调整数据库参数以满足克隆数据库需求、例如减少SGA目标。
 +
-image::snapctr_ora_azure_anf_clone_05.png[此映像为SnapCenter服务器提供了数据库克隆]
+image:snapctr_ora_azure_anf_clone_05.png["此映像为SnapCenter服务器提供了数据库克隆"]
 
 . 。 `PostOps` 允许在执行克隆操作后对数据库执行脚本。克隆数据库恢复可以基于scn、基于时间戳、也可以直到取消(将数据库前滚到备份集中的最后一个归档日志)。
 +
-image::snapctr_ora_azure_anf_clone_06.png[此映像为SnapCenter服务器提供了数据库克隆]
+image:snapctr_ora_azure_anf_clone_06.png["此映像为SnapCenter服务器提供了数据库克隆"]
 
 . 如果需要、可通过电子邮件发送通知。
 +
-image::snapctr_ora_azure_anf_clone_07.png[此映像为SnapCenter服务器提供了数据库克隆]
+image:snapctr_ora_azure_anf_clone_07.png["此映像为SnapCenter服务器提供了数据库克隆"]
 
 . 克隆作业摘要。
 +
-image::snapctr_ora_azure_anf_clone_08.png[此映像为SnapCenter服务器提供了数据库克隆]
+image:snapctr_ora_azure_anf_clone_08.png["此映像为SnapCenter服务器提供了数据库克隆"]
 
 . 单击正在运行的作业以打开 `Job Details` 窗口。也可以从打开和查看作业状态 `Monitor` 选项卡。
 +
-image::snapctr_ora_azure_anf_clone_09.png[此映像提供SnapCenter服务器的数据库还原]
+image:snapctr_ora_azure_anf_clone_09.png["此映像提供SnapCenter服务器的数据库还原"]
 
 . 克隆的数据库会立即注册到SnapCenter中。
 +
-image::snapctr_ora_azure_anf_clone_10.png[此映像提供SnapCenter服务器的数据库还原]
+image:snapctr_ora_azure_anf_clone_10.png["此映像提供SnapCenter服务器的数据库还原"]
 
 . 验证数据库服务器主机上的克隆数据库。对于克隆的开发数据库、应关闭数据库归档模式。
 +

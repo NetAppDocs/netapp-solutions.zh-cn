@@ -66,7 +66,7 @@ NOTE: 默认选项为HCX高级版、VMware HCX Enterprise版本也可通过支�
 ====
 出于测试目的、用于此验证的内部实验室环境通过云VPN进行连接、从而可以在内部连接到Google Cloud VPC。
 
-image::gcpd-hcx-image1.png[此图显示了此解决方案 中使用的高级架构。]
+image:gcpd-hcx-image1.png["此图显示了此解决方案 中使用的高级架构。"]
 
 有关HCX的更多详细图表、请参见 https://www.vmware.com/content/dam/digitalmarketing/vmware/en/pdf/products/vmw-google-cloud-vmware-engine-logical-design-poster-for-workload-mobility.pdf["VMware链接"^]
 
@@ -84,10 +84,10 @@ image::gcpd-hcx-image1.png[此图显示了此解决方案 中使用的高级架�
 
 . 登录到Google VMware引擎门户并登录到HCX Cloud Manager。
 +
-您可以通过单击HCX版本链接image：：gcpd-HCX-image2.png[HCX Console access with link on GCVE resource]或单击"vSphere Management Network"(vSphere管理网络)选项卡下的HCX FQDN来登录到HCX控制台。 图像：：gcpd-HCX-image3.png[HCX控制台访问和FQDN链接]
+您可以通过单击HCX版本链接image:gcpd-hcx-image2.png["通过GCVE资源上的链接访问HCX控制台"]或单击vSphere Management Network选项卡下的HCX FQDN登录到HCX控制台。image:gcpd-hcx-image3.png["使用FQDN链接访问HCX控制台"]
 
 . 在HCX Cloud Manager中、转到*管理>系统更新*。
-. 单击*请求下载链接*并下载OVA文件。 图像：：gcpd-HCX-image4.png[请求下载链接]
+. 单击*请求下载链接*并下载OVA文件。image:gcpd-hcx-image4.png["请求下载链接"]
 . 将HCX Cloud Manager更新为可从HCX Cloud Manager UI获得的最新版本。
 
 
@@ -102,7 +102,7 @@ image::gcpd-hcx-image1.png[此图显示了此解决方案 中使用的高级架�
 . 按照上一步所述、从Google Cloud VMware Engine上的HCX控制台下载ova。
 . 下载OVA后、使用*部署OVF模板*选项将其部署到内部VMware vSphere环境中。
 +
-image::gcpd-hcx-image5.png[用于选择正确OVA模板的屏幕截图。]
+image:gcpd-hcx-image5.png["用于选择正确OVA模板的屏幕截图。"]
 
 . 输入OVA部署所需的所有信息、单击*下一步*、然后单击*完成*以部署VMware HCX连接器OVA。
 +
@@ -119,7 +119,7 @@ NOTE: 手动启动虚拟设备。
 ====
 在内部部署VMware HCX Connector OVA并启动设备后、请完成以下步骤以激活HCX Connector。从Google Cloud VMware Engine门户生成许可证密钥、并在VMware HCX Manager中激活它。
 
-. 在VMware Engine门户中，单击Resources，选择私有云，然后*单击HCX Manager Cloud Version*下的下载图标。 image::gcpd-HCX-image6.png[下载HCX License]打开下载的文件并复制许可证密钥字符串。
+. 在VMware引擎门户中、单击资源、选择私有云、然后*单击HCX Manager Cloud Version*下的下载图标。image:gcpd-hcx-image6.png["下载HCX许可证"] 打开下载的文件并复制许可证密钥字符串。
 . 登录到内部部署的VMware HCX Manager、网址为 `"https://hcxmanagerIP:9443"` 使用管理员凭据。
 +
 
@@ -150,7 +150,7 @@ NOTE: 对于嵌入式PSC、输入VMware vCenter Server FQDN或IP地址。
 NOTE: 此过程大约需要10到20分钟、并且需要将此插件添加到vCenter Server中。
 
 +
-image::gcpd-hcx-image7.png[显示已完成过程的屏幕截图。]
+image:gcpd-hcx-image7.png["显示已完成过程的屏幕截图。"]
 
 
 
@@ -162,7 +162,7 @@ image::gcpd-hcx-image7.png[显示已完成过程的屏幕截图。]
 
 . 要在内部vCenter环境和Google Cloud VMware Engine SDDC之间创建站点对、请登录到内部vCenter Server并访问新的HCX vSphere Web Client插件。
 +
-image::gcpd-hcx-image8.png[HCX vSphere Web Client插件的屏幕截图。]
+image:gcpd-hcx-image8.png["HCX vSphere Web Client插件的屏幕截图。"]
 
 . 在基础架构下、单击*添加站点配对*。
 +
@@ -170,7 +170,7 @@ image::gcpd-hcx-image8.png[HCX vSphere Web Client插件的屏幕截图。]
 NOTE: 输入拥有云所有者角色特权的用户访问私有云的Google Cloud VMware Engine HCX Cloud Manager URL或IP地址以及凭据。
 
 +
-image::gcpd-hcx-image9.png[CloudOwner角色的URL或IP地址和凭据屏幕截图。]
+image:gcpd-hcx-image9.png["CloudOwner角色的URL或IP地址和凭据屏幕截图。"]
 
 . 单击 * 连接 * 。
 +
@@ -179,7 +179,7 @@ NOTE: VMware HCX Connector必须能够通过端口443路由到HCX Cloud Manager 
 
 . 创建配对后、新配置的站点配对将显示在HCX信息板上。
 +
-image::gcpd-hcx-image10.png[HCX信息板上已完成过程的屏幕截图。]
+image:gcpd-hcx-image10.png["HCX信息板上已完成过程的屏幕截图。"]
 
 
 
@@ -195,7 +195,7 @@ VMware HCX互连服务设备可通过Internet以及与目标站点的专用连�
 NOTE: 计算配置文件定义了部署参数、包括部署的设备以及HCL服务可访问的VMware数据中心的哪个部分。
 
 +
-image::gcpd-hcx-image11.png[vSphere客户端互连页面的屏幕截图。]
+image:gcpd-hcx-image11.png["vSphere客户端互连页面的屏幕截图。"]
 
 . 创建计算配置文件后、通过选择*多站点服务网格>网络配置文件>创建网络配置文件*来创建网络配置文件。
 +
@@ -206,7 +206,7 @@ image::gcpd-hcx-image11.png[vSphere客户端互连页面的屏幕截图。]
 NOTE: 此步骤需要两个或更多IP地址。这些IP地址将从管理网络分配给互连设备。
 
 +
-image::gcpd-hcx-image12.png[网络配置文件的屏幕截图。]
+image:gcpd-hcx-image12.png["网络配置文件的屏幕截图。"]
 
 . 此时、已成功创建计算和网络配置文件。
 . 在*互连*选项中选择*服务网格*选项卡以创建服务网格、然后选择内部站点和GCVE SDDC站点。
@@ -216,11 +216,11 @@ image::gcpd-hcx-image12.png[网络配置文件的屏幕截图。]
 NOTE: 在此过程中、源站点和目标站点都会部署并自动配置HCX设备、以便创建安全的传输网络结构。
 
 +
-image::gcpd-hcx-image13.png[vSphere客户端互连页面上的服务网格选项卡的屏幕截图。]
+image:gcpd-hcx-image13.png["vSphere客户端互连页面上的服务网格选项卡的屏幕截图。"]
 
 . 这是配置的最后一步。完成部署大约需要30分钟。配置服务网格后、环境便已准备就绪、可以成功创建IPsec通道来迁移工作负载VM。
 +
-image::gcpd-hcx-image14.png[vSphere客户端互连页面上的HCX设备的屏幕截图。]
+image:gcpd-hcx-image14.png["vSphere客户端互连页面上的HCX设备的屏幕截图。"]
 
 
 
@@ -246,15 +246,15 @@ NOTE: 应设置网络扩展(对于VM所连接的端口组)、以便在不更改I
 
 . 从内部vSphere客户端中、转到清单、右键单击要迁移的虚拟机、然后选择HCX操作>迁移到HCX目标站点。
 +
-image::gcpd-hcx-image15.png[gcpd HCX image15.]
+image:gcpd-hcx-image15.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在迁移虚拟机向导中、选择远程站点连接(目标GCVE)。
 +
-image::gcpd-hcx-image16.png[gcpd HCX image16.]
+image:gcpd-hcx-image16.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 更新必填字段(集群、存储和目标网络)、然后单击验证。
 +
-image::gcpd-hcx-image17.png[gcpd HCX image17.]
+image:gcpd-hcx-image17.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 验证检查完成后、单击"Go"启动迁移。
 +
@@ -263,7 +263,7 @@ NOTE: vMotion传输会捕获VM活动内存、其执行状态、IP地址及其MAC
 
 . 您可以从"HCX">"迁移"信息板监控vMotion的进度和完成情况。
 +
-image::gcpd-hcx-image18.png[gcpd HCX image18.]
+image:gcpd-hcx-image18.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 

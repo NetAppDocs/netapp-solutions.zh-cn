@@ -26,7 +26,7 @@ DevOps工作流的一个最常见用途是持续集成和持续部署(CI/CD)管�
 
 在此使用情形中、我们将深入了解一个从促销到生产的管道、该管道会部署新版本的应用程序：首先部署到暂存环境、然后部署到生产环境。此示例同样适用于主要公有 云以及内部环境。虽然我们展示了一个版本的应用程序的部署、但该渠道也可用于其他策略、例如蓝色/绿色或金丝雀部署。作为CI/CD管道的一部分、我们将通过创建完整的应用程序备份来保护应用程序。对生产中应用程序及其数据、状态和配置进行应用程序感知备份、对于众多DevOps工作流来说非常有用。
 
-image::dwn_image1.jpg[采用NetApp Astra的DevOps用例1架构]
+image:dwn_image1.jpg["采用NetApp Astra的DevOps用例1架构"]
 
 用于验证此用例的应用程序为 https://magento.com/["Magento"^]一种基于Web的前端电子商务解决方案 、一种用于搜索和分析功能的Elasticsearch实例以及一个跟踪所有购物清单和交易详细信息的MariaDB数据库。此容器化应用程序安装在Red Hat OpenShift集群中。应用程序中的每个POD都使用永久性卷来存储数据。永久性卷由NetApp Astra Trident自动创建、NetApp Astra Trident是适用于Kubernetes的容器存储接口兼容存储编排程序、可在NetApp存储系统上配置存储。此外、为了利用Astra控制中心的应用程序保护功能、相关应用程序由Astra Control管理、然后使用该控制器触发应用程序备份、这些备份将存储应用程序的状态以及永久性卷中的数据。我们使用了 https://github.com/NetApp/netapp-astra-toolkits["NetApp Astra Control Python SDK"^] 自动执行触发应用程序备份的过程、然后将该过程引入到CI/CD管道中。此管道是使用一个常用的CI/CD工具创建和执行的、该工具称为 [https://www.jenkins.io/["Jenkins"^]]以自动执行流、从而构建、保护和部署应用程序。
 
@@ -87,7 +87,7 @@ magento-mariadb-0                                        1/1     Running   0    
 . 在生产环境中、单击Magento应用程序旁边的省略号(`mageno-prod`)、然后单击管理。
 . 现在、Magento应用程序由Astra控制中心管理。Astra Control支持的所有操作均可在此应用程序上执行。同时、请记下此应用程序的版本。
 +
-image::dwn_image2.jpg[升级前检查Magento版本]
+image:dwn_image2.jpg["升级前检查Magento版本"]
 
 . 重复执行在暂存环境中管理Magento应用程序的步骤(`mageno-staging`)。
 
@@ -102,7 +102,7 @@ image::dwn_image2.jpg[升级前检查Magento版本]
 . 导航到Manage Jenkins > Manage Credentials、然后单击相应的域。
 . 单击Add Credentials、然后将种类设置为Username、并将密码和范围设置为Global。输入凭据的用户名、密码和ID、然后单击确定。
 +
-image::dwn_image8.jpg[创建凭据]
+image:dwn_image8.jpg["创建凭据"]
 
 . 对其他两个凭据重复相同的操作步骤。
 . 返回信息板、单击"新建项目"创建管道、然后单击"管道"。
@@ -130,27 +130,27 @@ MAGENTO_MARIADB_ROOT_CREDS = credentials('magento-mariadb-root-cred')
 ----
 . 单击Build now。管道将开始执行并逐步完成各个步骤。首先构建应用程序映像并将其上传到容器注册表。
 +
-image::dwn_image3.jpg[管道进度]
+image:dwn_image3.jpg["管道进度"]
 
 . 应用程序备份通过Astra Control启动。
 +
-image::dwn_image4.jpg[已启动备份]
+image:dwn_image4.jpg["已启动备份"]
 
 . 成功完成备份阶段后、从Astra控制中心验证备份。
 +
-image::dwn_image5.jpg[备份成功]
+image:dwn_image5.jpg["备份成功"]
 
 . 然后、新版本的应用程序将部署到暂存环境中。
 +
-image::dwn_image6.jpg[已启动暂存部署]
+image:dwn_image6.jpg["已启动暂存部署"]
 
 . 完成此步骤后、该程序将等待用户批准部署到生产环境中。在此阶段、假设QA团队执行一些手动测试并批准生产。然后、您可以单击批准将新版本的应用程序部署到生产环境中。
 +
-image::dwn_image7.jpg[正在等待升级]
+image:dwn_image7.jpg["正在等待升级"]
 
 . 验证生产应用程序是否也已升级到所需版本。
 +
-image::dwn_image11.jpg[已升级生产应用程序]
+image:dwn_image11.jpg["已升级生产应用程序"]
 
 
 

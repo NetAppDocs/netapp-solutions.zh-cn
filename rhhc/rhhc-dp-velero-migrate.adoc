@@ -62,7 +62,7 @@ spec:
 * 在集群上创建一个应用程序、并为此应用程序创建备份。例如，安装postgres应用程序。
 
 
-image::redhat_openshift_OADP_migrate_image1.png[安装postgres应用程序]
+image:redhat_openshift_OADP_migrate_image1.png["安装postgres应用程序"]
 
 * 对备份CR使用以下规范：
 
@@ -78,7 +78,7 @@ spec:
   storageLocation: velero-sample-1
   ttl: 720h0m0s
 ....
-image::redhat_openshift_OADP_migrate_image2.png[安装postgres应用程序]
+image:redhat_openshift_OADP_migrate_image2.png["安装postgres应用程序"]
 
 您可以单击“**所有实例**”选项卡，查看正在创建的不同对象，并通过不同的阶段最终进入备份**已完成**阶段。
 
@@ -96,13 +96,13 @@ image::redhat_openshift_OADP_migrate_image2.png[安装postgres应用程序]
 * 备份CR必须在第二个集群中可见。
 
 
-image::redhat_openshift_OADP_migrate_image3.png[已安装｛\f270]
+image:redhat_openshift_OADP_migrate_image3.png["已安装｛\f270"]
 
-image::redhat_openshift_OADP_migrate_image4.png[尚未安装Postgre]
+image:redhat_openshift_OADP_migrate_image4.png["尚未安装Postgre"]
 
-image::redhat_openshift_OADP_migrate_image5.png[集群2上已安装OADP]
+image:redhat_openshift_OADP_migrate_image5.png["集群2上已安装OADP"]
 
-image::redhat_openshift_OADP_migrate_image6.png[指向同一对象存储的备份存储位置]
+image:redhat_openshift_OADP_migrate_image6.png["指向同一对象存储的备份存储位置"]
 
 从此备份还原此集群上的应用程序。使用以下YAML创建还原CR。
 
@@ -119,8 +119,8 @@ spec:
 ....
 还原完成后、您将看到PostgreSQL应用程序正在此集群上运行、并且与PVC和相应的PV关联。应用程序的状态与创建备份时相同。
 
-image::redhat_openshift_OADP_migrate_image7.png[还原成功]
+image:redhat_openshift_OADP_migrate_image7.png["还原成功"]
 
-image::redhat_openshift_OADP_migrate_image8.png[Postgre已迁移]
+image:redhat_openshift_OADP_migrate_image8.png["Postgre已迁移"]
 
 ====

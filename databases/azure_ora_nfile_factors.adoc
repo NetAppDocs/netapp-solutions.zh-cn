@@ -73,7 +73,7 @@ Oracle数据库卷的吞吐量限制由以下因素组合决定：卷所属容�
 
 下图显示了如何计算Oracle数据库卷的吞吐量限制。
 
-image::db_ora_azure_anf_factors_01.PNG[此图显示了应用于三个容量层以确定总吞吐量的等式。]
+image:db_ora_azure_anf_factors_01.png["此图显示了应用于三个容量层以确定总吞吐量的等式。"]
 
 在示例1中、如果容量池中的高级存储层分配了2 TiB的配额、则该卷的吞吐量限制为128 MiBps (2 TiB * 64 MiBps)。无论容量池大小或实际卷占用情况如何、此方案都适用。
 
@@ -89,11 +89,11 @@ NetApp建议采用以下存储布局：
 
 * 对于小型数据库、对所有Oracle文件使用单个卷布局。
 +
-image::db_ora_azure_anf_factors_02.PNG[此图描绘了三个数据库(DB1、DB2和DB3)、每个数据库都包含数据文件、重做日志、归档日志和控制文件、这些文件都位于一个容量池中。]
+image:db_ora_azure_anf_factors_02.png["此图描绘了三个数据库(DB1、DB2和DB3)、每个数据库都包含数据文件、重做日志、归档日志和控制文件、这些文件都位于一个容量池中。"]
 
 * 对于大型数据库、建议的卷布局为多个卷：一个用于Oracle数据和一个重复的控制文件、一个用于Oracle活动日志、归档日志和控制文件。NetApp强烈建议为Oracle二进制文件而不是本地驱动器分配一个卷、以便可以将数据库重新定位到新主机并快速还原。
 +
-image::db_ora_azure_anf_factors_03.PNG[此图显示了两个数据库、每个数据库包含两个卷。第一个卷包含数据文件、而每个数据库的第二个卷包含重做日志、归档日志和控制文件。全部位于一个容量池中。]
+image:db_ora_azure_anf_factors_03.png["此图显示了两个数据库、每个数据库包含两个卷。第一个卷包含数据文件、而每个数据库的第二个卷包含重做日志、归档日志和控制文件。全部位于一个容量池中。"]
 
 
 
@@ -107,7 +107,7 @@ image::db_ora_azure_anf_factors_03.PNG[此图显示了两个数据库、每个�
 
 下图展示了采用Oracle DNFS的Azure NetApp Files 上的SLOB基准测试。
 
-image::db_ora_azure_anf_factors_04.PNG[此图可显著显示DNFS比KNFS可提高数据库顺序文件延迟(毫秒)。]
+image:db_ora_azure_anf_factors_04.png["此图可显著显示DNFS比KNFS可提高数据库顺序文件延迟(毫秒)。"]
 
 需要考虑的其他因素：
 
@@ -122,7 +122,7 @@ sysctl -a | grep tcp.*.slot_table
 ----
 * 下表提供了单个Linux NFSv3实例的建议NFS挂载选项。
 +
-image::aws_ora_fsx_ec2_nfs_01.PNG[此表显示了以下文件类型、控制文件、数据文件、重做日志、ORACLE_HOME、和ORACLE_BASE。]
+image:aws_ora_fsx_ec2_nfs_01.png["此表显示了以下文件类型、控制文件、数据文件、重做日志、ORACLE_HOME、和ORACLE_BASE。"]
 
 
 

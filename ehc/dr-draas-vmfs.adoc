@@ -20,7 +20,7 @@ summary: 本节介绍如何配置BlueXP  DRaaS、以便为内部VMware VM设置
 
 使用集成在NetApp BlueXP  控制台中的BlueXP  灾难恢复服务、客户可以发现其内部VMware vCenter以及ONTAP存储、创建资源组、创建灾难恢复计划、将其与资源组关联以及测试或执行故障转移和故障恢复。SnapMirror提供存储级别的块复制功能、可通过增量更改使两个站点保持最新、从而实现长达5分钟的RPO。此外、还可以定期模拟灾难恢复过程、而不会影响生产和复制的数据存储库、也不会产生额外的存储成本。BlueXP  灾难恢复可利用ONTAP的FlexClone技术从灾难恢复站点上最后复制的Snapshot创建节省空间的VMFS数据存储库副本。灾难恢复测试完成后、客户只需删除测试环境、同样不会对实际复制的生产资源产生任何影响。如果需要(计划内或计划外)执行实际故障转移、只需单击几下鼠标、BlueXP  灾难恢复服务就会编排自动启动指定灾难恢复站点上受保护虚拟机所需的所有步骤。该服务还会根据需要反转与主站点的SnapMirror关系、并将所做的任何更改从二级站点复制到主站点、以便执行故障恢复操作。与其他众所周知的替代品相比，所有这些都只需很少的成本即可实现。
 
-image::dr-draas-vmfs-image0.png[DR DRaaS VMFS image0]
+image:dr-draas-vmfs-image0.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -33,7 +33,7 @@ image::dr-draas-vmfs-image0.png[DR DRaaS VMFS image0]
 . 此时将显示BlueXP  灾难恢复信息板。
 
 
-image:dr-draas-vmfs-image1.png[""]
+image:dr-draas-vmfs-image1.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 在配置灾难恢复计划之前、请确保满足以下前提条件：
 
@@ -49,7 +49,7 @@ image:dr-draas-vmfs-image1.png[""]
 
 NOTE: NetApp建议将BlueXP  Connector部署在灾难恢复站点或第三个站点中、以便BlueXP  Connector可以在实际中断或自然灾害期间通过网络与源和目标资源进行通信。
 
-image:dr-draas-vmfs-image2.png[""]
+image:dr-draas-vmfs-image2.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 NOTE: 编写本文档时、我们将对内部到内部VMFS数据存储库提供技术预览支持。基于FC和iSCSI协议的VMFS数据存储库均支持此功能。
@@ -63,19 +63,19 @@ NOTE: 编写本文档时、我们将对内部到内部VMFS数据存储库提供�
 
 NOTE: 确保已将ONTAP存储系统添加到画布中的工作环境中。打开BlueXP  控制台并从左侧导航栏中选择*保护>灾难恢复*。选择*发现vCenter服务器*或使用顶部菜单、选择*站点>添加>添加vCenter *。
 
-image:dr-draas-vmfs-image3.png[""]
+image:dr-draas-vmfs-image3.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 添加以下平台：
 
 * *来源*。内部vCenter。
 
 
-image:dr-draas-vmfs-image4.png[""]
+image:dr-draas-vmfs-image4.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 * *目的地*。VMC SDDC vCenter。
 
 
-image:dr-draas-vmfs-image5.png[""]
+image:dr-draas-vmfs-image5.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 添加完vCenter后、将触发自动发现。
 
@@ -95,7 +95,7 @@ SnapMirror利用ONTAP快照管理从一个位置到另一个位置的数据传�
 
 对于任何给定应用程序、创建SnapMirror复制的过程都保持不变。此过程可以手动执行、也可以自动执行。最简单的方法是利用BlueXP  配置SnapMirror复制、方法是将环境中的源ONTAP系统简单地拖放到目标上、以触发向导来完成其余过程。
 
-image:dr-draas-vmfs-image6.png[""]
+image:dr-draas-vmfs-image6.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 如果满足以下两个条件、BlueXP  DRaaS还可以实现相同的自动化：
 
@@ -103,7 +103,7 @@ image:dr-draas-vmfs-image6.png[""]
 * 源SVM和目标SVM具有对等关系。
 
 
-image:dr-draas-vmfs-image7.png[""]
+image:dr-draas-vmfs-image7.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 NOTE: 如果已通过命令行界面为卷配置SnapMirror关系、则BlueXP  DRaaS将接管该关系并继续执行其余工作流操作。
@@ -117,34 +117,34 @@ NOTE: 除了上述方法之外、还可以通过ONTAP命令行界面或System Ma
 
 添加源站点和目标站点后、BlueXP  灾难恢复将执行自动深度发现、并显示VM以及关联的元数据。BlueXP  灾难恢复还会自动检测VM使用的网络和端口组并将其填充。
 
-image:dr-draas-vmfs-image8.png[""]
+image:dr-draas-vmfs-image8.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 添加站点后、可以将VM分组到资源组中。通过BlueXP  灾难恢复资源组、您可以将一组相关VM分组到逻辑组中、这些逻辑组包含其启动顺序以及恢复后可以执行的启动延迟。要开始创建资源组，请导航到*Resource Groups*并单击*Create New Resource Group*。
 
-image:dr-draas-vmfs-image9.png[""]
+image:dr-draas-vmfs-image9.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 NOTE: 也可以在创建复制计划时创建资源组。
 
 在创建资源组期间、可以使用简单的拖放机制来定义或修改VM的启动顺序。
 
-image:dr-draas-vmfs-image10.png[""]
+image:dr-draas-vmfs-image10.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 创建资源组后、下一步是创建执行蓝图或计划、以便在发生灾难时恢复虚拟机和应用程序。如前提条件中所述、可以事先配置SnapMirror复制、也可以使用创建复制计划期间指定的RPO和保留计数来配置DRaaS。
 
-image:dr-draas-vmfs-image11.png[""]
+image:dr-draas-vmfs-image11.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-image:dr-draas-vmfs-image12.png[""]
+image:dr-draas-vmfs-image12.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 通过从下拉列表中选择源和目标vCenter平台来配置复制计划、然后选择要包含在该计划中的资源组、并分组应用程序的还原和启动方式以及集群和网络的映射。要定义恢复计划，请导航到*复制计划*选项卡，然后单击*添加计划*。
 
 首先、选择源vCenter、然后选择目标vCenter。
 
-image:dr-draas-vmfs-image13.png[""]
+image:dr-draas-vmfs-image13.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 下一步是选择现有资源组。如果未创建任何资源组、则该向导会根据恢复目标帮助对所需的虚拟机进行分组(基本上是创建功能资源组)。这还有助于定义应如何还原应用程序虚拟机的操作顺序。
 
-image:dr-draas-vmfs-image14.png[""]
+image:dr-draas-vmfs-image14.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 NOTE: 资源组允许使用拖放功能设置引导顺序。它可用于轻松修改恢复过程中VM的启动顺序。
@@ -154,38 +154,38 @@ NOTE: 资源组中的每个虚拟机将根据顺序依次启动。两个资源�
 
 以下屏幕截图显示了一个选项、用于根据组织要求筛选虚拟机或特定数据存储库(如果事先未创建资源组)。
 
-image:dr-draas-vmfs-image15.png[""]
+image:dr-draas-vmfs-image15.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 选择资源组后、创建故障转移映射。在此步骤中、指定源环境中的资源与目标之间的映射方式。其中包括计算资源、虚拟网络。IP自定义、前处理脚本和后处理脚本、启动延迟、应用程序一致性等。有关详细信息，请参见link:https://docs.netapp.com/us-en/bluexp-disaster-recovery/use/drplan-create.html#map-source-resources-to-the-target["创建复制计划"]。
 
-image:dr-draas-vmfs-image16.png[""]
+image:dr-draas-vmfs-image16.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 NOTE: 默认情况下、测试和故障转移操作会使用相同的映射参数。要对测试环境应用不同的映射、请在取消选中相应复选框后选择Test Mapping选项、如下所示：
 
-image:dr-draas-vmfs-image17.png[""]
+image:dr-draas-vmfs-image17.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 完成资源映射后、单击"Next"(下一步)。
 
-image:dr-draas-vmfs-image18.png[""]
+image:dr-draas-vmfs-image18.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 选择重复类型。简而言之、请选择迁移(使用故障转移进行一次性迁移)或重复连续复制选项。在此逐步介绍中、已选择"复件"选项。
 
-image:dr-draas-vmfs-image19.png[""]
+image:dr-draas-vmfs-image19.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 完成后、查看创建的映射、然后单击Add Plan。
 
-image:dr-draas-vmfs-image20.png[""]
+image:dr-draas-vmfs-image20.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-image:dr-draas-vmfs-image21.png[""]
+image:dr-draas-vmfs-image21.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 创建复制计划后、可以根据需要选择故障转移选项、test-Failover选项或migrate选项来执行故障转移。BlueXP  灾难恢复可确保每30分钟按照计划执行一次复制过程。在故障转移和测试故障转移选项期间、您可以使用最新的SnapMirror Snapshot副本、也可以从时间点Snapshot副本中选择特定的Snapshot副本(根据SnapMirror的保留策略)。如果发生勒索软件等损坏事件、并且最近的副本已被泄露或加密、则时间点选项非常有用。BlueXP  灾难恢复显示所有可用的恢复点。
 
-image:dr-draas-vmfs-image22.png[""]
+image:dr-draas-vmfs-image22.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 要使用复制计划中指定的配置触发故障转移或测试故障转移，请单击*故障转移*或*测试故障转移*。
 
-image:dr-draas-vmfs-image23.png[""]
+image:dr-draas-vmfs-image23.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -199,13 +199,13 @@ NOTE: 测试故障转移操作会在目标ONTAP存储系统上创建克隆的卷
 
 NOTE: 运行测试恢复操作不会影响SnapMirror复制。
 
-image:dr-draas-vmfs-image24.png[""]
+image:dr-draas-vmfs-image24.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 在此过程中、BlueXP  灾难恢复不会映射原始目标卷。相反、它会从选定的Snapshot创建一个新的FlexClone卷、并将支持该FlexClone卷的临时数据存储库映射到ESXi主机。
 
-image:dr-draas-vmfs-image25.png[""]
+image:dr-draas-vmfs-image25.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-image:dr-draas-vmfs-image26.png[""]
+image:dr-draas-vmfs-image26.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 测试故障转移操作完成后、可以使用*"清理故障转移测试"*触发清理操作。在此操作期间、BlueXP  灾难恢复会销毁操作中使用的FlexClone卷。
 
@@ -217,17 +217,17 @@ image:dr-draas-vmfs-image26.png[""]
 . 启动VM
 
 
-image:dr-draas-vmfs-image27.png[""]
+image:dr-draas-vmfs-image27.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 主站点启动并运行后、BlueXP  灾难恢复将为SnapMirror启用反向重新同步并启用故障恢复、只需单击一个按钮即可再次执行故障恢复。
 
-image:dr-draas-vmfs-image28.png[""]
+image:dr-draas-vmfs-image28.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 如果选择了迁移选项、则会将其视为计划内故障转移事件。在这种情况下、还会触发一个额外的步骤、即关闭源站点上的虚拟机。其余步骤与故障转移事件相同。
 
 在BlueXP  或ONTAP命令行界面中、您可以监控相应数据存储库卷的复制运行状况、并可通过作业监控功能跟踪故障转移或测试故障转移的状态。
 
-image:dr-draas-vmfs-image29.png[""]
+image:dr-draas-vmfs-image29.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 这是一款功能强大的解决方案、可用于处理定制和自定义的灾难恢复计划。发生灾难并决定激活灾难恢复站点时、只需单击按钮、即可按计划故障转移或故障转移的形式完成故障转移。
 

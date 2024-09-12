@@ -1,0 +1,71 @@
+---
+sidebar: sidebar 
+keywords: Cyber vault, cybervault, cyber-vault, data protection, security, ransomware, ONTAP 
+permalink: /cyber-vault/ontap-create-cyber-vault-task.html 
+summary: 本页面中包含的步骤将帮助您创建基于ONTAP的网络存储解决方案 
+---
+= 使用ONTAP创建网络存储
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+以下步骤将有助于使用ONTAP创建网络存储。
+
+.开始之前
+* 源集群必须运行ONTAP 9或更高版本。
+* 源聚合和目标聚合必须为 64 位。
+* 必须在具有对等 SVM 的对等集群中创建源卷和目标卷。有关详细信息，请参见 link:../../ontap-sm-classic/peering/index.html["集群对等"^]。
+* 如果禁用了卷自动增长，则目标卷上的可用空间必须至少比源卷上的已用空间多 5% 。
+
+
+.关于此任务
+下图显示了初始化SnapLock Compliance存储关系的过程：
+
+image::ontap-cyber-vault-air-gap.png[使用NetApp ONTAP的有气隙的网络存储]
+
+.步骤
+. 确定目标阵列、使其成为网络存储、以接收经过空气隔离的数据。
+. 在目标阵列上，要准备网络存储link:../../ontap/system-admin/install-license-task.html["安装ONTAP One许可证"^]、、link:../../ontap/snaplock/initialize-complianceclock-task.html["初始化Compliance时钟"^]和(如果您使用的是9.10.1之前的ONTAP版本)，请link:../../ontap/snaplock/create-snaplock-aggregate-task.html["创建SnapLock Compliance聚合"^]执行以下操作：。
+. 在目标阵列上、创建类型为DP的SnapLock Compliance目标卷：
++
+`volume create -vserver SVM_name -volume volume_name -aggregate aggregate_name -snaplock-type compliance|enterprise -type DP -size size`
+
+. 从 ONTAP 9.10.1 开始， SnapLock 卷和非 SnapLock 卷可以位于同一聚合上；因此，如果使用的是 ONTAP 9.10.1 ，则不再需要创建单独的 SnapLock 聚合。您可以使用卷 `-snaplock-type`选项指定合规性类型。在ONTAP 9 10.1之前的ONTAP版本中、SnapLock合规性模式是从聚合继承的。不支持版本灵活的目标卷。目标卷的语言设置必须与源卷的语言设置匹配。
++
+以下命令将 `dstvolB` `SVM2`在聚合上创建一个名为的2 GB SnapLock Compliance卷 `node01_aggr`：
+
++
+`cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -snaplock-type compliance -type DP -size 2GG`
+
+. 在目标集群上，要创建空隙，请设置默认保留期限，如中所述link:../../ontap/snaplock/set-default-retention-period-task.html["设置默认保留期限"^]。作为存储目标的 SnapLock 卷会为其分配默认保留期限。对于SnapLock Compliance卷、此时间段的值最初设置为最小0年、最大30年。首次提交每个 NetApp Snapshot 副本时都会使用此默认保留期限。必须更改default-保留 期限。保留期限可以稍后根据需要延长、但不能缩短。有关详细信息，请参见 link:../../ontap/snaplock/set-retention-period-task.html["设置保留时间概述"^]。
+. link:../../ontap/data-protection/create-replication-relationship-task.html["创建新的复制关系"^]在非SnapLock源和您在步骤3中创建的新SnapLock目标之间。
++
+以下示例将使用XDPDefault策略与目标SnapLock卷dstvolB创建一个新的SnapMirror关系、以便按每小时计划存储标记为daily和Weekly的Snapshot副本：
+
++
+`cluster2::> snapmirror create -source-path SVM1:srcvolA -destination-path SVM2:dstvolB -vserver SVM2 -policy XDPDefault -schedule hourly`
+
++
+link:../../ontap/data-protection/create-custom-replication-policy-concept.html["创建自定义复制策略"^]或者link:../../ontap/data-protection/create-replication-job-schedule-task.html["自定义计划"^]、如果可用默认值不合适、则为。
+
+. 在目标 SVM 上，初始化步骤 5 中创建的 SnapVault 关系：
++
+`snapmirror initialize -destination-path destination_path`
+
+. 以下命令将初始化 SVM1 上的源卷 srcvolA 与 SVM2 上的目标卷 dstvolB 之间的关系：
++
+`cluster2::> snapmirror initialize -destination-path SVM2:dstvolB`
+
+. 在关系初始化并处于空闲状态后、在目标上使用snapSnapshot show命令验证应用于复制的SnapLock副本的Snapshot到期时间。
++
+此示例列出了卷dstvolB上具有SnapMirror标签和SnapLock到期日期的Snapshot副本：
+
++
+`cluster2::> snapshot show -vserver SVM2 -volume dstvolB -fields snapmirror-label, snaplock-expiry-time`
+
+

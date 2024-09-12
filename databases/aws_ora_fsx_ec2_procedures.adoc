@@ -44,7 +44,7 @@ keywords: AWS, Oracle, RDS, HA, DR, database
 
 对于架构图中所示的Oracle高可用性配置、您必须在一个区域中至少启用四个可用性区域。多个可用性区域也可以位于不同区域、以满足灾难恢复所需的距离。
 
-image::aws_ora_fsx_ec2_inst_01.PNG[AWS ora FSx EC2安装01]
+image:aws_ora_fsx_ec2_inst_01.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -65,38 +65,35 @@ image::aws_ora_fsx_ec2_inst_01.PNG[AWS ora FSx EC2安装01]
 
 . 在EC2信息板中、单击黄色的Launch Instance按钮以启动EC2实例部署工作流。
 +
-image::aws_ora_fsx_ec2_inst_02.PNG[AWS ora FSx EC2安装02]
+image:aws_ora_fsx_ec2_inst_02.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在第1步中、选择"Red Hat Enterprise Linux 8 (HVM)、SSD卷类型- AMI-0b0af3577fe5e3532 (64位x86)/AMI-01fc429821bf1f4b4 (64位ARM)"。
 +
-image::aws_ora_fsx_ec2_inst_03.PNG[AWS ora FSx EC2安装03]
+image:aws_ora_fsx_ec2_inst_03.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在步骤2中、根据Oracle数据库工作负载选择一个M5实例类型、并分配适当的CPU和内存。单击"下一步：配置实例详细信息"。
 +
-image::aws_ora_fsx_ec2_inst_04.PNG[AWS ora FSx EC2安装04]
+image:aws_ora_fsx_ec2_inst_04.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在步骤3中、选择应放置实例的VPC和子网、并启用公有 IP分配。单击"下一步：添加存储"。
 +
-image::aws_ora_fsx_ec2_inst_05.PNG[AWS ora FSx EC2安装05]
+image:aws_ora_fsx_ec2_inst_05.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在步骤4中、为根磁盘分配足够的空间。您可能需要空间来添加交换。默认情况下、EC2实例分配的交换空间为零、这不是运行Oracle的最佳选择。
 +
-image::aws_ora_fsx_ec2_inst_06.PNG[AWS ora FSx EC2安装06]
+image:aws_ora_fsx_ec2_inst_06.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在步骤5中、根据需要添加用于实例标识的标记。
 +
-image::aws_ora_fsx_ec2_inst_07.PNG[AWS ora FSx EC2安装07]
+image:aws_ora_fsx_ec2_inst_07.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在第6步中、选择现有安全组或使用所需的实例入站和出站策略创建一个新安全组。
 +
-image::aws_ora_fsx_ec2_inst_08.PNG[AWS ora FSx EC2安装08]
+image:aws_ora_fsx_ec2_inst_08.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在第7步中、查看实例配置摘要、然后单击启动以启动实例部署。系统将提示您创建密钥对或选择密钥对以访问实例。
 +
-image::aws_ora_fsx_ec2_inst_09.PNG[AWS ora FSx EC2安装09]
-
-+
-image::aws_ora_fsx_ec2_inst_09_1.PNG[AWS ora FSx EC2安装09 1.]
+image:aws_ora_fsx_ec2_inst_09.png["图中显示了输入/输出对话框或表示已写入内容"] image:aws_ora_fsx_ec2_inst_09_1.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 使用SSH密钥对登录到EC2实例。根据需要更改密钥名称和实例IP地址。
 +
@@ -129,7 +126,7 @@ EC2实例部署会为操作系统分配EBS根卷。适用于ONTAP 文件系统�
 * 备份和维护。禁用自动每日备份；数据库存储备份通过SnapCenter 计划执行。
 * 从SVM详细信息页面检索SVM管理IP地址以及特定于协议的访问地址。FSX配置自动化所需。
 +
-image::aws_rds_custom_deploy_fsx_01.PNG[AWS RDS定制部署FSx 01]
+image:aws_rds_custom_deploy_fsx_01.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -137,35 +134,35 @@ image::aws_rds_custom_deploy_fsx_01.PNG[AWS RDS定制部署FSx 01]
 
 . 在FSX控制台中、单击Create File System以启动FSX配置工作流。
 +
-image::aws_ora_fsx_ec2_stor_01.PNG[AWS ora FSx EC2或01]
+image:aws_ora_fsx_ec2_stor_01.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 选择适用于NetApp ONTAP 的Amazon FSX。然后单击下一步。
 +
-image::aws_ora_fsx_ec2_stor_02.PNG[AWS ora FSx EC2或02]
+image:aws_ora_fsx_ec2_stor_02.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 选择标准创建、然后在文件系统详细信息中将文件系统命名为Multi-AZ HA。根据您的数据库工作负载、选择自动或用户配置的IOPS、最高可达80、000 SSD IOPS。FSX存储在后端提供高达2 TiB的NVMe缓存、可提供更高的测量IOPS。
 +
-image::aws_ora_fsx_ec2_stor_03.PNG[AWS ora FSx EC2或03]
+image:aws_ora_fsx_ec2_stor_03.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在网络和安全部分中、选择VPC、安全组和子网。应在部署FSX之前创建这些卷。根据FSX集群的角色(主或备用)、将FSX存储节点置于相应的分区中。
 +
-image::aws_ora_fsx_ec2_stor_04.PNG[AWS ora FSx EC2或04]
+image:aws_ora_fsx_ec2_stor_04.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在安全性和加密部分中、接受默认值、然后输入fsxadmin密码。
 +
-image::aws_ora_fsx_ec2_stor_05.PNG[AWS ora FSx EC2或05]
+image:aws_ora_fsx_ec2_stor_05.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 输入SVM名称和vsadmin密码。
 +
-image::aws_ora_fsx_ec2_stor_06.PNG[AWS ora FSx EC2或06]
+image:aws_ora_fsx_ec2_stor_06.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 将卷配置留空；此时不需要创建卷。
 +
-image::aws_ora_fsx_ec2_stor_07.PNG[AWS ora FSx EC2或07]
+image:aws_ora_fsx_ec2_stor_07.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 查看摘要页面、然后单击创建文件系统以完成FSX文件系统配置。
 +
-image::aws_ora_fsx_ec2_stor_08.PNG[AWS ora FSx EC2或08]
+image:aws_ora_fsx_ec2_stor_08.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -189,11 +186,7 @@ image::aws_ora_fsx_ec2_stor_08.PNG[AWS ora FSx EC2或08]
 
 在AWS FSX控制台中、您可以为Oracle数据库文件存储创建三个卷：一个用于Oracle二进制文件、一个用于Oracle数据、一个用于Oracle日志。请确保卷命名与Oracle主机名(在自动化工具包中的hosts文件中定义)匹配、以便正确识别。在此示例中、我们使用db1作为EC2 Oracle主机名、而不是使用典型的基于IP地址的主机名作为EC2实例。
 
-image::aws_ora_fsx_ec2_stor_09.PNG[AWS ora FSx EC2或09]
-
-image::aws_ora_fsx_ec2_stor_10.PNG[AWS ora FSx EC2或10.]
-
-image::aws_ora_fsx_ec2_stor_11.PNG[AWS ora FSx EC2或11.]
+image:aws_ora_fsx_ec2_stor_09.png["图中显示了输入/输出对话框或表示已写入内容"] image:aws_ora_fsx_ec2_stor_10.png["图中显示了输入/输出对话框或表示已写入内容"] image:aws_ora_fsx_ec2_stor_11.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 NOTE: FSX控制台当前不支持创建iSCSI LUN。对于适用于Oracle的iSCSI LUN部署、可以通过NetApp自动化工具包中的自动化for ONTAP 来创建卷和LUN。
@@ -289,7 +282,7 @@ vserver peer create -vserver primary_vserver_name -peer-vserver standby_vserver_
 ----
 . 验证集群和SVM对等项是否设置正确。
 +
-image::aws_ora_fsx_ec2_stor_14.PNG[AWS ora FSx EC2或14.]
+image:aws_ora_fsx_ec2_stor_14.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在备用FSX集群上为主FSX集群上的每个源卷创建目标NFS卷。根据您的环境需要替换卷名称。
 +
@@ -422,16 +415,16 @@ NOTE: 将Oracle二进制文件从主集群复制到备用集群可能会涉及Or
 
 . 自动安装SnapCenter 后、以安装SnapCenter 服务器的Window主机的管理用户身份登录到SnapCenter。
 +
-image::aws_rds_custom_deploy_snp_01.PNG[AWS RDS自定义部署SNP 01]
+image:aws_rds_custom_deploy_snp_01.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 从左侧菜单中、单击设置、然后单击凭据和新建、为SnapCenter 插件安装添加EC2-user凭据。
 +
-image::aws_rds_custom_deploy_snp_02.PNG[AWS RDS自定义部署SNP 02]
+image:aws_rds_custom_deploy_snp_02.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 通过编辑EC2实例主机上的`/etc/ssh/sshd_config`文件、重置EC2-user密码并启用密码SSH身份验证。
 . 验证是否已选中"Use sudo privileges"复选框。您只需在上一步中重置EC2-user密码即可。
 +
-image::aws_rds_custom_deploy_snp_03.PNG[AWS RDS自定义部署SNP 03]
+image:aws_rds_custom_deploy_snp_03.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 将SnapCenter 服务器名称和IP地址添加到EC2实例主机文件以进行名称解析。
 +
@@ -451,31 +444,31 @@ image::aws_rds_custom_deploy_snp_03.PNG[AWS RDS自定义部署SNP 03]
 ----
 . 在左侧菜单中、选择主机>受管主机、然后单击添加将EC2实例主机添加到SnapCenter。
 +
-image::aws_rds_custom_deploy_snp_04.PNG[AWS RDS自定义部署SNP 04]
+image:aws_rds_custom_deploy_snp_04.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 检查Oracle数据库、然后在提交之前、单击更多选项。
 
 +
-image::aws_rds_custom_deploy_snp_05.PNG[AWS RDS自定义部署SNP 05]
+image:aws_rds_custom_deploy_snp_05.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 选中跳过预安装检查。确认跳过预安装检查、然后在保存后单击提交。
 
 +
-image::aws_rds_custom_deploy_snp_06.PNG[AWS RDS自定义部署SNP 06]
+image:aws_rds_custom_deploy_snp_06.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 系统将提示您确认指纹、然后单击确认并提交。
 
 +
-image::aws_rds_custom_deploy_snp_07.PNG[AWS RDS自定义部署SNP 07]
+image:aws_rds_custom_deploy_snp_07.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 成功配置插件后、受管主机的整体状态将显示为正在运行。
 
 +
-image::aws_rds_custom_deploy_snp_08.PNG[AWS RDS自定义部署SNP 08]
+image:aws_rds_custom_deploy_snp_08.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -500,4 +493,4 @@ SnapCenter 中的数据库备份可由用户配置、可以单独设置、也可
 
 下图举例说明了为备份Oracle数据库而设置的资源组。
 
-image::aws_rds_custom_deploy_snp_09.PNG[AWS RDS自定义部署SNP 09]
+image:aws_rds_custom_deploy_snp_09.png["图中显示了输入/输出对话框或表示已写入内容"]

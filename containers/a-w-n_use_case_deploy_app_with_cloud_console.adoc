@@ -36,23 +36,23 @@ summary: 如何使用Google Cloud Console将应用程序部署到内部的Anthos
 
 . 确认要部署到的集群可在Google Cloud Console中访问。
 +
-image::a-w-n_use_case_deploy_app-10.png[已注册集群]
+image:a-w-n_use_case_deploy_app-10.png["已注册集群"]
 
 . 从左侧菜单中选择应用程序、选择顶部的三点选项菜单、然后选择从Marketplace部署、此时将显示一个新窗口、您可以从Google Cloud Marketplace中选择应用程序。
 +
-image::a-w-n_use_case_deploy_app-09.png[应用程序市场]
+image:a-w-n_use_case_deploy_app-09.png["应用程序市场"]
 
 . 搜索要安装的应用程序、此处为WordPress。
 +
-image::a-w-n_use_case_deploy_app-08.png[搜索WordPress]
+image:a-w-n_use_case_deploy_app-08.png["搜索WordPress"]
 
 . 选择WordPress应用程序后、将显示一个概述屏幕。单击配置按钮。
 +
-image::a-w-n_use_case_deploy_app-07.png[WordPress概述屏幕]
+image:a-w-n_use_case_deploy_app-07.png["WordPress概述屏幕"]
 
 . 在下一页的案例演示集群中、您必须选择要部署到的集群。选择或创建新的命名空间和应用程序实例名称、然后选择WordPress应用程序及其后备MariaDB数据库所需的存储类和永久性卷大小。在这两种情况下、我们都选择了ontap-nas-csi存储类。
 +
-image::a-w-n_use_case_deploy_app-06.png[WordPress配置]
+image:a-w-n_use_case_deploy_app-06.png["WordPress配置"]
 
 +
 
@@ -60,11 +60,11 @@ NOTE: 请勿选择启用公有 IP访问。这样会创建一个类型为NodePort
 
 . 单击Deploy按钮后、您将看到一个页面、其中提供了应用程序详细信息。您可以刷新此页面或使用命令行界面登录到集群以检查部署状态。
 +
-image::a-w-n_use_case_deploy_app-05.png[应用程序详细信息]
+image:a-w-n_use_case_deploy_app-05.png["应用程序详细信息"]
 
 . 在部署应用程序时、可以使用命令行界面在应用程序命名空间中运行命令以提取Pod信息：`kubectl get pods -n anthos-wp`来检查应用程序的状态。
 +
-image::a-w-n_use_case_deploy_app-04.png[Kubectl GET POD]
+image:a-w-n_use_case_deploy_app-04.png["Kubectl GET POD"]
 
 +
 
@@ -72,7 +72,7 @@ NOTE: 请注意、此屏幕截图显示一个部署程序POD处于错误状态�
 
 . 请稍后确认您的应用程序正在运行。
 +
-image::a-w-n_use_case_deploy_app-03.png[应用程序正在运行]
+image:a-w-n_use_case_deploy_app-03.png["应用程序正在运行"]
 
 
 
@@ -90,22 +90,22 @@ image::a-w-n_use_case_deploy_app-03.png[应用程序正在运行]
 
 . 在Google Cloud Console中、单击左侧菜单中的服务和入口。
 +
-image::a-w-n_use_case_deploy_app-11.png[服务和传入]
+image:a-w-n_use_case_deploy_app-11.png["服务和传入"]
 
 . 单击`WordPress-WordPress-Svc`服务。此时将打开服务详细信息屏幕。单击顶部的编辑按钮。
 +
-image::a-w-n_use_case_deploy_app-12.png[编辑服务详细信息]
+image:a-w-n_use_case_deploy_app-12.png["编辑服务详细信息"]
 
 . 此时将打开编辑服务详细信息页面、其中包含此服务的YAML信息。向下滚动、直到看到`sPec：`部分和`type：`值、该值设置为`ClusterIP`。将此值更改为`loadbalancer`、然后单击保存按钮。
 +
-image::a-w-n_use_case_deploy_app-13.png[键入ClusterIP值]
+image:a-w-n_use_case_deploy_app-13.png["键入ClusterIP值"]
 
 +
-image::a-w-n_use_case_deploy_app-14.png[键入loadbalancer值]
+image:a-w-n_use_case_deploy_app-14.png["键入loadbalancer值"]
 
 . 返回到服务详细信息页面后、`Type：` NOW会列出`loadbalancer`、而`External Endpoints：`字段会列出从MetalLB池分配的IP地址以及可访问应用程序的端口。
 +
-image::a-w-n_use_case_deploy_app-15.png[服务详细信息最终确定]
+image:a-w-n_use_case_deploy_app-15.png["服务详细信息最终确定"]
 
 
 
@@ -117,7 +117,7 @@ image::a-w-n_use_case_deploy_app-15.png[服务详细信息最终确定]
 
 . 使用`kubectl get services -n anthos-wp`命令列出与命名空间中Pod关联的服务。
 +
-image::a-w-n_use_case_deploy_app-02.png[列出服务]
+image:a-w-n_use_case_deploy_app-02.png["列出服务"]
 
 . 使用以下命令将服务类型从`ClusterIP`修改为类型`LoadBaler`：
 +
@@ -129,7 +129,7 @@ kubectl patch svc wordpress-wordpress-svc -p '{"spec": {"type": "LoadBalancer"}}
 系统会自动从MetalLB池为这种新服务类型分配一个可用的IP地址。
 
 +
-image::a-w-n_use_case_deploy_app-01.png[修补服务到类型负载平衡器]
+image:a-w-n_use_case_deploy_app-01.png["修补服务到类型负载平衡器"]
 
 
 
@@ -139,4 +139,4 @@ image::a-w-n_use_case_deploy_app-01.png[修补服务到类型负载平衡器]
 
 现在、您已使用可公开访问的IP地址公开应用程序、您可以使用浏览器访问WordPress实例。
 
-image::a-w-n_use_case_deploy_app-00.png[浏览器中的WordPress]
+image:a-w-n_use_case_deploy_app-00.png["浏览器中的WordPress"]

@@ -23,7 +23,7 @@ summary: 要启用 Trident 与 NetApp ONTAP 存储系统的集成，您必须创
 . 登录到ONTAP 系统管理器、导航到存储> Storage VM、然后单击添加。
 . 输入SVM的名称、启用NFS协议、选中允许NFS客户端访问复选框、然后在导出策略规则中添加工作节点所在的子网、以便允许将卷作为PV挂载到工作负载集群中。
 +
-image::vtwn_image06.jpg[使用NFS创建SVM]
+image:vtwn_image06.jpg["使用NFS创建SVM"]
 
 +
 
@@ -31,11 +31,11 @@ NOTE: 如果您要在NSX-T中使用NAT部署用户集群或工作负载集群、
 
 . 提供数据LIF的详细信息以及SVM管理帐户的详细信息、然后单击保存。
 +
-image::vtwn_image07.jpg[SVM数据LIF和SVM管理]
+image:vtwn_image07.jpg["SVM数据LIF和SVM管理"]
 
 . 将聚合分配给SVM。导航到存储>存储VM、单击新创建的SVM旁边的省略号、然后单击编辑。选中将卷创建限制为首选本地层复选框、并将所需聚合附加到其中。
 +
-image::vtwn_image08.jpg[SVM聚合分配]
+image:vtwn_image08.jpg["SVM聚合分配"]
 
 . 如果要安装Trident的用户或工作负载集群采用NAT方式进行部署、则由于SNAT、存储挂载请求可能来自非标准端口。默认情况下、ONTAP 仅允许从根端口发出卷挂载请求。因此、请登录到ONTAP 命令行界面并修改设置、以允许来自非标准端口的挂载请求。
 +

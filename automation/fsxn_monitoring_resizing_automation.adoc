@@ -67,7 +67,7 @@ FSx for ONTAP是AWS上提供的第一方企业级云存储服务、可提供基�
 * 如果在无法访问Internet的VPC中部署解决方案、则会对适用于AWS SSM、FSx和SES的VPC端点进行设置、使Lamb达 能够通过AWS内部网络访问这些服务。
 
 
-image::fsxn-monitoring-resizing-architecture.png[此图显示了此解决方案 中使用的高级架构。]
+image:fsxn-monitoring-resizing-architecture.png["此图显示了此解决方案 中使用的高级架构。"]
 
 ====
 
@@ -99,7 +99,7 @@ git clone https://github.com/NetApp/fsxn-monitoring-auto-resizing.git
 . 导航到AWS控制台>*。s3*并单击*创建存储分段*。使用默认设置创建存储分段。
 . 进入存储分段后、单击*上传*>*添加文件*、然后从系统上克隆的GitHub存储库中选择*实用程序.zip。
 +
-image::fsxn-monitoring-resizing-s3-upload-zip-files.png[此图显示了正在上传zip文件的S3窗口]
+image:fsxn-monitoring-resizing-s3-upload-zip-files.png["此图显示了正在上传zip文件的S3窗口"]
 
 
 
@@ -116,7 +116,7 @@ image::fsxn-monitoring-resizing-s3-upload-zip-files.png[此图显示了正在上
 NOTE: 如果SES SMTP设置已到位、请跳过此步骤。
 
 +
-image::fsxn-monitoring-resizing-ses-smtp-creds-addition.png[此图显示了AWS SES下的创建SMTP凭据窗口]
+image:fsxn-monitoring-resizing-ses-smtp-creds-addition.png["此图显示了AWS SES下的创建SMTP凭据窗口"]
 
 
 
@@ -133,7 +133,7 @@ Specify template: Upload a template file
 Choose file: Browse to the cloned GitHub repo and select fsxn-monitoring-solution.yaml
 ----
 +
-image::fsxn-monitoring-resizing-create-cft-1.png[此图显示了AWS CloudFormation创建堆栈窗口]
+image:fsxn-monitoring-resizing-create-cft-1.png["此图显示了AWS CloudFormation创建堆栈窗口"]
 
 +
 单击下一步
@@ -144,24 +144,24 @@ image::fsxn-monitoring-resizing-create-cft-1.png[此图显示了AWS CloudFormati
 NOTE: 如果"VPC是否可访问互联网？" 设置为False、需要提供"AWS SES的SMTP用户名"和"AWS SES的SMTP密码"。否则、可以将其留空。
 
 +
-image::fsxn-monitoring-resizing-cft-stack-details-1.png[此图显示了AWS CloudFormation堆栈详细信息窗口]
+image:fsxn-monitoring-resizing-cft-stack-details-1.png["此图显示了AWS CloudFormation堆栈详细信息窗口"]
 
 +
-image::fsxn-monitoring-resizing-cft-stack-details-2.png[此图显示了AWS CloudFormation堆栈详细信息窗口]
+image:fsxn-monitoring-resizing-cft-stack-details-2.png["此图显示了AWS CloudFormation堆栈详细信息窗口"]
 
 +
-image::fsxn-monitoring-resizing-cft-stack-details-3.png[此图显示了AWS CloudFormation堆栈详细信息窗口]
+image:fsxn-monitoring-resizing-cft-stack-details-3.png["此图显示了AWS CloudFormation堆栈详细信息窗口"]
 
 +
-image::fsxn-monitoring-resizing-cft-stack-details-4.png[此图显示了AWS CloudFormation堆栈详细信息窗口]
+image:fsxn-monitoring-resizing-cft-stack-details-4.png["此图显示了AWS CloudFormation堆栈详细信息窗口"]
 
 . 一旦CloudFormation部署开始、"发件人电子邮件ID"中提及的电子邮件ID将收到一封电子邮件、要求他们授权在AWS SES中使用此电子邮件地址。单击链接以验证电子邮件地址。
 . CloudFormation堆栈部署完成后、如果出现任何警告/通知、系统将向收件人电子邮件ID发送一封电子邮件、其中包含通知详细信息。
 +
-image::fsxn-monitoring-resizing-email-1.png[此图显示了通知可用时收到的电子邮件通知]
+image:fsxn-monitoring-resizing-email-1.png["此图显示了通知可用时收到的电子邮件通知"]
 
 +
-image::fsxn-monitoring-resizing-email-2.png[此图显示了通知可用时收到的电子邮件通知]
+image:fsxn-monitoring-resizing-email-2.png["此图显示了通知可用时收到的电子邮件通知"]
 
 
 
@@ -193,7 +193,7 @@ git clone https://github.com/NetApp/fsxn-monitoring-auto-resizing.git
 . 导航到AWS控制台>*AWS Simple Email Service (SES)*> SMTP Settings，然后单击*Create SMTP crederations*
 . 输入IAM用户名或将其保留为默认值、然后单击创建。保存用户名和密码以供将来使用。
 +
-image::fsxn-monitoring-resizing-ses-smtp-creds-addition.png[此图显示了AWS SES下的创建SMTP凭据窗口]
+image:fsxn-monitoring-resizing-ses-smtp-creds-addition.png["此图显示了AWS SES下的创建SMTP凭据窗口"]
 
 
 
@@ -215,7 +215,7 @@ Value: <Enter the password for "fsxadmin" user configured on FSx for ONTAP>
 单击*创建参数*。
 对要监控的所有FSx for ONTAP文件系统重复上述步骤。
 
-image::fsxn-monitoring-resizing-ssm-parameter.png[此图显示了AWS控制台上的SSM参数创建窗口。]
+image:fsxn-monitoring-resizing-ssm-parameter.png["此图显示了AWS控制台上的SSM参数创建窗口。"]
 
 如果在不访问Internet的情况下部署解决方案 、则执行相同的步骤来存储SMTP用户名和SMTP密码。否则、跳过添加这2个参数。
 
@@ -234,7 +234,7 @@ Email address: <Enter an email address to be used for sending resizing notificat
 
 "发件人电子邮件ID"中提及的电子邮件ID将收到一封电子邮件、要求所有者授权AWS SES使用此电子邮件地址。单击链接以验证电子邮件地址。
 
-image::fsxn-monitoring-resizing-ses.png[此图显示了AWS控制台上的SES身份创建窗口。]
+image:fsxn-monitoring-resizing-ses.png["此图显示了AWS控制台上的SES身份创建窗口。"]
 
 ====
 .第5步：设置VPC端点(如果无法访问Internet、则需要此端点)
@@ -259,10 +259,10 @@ Policy: <Either choose Full access or set your own custom policy>
 单击创建端点。
 
 +
-image::fsxn-monitoring-resizing-vpc-endpoint-create-1.png[此图显示了VPC端点创建窗口]
+image:fsxn-monitoring-resizing-vpc-endpoint-create-1.png["此图显示了VPC端点创建窗口"]
 
 +
-image::fsxn-monitoring-resizing-vpc-endpoint-create-2.png[此图显示了VPC端点创建窗口]
+image:fsxn-monitoring-resizing-vpc-endpoint-create-2.png["此图显示了VPC端点创建窗口"]
 
 . 按照相同的过程创建SES和SSM VPC端点。除将<region>分别对应于*com.惊奇aws.smp.smNT*和*com.惊奇aws.smssm*<region>的服务外，所有参数均与上述相同。
 
@@ -290,26 +290,26 @@ Advanced Settings:
 单击*创建功能*。
 
 +
-image::fsxn-monitoring-resizing-lambda-creation-1.png[此图显示了AWS控制台上的Lambda创建窗口。]
+image:fsxn-monitoring-resizing-lambda-creation-1.png["此图显示了AWS控制台上的Lambda创建窗口。"]
 
 +
-image::fsxn-monitoring-resizing-lambda-creation-2.png[此图显示了AWS控制台上的Lambda创建窗口。]
+image:fsxn-monitoring-resizing-lambda-creation-2.png["此图显示了AWS控制台上的Lambda创建窗口。"]
 
 . 导航到新创建的Lamba函数>向下滚动到*图层*部分，然后单击*添加图层*。
 +
-image::fsxn-monitoring-resizing-add-layer-button.png[此图显示了AWS Lambda功能控制台上的添加层按钮。]
+image:fsxn-monitoring-resizing-add-layer-button.png["此图显示了AWS Lambda功能控制台上的添加层按钮。"]
 
 . 单击*层源*下的*创建新层*
 . 创建图层并上传*Utilities．zip*文件。选择* Python 3.9*作为兼容运行时、然后单击*创建*。
 +
-image::fsxn-monitoring-resizing-create-layer-paramiko.png[此图显示了AWS控制台上的创建新层窗口。]
+image:fsxn-monitoring-resizing-create-layer-paramiko.png["此图显示了AWS控制台上的创建新层窗口。"]
 
 . 导航回AWS Lamb另 一个函数>*添加图层*>*自定义图层*并添加实用程序图层。
 +
-image::fsxn-monitoring-resizing-add-layer-window.png[此图显示了AWS Lambda功能控制台上的添加层窗口。]
+image:fsxn-monitoring-resizing-add-layer-window.png["此图显示了AWS Lambda功能控制台上的添加层窗口。"]
 
 +
-image::fsxn-monitoring-resizing-layers-added.png[此图显示了AWS Lambda功能控制台上添加的层。]
+image:fsxn-monitoring-resizing-layers-added.png["此图显示了AWS Lambda功能控制台上添加的层。"]
 
 . 导航到Lambda函数的*配置*选项卡、然后单击*常规配置*下的*编辑*。将超时更改为*5分钟*，然后单击*Save*。
 . 导航到Lambda函数的*权限*选项卡、然后单击分配的角色。在角色的权限选项卡中、单击*添加权限*>*创建实时策略*。
@@ -374,7 +374,7 @@ image::fsxn-monitoring-resizing-layers-added.png[此图显示了AWS Lambda功能
 | *收件人电子邮件* | string | (必需)输入要接收警报通知的电子邮件ID。 
 |===
 +
-image::fsxn-monitoring-resizing-lambda-code.png[此图显示了AWS Lambda功能控制台上的lambda代码。]
+image:fsxn-monitoring-resizing-lambda-code.png["此图显示了AWS Lambda功能控制台上的lambda代码。"]
 
 . 单击*Test*，创建一个包含空JSON对象的测试事件，然后通过单击*Invoke *来运行测试，以检查脚本是否运行正常。
 . 成功测试后、导航到*配置*>*触发器*>*添加触发器*。
@@ -391,7 +391,7 @@ Schedule expression: <Use "rate(1 day)" if you want the function to run daily or
 单击添加。
 
 +
-image::fsxn-monitoring-resizing-eventbridge.png[此图显示了AWS Lambda功能控制台上的事件网桥创建窗口。]
+image:fsxn-monitoring-resizing-eventbridge.png["此图显示了AWS Lambda功能控制台上的事件网桥创建窗口。"]
 
 
 

@@ -20,12 +20,12 @@ keywords: architecture, database, Oracle, Azure, Azure NetApp Files
 
 另一方面、Oracle数据库存储则通过Azure控制台提供的Azure NetApp Files 服务进行部署。随后、Oracle二进制卷、数据卷或日志卷将显示并挂载到Azure VM实例Linux主机上。
 
-image::db_ora_azure_anf_architecture.PNG[此图显示了主站点、备用站点和每个站点的vNet对等之间的关系。这构成了四个独立的虚拟网络。]
+image:db_ora_azure_anf_architecture.png["此图显示了主站点、备用站点和每个站点的vNet对等之间的关系。这构成了四个独立的虚拟网络。"]
 
 在许多方面、在Azure云中实施Azure NetApp Files 与具有许多内置冗余功能(例如RAID和双控制器)的内部ONTAP 数据存储架构非常相似。对于灾难恢复、可以在不同区域设置备用站点、并且可以使用应用程序级复制(例如Oracle Data Guard)将数据库与主站点同步。
 
 在我们对Oracle数据库部署和数据保护进行的测试验证中、Oracle数据库部署在一个Azure虚拟机上、如下图所示：
 
-image::db_ora_azure_anf_architecture2.PNG[此图显示了一个Azure虚拟机的组织结构、该虚拟机采用vNet对等关系来创建两个单独的虚拟网络。]
+image:db_ora_azure_anf_architecture2.png["此图显示了一个Azure虚拟机的组织结构、该虚拟机采用vNet对等关系来创建两个单独的虚拟网络。"]
 
 Azure Oracle环境可通过Ansible控制器节点进行管理、以便使用NetApp提供的用于数据库部署、备份、恢复和数据库迁移的工具包实现自动化。可以并行执行对Oracle Azure VM实例操作系统内核或Oracle修补的任何更新、以使主系统和备用系统保持同步。事实上、初始工具包可以轻松扩展、以便在需要时执行日常Oracle任务。如果您需要有关设置CLI Ansible控制器的帮助、请参见 link:../automation/automation_introduction.html["NetApp 解决方案自动化"^] 开始使用。

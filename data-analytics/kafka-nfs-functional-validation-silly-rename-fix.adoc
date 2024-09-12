@@ -43,7 +43,7 @@ summary: 在功能验证方面、我们显示了具有NFSv3存储挂载的Kafka�
 |===
 下图显示了此解决方案 的架构配置。
 
-image::kafka-nfs-image1.png[此图显示了AWS拓扑、其中包含三个专用子网、分别包含一个生产者Swarm、Kafka集群和CVO实例。]
+image:kafka-nfs-image1.png["此图显示了AWS拓扑、其中包含三个专用子网、分别包含一个生产者Swarm、Kafka集群和CVO实例。"]
 
 
 
@@ -78,13 +78,13 @@ aws-shantanclastrecall-aws::*> volume create -vserver kafka_svm -volume kafka_fg
 集群1：
 
 +
-image::kafka-nfs-image2.png[此屏幕截图显示了在集群1上创建的演示主题。]
+image:kafka-nfs-image2.png["此屏幕截图显示了在集群1上创建的演示主题。"]
 
 +
 集群2：
 
 +
-image::kafka-nfs-image3.png[此屏幕截图显示了在集群2上创建的演示主题。]
+image:kafka-nfs-image3.png["此屏幕截图显示了在集群2上创建的演示主题。"]
 
 . 数据已加载到这两个集群的新创建主题中。这是使用默认Kafka软件包中提供的producer-perf-test工具包实现的：
 +
@@ -99,7 +99,7 @@ image::kafka-nfs-image3.png[此屏幕截图显示了在集群2上创建的演示
 下一个屏幕截图显示了两个集群上的代理的成功运行状况检查：
 
 +
-image::kafka-nfs-image4.png[此屏幕截图显示了对两个代理成功执行运行状况检查时的读取结果。]
+image:kafka-nfs-image4.png["此屏幕截图显示了对两个代理成功执行运行状况检查时的读取结果。"]
 
 
 
@@ -120,7 +120,7 @@ kafka-reassign-partitions --bootstrap-server=172.30.0.198:9092,172.30.0.163:9092
 
 . 在完成重新分配几分钟后、对代理进行的另一项运行状况检查显示、使用NFSv3存储卷的集群运行到一个错误的重命名问题描述 中并发生崩溃、而使用NetApp ONTAP NFSv4.1存储卷的集群1则在修复后继续运行、而不会造成任何中断。
 +
-image::kafka-nfs-image5.png[此屏幕截图显示了崩溃代理的输出。]
+image:kafka-nfs-image5.png["此屏幕截图显示了崩溃代理的输出。"]
 
 +
 ** cluster1-Broker-1处于活动状态。
@@ -129,12 +129,12 @@ image::kafka-nfs-image5.png[此屏幕截图显示了崩溃代理的输出。]
 
 . 检查Kafka日志目录后、可以明显看出、使用NetApp ONTAP NFSv4.1存储卷并进行修复的集群1分配了干净的分区、而使用通用NFSv3存储的集群2则不是由于错误的重命名问题而导致崩溃。下图显示了集群2的分区重新平衡、这会导致在NFSv3存储上对问题描述 进行重命名、操作很不明智。
 +
-image::kafka-nfs-image6.png[此屏幕截图显示了集群2崩溃的日志输出。]
+image:kafka-nfs-image6.png["此屏幕截图显示了集群2崩溃的日志输出。"]
 
 +
 下图显示了使用NetApp NFSv4.1存储重新平衡集群1的全新分区。
 
 +
-image::kafka-nfs-image7.png[此屏幕截图显示了成功为集群1分配清理分区的日志输出、而]
+image:kafka-nfs-image7.png["此屏幕截图显示了成功为集群1分配清理分区的日志输出、而"]
 
 

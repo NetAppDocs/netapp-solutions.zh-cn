@@ -39,7 +39,7 @@ NetApp Snapshot 集成在培训代码中，可捕获每个实验的数据状态�
 .. 以 `Standard_DS2_v2` 大小添加名为 `agentpool` 的主系统节点。使用默认的三个节点。
 .. 添加工作节点 `gpupool` 并使用 `Standard_Nc6s_v3` 池大小。至少为 GPU 节点使用三个节点。
 +
-image::runai-ld_image3.png[runai ld image3.]
+image:runai-ld_image3.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 
@@ -66,7 +66,7 @@ kubectl get nodes
 NOTE: 如果所有六个节点均按此处所示启动并运行，则 AKS 集群已准备就绪并连接到本地环境。
 
 +
-image::runai-ld_image4.png[runai ld image4.]
+image:runai-ld_image4.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -78,15 +78,15 @@ image::runai-ld_image4.png[runai ld image4.]
 
 . 导航到 Azure 门户中的虚拟网络。查找新创建的虚拟网络。它应具有前面板，如 AK vnet ，如此处所示。单击虚拟网络的名称。
 +
-image::runai-ld_image5.png[runai ld image5.]
+image:runai-ld_image5.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 单击子网，然后从顶部工具栏中选择 +Subnet 。
 +
-image::runai-ld_image6.png[runai ld image6.]
+image:runai-ld_image6.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 为子网提供名称，例如 `ANF.SN` ，然后在 Subnet delegation 标题下选择 Microsoft.NetApp/volumes 。请勿更改任何其他内容。单击确定。
 +
-image::runai-ld_image7.png[runai ld image7.]
+image:runai-ld_image7.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -295,7 +295,7 @@ kubectl get sc azurenetappfiles
 输出应类似于以下示例：
 
 +
-image::runai-ld_image8.png[runai ld image8.]
+image:runai-ld_image8.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -332,7 +332,7 @@ kubectl create -f netapp-volume-snapshot-class.yaml
 输出应类似于以下示例：
 
 +
-image::runai-ld_image9.png[runai ld image9.]
+image:runai-ld_image9.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 使用以下命令检查是否已创建卷 Snapshot 副本类：
 +
@@ -343,7 +343,7 @@ kubectl get volumesnapshotclass
 输出应类似于以下示例：
 
 +
-image::runai-ld_image10.png[runai ld image10.]
+image:runai-ld_image10.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -356,7 +356,7 @@ image::runai-ld_image10.png[runai ld image10.]
 . https://docs.run.ai/Administrator/Cluster-Setup/cluster-install/["在 AKS 上安装 run ： ai 集群"^]。
 . 转至 app.runai.ai ，单击创建新项目，然后将其命名为 LAN-detection 。它将在 K8s 集群上创建一个命名空间，其开头为 `runai` - ，后跟项目名称。在这种情况下，创建的命名空间将为 runai-lane 检测。
 +
-image::runai-ld_image11.png[runai ld image11.]
+image:runai-ld_image11.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . https://docs.run.ai/Administrator/Cluster-Setup/cluster-install/["安装 run ： ai 命令行界面"^]。
 . 在您的终端上，使用以下命令将通道检测设置为默认运行： AI project ：
@@ -368,7 +368,7 @@ image::runai-ld_image11.png[runai ld image11.]
 输出应类似于以下示例：
 
 +
-image::runai-ld_image12.png[runai ld image12.]
+image:runai-ld_image12.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 为项目命名空间创建 ClusterRole 和 ClusterRoleBinding （例如， `LANE-detection ）` 因此，属于 `runai-lan-detection` namespace 的默认服务帐户有权在作业执行期间执行 `volumesnapshot` 操作：
 +
@@ -381,7 +381,7 @@ kubectl get namespaces
 输出应类似于以下示例：
 
 +
-image::runai-ld_image13.png[runai ld image13.]
+image:runai-ld_image13.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -413,7 +413,7 @@ cd ./lane-detection-SCNN-horovod/data
 ....
 .. 修改 `build_image.sh` shell 脚本并将 Docker 存储库更改为您的。例如，将 `muneer7589` 替换为 Docker 存储库名称。您还可以更改 Docker 映像名称和标记（例如 `download-tusimple` 和 `1.0` ）：
 +
-image::runai-ld_image14.png[runai ld image14.]
+image:runai-ld_image14.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 .. 运行脚本以构建 Docker 映像，并使用以下命令将其推送到 Docker 存储库：
 +
@@ -451,7 +451,7 @@ runai submit
 输出应类似于以下示例：
 
 +
-image::runai-ld_image15.png[runai ld image15.]
+image:runai-ld_image15.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 .. 列出已提交的运行： AI 作业。
 +
@@ -459,7 +459,7 @@ image::runai-ld_image15.png[runai ld image15.]
 runai list jobs
 ....
 +
-image::runai-ld_image16.png[runai ld image16.]
+image:runai-ld_image16.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 .. 检查提交的作业日志。
 +
@@ -467,7 +467,7 @@ image::runai-ld_image16.png[runai ld image16.]
 runai logs download-tusimple-data -t 10
 ....
 +
-image::runai-ld_image17.png[runai ld image17.]
+image:runai-ld_image17.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 .. 列出已创建的 `PVC` 。在下一步中使用此 `PVC` 命令进行培训。
 +
@@ -478,11 +478,11 @@ kubectl get pvc | grep download-tusimple-data
 输出应类似于以下示例：
 
 +
-image::runai-ld_image18.png[runai ld image18.]
+image:runai-ld_image18.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 .. 在 run ： ai UI （或 `app.run.ai` ）中检查作业。
 +
-image::runai-ld_image19.png[runai ld image19.]
+image:runai-ld_image19.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -508,7 +508,7 @@ cd ./lane-detection-SCNN-horovod
 ....
 .. 修改 `build_image.sh` shell 脚本并将 Docker 存储库更改为您的（例如，将 `muneer7589` 替换为您的 Docker 存储库名称）。您也可以更改 Docker 映像名称和标记（例如， `dist-lan-detection` 和 `3.1 ）` 。
 +
-image::runai-ld_image20.png[runai ld image20.]
+image:runai-ld_image20.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 .. 运行脚本以构建 Docker 映像并推送到 Docker 存储库。
 +
@@ -527,7 +527,7 @@ chmod +x build_image.sh
 kubectl get pvc | grep download-tusimple-data
 ....
 +
-image::runai-ld_image21.png[runai ld image21.]
+image:runai-ld_image21.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 .. 修补卷并将访问模式更新为 ReadWriteMany （在以下命令中将卷名称替换为您的）：
 +
@@ -602,7 +602,7 @@ runai submit-mpi
 输出应类似于以下示例：
 
 +
-image::runai-ld_image22.png[runai ld image22.]
+image:runai-ld_image22.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 .. 列出已提交的作业。
 +
@@ -610,7 +610,7 @@ image::runai-ld_image22.png[runai ld image22.]
 runai list jobs
 ....
 +
-image::runai-ld_image23.png[runai ld image23.]
+image:runai-ld_image23.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 .. 已提交作业日志：
 +
@@ -618,14 +618,14 @@ image::runai-ld_image23.png[runai ld image23.]
 runai logs dist-lane-detection-training
 ....
 +
-image::runai-ld_image24.png[runai ld image24.]
+image:runai-ld_image24.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 .. 查看 Run 中的培训作业： AI GUI （或 app.runai.ai): run ： AI Dashboard ，如下图所示。第一个图详细介绍了为分布在 AKS 三个节点上的分布式培训作业分配的三个 GPU ，以及第二个运行： AI 作业：
 +
-image::runai-ld_image25.png[runai ld image25.]
+image:runai-ld_image25.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
-image::runai-ld_image26.png[runai ld image26.]
+image:runai-ld_image26.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 .. 完成培训后，请检查创建的 NetApp Snapshot 副本，并将其与 run ： ai 作业链接在一起。
 +
@@ -633,7 +633,7 @@ image::runai-ld_image26.png[runai ld image26.]
 runai logs dist-lane-detection-training --tail 1
 ....
 +
-image::runai-ld_image27.png[runai ld image27.]
+image:runai-ld_image27.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 ....
@@ -661,7 +661,7 @@ cd ./lane-detection-SCNN-horovod
 ....
 . 修改 `restore-snaphot-vc.yaml` 并将 `dataSource` `name` 字段更新到要从中还原数据的 Snapshot 副本。您也可以更改要将数据还原到的 PVC 名称，在此示例中为其 `restored-tusimple` 。
 +
-image::runai-ld_image29.png[runai ld image29.]
+image:runai-ld_image29.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 使用 `restore-snapshot-vc.yaml` 创建新的 PVC 。
 +
@@ -672,7 +672,7 @@ kubectl create -f restore-snapshot-pvc.yaml
 输出应类似于以下示例：
 
 +
-image::runai-ld_image30.png[runai ld image30.]
+image:runai-ld_image30.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 如果您要使用刚刚还原的数据进行培训，则作业提交将保持不变；在提交培训作业时，只需将 `vc_name` 替换为已还原的 `vc_name` ，如以下命令所示：
 +
@@ -708,35 +708,35 @@ runai submit-mpi
 
 下图显示了 1 个 GPU 分配和内存利用率。
 
-image::runai-ld_image31.png[runai ld image31]
+image:runai-ld_image31.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 下图显示了单节点 GPU 利用率。
 
-image::runai-ld_image32.png[runai ld image32.]
+image:runai-ld_image32.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 下图显示了单节点内存大小（ 16 GB ）。
 
-image::runai-ld_image33.png[runai ld image33]
+image:runai-ld_image33.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 下图显示了单节点 GPU 计数（ 1 ）。
 
-image::runai-ld_image34.png[Runai ld image34]
+image:runai-ld_image34.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 下图显示了单节点 GPU 分配（ % ）。
 
-image::runai-ld_image35.png[runai ld image35]
+image:runai-ld_image35.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 下图显示了三个节点上的三个 GPU — GPU 分配和内存。
 
-image::runai-ld_image36.png[runai ld image36]
+image:runai-ld_image36.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 下图显示了三个节点的三个 GPU 利用率（ % ）。
 
-image::runai-ld_image37.png[runai ld image37]
+image:runai-ld_image37.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 下图显示了三个节点的三个 GPU 内存利用率（ % ）。
 
-image::runai-ld_image38.png[runai ld image38]
+image:runai-ld_image38.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -752,11 +752,11 @@ image::runai-ld_image38.png[runai ld image38]
 
 . 在卷页面上，右键单击要更改其服务级别的卷。选择更改池。
 +
-image::runai-ld_image39.png[runai ld image39]
+image:runai-ld_image39.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在更改池窗口中，选择要将卷移动到的容量池。然后，单击确定。
 +
-image::runai-ld_image40.png[runai ld image40]
+image:runai-ld_image40.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 

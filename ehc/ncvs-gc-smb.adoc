@@ -45,7 +45,7 @@ NOTE: 要创建PTR条目、DNS服务器上必须存在Cloud Volumes Service 实�
 
 在Active Directory中、这些是Cloud Volumes Service生成的SPN条目：
 
-image::ncvs-gc-image6.png[NVS GC映像6.]
+image:ncvs-gc-image6.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 这是DNS正向/反向查找结果：
 
@@ -71,7 +71,7 @@ Address:  10. xxx.0. x
 
 如果要为SMB共享路径创建别名、可以利用DNS中的CNAME记录。例如、如果您要使用名称`\\cifs`来访问共享、而不是`\\cvs-east- 433d.cvsdema.local`、但您仍要使用Kerberos身份验证、则DNS中指向现有A/AAAA记录的CNAME以及添加到现有计算机帐户的其他SPN可提供Kerberos访问。
 
-image::ncvs-gc-image7.png[NVS GC映像7]
+image:ncvs-gc-image7.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 这是添加CNAME后生成的DNS正向查找结果：
 
@@ -85,11 +85,11 @@ Aliases:  cifs.cvsdemo.local
 ....
 这是添加新SPN后生成的SPN查询：
 
-image::ncvs-gc-image8.png[NVS GC映像8.]
+image:ncvs-gc-image8.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 在数据包捕获中、我们可以使用与CNAME绑定的SPN查看会话设置请求。
 
-image::ncvs-gc-image9.png[NVS GC映像9]
+image:ncvs-gc-image9.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -148,9 +148,9 @@ NTFS权限由Windows SMB客户端控制。
 
 例如、如果仅允许用户读取Cloud Volumes Service 卷文件ACL、则即使共享ACL设置为"具有完全控制的所有人"、也会拒绝用户访问创建文件和文件夹、如下图所示。
 
-image::ncvs-gc-image10.png[NVS GC映像10]
+image:ncvs-gc-image10.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-image::ncvs-gc-image11.png[NVS GC映像11]
+image:ncvs-gc-image11.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 要获得最佳安全性结果、请执行以下操作：
 
@@ -172,7 +172,7 @@ image::ncvs-gc-image11.png[NVS GC映像11]
 * *使Snapshot目录可见(可用于CVS-Performance和CVS-SW)。*此选项控制SMB客户端是否可以访问SMB共享中的Snapshot目录(`\\server\share\~snapshot`和/或先前版本选项卡)。默认设置不会选中、这意味着卷默认隐藏和禁止访问`~snapshot`目录、并且卷的"先前版本"选项卡中不会显示任何Snapshot副本。
 
 
-image::ncvs-gc-image12.png[NVS GC映像12]
+image:ncvs-gc-image12.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 出于安全原因、性能原因(从AV扫描中隐藏这些文件夹)或偏好、可能需要向最终用户隐藏Snapshot副本。Cloud Volumes Service 快照是只读的、因此、即使这些快照可见、最终用户也无法删除或修改Snapshot目录中的文件。创建Snapshot副本时对文件或文件夹的文件权限将适用。如果文件或文件夹在Snapshot副本之间的权限发生变化、则所做的更改也会应用于Snapshot目录中的文件或文件夹。用户和组可以根据权限访问这些文件或文件夹。虽然无法删除或修改Snapshot目录中的文件、但可以从Snapshot目录中复制文件或文件夹。
 
@@ -202,11 +202,11 @@ Cloud Volumes Service SMB服务器与常规Windows SMB服务器具有类似的�
 
 将用户添加到安全权限用户时、系统会为该用户授予SeSecurityPrivilege、这在某些应用程序使用情形下非常有用、例如 https://docs.netapp.com/us-en/ontap/smb-hyper-v-sql/add-sesecurityprivilege-user-account-task.html["SMB共享上的SQL Server"^]。
 
-image::ncvs-gc-image13.png[NVS GC映像13.]
+image:ncvs-gc-image13.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 您可以使用适当的权限通过MMC查看Cloud Volumes Service 本地组成员资格。下图显示了已使用Cloud Volumes Service 控制台添加的用户。
 
-image::ncvs-gc-image14.png[NVS GC映像14.]
+image:ncvs-gc-image14.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 下表显示了默认BUILTIN组的列表以及默认添加的用户/组。
 
@@ -232,9 +232,9 @@ image::ncvs-gc-image14.png[NVS GC映像14.]
 
 您可以在MMC窗口中查看本地用户和组(以及组成员)、但不能在此控制台中添加或删除对象或更改组成员资格。默认情况下、只有域管理员组和管理员才会添加到Cloud Volumes Service 中的BUILTIN\Administrators组。目前、您无法修改此设置。
 
-image::ncvs-gc-image15.png[NVS GC映像15]
+image:ncvs-gc-image15.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-image::ncvs-gc-image16.png[NVS GC映像16.]
+image:ncvs-gc-image16.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -250,9 +250,9 @@ image::ncvs-gc-image16.png[NVS GC映像16.]
 
 请记住、每个区域仅允许一个Active Directory连接。
 
-image::ncvs-gc-image17.png[NCVS GC映像17.]
+image:ncvs-gc-image17.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-image::ncvs-gc-image18.png[NVS GC映像18.]
+image:ncvs-gc-image18.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 下表列出了MMC支持/不支持的功能。
 

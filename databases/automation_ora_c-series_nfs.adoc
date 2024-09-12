@@ -54,7 +54,7 @@ NetApp AFF C系列是一款容量闪存存储、可使统一存储更易于访�
 
 === 架构
 
-image::automation_ora_c-series_nfs_archit.png[此图详细展示了AWS公共云中使用iSCSI和ASM的Oracle部署配置。]
+image:automation_ora_c-series_nfs_archit.png["此图详细展示了AWS公共云中使用iSCSI和ASM的Oracle部署配置。"]
 
 
 
@@ -182,32 +182,23 @@ installer_archives:
 
 . 登录到ONTAP系统管理器、查看在首次安装ONTAP集群后、是否已为广播域配置了正确分配给每个域的以太网端口。通常、集群应有广播域、管理应有广播域、数据等工作负载应有广播域。
 +
-image::automation_ora_c-series_nfs_net_01.png[此图提供了c系列控制器配置的屏幕截图]
+image:automation_ora_c-series_nfs_net_01.png["此图提供了c系列控制器配置的屏幕截图"]
 
 . 在"network - Ethernet Ports"(网络-以太网端口 `Link Aggregate Group` 创建LACP链路聚合组端口a0a、以便在聚合组端口中的成员端口之间实现负载平衡和故障转移。C400控制器上提供了4个数据端口—e0e、e0f、e0g和e0h。
 +
-image::automation_ora_c-series_nfs_net_02.png[此图提供了c系列控制器配置的屏幕截图]
+image:automation_ora_c-series_nfs_net_02.png["此图提供了c系列控制器配置的屏幕截图"]
 
 . 选择组中的以太网端口、 `LACP` 对于模式、和 `Port` 用于负载分布。
 +
-image::automation_ora_c-series_nfs_net_03.png[此图提供了c系列控制器配置的屏幕截图]
+image:automation_ora_c-series_nfs_net_03.png["此图提供了c系列控制器配置的屏幕截图"]
 
 . 验证已创建的LACP端口a0a和广播域 `Data` 正在LACP端口上运行。
 +
-image::automation_ora_c-series_nfs_net_04.png[此图提供了c系列控制器配置的屏幕截图]
-
-+
-image::automation_ora_c-series_nfs_net_05.png[此图提供了c系列控制器配置的屏幕截图]
+image:automation_ora_c-series_nfs_net_04.png["此图提供了c系列控制器配置的屏幕截图"] image:automation_ora_c-series_nfs_net_05.png["此图提供了c系列控制器配置的屏幕截图"]
 
 . from `Ethernet Ports`下、单击 `VLAN` 在每个控制器节点上为采用NFS协议的Oracle工作负载添加VLAN。
 +
-image::automation_ora_c-series_nfs_net_06.png[此图提供了c系列控制器配置的屏幕截图]
-
-+
-image::automation_ora_c-series_nfs_net_07.png[此图提供了c系列控制器配置的屏幕截图]
-
-+
-image::automation_ora_c-series_nfs_net_08.png[此图提供了c系列控制器配置的屏幕截图]
+image:automation_ora_c-series_nfs_net_06.png["此图提供了c系列控制器配置的屏幕截图"] image:automation_ora_c-series_nfs_net_07.png["此图提供了c系列控制器配置的屏幕截图"] image:automation_ora_c-series_nfs_net_08.png["此图提供了c系列控制器配置的屏幕截图"]
 
 . 通过ssh从集群管理IP登录到C系列控制器、以验证是否已正确配置网络故障转移组。ONTAP会自动创建和管理故障转移组。
 +
@@ -238,42 +229,39 @@ HCG-NetApp-C400-E9U9
 ....
 . from `STORAGE - Storage VMs`下、单击+Add为Oracle创建SVM。
 +
-image::automation_ora_c-series_nfs_svm_01.png[此图提供了c系列控制器配置的屏幕截图]
+image:automation_ora_c-series_nfs_svm_01.png["此图提供了c系列控制器配置的屏幕截图"]
 
 . 为Oracle SVM命名、请选中 `Enable NFS` 和 `Allow NFS client access`。
 +
-image::automation_ora_c-series_nfs_svm_02.png[此图提供了c系列控制器配置的屏幕截图]
+image:automation_ora_c-series_nfs_svm_02.png["此图提供了c系列控制器配置的屏幕截图"]
 
 . 添加NFS导出策略 `Default` 规则。
 +
-image::automation_ora_c-series_nfs_svm_03.png[此图提供了c系列控制器配置的屏幕截图]
+image:automation_ora_c-series_nfs_svm_03.png["此图提供了c系列控制器配置的屏幕截图"]
 
 . 在中 `NETWORK INTERFACE`下，在每个节点上填写NFS lf地址的IP地址。
 +
-image::automation_ora_c-series_nfs_svm_04.png[此图提供了c系列控制器配置的屏幕截图]
+image:automation_ora_c-series_nfs_svm_04.png["此图提供了c系列控制器配置的屏幕截图"]
 
 . 验证适用于Oracle的SVM是否已启动/正在运行、以及NFS Lifs状态是否为活动。
 +
-image::automation_ora_c-series_nfs_svm_05.png[此图提供了c系列控制器配置的屏幕截图]
-
-+
-image::automation_ora_c-series_nfs_svm_06.png[此图提供了c系列控制器配置的屏幕截图]
+image:automation_ora_c-series_nfs_svm_05.png["此图提供了c系列控制器配置的屏幕截图"] image:automation_ora_c-series_nfs_svm_06.png["此图提供了c系列控制器配置的屏幕截图"]
 
 . from `STORAGE-Volumes` 用于为Oracle数据库添加NFS卷的选项卡。
 +
-image::automation_ora_c-series_nfs_vol_01.png[此图提供了c系列控制器配置的屏幕截图]
+image:automation_ora_c-series_nfs_vol_01.png["此图提供了c系列控制器配置的屏幕截图"]
 
 . 为卷命名、分配容量和性能级别。
 +
-image::automation_ora_c-series_nfs_vol_02.png[此图提供了c系列控制器配置的屏幕截图]
+image:automation_ora_c-series_nfs_vol_02.png["此图提供了c系列控制器配置的屏幕截图"]
 
 . 在中 `Access Permission`下，选择从上一步创建的默认策略。取消选中 `Enable Snapshot Copies` 因为我们更喜欢使用SnapCenter创建应用程序一致的快照。
 +
-image::automation_ora_c-series_nfs_vol_03.png[此图提供了c系列控制器配置的屏幕截图]
+image:automation_ora_c-series_nfs_vol_03.png["此图提供了c系列控制器配置的屏幕截图"]
 
 . 为每个数据库服务器创建三个数据库卷：SERVER_NAME_u01 -二进制、SERVER_NAME_u02 -数据、SERVER_NAME_u03 -日志。
 +
-image::automation_ora_c-series_nfs_vol_04.png[此图提供了c系列控制器配置的屏幕截图]
+image:automation_ora_c-series_nfs_vol_04.png["此图提供了c系列控制器配置的屏幕截图"]
 
 +
 
@@ -665,13 +653,7 @@ DIRNAME
 ....
 . 登录到Oracle Enterprise Manager Express以验证数据库。
 +
-image::automation_ora_c-series_nfs_em_01.png[此图提供Oracle Enterprise Manager Express的登录屏幕]
-
-+
-image::automation_ora_c-series_nfs_em_02.png[此图提供了Oracle Enterprise Manager Express中的容器数据库视图]
-
-+
-image::automation_ora_c-series_nfs_em_03.png[此图提供了Oracle Enterprise Manager Express中的容器数据库视图]
+image:automation_ora_c-series_nfs_em_01.png["此图提供Oracle Enterprise Manager Express的登录屏幕"] image:automation_ora_c-series_nfs_em_02.png["此图提供了Oracle Enterprise Manager Express中的容器数据库视图"] image:automation_ora_c-series_nfs_em_03.png["此图提供了Oracle Enterprise Manager Express中的容器数据库视图"]
 
 
 

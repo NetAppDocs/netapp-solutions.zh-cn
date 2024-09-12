@@ -60,12 +60,12 @@ volume=sourceVolumeName
 * `igiio/NetApp.` 用于处理 ML 任务。
 
 
-image::mlrun_image13.png[milrun image13.]
+image:mlrun_image13.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 * `NetApp/ 渠道` 。包含用于处理 NetApp Snapshot 副本的实用程序。
 
 
-image::mlrun_image14.png[milrun image14.]
+image:mlrun_image14.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -98,7 +98,7 @@ image::mlrun_image14.png[milrun image14.]
 
 理想的结果是，通过管道根据数据的 Snapshot 副本训练模型，并部署模型进行推理。下图显示了已完成的 MLRun 管道的结构图。
 
-image::mlrun_image15.png[请执行以下操作]
+image:mlrun_image15.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -331,26 +331,26 @@ prep = data_prep.as_step(name='data-prep', handler='handler',params=params,
 |===
 您可以从上至下运行 `pipvip.ipynb` 。然后，您可以转到 Iguazio 信息板中的管道选项卡来监控进度，如 Iguazio 信息板管道选项卡中所示。
 
-image::mlrun_image16.png[milrun image16.]
+image:mlrun_image16.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 由于我们在每次运行中都记录了训练步骤的准确性，因此我们在每个实验中都有一个准确性记录，如训练准确性记录所示。
 
-image::mlrun_image17.png[milrun image17.]
+image:mlrun_image17.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 如果选择 Snapshot 步骤，则可以看到用于运行此实验的 Snapshot 副本的名称。
 
-image::mlrun_image18.png[milrun image18]
+image:mlrun_image18.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 所述步骤具有可视化项目，可用于浏览我们使用的指标。您可以展开以查看完整图，如下图所示。
 
-image::mlrun_image19.png[milrun image19]
+image:mlrun_image19.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 此外， MLRun API 数据库还会跟踪按项目组织的每个运行的输入，输出和项目。下图显示了每个运行的输入，输出和项目示例。
 
-image::mlrun_image20.png[mrunimage20]
+image:mlrun_image20.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 对于每个作业，我们会存储更多详细信息。
 
-image::mlrun_image21.png[请执行以下操作：1.]
+image:mlrun_image21.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 有关 MLRun 的信息比本文档中介绍的信息更多。可以将 AL 项目（包括步骤和功能的定义）保存到 API 数据库中，并进行版本控制，也可以单独调用或作为完整项目调用。此外，还可以保存项目并将其推送到 Git 以供日后使用。我们建议您在中了解更多信息 https://github.com/mlrun/mlrun["MLRun GitHub 站点"^]。

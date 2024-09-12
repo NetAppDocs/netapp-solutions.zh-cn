@@ -1,0 +1,37 @@
+---
+sidebar: sidebar 
+keywords: Cyber vault, cybervault, cyber-vault, data protection, security, ransomware, ONTAP, hardening 
+permalink: /cyber-vault/ontap-cyber-vault-terminology.html 
+summary: 使用ONTAP术语的网络存储 
+---
+= 网络存储ONTAP术语
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+这些术语在网络存储架构中常用。
+
+*自主勒索软件保护(ARP)*—自主勒索软件保护(ARP)功能可通过NAS (NFS和SMB)环境中的工作负载分析、主动实时检测可能指示勒索软件攻击的异常活动并发出警告。如果怀疑发生攻击、ARP除了从计划的Snapshot副本中提供现有保护之外、还会创建新的Snapshot副本。有关详细信息、请参见link:../../ontap/anti-ransomware/index.html["有关自主防网络软件保护的ONTAP文档"^]
+
+*Airgap (逻辑)*—您可以利用将采用ONTAP的NetApp存储配置为逻辑气隙网络存储link:../../ontap/snaplock/commit-snapshot-copies-worm-concept.html["SnapLock Compliance到WORM保护Snapshot副本"^]
+
+*Airgap (物理)*—物理Airgap系统与其没有网络连接。使用磁带备份、您可以将映像移动到其他位置。SnapLock Compliance逻辑气隙与物理气隙系统一样坚固。
+
+*Batton host*—隔离网络上的专用计算机，配置为可抵御攻击。
+
+*不可变Snapshot副本*—无一例外地无法修改的Snapshot副本(包括支持组织或对存储系统进行低级格式化的能力)。
+
+*不可删除的Snapshot副本*—无法无一例外地删除的Snapshot副本(包括支持组织或对存储系统进行低级格式化的能力)。
+
+*防篡改Snapshot副本*-防篡改Snapshot副本使用SnapLock Compliance时钟功能在指定时间段内锁定Snapshot副本。任何用户或NetApp支持人员都无法删除这些锁定的快照。如果卷受到勒索软件攻击、恶意软件、黑客、恶意管理员或意外删除的威胁、您可以使用锁定的Snapshot副本恢复数据。有关详细信息、请参见link:../../ontap/snaplock/snapshot-lock-concept.html["有关防篡改Snapshot副本的ONTAP文档"^]
+
+*WORM*- SnapLock是一款高性能合规性解决方案，适用于使用SnapLock存储保留文件的组织，这些文件未经修改，以满足法规和监管要求。有关详细信息，请参见link:../../ontap/snaplock/["有关SnapLock的ONTAP文档"^]。
+
+* SnapMirror *- SnapMirror是一种灾难恢复复制技术，旨在高效复制数据。SnapMirror可以创建镜像(或数据的精确副本)、存储(具有较长Snapshot副本保留时间的数据副本)或同时创建这两者到二级系统、内部环境或云中。这些副本可用于多种不同的用途、例如灾难、突发到云或网络存储(在使用存储策略并锁定存储时)。有关详细信息、请参见link:../../ontap/concepts/snapmirror-disaster-recovery-data-transfer-concept.html["有关SnapMirror的ONTAP文档"^]
+
+* SnapVault *-在ONTAP 9™3中，SnapVault已弃用，取而代之的是使用存储或镜像存储策略配置SnapMirror。这一术语虽然仍在使用，但也已折旧。有关详细信息，请参见link:../../ontap/concepts/snapvault-archiving-concept.html["有关SnapVault的ONTAP文档"^]。

@@ -48,32 +48,32 @@ Azure NetApp Files 和 Azure VMware 解决方案必须位于同一 Azure 区域�
 有关详细步骤，请参见 link:https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-create-netapp-account["Azure NetApp Files 共享"]。此页面将引导您逐步完成此过程。
 
 +
-image::azure-anf-guest-1.png[Azure和子系统1]
+image:azure-anf-guest-1.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 创建 NetApp 帐户后，使用所需的服务级别和大小设置容量池。
 +
 有关详细信息，请参见 link:https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-set-up-capacity-pool["设置容量池"]。
 
 +
-image::azure-anf-guest-2.png[Azure和子系统2]
+image:azure-anf-guest-2.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 为 Azure NetApp Files 配置委派子网，并在创建卷时指定此子网。有关创建委派子网的详细步骤，请参见 link:https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-delegate-subnet["Delegate a subnet to Azure NetApp Files"]。
 +
-image::azure-anf-guest-3.png[Azure和子系统3]
+image:azure-anf-guest-3.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 使用容量池刀片下的卷刀片添加 SMB 卷。确保在创建 SMB 卷之前已配置 Active Directory 连接器。
 +
-image::azure-anf-guest-4.png[Azure和子系统4.]
+image:azure-anf-guest-4.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 单击查看 + 创建以创建 SMB 卷。
 +
 如果应用程序是 SQL Server ，则启用 SMB 持续可用性。
 
 +
-image::azure-anf-guest-5.png[Azure和子系统5]
+image:azure-anf-guest-5.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
-image::azure-anf-guest-6.png[Azure和子系统6]
+image:azure-anf-guest-6.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 要了解有关按大小或配额显示的 Azure NetApp Files 卷性能的详细信息，请参见 link:https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-performance-considerations["Azure NetApp Files 的性能注意事项"]。
@@ -83,14 +83,14 @@ image::azure-anf-guest-6.png[Azure和子系统6]
 要完成此操作，请从 Azure 门户中单击卷刀片，然后选择要挂载的卷并访问挂载说明。复制路径并使用映射网络驱动器选项将卷挂载到 Azure VMware 解决方案 SDDC 上运行的虚拟机上。
 
 +
-image::azure-anf-guest-7.png[Azure和子系统7]
+image:azure-anf-guest-7.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
-image::azure-anf-guest-8.png[Azure和子系统8.]
+image:azure-anf-guest-8.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 要在 Azure VMware 解决方案 SDDC 上运行的 Linux VM 上挂载 NFS 卷，请使用相同的过程。使用卷重新调整或动态服务级别功能来满足工作负载需求。
 +
-image::azure-anf-guest-9.png[Azure和子系统9.]
+image:azure-anf-guest-9.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 有关详细信息，请参见 link:https://docs.microsoft.com/en-us/azure/azure-netapp-files/dynamic-change-volume-service-level["动态更改卷的服务级别"]。
@@ -126,47 +126,47 @@ NOTE: 使用 ... link:https://cloud.netapp.com/cvo-sizer["Cloud Volumes ONTAP �
 
 . 登录到 NetApp Cloud Central —此时将显示 Fabric View 屏幕。找到 Cloud Volumes ONTAP 选项卡，然后选择转到 Cloud Manager 。登录后，将显示 " 画布 " 屏幕。
 +
-image::azure-cvo-guest-1.png[Azure CVO子系统1]
+image:azure-cvo-guest-1.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在 Cloud Manager 主页上，单击添加工作环境，然后选择 Microsoft Azure 作为云以及系统配置的类型。
 +
-image::azure-cvo-guest-2.png[Azure CVO子系统2]
+image:azure-cvo-guest-2.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在创建第一个 Cloud Volumes ONTAP 工作环境时， Cloud Manager 会提示您部署连接器。
 +
-image::azure-cvo-guest-3.png[Azure CVO子系统3]
+image:azure-cvo-guest-3.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 创建连接器后，更新详细信息和凭据字段。
 +
-image::azure-cvo-guest-4.png[Azure CVO子系统4.]
+image:azure-cvo-guest-4.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 提供要创建的环境的详细信息，包括环境名称和管理员凭据。为 Azure 环境添加资源组标记作为可选参数。完成后，单击 Continue 。
 +
-image::azure-cvo-guest-5.png[Azure CVO子系统5.]
+image:azure-cvo-guest-5.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 为Cloud Volumes ONTAP部署选择附加服务、包括BlueXP分类、BlueXP备份和恢复以及Cloud Insights。选择服务，然后单击继续。
 +
-image::azure-cvo-guest-6.png[Azure CVO子系统6.]
+image:azure-cvo-guest-6.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 配置 Azure 位置和连接。选择要使用的 Azure 区域，资源组， vNet 和子网。
 +
-image::azure-cvo-guest-7.png[Azure CVO子系统7]
+image:azure-cvo-guest-7.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 选择许可证选项：按需购买或自带许可证以使用现有许可证。在此示例中，使用按需购买选项。
 +
-image::azure-cvo-guest-8.png[Azure CVO子系统8.]
+image:azure-cvo-guest-8.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在可用于各种工作负载类型的多个预配置软件包之间进行选择。
 +
-image::azure-cvo-guest-9.png[Azure CVO子系统9.]
+image:azure-cvo-guest-9.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 接受有关激活 Azure 资源支持和分配的两个协议。要创建 Cloud Volumes ONTAP 实例，请单击 " 转到 " 。
 +
-image::azure-cvo-guest-10.png[Azure CVO子系统10.]
+image:azure-cvo-guest-10.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 配置 Cloud Volumes ONTAP 后，它将在 " 画布 " 页面的工作环境中列出。
 +
-image::azure-cvo-guest-11.png[Azure CVO子系统11.]
+image:azure-cvo-guest-11.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -176,23 +176,23 @@ image::azure-cvo-guest-11.png[Azure CVO子系统11.]
 ====
 . 准备好工作环境后，请确保为 CIFS 服务器配置了适当的 DNS 和 Active Directory 配置参数。要创建 SMB 卷，必须执行此步骤。
 +
-image::azure-cvo-guest-20.png[Azure CVO子系统20.]
+image:azure-cvo-guest-20.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 创建 SMB 卷的过程非常简单。选择要创建卷的 CVO 实例，然后单击创建卷选项。选择适当的大小， Cloud Manager 选择包含的聚合或使用高级分配机制将其放置在特定聚合上。在此演示中，选择 SMB 作为协议。
 +
-image::azure-cvo-guest-21.png[Azure CVO子系统21.]
+image:azure-cvo-guest-21.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 配置卷后，卷将显示在卷窗格下。由于已配置 CIFS 共享，因此请为用户或组授予对文件和文件夹的权限，并验证这些用户是否可以访问此共享并创建文件。如果从内部环境复制卷，则不需要执行此步骤，因为文件和文件夹权限均会在 SnapMirror 复制过程中保留。
 +
-image::azure-cvo-guest-22.png[Azure CVO子系统22.]
+image:azure-cvo-guest-22.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 创建卷后，使用 mount 命令从 Azure VMware 解决方案 SDDC 主机上运行的虚拟机连接到共享。
 . 复制以下路径并使用映射网络驱动器选项将卷挂载到 Azure VMware 解决方案 SDDC 上运行的虚拟机上。
 +
-image::azure-cvo-guest-23.png[Azure CVO子系统23.]
+image:azure-cvo-guest-23.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
-image::azure-cvo-guest-24.png[Azure CVO子系统24]
+image:azure-cvo-guest-24.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -205,7 +205,7 @@ image::azure-cvo-guest-24.png[Azure CVO子系统24]
 . 在 " 画布 " 页面上，双击 Cloud Volumes ONTAP 工作环境以创建和管理卷。
 . 单击 "Add Volume" （添加卷） >"New Volume" （新卷），然后选择 "iSCSI" ，然后单击 "Create Initiator Group" （单击 Continue （继续）。
 +
-image::azure-cvo-guest-30.png[Azure CVO子系统30.]
+image:azure-cvo-guest-30.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 配置卷后，选择卷，然后单击目标 IQN 。要复制 iSCSI 限定名称（ IQN ），请单击复制。设置从主机到 LUN 的 iSCSI 连接。
 +
@@ -221,7 +221,7 @@ image::azure-cvo-guest-30.png[Azure CVO子系统30.]
 * 注： * Windows 主机必须与集群中的每个节点建立 iSCSI 连接。原生 DSM 会选择要使用的最佳路径。
 
 +
-image::azure-cvo-guest-31.png[Azure CVO子系统31]
+image:azure-cvo-guest-31.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -235,7 +235,7 @@ Storage Virtual Machine （ SVM ）上的 LUN 在 Windows 主机中显示为磁�
 . 单击操作 > 重新扫描磁盘。
 
 
-image::azure-cvo-guest-32.png[Azure CVO子系统32.]
+image:azure-cvo-guest-32.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 当新 LUN 首次由 Windows 主机访问时，它没有分区或文件系统。初始化 LUN ；也可以通过完成以下步骤使用文件系统格式化 LUN ：
 
@@ -244,8 +244,8 @@ image::azure-cvo-guest-32.png[Azure CVO子系统32.]
 . 按照向导中的说明进行操作。在此示例中，驱动器 E ：已挂载
 
 
-image::azure-cvo-guest-33.png[Azure CVO子系统33]
+image:azure-cvo-guest-33.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-image::azure-cvo-guest-34.png[Azure CVO子系统34]
+image:azure-cvo-guest-34.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 ====

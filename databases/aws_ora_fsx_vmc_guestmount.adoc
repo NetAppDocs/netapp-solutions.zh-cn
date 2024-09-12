@@ -55,7 +55,7 @@ NetApp公司Allen Cao、Niyaz Mohamed
 
 === 架构
 
-image::aws_ora_fsx_vmc_architecture.png[此图详细展示了AWS公共云中使用iSCSI和ASM的Oracle部署配置。]
+image:aws_ora_fsx_vmc_architecture.png["此图详细展示了AWS公共云中使用iSCSI和ASM的Oracle部署配置。"]
 
 
 
@@ -165,7 +165,7 @@ git clone https://github.com/NetApp-Automation/na_aws_fsx_ec2_deploy.git
 ....
 . 在AWS上的VMware SDDC中构建VM、用于托管要在VMC中部署的Oracle环境。在我们的演示中、我们构建了两个Linux VM作为Oracle数据库服务器、一个Windows服务器用于SnapCenter服务器、一个可选的Linux服务器作为可选的控制器、用于根据需要自动安装或配置Oracle。下面是用于解决方案验证的实验室环境的快照。
 +
-image::aws_ora_fsx_vmc_vm_08.png[显示VMC SDDC测试环境的屏幕截图。]
+image:aws_ora_fsx_vmc_vm_08.png["显示VMC SDDC测试环境的屏幕截图。"]
 
 . 此外、NetApp还提供了多个自动化工具包、以便在适用时运行Oracle部署和配置。请参见 link:index.html["DB自动化工具包"^] 有关详细信息 ...
 
@@ -1488,23 +1488,23 @@ NOTE: 如果Windows服务器部署在域环境中、请将域用户添加到Snap
 . 以安装用户身份通过HTTPS端口8846登录到SnapCenter UI、以配置适用于Oracle的SnapCenter。
 . 更新 `Hypervisor Settings` 在全局设置中。
 +
-image::aws_ora_fsx_vmc_snapctr_01.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_01.png["显示SnapCenter配置的屏幕截图。"]
 
 . 创建Oracle数据库备份策略。理想情况下、请创建一个单独的归档日志备份策略、以便更频繁地进行备份、从而最大限度地减少发生故障时的数据丢失。
 +
-image::aws_ora_fsx_vmc_snapctr_02.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_02.png["显示SnapCenter配置的屏幕截图。"]
 
 . 添加数据库服务器 `Credential` 用于通过SnapCenter访问DB VM。此凭据在Linux VM上应具有sudo权限、在Windows VM上应具有管理员权限。
 +
-image::aws_ora_fsx_vmc_snapctr_03.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_03.png["显示SnapCenter配置的屏幕截图。"]
 
 . 将FSx ONTAP存储集群添加到 `Storage Systems` 使用集群管理IP并通过fsxadmin用户ID进行身份验证。
 +
-image::aws_ora_fsx_vmc_snapctr_04.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_04.png["显示SnapCenter配置的屏幕截图。"]
 
 . 将VMC中的Oracle数据库VM添加到 `Hosts` 使用上一步中创建的服务器凭据6.
 +
-image::aws_ora_fsx_vmc_snapctr_05.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_05.png["显示SnapCenter配置的屏幕截图。"]
 
 
 
@@ -1522,27 +1522,27 @@ NOTE: 确保SnapCenter服务器名称可解析为数据库VM中的IP地址、而
 
 . 从 `Resources` 选项卡中、将虚拟机添加到SnapCenter后、系统会自动发现虚拟机上的任何数据库。最初、数据库状态显示为 `Not protected`。
 +
-image::aws_ora_fsx_vmc_snapctr_06.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_06.png["显示SnapCenter配置的屏幕截图。"]
 
 . 创建一个资源组、以按逻辑分组(如DB VM等)备份数据库 在此示例中、我们创建了一个ora_02_data组、用于对VM ora_02上的所有数据库执行完整的联机数据库备份。资源组ora_02_log仅在VM上执行归档日志备份。创建资源组还会定义执行备份的计划。
 +
-image::aws_ora_fsx_vmc_snapctr_07.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_07.png["显示SnapCenter配置的屏幕截图。"]
 
 . 单击也可以手动触发资源组备份 `Back up Now` 并使用资源组中定义的策略执行备份。
 +
-image::aws_ora_fsx_vmc_snapctr_08.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_08.png["显示SnapCenter配置的屏幕截图。"]
 
 . 可通过监控备份作业 `Monitor` 选项卡、单击正在运行的作业。
 +
-image::aws_ora_fsx_vmc_snapctr_09.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_09.png["显示SnapCenter配置的屏幕截图。"]
 
 . 成功备份后、数据库状态将显示作业状态和最近的备份时间。
 +
-image::aws_ora_fsx_vmc_snapctr_10.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_10.png["显示SnapCenter配置的屏幕截图。"]
 
 . 单击数据库以查看每个数据库的备份集。
 +
-image::aws_ora_fsx_vmc_snapctr_11.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_11.png["显示SnapCenter配置的屏幕截图。"]
 
 
 
@@ -1651,39 +1651,39 @@ ORA-00942: table or view does not exist
 ....
 . 从上一步创建的备份集中、记下日志备份的scn编号。单击 `Restore` 启动还原-恢复工作流。
 +
-image::aws_ora_fsx_vmc_snapctr_12.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_12.png["显示SnapCenter配置的屏幕截图。"]
 
 . 选择还原范围。
 +
-image::aws_ora_fsx_vmc_snapctr_13.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_13.png["显示SnapCenter配置的屏幕截图。"]
 
 . 选择从上次完整数据库备份到日志scn的恢复范围。
 +
-image::aws_ora_fsx_vmc_snapctr_14.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_14.png["显示SnapCenter配置的屏幕截图。"]
 
 . 指定要运行的任何可选预处理脚本。
 +
-image::aws_ora_fsx_vmc_snapctr_15.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_15.png["显示SnapCenter配置的屏幕截图。"]
 
 . 指定要运行的任何可选后处理脚本。
 +
-image::aws_ora_fsx_vmc_snapctr_16.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_16.png["显示SnapCenter配置的屏幕截图。"]
 
 . 根据需要发送作业报告。
 +
-image::aws_ora_fsx_vmc_snapctr_17.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_17.png["显示SnapCenter配置的屏幕截图。"]
 
 . 查看摘要、然后单击 `Finish` 启动还原和恢复。
 +
-image::aws_ora_fsx_vmc_snapctr_18.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_18.png["显示SnapCenter配置的屏幕截图。"]
 
 . 通过Oracle Restart网格控件、我们可以观察到、在恢复cdb3时、cdb4处于联机和可用状态。
 +
-image::aws_ora_fsx_vmc_snapctr_19.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_19.png["显示SnapCenter配置的屏幕截图。"]
 
 . from `Monitor` 选项卡中、打开作业以查看详细信息。
 +
-image::aws_ora_fsx_vmc_snapctr_20.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_20.png["显示SnapCenter配置的屏幕截图。"]
 
 . 从DB VM ora_02中、验证在成功恢复后是否已恢复丢弃的表。
 +
@@ -1754,39 +1754,39 @@ SQL>
 
 . 打开数据库cdb3备份列表。从所选的数据备份中、单击 `Clone` 用于启动数据库克隆工作流的按钮。
 +
-image::aws_ora_fsx_vmc_snapctr_21.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_21.png["显示SnapCenter配置的屏幕截图。"]
 
 . 将克隆数据库命名为SID。
 +
-image::aws_ora_fsx_vmc_snapctr_22.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_22.png["显示SnapCenter配置的屏幕截图。"]
 
 . 在VMC中选择一个VM作为目标数据库主机。主机上应已安装和配置相同版本的Oracle。
 +
-image::aws_ora_fsx_vmc_snapctr_23.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_23.png["显示SnapCenter配置的屏幕截图。"]
 
 . 在目标主机上选择正确的oracle_home、用户和组。保留默认凭据。
 +
-image::aws_ora_fsx_vmc_snapctr_24.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_24.png["显示SnapCenter配置的屏幕截图。"]
 
 . 更改克隆数据库参数以满足克隆数据库的配置或资源要求。
 +
-image::aws_ora_fsx_vmc_snapctr_25.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_25.png["显示SnapCenter配置的屏幕截图。"]
 
 . 选择恢复范围。 `Until Cancel` 将克隆恢复到备份集中最后一个可用日志文件。
 +
-image::aws_ora_fsx_vmc_snapctr_26.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_26.png["显示SnapCenter配置的屏幕截图。"]
 
 . 查看摘要并启动克隆作业。
 +
-image::aws_ora_fsx_vmc_snapctr_27.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_27.png["显示SnapCenter配置的屏幕截图。"]
 
 . 通过监控克隆作业的执行情况 `Monitor` 选项卡。
 +
-image::aws_ora_fsx_vmc_snapctr_28.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_28.png["显示SnapCenter配置的屏幕截图。"]
 
 . 克隆的数据库会立即注册到SnapCenter中。
 +
-image::aws_ora_fsx_vmc_snapctr_29.png[显示SnapCenter配置的屏幕截图。]
+image:aws_ora_fsx_vmc_snapctr_29.png["显示SnapCenter配置的屏幕截图。"]
 
 . 从DB VM ora_02中、克隆的数据库也会注册到Oracle Restart网格控件中、而丢弃的测试表会恢复到克隆的数据库cdb3tst中、如下所示。
 +

@@ -58,24 +58,15 @@ NOTE: 目前、只有来宾存储是将Cloud Volumes ONTAP (CVO)连接到AWS VMC
 
 . 使用现有或新创建的 VMware 凭据登录到 VMware Cloud Console 。
 +
-image::aws-config-1.png[AWS配置1]
+image:aws-config-1.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 配置 AWS 区域，部署和主机类型以及 SDDC 名称：
 +
-image::aws-config-2.png[AWS配置2]
+image:aws-config-2.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 连接到所需的 AWS 帐户并执行 AWS Cloud Formation 堆栈。
 +
-image::aws-config-3.png[AWS配置3]
-
-+
-image::aws-config-4.png[AWS配置4]
-
-+
-image::aws-config-5.png[AWS配置5]
-
-+
-image::aws-config-6.png[AWS配置6]
+image:aws-config-3.png["图中显示了输入/输出对话框或表示已写入内容"] image:aws-config-4.png["图中显示了输入/输出对话框或表示已写入内容"] image:aws-config-5.png["图中显示了输入/输出对话框或表示已写入内容"] image:aws-config-6.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 
@@ -83,25 +74,25 @@ NOTE: 此验证使用单主机配置。
 
 . 选择所需的 AWS VPC 以连接 VMC 环境。
 +
-image::aws-config-7.png[AWS配置7]
+image:aws-config-7.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 配置 VMC 管理子网；此子网包含 vCenter ， NSX 等 VMC 管理的服务。请勿选择与任何其他需要连接到 SDDC 环境的网络重叠的地址空间。最后，请遵循下面标注的 CIDR 大小建议。
 +
-image::aws-config-8.png[AWS配置8]
+image:aws-config-8.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 查看并确认 SDDC 配置，然后单击 Deploy the SDDC 。
 +
-image::aws-config-9.png[AWS配置9]
+image:aws-config-9.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 完成部署过程通常需要大约两个小时。
 
 +
-image::aws-config-10.png[AWS配置10]
+image:aws-config-10.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 完成后， SDDC 即可使用。
 +
-image::aws-config-11.png[AWS配置11]
+image:aws-config-11.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -116,42 +107,30 @@ image::aws-config-11.png[AWS配置11]
 
 . 完成 VMware Cloud 部署并连接到 AWS VPC 后，您必须将适用于 NetApp ONTAP 的 Amazon FSx 部署到新的 VPC 中，而不是原始连接的 VPC 中（请参见下面的屏幕截图）。如果在连接的 VPC 中部署了 FSX （ NFS 和 SMB 浮动 IP ），则无法访问它。请注意， Cloud Volumes ONTAP 等 iSCSI 端点在连接的 VPC 上运行正常。
 +
-image::aws-connect-fsx-1.png[AWS连接FSx 1]
+image:aws-connect-fsx-1.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在同一地区部署一个额外的 VPC ，然后将适用于 NetApp ONTAP 的 Amazon FSx 部署到新的 VPC 中。
 +
 通过在 VMware Cloud 控制台中配置 SDDC 组，可以使用所需的网络配置选项连接到部署了 FSX 的新 VPC 。在第 3 步中，验证是否已选中 " 为组配置 VMware Transit Connect 将在每个附件和数据传输中产生费用 " ，然后选择创建组。完成此过程可能需要几分钟时间。
 
 +
-image::aws-connect-fsx-2.png[AWS连接FSx 2]
-
-+
-image::aws-connect-fsx-3.png[AWS连接FSx 3]
-
-+
-image::aws-connect-fsx-4.png[AWS连接FSx 4.]
+image:aws-connect-fsx-2.png["图中显示了输入/输出对话框或表示已写入内容"] image:aws-connect-fsx-3.png["图中显示了输入/输出对话框或表示已写入内容"] image:aws-connect-fsx-4.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 将新创建的 VPC 附加到刚刚创建的 SDDC 组。选择外部 VPC 选项卡，然后按照进行操作 link:https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-operations/GUID-A3D03968-350E-4A34-A53E-C0097F5F26A9.html["连接外部 VPC 的说明"] 组。完成此过程可能需要 10 到 15 分钟。
 +
-image::aws-connect-fsx-5.png[AWS连接FSx 5]
-
-+
-image::aws-connect-fsx-6.png[AWS连接FSx 6]
+image:aws-connect-fsx-5.png["图中显示了输入/输出对话框或表示已写入内容"] image:aws-connect-fsx-6.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在外部 VPC 过程中，系统会通过 AWS 控制台通过资源访问管理器提示您访问新的共享资源。共享资源为 link:https://aws.amazon.com/transit-gateway["AWS 传输网关"] 由 VMware Transit Connect 管理。
 +
-image::aws-connect-fsx-7.png[AWS连接FSx 7]
-
-+
-image::aws-connect-fsx-8.png[AWS连接FSx 8]
+image:aws-connect-fsx-7.png["图中显示了输入/输出对话框或表示已写入内容"] image:aws-connect-fsx-8.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 创建传输网关附件。
 +
-image::aws-connect-fsx-9.png[AWS连接FSx 9]
+image:aws-connect-fsx-9.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 返回 VMC 控制台，接受 VPC 连接。完成此过程大约需要 10 分钟。
 +
-image::aws-connect-fsx-10.png[AWS连接FSx 10]
+image:aws-connect-fsx-10.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在外部 VPC 选项卡中，单击路由列中的编辑图标，然后添加以下所需的路由：
 +
@@ -159,17 +138,17 @@ image::aws-connect-fsx-10.png[AWS连接FSx 10]
 ** Cloud Volumes ONTAP 的浮动 IP 范围的路由（如果适用）。
 ** 新创建的外部 VPC 地址空间的路由。
 +
-image::aws-connect-fsx-11.png[AWS连接FSx 11]
+image:aws-connect-fsx-11.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
 . 最后，允许双向流量 link:https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-operations/GUID-DE330202-D63D-408A-AECF-7CDC6ADF7EAC.html["防火墙规则"] 用于访问 FSX/CVO 。请按照以下说明操作 link:https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-operations/GUID-DE330202-D63D-408A-AECF-7CDC6ADF7EAC.html["详细步骤"] SDDC 工作负载连接的计算网关防火墙规则。
 +
-image::aws-connect-fsx-12.png[AWS连接FSx 12]
+image:aws-connect-fsx-12.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 为管理和计算网关配置防火墙组后，可以按如下方式访问 vCenter ：
 +
-image::aws-connect-fsx-13.png[AWS连接FSx 13]
+image:aws-connect-fsx-13.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 

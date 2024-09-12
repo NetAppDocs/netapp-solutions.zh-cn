@@ -47,7 +47,7 @@ summary:
 
 ONTAP是NetApp行业领先的存储解决方案、无论您是通过SAN还是NAS协议访问、它都能提供统一存储。3-2-1备份策略可确保内部数据在多种介质类型上受到保护、NetApp提供的平台从高速闪存到低成本介质不等。
 
-image::bxp-scv-hybrid-40.png[ONTAP数据存储]
+image:bxp-scv-hybrid-40.png["ONTAP数据存储"]
 
 有关NetApp所有硬件平台的详细信息、请查看 https://www.netapp.com/data-storage/["NetApp数据存储"]。
 
@@ -72,15 +72,15 @@ BlueXP备份和恢复是一款基于云的数据管理工具、可为内部和�
 
 *扇出拓扑*—适用于VMware vSphere的SnapCenter插件启动备份时，会立即创建本地快照。然后、SCV启动SnapMirror操作、将最新的快照复制到二级ONTAP集群。在BlueXP备份和恢复中、策略会将主ONTAP集群指定为要传输到所选云提供商中的对象存储的数据Snapshot副本的源。
 
-image::bxp-scv-hybrid-01.png[扇出拓扑,800,418]
+image:bxp-scv-hybrid-01.png["扇出拓扑、800、418"]
 
 *级联拓扑*–使用SCV创建主数据副本和二级数据副本与上述扇出拓扑相同。但是、这一次在BlueXP备份和恢复中创建一个策略、指定对象存储备份将源自二级ONTAP集群。
 
-image::bxp-scv-hybrid-02.png[级联拓扑]
+image:bxp-scv-hybrid-02.png["级联拓扑"]
 
 BlueXP备份和恢复可以为内部ONTAP快照创建备份副本、并将其备份到AWS Glacie、Azure Blb和GCP归档存储。
 
-image::bxp-scv-hybrid-03.png[级联拓扑]
+image:bxp-scv-hybrid-03.png["级联拓扑"]
 
 此外、您还可以使用NetApp StorageGRID作为对象存储备份目标。有关StorageGRID的详细信息、请参阅 https://www.netapp.com/data-storage/storagegrid["StorageGRID登录页面"]。
 
@@ -133,7 +133,7 @@ image::bxp-scv-hybrid-03.png[级联拓扑]
 
 此解决方案 的测试/验证是在可能与最终部署环境匹配或可能不匹配的实验室中执行的。
 
-image::bxp-scv-hybrid-04.png[解决方案 架构图]
+image:bxp-scv-hybrid-04.png["解决方案 架构图"]
 
 
 
@@ -170,34 +170,34 @@ image::bxp-scv-hybrid-04.png[解决方案 架构图]
 
 . 将源(主) ONTAP存储系统拖放到目标(二级) ONTAP存储系统上。
 +
-image::bxp-scv-hybrid-41.png[拖放存储系统]
+image:bxp-scv-hybrid-41.png["拖放存储系统"]
 
 . 从显示的菜单中选择*复制*。
 +
-image::bxp-scv-hybrid-42.png[选择复制]
+image:bxp-scv-hybrid-42.png["选择复制"]
 
 . 在*目标对等设置*页面上、选择要用于存储系统之间连接的目标集群间Lifs。
 +
-image::bxp-scv-hybrid-43.png[选择集群间的"Lif"]
+image:bxp-scv-hybrid-43.png["选择集群间的\"Lif\""]
 
 . 在*目标卷名称*页面上、首先选择源卷、然后填写目标卷名称并选择目标SVM和聚合。单击“*下一步*”继续。
 +
-image::bxp-scv-hybrid-44.png[选择源卷]
+image:bxp-scv-hybrid-44.png["选择源卷"]
 
 +
-image::bxp-scv-hybrid-45.png[目标卷详细信息]
+image:bxp-scv-hybrid-45.png["目标卷详细信息"]
 
 . 选择进行复制的最大传输速率。
 +
-image::bxp-scv-hybrid-46.png[最大传输速率]
+image:bxp-scv-hybrid-46.png["最大传输速率"]
 
 . 选择用于确定二级备份的保留计划的策略。此策略可以事先创建(请参见下面的*创建快照保留策略*步骤中的手动过程)，也可以在创建后根据需要进行更改。
 +
-image::bxp-scv-hybrid-47.png[选择保留策略]
+image:bxp-scv-hybrid-47.png["选择保留策略"]
 
 . 最后，查看所有信息，然后单击*go *按钮开始复制设置过程。
 +
-image::bxp-scv-hybrid-48.png[查看并继续]
+image:bxp-scv-hybrid-48.png["查看并继续"]
 
 
 
@@ -215,7 +215,7 @@ image::bxp-scv-hybrid-48.png[查看并继续]
 
 . 在ONTAP 系统管理器中、导航到"网络概述"页面、然后检索类型为"集群间"的IP地址、这些IP地址配置为与安装了FSX的AWS VPC进行通信。
 +
-image::dr-vmc-aws-image10.png[灾难恢复vmc AWS image10]
+image:dr-vmc-aws-image10.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 要使用命令行界面检索集群间IP地址、请运行以下命令：
 +
@@ -239,7 +239,7 @@ Confirm the passphrase:
 ....
 . 在源集群上、您可以使用ONTAP 系统管理器或命令行界面建立集群对等关系。在ONTAP 系统管理器中、导航到"保护">"概述"、然后选择"对等集群"。
 +
-image::dr-vmc-aws-image12.png[灾难恢复vmc AWS image12]
+image:dr-vmc-aws-image12.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在对等集群对话框中、填写所需信息：
 +
@@ -248,7 +248,7 @@ image::dr-vmc-aws-image12.png[灾难恢复vmc AWS image12]
 .. 输入目标ONTAP集群的集群间LIF IP地址。
 .. 单击启动集群对等以完成此过程。
 +
-image::dr-vmc-aws-image13.png[灾难恢复vmc AWS image13]
+image:dr-vmc-aws-image13.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -273,7 +273,7 @@ ONTAP-Dest::> vserver peer create -vserver DestSVM -peer-vserver Backup -peer-cl
 . 在源ONTAP 集群中、接受与ONTAP 系统管理器或命令行界面的对等关系。
 . 在ONTAP 系统管理器中、转到"保护">"概述"、然后在"Storage VM对等方"下选择"对等Storage VM"。
 +
-image::dr-vmc-aws-image15.png[灾难恢复vmc AWS image15]
+image:dr-vmc-aws-image15.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在对等Storage VM的对话框中、填写必填字段：
 +
@@ -281,7 +281,7 @@ image::dr-vmc-aws-image15.png[灾难恢复vmc AWS image15]
 ** 目标集群
 ** 目标Storage VM
 +
-image::dr-vmc-aws-image16.png[灾难恢复vmc AWS image16]
+image:dr-vmc-aws-image16.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 
@@ -301,7 +301,7 @@ NOTE: 在二级存储上、这些标签与与与目标卷关联的策略规则�
 
 以下示例显示了一个SnapMirror标签、该标签位于作为SQL Server数据库和日志卷每日备份策略一部分生成的所有快照上。
 
-image::dr-vmc-aws-image17.png[灾难恢复vmc AWS image17]
+image:dr-vmc-aws-image17.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 有关为SQL Server数据库创建SnapCenter 策略的详细信息、请参见 https://docs.netapp.com/us-en/snapcenter/protect-scsql/task_create_backup_policies_for_sql_server_databases.html["SnapCenter 文档"^]。
 
@@ -377,11 +377,11 @@ ONTAP-Dest::> snapmirror initialize -destination-path DestSVM:DestVol
 
 . 在适用于VMware vSphere的SnapCenter插件中，导航到左侧菜单中的*存储系统*，然后单击*Add*按钮。
 +
-image::bxp-scv-hybrid-05.png[存储系统]
+image:bxp-scv-hybrid-05.png["存储系统"]
 
 . 填写主ONTAP存储系统的凭据和平台类型，然后单击*Add*。
 +
-image::bxp-scv-hybrid-06.png[添加存储系统]
+image:bxp-scv-hybrid-06.png["添加存储系统"]
 
 . 对二级ONTAP存储系统重复此操作步骤。
 
@@ -398,11 +398,11 @@ image::bxp-scv-hybrid-06.png[添加存储系统]
 
 . 在适用于VMware vSphere的SnapCenter插件中、导航到左侧菜单中的*策略*、然后单击*创建*按钮。
 +
-image::bxp-scv-hybrid-07.png[策略]
+image:bxp-scv-hybrid-07.png["策略"]
 
 . 指定策略名称、保留期限、频率和复制选项以及快照标签。
 +
-image::bxp-scv-hybrid-08.png[创建策略]
+image:bxp-scv-hybrid-08.png["创建策略"]
 
 +
 
@@ -427,12 +427,12 @@ NOTE: Snapshot标签非常有用、因为它们可用于为复制到二级ONTAP�
 
 . 在适用于VMware vSphere的SnapCenter插件中、导航到左侧菜单中的*资源组*、然后单击*创建*按钮。
 +
-image::bxp-scv-hybrid-09.png[创建资源组]
+image:bxp-scv-hybrid-09.png["创建资源组"]
 
 . 在创建资源组向导中、输入组的名称和问题描述以及接收通知所需的信息。单击“*下一步*”
 . 在下一页上、选择要包含在备份作业中的数据存储库和虚拟机、然后单击*下一步*。
 +
-image::bxp-scv-hybrid-10.png[选择数据存储库和虚拟机]
+image:bxp-scv-hybrid-10.png["选择数据存储库和虚拟机"]
 
 +
 
@@ -440,7 +440,7 @@ NOTE: 您可以选择特定虚拟机或整个数据存储库。无论选择哪�
 
 . 为VMDK位于多个数据存储库上的VM选择跨数据存储库选项、然后单击*下一步*。
 +
-image::bxp-scv-hybrid-11.png[跨数据存储库]
+image:bxp-scv-hybrid-11.png["跨数据存储库"]
 
 +
 
@@ -448,7 +448,7 @@ NOTE: BlueXP备份和恢复目前不支持使用跨多个数据存储库的VMDK�
 
 . 在下一页中，选择要与资源组关联的策略，然后单击*Next*。
 +
-image::bxp-scv-hybrid-12.png[资源组策略]
+image:bxp-scv-hybrid-12.png["资源组策略"]
 
 +
 
@@ -456,7 +456,7 @@ NOTE: 使用BlueXP备份和恢复将SCV管理的快照备份到对象存储时�
 
 . 选择一个计划、以确定备份的运行时间。单击“*下一步*”。
 +
-image::bxp-scv-hybrid-13.png[资源组策略]
+image:bxp-scv-hybrid-13.png["资源组策略"]
 
 . 最后，查看摘要页，然后在*Finish (完成)*上完成资源组的创建。
 
@@ -470,11 +470,11 @@ image::bxp-scv-hybrid-13.png[资源组策略]
 . 在适用于VMware vSphere的SnapCenter插件中、导航到左侧菜单中的*资源组*。
 . 要启动备份作业，请选择所需的资源组，然后单击*立即运行*按钮。
 +
-image::bxp-scv-hybrid-14.png[运行备份作业]
+image:bxp-scv-hybrid-14.png["运行备份作业"]
 
 . 要监控备份作业，请导航至左侧菜单中的*Dashboard。在*近期工作活动*下，单击工作ID号以监视工作进度。
 +
-image::bxp-scv-hybrid-15.png[监控作业进度]
+image:bxp-scv-hybrid-15.png["监控作业进度"]
 
 
 
@@ -498,15 +498,15 @@ image::bxp-scv-hybrid-15.png[监控作业进度]
 
 . 从“画布”中选择*添加工作环境*开始。
 +
-image::bxp-scv-hybrid-16.png[添加工作环境]
+image:bxp-scv-hybrid-16.png["添加工作环境"]
 
 . 从所选位置中选择*内部*，然后单击*发现*按钮。
 +
-image::bxp-scv-hybrid-17.png[选择内部部署]
+image:bxp-scv-hybrid-17.png["选择内部部署"]
 
 . 填写ONTAP存储系统的凭据，然后单击*Discover (发现)*按钮以添加工作环境。
 +
-image::bxp-scv-hybrid-18.png[添加存储系统凭据]
+image:bxp-scv-hybrid-18.png["添加存储系统凭据"]
 
 
 
@@ -518,23 +518,23 @@ image::bxp-scv-hybrid-18.png[添加存储系统凭据]
 
 . 从BlueXP左侧菜单中选择*保护>备份和恢复>虚拟机*
 +
-image::bxp-scv-hybrid-19.png[选择虚拟机]
+image:bxp-scv-hybrid-19.png["选择虚拟机"]
 
 . 从虚拟机主屏幕访问*设置*下拉菜单并选择*适用于VMware vSphere的SnapCenter插件*。
 +
-image::bxp-scv-hybrid-20.png[设置下拉菜单]
+image:bxp-scv-hybrid-20.png["设置下拉菜单"]
 
 . 单击*注册*按钮、然后输入SnapCenter插件设备的IP地址和端口号以及vCenter管理设备的用户名和密码。单击*注册*按钮开始发现过程。
 +
-image::bxp-scv-hybrid-21.png[输入SCV和vCenter信息]
+image:bxp-scv-hybrid-21.png["输入SCV和vCenter信息"]
 
 . 可以通过作业监控选项卡监控作业进度。
 +
-image::bxp-scv-hybrid-22.png[查看作业进度]
+image:bxp-scv-hybrid-22.png["查看作业进度"]
 
 . 发现完成后、您将能够查看所有已发现的SCV设备中的数据存储库和虚拟机。
 +
-image::bxp-scv-hybrid-23.png[查看可用资源]
+image:bxp-scv-hybrid-23.png["查看可用资源"]
 
 
 
@@ -548,7 +548,7 @@ image::bxp-scv-hybrid-23.png[查看可用资源]
 
 . 从虚拟机的BlueXP备份和恢复主页中、访问*设置*下拉菜单并选择*策略*。
 +
-image::bxp-scv-hybrid-24.png[选择虚拟机]
+image:bxp-scv-hybrid-24.png["选择虚拟机"]
 
 . 单击*创建策略*以访问*为混合备份创建策略*窗口。
 +
@@ -557,7 +557,7 @@ image::bxp-scv-hybrid-24.png[选择虚拟机]
 .. 选择是从内部ONTAP主存储系统还是从二级存储系统获取备份
 .. (可选)指定备份分层到归档存储的时间期限、以节省更多成本。
 +
-image::bxp-scv-hybrid-25.png[创建备份策略]
+image:bxp-scv-hybrid-25.png["创建备份策略"]
 
 +
 
@@ -578,27 +578,27 @@ NOTE: 此处输入的SnapMirror标签用于标识要应用此策略的备份。�
 
 . 从虚拟机的BlueXP备份和恢复主页中，访问要备份的数据存储库的设置下拉列表，然后选择*Activate Backup*。
 +
-image::bxp-scv-hybrid-26.png[激活备份]
+image:bxp-scv-hybrid-26.png["激活备份"]
 
 . 分配要用于数据保护操作的策略，然后单击*Next*。
 +
-image::bxp-scv-hybrid-27.png[分配策略]
+image:bxp-scv-hybrid-27.png["分配策略"]
 
 . 如果先前已发现数据存储库和工作环境，则会在“*添加工作环境”页面上显示带有复选标记的数据存储库和工作环境。如果以前未发现工作环境、您可以在此处添加它。单击“*下一步*”继续。
 +
-image::bxp-scv-hybrid-28.png[添加工作环境]
+image:bxp-scv-hybrid-28.png["添加工作环境"]
 
 . 在*选择提供商*页面上单击AWS、然后单击*下一步*按钮继续。
 +
-image::bxp-scv-hybrid-29.png[选择云提供商]
+image:bxp-scv-hybrid-29.png["选择云提供商"]
 
 . 填写AWS的提供商专用凭据信息、包括要使用的AWS访问密钥和机密密钥、区域和归档层。此外、请为内部ONTAP存储系统选择ONTAP IP空间。单击“*下一步*”。
 +
-image::bxp-scv-hybrid-30.png[提供云提供凭据]
+image:bxp-scv-hybrid-30.png["提供云提供凭据"]
 
 . 最后，查看备份作业详细信息，然后单击*Activate Backup*按钮以启动数据存储库的数据保护。
 +
-image::bxp-scv-hybrid-31.png[查看并激活]
+image:bxp-scv-hybrid-31.png["查看并激活"]
 
 +
 
@@ -631,19 +631,19 @@ NetApp提供高度适应性的3-2-1策略、可对主存储、二级存储和对
 . 从vCenter Client导航到*清单>存储*、然后单击包含要还原的虚拟机的数据存储库。
 . 从*配置*选项卡单击*备份*以访问可用备份列表。
 +
-image::bxp-scv-hybrid-32.png[访问备份列表]
+image:bxp-scv-hybrid-32.png["访问备份列表"]
 
 . 单击备份以访问VM列表、然后选择要还原的VM。单击*Restore*。
 +
-image::bxp-scv-hybrid-33.png[选择要还原的虚拟机]
+image:bxp-scv-hybrid-33.png["选择要还原的虚拟机"]
 
 . 在还原向导中、选择还原整个虚拟机或特定VMDK。选择此选项可安装到原始位置或备用位置、并在还原后提供虚拟机名称和目标数据存储库。单击 * 下一步 * 。
 +
-image::bxp-scv-hybrid-34.png[提供还原详细信息]
+image:bxp-scv-hybrid-34.png["提供还原详细信息"]
 
 . 选择从主存储位置或二级存储位置进行备份。
 +
-image::bxp-scv-hybrid-35.png[选择主卷或二级卷]
+image:bxp-scv-hybrid-35.png["选择主卷或二级卷"]
 
 . 最后、查看备份作业的摘要、然后单击完成开始还原过程。
 
@@ -664,20 +664,20 @@ image::bxp-scv-hybrid-35.png[选择主卷或二级卷]
 
 . 导航到*保护>备份和恢复>虚拟机*，然后单击虚拟机以查看可还原的虚拟机列表。
 +
-image::bxp-scv-hybrid-36.png[VM的访问列表]
+image:bxp-scv-hybrid-36.png["VM的访问列表"]
 
 . 访问要还原的虚拟机的设置下拉菜单、然后选择
 +
-image::bxp-scv-hybrid-37.png[选择Restore from settings (从设置还原)]
+image:bxp-scv-hybrid-37.png["选择Restore from settings (从设置还原)"]
 
 . 选择要从中进行还原的备份，然后单击*Next*。
 +
-image::bxp-scv-hybrid-38.png[选择备份]
+image:bxp-scv-hybrid-38.png["选择备份"]
 
 . 查看备份作业的摘要，然后单击*Restore*以启动恢复过程。
 . 通过*作业监控*选项卡监控恢复作业的进度。
 +
-image::bxp-scv-hybrid-39.png[从作业监控选项卡查看还原]
+image:bxp-scv-hybrid-39.png["从作业监控选项卡查看还原"]
 
 
 

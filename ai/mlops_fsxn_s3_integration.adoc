@@ -41,11 +41,11 @@ Jian Jian (Ken)、NetApp高级数据和应用科学人员
 
 . 打开AWS控制台。在搜索面板中、搜索SageMaker并单击服务*亚马逊SageMaker *。
 +
-image::mlops_fsxn_s3_integration_0.png[打开AWS控制台]
+image:mlops_fsxn_s3_integration_0.png["打开AWS控制台"]
 
 . 打开“笔记本”选项卡下的“*笔记本实例*”，单击橙色按钮*创建笔记本实例*。
 +
-image::mlops_fsxn_s3_integration_1.png[AWS SageMaker笔记本实例控制台]
+image:mlops_fsxn_s3_integration_1.png["AWS SageMaker笔记本实例控制台"]
 
 . 在创建页面中、
 输入*笔记本实例名称*
@@ -53,7 +53,7 @@ image::mlops_fsxn_s3_integration_1.png[AWS SageMaker笔记本实例控制台]
 保留其它条目默认值，然后选择*VPC*、*Subnet*和*Security group*。(稍后将使用此*VPC*和*Subnet*创建FSxN文件系统)
 单击右下角的橙色按钮*创建笔记本实例*。
 +
-image::mlops_fsxn_s3_integration_2.png[创建笔记本实例]
+image:mlops_fsxn_s3_integration_2.png["创建笔记本实例"]
 
 
 
@@ -63,47 +63,47 @@ image::mlops_fsxn_s3_integration_2.png[创建笔记本实例]
 
 . 打开AWS控制台。在搜索面板中，搜索FSx并单击服务*FSX*。
 +
-image::mlops_fsxn_s3_integration_3.png[FSx面板]
+image:mlops_fsxn_s3_integration_3.png["FSx面板"]
 
 . 单击*创建文件系统*。
 +
-image::mlops_fsxn_s3_integration_4.png[创建文件系统]
+image:mlops_fsxn_s3_integration_4.png["创建文件系统"]
 
 . 选择第一张卡*FSx for FS* NetApp ONTAP，然后单击*Next*。
 +
-image::mlops_fsxn_s3_integration_5.png[选择文件系统类型]
+image:mlops_fsxn_s3_integration_5.png["选择文件系统类型"]
 
 . 在详细信息配置页面中。
 +
 .. 选择*标准创建*选项。
 +
-image::mlops_fsxn_s3_integration_6.png[创建文件系统面板]
+image:mlops_fsxn_s3_integration_6.png["创建文件系统面板"]
 
 .. 输入*文件系统名称*和* SSD存储容量*。
 +
-image::mlops_fsxn_s3_integration_7.png[指定文件系统详细信息]
+image:mlops_fsxn_s3_integration_7.png["指定文件系统详细信息"]
 
 .. 确保使用与*SageMaker记事本*实例相同的*vpc*和*subnet*。
 +
-image::mlops_fsxn_s3_integration_8.png[网络和安全配置]
+image:mlops_fsxn_s3_integration_8.png["网络和安全配置()"]
 
 .. 输入SVM (Storage Virtual Machine)的* Storage Virtual Machine*名称和*指定密码*。
 +
-image::mlops_fsxn_s3_integration_9.png[默认Storage Virtual Machine配置]
+image:mlops_fsxn_s3_integration_9.png["默认Storage Virtual Machine配置"]
 
 .. 保留其它条目的默认值，然后单击右下角的橙色按钮*Next*。
 +
-image::mlops_fsxn_s3_integration_10.png[确认配置]
+image:mlops_fsxn_s3_integration_10.png["确认配置"]
 
 .. 单击查看页面右下角的橙色按钮*创建文件系统*。
 +
-image::mlops_fsxn_s3_integration_11.png[查看配置并确认创建]
+image:mlops_fsxn_s3_integration_11.png["查看配置并确认创建"]
 
 
 
 . 启动FSx文件系统可能需要大约*20-40分钟*。
 +
-image::mlops_fsxn_s3_integration_12.png[检查FSx控制台]
+image:mlops_fsxn_s3_integration_12.png["检查FSx控制台"]
 
 
 
@@ -117,24 +117,24 @@ image::mlops_fsxn_s3_integration_12.png[检查FSx控制台]
 
 . 打开创建的FSx文件系统。请确保状态为*可用*。
 +
-image::mlops_fsxn_s3_integration_13.png[等待后端创建]
+image:mlops_fsxn_s3_integration_13.png["等待后端创建"]
 
 . 选择*管理*选项卡并保留*管理端点- IP地址*和* ONTAP管理员用户名*。
 +
-image::mlops_fsxn_s3_integration_14.png[文件系统详细信息控制台]
+image:mlops_fsxn_s3_integration_14.png["文件系统详细信息控制台"]
 
 . 打开创建的*SageMaker笔记本实例*，然后单击*Open JupyterLab*。
 +
-image::mlops_fsxn_s3_integration_15.png[AWS SageMaker笔记本实例控制台]
+image:mlops_fsxn_s3_integration_15.png["AWS SageMaker笔记本实例控制台"]
 
 . 在Jupyter Lab页面中，打开一个新的*Terminal *。
 +
-image::mlops_fsxn_s3_integration_16.png[Jupyter Lab欢迎页面]
+image:mlops_fsxn_s3_integration_16.png["Jupyter Lab欢迎页面"]
 
 . 输入ssh命令ssh <admin user name>@<ONTAP server IP>登录到FSxN ONTAP文件系统。(用户名和IP地址从步骤2中检索)
 请使用创建*Storage Virtual Machine*时使用的密码。
 +
-image::mlops_fsxn_s3_integration_17.png[Jupyter实验室终端]
+image:mlops_fsxn_s3_integration_17.png["Jupyter实验室终端"]
 
 . 按以下顺序执行命令。
 我们使用*fsxn-ONTAP *作为* FSxN专用S3存储分段名称*的名称。
@@ -151,7 +151,7 @@ vserver object-store-server group create -name s3group -users s3user -policies F
 vserver object-store-server bucket create fsxn-ontap -vserver fsxn-svm-demo -type nas -nas-path /vol1
 ----
 +
-image::mlops_fsxn_s3_integration_18.png[Jupyter Lab终端输出]
+image:mlops_fsxn_s3_integration_18.png["Jupyter Lab终端输出"]
 
 . 执行以下命令以检索FSxN Private S3的端点IP和凭据。
 +
@@ -165,7 +165,7 @@ vserver object-store-server user show
 ----
 . 保留端点IP和凭据以供将来使用。
 +
-image::mlops_fsxn_s3_integration_19.png[Jupyter实验室终端]
+image:mlops_fsxn_s3_integration_19.png["Jupyter实验室终端"]
 
 
 
@@ -175,7 +175,7 @@ image::mlops_fsxn_s3_integration_19.png[Jupyter实验室终端]
 
 . 在SageMaker笔记本实例中、创建新的Jupyter笔记本。
 +
-image::mlops_fsxn_s3_integration_20.png[打开新的Jupyter笔记本]
+image:mlops_fsxn_s3_integration_20.png["打开新的Jupyter笔记本"]
 
 . 使用以下代码作为解决解决方案问题的方法、将文件上传到FSxN私有S3存储分段。
 有关完整的代码示例、请参阅本笔记本。

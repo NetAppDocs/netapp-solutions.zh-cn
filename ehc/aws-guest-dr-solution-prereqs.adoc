@@ -199,7 +199,7 @@ AWS身份和访问管理(AWS Identity and Access Management、Aaim)提供了一�
 ====
 VMware虚拟环境包括ESXi主机、VMware vCenter Server、NSX网络和其他组件的许可、如下图所示。所有这些组件的许可方式都不同、了解底层组件如何使用可用的许可容量非常重要。
 
-image::dr-vmc-aws-image2.png[灾难恢复vmc AWS image2]
+image:dr-vmc-aws-image2.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 .ESXi主机
 [%collapsible]
@@ -493,7 +493,7 @@ NOTE: 如果未在默认网关上创建IPsec VPN通道、则必须通过本地VP
 
 下图显示了典型的VPN连接选项。
 
-image::dr-vmc-aws-image3.png[灾难恢复vmc AWS image3]
+image:dr-vmc-aws-image3.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 =====
 .直接连接
@@ -505,7 +505,7 @@ Direct Connect提供指向AWS网络的专用链接。专用连接会使用1 Gbps
 
 下图显示了Direct Connect接口选项。
 
-image::dr-vmc-aws-image4.png[灾难恢复vmc AWS image4]
+image:dr-vmc-aws-image4.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 =====
 .传输网关
@@ -529,7 +529,7 @@ VMware Cloud SDDC可以部署在一个可用性区域中、就像拥有一个数
 
 为了最大限度地降低数据传输成本、请将VMware Cloud SDDC和AWS实例或服务保留在同一可用性区域中。最好使用可用性区域ID而不是名称进行匹配、因为AWS会提供特定于帐户的AZ订单列表、以便在可用性区域之间分摊负载。例如、一个帐户(US-East-1a)可能指向AZ ID 1、而另一个帐户(US-East-1c)可能指向AZ ID 1。可以通过多种方式检索可用性区域ID。在以下示例中、我们从VPC子网检索到AZ ID。
 
-image::dr-vmc-aws-image5.png[灾难恢复vmc AWS image5]
+image:dr-vmc-aws-image5.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 在VMware Cloud SDDC中、网络连接通过NSX进行管理、处理北-南流量上行链路端口的边缘网关(第0层路由器)连接到AWS VPC。计算网关和管理网关(第1层路由器)用于处理东西向流量。如果边缘的上行链路端口使用率较高、则可以创建流量组以与特定主机IP或子网关联。创建流量组会创建额外的边缘节点来分隔流量。检查 https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-networking-security/GUID-306D3EDC-F94E-4216-B306-413905A4A784.html["VMware 文档"^] 使用多边缘设置所需的最小vSphere主机数。
 
@@ -540,7 +540,7 @@ image::dr-vmc-aws-image5.png[灾难恢复vmc AWS image5]
 
 下图显示了主机VMKernel信息示例。
 
-image::dr-vmc-aws-image6.png[灾难恢复vmc AWS image6]
+image:dr-vmc-aws-image6.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 =====
 .配置的存储网络(iSCSI、NFS)
@@ -573,7 +573,7 @@ NetApp AFF A系列系统可提供高性能存储基础架构、并提供灵活�
 
 下图显示了VMware存储选项。
 
-image::dr-vmc-aws-image7.png[灾难恢复vmc AWS image7]
+image:dr-vmc-aws-image7.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 ONTAP 卷用于应用程序VM的iSCSI和NFS子系统连接存储。我们对应用程序数据使用了以下存储协议：
 
@@ -622,7 +622,7 @@ FSX for ONTAP 用作使用SnapCenter 和SyncMirror 镜像的应用程序数据�
 
 下图展示了我们的FSX ONTAP 环境。
 
-image::dr-vmc-aws-image8.png[灾难恢复vmc AWS image8]
+image:dr-vmc-aws-image8.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 =====
 .已创建网络接口
@@ -657,7 +657,7 @@ VMware vSphere可在数据中心以及所有主要云提供商之间提供虚拟
 ====
 我们在AWS上的VMware Cloud中部署了一个SDDC、其中包含两台主机、用于提供足够的资源来运行从主站点还原的虚拟机。
 
-image::dr-vmc-aws-image9.png[灾难恢复vmc AWS image9]
+image:dr-vmc-aws-image9.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 ====
 

@@ -18,7 +18,7 @@ summary:
 
 让我们来了解一下上述功能如何与VMware配合使用、以保护和恢复数据免遭勒索软件的攻击。为了保护vSphere和子VM免受攻击、必须采取多种措施、包括分段、对端点使用EDR/XDR/SIEM、安装安全更新以及遵守相应的强化准则。驻留在数据存储库上的每个虚拟机还托管一个标准操作系统。确保安装并定期更新企业服务器反恶意软件产品套件、这是多层勒索软件保护策略的重要组成部分。同时、在为数据存储库提供支持的NFS卷上启用自动防兰森(ARP)。ARP利用内置的内置ML来查看卷工作负载活动和数据熵、从而自动检测勒索软件。ARP可通过ONTAP内置管理界面或系统管理器进行配置、并按卷启用。
 
-image::nfs-arp-image1.png[NFS arp image1]
+image:nfs-arp-image1.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 NOTE: 借助目前处于技术预览阶段的全新NetApp ARP/AI、无需学习模式。相反、它可以借助AI驱动的勒索软件检测功能直接进入活动模式。
@@ -28,7 +28,7 @@ NOTE: 使用ONTAP One、所有这些功能集都是完全免费的。访问NetAp
 
 处于活动模式后、它将开始查找可能是勒索软件的异常卷活动。如果检测到异常活动、则会立即自动创建Snapshot副本、从而提供尽可能接近文件感染的恢复点。在向加密卷添加新扩展名或修改文件扩展名时、ARP可以检测位于VM外部的NFS卷上VM专用文件扩展名的更改。
 
-image::nfs-arp-image2.png[NFS arp image2]
+image:nfs-arp-image2.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 如果勒索软件攻击以虚拟机(VM)为目标并更改虚拟机中的文件而不在虚拟机外部进行更改、则高级勒索软件保护(ARP)仍会检测到威胁、前提是虚拟机的默认熵较低、例如.txt、.DOCX或.mp4文件类型。在此情形下、即使ARP创建了一个保护性快照、也不会生成威胁警报、因为虚拟机外部的文件扩展名未被篡改。在这种情况下、初始防御层会识别异常、但ARP有助于根据熵创建快照。
 
@@ -36,11 +36,11 @@ image::nfs-arp-image2.png[NFS arp image2]
 
 从文件转移到备份数据、勒索软件攻击现在越来越多地针对备份和快照恢复点、在开始加密文件之前尝试将其删除。但是，使用ONTAP时，可以通过使用在主系统或二级系统上创建防篡改快照来防止这种情况link:https://docs.netapp.com/us-en/ontap/snaplock/snapshot-lock-concept.html["NetApp Snapshot™副本锁定"]的发生。
 
-image::nfs-arp-image3.png[NFS arp image3]
+image:nfs-arp-image3.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 勒索软件攻击者或恶意管理员不能删除或更改这些Snapshot副本、因此即使在遭受攻击后也可以访问这些副本。如果数据存储库或特定虚拟机受到影响、SnapCenter可以在几秒钟内恢复虚拟机数据、从而最大程度地减少组织的停机时间。
 
-image::nfs-arp-image4.png[NFS arp image4]
+image:nfs-arp-image4.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 上述内容说明了ONTAP存储如何在现有技术基础上再增加一层、从而增强环境的未来防护。
 
@@ -50,25 +50,25 @@ image::nfs-arp-image4.png[NFS arp image4]
 
 在此示例中、NFS数据存储库"src_NFS_DS04"使用BlueXP  勒索软件保护进行保护。
 
-image::nfs-arp-image5.png[NFS arp image5]
+image:nfs-arp-image5.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-image::nfs-arp-image6.png[NFS arp image6]
+image:nfs-arp-image6.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 有关配置BlueXP  勒索软件保护的详细信息，请参阅link:https://docs.netapp.com/us-en/bluexp-ransomware-protection/rp-start-setup.html["设置BlueXP  勒索软件保护"]和link:https://docs.netapp.com/us-en/bluexp-ransomware-protection/rp-use-settings.html#add-amazon-web-services-as-a-backup-destination["配置BlueXP勒索软件保护设置"]。
 
 现在是时候通过一个示例来说明这一点了。在此逐步介绍中、数据存储库"src_NFS_DS04"会受到影响。
 
-image::nfs-arp-image7.png[NFS arp image7]
+image:nfs-arp-image7.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 ARP在检测到后立即触发卷上的快照。
 
-image::nfs-arp-image8.png[NFS arp image8]
+image:nfs-arp-image8.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-image::nfs-arp-image9.png[NFS arp image9]
+image:nfs-arp-image9.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 取证分析完成后、可以使用SnapCenter或BlueXP  勒索软件保护快速无缝地完成恢复。使用SnapCenter、转到受影响的虚拟机并选择要还原的相应快照。
 
-image::nfs-arp-image10.png[NFS arp image10]
+image:nfs-arp-image10.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 本节将介绍BlueXP  勒索软件保护如何编排从对VM文件进行加密的勒索软件事件中恢复。
 
@@ -78,11 +78,11 @@ NOTE: 如果虚拟机由SnapCenter管理、则BlueXP  勒索软件保护会使�
 . 访问BlueXP  勒索软件保护、BlueXP  勒索软件保护信息板上会显示警报。
 . 单击此警报可查看此特定卷上生成的警报的意外事件
 +
-image::nfs-arp-image11.png[NFS arp image11]
+image:nfs-arp-image11.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 选择"Mark restore needed"(标记需要还原)、将勒索软件事件标记为已做好恢复准备(在消除意外事件后)
 +
-image::nfs-arp-image12.png[NFS arp image12]
+image:nfs-arp-image12.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
 
@@ -90,19 +90,19 @@ NOTE: 如果事件被证明是误报、则可以解除警报。
 
 . 进入"RecRecovery (恢复)"选项卡、查看"Recovery (恢复)"页面中的工作负载信息、选择处于"Restore Need"(需要还原)状态的数据存储库卷、然后选择"Restore (还原)"。
 +
-image::nfs-arp-image13.png[NFS arp image13.]
+image:nfs-arp-image13.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在这种情况下、还原范围为"按VM"(对于适用于VM的SnapCenter、还原范围为"按VM")
 +
-image::nfs-arp-image14.png[NFS arp image14.]
+image:nfs-arp-image14.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 选择要用于还原数据的还原点、然后选择Destination (目标)并单击Restore (还原)。
 +
-image::nfs-arp-image15.png[NFS arp image15]
+image:nfs-arp-image15.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 从顶部菜单中、选择恢复以查看恢复页面上的工作负载、其中操作状态将在各个状态之间移动。还原完成后、VM文件将还原、如下所示。
 +
-image::nfs-arp-image16.png[NFS arp image16.]
+image:nfs-arp-image16.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 
 

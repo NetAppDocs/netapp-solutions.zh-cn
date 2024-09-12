@@ -1,0 +1,36 @@
+---
+sidebar: sidebar 
+keywords: Cyber vault, cybervault, cyber-vault, data protection, security, ransomware, ONTAP, hardening 
+permalink: /cyber-vault/ontap-cyber-vault-hardening.html 
+summary: 为ONTAP加强网络存储而建议的其他步骤 
+---
+= 网络存储强化
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+以下是增强ONTAP网络存储的附加建议。有关更多建议和流程、请参见下面的ONTAP强化指南。
+
+
+
+== 网络存储强化建议
+
+* 隔离网络存储的管理平台
+* 请勿在目标集群上启用数据生命周期、因为数据生命周期是额外的攻击媒介
+* 在目标集群上、使用服务策略限制对源集群的集群间LIF访问
+* 对目标集群上的管理LIF进行分段、以便使用服务策略和基站主机进行有限的访问
+* 将源集群中的所有数据流量限制为网络存储、以便仅允许SnapMirror流量所需的端口
+* 如有可能、请在ONTAP中禁用任何不需要的管理访问方法、以减少攻击面
+* 启用审核日志记录和远程日志存储
+* 启用多管理员验证、并需要常规存储管理员以外的管理员(例如CISO员工)进行验证
+* 实施基于角色的访问控制
+* 需要对System Manager和ssh进行管理多因素身份验证
+* 对脚本和REST API调用使用基于令牌的身份验证
+
+
+link:../../ontap/ontap-security-hardening/security-hardening-overview.html["ONTAP强化指南"]link:../../ontap/multi-admin-verify/index.html["多管理员验证概述"^]link:https://www.netapp.com/media/17055-tr4647.pdf["ONTAP多因素身份验证指南"^]有关如何完成这些强化步骤，请参见、和。

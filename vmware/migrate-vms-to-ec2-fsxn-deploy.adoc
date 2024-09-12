@@ -24,11 +24,11 @@ summary: '本技术报告介绍如何使用卷云迁移(CMC)的MigrateOps "数�
 
 在本演示中、"DRaaSDEM"是所创建文件系统的名称。
 
-image::migrate-ec2-fsxn-image02.png[演示文件系统用户界面的图像]
+image:migrate-ec2-fsxn-image02.png["演示文件系统用户界面的图像"]
 
 配置AWS VPC并根据性能要求配置FSx for ONTAP后、登录到 link:http://cloud.cirrusdata.com/["cloud.cirrusdata.com"] 和 link:https://customer.cirrusdata.com/cdc/kb/articles/get-started-with-cirrus-data-cloud-4eDqjIxQpg["创建新项目"] 或访问现有项目。
 
-image::migrate-ec2-fsxn-image03.png["开展 数据项目"用户界面的图像]
+image:migrate-ec2-fsxn-image03.png["\"开展 数据项目\"用户界面的图像"]
 
 在创建迁移操作方案之前、应将AWS Cloud作为集成添加。CMC可与FSx for ONTAP和AWS内置集成。FSx for ONTAP的集成提供了以下自动化功能：
 
@@ -59,11 +59,11 @@ image::migrate-ec2-fsxn-image03.png["开展 数据项目"用户界面的图像]
 . 导航到"Integrations"(集成)->"好 的方面"。
 . 滚动找到FSx for NetApp ONTAP、然后单击Add integration。
 +
-image::migrate-ec2-fsxn-image04.png[“添加集成”用户界面的图像]
+image:migrate-ec2-fsxn-image04.png["“添加集成”用户界面的图像"]
 
 . 请提供一个描述性名称(严格限于显示目的)并添加相应的凭据。
 +
-image::migrate-ec2-fsxn-image05.png[“添加集成”用户界面的图像]
+image:migrate-ec2-fsxn-image05.png["“添加集成”用户界面的图像"]
 
 . 创建集成后、在创建新迁移会话期间、选择自动分配目标卷以在FSx for ONTAP上自动分配新卷。
 +
@@ -77,7 +77,7 @@ image::migrate-ec2-fsxn-image05.png[“添加集成”用户界面的图像]
 
 . 完成后、按照屏幕上的步骤添加适用于AWS的集成。
 +
-image::migrate-ec2-fsxn-image06.png[“添加集成”用户界面的图像]
+image:migrate-ec2-fsxn-image06.png["“添加集成”用户界面的图像"]
 
 +
 *注意*：将虚拟机从内部存储迁移到AWS时、将使用此集成、同时集成FSx for ONTAP。
@@ -102,7 +102,7 @@ image::migrate-ec2-fsxn-image06.png[“添加集成”用户界面的图像]
 
 *注意*：上一节中配置的集成功能可在创建新磁盘、设置主机实体及其IQN、甚至针对iSCSI和多路径配置修复应用程序VM (主机)时自动配置新的目标存储。
 
-image::migrate-ec2-fsxn-image07.png[要迁移的VMware虚拟机的图像]
+image:migrate-ec2-fsxn-image07.png["要迁移的VMware虚拟机的图像"]
 
 此演示将应用程序VMDK从每个VM迁移到FSx for ONTAP中自动配置和映射的iSCSI卷。在这种情况下、操作系统VMDK将迁移到Amazon EBS卷、因为Amazon EC2实例仅支持此Amazon EBS作为启动磁盘。
 
@@ -122,10 +122,10 @@ image::migrate-ec2-fsxn-image07.png[要迁移的VMware虚拟机的图像]
 然后、复制 `iex` 命令、然后使用PowerShell运行该命令。成功部署代理后、此主机将添加到"迁移主机"下的项目中。
 
 +
-image::migrate-ec2-fsxn-image08.png[图像："r出来 的数据"安装界面]
+image:migrate-ec2-fsxn-image08.png["图像：\"r出来 的数据\"安装界面"]
 
 +
-image::migrate-ec2-fsxn-image09.png[Windows安装进度图像]
+image:migrate-ec2-fsxn-image09.png["Windows安装进度图像"]
 
 . 为每个虚拟机准备YAML。
 +
@@ -209,22 +209,22 @@ operations:
 . 除非 `scheduled_start_time` 字段、则操作将立即开始。
 . 此时将执行此操作并继续。从卷云数据UI中、您可以通过详细消息监控进度。这些步骤会自动包含通常手动完成的任务、例如执行自动分配和创建迁移会话。
 +
-image::migrate-ec2-fsxn-image10.png["NetApp的数据迁移进度"图]
+image:migrate-ec2-fsxn-image10.png["\"NetApp的数据迁移进度\"图"]
 
 +
 *注意*：在主机到主机迁移期间，将创建一个附加的安全组，该组的规则允许使用入站4996端口，这将允许所需的端口进行通信，同步完成后，该安全组将被自动删除。
 
 +
-image::migrate-ec2-fsxn-image11.png[用于执行"NetApp的数据迁移"的入站规则的图像]
+image:migrate-ec2-fsxn-image11.png["用于执行\"NetApp的数据迁移\"的入站规则的图像"]
 
 . 在同步此迁移会话时、阶段3 (转换)中还有一个未来步骤、其标签为"Approval required"(需要批准)。 在MigrateOps秘诀中、关键任务(如迁移转换)需要用户批准、才能执行。项目操作员或管理员可以从UI批准这些任务。也可以创建未来审批窗口。
 +
-image::migrate-ec2-fsxn-image12.png["crucr想 数据迁移同步"图像]
+image:migrate-ec2-fsxn-image12.png["\"crucr想 数据迁移同步\"图像"]
 
 . 获得批准后、MigrateOps操作将继续执行转换。
 . 片刻后、操作将完成。
 +
-image::migrate-ec2-fsxn-image13.png[完成了数据迁移的图像]
+image:migrate-ec2-fsxn-image13.png["完成了数据迁移的图像"]
 
 +
 *注意*：借助卷卷卷影Data cMotion™技术，目标存储已与所有最新更改保持最新。因此、在获得批准后、整个最终转换过程只需很短的时间(不到一分钟)即可完成。

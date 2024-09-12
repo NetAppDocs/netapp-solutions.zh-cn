@@ -101,30 +101,27 @@ NOTE: 在使用此工具包存储库中的内容生成和/或共享任何衍生�
 ====
 . 打开HTML解析器AWR模块。
 +
-image::db_sizing_ora_parser_01.png[此图提供了用于Oracle规模估算的HTML解析器屏幕]
+image:db_sizing_ora_parser_01.png["此图提供了用于Oracle规模估算的HTML解析器屏幕"]
 
 . 将输出格式检查为.csv、然后单击 `Upload files` 上传AWR报告。解析器将在HTML页面中返回结果、其中包含表摘要以及output.csv文件 `Download` 文件夹。
 +
-image::db_sizing_ora_parser_02.png[此图提供了用于Oracle规模估算的HTML解析器屏幕]
+image:db_sizing_ora_parser_02.png["此图提供了用于Oracle规模估算的HTML解析器屏幕"]
 
 . 打开Excel模板文件、然后将csv内容复制并粘贴到列A和单元格1中以生成数据库服务器规模估算信息。
 +
-image::db_sizing_ora_parser_03_anf.png[此图提供了用于Oracle规模估算的Excel模板屏幕截图]
+image:db_sizing_ora_parser_03_anf.png["此图提供了用于Oracle规模估算的Excel模板屏幕截图"]
 
 . 突出显示列A以及字段1和2、然后单击 `Data`、然后 `Text to Columns` 以打开文本向导。选择 `Delimited`、然后 `Next` 至下一屏幕。
 +
-image::db_sizing_ora_parser_04_anf.png[此图提供了用于Oracle规模估算的Excel模板屏幕截图]
+image:db_sizing_ora_parser_04_anf.png["此图提供了用于Oracle规模估算的Excel模板屏幕截图"]
 
 . 检查 `Other`，然后输入'='作为 `Delimiters`。单击 `Next` 至下一屏幕。
 +
-image::db_sizing_ora_parser_05_anf.png[此图提供了用于Oracle规模估算的Excel模板屏幕截图]
+image:db_sizing_ora_parser_05_anf.png["此图提供了用于Oracle规模估算的Excel模板屏幕截图"]
 
 . 单击 `Finish` 将字符串转换为可读列格式。请注意、VM和ANF规模估算字段已填充从Oracle AWR报告中检索到的数据。
 +
-image::db_sizing_ora_parser_06_anf.png[此图提供了用于Oracle规模估算的Excel模板屏幕截图]
-
-+
-image::db_sizing_ora_parser_07_anf.png[此图提供了用于Oracle规模估算的Excel模板屏幕截图]
+image:db_sizing_ora_parser_06_anf.png["此图提供了用于Oracle规模估算的Excel模板屏幕截图"] image:db_sizing_ora_parser_07_anf.png["此图提供了用于Oracle规模估算的Excel模板屏幕截图"]
 
 . 以sqlplus中的数据库A形式执行脚本ora_db_data_size.sql、ora_db_logs_size.sql、以检索现有Oracle数据库数据大小和已归档日志大小以及保留窗口天数。
 +
@@ -167,7 +164,7 @@ NOTE: 使用上述脚本检索的数据库规模估算信息是所有物理数�
 
 . 将结果输入到Excel文件中以完成规模估算指导输出。
 +
-image::db_sizing_ora_parser_08_anf.png[此图提供了用于Oracle规模估算的Excel模板屏幕截图]
+image:db_sizing_ora_parser_08_anf.png["此图提供了用于Oracle规模估算的Excel模板屏幕截图"]
 
 . ANF使用三层服务级别(Standard、Premium、Ultra)来管理数据库卷吞吐量限制。请参见 link:https://learn.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-service-levels["Azure NetApp Files 的服务级别"^] 了解详细信息。根据规模估算指导输出、选择可提供满足数据库要求的吞吐量的ANF服务级别。
 
