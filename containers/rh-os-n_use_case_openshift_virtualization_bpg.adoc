@@ -16,7 +16,7 @@ summary: 针对Red Hat OpenShift虚拟化中VM的最佳实践建议
 作者：Banu Sunzhar、NetApp
 
 [role="lead"]
-本节介绍在部署新VM或将现有VM从VMware环境导入到OpenShift容器平台上的OpenShift虚拟化时应考虑的不同因素。
+本节介绍在部署新VM或将现有VM从VMware vSphere导入到OpenShift容器平台上的OpenShift虚拟化时应考虑的不同因素。
 
 
 
@@ -31,7 +31,7 @@ summary: 针对Red Hat OpenShift虚拟化中VM的最佳实践建议
 * 工作负载所需的性能特征
 
 
-有关详细信息、请参见存储配置一节。
+有关详细信息、请参见下面的"存储配置"部分。
 
 
 
@@ -39,21 +39,23 @@ summary: 针对Red Hat OpenShift虚拟化中VM的最佳实践建议
 
 OpenShift虚拟化支持实时迁移虚拟机。通过实时迁移、可以在不中断工作负载的情况下将正在运行的虚拟机实例(Virtual Machine Instance、VM)移至另一个节点。迁移有助于在集群升级期间或在需要耗尽节点以进行维护或配置更改时实现平稳过渡。实时迁移需要使用一个共享存储解决方案、该解决方案可提供Read任意(rwx)访问模式。VM磁盘应使用提供rwx访问模式的存储选项作为后备存储。OpenShift虚拟化将检查一个VIF是否为**实时迁移**，如果是，** evicalStrategy**将设置为**实时迁移**。有关详细信息、请参见。 link:https://docs.openshift.com/container-platform/latest/virt/live_migration/virt-about-live-migration.html["有关实时迁移一节"]
 
-使用支持**rwx**访问方式的驱动程序非常重要。有关哪些驱动程序支持rwx访问模式的详细信息、请参见存储配置一节。
+使用支持**rwx**访问方式的驱动程序非常重要。有关哪些ONTAP驱动程序支持rwx访问模式的详细信息、请参见下面的存储配置部分。
 
 
 
 == 存储配置
 
-Trident CSI配置程序为配置NetApp存储选项支持的存储提供了多种驱动程序(NAS、NAS经济型、NAS经济型、FlexGroup、SAN和SAN经济型)。**使用的协议：*** NAS驱动程序使用NAS协议(NFS和SMB)* SAN驱动程序使用iSCSI或NVMe/TCP协议
+Trident CSI配置程序为配置NetApp存储选项支持的存储提供了多种驱动程序(NAS、NAS经济型、NAS经济型、FlexGroup、SAN和SAN经济型)。
+
+**使用的协议：*** NAS驱动程序使用NAS协议(NFS和SMB)* SAN驱动程序使用iSCSI或NVMe/TCP协议
 
 以下内容可帮助您根据工作负载要求和存储利用率确定存储配置的方式。
 
-* NAS驱动程序会在一个FlexVolume上创建一个永久性卷(PV)。
-* NAS经济型驱动程序会在共享FlexVolume的qtree上创建一个PV。(每200个PIV对应一个FlexVolume、可在50到300之间配置)
-* 在一个FlexGroup的一个PV上创建NAS FlexGroup驱动程序
+* ** NAS **驱动程序在一个FlexVolume上创建一个永久性卷(PV)。
+* **NAS经济**驱动程序在共享FlexVolume的qtree上创建一个PV。(每200个PIV对应一个FlexVolume、可在50到300之间配置)
+* **NAS－PV**驱动程序在一个FlexGroup的一个FlexGroup上创建
 * SAN驱动程序会在专用FlexVolume上的LUN上创建一个PV
-* SAN经济型驱动程序会在共享FlexVolume上的LUN上创建一个PV (每100个PV使用一个FlexVolume、可在50到200之间配置)
+* ** SAN经济**驱动程序在共享FlexVolume上的LUN上创建一个PV (每100个PV创建一个FlexVolume，可在50到200之间配置)
 
 
 下图对此进行了说明。
@@ -62,12 +64,12 @@ image::redhat_openshift_bpg_image1.png[驱动程序]
 
 此外、驱动程序支持的访问模式也不同。
 
-支持ONTAP NAS驱动程序
+** ONTAP NAS驱动程序支持**
 
 * 文件系统访问和RwO、ROX、rwx、RWONP访问模式。
 
 
-ONTAP SAN驱动程序支持原始块和文件系统模式。
+** ONTAP SAN驱动程序支持原始块和文件系统模式**
 
 * 在原始块模式下，它可以支持RWO、ROX、Rwx、RWONP访问模式。
 * 在文件系统模式下，只允许使用RwO、RwoP访问模式。
@@ -197,6 +199,37 @@ NOTE: 要访问上述内容、需要有效的Red Hat订阅。
 
 === **从VMware环境迁移VM **
 
-有关从VMware环境迁移VM的详细信息、请参见link:https://docs.netapp.com/us-en/netapp-solutions/containers/rh-os-n_use_case_openshift_virtualization_workflow_vm_migration_using_mtv.html["工作流 ONTAP的Red Hat OpenShift虚拟化"]
+适用于OpenShift虚拟化的迁移工具包是Red Hat提供的一个操作员、可从OpenShift容器平台的OperatorHub获得。此工具可用于从vSphere、Red Hat虚拟化、OpenStack和OpenShift虚拟化迁移虚拟机。
 
-如果要在同一迁移计划中从ESXi主机迁移10个以上的VM、则必须增加此主机的NFC服务内存。否则、迁移将失败、因为NFC服务内存限制为10个并行连接。有关更多详细信息、请参见Red Hat文档：链接：https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.6/html/installing_and_using_the_migration_toolkit_for_virtualization/prerequisites_mtv#increasing-nfc-memory-vmware-host_mtv[Increasing the NFC service memory of an ESXi host]
+有关从vSphere迁移VM的详细信息、请参见link:https://docs.netapp.com/us-en/netapp-solutions/containers/rh-os-n_use_case_openshift_virtualization_workflow_vm_migration_using_mtv.html["工作流 ONTAP的Red Hat OpenShift虚拟化"]
+
+您可以从命令行界面或迁移Web控制台为各种参数配置限制。下面提供了一些示例
+
+. 最多并发虚拟机迁移数用于设置可同时迁移的最大虚拟机数。默认值为20个虚拟机。
+. 预复制间隔(分钟)用于控制在启动热迁移之前请求新快照的间隔。默认值为60分钟。
+. Snapshot轮询间隔(秒)用于确定系统在oVirt热迁移期间检查快照创建或删除状态的频率。默认值为10秒。
+
+
+如果要在同一迁移计划中从ESXi主机迁移10个以上的VM、则必须增加此主机的NFC服务内存。否则、迁移将失败、因为NFC服务内存限制为10个并行连接。有关更多详细信息、请参见Red Hat文档：link:https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.6/html/installing_and_using_the_migration_toolkit_for_virtualization/prerequisites_mtv#increasing-nfc-memory-vmware-host_mtv["增加ESXi主机的NFC服务内存"]
+
+下面将使用适用于虚拟化的迁移工具包成功地将10个VM从vSphere中的同一主机并行迁移到OpenShift虚拟化。
+
+**同一ESXi主机上的VM **
+
+image::redhat_openshift_bpg_image2-a.png[同一主机上的VM]
+
+**首先制定了从VMware**迁移10个VM的计划
+
+image::redhat_openshift_bpg_image2.png[迁移计划]
+
+**迁移计划已开始执行**
+
+image::redhat_openshift_bpg_image3.png[migration-plo-Executing]
+
+**所有10个VM均已成功迁移**
+
+image::redhat_openshift_bpg_image4.png[迁移计划成功]
+
+**在OpenShift虚拟化中，所有10个VM均处于运行状态**
+
+image::redhat_openshift_bpg_image5.png[已迁移-VMs-running]
