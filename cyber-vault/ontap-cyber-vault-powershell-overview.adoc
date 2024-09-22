@@ -1,0 +1,91 @@
+---
+sidebar: sidebar 
+permalink: cyber-vault/ontap-cyber-vault-powershell-overview.html 
+keywords: Cyber vault, powershell, script, configuration, validation, hardening 
+summary: 这是一款NetApp ONTAP解决方案、用于配置、强化和验证基于ONTAP的网络存储 
+---
+= 使用PowerShell的ONTAP网络存储概述
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
+
+
+[role="lead"]
+在当今的数字化环境中、保护企业的关键数据资产不仅是一项最佳实践、而且也是一项业务要务。网络威胁以前所未有的速度不断发展、传统数据保护措施已不再足以保证敏感信息的安全。这正是网络存储的出现之处。NetApp基于ONTAP的尖端解决方案将先进的空气封顶技术与强大的数据保护措施相结合、为抵御网络威胁创建了一个不可阻挡的屏障。通过使用安全强化技术隔离最有价值的数据、网络存储可最大限度地减少攻击面、从而使最关键的数据保持机密性、完整性、并在需要时随时可用。
+
+网络存储是一种由多层保护(如防火墙、网络和存储)组成的安全存储设施。这些组件可保护关键业务运营所需的重要恢复数据。网络存储的组件会根据存储策略定期与基本生产数据同步、但在其他方面仍无法访问。这种隔离且互不关联的设置可确保在发生网络攻击损害生产环境时、可以轻松地从网络存储执行可靠的最终恢复。
+
+NetApp通过配置网络、禁用LIFs、更新防火墙规则以及将系统与外部网络和Internet隔离、可以轻松地为网络存储创建空隙。这种强大的方法可以有效地将系统与外部网络和互联网断开连接、从而提供无与伦比的保护、防止远程网络攻击和未经授权的访问尝试、使系统免受基于网络的威胁和入侵的影响。
+
+将此功能与SnapLock Compliance保护相结合、即使ONTAP管理员或NetApp支持人员也无法修改或删除数据。SnapLock会根据SEC和金融监管局的法规定期进行审核、以确保数据故障恢复能力满足银行业这些严格的WORM和数据保留法规。NetApp是唯一经过NSA CSFC验证可存储顶级机密数据的企业级存储。
+
+image:ontap-cyber-vault-logical-air-gap.png["利用不可变和不可变的SnapLock副本将ONTAP网络存储与之隔离"]
+
+本文档介绍如何将用于内部ONTAP存储的NetApp网络存储自动配置到另一个指定的ONTAP存储、并使用不可修改的快照增加一层保护、以防止网络攻击增加、从而实现快速恢复。在此架构中、将根据ONTAP最佳实践应用整个配置。最后一节介绍了在发生攻击时执行恢复的说明。
+
+
+NOTE: 使用FSx for ONTAP在AWS中创建指定的网络存储也适用相同的解决方案。
+
+
+
+== 创建ONTAP网络存储的高级步骤
+
+* 创建对等关系
++
+** 使用ONTAP存储的生产站点与指定的网络存储ONTAP存储建立对等关系
+
+
+* 创建SnapLock Compliance卷
+* 设置SnapMirror关系和规则以设置标签
++
+** 已配置SnapMirror关系和相应的计划
+
+
+* 在启动SnapMirror (存储)传输之前设置保留
++
+** 对复制的数据应用保留锁定、从而进一步防止数据发生任何内部或数据故障。使用此选项时、无法在保留期限到期之前删除数据
+** 组织可以根据需要将这些数据保留几周/几个月
+
+
+* 根据标签初始化SnapMirror关系
++
+** 初始传播和增量永久传输根据SnapMirror计划进行
+** 数据通过SnapLock Compliance进行保护(不可变、不可变)、并且数据可供恢复
+
+
+* 实施严格的数据传输控制
++
+** 网络存储在有限的时间内与生产站点中的数据解除锁定、并与存储中的数据同步。传输完成后、连接将断开、关闭并再次锁定
+
+
+* 快速恢复
++
+** 如果主站点在生产站点中受到影响、则网络存储中的数据将安全地恢复到原始生产环境或其他选定环境
+
+
+
+
+image:ontap-cyber-vault-air-gap.png["创建ONTAP网络存储的高级步骤"]
+
+
+
+== 解决方案组件
+
+源集群和目标集群上的NetApp ONTAP 9.15.1。
+
+ONTAP One：NetApp ONTAP的一体化许可证。
+
+ONTAP One许可证使用的功能：
+
+* SnapLock Compliance
+* SnapMirror
+* 多管理员验证
+* ONTAP提供的所有强化功能
+* 网络存储的单独RBAC凭据
+
+
+
+NOTE: 所有ONTAP统一物理阵列均可用于网络存储、但基于AFF C系列容量的闪存系统和FAS混合闪存系统是实现此目的最经济高效的理想平台。link:./ontap-cyber-vault-sizing.html["ONTAP网络存储规模估算"]有关规模估算指导、请参见。

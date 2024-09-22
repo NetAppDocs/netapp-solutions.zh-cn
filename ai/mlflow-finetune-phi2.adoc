@@ -1,0 +1,63 @@
+---
+sidebar: sidebar 
+permalink: ai/aicp_example_notebooks_and_pipelines.html 
+keywords: Jupyter Notebook, MLFlow, NetApp DataOps Toolkit, LLM, 
+summary: 在Jupyter Hub上使用MLFlow微调大型语言模型 
+---
+= 前提条件
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+本节介绍使用Jupyter Hub通过MLFlow微调大型语言模型(LLM)所涉及的步骤。此示例用于展示将NetApp存储和NetApp智能数据基础架构整合到客户用例(例如、"恢复增强型生成"(RAG))中的培训工作。
+
+
+
+== 前提条件
+
+本节概述了使用jupyter hub微调语言模型的前提条件。为此、假定您已安装训练或微调模型所需的相关库和软件包。本示例中使用的一些库包括但不限于：-变压器- PEFT (参数高效微调)-加速这些库属于HuggingFace。其他库包括matoplib, CiPy, Einops等。
+
+此外、还假定您可以通过HuggingFace访问基本模型及其重量。 https://huggingface.co/models["HuggingFace"]有关可用型号的列表，请参见。
+
+最后、您还需要使用适当的存储访问Jupyter Hub帐户。建议访问GPU服务器(以满足更高的计算要求)。
+
+此微调示例的灵感来自由开发的一系列笔记本指南和示例 https://github.com/brevdev/notebooks["Brevdev团队"]。
+
+
+
+== 数据加载和模拟设置
+
+将所有数据(文档和文本)存储在与笔记本相同的共享文件夹中、以便于检索。将文档转换为.json格式、以供Data Processing和培训使用。
+
+处理完数据后、请确保GPU具有足够的RAM来加载模型和数据。在此示例中、我们使用具有16 GB RAM的NVIDIA Tesla T4 GPU来微调 https://huggingface.co/microsoft/phi-2["PHI-2"]27亿大小的Microsoft参数。根据您使用的模型和数据量、您可能需要更多RAM/Additional GPU、以便构建分布式训练设置。
+
+image:tesla-t4.png["此示例中使用的GPU规格"]
+
+在此示例中、 https://huggingface.co/docs/diffusers/main/en/training/lora["LORA"]利用来确保模型符合资源限制。如果计算不是一个限制、则可以执行完全微调。
+
+
+
+== 成果和今后的工作
+
+下表显示了在NetApp解决方案数据集(内部解决方案工程博客/文章)上训练的PHI-2的训练损失和相应的验证损失。如观察到的那样、随着时间的增加、验证损失会随着训练损失而减少。
+
+image:phi2-results.png["PHI-2的训练损失和验证损失"]
+
+用于评估微调语言模型的几个示例提示如下-*1.描述将NetApp FlexGroup卷用于AI训练数据集的优势。*
+
+对此提示的响应如下："AI训练数据集使用NetApp FlexGroup卷时、卷具有多种优势、其中包括：-*可扩展性*：FlexGroup卷可以水平扩展、以容纳AI训练所需的大量数据和计算资源。这样、企业就可以在更大的数据集中训练模型、而不必担心资源限制。-*数据一致性*：FlexGroup卷通过为所有数据提供一个命名空间来确保集群中多个节点之间的数据一致性。这可确保数据在不同节点之间始终可用且一致、对于需要访问来自多个来源的数据的AI应用程序来说、这一点至关重要。-*性能*：FlexGroup卷针对高性能存储进行了优化、非常适合存储AI训练所需的大型数据集。该卷的性能特征包括低延迟、高吞吐量和高可用性、可确保在训练期间快速可靠地访问数据。-*安全性*：FlexGroup卷提供加密、访问控制和数据保护等内置安全功能，确保敏感数据在整个生命周期内受到保护。对于处理敏感数据(例如个人信息或财务数据)的AI应用程序来说、这一点尤为重要。总之、NetApp FlexGroup卷为存储和管理AI训练数据集提供了一个可扩展、安全且高性能的解决方案。"
+
+*2.ONTAP 9提供哪些优势和功能？提供具体的实例。*
+
+对此提示的响应如下- ONTAP 9具有以下优势和功能：-*高性能*、节点与存储卷之间的数据传输吞吐量高达每节点1 TB/秒。-*高可用性*，可在多个节点之间实现99.999%的正常运行时间和高可用性。-*可扩展性*，可通过添加更多节点或增加每个节点上的磁盘数量来横向扩展。-*灵活性*，可根据工作负载要求使用不同类型的存储卷，如SSD、HDD或NVMe驱动器。-*安全性*，能够实施各种安全策略，如加密、访问控制和审核，以保护集群中的数据和资源。-支持*重复数据删除、数据压缩和复制*等高级功能，以优化性能并降低存储和传输大量数据的成本。"
+
+这些响应表明、与基础模型相比、经过微调的模型在训练数据集中具有更丰富的上下文、并会产生更相关的输出。
+
+此示例旨在表明、仍然可以使用少量计算机资源训练有关自定义/专有数据的语言模型。未来的工作包括利用更大的GPU设置(GPU的分布式系统网络)对组织范围内的数据进行更大的语言模型(参数顺序>10B)的训练。
+
+link:mlrun_configure_working_environment.adoc["下一步：ML Run工作环境"]

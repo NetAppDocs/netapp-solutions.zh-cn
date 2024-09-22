@@ -1,0 +1,120 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/dremio-lakehouse-solution-verification.html 
+keywords: performance, tests, dremio 
+summary: '我们使用五个节点对使用NetApp对象存储(例如ONTAP和StorageGRID)的SQL工作负载执行了TPC-DS测试。' 
+---
+= 解决方案验证概述
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+在本节中、我们从多个源执行了SQL测试查询、以验证功能、测试并验证是否溢出到NetApp存储。
+
+
+
+=== 对象存储上的SQL查询
+
+. 在dremio．env中将每个服务器的内存设置为250 GB
++
+....
+root@hadoopmaster:~# for i in hadoopmaster hadoopnode1 hadoopnode2 hadoopnode3 hadoopnode4; do ssh $i "hostname; grep -i  DREMIO_MAX_MEMORY_SIZE_MB /opt/dremio/conf/dremio-env; cat /proc/meminfo  | grep -i memtotal"; done
+hadoopmaster
+#DREMIO_MAX_MEMORY_SIZE_MB=120000
+DREMIO_MAX_MEMORY_SIZE_MB=250000
+MemTotal:       263515760 kB
+hadoopnode1
+#DREMIO_MAX_MEMORY_SIZE_MB=120000
+DREMIO_MAX_MEMORY_SIZE_MB=250000
+MemTotal:       263515860 kB
+hadoopnode2
+#DREMIO_MAX_MEMORY_SIZE_MB=120000
+DREMIO_MAX_MEMORY_SIZE_MB=250000
+MemTotal:       263515864 kB
+hadoopnode3
+#DREMIO_MAX_MEMORY_SIZE_MB=120000
+DREMIO_MAX_MEMORY_SIZE_MB=250000
+MemTotal:       264004556 kB
+node4
+#DREMIO_MAX_MEMORY_SIZE_MB=120000
+DREMIO_MAX_MEMORY_SIZE_MB=250000
+MemTotal:       263515484 kB
+root@hadoopmaster:~#
+....
+. 检查dremio．conf文件和存储详细信息中的溢出位置($｛DREMIO_HOME｝"/dremiocache)。
++
+....
+paths: {
+  # the local path for dremio to store data.
+  local: ${DREMIO_HOME}"/dremiocache"
+
+  # the distributed path Dremio data including job results, downloads, uploads, etc
+  #dist: "hdfs://hadoopmaster:9000/dremiocache"
+  dist: "dremioS3:///dremioconf"
+}
+
+services: {
+  coordinator.enabled: true,
+  coordinator.master.enabled: true,
+  executor.enabled: false,
+  flight.use_session_service: false
+}
+
+zookeeper: "10.63.150.130:2181,10.63.150.153:2181,10.63.150.151:2181"
+services.coordinator.master.embedded-zookeeper.enabled: false
+....
+. 将d不良 位置指向NetApp NFS存储
++
+....
+root@hadoopnode1:~# ls -ltrh /dremiocache
+total 4.0K
+drwx------ 3 nobody nogroup 4.0K Sep 13 16:00 spilling_stlrx2540m4-12-10g_45678
+root@hadoopnode1:~# ls -ltrh /opt/dremio/dremiocache/
+total 8.0K
+drwxr-xr-x 3 dremio dremio 4.0K Aug 22 18:19 spill_old
+drwxr-xr-x 4 dremio dremio 4.0K Aug 22 18:19 cm
+lrwxrwxrwx 1 root   root     12 Aug 22 19:03 spill -> /dremiocache
+root@hadoopnode1:~# ls -ltrh /dremiocache
+total 4.0K
+drwx------ 3 nobody nogroup 4.0K Sep 13 16:00 spilling_stlrx2540m4-12-10g_45678
+root@hadoopnode1:~# df -h /dremiocache
+Filesystem                              Size  Used Avail Use% Mounted on
+10.63.150.159:/dremiocache_hadoopnode1  2.1T  209M  2.0T   1% /dremiocache
+root@hadoopnode1:~#
+....
+. 选择上下文。在我们的测试中、我们会对驻留在ONTAP S3中的TPCDS生成的镶木地板文件运行测试。D不良 信息板-> SQL运行程序->上下文-> NetApp ONTAPS3->Parquet1TB
+
+
+image:ontaps3-context.png["将contex设置为ontaps3镶木地板文件夹"]
+
+. 从D雷 米奥信息板运行TPC-DS quory67
+
+
+image:TPCDS-Q67.png["运行查询67、这是TPC-DS中的99个查询之一"]
+
+. 检查作业是否正在所有执行器上运行。d不良 信息板->作业-><jobid>->原始配置文件->选择外部排序->主机名
+
+
+image:node-in-query.png["Q67查询中的节点列表"]
+
+. 运行SQL查询时、您可以检查拆分文件夹中的NetApp存储控制器中是否存在数据缓存。
++
+....
+root@hadoopnode1:~# ls -ltrh /dremiocache
+total 4.0K
+drwx------ 3 nobody nogroup 4.0K Sep 13 16:00 spilling_stlrx2540m4-12-10g_45678
+root@hadoopnode1:~# ls -ltrh /dremiocache/spilling_stlrx2540m4-12-10g_45678/
+total 4.0K
+drwxr-xr-x 2 root daemon 4.0K Sep 13 16:23 1726243167416
+....
+. SQL查询已完成、但溢出image:spinover.png["查询67完成后溢出详细信息"]
+. 作业完成摘要。image:jobsummary.png["已完成查询的作业摘要67"]
+. 检查溢出的数据大小image:splleddata.png["从查询结果中拆分数据详细信息"]
+
+
+适用于NAS和StorageGRID对象存储的过程相同。

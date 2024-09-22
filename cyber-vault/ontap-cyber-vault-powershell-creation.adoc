@@ -1,0 +1,135 @@
+---
+sidebar: sidebar 
+permalink: cyber-vault/ontap-cyber-vault-powershell-creation.html 
+keywords: Cyber vault, powershell, script, configuration, validation, hardening 
+summary: 这是一款NetApp ONTAP解决方案、用于配置、强化和验证基于ONTAP的网络存储 
+---
+= 使用PowerShell创建ONTAP网络存储
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
+
+
+[role="lead"]
+使用传统方法的空载备份涉及到创建空间以及物理分离主介质和二级介质。通过将介质移至异地和/或断开连接、不良行为者将无法访问数据。这样可以保护数据、但可能会导致恢复时间变慢。使用SnapLock Compliance时、不需要进行物理隔离。SnapLock Compliance可保护存储的快照时间点只读副本、从而使数据能够快速访问、安全地不会被删除或不可删除、也不会被修改或不可变。
+
+
+
+== 前提条件
+
+开始执行本文档下一节中的步骤之前、请确保满足以下前提条件：
+
+* 源集群必须运行ONTAP 9或更高版本。
+* 源聚合和目标聚合必须为 64 位。
+* 源集群和目标集群必须建立对等关系。
+* 源和目标SVM必须建立对等关系。
+* 确保已启用集群对等加密。
+
+
+设置到ONTAP网络存储的数据传输需要几个步骤。在主卷上、使用适当的计划配置一个快照策略来指定要创建的副本以及创建时间、并分配标签以指定应由SnapVault传输的副本。在二级系统上、必须创建SnapMirror策略、指定要传输的Snapshot副本的标签以及应在网络存储上保留这些副本的数量。配置这些策略后、创建SnapVault关系并建立传输计划。
+
+
+NOTE: 本文档假设已设置和配置主存储和指定的ONTAP网络存储。
+
+
+NOTE: 网络存储集群可以与源数据位于同一数据中心、也可以位于不同数据中心。
+
+
+
+== 创建ONTAP网络存储的步骤
+
+. 使用ONTAP命令行界面或系统管理器初始化Compliance时钟。
+. 创建启用了SnapLock Compliance的数据保护卷。
+. 使用SnapMirror create命令创建SnapVault数据保护关系。
+. 设置目标卷的默认SnapLock Compliance保留期限。
+
+
+
+NOTE: 默认保留为"设置为最小值"。作为存储目标的 SnapLock 卷会为其分配默认保留期限。对于SnapLock Compliance卷、此时间段的值最初设置为最小0年、最大30年。首次提交每个 NetApp Snapshot 副本时都会使用此默认保留期限。保留期限可以稍后根据需要延长、但不能缩短。
+
+上述步骤包括手动步骤。安全专家建议自动执行此过程、以避免因手动管理而产生较大的错误空间。以下代码段可完全自动执行SnapLock Compliance的前提条件和配置以及时钟初始化。
+
+以下是用于初始化ONTAP Compliance时钟的PowerShell代码示例。
+
+[source, powershell]
+----
+function initializeSnapLockComplianceClock {
+    try {
+        $nodes = Get-NcNode
+
+        $isInitialized = $false
+        logMessage -message "Cheking if snaplock compliance clock is initialized"
+        foreach($node in $nodes) {
+            $check = Get-NcSnaplockComplianceClock -Node $node.Node
+            if ($check.SnaplockComplianceClockSpecified -eq "True") {
+                $isInitialized = $true
+            }
+        }
+
+        if ($isInitialized) {
+            logMessage -message "SnapLock Compliance clock already initialized" -type "SUCCESS"
+        } else {
+            logMessage -message "Initializing SnapLock compliance clock"
+            foreach($node in $nodes) {
+                Set-NcSnaplockComplianceClock -Node $node.Node
+            }
+            logMessage -message "Successfully initialized SnapLock Compliance clock" -type "SUCCESS"
+        }
+    } catch {
+        handleError -errorMessage $_.Exception.Message
+    }
+}
+
+----
+以下是用于配置ONTAP网络存储的PowerShell代码示例。
+
+[source, powershell]
+----
+function configureCyberVault {
+    for($i = 0; $i -lt $DESTINATION_VOLUME_NAMES.Length; $i++) {
+        try {
+            # checking if the volume already exists and is of type snaplock compliance
+            logMessage -message "Checking if SnapLock Compliance volume $($DESTINATION_VOLUME_NAMES[$i]) already exists in vServer $DESTINATION_VSERVER"
+            $volume = Get-NcVol -Vserver $DESTINATION_VSERVER -Volume $DESTINATION_VOLUME_NAMES[$i] | Select-Object -Property Name, State, TotalSize, Aggregate, Vserver, Snaplock | Where-Object { $_.Snaplock.Type -eq "compliance" }
+            if($volume) {
+                $volume
+                logMessage -message "SnapLock Compliance volume $($DESTINATION_VOLUME_NAMES[$i]) already exists in vServer $DESTINATION_VSERVER" -type "SUCCESS"
+            } else {
+                # Create SnapLock Compliance volume
+                logMessage -message "Creating SnapLock Compliance volume: $($DESTINATION_VOLUME_NAMES[$i])"
+                New-NcVol -Name $DESTINATION_VOLUME_NAMES[$i] -Aggregate $DESTINATION_AGGREGATE_NAMES[$i] -SnaplockType Compliance -Type DP -Size $DESTINATION_VOLUME_SIZES[$i] -ErrorAction Stop | Select-Object -Property Name, State, TotalSize, Aggregate, Vserver
+                logMessage -message "Volume $($DESTINATION_VOLUME_NAMES[$i]) created successfully" -type "SUCCESS"
+            }
+
+            # Set SnapLock volume attributes
+            logMessage -message "Setting SnapLock volume attributes for volume: $($DESTINATION_VOLUME_NAMES[$i])"
+            Set-NcSnaplockVolAttr -Volume $DESTINATION_VOLUME_NAMES[$i] -MinimumRetentionPeriod $SNAPLOCK_MIN_RETENTION -MaximumRetentionPeriod $SNAPLOCK_MAX_RETENTION -ErrorAction Stop | Select-Object -Property Type, MinimumRetentionPeriod, MaximumRetentionPeriod
+            logMessage -message "SnapLock volume attributes set successfully for volume: $($DESTINATION_VOLUME_NAMES[$i])" -type "SUCCESS"
+
+            # checking snapmirror relationship
+            logMessage -message "Checking if SnapMirror relationship exists between source volume $($SOURCE_VOLUME_NAMES[$i]) and destination SnapLock Compliance volume $($DESTINATION_VOLUME_NAMES[$i])"
+            $snapmirror = Get-NcSnapmirror | Select-Object SourceCluster, SourceLocation, DestinationCluster, DestinationLocation, Status, MirrorState | Where-Object { $_.SourceCluster -eq $SOURCE_ONTAP_CLUSTER_NAME -and $_.SourceLocation -eq "$($SOURCE_VSERVER):$($SOURCE_VOLUME_NAMES[$i])" -and $_.DestinationCluster -eq $DESTINATION_ONTAP_CLUSTER_NAME -and $_.DestinationLocation -eq "$($DESTINATION_VSERVER):$($DESTINATION_VOLUME_NAMES[$i])" -and ($_.Status -eq "snapmirrored" -or $_.Status -eq "uninitialized") }
+            if($snapmirror) {
+                $snapmirror
+                logMessage -message "SnapMirror relationship already exists for volume: $($DESTINATION_VOLUME_NAMES[$i])" -type "SUCCESS"
+            } else {
+                # Create SnapMirror relationship
+                logMessage -message "Creating SnapMirror relationship for volume: $($DESTINATION_VOLUME_NAMES[$i])"
+                New-NcSnapmirror -SourceCluster $SOURCE_ONTAP_CLUSTER_NAME -SourceVserver $SOURCE_VSERVER -SourceVolume $SOURCE_VOLUME_NAMES[$i] -DestinationCluster $DESTINATION_ONTAP_CLUSTER_NAME -DestinationVserver $DESTINATION_VSERVER -DestinationVolume $DESTINATION_VOLUME_NAMES[$i] -Policy $SNAPMIRROR_PROTECTION_POLICY -Schedule $SNAPMIRROR_SCHEDULE -ErrorAction Stop | Select-Object -Property SourceCluster, SourceLocation, DestinationCluster, DestinationLocation, Status, Policy, Schedule
+                logMessage -message "SnapMirror relationship created successfully for volume: $($DESTINATION_VOLUME_NAMES[$i])" -type "SUCCESS"
+            }
+
+        } catch {
+            handleError -errorMessage $_.Exception.Message
+        }
+    }
+}
+
+----
+. 完成上述步骤后、使用SnapLock Compliance和SnapVault的气隙网络存储即已准备就绪。
+
+
+在将快照数据传输到网络存储之前、必须初始化SnapVault关系。但是、在此之前、必须执行安全强化以保护存储。

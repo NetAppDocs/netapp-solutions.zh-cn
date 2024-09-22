@@ -1,0 +1,29 @@
+---
+sidebar: sidebar 
+permalink: cyber-vault/ontap-cyber-vault-powershell-data-recovery.html 
+keywords: Cyber vault, powershell, script, configuration, validation, hardening 
+summary: 这是一款NetApp ONTAP解决方案、用于配置、强化和验证基于ONTAP的网络存储 
+---
+= ONTAP网络存储数据恢复
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
+
+
+[role="lead"]
+如果生产数据中心中的数据被销毁、则网络存储中的数据可以安全地恢复到所选环境中。与物理隔离解决方案不同、隔离ONTAP网络存储是使用SnapLock Compliance和SnapMirror等本机ONTAP功能构建的。结果是恢复过程既快速又易于执行。
+
+如果发生勒索软件攻击并需要从网络存储中恢复、则恢复过程非常简单、因为网络存储中的Snapshot副本用于恢复加密数据。
+
+image:ontap-cyber-vault-data-recovery.png["还原关系"]
+
+如果需要提供更快的方法、以便在必要时将数据恢复联机、从而快速验证、隔离和分析数据以进行恢复。通过与FlexClone结合使用并将SnapLock类型选项设置为非SnapLock类型、可以轻松实现这一点。
+
+
+NOTE: 从SnapVault.13.1开始、可以通过创建FlexClone并将SnapLock类型选项设置为"NON-SnapVault"来即时还原SnapLock SnapLock存储关系的目标SnapLock卷上锁定的ONTAP 9副本。执行卷克隆创建操作时、请将Snapshot副本指定为"parent快照"。有关创建SnapLock类型的FlexClone卷的详细信息link:https://docs.netapp.com/us-en/ontap/volumes/create-flexclone-task.html?q=volume+clone["此处。"]
+
+
+NOTE: 从网络存储执行恢复过程将确保制定正确的步骤、以便连接到网络存储并检索数据。规划和测试该过程对于网络攻击事件期间的任何恢复都至关重要。

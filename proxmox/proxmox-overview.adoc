@@ -1,0 +1,133 @@
+---
+sidebar: sidebar 
+permalink: proxmox/proxmox-overview.html 
+keywords: proxmox ve, kvm, qemu, lxc, vm 
+summary:  
+---
+= Proxmox虚拟环境概述
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Proxmox虚拟环境是一个基于Debian Linux的开源1类虚拟机管理程序(安装在裸机服务器上)。它可以托管虚拟机(VM)以及Linux容器(LDC)。
+
+
+
+== 概述
+
+Proxmox虚拟环境(VE)支持在同一主机上进行基于虚拟机和容器的完整虚拟化。利用基于内核的虚拟机(KVM)和快速模拟器(QEMu)实现完整的VM虚拟化。QEMU是一个开源计算机模拟器和虚拟器、它使用KVM内核模块直接在主机CPU上执行子系统代码。通过Linux容器(LDC)、可以像管理VM一样管理容器、并在重新启动后保证数据安全。
+
+image:proxmox-overview-image01.png["Proxmox主机上的VM和LDX"]
+
+REST风格的API可用于自动化任务。有关API调用的信息、请检查link:https://pve.proxmox.com/pve-docs/api-viewer/index.html["Proxmox VE API查看器"]
+
+
+
+== 集群管理
+
+基于Web的管理门户位于Proxmox VE节点的端口8006上。一组节点可以连接在一起、形成一个集群。Proxmox VE配置 `/etc/pve`在集群的所有节点之间共享。Proxmox VE使用link:https://pve.proxmox.com/wiki/Cluster_Manager["corosync集群引擎"]管理集群。可以从集群的任何节点访问管理门户。
+
+image:proxmox-overview-image02.png["管理接口"]
+
+通过集群、可以在托管节点出现故障时监控VM和容器并在其他节点上重新启动它们。需要为虚拟机和容器配置高可用性(HA)。通过创建组、VM和容器可以托管在特定的部分主机上。VM或容器托管在优先级最高的主机上。有关详细信息、请查看link:https://pve.proxmox.com/wiki/High_Availability["HA管理器"]
+
+image:proxmox-overview-image03.png["HA组优先级"]
+
+身份验证选项包括Linux PAM、Proxmox VE PAM、LDAP、Microsoft AD或OpenID。可以通过角色和使用资源池(资源集合)来分配权限。有关更多详细信息、请查看link:https://pve.proxmox.com/pve-docs/chapter-pveum.html["Proxmox用户管理"]
+
+
+TIP: LDAP/Microsoft AD的连接凭据可能以明文形式存储、并存储在需要由主机文件系统保护的文件中。
+
+
+
+== 计算
+
+VM的CPU选项包括CPU核数和插槽数(用于指定vCPU的数量)、选择NUMA的选项、定义相关性、设置限制以及CPU类型。
+
+image:proxmox-overview-image11.png["VM CPU选项"]
+
+有关CPU类型及其对实时迁移的影响的指导、请查看link:https://pve.proxmox.com/pve-docs/chapter-qm.html#qm_cpu["Proxmox VE文档的QEMU/KVM虚拟机部分"]
+
+以下屏幕截图显示了用于LYing容器映像的CPU选项。
+
+image:proxmox-overview-image12.png["lxc CPU选项"]
+
+VM和LDI可以指定内存大小。对于VM、Linux VM可使用平衡功能。有关详细信息、请参见link:https://pve.proxmox.com/pve-docs/chapter-qm.html#qm_memory["Proxmox VE文档的QEMU/KVM虚拟机部分"]
+
+
+
+== 存储
+
+虚拟机由配置文件、 `/etc/pve/qemu-server/<vm id>.conf`和虚拟磁盘组件组成。支持的虚拟磁盘格式包括RAW、qcow2和VMDK。qcow2可以在各种存储类型上提供精简配置和快照功能。
+
+image:proxmox-overview-image04.png["VM磁盘格式"]
+
+可以选择将iSCSI LUN作为原始设备提供给VM。
+
+lxc还具有自己的配置文件、 `/etc/pve/lxc/<container id>.conf`和容器磁盘组件。可以使用支持的存储类型挂载数据卷。
+
+image:proxmox-overview-image05.png["容器附加挂载"]
+
+支持的存储类型包括本地磁盘、NAS (SMB和NFS)和SAN (FC、iSCSI、NVMe-oF等)。有关详细信息、请参见link:https://pve.proxmox.com/pve-docs/chapter-pvesm.html["Proxmox VE存储"]
+
+每个存储卷都配置了允许的内容类型。NAS卷支持所有内容类型、而SAN支持仅限于VM和容器映像。
+
+
+NOTE: 目录存储类型还支持所有内容类型。SMB连接凭据以明文形式存储、只有root用户可以访问。
+
+image:proxmox-overview-image06.png["NAS的内容类型"]
+
+image:proxmox-overview-image07.png["SAN的内容类型"]
+
+要从Broadcom vSphere环境导入VM、也可以将vSphere主机作为存储设备包含在内。
+
+
+
+== 网络
+
+Proxmox VE支持Linux网桥或Open vSwitch等本机Linux网络功能、以实施软件定义的网络(SDN)。主机上的以太网接口可以绑定在一起、以提供冗余和高可用性。有关其他选件、请参见link:https://pve.proxmox.com/pve-docs/chapter-sysadmin.html#_choosing_a_network_configuration["Proxmox VE文档"]
+
+image:proxmox-overview-image08.png["绑定网络"]
+
+可以在集群级别配置子系统网络、并将更改推送到成员主机。隔离通过区域、VNet和子网进行管理。link:https://pve.proxmox.com/pve-docs/chapter-pvesdn.html["分区"]定义网络类型、例如简单、VLAN、VLAN堆栈、VXLAN、EVPN等
+
+根据分区类型、网络行为有所不同、并具有特定的功能、优势和限制。
+
+SDN的用例包括每个节点上的隔离专用网络、以及不同位置上多个PVE集群之间的复杂叠加网络。
+
+在集群范围的数据中心SDN管理界面中配置了一个vNet后、该vNet可作为一个通用Linux网桥使用、位于每个节点本地、并分配给VM和容器。
+
+创建VM后、用户可以选择要连接的Linux网桥。创建虚拟机后、可以添加其他接口。
+
+image:proxmox-overview-image13.png["VM网络选择"]
+
+下面是数据中心级别的vNet信息。
+
+image:proxmox-overview-image14.png["数据中心的VNet信息"]
+
+
+
+== 监控
+
+大多数对象(例如数据中心、主机、VM、容器、存储等)的摘要页面提供了详细信息并包含一些性能指标。以下屏幕截图显示了主机的摘要页面、其中包括有关已安装软件包的信息。
+
+image:proxmox-overview-image09.png["主机软件包视图"]
+
+有关主机、子系统、存储等的统计信息可以推送到外部Graphite或Inflexdb数据库。有关详细信息，请参见 link:https://pve.proxmox.com/pve-docs/chapter-sysadmin.html#external_metric_server["Proxmox VE文档"]。
+
+
+
+== 数据保护
+
+Proxmox VE提供了一些选项、用于将VM和容器备份和还原到为备份内容配置的存储。可以使用工具vzdump从UI或CLI启动备份、也可以计划备份。有关详细信息，请参见 link:https://pve.proxmox.com/pve-docs/chapter-vzdump.html["Proxmox VE文档的备份和还原部分"]。
+
+image:proxmox-overview-image10.png["Proxmox VE备份存储内容"]
+
+备份内容需要异地存储、以防止源站点出现任何灾难。
+
+Veeam在12.2版中增加了对Proxmox VE的支持。这样可以将VM备份从vSphere还原到Proxmox VE主机。

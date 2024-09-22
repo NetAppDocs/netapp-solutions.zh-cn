@@ -1,0 +1,73 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/dremio-lakehouse-technology-overview.html 
+keywords: storagegrid, apache, dremio, lakehouse, 
+summary: 本节介绍此解决方案中使用的技术。 
+---
+= 技术要求
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+在本文档中、我们会使用下面所述的硬件和软件配置进行验证。这些配置可作为设置环境的指导原则、但是请注意、具体组件可能会因客户的具体要求而异。
+
+
+
+=== 硬件要求
+
+|===
+| 硬件 | 详细信息 
+
+
+| NetApp AFF存储阵列HA对  a| 
+* A800
+* ONTAP 9.14.1.
+* 48个3.49 TB SSD -NVM
+* 两个S3存储分段：d不良 元数据和客户数据。
+
+
+
+
+| 4个Fujitsu PRIMERGY RX2540 M4  a| 
+* 64个CPU
+* 英特尔®至强®金牌6142 CPU @ 2.60GHz
+* 256 GM物理内存
+* 1个100GbE网络端口
+
+
+
+
+| 网络  a| 
+* 100 GbE
+
+
+
+
+| StorageGRID | * 1个SG100、3个SGF6024 * 3个24 x 7.68 TB *两个S3存储分段：德米奥元数据和客户数据。 
+|===
+
+
+=== 软件要求
+
+|===
+| 软件 | 详细信息 
+
+
+| Dremio  a| 
+* 版本- 2150.3-202405170357270647-d2042e1b
+* 企业版
+
+
+
+
+| 内部  a| 
+* 5节点的d不良 集群
+* 1名总协调员和4名执行人
+
+
+|===

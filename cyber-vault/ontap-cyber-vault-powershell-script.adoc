@@ -1,0 +1,75 @@
+---
+sidebar: sidebar 
+permalink: cyber-vault/ontap-cyber-vault-powershell-script.html 
+keywords: Cyber vault, powershell, script, configuration, validation, hardening 
+summary: 这是一款NetApp ONTAP解决方案、用于配置、强化和验证基于ONTAP的网络存储 
+---
+= 配置、分析、cron脚本
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
+
+
+[role="lead"]
+NetApp创建了一个可下载的脚本、用于配置、验证和计划网络存储关系。
+
+
+
+== 此脚本的作用
+
+* 集群对等
+* SVM 对等
+* DP卷创建
+* SnapMirror关系和初始化
+* 对用于网络存储的ONTAP系统进行了加密
+* 根据传输计划暂停和恢复关系
+* 定期验证安全设置并生成报告以显示任何异常情况
+
+
+
+
+== 如何使用此脚本
+
+下载脚本并使用脚本、只需执行以下步骤：
+
+* 以管理员身份启动Windows PowerShell。
+* 导航到包含脚本的目录。
+* 使用 `.\`语法和所需参数执行该脚本
+
+
+
+NOTE: 请确保输入了所有信息。首次运行(配置模式)时、它将要求提供生产和新网络存储系统的凭据。之后、它将在系统之间创建SVM对等关系(如果不存在)、卷和SnapMirror并对其进行初始化。
+
+
+NOTE: cron模式可用于计划暂停和恢复数据传输。
+
+
+
+== 操作模式
+
+自动化脚本提供了3种执行模式- `configure`、 `analyze`和 `cron`。
+
+[source, powershell]
+----
+if($SCRIPT_MODE -eq "configure") {
+        configure
+    } elseif ($SCRIPT_MODE -eq "analyze") {
+        analyze
+    } elseif ($SCRIPT_MODE -eq "cron") {
+        runCron
+    }
+----
+* 配置-执行验证检查并将系统配置为气隙。
+* 分析-自动监控和报告功能、用于向监控组发送异常和可疑活动的信息、以确保配置不会偏离。
+* cron—要启用已断开连接的基础架构、cron模式会自动禁用LIF并使传输关系处于静机状态。
+
+
+传输这些选定卷中的数据需要一些时间、具体取决于系统性能和数据量。
+
+[source, powershell]
+----
+./script.ps1 -SOURCE_ONTAP_CLUSTER_MGMT_IP "172.21.166.157" -SOURCE_ONTAP_CLUSTER_NAME "NTAP915_Src" -SOURCE_VSERVER "svm_NFS" -SOURCE_VOLUME_NAME "Src_RP_Vol01" -DESTINATION_ONTAP_CLUSTER_MGMT_IP "172.21.166.159" -DESTINATION_ONTAP_CLUSTER_NAME "NTAP915_Destn" -DESTINATION_VSERVER "svm_nim_nfs" -DESTINATION_AGGREGATE_NAME "NTAP915_Destn_01_VM_DISK_1" -DESTINATION_VOLUME_NAME "Dst_RP_Vol01_Vault" -DESTINATION_VOLUME_SIZE "5g" -SNAPLOCK_MIN_RETENTION "15minutes" -SNAPLOCK_MAX_RETENTION "30minutes" -SNAPMIRROR_PROTECTION_POLICY "XDPDefault" -SNAPMIRROR_SCHEDULE "5min" -DESTINATION_CLUSTER_USERNAME "admin" -DESTINATION_CLUSTER_PASSWORD "PASSWORD123"
+----

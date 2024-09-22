@@ -4,7 +4,7 @@ permalink: ai/aipod_nv_architecture.html
 keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, NVIDIA AI Enterprise, NVIDIA BasePOD, NVIDIA DGX 
 summary: 采用NVIDIA DGX系统的NetApp AIPod—架构 
 ---
-= 采用NVIDIA DGX系统的NetApp AIPod—解决方案架构
+= NVA-1173采用NVIDIA DGX H100系统的NetApp AIPod—解决方案架构
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -18,45 +18,41 @@ summary: 采用NVIDIA DGX系统的NetApp AIPod—架构
 
 
 
-== 采用DGX H100系统的NetApp AI Pod
+== 采用DGX系统的NetApp AIPod
 
 此参考架构利用单独的网络结构实现计算集群互连和存储访问、并在计算节点之间建立400 GB/秒InfiniBand (IB)连接。下图显示了采用DGX H100系统的NetApp AIPod的整体解决方案拓扑。
 
 _AIPOD NetApp解决方案拓扑_
 
-image:aipod_nv_a900topo.png["图中显示了输入/输出对话框或表示已写入内容"]
+image:aipod_nv_A90_topo.png["错误：缺少图形映像"]
 
 
 
-== 网络配置：
+== 网络设计
 
 在此配置中、计算集群网络结构使用一对QM9700 400Gb/s IB交换机、这些交换机连接在一起以实现高可用性。每个DGX H100系统通过八个连接连接到交换机、其中、偶数端口连接到一个交换机、奇数端口连接到另一个交换机。
 
-对于存储系统访问、带内管理和客户端访问、使用一对SN4600以太网交换机。这些交换机通过交换机间链路进行连接、并配置有多个VLAN以隔离各种流量类型。对于大型部署、可以根据需要为主干交换机添加更多交换机对并添加更多叶片、从而将以太网网络扩展为分支-主干配置。
+对于存储系统访问、带内管理和客户端访问、使用一对SN4600以太网交换机。这些交换机通过交换机间链路进行连接、并配置有多个VLAN以隔离各种流量类型。在特定VLAN之间启用基本L3路由、以便在同一交换机上的客户端和存储接口之间以及交换机之间启用多个路径、从而实现高可用性。对于大型部署、可以根据需要为主干交换机添加更多交换机对并添加更多叶片、从而将以太网网络扩展为分支-主干配置。
 
-除了计算互连和高速以太网网络之外、所有物理设备还会连接到一个或多个SN2201以太网交换机、以实现带外管理。  有关DGX H100系统连接的更多详细信息、请参见 link:https://nvdam.widen.net/s/nfnjflmzlj/nvidia-dgx-basepod-reference-architecture["NVIDIA BasePD文档"]。
+除了计算互连和高速以太网网络之外、所有物理设备还会连接到一个或多个SN2201以太网交换机、以实现带外管理。link:ai/aipod_nv_deployment.html["部署详细信息"]有关网络配置的详细信息、请参见页面。
 
 
 
-== 用于存储访问的客户端配置
+== DGX H100系统的存储访问概述
 
 每个DGX H100系统都配置有两个双端口ConnectX-7适配器、用于管理和存储流量、对于此解决方案、每个卡上的两个端口都连接到同一交换机。然后、将每个卡中的一个端口配置到LACP MAG绑定中、并将一个端口连接到每个交换机、同时在此绑定上托管用于带内管理、客户端访问和用户级存储访问的VLAN。
 
-每个卡上的另一个端口用于连接到AFF A900存储系统、并可根据工作负载要求在多种配置中使用。对于使用基于RDMA的NFS来支持NVIDIA Magrum IO GPUDirect存储的配置、端口配置为主动/被动绑定、因为任何其他类型的绑定都不支持RDMA。对于不需要RDMA的部署、还可以为存储接口配置LACP绑定、以提供高可用性和额外带宽。无论是否使用RDMA、客户端都可以使用NFS v4.1 pNFS和会话中继挂载存储系统、以便能够并行访问集群中的所有存储节点。
+每个卡上的另一个端口用于连接到AFF A90存储系统、并可根据工作负载要求在多种配置中使用。对于使用基于RDMA的NFS来支持NVIDIA麦格努姆IO GPUDirect存储的配置、这些端口将分别与不同VLAN中的IP地址结合使用。对于不需要RDMA的部署、还可以为存储接口配置LACP绑定、以提供高可用性和额外带宽。无论是否使用RDMA、客户端都可以使用NFS v4.1 pNFS和会话中继挂载存储系统、以便能够并行访问集群中的所有存储节点。link:ai/aipod_nv_deployment.html["部署详细信息"]有关客户端配置的详细信息、请参见页面。
+
+有关DGX H100系统连接的详细信息，请参阅link:https://nvdam.widen.net/s/nfnjflmzlj/nvidia-dgx-basepod-reference-architecture["NVIDIA BasePD文档"]。
 
 
 
-== 存储系统配置：
+== 存储系统设计
 
-每个AFF A900存储系统使用每个控制器中的四个100 GbE端口进行连接。每个控制器的两个端口用于从DGX系统访问工作负载数据、每个控制器的两个端口配置为LACP接口组、以支持从管理平台服务器访问集群管理项目和用户主目录。存储系统的所有数据访问均通过NFS提供、其中一个Storage Virtual Machine (SVM)专用于AI工作负载访问、另一个SVM专用于集群管理用途。
+每个AFF A90存储系统使用每个控制器中的六个200 GbE端口进行连接。每个控制器的四个端口用于从DGX系统访问工作负载数据、每个控制器的两个端口配置为一个LACP接口组、以支持从管理平台服务器访问集群管理项目和用户主目录。存储系统的所有数据访问均通过NFS提供、其中一个Storage Virtual Machine (SVM)专用于AI工作负载访问、另一个SVM专用于集群管理用途。
 
-工作负载SVM总共配置了八个逻辑接口(LIP)、每个物理端口上配置两个LIP。此配置可提供最大带宽、并允许每个LIF故障转移到同一控制器上的另一个端口、以便在发生网络故障时两个控制器保持活动状态。此配置还支持基于RDMA的NFS、以启用GPUDirect存储访问。存储容量以一个大型FlexGroup卷的形式进行配置、该卷跨越集群中的所有存储控制器、每个控制器上有16个成分卷。可从SVM上的任何LIF访问此FlexGroup、并通过将NFSv4.1与pNFS和会话中继结合使用、客户端可与SVM中的每个LIF建立连接、从而可以并行访问每个存储节点的本地数据、从而显著提高性能。此外、还会为工作负载SVM和每个数据LIF配置RDMA协议访问。有关ONTAP的RDMA配置的详细信息、请参见 link:https://docs.netapp.com/us-en/ontap/nfs-rdma/index.html["ONTAP 文档"]。
-
-管理SVM仅需要一个LIF、该LIF托管在每个控制器上配置的双端口接口组上。在管理SVM上配置了其他FlexGroup卷、用于存放集群管理项目、例如集群节点映像、系统监控历史数据和最终用户主目录。下图显示了存储系统的逻辑配置。
-
-_ NetApp A900存储集群逻辑配置_
-
-image:aipod_nv_A900logical.png["图中显示了输入/输出对话框或表示已写入内容"]
+link:ai/aipod_nv_deployment.html["部署详细信息"]有关存储系统配置的详细信息、请参见页面。
 
 
 

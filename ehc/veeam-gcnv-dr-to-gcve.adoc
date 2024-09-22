@@ -1,0 +1,425 @@
+---
+sidebar: sidebar 
+permalink: ehc/veeam-gcnv-dr-to-gcve.html 
+keywords: disaster recovery, avs, google cloud, gcp, gcve, gcnv, google cloud netapp volumes, netapp volumes, dr, veeam, replication 
+summary:  
+---
+= 使用Veeam复制和Google Cloud NetApp卷数据存储库将灾难恢复到Google Cloud VMware Engine
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+在发生危机时、全面的灾难恢复计划对于企业至关重要。许多企业利用云计算进行日常运营和灾难恢复。这种主动式方法可以减少或消除代价高昂的业务中断。
+
+本文介绍如何使用Veeam Backup & Replication为内部VMware VM设置灾难恢复、并将其迁移到Google Cloud NetApp卷(NetApp卷)中的Google Cloud VMware Engine (GCVE)。
+
+
+
+== 概述
+
+Google Cloud NetApp Volumes是Google和NetApp提供的一项存储服务、可用于Google Cloud。NetApp卷服务可提供高性能NFS/SMB存储。VMware认证的NetApp卷NFS存储可用作GCVe中ESXi主机的外部数据存储库。用户需要在其GCVA私有云和NetApp卷项目之间建立对等连接。区域内的存储访问不会产生网络费用。用户可以在Google Cloud控制台中创建NetApp卷、并在将卷作为数据存储库挂载到其ESXi主机之前启用删除保护。
+
+基于NetApp卷的NFS数据存储库可用于通过任何经验证的第三方解决方案从内部复制数据、该解决方案可提供VM复制功能。通过添加NetApp卷数据存储库、它可以实现成本优化的部署、而不是使用大量ESXi主机构建基于Google Cloud VMware Engine (GCVA)的SDDC来容纳存储。这种方法称为“导向灯组”。试点轻型集群是一种最低的GCVA主机配置(3个GCVA ESXi主机)以及NetApp卷数据存储库容量、可用于独立扩展以满足容量要求。
+
+其目标是、仅使用核心组件来管理故障转移、从而保持一个经济高效的基础架构。在发生故障转移时、指示灯集群可以扩展和添加更多GCVA主机。解决故障转移问题并恢复正常操作后、指示灯集群可以减小其规模、从而恢复到低成本操作模式。
+
+
+
+== 本文档的目的
+
+本文介绍如何将Google Cloud NetApp卷数据存储库与Veeam Backup & Replication结合使用、以便使用Veeam VM复制软件功能为内部VMware VM到GCVE设置灾难恢复。
+
+Veeam Backup & Replication是一款适用于虚拟环境的备份和复制应用程序。复制虚拟机后、Veeam Backup & Replication将在目标GCVE SDDC集群上以本机VMware vSphere格式创建VM的精确副本。Veeam Backup & Replication将使副本与原始虚拟机保持同步。复制可提供最佳恢复时间目标(Recovery Time客观、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标、Recovery Time目标)、因为灾难恢复站点上已挂载VM副本、并且处于随时可启动的状态。
+
+此复制机制可确保在发生灾难事件时、工作负载可以在GCVA中快速启动。Veeam Backup & Replication软件还可以优化流量传输、以便通过WAN和慢速连接进行复制。此外、它还会筛选出重复的数据块、零数据块、交换文件和"排除的VM子操作系统文件"。软件还将压缩副本流量。为了防止复制作业占用整个网络带宽、可以使用WAN加速器和网络限制规则。
+
+Veeam Backup & Replication中的复制过程由作业驱动、这意味着复制是通过配置复制作业来执行的。如果发生灾难事件、则可以通过故障转移到VM副本来触发故障转移以恢复VM。执行故障转移时、复制的虚拟机将接管原始虚拟机的角色。可以将故障转移到副本的最新状态或任何已知正常的还原点。这样便可根据需要进行勒索软件恢复或隔离测试。Veeam Backup & Replication提供了多种选项来处理不同的灾难恢复场景。
+
+
+
+== 解决方案概述
+
+此解决方案包括以下高级步骤：
+
+. 使用Google Cloud NetApp卷创建NFS卷
+. 按照GCP过程从NetApp卷NFS卷创建GCVA数据存储库。
+. 设置复制作业以使用Veeam Backup & Replication创建VM副本。
+. 创建故障转移计划并执行故障转移。
+. 灾难事件完成且主站点启动后、切换回生产VM。
+
+
+
+NOTE: 在NetApp卷中创建卷以用作GCVA数据存储库时、仅支持NFS v3。
+
+有关使用NetApp卷NFS卷作为GCVE(通用加密)的数据存储库的详细信息，请查看 https://cloud.google.com/vmware-engine/docs/vmware-ecosystem/howto-cloud-volumes-datastores-gcve["使用NFS卷作为由Google Cloud NetApp卷托管的vSphere数据存储库"]。
+
+
+
+== 架构
+
+下图显示了本文档中介绍的解决方案架构。建议的最佳实践是、在内部站点和GCVE SDDC中都部署Veeam Backup & Replication服务器。备份和恢复由内部Veeam服务器执行和管理、复制由GCVESDDC中的Veeam服务器管理。此架构可在主数据中心发生故障时提供最高的可用性。
+
+image::dr-veeam-gcnv-image01.png[架构图]
+
+
+
+== Veeam复制到GCVE和NetApp卷数据存储库的前提条件
+
+此解决方案需要以下组件和配置：
+
+. NetApp卷具有一个可用容量足以容纳要创建的NFS卷的存储池。
+. Veeam Backup and Replication软件在具有适当网络连接的内部环境中运行。
+. 确保Veeam Backup & Replication备份VM已连接到源和目标GCVE SDDC集群。
+. 确保Veeam Backup & Replication备份VM已连接到源和目标GCVE集群上的Veeam代理服务器VM。
+. 备份服务器必须能够解析短名称并连接到源和目标vCenter。
+
+
+用户需要在其GCVE私有云和NetApp卷项目之间使用VMware引擎云控制台UI中的VPC网络对等或私有连接页面建立对等连接。
+
+
+NOTE: 在将GCVE vCenter服务器添加到Veeam备份和复制清单时、Veeam需要一个Privileges提升的GCVE解决方案用户帐户。有关详细信息，请参阅Google Cloud Platform (GCP)文档 https://cloud.google.com/vmware-engine/docs/private-clouds/classic-console/howto-elevate-privilege["VMware Engine Privileges的相关信息"]。
+
+有关更多信息、请参见 https://helpcenter.veeam.com/docs/backup/vsphere/replica_limitations.html?ver=120["注意事项和限制"]Veeam Backup & Replication文档中的。
+
+
+
+== 部署步骤
+
+以下各节概述了使用Google Cloud NetApp卷创建和挂载NFS数据存储库以及使用Veeam备份和复制在内部数据中心和Google Cloud VMware引擎之间实施完整灾难恢复解决方案的部署步骤。
+
+
+
+=== 为GCVE)创建NetApp卷NFS卷和数据存储库
+
+ https://cloud.google.com/vmware-engine/docs/vmware-ecosystem/howto-cloud-volumes-datastores-gcve["使用NFS卷作为由Google Cloud NetApp卷托管的vSphere数据存储库"]有关如何将Google Cloud NetApp卷作为GCVA的数据存储库的概述、请参见。
+
+完成以下步骤、使用NetApp卷为GCVE)创建和使用NFS数据存储库：
+
+.创建NetApp卷NFS卷
+[%collapsible]
+====
+可从Google云平台(GCP)控制台访问Google Cloud NetApp卷。
+
+ https://cloud.google.com/netapp/volumes/docs/configure-and-use/volumes/create-volume["创建卷"]有关此步骤的详细信息、请参见Google Cloud NetApp卷文档中的。
+
+. 在Web浏览器中、导航到 https://console.cloud.google.com/[]并登录到GCP控制台。搜索* NetApp Volumes*以开始使用。
+. 在*NFS Volumes*管理界面中，单击*Create*开始创建NetApp卷。
++
+image::dr-veeam-gcnv-image02.png[创建卷]
+
++
+｛｛｝
+
+. 在*创建卷*向导中，填写所有必需信息：
++
+** 卷的名称。
+** 要在其中创建卷的存储池。
+** 挂载NFS卷时使用的共享名称。
+** 卷的容量(以GiB为单位)。
+** 要使用的存储协议。
+** 选中*连接客户端时阻止删除卷*(作为数据存储库挂载时GCVA需要)复选框。
+** 用于访问卷的导出规则。这是NFS网络上ESXi适配器的IP地址。
+** 一种用于使用本地快照保护卷的快照计划。
+** (可选)选择备份卷和/或为卷创建标签。
++
+
+NOTE: 在NetApp卷中创建卷以用作GCVA数据存储库时、仅支持NFS v3。
+
++
+image::dr-veeam-gcnv-image03.png[创建卷]
+
++
+｛｛｝
+
++
+image::dr-veeam-gcnv-image04.png[创建卷]
+
++
+｛NInspp｝单击*创建*以完成卷的创建。
+
+
+
+. 创建卷后、可以从卷的属性页面查看挂载卷所需的NFS导出路径。
++
+image::dr-veeam-gcnv-image05.png[卷属性]
+
+
+
+====
+.在GCVE)中挂载NFS数据存储库
+[%collapsible]
+====
+在编写本文时、在GCVA中挂载数据存储库的过程需要打开GCP支持服务单、以便将卷挂载为NFS数据存储库。
+
+有关详细信息、请参见 https://cloud.google.com/vmware-engine/docs/vmware-ecosystem/howto-cloud-volumes-datastores-gcve["使用NFS卷作为由Google Cloud NetApp卷托管的vSphere数据存储库"] 。
+
+====
+
+
+=== 将VM复制到GCVE并执行故障转移计划和故障恢复
+
+.将VM复制到GCVE)中的NFS数据存储库
+[%collapsible]
+====
+Veeam Backup & Replication利用VMware vSphere快照功能在复制期间、Veeam Backup & Replication会请求VMware vSphere创建VM快照。VM快照是VM的时间点副本、其中包括虚拟磁盘、系统状态、配置和元数据。Veeam Backup & Replication使用快照作为复制数据源。
+
+要复制VM、请完成以下步骤：
+
+. 打开Veeam Backup & Replication Console。
+. 在*主页*选项卡上，单击*复制作业>虚拟机...*
++
+image::dr-veeam-gcnv-image06.png[创建VM复制作业]
+
++
+｛｛｝
+
+. 在*New Replication Job*向导的*Name*页面上，指定作业名称并选中相应的高级控制复选框。
++
+** 如果内部和GCP之间的连接带宽受限、请选中副本传播复选框。
+** 如果GCVA SDDC上的网段与内部站点网络的网段不匹配、请选中"网络重新映射(适用于具有不同网络的GCVA SDDC站点)"复选框。
+** 如果内部生产站点中的IP编址方案与目标GCe站点中的方案不同、请选中"Re-IP (for DR site with the weses from the不同IP Addressing方案)"复选框。
++
+image::dr-veeam-gcnv-image07.png[名称页面]
+
++
+｛｛｝
+
+
+
+. 在*Virtual Machines*页面上，选择要复制到连接到GCVE SDDC的NetApp卷数据存储库的VM。单击*Add*，然后在*Add Object*窗口中选择所需的VM或VM容器，然后单击*Add*。单击 * 下一步 * 。
++
+
+NOTE: 可以将虚拟机放置在vSAN上、以填满可用的vSAN数据存储库容量。在试点轻型集群中、三节点vSAN集群的可用容量将受到限制。其余数据可以轻松放置在Google Cloud NetApp卷数据存储库中、以便恢复VM、之后可以扩展集群以满足CPU/内存要求。
+
++
+image::dr-veeam-gcnv-image08.png[选择要复制的VM]
+
++
+｛｛｝
+
+. 在*目标*页面上、选择目标作为GCVESDDC集群/主机、并为VM副本选择相应的资源池、VM文件夹和GCNV数据存储库。单击 * 下一步 * 继续。
++
+image::dr-veeam-gcnv-image09.png[选择目标详细信息]
+
++
+｛｛｝
+
+. 在*Network*页面上，根据需要创建源虚拟网络与目标虚拟网络之间的映射。单击 * 下一步 * 继续。
++
+image::dr-veeam-gcnv-image10.png[网络映射]
+
++
+｛｛｝
+
+. 在*Re-IP*页面上，单击*Add...*按钮以添加新的Re-IP规则。填写源VM和目标VM IP范围、以指定在发生故障转移时要应用于源VM的网络连接。使用星号指定为该八位组指定的地址范围。单击 * 下一步 * 继续。
++
+image::dr-veeam-gcnv-image11.png[Re-IP页面]
+
++
+｛｛｝
+
+. 在*作业设置*页面上，指定要存储VM副本元数据的备份存储库、保留策略，然后选择底部的*高级...*按钮按钮以获取其他作业设置。单击 * 下一步 * 继续。
+. 在*数据传输*上，选择位于源站点和目标站点的代理服务器，并保持选择直接选项。如果已配置WAN加速器、也可以在此处选择。单击 * 下一步 * 继续。
++
+image::dr-veeam-gcnv-image12.png[数据传输]
+
++
+｛｛｝
+
+. 在*Guest Processing*页面上，选中*根据需要启用应用程序感知处理*复选框，然后选择*子操作系统凭据*。单击 * 下一步 * 继续。
++
+image::dr-veeam-gcnv-image13.png[子系统处理]
+
++
+｛｛｝
+
+. 在*Schedule页上，定义运行复制作业的时间和频率。单击 * 下一步 * 继续。
++
+image::dr-veeam-gcnv-image14.png[计划页面]
+
++
+｛｛｝
+
+. 最后，查看*Summary (摘要)*页面上的作业设置。选中*单击完成时运行作业*复选框，然后单击*完成*完成复制作业的创建。
+. 运行后、可以在作业状态窗口中查看复制作业。
++
+image::dr-veeam-gcnv-image15.png[作业状态窗口]
+
++
+有关Veeam复制的详细信息、请参见link:https://helpcenter.veeam.com/docs/backup/vsphere/replication_process.html?ver=120["复制的工作原理"]
+
+
+
+====
+.创建故障转移计划
+[%collapsible]
+====
+初始复制或传播完成后、创建故障转移计划。故障转移计划有助于逐个或以组的形式自动对相关VM执行故障转移。故障转移计划是VM处理顺序(包括启动延迟)的蓝图。故障转移计划还有助于确保依赖关系关键的VM已在运行。
+
+完成初始复制或传播后、创建故障转移计划。此计划可作为一个战略蓝图、用于编排相关VM的故障转移过程、无论是单个虚拟机还是一个组虚拟机。它定义了VM的处理顺序、纳入了必要的启动延迟、并确保关键的依赖VM优先于其他VM运行。通过实施结构合理的故障转移计划、企业可以简化灾难恢复流程、最大限度地减少停机时间、并在故障转移期间保持相互依赖的系统的完整性。
+
+在创建计划时、Veeam Backup & Replication会自动识别并使用最新的还原点来启动VM副本。
+
+
+NOTE: 只有在初始复制完成且虚拟机副本处于就绪状态时、才能创建故障转移计划。
+
+
+NOTE: 在运行故障转移计划时、最多可同时启动10个VM。
+
+
+NOTE: 在故障转移过程中、源VM不会关闭。
+
+要创建*故障转移计划*，请完成以下步骤：
+
+. 在*主页*视图中，单击*还原*部分中的*故障转移计划*按钮。在下拉列表中，选择*VMware vSphere……*
++
+image::dr-veeam-gcnv-image16.png[创建故障转移计划]
+
++
+｛｛｝
+
+. 在*New Failover Plan*向导的*General页上，提供该计划的名称和说明。可以根据需要添加故障转移前和故障转移后脚本。例如、在启动复制的VM之前、请运行一个脚本来关闭VM。
++
+image::dr-veeam-gcnv-image17.png[常规页面]
+
++
+｛｛｝
+
+. 在*Virtual Machines*页面上，单击按钮以*Add VM*，然后选择*from re文 副本...*。选择要纳入故障转移计划的VM、然后修改VM启动顺序以及任何所需的启动延迟、以满足应用程序的依赖关系。
++
+image::dr-veeam-gcnv-image18.png[虚拟机页面]
+
++
+｛｛｝
+
++
+image::dr-veeam-gcnv-image19.png[启动顺序和延迟]
+
++
+｛｛｝
+
++
+单击*Apply*继续。
+
+. 最后，查看所有故障转移计划设置，然后单击*Complet*(完成)创建故障转移计划。
+
+
+有关创建复制作业的其他信息，请参阅link:https://helpcenter.veeam.com/docs/backup/vsphere/replica_job.html?ver=120["正在创建复制作业"]。
+
+====
+.运行故障转移计划
+[%collapsible]
+====
+在故障转移期间、生产站点中的源VM会切换到其在灾难恢复站点上的副本。在此过程中、Veeam Backup & Replication会将VM副本还原到所需的还原点、并将所有I/O活动从源VM传输到其副本。副本不仅适用于实际灾难、还适用于模拟灾难恢复演练。在故障转移模拟中、源VM会继续运行。完成必要的测试后、故障转移可以撤消、从而使操作恢复正常。
+
+
+NOTE: 确保已建立网络分段、以避免故障转移期间发生IP冲突。
+
+完成以下步骤以启动故障转移计划：
+
+. 要开始，请在“*主页*”视图中单击左侧菜单中的*副本>故障转移计划*，然后单击“*开始*”按钮。或者，可以使用*Start to…*按钮故障转移到先前的还原点。
++
+image::dr-veeam-gcnv-image20.png[启动故障转移计划]
+
++
+｛｛｝
+
+. 在*正在执行故障转移计划*窗口中监控故障转移的进度。
++
+image::dr-veeam-gcnv-image21.png[监控故障转移进度]
+
++
+｛｛｝
+
+
+
+
+NOTE: Veeam Backup & Replication会停止源VM的所有复制活动、直到其副本恢复到就绪状态为止。
+
+有关故障转移计划的详细信息、请参见 link:https://helpcenter.veeam.com/docs/backup/vsphere/failover_plan.html?ver=120["故障转移计划"]。
+
+====
+.故障恢复到生产站点
+[%collapsible]
+====
+执行故障转移被视为一个中间步骤、需要根据要求完成。选项包括：
+
+* *故障恢复到生产环境*-还原到原始虚拟机并将副本活动期间所做的所有修改同步回源虚拟机。
+
+
+
+NOTE: 在故障恢复期间、更改会进行传输、但不会立即应用。验证初始虚拟机的功能后，选择*commit failback*。或者，如果原始虚拟机出现意外行为，也可以选择*Undo failback*以还原到VM副本。
+
+* *撤消故障转移*-还原到原始虚拟机，并删除在虚拟机副本运行期间对其所做的所有更改。
+* *永久故障转移*-从原始虚拟机永久切换到其副本，将副本建立为新的主虚拟机以供持续操作。
+
+
+在此情景中、选择了"Failback to Production (故障恢复到生产)"选项。
+
+要对生产站点执行故障恢复、请完成以下步骤：
+
+. 在“*主页*”视图中，单击左侧菜单中的*副本>活动*。选择要包含的VM，然后单击顶部菜单中的*故障恢复到生产*按钮。
++
+image::dr-veeam-gcnv-image22.png[启动故障恢复]
+
++
+｛｛｝
+
+. 在*故障恢复*向导的*副本*页面上，选择要包括在故障恢复作业中的副本。
+. 在*目标*页面上，选择*故障恢复到原始虚拟机*，然后单击*下一步*继续。
++
+image::dr-veeam-gcnv-image23.png[故障恢复到原始虚拟机]
+
++
+｛｛｝
+
+. 在*故障恢复模式*页面上，选择*自动*以尽快启动故障恢复。
++
+image::dr-veeam-gcnv-image24.png[故障恢复模式]
+
++
+｛｛｝
+
+. 在*摘要*页面上，选择是否要*在还原后启动目标虚拟机*，然后单击完成以启动故障恢复作业。
++
+image::dr-veeam-gcnv-image25.png[故障恢复作业摘要]
+
++
+｛｛｝
+
+
+
+故障恢复提交将完成故障恢复操作、确认已成功将更改集成到生产VM。提交后、Veeam Backup & Replication将为已还原的生产虚拟机恢复常规复制活动。此操作会将已还原副本的状态从_Failback_更改为_Ready_。
+
+. 要提交故障恢复，请导航到*副本>活动*，选择要提交的虚拟机，右键单击并选择*提交故障恢复*。
++
+image::dr-veeam-gcnv-image26.png[提交故障恢复]
+
++
+｛｛｝
+
++
+image::dr-veeam-gcnv-image27.png[提交故障恢复成功]
+
++
+｛n｝成功故障恢复到生产环境后、所有VM都会还原回原始生产站点。
+
+
+
+有关故障恢复过程的详细信息、请参见的Veeam文档 link:https://helpcenter.veeam.com/docs/backup/vsphere/failover_failback.html?ver=120["故障转移和故障恢复以进行复制"]。
+
+====
+
+
+== 结论
+
+Google Cloud NetApp Volumes数据存储库功能使Veeam和其他经过验证的第三方工具能够提供经济高效的灾难恢复(Disaster Recovery、DR)解决方案。通过使用Pilot Light集群代替大型专用集群来创建VM副本、企业可以显著降低支出。这种方法支持量身定制的灾难恢复策略、利用现有的内部备份解决方案实现基于云的灾难恢复、从而不再需要额外的内部数据中心。发生灾难时、只需单击一下即可启动故障转移、或者将故障转移配置为自动进行、从而确保业务连续性、并最大程度地减少停机时间。
+
+要了解有关此过程的更多信息、请随时观看详细的演练视频。
+
+video::b2fb8597-c3fe-49e2-8a84-b1f10118db6d[panopto,width=Video walkthrough of the solution]
