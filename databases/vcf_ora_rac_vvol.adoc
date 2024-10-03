@@ -24,7 +24,7 @@ NetApp公司Allen Cao、Niyaz Mohamed
 
 VMware vSphere虚拟卷(vvol)是一个SAN/NAS管理和集成框架、可将虚拟磁盘公开为本机存储对象、并可在虚拟磁盘级别执行基于阵列的操作。换言之、Vvol可使SAN/NAS设备具有VM感知能力、并在单个虚拟磁盘粒度范围内通过以VM为中心的方法充分利用基于阵列的数据服务。 利用虚拟卷、客户可以充分利用当前存储投资的独特功能、并在不中断系统运行的情况下过渡到针对适用于所有存储类型的虚拟环境而优化的更简单、更高效的运营模式。
 
-在中link:https://docs.netapp.com/us-en/netapp-solutions/databases/vcf_ora_si_vvol.html["TR-4996"^]，我们演示了使用VVO尔 在VCF中部署和保护单实例Oracle数据库的过程。本文档演示了如何在VMware Cloud Foundation环境中部署和保护Oracle RAC数据库、并将vvol作为NetApp ONTAP存储集群中的主数据库存储。Oracle RAC数据库的配置就像部署在本地存储系统的本地文件系统中一样。本技术报告重点介绍在适用于Oracle RAC部署的VCF中创建VVO尔 的步骤。我们还演示了如何使用NetApp自动化工具包在VVO尔 上的VCF中部署Oracle RAC数据库、以及如何使用NetApp SnapCenter UI工具保护RAC数据库。
+在中link:vcf_ora_si_vvol.html["TR-4996"^]，我们演示了使用VVO尔 在VCF中部署和保护单实例Oracle数据库的过程。本文档演示了如何在VMware Cloud Foundation环境中部署和保护Oracle RAC数据库、并将vvol作为NetApp ONTAP存储集群中的主数据库存储。Oracle RAC数据库的配置就像部署在本地存储系统的本地文件系统中一样。本技术报告重点介绍在适用于Oracle RAC部署的VCF中创建VVO尔 的步骤。我们还演示了如何使用NetApp自动化工具包在VVO尔 上的VCF中部署Oracle RAC数据库、以及如何使用NetApp SnapCenter UI工具保护RAC数据库。
 
 此解决方案 可解决以下使用情形：
 
@@ -151,7 +151,7 @@ image:vcf_orarac_vvol_architecture.png["此图详细展示了AWS公共云中使�
 部署需要满足以下前提条件。
 
 . 已设置VMware VCF。有关如何创建VCF的信息或说明，请参阅VMware文档 link:https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html["VMware Cloud Foundation文档"^]。
-. 在VCF工作负载域中配置三个Linux VM、两个VM用于Oracle RAC数据库集群、一个VM用于Ansv可 控制器。配置一个Windows服务器VM以运行NetApp SnapCenter服务器。有关为自动化Oracle数据库部署设置Ans得 控制器的信息，请参阅以下资源 link:https://docs.netapp.com/us-en/netapp-solutions/automation/getting-started.html["NetApp解决方案 自动化入门"^]。
+. 在VCF工作负载域中配置三个Linux VM、两个VM用于Oracle RAC数据库集群、一个VM用于Ansv可 控制器。配置一个Windows服务器VM以运行NetApp SnapCenter服务器。有关为自动化Oracle数据库部署设置Ans得 控制器的信息，请参阅以下资源 link:../automation/getting-started.html["NetApp解决方案 自动化入门"^]。
 . Oracle RAC数据库VM应至少配置两个网络接口—一个用于Oracle RAC专用互连、另一个用于应用程序或公共数据流量。
 . VCF中已部署适用于VMware vSphere的SnapCenter插件6.0版。有关插件部署的信息，请参见以下资源： link:https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/["适用于 VMware vSphere 的 SnapCenter 插件文档"^]。
 . 适用于VMware vSphere的ONTAP工具已部署在VCF中。有关适用于VMware vSphere的ONTAP工具部署的信息、请参见以下资源： link:https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html["适用于VMware vSphere的ONTAP工具文档"^]
@@ -1203,20 +1203,8 @@ Version 19.18.0.0.0
 
 要了解有关本文档中所述信息的更多信息，请查看以下文档和 / 或网站：
 
-* VMware Cloud Foundation
-+
-link:https://www.vmware.com/products/cloud-infrastructure/vmware-cloud-foundation["https://www.vmware.com/products/cloud-infrastructure/vmware-cloud-foundation"^]
-
-* NetApp企业数据库解决方案
-+
-link:https://docs.netapp.com/us-en/netapp-solutions/databases/index.html["https://docs.netapp.com/us-en/netapp-solutions/databases/index.html"^]
-
-* SnapCenter 软件 6.0
-+
-link:https://docs.netapp.com/us-en/snapcenter/concept/concept_snapcenter_overview.html["https://docs.netapp.com/us-en/snapcenter/concept/concept_snapcenter_overview.html"^]
-
-* 适用于VMware vSphere的ONTAP工具文档
-+
-link:https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html["https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html"^]
-
+* link:https://www.vmware.com/products/cloud-infrastructure/vmware-cloud-foundation["VMware Cloud Foundation"^]
+* link:index.html["NetApp企业数据库解决方案"^]
+* link:https://docs.netapp.com/us-en/snapcenter/concept/concept_snapcenter_overview.html["SnapCenter 软件 6.0"^]
+* link:https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html["适用于VMware vSphere的ONTAP工具文档"^]
 

@@ -35,7 +35,7 @@ image:redhat_openshift_image52.png["创建 VM 架构"]
 
 此时将创建并启动虚拟机，使其进入*running"状态。它会使用默认存储类自动为启动磁盘创建PVC和相应的PV。为了能够在将来实时迁移虚拟机、您必须确保用于磁盘的存储类可以支持rwx卷。这是实时迁移的一项要求。对于使用相应存储类创建的卷、ONTAP NAS和ONTAP SAN (适用于iSCSI和NVMe/TCP协议的卷模式块)可以支持rwx访问模式。
 
-要在集群上配置ONONTAP SAN存储类、请参见 link:https://docs.netapp.com/us-en/netapp-solutions/containers/rh-os-n_use_case_openshift_virtualization_workflow_vm_migration_using_mtv.html["有关将VM从VMware迁移到OpenShift虚拟化的章节"]。
+要在集群上配置ONTAP－SAN存储类，请参见link:rh-os-n_use_case_openshift_virtualization_workflow_vm_migration_using_mtv.html["有关将VM从VMware迁移到OpenShift虚拟化的章节"]。
 
 
 NOTE: 您可以将ONTAP NAS或iSCSI设置为集群的默认存储类。单击Quick create VirtualMachine将使用默认存储类为虚拟机的可启动根磁盘创建PVC和PV。如果默认存储类不是ONTAP NAS或ONTAP SAN、则可以选择磁盘的存储类、方法是选择自定义虚拟机>自定义虚拟机参数>磁盘、然后编辑该磁盘以使用所需的存储类。

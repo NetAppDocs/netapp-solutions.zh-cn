@@ -148,7 +148,7 @@ image:vcf_ora_si_vvols_architecture.png["此图详细展示了AWS公共云中使
 部署需要满足以下前提条件。
 
 . 已设置VMware VCF。有关如何创建VCF的信息或说明，请参阅VMware文档 link:https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html["VMware Cloud Foundation文档"^]。
-. 在VCF工作负载域中配置三个Linux VM、两个VM用于Oracle数据库、一个VM用于Ansv可 控制器。配置一个Windows服务器VM以运行NetApp SnapCenter服务器。有关为自动化Oracle数据库部署设置Ans得 控制器的信息，请参阅以下资源 link:https://docs.netapp.com/us-en/netapp-solutions/automation/getting-started.html["NetApp解决方案 自动化入门"^]。
+. 在VCF工作负载域中配置三个Linux VM、两个VM用于Oracle数据库、一个VM用于Ansv可 控制器。配置一个Windows服务器VM以运行NetApp SnapCenter服务器。有关为自动化Oracle数据库部署设置Ans得 控制器的信息，请参阅以下资源 link:../automation/getting-started.html["NetApp解决方案 自动化入门"^]。
 . VCF中已部署适用于VMware vSphere的SnapCenter插件6.0版。有关插件部署的信息，请参见以下资源： link:https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/["适用于 VMware vSphere 的 SnapCenter 插件文档"^]。
 . 适用于VMware vSphere的ONTAP工具已部署在VCF中。有关适用于VMware vSphere的ONTAP工具部署的信息、请参见以下资源： link:https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html["适用于VMware vSphere的ONTAP工具文档"^]
 
@@ -434,7 +434,7 @@ UUID=aff942c4-b224-4b62-807d-6a5c22f7b623 /boot                   xfs     defaul
 
 [%collapsible]
 ====
-建议利用NetApp自动化工具包在VCF中使用VVO尔 部署Oracle。有关在xfs文件系统上执行Oracle自动部署的详细参考信息，请参阅TR-4不同 的文档： link:https://docs.netapp.com/us-en/netapp-solutions/databases/automation_ora_c-series_nfs.html["在采用NFS的NetApp C系列上简化的自动化Oracle部署"^]。虽然TR-4处于 使用NFS的NetApp C系列上的Oracle自动部署范围、但如果绕过挂载到数据库VM的NFS文件系统、则它与使用VVOR的VCF中的Oracle部署方式相同。我们只需使用特定标记即可跳过该步骤。下面是分步过程。
+建议利用NetApp自动化工具包在VCF中使用VVO尔 部署Oracle。有关在xfs文件系统上执行Oracle自动部署的详细参考信息，请参阅TR-4不同 的文档： link:automation_ora_c-series_nfs.html["在采用NFS的NetApp C系列上简化的自动化Oracle部署"^]。虽然TR-4处于 使用NFS的NetApp C系列上的Oracle自动部署范围、但如果绕过挂载到数据库VM的NFS文件系统、则它与使用VVOR的VCF中的Oracle部署方式相同。我们只需使用特定标记即可跳过该步骤。下面是分步过程。
 
 . 以管理员用户身份通过ssh登录到Ands得以 控制器VM、并克隆NFS上适用于Oracle的自动化工具包副本。
 +
@@ -449,7 +449,7 @@ LINUX.X64_193000_db_home.zip
 p34765931_190000_Linux-x86-64.zip
 p6880880_190000_Linux-x86-64.zip
 ....
-. 根据TR-4不同 的本节中的说明，配置部署目标文件-主机、全局变量文件- vars/vars.yml和本地数据库VM变量文件- host_vars/host_name.yml link:https://docs.netapp.com/us-en/netapp-solutions/databases/automation_ora_c-series_nfs.html#parameter-files-configuration["参数文件配置"^]。从本地DB VM变量文件中注释掉NFS_lf变量。
+. 根据TR-4不同 的本节中的说明，配置部署目标文件-主机、全局变量文件- vars/vars.yml和本地数据库VM变量文件- host_vars/host_name.yml link:automation_ora_c-series_nfs.html#parameter-files-configuration["参数文件配置"^]。从本地DB VM变量文件中注释掉NFS_lf变量。
 . 在Ans得 控制器和数据库VM之间设置ssh无密钥身份验证、这需要生成ssh密钥对并将公共密钥复制到数据库VM管理员用户根目录.ssh folder authorized_keys文件。
 +
 [source, cli]
@@ -852,16 +852,7 @@ SQL>
 
 要了解有关本文档中所述信息的更多信息，请查看以下文档和 / 或网站：
 
-* VMware Cloud Foundation
-+
-link:https://www.vmware.com/products/cloud-infrastructure/vmware-cloud-foundation["https://www.vmware.com/products/cloud-infrastructure/vmware-cloud-foundation"^]
-
-* NetApp企业数据库解决方案
-+
-link:https://docs.netapp.com/us-en/netapp-solutions/databases/index.html["https://docs.netapp.com/us-en/netapp-solutions/databases/index.html"^]
-
-* SnapCenter 软件 6.0
-+
-link:https://docs.netapp.com/us-en/snapcenter/concept/concept_snapcenter_overview.html["https://docs.netapp.com/us-en/snapcenter/concept/concept_snapcenter_overview.html"^]
-
+* link:https://www.vmware.com/products/cloud-infrastructure/vmware-cloud-foundation["VMware Cloud Foundation"^]
+* link:index.html["NetApp企业数据库解决方案"^]
+* link:https://docs.netapp.com/us-en/snapcenter/concept/concept_snapcenter_overview.html["SnapCenter 软件 6.0"^]
 
