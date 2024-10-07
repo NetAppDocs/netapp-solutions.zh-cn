@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: containers/rh-os-n_overview_astra.html 
-keywords: NetApp Astra Control, Astra Control Center, Application, Trident, Astra Trident, Helm, Operator, ONTAP, OpenShift, Kubernetes, Red Hat OpenShift 
+keywords: NetApp Astra Control, Astra Control Center, Application, Trident, Trident, Helm, Operator, ONTAP, OpenShift, Kubernetes, Red Hat OpenShift 
 summary: NetApp Astra 控制中心为有状态 Kubernetes 工作负载提供了一组丰富的存储和应用程序感知型数据管理服务，这些服务部署在内部环境中，并采用 NetApp 值得信赖的数据保护技术。 
 ---
 = NetApp Astra 控制中心概述
@@ -19,9 +19,9 @@ NetApp Astra 控制中心为部署在内部环境中并采用 NetApp 数据保�
 
 image:redhat_openshift_image44.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-NetApp Astra 控制中心可以安装在 Red Hat OpenShift 集群上，该集群已部署 Astra Trident 存储编排程序并为其配置存储类和存储后端到 NetApp ONTAP 存储系统。
+NetApp Astra控制中心可以安装在Red Hat OpenShift集群上、该集群已部署Trident存储流程编排程序、并为NetApp ONTAP存储系统配置了存储类和存储后端。
 
-有关安装和配置 Astra Trident 以支持 Astra 控制中心的信息，请参见 link:rh-os-n_overview_trident.html["本文档在此处提供"^]。
+有关安装和配置Trident以支持Astra控制中心的信息，请参见link:rh-os-n_overview_trident.html["本文档在此处提供"^]。
 
 在云互联环境中， Astra 控制中心使用 Cloud Insights 提供高级监控和遥测功能。在没有 Cloud Insights 连接的情况下，可以使用有限的监控和遥测（ 7 天的指标），并通过开放式指标端点导出到 Kubernetes 原生监控工具（ Prometheus 和 Grafana ）。
 
@@ -36,14 +36,14 @@ Asta控制中心完全集成到NetApp AutoSupport和Active IQ数字顾问(也称
 == 安装 Astra 控制中心的前提条件
 
 . 一个或多个 Red Hat OpenShift 集群。目前支持版本 4.6 EUS 和 4.7 。
-. 必须已在每个 Red Hat OpenShift 集群上安装和配置 Astra Trident 。
+. 必须已在每个Red Hat OpenShift集群上安装和配置Trident。
 . 运行 ONTAP 9.5 或更高版本的一个或多个 NetApp ONTAP 存储系统。
 +
 
 NOTE: 最佳做法是，在站点上安装的每个 OpenShift 都要有一个专用的 SVM 来用于永久性存储。多站点部署需要额外的存储系统。
 
 . 必须在每个 OpenShift 集群上配置一个 Trident 存储后端，其中包含一个由 ONTAP 集群提供支持的 SVM 。
-. 在每个 OpenShift 集群上配置的默认 StorageClass ，其中使用 Astra Trident 作为存储配置程序。
+. 在每个OpenShift集群上配置的一个默认存储类、其中Trident是存储配置程序。
 . 必须在每个 OpenShift 集群上安装和配置负载平衡器，以实现负载平衡并公开 OpenShift 服务。
 +
 

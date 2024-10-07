@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: rhhc/rhhc-dp-velero-migrate.html 
-keywords: OpenShift, OCP, Astra Trident, NetApp ONTAP, Red Hat OpenShift, OADP operator, Openshift Data Protection Application operator, Velero 
+keywords: OpenShift, OCP, Trident, NetApp ONTAP, Red Hat OpenShift, OADP operator, Openshift Data Protection Application operator, Velero 
 summary: 使用NetApp ONTAP实现Red Hat OpenShift容器应用程序数据保护 
 ---
 = 将应用程序从一个集群迁移到另一个集群
@@ -21,7 +21,7 @@ Velero的备份和恢复功能使其成为在集群之间迁移数据的重要�
 ====
 **集群1**上的前提条件
 
-* 集群上必须安装Astra三端存储。
+* 集群上必须安装Trident。
 * 必须创建一个三级存储后端和存储类。
 * 集群上必须安装OADP操作员。
 * 应配置DataSetionApplication。
@@ -90,7 +90,7 @@ image:redhat_openshift_OADP_migrate_image2.png["安装postgres应用程序"]
 ====
 **集群2**上的前提条件
 
-* 必须在集群2上安装Asta三端磁盘。
+* Trident必须安装在集群2上。
 * PostgreSQL应用程序必须尚未安装在PostgreSQL命名空间中。
 * OADP操作员必须安装在集群2上、并且备份存储位置必须指向从第一个集群存储备份的同一对象存储位置。
 * 备份CR必须在第二个集群中可见。

@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: containers/rh-os-n_use_case_openshift_virtualization_workflow_clone_vm.html 
-keywords: OpenShift, OCP, Astra Trident, NetApp ONTAP, Red Hat OpenShift, OpenShift Virtualization, CNV, Container Native Virtualization, Red Hat OpenShift Virtualization 
+keywords: OpenShift, OCP, Trident, NetApp ONTAP, Red Hat OpenShift, OpenShift Virtualization, CNV, Container Native Virtualization, Red Hat OpenShift Virtualization 
 summary: 借助 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化 
 ---
 = 工作流：使用 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化
@@ -20,7 +20,7 @@ summary: 借助 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化
 
 == VM 克隆
 
-通过支持 Astra Trident 的卷 CSI 克隆功能，可以在 OpenShift 中克隆现有虚拟机。通过 CSI 卷克隆，可以使用现有 PVC 作为数据源并通过复制其 PV 来创建新的 PVC 。创建新的 PVC 后，它将作为一个单独的实体运行，并且不会与源 PVC 建立任何链接或依赖关系。
+通过支持Trident的卷CSI克隆功能、可以在OpenShift中克隆现有虚拟机。通过 CSI 卷克隆，可以使用现有 PVC 作为数据源并通过复制其 PV 来创建新的 PVC 。创建新的 PVC 后，它将作为一个单独的实体运行，并且不会与源 PVC 建立任何链接或依赖关系。
 
 image:redhat_openshift_image57.png["VM 克隆架构"]
 
@@ -41,7 +41,7 @@ image:redhat_openshift_image57.png["VM 克隆架构"]
 
 === 关闭源 VM
 
-通过关闭虚拟机克隆现有虚拟机是一项原生 OpenShift 功能，该功能在 Astra Trident 的支持下实施。要克隆虚拟机，请完成以下步骤。
+通过关闭虚拟机克隆现有虚拟机是一项本机OpenShift功能、该功能可在Trident的支持下实施。要克隆虚拟机，请完成以下步骤。
 
 . 导航到工作负载 > 虚拟化 > 虚拟机，然后单击要克隆的虚拟机旁边的省略号。
 . 单击克隆虚拟机并提供新虚拟机的详细信息。

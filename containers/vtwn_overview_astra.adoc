@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: containers/vtwn_overview_astra.html 
-keywords: NetApp Astra Control, Astra Control Center, Application, Trident, Astra Trident, Helm, Operator, ONTAP, Tanzu, Kubernetes, VMware Tanzu 
+keywords: NetApp Astra Control, Astra Control Center, Application, Trident, Trident, Helm, Operator, ONTAP, Tanzu, Kubernetes, VMware Tanzu 
 summary: NetApp Astra控制中心为有状态Kubernetes工作负载提供了一组丰富的存储和应用程序感知型数据管理服务、这些服务部署在内部环境中、并采用NetApp值得信赖的数据保护技术。 
 ---
 = NetApp Astra Control概述
@@ -23,9 +23,9 @@ NetApp Astra 控制中心为部署在内部环境中并采用 NetApp 数据保�
 
 image:redhat_openshift_image44.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-NetApp Astra控制中心可以安装在｛K8s_distribution_name｝集群上、该集群已部署Astra Trident存储编排程序并为其配置存储类和NetApp ONTAP 存储系统的后端。
+NetApp Astra控制中心可以安装在已部署Trident存储流程编排程序并为NetApp ONTAP存储系统配置了存储类和存储后端的｛K8s_Distribution _name｝集群上。
 
-有关Astra Trident的详细信息、请参见 link:dwn_overview_trident.html["本文档在此处提供"^]。
+有关Trident的详细信息，请参见link:dwn_overview_trident.html["本文档在此处提供"^]。
 
 在云互联环境中， Astra 控制中心使用 Cloud Insights 提供高级监控和遥测功能。在没有Cloud Insights 连接的情况下、可以使用有限的监控和遥测功能(相当于7天的指标)、并通过开放式指标端点导出到Kubernetes原生 监控工具(Prometheus和Grafana)。
 
@@ -52,14 +52,14 @@ Astra控制中心具有一个功能完备的REST API、可用于编程访问。�
 安装Astra控制中心需要满足以下前提条件：
 
 * 一个或多个由管理集群、TKGS或TKGI管理的Tanzu Kubernetes集群。支持TKG工作负载集群1.4+和TKGI用户集群1.12.2+。
-* 必须已在每个Tanzu Kubernetes集群上安装和配置Astra Trident。
+* 必须已在每个Tanzu Kubnetes集群上安装和配置Trident。
 * 运行 ONTAP 9.5 或更高版本的一个或多个 NetApp ONTAP 存储系统。
 +
 
 NOTE: 最佳做法是、每个安装在站点上的Tanzu Kubernetes都要有一个专用的SVM来实现永久性存储。多站点部署需要额外的存储系统。
 
 * 必须在每个Tanzu Kubernetes集群上配置一个Trident存储后端、其中包含一个由ONTAP 集群提供支持的SVM。
-* 在每个Tanzu Kubernetes集群上配置的一个默认StorageClass、其中使用Astra Trident作为存储配置程序。
+* 在每个Tanzu Kuburenetes集群上配置的默认StorageClass、其中Trident是存储配置程序。
 * 如果您使用的是ingType `AccesTraefik`、则必须在每个Tanzu Kubernetes集群上安装并配置负载平衡器、以实现负载平衡并公开Astra控制中心。
 * 如果您使用的是ingressType `Generic`、则必须在每个Tanzu Kubernetes集群上安装并配置一个入口控制器、以公开Astra控制中心。
 * 必须配置私有映像注册表以托管 NetApp Astra Control Center 映像。

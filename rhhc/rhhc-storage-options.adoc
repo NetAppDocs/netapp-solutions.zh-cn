@@ -14,9 +14,9 @@ summary:
 
 
 [role="lead"]
-无论Red Hat Open Shift容器是在VMware上运行还是在超大型机中运行、NetApp A作用 力三端均可用作其支持的各种后端NetApp存储的CSI配置程序。
+无论Red Hat Open Shift容器是运行在VMware上还是运行在超频器中、NetApp Trident都可以用作其支持的各种后端NetApp存储的CSI配置程序。
 
-下图展示了可使用NetApp Asta Dent与OpenShift集群集成的各种后端NetApp存储。
+下图展示了可使用NetApp Trident与OpenShift集群集成的各种后端NetApp存储。
 
 image:a-w-n_astra_trident.png["图中显示了输入/输出对话框或表示已写入内容"]
 
@@ -34,7 +34,7 @@ image:rhhc_storage_opt_pod2vol.png["POD与ONTAP 卷之间的关系"]
 
 == 容器存储接口(CSI)选项
 
-在vSphere环境中、客户可以选择VMware CSI驱动程序和/或Astra三端CSI与ONTAP 集成。使用VMware CSI时、永久性卷会用作本地SCSI磁盘、而使用三端技术时、则会使用网络。由于VMware CSI不支持使用ONTAP 的rwx访问模式、因此如果需要rwx模式、应用程序需要使用TRIDent CSI。对于基于FC的部署、首选使用VMware CSI、而SnapMirror业务连续性(SMBC)可提供区域级高可用性。
+在vSphere环境中、客户可以选择VMware CSI驱动程序和/或Trident CSI与ONTAP集成。使用VMware CSI时、永久性卷会用作本地SCSI磁盘、而使用三端技术时、则会使用网络。由于VMware CSI不支持使用ONTAP 的rwx访问模式、因此如果需要rwx模式、应用程序需要使用TRIDent CSI。对于基于FC的部署、首选使用VMware CSI、而SnapMirror业务连续性(SMBC)可提供区域级高可用性。
 
 
 
@@ -56,7 +56,7 @@ image:rhhc_storage_opt_pod2vol.png["POD与ONTAP 卷之间的关系"]
 * ONTAP—NAS—Flexgroup (专用大规模卷)
 
 
-对于VMware CSI和Asta三端CSI、ONTAP 均支持对NFS使用nconnect、会话中继、Kerberos等、对块协议使用多路径、chap身份验证等。
+对于VMware CSI和Trident CSI、ONTAP均支持对块协议使用nconnect、会话中继、Kerberos等、以及多路径、chap身份验证等。
 
 在AWS中、FSx for NetApp ONTAP (FSxN)可以部署在单个可用性区域(AZ)或多个可用性区域(AZ)中。对于需要高可用性的生产工作负载、与单个AZ相比、多可用性可提供分区级容错、并具有更好的NVMe读取缓存。有关详细信息，请查看 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/performance.html["AWS性能准则"]。为了节省灾难恢复站点的成本、可以使用一个AZ FSx ONTAP。image:rhhc_storage_options_fsxn_options.png["在多可用性分区和单可用性分区之间进行复制"]
 

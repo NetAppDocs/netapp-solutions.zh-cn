@@ -58,6 +58,6 @@ link:ai/aipod_nv_deployment.html["部署详细信息"]有关存储系统配置�
 
 == 管理平台服务器
 
-此参考架构还包括五个基于CPU的服务器、供管理平台使用。其中两个系统用作NVIDIA Base Command Manager的主节点、用于集群部署和管理。另外三个系统用于提供额外的集群服务、例如、在使用Slurm进行作业计划的部署中、可使用Kubornetes主节点或登录节点。利用Kubnetes的部署可以利用NetApp Asta三端CSI驱动程序为AFF A900存储系统上的管理和AI工作负载提供自动化配置和数据服务以及永久性存储。
+此参考架构还包括五个基于CPU的服务器、供管理平台使用。其中两个系统用作NVIDIA Base Command Manager的主节点、用于集群部署和管理。另外三个系统用于提供额外的集群服务、例如、在使用Slurm进行作业计划的部署中、可使用Kubornetes主节点或登录节点。利用Kubnetes的部署可以利用NetApp Trident CSI驱动程序为AFF A900存储系统上的管理和AI工作负载提供具有永久性存储的自动化配置和数据服务。
 
 每个服务器都会以物理方式连接到IB交换机和以太网交换机、以实现集群部署和管理、并通过管理SVM配置NFS挂载到存储系统、以便如前所述存储集群管理项目。

@@ -13,7 +13,7 @@ summary:
 == 在Azure上部署和配置Red Hat OpenShift容器平台
 
 [role="lead"]
-本节简要介绍了如何在Azure中设置和管理OpenShift集群并在其上部署有状态应用程序的工作流。它展示了如何借助Asta三端磁盘/Asta控件配置程序使用NetApp Cloud Volumes ONTAP存储来提供永久性卷。本节详细介绍了如何使用Astra Control Center为有状态应用程序执行数据保护和迁移活动。
+本节简要介绍了如何在Azure中设置和管理OpenShift集群并在其上部署有状态应用程序的工作流。它展示了如何借助Trident Astra/Astra Control配置程序使用NetApp Cloud Volumes ONTAP存储来提供永久性卷。本节详细介绍了如何使用Astra Control Center为有状态应用程序执行数据保护和迁移活动。
 
 下图显示了部署在Azure上并使用VPN连接到数据中心的集群。
 
@@ -128,10 +128,10 @@ link:https://docs.netapp.com/us-en/astra-control-center/get-started/setup_overvi
 
 ====
 .对多区域架构使用三元数据的CSI拓扑功能
-如今、云提供商支持Kubbernetes/OpenShift集群管理员生成基于分区的集群节点。节点可以位于一个区域内的不同可用性区域中，也可以位于不同区域之间。为了便于在多区域架构中为工作负载配置卷， Astra Trident 使用了 CSI 拓扑。使用 CSI 拓扑功能，可以根据区域和可用性区域将对卷的访问限制为一小部分节点。请参见 link:https://docs.netapp.com/us-en/trident/trident-use/csi-topology.html["此处"] 了解更多详细信息。
+如今、云提供商支持Kubbernetes/OpenShift集群管理员生成基于分区的集群节点。节点可以位于一个区域内的不同可用性区域中，也可以位于不同区域之间。为了便于在多区域架构中为工作负载配置卷、Trident使用CSI拓扑。使用 CSI 拓扑功能，可以根据区域和可用性区域将对卷的访问限制为一小部分节点。有关更多详细信息、请参见link:https://docs.netapp.com/us-en/trident/trident-use/csi-topology.html["此处"]。
 
 
-NOTE: Kubarnetes支持两种卷绑定模式：-将**_VolumeBindingMode_设置为_Immediate_**(默认)时、Asta Trident会在没有任何拓扑感知功能的情况下创建卷。创建永久性卷时，不会依赖于请求的 Pod 的计划要求。-当**_VolumeBindingMode_设置为_WaitForFirstConsumer_**时，为PVC创建和绑定永久性卷的操作会延迟，直到计划和创建使用PVC的Pod为止。这样，卷就会根据拓扑要求强制实施的计划限制来创建。Astra三叉设计存储后端可以根据可用性区域选择性地配置卷(拓扑感知型后端)。对于使用此后端的 StorageClasses ，只有在受支持区域 / 区域中计划的应用程序请求时，才会创建卷。(拓扑感知型存储类)请参见 link:https://docs.netapp.com/us-en/trident/trident-use/csi-topology.html["此处"] 了解更多详细信息。
+NOTE: Kubarnetes支持两种卷绑定模式：-将**_VolumeBindingMode_设置为_Immediate_**(默认)时、Trident创建卷时不具有任何拓扑感知功能。创建永久性卷时，不会依赖于请求的 Pod 的计划要求。-当**_VolumeBindingMode_设置为_WaitForFirstConsumer_**时，为PVC创建和绑定永久性卷的操作会延迟，直到计划和创建使用PVC的Pod为止。这样，卷就会根据拓扑要求强制实施的计划限制来创建。Trident存储后端可以设计为根据可用性区域选择性地配置卷(拓扑感知型后端)。对于使用此后端的 StorageClasses ，只有在受支持区域 / 区域中计划的应用程序请求时，才会创建卷。(拓扑感知型存储类)有关更多详细信息、请参见link:https://docs.netapp.com/us-en/trident/trident-use/csi-topology.html["此处"]。
 
 [下划线]#*演示视频*#
 

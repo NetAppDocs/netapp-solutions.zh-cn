@@ -26,8 +26,8 @@ summary: 采用Domino数据实验室和NetApp的混合多云MLOps—初始设置
 * 您已在AWS中配置Amazon FSx for NetApp ONTAP实例。有关详细信息，请参见 link:https://aws.amazon.com/fsx/netapp-ontap/["Amazon FSx for NetApp ONTAP商品页面"]。
 * 您已在内部数据中心中配置了Kubbernetes集群。有关详细信息，请参见 link:https://docs.dominodatalab.com/en/latest/admin_guide/b35e66/admin-guide/["Domino管理指南"]。
 * 您已在AWS中配置Amazon EKS集群。有关详细信息，请参见 link:https://docs.dominodatalab.com/en/latest/admin_guide/b35e66/admin-guide/["Domino管理指南"]。
-* 您已在内部部署的Kubbernetes集群中安装NetApp Asta三端存储。此外、您还配置了此三项技术实例、以便在配置和管理存储资源时使用内部NetApp ONTAP存储平台。有关详细信息，请参见 link:https://docs.netapp.com/us-en/trident/index.html["NetApp Astra Trident 文档"]。
-* 您已在Amazon EKS集群中安装NetApp Asta三端磁盘。此外、您还配置了此TRIDent实例、以便在配置和管理存储资源时使用Amazon FSx for NetApp ONTAP实例。有关详细信息，请参见 link:https://docs.netapp.com/us-en/trident/index.html["NetApp Astra Trident 文档"]。
+* 您已在内部Kubbernetes集群中安装NetApp Trident。此外、您还配置了此三项技术实例、以便在配置和管理存储资源时使用内部NetApp ONTAP存储平台。有关详细信息，请参阅link:https://docs.netapp.com/us-en/trident/index.html["NetApp Trident 文档"]。
+* 您已在Amazon EKS集群中安装NetApp Trident。此外、您还配置了此TRIDent实例、以便在配置和管理存储资源时使用Amazon FSx for NetApp ONTAP实例。有关详细信息，请参阅link:https://docs.netapp.com/us-en/trident/index.html["NetApp Trident 文档"]。
 * 您必须在内部数据中心和AWS中的虚拟私有云(Virtual Private Cloud、VPC)之间建立双向网络连接。有关实施此功能的各种选项的更多详细信息、请参见 link:https://docs.aws.amazon.com/vpc/latest/userguide/vpn-connections.html["Amazon虚拟专用网络(VPN)文档"]。
 
 
@@ -35,7 +35,7 @@ summary: 采用Domino数据实验室和NetApp的混合多云MLOps—初始设置
 
 == 在AWS中安装Domino Enterprise AI Platform
 
-要在AWS中安装Domino Enterprise MLOps平台、请按照中所述的说明进行操作 link:https://docs.dominodatalab.com/en/latest/admin_guide/c1eec3/deploy-domino/["Domino管理指南"]。您必须在先前配置的同一个Amazon EKS集群中部署Domino。此外、必须已在此EKS集群中安装和配置NetApp Asta三端磁盘、并且必须在Domino/yml安装配置文件中指定一个三端磁盘管理的存储类作为共享存储类。
+要在AWS中安装Domino Enterprise MLOps平台，请按照中所述的说明link:https://docs.dominodatalab.com/en/latest/admin_guide/c1eec3/deploy-domino/["Domino管理指南"]进行操作。您必须在先前配置的同一个Amazon EKS集群中部署Domino。此外、必须已在此EKS集群中安装和配置NetApp Trident、并且必须在Domino/yml安装配置文件中指定Trident管理的存储类作为共享存储类。
 
 
 NOTE: 请参见 link:https://docs.dominodatalab.com/en/latest/admin_guide/7f4331/install-configuration-reference/#storage-classes["Domino安装配置参考指南"] 有关如何在Domino/yml安装配置文件中指定共享存储类的详细信息。
@@ -53,4 +53,4 @@ NOTE: link:https://www.netapp.com/media/79922-tr-4952.pdf["技术报告TR-4952"]
 
 == 在内部数据中心部署Domino数据平面
 
-接下来、您必须在内部数据中心部署Domino数据平面。您必须将此数据平面部署在先前配置的内部Kubbernetes集群中。此外、必须已在此Kubbernetes集群中安装和配置NetApp Asta三端存储。请参见 link:https://docs.dominodatalab.com/en/latest/admin_guide/5781ea/data-planes/["Domino管理指南"] 了解详细信息。
+接下来、您必须在内部数据中心部署Domino数据平面。您必须将此数据平面部署在先前配置的内部Kubbernetes集群中。此外、必须已在此Kubnetes集群中安装和配置NetApp Trident。有关详细信息、请参见 link:https://docs.dominodatalab.com/en/latest/admin_guide/5781ea/data-planes/["Domino管理指南"] 。

@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: containers/dwn_use_case_integrated_data_protection.html 
-keywords: NetApp Astra Control, Astra Control Center, Application, Trident, Astra Trident, Helm, Operator, ONTAP, OpenShift, Kubernetes, Red Hat OpenShift, DevOps, Data Protection, Continuous Data Protection, Induce Data Protection into CI/CD, CI, CD, CI/CD 
+keywords: NetApp Astra Control, Astra Control Center, Application, Trident, Trident, Helm, Operator, ONTAP, OpenShift, Kubernetes, Red Hat OpenShift, DevOps, Data Protection, Continuous Data Protection, Induce Data Protection into CI/CD, CI, CD, CI/CD 
 summary: NetApp Astra 控制中心为有状态 Kubernetes 工作负载提供了一组丰富的存储和应用程序感知型数据管理服务，这些服务部署在内部环境中，并采用 NetApp 值得信赖的数据保护技术。 
 ---
 = 利用NetApp Astra Control将保护功能集成到CI/CD管道中
@@ -28,7 +28,7 @@ DevOps工作流的一个最常见用途是持续集成和持续部署(CI/CD)管�
 
 image:dwn_image1.jpg["采用NetApp Astra的DevOps用例1架构"]
 
-用于验证此用例的应用程序为 https://magento.com/["Magento"^]一种基于Web的前端电子商务解决方案 、一种用于搜索和分析功能的Elasticsearch实例以及一个跟踪所有购物清单和交易详细信息的MariaDB数据库。此容器化应用程序安装在Red Hat OpenShift集群中。应用程序中的每个POD都使用永久性卷来存储数据。永久性卷由NetApp Astra Trident自动创建、NetApp Astra Trident是适用于Kubernetes的容器存储接口兼容存储编排程序、可在NetApp存储系统上配置存储。此外、为了利用Astra控制中心的应用程序保护功能、相关应用程序由Astra Control管理、然后使用该控制器触发应用程序备份、这些备份将存储应用程序的状态以及永久性卷中的数据。我们使用了 https://github.com/NetApp/netapp-astra-toolkits["NetApp Astra Control Python SDK"^] 自动执行触发应用程序备份的过程、然后将该过程引入到CI/CD管道中。此管道是使用一个常用的CI/CD工具创建和执行的、该工具称为 [https://www.jenkins.io/["Jenkins"^]]以自动执行流、从而构建、保护和部署应用程序。
+用于验证此用例的应用程序是 https://magento.com/["Magento"^]：一个具有基于Web的前端的电子商务解决方案；一个用于搜索和分析功能的ElastSearch实例；以及一个跟踪所有购物库存和交易详细信息的MariaDB数据库。此容器化应用程序安装在Red Hat OpenShift集群中。应用程序中的每个POD都使用永久性卷来存储数据。永久性卷由NetApp Trident自动创建、它是一款符合容器存储接口的适用于Kub并 支持在NetApp存储系统上配置存储的存储编排程序。此外、为了利用Astra控制中心的应用程序保护功能、相关应用程序由Astra Control管理、然后使用该控制器触发应用程序备份、这些备份将存储应用程序的状态以及永久性卷中的数据。我们使用 https://github.com/NetApp/netapp-astra-toolkits["NetApp Astra Control Python SDK"^]自动执行触发应用程序备份的过程、然后将其引入CI/CD管道。此管道是使用名为的常用CI/CD工具创建和执行的[https://www.jenkins.io/["Jenkins"^]，用于自动执行流程以构建、保护和部署应用程序。
 
 让我们来了解一下前提条件和操作步骤 、以便在CI/CD管道中引入保护。
 
@@ -39,7 +39,7 @@ image:dwn_image1.jpg["采用NetApp Astra的DevOps用例1架构"]
 部署和配置了以下工具或平台作为前提条件：
 
 . Red Hat OpenShift 容器平台
-. NetApp Astra Trident安装在OpenShift上、并配置了NetApp ONTAP 系统的后端
+. NetApp Trident安装在OpenShift上、并配置了NetApp ONTAP系统的后端
 . 已配置一个指向NetApp ONTAP 后端的默认存储器
 . NetApp Astra Control Center安装在OpenShift集群上
 . OpenShift集群作为受管集群添加到Astra控制中心

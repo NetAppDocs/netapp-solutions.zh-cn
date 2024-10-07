@@ -16,13 +16,13 @@ summary:
 [role="lead"]
 此页面显示了使用Astra Control Service在AWS上托管Red Hat OpenShift (ROSA)集群的数据保护选项。Astra Control Service (ACS)提供了一个易于使用的图形用户界面、您可以使用该界面添加集群、定义在其中运行的应用程序以及执行应用程序感知型数据管理活动。此外、还可以使用支持工作流自动化的API访问ACS功能。
 
-NetApp Astra控制(ACS或ACC)由Astra三端驱动。Asta三端集成了多种类型的Kubernetes集群、例如Red Hat OpenShift、EKS、AKS、SUSE缓存器、Anthos等。 具有各种NetApp ONTAP存储风格、例如FAS/AFFF、ONTAP Select、CVO、Google Cloud Volumes Service、Azure NetApp Files和Amazon FSx for NetApp ONTAP。
+为Astra Control (ACS或ACC)供电是NetApp Trident。Trident将多种类型的Kubernetes集群(例如Red Hat OpenShift、EKS、AKS、SUSE LINUX、Anthos等)与各种类型的NetApp ONTAP存储(例如FAS或AFF、ONTAP Select、CVO、Google Cloud Volumes Service、Azure NetApp Files和Amazon FSx for NetApp ONTAP)相集成。
 
 本节详细介绍了使用ACS的以下数据保护选项：
 
 * 显示备份和还原在一个区域运行的ROSA应用程序并还原到另一个区域的视频。
 * 显示ROSA应用程序的Snapshot和Restore的视频。
-* 安装ROSA集群的分步详细信息、Amazon FSx for NetApp ONTAP、使用NetApp Astra三端集成到存储后端、在ROSA集群上安装PostgreSQL应用程序、使用ACS创建应用程序快照并从中还原应用程序。
+* 安装ROSA集群的分步详细信息、Amazon FSx for NetApp ONTAP、使用NetApp Trident与存储后端集成、在ROSA集群上安装PostgreSQL应用程序、使用ACS创建应用程序快照以及从该应用程序还原应用程序。
 * 一篇博客、详细介绍了如何使用ACS在使用FSx for ONTAP的ROSA集群上为myql应用程序创建快照并从快照中还原。
 
 
@@ -75,7 +75,7 @@ video::36ecf505-5d1d-4e99-a6f8-b11c00341793[panopto]
 
 . 创建管理员用户并登录到集群。
 . 为集群创建一个kubeconfig.文件。
-. 在集群上安装Asta Trdent。
+. 在集群上安装Trident。
 . 使用三端CSI配置程序创建后端、存储类和快照类配置。
 . 在集群上部署PostgreSQL应用程序。
 . 创建数据库并添加记录。
@@ -110,9 +110,9 @@ NOTE: 您也可以使用令牌登录到集群。如果您在创建集群时已�
 
 
 
-==== **3.在群集上安装Asta Trdent **
+==== **3.在群集上安装Trident **
 
-在ROSA集群上安装Asta Trident (最新版本)。要执行此操作、您可以按照给定的任一过程进行操作 link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html["此处"]。要从集群控制台使用Helm安装Trident、请先创建一个名为Trident的项目。
+在ROSA集群上安装Trident (最新版本)。要执行此操作，您可以按照给定的任一过程link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html["此处"]进行操作。要从集群控制台使用Helm安装Trident、请先创建一个名为Trident的项目。
 
 image:rhhc-trident-project-create.png["图中显示了输入/输出对话框或表示已写入内容"]
 

@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: rhhc/rhhc-dp-velero-installation.html 
-keywords: OpenShift, OCP, Astra Trident, NetApp ONTAP, Red Hat OpenShift, OADP operator, Openshift Data Protection Application operator, Velero 
+keywords: OpenShift, OCP, Trident, NetApp ONTAP, Red Hat OpenShift, OADP operator, Openshift Data Protection Application operator, Velero 
 summary: 使用NetApp ONTAP实现Red Hat OpenShift容器应用程序数据保护 
 ---
 = 安装OpenShift API for Data Protection (OADP) Operator
@@ -21,9 +21,9 @@ summary: 使用NetApp ONTAP实现Red Hat OpenShift容器应用程序数据保护
 == 前提条件
 
 * 一个Red Hat OpenShift集群(版本高于版本发行版次)、安装在具有RHCOS工作节点的裸机基础架构上
-* 使用Astra三端磁盘与集群集成的NetApp ONTAP集群
+* 使用Trident与集群集成的NetApp ONTAP集群
 * 在 ONTAP 集群上配置了 SVM 的 Trident 后端
-* 一种在 OpenShift 集群上配置的存储类，其中使用 Astra Trident 作为配置程序
+* 在OpenShift集群上配置的一个StorageClass、其中Trident是配置程序
 * 在集群上创建的三项Snapshot类
 * 对 Red Hat OpenShift 集群的集群管理员访问
 * 对 NetApp ONTAP 集群的管理员访问权限
@@ -165,8 +165,7 @@ YAML文件中的规范部分应针对与上述示例类似的以下参数进行�
 **备份位置**
 ONTAP S3或StorageGRID S3 (及其凭据和YAML中显示的其他信息)被配置为Velero的默认备份位置。
 
-**快照位置**
-如果使用容器存储接口(CSI)快照、则无需指定快照位置、因为您将创建一个卷快照类CR来注册CSI驱动程序。在本示例中、您使用的是A作用 力的三端CSI、并且之前已使用三端CSI驱动程序创建了卷eSnap而已。
+**快照位置**如果使用容器存储接口(CI)快照，则无需指定快照位置，因为您将创建一个卷快照类CR来注册CSI驱动程序。在本示例中、您使用的是Trident CSI、并且之前已使用Trident CSI驱动程序创建了卷SnapShateClass CR。
 
 **启用CSI插件**
 将CSI添加到Velero的DEDEPTO插 件中、以便使用CSI快照备份永久性卷。

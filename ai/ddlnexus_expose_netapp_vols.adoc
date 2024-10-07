@@ -30,9 +30,9 @@ summary: 采用Domino数据实验室和NetApp的混合多云MLOps—将现有Net
 
 
 
-== 公开Asta Trident未配置的现有NFS卷
+== 公开未由Trident配置的现有NFS卷
 
-如果现有的NetApp ONTAP NFS卷不是由Astra Trident配置的、请按照本小节中概述的步骤进行操作。
+如果现有NetApp ONTAP NFS卷不是由Trident配置的、请按照本小节中概述的步骤进行操作。
 
 
 
@@ -53,15 +53,15 @@ image:ddlnexus_image3.png["图中显示了输入/输出对话框或表示已写�
 
 
 
-== 公开Asta Trident配置的现有卷
+== 公开Trident配置的现有卷
 
-如果现有卷是由Asta Trident配置的、请按照本小节中概述的步骤进行操作。
+如果现有卷是由Trident配置的、请按照本小节中所述的步骤进行操作。
 
 
 
 === 编辑现有PVC
 
-如果您的卷是由Asta Trident配置的、则您已经拥有与您的卷对应的永久性卷请求(PVC)。要将此卷公开给Domino、必须编辑PVC并将以下标签添加到中的标签列表中 `metadata.labels` 字段：
+如果您的卷是由Trident配置的、则您已经拥有与您的卷对应的永久性卷请求(PVC)。要将此卷公开给Domino、必须编辑PVC并将以下标签添加到字段中的标签列表中 `metadata.labels`：
 
 ....
 "dominodatalab.com/external-data-volume": "Generic"

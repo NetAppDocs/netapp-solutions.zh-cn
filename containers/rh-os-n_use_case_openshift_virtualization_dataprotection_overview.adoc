@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: containers/rh-os-n_use_case_openshift_virtualization_dataprotection_overview.html 
-keywords: OpenShift, OCP, Astra Trident, NetApp ONTAP, Red Hat OpenShift, OpenShift Virtualization, CNV, Container Native Virtualization, Red Hat OpenShift Virtualization, OADP operator, Openshift Data Protection Application operator, velero 
+keywords: OpenShift, OCP, Trident, NetApp ONTAP, Red Hat OpenShift, OpenShift Virtualization, CNV, Container Native Virtualization, Red Hat OpenShift Virtualization, OADP operator, Openshift Data Protection Application operator, velero 
 summary: 借助NetApp ONTAP实现Red Hat OpenShift虚拟化数据保护 
 ---
 = 使用OpenShift API实现数据保护(OADP)、在OpenShift虚拟化中为VM提供数据保护
@@ -16,11 +16,11 @@ summary: 借助NetApp ONTAP实现Red Hat OpenShift虚拟化数据保护
 作者：Banu Sunzhar、NetApp
 
 [role="lead"]
-本参考文档的这一部分详细介绍了如何在NetApp ONTAP S3或NetApp StorageGRID S3上使用用于数据保护的OpenShift API (OADP)和Velero创建VM备份。VM磁盘的持久卷(PV)备份是使用CSI Asta三端Snapshot创建的。
+本参考文档的这一部分详细介绍了如何在NetApp ONTAP S3或NetApp StorageGRID S3上使用用于数据保护的OpenShift API (OADP)和Velero创建VM备份。VM磁盘的持久卷(PV)备份是使用CSI Trident Snapshot创建的。
 
 OpenShift虚拟化环境中的虚拟机是在OpenShift容器平台的工作节点中运行的容器化应用程序。保护VM元数据以及VM的永久性磁盘非常重要、这样、当VM丢失或损坏时、您可以对其进行恢复。
 
-OpenShift虚拟化VM的永久性磁盘可以通过集成到OpenShift集群的ONTAP存储作为后备存储 link:https://docs.netapp.com/us-en/trident/["Astra三端CSI"]。在本节中、我们将使用 link:https://docs.openshift.com/container-platform/4.14/backup_and_restore/application_backup_and_restore/installing/installing-oadp-ocs.html["用于数据保护的OpenShift API (OADP)"] 将虚拟机(包括其数据卷)备份到
+OpenShift虚拟化VM的永久性磁盘可以通过集成到OpenShift集群的ONTAP存储提供后备支持link:https://docs.netapp.com/us-en/trident/["Trident CSI"]。在本节中、我们将使用link:https://docs.openshift.com/container-platform/4.14/backup_and_restore/application_backup_and_restore/installing/installing-oadp-ocs.html["用于数据保护的OpenShift API (OADP)"]执行VM备份、包括其数据卷
 
 * ONTAP对象存储
 * StorageGRID
@@ -44,10 +44,8 @@ OADP 1.3可从OpenShift集群的操作中心进行下载、版本为：它具有
 * 通过Red Hat提供的OperatorOpenShift Virtualization Operator安装OpenShift虚拟化
 * OADP Operator 1.13由Red Hat提供
 * 适用于Linux的Velero CLI 1.13
-* Astra三端到子24.02
+* Trident 24.02
 * ONTAP 9.12.
 
 
-link:https://docs.netapp.com/us-en/trident/["Astra三端CSI"]
-link:https://docs.openshift.com/container-platform/4.14/backup_and_restore/application_backup_and_restore/installing/installing-oadp-ocs.html["用于数据保护的OpenShift API (OADP)"]
-link:https://velero.io/["Velero"]
+link:https://docs.netapp.com/us-en/trident/["Trident CSI"] link:https://docs.openshift.com/container-platform/4.14/backup_and_restore/application_backup_and_restore/installing/installing-oadp-ocs.html["用于数据保护的OpenShift API (OADP)"] link:https://velero.io/["Velero"]

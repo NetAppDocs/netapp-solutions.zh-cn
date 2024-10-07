@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: rhhc/rhhc-dp-velero-solution.html 
-keywords: OpenShift, OCP, Astra Trident, NetApp ONTAP, Red Hat OpenShift, OADP operator, Openshift Data Protection Application operator, Velero, app data protection, Containers 
+keywords: OpenShift, OCP, Trident, NetApp ONTAP, Red Hat OpenShift, OADP operator, Openshift Data Protection Application operator, Velero, app data protection, Containers 
 summary: 使用NetApp ONTAP实现Red Hat OpenShift容器应用程序数据保护 
 ---
 = 使用OpenShift API实现数据保护(OADP)、在OpenShift容器平台中为容器应用程序提供数据保护
@@ -16,9 +16,9 @@ summary: 使用NetApp ONTAP实现Red Hat OpenShift容器应用程序数据保护
 作者：Banu Sunzhar、NetApp
 
 [role="lead"]
-本参考文档的这一部分详细介绍了如何在NetApp ONTAP S3或NetApp StorageGRID S3上使用用于数据保护的OpenShift API (OADP)和Velero创建容器应用的备份。命名空间范围的资源(包括应用程序的永久性卷(PV))的备份是使用CSI Asta三端Snapshot创建的。
+本参考文档的这一部分详细介绍了如何在NetApp ONTAP S3或NetApp StorageGRID S3上使用用于数据保护的OpenShift API (OADP)和Velero创建容器应用的备份。命名空间范围的资源(包括应用程序的永久性卷(PVs))的备份是使用CSI Trident Snapshot创建的。
 
-容器应用程序的永久性存储可通过集成到OpenShift集群的ONTAP存储提供支持 link:https://docs.netapp.com/us-en/trident/["Astra三端CSI"]。在本节中、我们使用 link:https://docs.openshift.com/container-platform/4.14/backup_and_restore/application_backup_and_restore/installing/installing-oadp-ocs.html["用于数据保护的OpenShift API (OADP)"] 将应用程序(包括其数据卷)备份到
+容器应用程序的永久性存储可通过集成到OpenShift集群的ONTAP存储提供支持 link:https://docs.netapp.com/us-en/trident/["Trident CSI"]。在本节中、我们使用 link:https://docs.openshift.com/container-platform/4.14/backup_and_restore/application_backup_and_restore/installing/installing-oadp-ocs.html["用于数据保护的OpenShift API (OADP)"] 将应用程序(包括其数据卷)备份到
 
 * ONTAP对象存储
 * StorageGRID
@@ -41,11 +41,9 @@ OADP 1.3可从OpenShift集群的操作中心进行下载、版本为：它具有
 * OpenShift集群4.14.
 * OADP Operator 1.13由Red Hat提供
 * 适用于Linux的Velero CLI 1.13
-* Astra三端到子24.02
+* Trident 24.02
 * ONTAP 9.12.
 * 使用Helm安装PostgreSQL。
 
 
-link:https://docs.netapp.com/us-en/trident/["Astra三端CSI"]
-link:https://docs.openshift.com/container-platform/4.14/backup_and_restore/application_backup_and_restore/installing/installing-oadp-ocs.html["用于数据保护的OpenShift API (OADP)"]
-link:https://velero.io/["Velero"]
+link:https://docs.netapp.com/us-en/trident/["Trident CSI"] link:https://docs.openshift.com/container-platform/4.14/backup_and_restore/application_backup_and_restore/installing/installing-oadp-ocs.html["用于数据保护的OpenShift API (OADP)"] link:https://velero.io/["Velero"]
