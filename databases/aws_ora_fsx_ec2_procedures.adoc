@@ -107,15 +107,15 @@ ssh -i ora-db1v2.pem ec2-user@54.80.114.77
 
 
 
-== 为ONTAP 文件系统配置FSX以存储Oracle数据库
+== 为Oracle数据库存储配置FSx ONTAP文件系统
 
-EC2实例部署会为操作系统分配EBS根卷。适用于ONTAP 文件系统的FSX可提供Oracle数据库存储卷、包括Oracle二进制卷、数据卷和日志卷。FSX存储NFS卷可以从AWS FSX控制台或Oracle安装进行配置、也可以通过配置自动化在自动化参数文件中按照用户配置的方式分配卷。
+EC2实例部署会为操作系统分配EBS根卷。FSx ONTAP文件系统提供Oracle数据库存储卷、包括Oracle二进制文件卷、数据卷和日志卷。FSX存储NFS卷可以从AWS FSX控制台或Oracle安装进行配置、也可以通过配置自动化在自动化参数文件中按照用户配置的方式分配卷。
 
 
 
-=== 为ONTAP 文件系统创建FSX
+=== 正在创建FSx ONTAP文件系统
 
-已参考此文档 https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/managing-file-systems.html["管理适用于ONTAP 文件系统的FSX"^] 用于为ONTAP 文件系统创建FSX。
+有关创建FSx ONTAP文件系统的信息、请参见本文档 https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/managing-file-systems.html["管理FSx ONTAP文件系统"^]。
 
 主要注意事项：
 
@@ -136,7 +136,7 @@ image:aws_rds_custom_deploy_fsx_01.png["图中显示了输入/输出对话框或
 +
 image:aws_ora_fsx_ec2_stor_01.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-. 选择适用于NetApp ONTAP 的Amazon FSX。然后单击下一步。
+. 选择Amazon FSx ONTAP。然后单击下一步。
 +
 image:aws_ora_fsx_ec2_stor_02.png["图中显示了输入/输出对话框或表示已写入内容"]
 
@@ -170,7 +170,7 @@ image:aws_ora_fsx_ec2_stor_08.png["图中显示了输入/输出对话框或表�
 
 === 为Oracle数据库配置数据库卷
 
-请参见 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/managing-volumes.html["管理ONTAP 卷的FSX—创建卷"^] 了解详细信息。
+有关详细信息、请参见。 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/managing-volumes.html["管理FSx ONTAP卷—创建卷"^]
 
 主要注意事项：
 

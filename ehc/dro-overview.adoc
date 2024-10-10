@@ -4,7 +4,7 @@ permalink: ehc/dro-overview.html
 keywords: NetApp Solutions, hybrid, multicloud, multi cloud, hyperscalers, vmware, disaster recovery orchestrator, DRO 
 summary:  
 ---
-= TR-4955：使用适用于ONTAP 和VMC的FSX进行灾难恢复(AWS VMware Cloud)
+= TR-4955：《借助FSx ONTAP和VMC实现灾难恢复》(AWS VMware Cloud)
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,7 +14,7 @@ summary:
 
 
 [role="lead"]
-将灾难恢复到云是一种弹性且经济高效的方式、可保护工作负载免受站点中断和数据损坏事件(例如勒索软件)的影响。借助NetApp SnapMirror技术、可以将内部VMware工作负载复制到在AWS中运行的FSX for ONTAP。
+将灾难恢复到云是一种弹性且经济高效的方式、可保护工作负载免受站点中断和数据损坏事件(例如勒索软件)的影响。借助NetApp SnapMirror技术、可以将内部VMware工作负载复制到在AWS中运行的FSx ONTAP。
 
 NetApp 公司 Niyaz Mohamed
 
@@ -22,9 +22,9 @@ NetApp 公司 Niyaz Mohamed
 
 == 概述
 
-可以使用灾难恢复协调器(DRO；具有UI的脚本式解决方案)无缝恢复从内部复制到FSX for ONTAP 的工作负载。DRO可通过VM注册到VMC自动从SnapMirror级别恢复到直接在NSX-T上进行的网络映射所有VMC环境都包含此功能。
+灾难恢复编排程序(Disaster Recovery Orchestrator、DRO；一种具有UI的脚本化解决方案)可用于无缝恢复从内部复制到FSx ONTAP的工作负载。DRO可通过VM注册到VMC自动从SnapMirror级别恢复到直接位于NSX-T上的网络映射。所有VMC环境都包含此功能。
 
-image:dro-vmc-image1.png["此图展示了内部数据中心、AWS SDDC实例上的VMware云和适用于NetApp ONTAP 的Amazon FSx之间的结构和互连。其中包括SnapMirror复制、DRaaS操作流量、互联网或直接连接以及VMware Transit Connect。"]
+image:dro-vmc-image1.png["此图展示了内部数据中心、基于AWS SDDC的VMware Cloud实例和Amazon FSx ONTAP之间的结构和互连。其中包括SnapMirror复制、DRaaS操作流量、互联网或直接连接以及VMware Transit Connect。"]
 
 
 
@@ -41,15 +41,15 @@ NOTE: 在初始版本中、DRO支持现有的试用集群。即将发布的版�
 
 
 
-=== 为ONTAP 配置和配置FSX
+=== 配置和配置FSx ONTAP
 
-适用于NetApp ONTAP 的Amazon FSX是一种完全托管的服务、可提供基于常见NetApp ONTAP 文件系统构建的高度可靠、可扩展、高性能和功能丰富的文件存储。请按照此处的步骤进行操作 link:aws-native-overview.html["链接。"^] 为ONTAP 配置和配置FSX。
+Amazon FSx ONTAP是一项完全托管的服务、可提供基于流行的NetApp ONTAP文件系统构建的高度可靠、可扩展、高性能和功能丰富的文件存储。按照此处的步骤link:aws-native-overview.html["链接。"^]配置和配置FSx ONTAP。
 
 
 
-=== 为适用于ONTAP 的FSX部署和配置SnapMirror
+=== 部署和配置SnapMirror到FSx ONTAP
 
-下一步是使用NetApp BlueXP并发现在AWS实例上为ONTAP 配置的FSX、并以适当的频率将所需的数据存储库卷从内部环境复制到适用于ONTAP 的FSX并保留NetApp Snapshot副本：
+下一步是使用NetApp BlueXP  并发现AWS上配置的FSx ONTAP实例、然后以适当的频率将所需的数据存储库卷从内部环境复制到FSx ONTAP并保留NetApp Snapshot副本：
 
 image:dro-vmc-image2.png["此图描绘了BlueXP画布关系映射、其中显示了已启用服务之间的各种交互。"]
 
@@ -144,9 +144,9 @@ image:dro-vmc-image3.png["Disaster Recovery Orchestrator登录屏幕。"]
 
 == DRO配置
 
-正确配置适用于ONTAP 的FSX和VMC之后、您可以开始配置DRO、以便使用适用于ONTAP 的FSX上的只读SnapMirror副本自动将内部工作负载恢复到VMC。
+正确配置FSx ONTAP和VMC后、您可以开始配置DRO、以便使用FSx ONTAP上的只读SnapMirror副本自动将内部工作负载恢复到VMC。
 
-NetApp建议在AWS中部署DRO代理、并将其部署到部署了FSX for ONTAP 的同一VPC上(也可以通过对等连接)。这样、DRO代理便可通过网络与内部组件以及适用于ONTAP 的FSX和VMC资源进行通信。
+NetApp建议在AWS中以及部署FSx ONTAP的同一个VPC上部署DRO代理(也可以通过对等连接)、以便DRO代理可以通过网络与内部组件以及FSx ONTAP和VMC资源进行通信。
 
 第一步是发现内部资源和云资源(vCenter和存储)并将其添加到DRO中。在支持的浏览器中打开DRO、并使用默认用户名和密码(admin/admin)以及添加站点。也可以使用发现选项添加站点。添加以下平台：
 
@@ -159,7 +159,7 @@ NetApp建议在AWS中部署DRO代理、并将其部署到部署了FSX for ONTAP 
 * 云
 +
 ** VMC vCenter
-** 适用于 ONTAP 的 FSX
+** FSX ONTAP
 
 
 
@@ -168,7 +168,7 @@ image:dro-vmc-image4.png["临时占位符图像问题描述。"]
 
 image:dro-vmc-image5.png["包含源站点和目标站点的DRO站点概述页面。"]
 
-添加后、DRO将执行自动发现、并显示具有从源存储到适用于ONTAP 的FSX的相应SnapMirror副本的VM。DRO会自动检测VM使用的网络和端口组并对其进行填充。
+添加后、DRO将执行自动发现、并显示具有从源存储到FSx ONTAP的相应SnapMirror副本的VM。DRO会自动检测VM使用的网络和端口组并对其进行填充。
 
 image:dro-vmc-image6.png["包含219个VM和10个数据存储库的自动发现屏幕。"]
 
@@ -259,7 +259,7 @@ image:dro-vmc-image18.png["复制计划概述的屏幕截图、其中包含Rever
 
 image:dro-vmc-image20.png["复制计划概述的屏幕截图、其中包含故障恢复选项的下拉列表。"] image:dro-vmc-image21.png["原始生产站点已启动且正在运行的DRO摘要页面的屏幕截图。"]
 
-在NetApp BlueXP中、我们可以看到相应卷(已映射到VMC的读写卷)的复制运行状况已中断。在测试故障转移期间、DRO不会映射目标卷或副本卷。相反、它会为所需的SnapMirror (或Snapshot)实例创建一个FlexClone副本、并公开FlexClone实例、这样不会占用适用于ONTAP 的FSX的额外物理容量。此过程可确保卷不会被修改、并且即使在灾难恢复测试或鉴别工作流期间、副本作业也可以继续执行。此外、此过程还可确保在发生错误或恢复损坏的数据时、可以清理恢复过程、而不会造成副本被销毁的风险。
+在NetApp BlueXP中、我们可以看到相应卷(已映射到VMC的读写卷)的复制运行状况已中断。在测试故障转移期间、DRO不会映射目标卷或副本卷。相反、它会为所需的SnapMirror (或Snapshot)实例创建FlexClone副本并公开FlexClone实例、而不会为FSx ONTAP占用额外的物理容量。此过程可确保卷不会被修改、并且即使在灾难恢复测试或鉴别工作流期间、副本作业也可以继续执行。此外、此过程还可确保在发生错误或恢复损坏的数据时、可以清理恢复过程、而不会造成副本被销毁的风险。
 
 image:dro-vmc-image22.png["临时占位符图像问题描述。"]
 

@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: rhhc/rhhc-pm-data-protection.html 
-keywords: NetApp Solutions, redhat OpenShift, red hat OpenShift, redhat openshift container platform, ocp, openshift container platform, Advanced Cluster Management, ACM, Hub Cluster, containers, container workloads, VMWare, provider managed storage, ONTAP, AWS FSxN, Astra Control Service 
+keywords: NetApp Solutions, redhat OpenShift, red hat OpenShift, redhat openshift container platform, ocp, openshift container platform, Advanced Cluster Management, ACM, Hub Cluster, containers, container workloads, VMWare, provider managed storage, ONTAP, AWS FSx ONTAP, Astra Control Service 
 summary:  
 ---
 = 数据保护
@@ -16,14 +16,14 @@ summary:
 [role="lead"]
 此页面显示了使用Astra Control Service在AWS上托管Red Hat OpenShift (ROSA)集群的数据保护选项。Astra Control Service (ACS)提供了一个易于使用的图形用户界面、您可以使用该界面添加集群、定义在其中运行的应用程序以及执行应用程序感知型数据管理活动。此外、还可以使用支持工作流自动化的API访问ACS功能。
 
-为Astra Control (ACS或ACC)供电是NetApp Trident。Trident将多种类型的Kubernetes集群(例如Red Hat OpenShift、EKS、AKS、SUSE LINUX、Anthos等)与各种类型的NetApp ONTAP存储(例如FAS或AFF、ONTAP Select、CVO、Google Cloud Volumes Service、Azure NetApp Files和Amazon FSx for NetApp ONTAP)相集成。
+为Astra Control (ACS或ACC)供电是NetApp Trident。Trident将多种类型的Kubernetes集群(例如Red Hat OpenShift、EKS、AKS、SUSE LINUX、Anthos等)与各种类型的NetApp ONTAP存储(例如FAS或AFF、ONTAP Select、CVO、Google Cloud Volumes Service、Azure NetApp Files和Amazon FSx ONTAP)相集成。
 
 本节详细介绍了使用ACS的以下数据保护选项：
 
 * 显示备份和还原在一个区域运行的ROSA应用程序并还原到另一个区域的视频。
 * 显示ROSA应用程序的Snapshot和Restore的视频。
-* 安装ROSA集群的分步详细信息、Amazon FSx for NetApp ONTAP、使用NetApp Trident与存储后端集成、在ROSA集群上安装PostgreSQL应用程序、使用ACS创建应用程序快照以及从该应用程序还原应用程序。
-* 一篇博客、详细介绍了如何使用ACS在使用FSx for ONTAP的ROSA集群上为myql应用程序创建快照并从快照中还原。
+* 安装ROSA集群(Amazon FSx ONTAP)的分步详细信息、使用NetApp Trident与存储后端集成、在ROSA集群上安装PostgreSQL应用程序、使用ACS创建应用程序快照并从中还原应用程序。
+* 一篇博客、详细介绍了如何使用ACS在使用FSx ONTAP的ROSA集群上为mySQL应用程序创建快照并从快照中还原。
 
 
 
@@ -40,7 +40,7 @@ video::01dd455e-7f5a-421c-b501-b01200fa91fd[panopto]
 
 以下视频显示了如何创建ROSA应用程序的快照以及之后如何从快照中还原。
 
-.使用Amazon FSx for NetApp ONTAP存储在AWS上的Red Hat OpenShift Service (ROSA)集群上为应用程序创建快照/还原
+.使用Amazon FSx ONTAP存储的Red Hat OpenShift Service on AWS (ROSA)集群上的应用程序的快照/还原
 video::36ecf505-5d1d-4e99-a6f8-b11c00341793[panopto]
 
 
@@ -65,7 +65,7 @@ video::36ecf505-5d1d-4e99-a6f8-b11c00341793[panopto]
 * link:https://console.redhat.com/openshift/downloads["OpenShift命令行界面"](OC)
 * 具有子网以及相应网关和路由的VPC
 * link:https://docs.openshift.com/rosa/rosa_install_access_delete_clusters/rosa_getting_started_iam/rosa-installing-rosa.html["已安装罗莎群集"] VPC
-* link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/getting-started-step1.html["适用于 NetApp ONTAP 的 Amazon FSX"] 在同一个VPC中创建
+* link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/getting-started-step1.html["Amazon FSx ONTAP"]在同一个VPC中创建
 * 从访问ROSA集群 link:https://console.redhat.com/openshift/overview["OpenShift混合云控制台"]
 
 
@@ -128,7 +128,7 @@ image:rhhc-trident-installed.png["图中显示了输入/输出对话框或表示
 
 ==== **4.使用三端CSI配置程序**创建后端、存储类和快照类配置
 
-使用下面显示的YAML文件创建三元后端对象、存储类对象和卷快照对象。请务必为您创建的Amazon FSx for NetApp ONTAP文件系统提供凭据、并在后端的YAML配置中提供管理LIF和文件系统的Vserver名称。要获取这些详细信息、请转到适用于Amazon FSx的AWS控制台并选择文件系统、然后导航到管理选项卡。此外、单击更新以设置的密码 `fsxadmin` 用户。
+使用下面显示的YAML文件创建三元后端对象、存储类对象和卷快照对象。请务必提供您创建的Amazon FSx ONTAP文件系统的凭据、管理LIF以及后端YAML配置中文件系统的Vserver名称。要获取这些详细信息、请转到适用于Amazon FSx的AWS控制台并选择文件系统、然后导航到管理选项卡。此外、单击更新可设置用户的密码 `fsxadmin`。
 
 
 NOTE: 您可以使用命令行创建对象、也可以从混合云控制台使用YAML文件创建对象。
@@ -211,7 +211,7 @@ image:rhhc-postgres-install.png["图中显示了输入/输出对话框或表示�
 
 NOTE: 如果您看不到应用程序Pod正在运行、则可能是由于安全上下文约束而导致错误。image:rhhc-scc-error.png["图中显示了输入/输出对话框或表示已写入内容"] `runAsUser` `fsGroup` `statefuleset.apps/postgresql`使用 `oc get project`命令输出中的uid编辑对象中的和字段以修复此错误、如下所示。image:rhhc-scc-fix.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-PostgreSQL应用程序应正在运行、并使用Amazon FSx支持的永久性卷作为NetApp ONTAP存储。
+PostgreSQL应用程序应正在运行并使用由Amazon FSx ONTAP存储提供支持的永久性卷。
 
 image:rhhc-postgres-running.png["图中显示了输入/输出对话框或表示已写入内容"]
 

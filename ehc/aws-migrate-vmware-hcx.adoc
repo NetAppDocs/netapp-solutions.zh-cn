@@ -14,7 +14,7 @@ summary:
 
 
 [role="lead"]
-迁移VMware工作负载是Amazon Web Services (AWS)上的VMware Cloud (VMC)及其在Amazon FSx for NetApp ONTAP 上的补充NFS数据存储库的一个常见使用情形。VMware HCX是首选选项、它提供了多种迁移方法、用于将在任何VMware支持的数据存储库上运行的内部虚拟机(VM)及其数据移动到VMC数据存储库、其中包括适用于ONTAP 的FSX上的补充NFS数据存储库。
+基于Amazon Web Services (AWS)的VMware Cloud (VMC)及其基于Amazon FSx ONTAP的补充NFS数据存储库的一个常见用例是迁移VMware工作负载。VMware HCX是首选方案、可通过多种迁移方法将在任何VMware支持的数据存储库上运行的内部虚拟机(VM)及其数据迁移到VMC数据存储库、其中包括FSx ONTAP上的补充NFS数据存储库。
 
 作者：NetApp Solutions Engineering
 
@@ -54,7 +54,7 @@ VMware HCX主要是一个移动平台、旨在简化工作负载迁移、工作�
 . 使用现有VMC SDDC或根据此操作创建新的SDDC link:aws-setup.html["NetApp链接"^] 或这一点 https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws.getting-started/GUID-EF198D55-03E3-44D1-AC48-6E2ABA31FF02.html["VMware链接"^]。
 . 从内部vCenter环境到VMC SDDC的网络路径必须支持使用vMotion迁移VM。
 . 确保满足所需 https://docs.vmware.com/en/VMware-HCX/4.4/hcx-user-guide/GUID-A631101E-8564-4173-8442-1D294B731CEB.html["防火墙规则和端口"^] 允许用于内部vCenter Server与SDDC vCenter之间的vMotion流量。
-. 适用于ONTAP NFS的FSX卷应作为补充数据存储库挂载到VMC SDDC中。  要将NFS数据存储库连接到相应的集群、请按照本节中所述的步骤进行操作 link:aws-native-overview.html["NetApp链接"^] 或这一点 https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-operations/GUID-D55294A3-7C40-4AD8-80AA-B33A25769CCA.html["VMware链接"^]。
+. FSx ONTAP NFS卷应作为补充数据存储库挂载到VMC SDDC中。要将NFS数据存储库连接到相应的集群，请按照本或本 https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-operations/GUID-D55294A3-7C40-4AD8-80AA-B33A25769CCA.html["VMware链接"^]中所述的步骤进行操作link:aws-native-overview.html["NetApp链接"^]。
 
 
 ====
@@ -315,14 +315,14 @@ image:fsx-hcx-image25.png["图中显示了输入/输出对话框或表示已写�
 NOTE: VMware HCX vMotion需要100 Mbps或更高的吞吐量功能。
 
 
-NOTE: ONTAP 数据存储库的目标VMC FSx必须具有足够的空间来容纳迁移。
+NOTE: 目标VMC FSx ONTAP数据存储库必须具有足够的空间来容纳迁移。
 
 ====
 
 
 == 结论
 
-无论您是针对全云还是混合云、以及驻留在内部任何类型/供应商存储上的数据、Amazon FSx for NetApp ONTAP 以及HCX均可提供出色的选项来部署和迁移工作负载、同时通过将数据需求无缝迁移到应用程序层来降低TCO。无论使用何种情形、都可以选择VMC以及适用于ONTAP 数据存储库的FSx、以便快速实现云优势、一致的基础架构以及跨内部和多个云的操作、工作负载的双向可移植性以及企业级容量和性能。使用VMware vSphere复制、VMware vMotion甚至是NFCs副本连接存储和迁移VM所使用的过程与步骤相同。
+无论您的目标是全云还是混合云、以及驻留在内部环境中任何类型/供应商存储上的数据、Amazon FSx ONTAP与HCX均可提供出色的选项来部署和迁移工作负载、同时通过将数据需求无缝迁移到应用程序层来降低TCO。无论何种使用情形、都可以选择VMC和FSx ONTAP数据存储库、以快速实现云优势、一致的基础架构、跨内部和多个云的操作、工作负载的双向可移动性以及企业级容量和性能。使用VMware vSphere复制、VMware vMotion甚至是NFCs副本连接存储和迁移VM所使用的过程与步骤相同。
 
 
 
@@ -331,7 +331,7 @@ NOTE: ONTAP 数据存储库的目标VMC FSx必须具有足够的空间来容纳�
 本文档的要点包括：
 
 * 现在、您可以使用Amazon FSX ONTAP 作为VMC SDDC的数据存储库。
-* 您可以轻松地将数据从任何内部数据中心迁移到使用FSX for ONTAP 数据存储库运行的VMC
+* 您可以轻松地将数据从任何内部数据中心迁移到使用FSx ONTAP数据存储库运行的VMC
 * 您可以轻松地扩展和缩减FSX ONTAP 数据存储库、以满足迁移活动期间的容量和性能要求。
 
 
@@ -345,7 +345,7 @@ NOTE: ONTAP 数据存储库的目标VMC FSx必须具有足够的空间来容纳�
 +
 https://docs.vmware.com/en/VMware-Cloud-on-AWS/["https://docs.vmware.com/en/VMware-Cloud-on-AWS/"^]
 
-* Amazon FSX for NetApp ONTAP 文档
+* Amazon FSx ONTAP文档
 +
 https://docs.aws.amazon.com/fsx/latest/ONTAPGuide["https://docs.aws.amazon.com/fsx/latest/ONTAPGuide"^]
 

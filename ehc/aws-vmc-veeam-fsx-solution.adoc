@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: ehc/aws-vmc-veeam-fsx-solution.html 
-keywords: disaster recovery, vmc, vmware cloud, aws, amazon web services, nfs datastore, fsxn, fsx for ontap, fsx for netapp ontap, backup, restore, sql server, oracle 
+keywords: disaster recovery, vmc, vmware cloud, aws, amazon web services, nfs datastore, fsxn, FSx ONTAP, FSx ONTAP, backup, restore, sql server, oracle 
 summary:  
 ---
-= VMware Cloud中的Veeam备份和还原、采用Amazon FSx for ONTAP
+= VMware Cloud中的Veeam备份和还原、使用Amazon FSx ONTAP
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,7 +14,7 @@ summary:
 
 
 [role="lead"]
-Veeam Backup & Replication是一款高效可靠的解决方案 、用于保护VMware Cloud中的数据。此解决方案 演示了使用Veeam备份和复制在VMware Cloud中备份和还原FSx for ONTAP NFS数据存储库上的应用程序VM的正确设置和配置。
+Veeam Backup & Replication是一款高效可靠的解决方案 、用于保护VMware Cloud中的数据。此解决方案演示了使用Veeam备份和复制备份和还原VMware Cloud中FSx ONTAP NFS数据存储库上的应用程序VM的正确设置和配置。
 
 作者：Jsh Powell—NetApp解决方案工程部
 
@@ -22,7 +22,7 @@ Veeam Backup & Replication是一款高效可靠的解决方案 、用于保护VM
 
 == 概述
 
-VMware Cloud (在AWS中)支持使用NFS数据存储库作为补充存储、而FSx for NetApp ONTAP 是一款安全解决方案 、适用于需要为云应用程序存储大量数据的客户、该数据存储库可以独立于SDDC集群中的ESXi主机数量进行扩展。这项集成的AWS存储服务可提供具有所有传统NetApp ONTAP 功能的高效存储。
+VMware Cloud (在AWS中)支持使用NFS数据存储库作为补充存储、而FSx ONTAP是一款安全解决方案、适用于需要为云应用程序存储大量数据的客户、该应用程序可以独立于SDDC集群中的ESXi主机数量进行扩展。这项集成的AWS存储服务可提供具有所有传统NetApp ONTAP 功能的高效存储。
 
 
 
@@ -30,16 +30,16 @@ VMware Cloud (在AWS中)支持使用NFS数据存储库作为补充存储、而FS
 
 此解决方案 可解决以下使用情形：
 
-* 使用FSx for NetApp ONTAP 作为备份存储库、备份和还原VMC中托管的Windows和Linux虚拟机。
-* 使用FSx for NetApp ONTAP 作为备份存储库来备份和还原Microsoft SQL Server应用程序数据。
-* 使用FSx for NetApp ONTAP 作为备份存储库来备份和还原Oracle应用程序数据。
+* 使用FSx ONTAP作为备份存储库、备份和还原VMC中托管的Windows和Linux虚拟机。
+* 使用FSx ONTAP作为备份存储库来备份和还原Microsoft SQL Server应用程序数据。
+* 使用FSx ONTAP作为备份存储库来备份和还原Oracle应用程序数据。
 
 
 
 
-=== 使用Amazon FSx for ONTAP 的NFS数据存储库
+=== 使用Amazon FSx ONTAP的NFS数据存储库
 
-此解决方案 中的所有虚拟机都位于FSx上、用于ONTAP 补充NFS数据存储库。使用FSx for ONTAP 作为补充NFS数据存储库具有若干优势。例如、它允许您：
+此解决方案中的所有虚拟机都位于FSx ONTAP补充NFS数据存储库上。使用FSx ONTAP作为补充NFS数据存储库具有若干优势。例如、它允许您：
 
 * 在云中创建可扩展且高度可用的文件系统、而无需复杂的设置和管理。
 * 与现有VMware环境集成、支持您使用熟悉的工具和流程来管理云资源。
@@ -49,10 +49,10 @@ VMware Cloud (在AWS中)支持使用NFS数据存储库作为补充存储、而FS
 .解决方案 部署概述
 [%collapsible]
 ====
-此列表简要介绍了配置Veeam备份和复制、使用FSx for ONTAP 作为备份存储库执行备份和还原作业以及还原SQL Server和Oracle VM和数据库所需的步骤：
+此列表简要介绍了配置Veeam备份和复制、使用FSx ONTAP作为备份存储库执行备份和还原作业以及还原SQL Server和Oracle VM和数据库所需的步骤：
 
-. 创建FSx for ONTAP 文件系统、用作Veeam Backup & Replication的iSCSI备份存储库。
-. 部署Veeam代理以分布备份工作负载并挂载FSx for ONTAP 上托管的iSCSI备份存储库。
+. 创建FSx ONTAP文件系统、用作Veeam Backup & Replication的iSCSI备份存储库。
+. 部署Veeam代理以分布备份工作负载并挂载FSx ONTAP上托管的iSCSI备份存储库。
 . 配置Veeam备份作业以备份SQL Server、Oracle、Linux和Windows虚拟机。
 . 还原SQL Server虚拟机和各个数据库。
 . 还原Oracle虚拟机和各个数据库。
@@ -62,22 +62,22 @@ VMware Cloud (在AWS中)支持使用NFS数据存储库作为补充存储、而FS
 .前提条件
 [%collapsible]
 ====
-本解决方案 的目的是演示在VMware Cloud中运行的虚拟机以及由FSx for NetApp ONTAP 托管的NFS数据存储库中的虚拟机的数据保护。此解决方案 假定已配置以下组件并可供使用：
+此解决方案的目的是、演示对在VMware Cloud中运行且位于FSx ONTAP托管的NFS数据存储库中的虚拟机的数据保护。此解决方案 假定已配置以下组件并可供使用：
 
-. 一个或多个NFS数据存储库连接到VMware Cloud的FSx for ONTAP 文件系统。
+. 一个或多个NFS数据存储库连接到VMware Cloud的FSx ONTAP文件系统。
 . 安装了Veeam Backup & Replication软件的Microsoft Windows Server VM。
 +
 ** Veeam Backup & Replication服务器已使用其IP地址或完全限定域名发现vCenter Server。
 
 
 . 在解决方案 部署期间、要与Veeam备份代理组件一起安装的Microsoft Windows Server VM。
-. VMDK和应用程序数据驻留在FSx for ONTAP NFS数据存储库上的Microsoft SQL Server VM。对于此解决方案 、我们在两个单独的VMDK上有两个SQL数据库。
+. VMDK和应用程序数据驻留在FSx ONTAP NFS数据存储库中的Microsoft SQL Server VM。对于此解决方案 、我们在两个单独的VMDK上有两个SQL数据库。
 +
 ** 注意：作为最佳实践、数据库和事务日志文件应放置在单独的驱动器上、因为这样可以提高性能和可靠性。这部分是由于事务日志是按顺序写入的、而数据库文件是随机写入的。
 
 
-. 包含VMDK和应用程序数据的Oracle数据库VM驻留在FSx上、用于ONTAP NFS数据存储库。
-. VMDK驻留在FSx上的Linux和Windows文件服务器VM、用于ONTAP NFS数据存储库。
+. VMDK和应用程序数据驻留在FSx ONTAP NFS数据存储库中的Oracle数据库VM。
+. VMDK驻留在FSx ONTAP NFS数据存储库上的Linux和Windows文件服务器VM。
 . Veeam需要使用特定的TCP端口在备份环境中的服务器和组件之间进行通信。在Veeam备份基础架构组件上、系统会自动创建所需的防火墙规则。有关网络端口要求的完整列表、请参阅的端口部分 https://helpcenter.veeam.com/docs/backup/vsphere/used_ports.html?zoom_highlight=network+ports&ver=120["适用于VMware vSphere的Veeam备份和复制用户指南"]。
 
 
@@ -93,16 +93,16 @@ image:aws-vmc-veeam-00.png["解决方案 架构图"]
 .硬件/软件组件
 [%collapsible]
 ====
-本解决方案 的目的是演示在VMware Cloud中运行的虚拟机以及由FSx for NetApp ONTAP 托管的NFS数据存储库中的虚拟机的数据保护。此解决方案 假定已配置以下组件并可供使用：
+此解决方案的目的是、演示对在VMware Cloud中运行且位于FSx ONTAP托管的NFS数据存储库中的虚拟机的数据保护。此解决方案 假定已配置以下组件并可供使用：
 
-* Microsoft Windows VM位于FSx for ONTAP NFS数据存储库上
-* Linux (CentOS) VM位于FSx for ONTAP NFS数据存储库上
-* Microsoft SQL Server VM位于FSx for ONTAP NFS数据存储库上
+* Microsoft Windows VM位于FSx ONTAP NFS数据存储库上
+* Linux (CentOS) VM位于FSx ONTAP NFS数据存储库上
+* Microsoft SQL Server VM位于FSx ONTAP NFS数据存储库上
 +
 ** 两个数据库托管在不同的VMDK上
 
 
-* Oracle VM位于FSx for ONTAP NFS数据存储库上
+* Oracle VM位于FSx ONTAP NFS数据存储库上
 
 
 ====
@@ -110,11 +110,11 @@ image:aws-vmc-veeam-00.png["解决方案 架构图"]
 
 == 解决方案 部署
 
-在本解决方案 中、我们详细说明了如何使用Veeam备份和复制软件部署和验证解决方案 、以便在AWS上的VMware Cloud SDDC中对SQL Server、Oracle以及Windows和Linux文件服务器虚拟机执行备份和恢复。此解决方案 中的虚拟机位于FSx for ONTAP 托管的补充NFS数据存储库中。此外、还会使用一个单独的FSx for ONTAP 文件系统来托管要用于Veeam备份存储库的iSCSI卷。
+在本解决方案 中、我们详细说明了如何使用Veeam备份和复制软件部署和验证解决方案 、以便在AWS上的VMware Cloud SDDC中对SQL Server、Oracle以及Windows和Linux文件服务器虚拟机执行备份和恢复。此解决方案中的虚拟机位于FSx ONTAP托管的补充NFS数据存储库中。此外、还会使用一个单独的FSx ONTAP文件系统来托管要用于Veeam备份存储库的iSCSI卷。
 
-我们将通过FSx创建ONTAP 文件系统、挂载要用作备份存储库的iSCSI卷、创建和运行备份作业以及执行VM和数据库还原。
+接下来、我们将对FSx ONTAP文件系统的创建、装载要用作备份存储库的iSCSI卷、创建和运行备份作业以及执行虚拟机和数据库还原进行操作。
 
-有关FSx for NetApp ONTAP 的详细信息、请参见 https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html["FSx for ONTAP 用户指南"^]。
+有关FSx ONTAP的详细信息，请参阅 https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html["FSx ONTAP用户指南"^]。
 
 有关Veeam备份和复制的详细信息、请参见 https://www.veeam.com/documentation-guides-datasheets.html?productId=8&version=product%3A8%2F221["Veeam帮助中心技术文档"^] 站点
 
@@ -182,22 +182,22 @@ image:aws-vmc-veeam-10.png["配置网络流量规则"]
 
 === 配置存储和备份存储库
 
-主Veeam备份服务器和Veeam代理服务器可访问直连存储形式的备份存储库。在本节中、我们将介绍如何创建适用于ONTAP 文件系统的FSx、如何将iSCSI LUN挂载到Veeam服务器以及如何创建备份存储库。
+主Veeam备份服务器和Veeam代理服务器可访问直连存储形式的备份存储库。本节将介绍如何创建FSx ONTAP文件系统、如何将iSCSI LUN挂载到Veeam服务器以及如何创建备份存储库。
 
-.为ONTAP 文件系统创建FSx
+.创建FSx ONTAP文件系统
 [%collapsible]
 ====
-创建FSx for ONTAP 文件系统、用于托管Veeam备份存储库的iSCSI卷。
+创建一个FSx ONTAP文件系统、用于托管Veeam备份存储库的iSCSI卷。
 
 . 在AWS控制台中，转到FSx，然后选择*Create file system*
 +
-image:aws-vmc-veeam-01.png["为ONTAP 文件系统创建FSx"]
+image:aws-vmc-veeam-01.png["创建FSx ONTAP文件系统"]
 
-. 选择*Amazon FSx for NetApp ONTAP FS*，然后选择*Next*继续。
+. 选择*Amazon FSx ONTAP *，然后选择*Next*继续。
 +
-image:aws-vmc-veeam-02.png["选择Amazon FSx for NetApp ONTAP"]
+image:aws-vmc-veeam-02.png["选择Amazon FSx ONTAP"]
 
-. 填写文件系统名称、部署类型、SSD存储容量以及FSx for ONTAP 集群将驻留的VPC。此VPC必须配置为与VMware Cloud中的虚拟机网络进行通信。单击“*下一步*”。
+. 填写文件系统名称、部署类型、SSD存储容量以及FSx ONTAP集群将驻留的VPC。此VPC必须配置为与VMware Cloud中的虚拟机网络进行通信。单击“*下一步*”。
 +
 image:aws-vmc-veeam-03.png["填写文件系统信息"]
 
@@ -208,13 +208,13 @@ image:aws-vmc-veeam-03.png["填写文件系统信息"]
 .配置和挂载iSCSI LUN
 [%collapsible]
 ====
-在FSx for ONTAP 上创建和配置iSCSI LUN、然后挂载到Veeam备份和代理服务器。这些LUN稍后将用于创建Veeam备份存储库。
+在FSx ONTAP上创建和配置iSCSI LUN、然后挂载到Veeam备份和代理服务器。这些LUN稍后将用于创建Veeam备份存储库。
 
 
-NOTE: 在FSx for ONTAP 上创建iSCSI LUN是一个多步骤过程。创建卷的第一步可以在Amazon FSx控制台中完成、也可以使用NetApp ONTAP 命令行界面完成。
+NOTE: 在FSx ONTAP上创建iSCSI LUN是一个多步骤过程。创建卷的第一步可以在Amazon FSx控制台中完成、也可以使用NetApp ONTAP 命令行界面完成。
 
 
-NOTE: 有关使用FSx for ONTAP 的详细信息、请参见 https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html["FSx for ONTAP 用户指南"^]。
+NOTE: 有关使用FSx ONTAP的详细信息，请参见 https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html["FSx ONTAP用户指南"^]。
 
 . 在NetApp ONTAP 命令行界面中、使用以下命令创建初始卷：
 +
@@ -449,7 +449,7 @@ image:aws-vmc-veeam-36.png["从列表中选择还原点"]
 
 VMware Cloud是一个功能强大的平台、用于运行业务关键型应用程序和存储敏感数据。对于依赖VMware Cloud的企业来说、安全的数据保护解决方案 对于确保业务连续性并帮助抵御网络威胁和数据丢失至关重要。通过选择可靠且强大的数据保护解决方案 、企业可以确信无论什么情况、其关键数据都是安全可靠的。
 
-本文档中提供的使用情形重点介绍经验证的数据保护技术、这些技术重点介绍了NetApp、VMware和Veeam之间的集成。在AWS中、FSx for ONTAP 可用作VMware Cloud的补充NFS数据存储库、并可用于所有虚拟机和应用程序数据。Veeam Backup & Replication是一款全面的数据保护解决方案 、旨在帮助企业改进、自动化和简化备份和恢复流程。Veeam可与FSx for ONTAP 上托管的iSCSI备份目标卷结合使用、为驻留在VMware Cloud中的应用程序数据提供安全且易于管理的数据保护解决方案。
+本文档中提供的使用情形重点介绍经验证的数据保护技术、这些技术重点介绍了NetApp、VMware和Veeam之间的集成。在AWS中、FSx ONTAP可用作VMware Cloud的补充NFS数据存储库、并可用于所有虚拟机和应用程序数据。Veeam Backup & Replication是一款全面的数据保护解决方案 、旨在帮助企业改进、自动化和简化备份和恢复流程。Veeam可与FSx ONTAP上托管的iSCSI备份目标卷结合使用、为驻留在VMware Cloud中的应用程序数据提供安全且易于管理的数据保护解决方案。
 
 
 
@@ -457,7 +457,7 @@ VMware Cloud是一个功能强大的平台、用于运行业务关键型应用�
 
 要详细了解此解决方案 中提供的技术、请参阅以下追加信息。
 
-* https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html["FSx for ONTAP 用户指南"^]
+* https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html["FSx ONTAP用户指南"^]
 * https://www.veeam.com/documentation-guides-datasheets.html?productId=8&version=product%3A8%2F221["Veeam帮助中心技术文档"^]
 * https://www.veeam.com/kb2414["VMware Cloud on AWS支持。注意事项和限制"]
 

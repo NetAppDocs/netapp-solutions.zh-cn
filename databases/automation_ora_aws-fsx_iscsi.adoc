@@ -22,7 +22,7 @@ NetApp公司Allen Cao、Niyaz Mohamed
 
 == 目的
 
-Amazon FSx for NetApp ONTAP是一项存储服务、支持您在AWS云中启动和运行完全托管的NetApp ONTAP文件系统。它提供了NetApp文件系统的熟悉特性、性能、功能和API、并具有完全托管的AWS服务的灵活性、可扩展性和精简性。它支持您在AWS云中运行要求最严苛的数据库工作负载、例如Oracle、让您高枕无忧。
+Amazon FSx ONTAP是一项存储服务、支持您在AWS云中启动和运行完全托管的NetApp ONTAP文件系统。它提供了NetApp文件系统的熟悉特性、性能、功能和API、并具有完全托管的AWS服务的灵活性、可扩展性和精简性。它支持您在AWS云中运行要求最严苛的数据库工作负载、例如Oracle、让您高枕无忧。
 
 本文档演示了如何使用Ans可 自动化在Amazon FSx ONTAP文件系统中简化Oracle数据库的部署。Oracle数据库部署在独立重新启动配置中、使用iSCSI协议进行数据访问、使用Oracle ASM进行数据库存储磁盘管理。它还提供了有关使用NetApp SnapCenter UI工具在AWS云中执行高效存储数据库操作的Oracle数据库备份、还原和克隆的信息。
 
@@ -143,7 +143,7 @@ image:automation_ora_aws-fsx_iscsi_archit.png["此图详细展示了AWS公共云
 
 . 已设置AWS帐户、并已在您的AWS帐户中创建必要的VPC和网段。
 . 从AWS EC2控制台中、将EC2 Linux实例部署为Oracle数据库服务器。为EC2用户启用SSH专用/公共密钥身份验证。有关环境设置的详细信息、请参见上一节中的架构图。另请查看 link:https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html["Linux实例用户指南"^] 有关详细信息 ...
-. 从AWS FSx控制台中、配置满足要求的Amazon FSx ONTAP文件系统。查看文档 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/creating-file-systems.html["为ONTAP 文件系统创建FSX"^] 了解分步说明。
+. 从AWS FSx控制台中、配置满足要求的Amazon FSx ONTAP文件系统。查看文档link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/creating-file-systems.html["正在创建FSx ONTAP文件系统"^]、了解分步说明。
 . 可以使用以下Terraform自动化工具包执行步骤2和步骤3、该工具包会创建一个名为的EC2实例 `ora_01` 和名为的FSX文件系统 `fsx_01`。执行前、请仔细阅读该说明并根据您的环境更改变量。您可以根据自己的部署要求轻松修改此模板。
 +
 [source, cli]
@@ -585,7 +585,7 @@ image:automation_ora_aws-fsx_iscsi_em_01.png["此图提供Oracle Enterprise Mana
 
 要了解有关本文档中所述信息的更多信息，请查看以下文档和 / 或网站：
 
-* 适用于 NetApp ONTAP 的 Amazon FSX
+* Amazon FSx ONTAP
 +
 link:https://aws.amazon.com/fsx/netapp-ontap/["https://aws.amazon.com/fsx/netapp-ontap/"^]
 

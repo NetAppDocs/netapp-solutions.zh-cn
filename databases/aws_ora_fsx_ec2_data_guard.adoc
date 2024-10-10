@@ -54,7 +54,7 @@ Oracle Data Guard可确保主数据库和备用数据库复制配置中企业数
 
 === 架构
 
-image:aws_ora_fsx_data_guard_architecture.png["此图详细展示了使用FSxN在AWS中实施的Oracle Data Guard。"]
+image:aws_ora_fsx_data_guard_architecture.png["此图详细展示了使用FSx ONTAP在AWS中实施的Oracle Data Guard。"]
 
 
 
@@ -117,7 +117,7 @@ image:aws_ora_fsx_data_guard_architecture.png["此图详细展示了使用FSxN�
 * *数据库存储管理。*为简化操作、Oracle建议在Oracle Data Guard配置中设置Oracle自动存储管理(Oracle ASM)和Oracle托管文件(Oracle Managed Files、OMF)时、在主数据库和备用数据库上对称设置。
 * *EC2计算实例。*在这些测试和验证中，我们使用AWS EC2 T2.xlea占用 空间实例作为Oracle数据库计算实例。NetApp建议在生产部署中使用M5类型的EC2实例作为Oracle的计算实例、因为它已针对数据库工作负载进行了优化。您需要根据实际工作负载要求根据vCPU数量和RAM量适当调整EC2实例的大小。
 * * FSX存储HA集群单区域或多区域部署。*在这些测试和验证中、我们在一个AWS可用性区域中部署了一个FSX HA集群。对于生产部署、NetApp建议在两个不同的可用性区域中部署一个FSX HA对。FSx集群始终配置在HA对中、该HA对会在一对主动-被动文件系统中同步镜像、以提供存储级别冗余。多区域部署可在单个AWS区域发生故障时进一步提高高可用性。
-* * FSX存储集群规模估算。*适用于ONTAP 存储文件系统的Amazon FSX可提供高达160、000个原始SSD IOPS、高达4 Gbps吞吐量以及最大192 TiB容量。但是、您可以根据部署时的实际要求、根据已配置的IOPS、吞吐量和存储限制(最小1、024 GiB)来调整集群的大小。可以动态调整容量、而不会影响应用程序可用性。
+* *FSx存储集群规模估算。*Amazon FSx ONTAP存储文件系统可提供高达16万次原始SSD IOPS、高达4 Gbps吞吐量和最大192 TiB容量。但是、您可以根据部署时的实际要求、根据已配置的IOPS、吞吐量和存储限制(最小1、024 GiB)来调整集群的大小。可以动态调整容量、而不会影响应用程序可用性。
 
 
 
@@ -143,7 +143,7 @@ image:aws_ora_fsx_data_guard_architecture.png["此图详细展示了使用FSxN�
 
 . 已设置AWS帐户、并已在您的AWS帐户中创建必要的VPC和网段。
 . 在AWS EC2控制台中、您至少需要部署三个EC2 Linux实例、一个作为主Oracle数据库实例、一个作为备用Oracle数据库实例、一个克隆目标数据库实例用于报告、开发和测试等 有关环境设置的详细信息、请参见上一节中的架构图。另请查看AWS link:https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html["Linux实例用户指南"^] 有关详细信息 ...
-. 从AWS EC2控制台中、部署Amazon FSx for ONTAP存储HA集群以托管存储Oracle备用数据库的Oracle卷。如果您不熟悉FSX存储的部署、请参见相关文档 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/creating-file-systems.html["为ONTAP 文件系统创建FSX"^] 了解分步说明。
+. 从AWS EC2控制台中、部署Amazon FSx ONTAP存储HA集群以托管存储Oracle备用数据库的Oracle卷。如果您不熟悉FSx存储的部署、请参见文档link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/creating-file-systems.html["正在创建FSx ONTAP文件系统"^]以获取分步说明。
 . 可以使用以下Terraform自动化工具包执行步骤2和步骤3、该工具包会创建一个名为的EC2实例 `ora_01` 和名为的FSX文件系统 `fsx_01`。执行前、请仔细阅读该说明并根据您的环境更改变量。您可以根据自己的部署要求轻松修改此模板。
 +
 [source, cli]
@@ -998,7 +998,7 @@ link:https://docs.oracle.com/en/database/oracle/oracle-database/19/sbydb/index.h
 +
 link:aws_ora_fsx_ec2_deploy_intro.html["简介"]
 
-* 适用于 NetApp ONTAP 的 Amazon FSX
+* Amazon FSx ONTAP
 +
 link:https://aws.amazon.com/fsx/netapp-ontap/["https://aws.amazon.com/fsx/netapp-ontap/"^]
 

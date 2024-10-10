@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: ai/ddlnexus_initial_setup.html 
-keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, Hybrid, Hybrid Cloud, Hybrid Multicloud, Cloud, AWS, Amazon, Amazon Web Services, FSx for NetApp ONTAP, FSx, NetApp ONTAP, FlexCache, SnapMirror, BlueXP 
+keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, Hybrid, Hybrid Cloud, Hybrid Multicloud, Cloud, AWS, Amazon, Amazon Web Services, FSx ONTAP, FSx, NetApp ONTAP, FlexCache, SnapMirror, BlueXP 
 summary: 采用Domino数据实验室和NetApp的混合多云MLOps—初始设置 
 ---
 = 初始设置
@@ -23,11 +23,11 @@ summary: 采用Domino数据实验室和NetApp的混合多云MLOps—初始设置
 在执行本节所述的步骤之前、我们假定您已执行以下任务：
 
 * 您已部署和配置内部NetApp ONTAP存储平台。有关详细信息，请参见 link:https://www.netapp.com/support-and-training/documentation/["NetApp 产品文档"]。
-* 您已在AWS中配置Amazon FSx for NetApp ONTAP实例。有关详细信息，请参见 link:https://aws.amazon.com/fsx/netapp-ontap/["Amazon FSx for NetApp ONTAP商品页面"]。
+* 您已在AWS中配置Amazon FSx ONTAP实例。有关详细信息，请参阅link:https://aws.amazon.com/fsx/netapp-ontap/["亚马逊FSx ONTAP商品页面"]。
 * 您已在内部数据中心中配置了Kubbernetes集群。有关详细信息，请参见 link:https://docs.dominodatalab.com/en/latest/admin_guide/b35e66/admin-guide/["Domino管理指南"]。
 * 您已在AWS中配置Amazon EKS集群。有关详细信息，请参见 link:https://docs.dominodatalab.com/en/latest/admin_guide/b35e66/admin-guide/["Domino管理指南"]。
 * 您已在内部Kubbernetes集群中安装NetApp Trident。此外、您还配置了此三项技术实例、以便在配置和管理存储资源时使用内部NetApp ONTAP存储平台。有关详细信息，请参阅link:https://docs.netapp.com/us-en/trident/index.html["NetApp Trident 文档"]。
-* 您已在Amazon EKS集群中安装NetApp Trident。此外、您还配置了此TRIDent实例、以便在配置和管理存储资源时使用Amazon FSx for NetApp ONTAP实例。有关详细信息，请参阅link:https://docs.netapp.com/us-en/trident/index.html["NetApp Trident 文档"]。
+* 您已在Amazon EKS集群中安装NetApp Trident。此外、您还将此Trident实例配置为在配置和管理存储资源时使用Amazon FSx ONTAP实例。有关详细信息，请参阅link:https://docs.netapp.com/us-en/trident/index.html["NetApp Trident 文档"]。
 * 您必须在内部数据中心和AWS中的虚拟私有云(Virtual Private Cloud、VPC)之间建立双向网络连接。有关实施此功能的各种选项的更多详细信息、请参见 link:https://docs.aws.amazon.com/vpc/latest/userguide/vpn-connections.html["Amazon虚拟专用网络(VPN)文档"]。
 
 
@@ -41,7 +41,7 @@ summary: 采用Domino数据实验室和NetApp的混合多云MLOps—初始设置
 NOTE: 请参见 link:https://docs.dominodatalab.com/en/latest/admin_guide/7f4331/install-configuration-reference/#storage-classes["Domino安装配置参考指南"] 有关如何在Domino/yml安装配置文件中指定共享存储类的详细信息。
 
 
-NOTE: link:https://www.netapp.com/media/79922-tr-4952.pdf["技术报告TR-4952"] 介绍如何使用Amazon FSx for NetApp ONTAP在AWS中部署Domino、对于解决出现的任何问题、这可能是一个有用的参考。
+NOTE: link:https://www.netapp.com/media/79922-tr-4952.pdf["技术报告TR-4952"]介绍如何使用Amazon FSx ONTAP在AWS中部署Domino、对于解决出现的任何问题、这可能是一个有用的参考。
 
 
 

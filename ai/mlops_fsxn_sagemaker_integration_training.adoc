@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: ai/mlops_fsxn_sagemaker_integration_training.html 
-keywords: FSxN, MLOps, NetApp ONTAP, SageMaker, AWS S3, Computer Vision, PyTorch 
-summary: '本文是一篇有关使用AWS FSx for NetApp ONTAP (FSxN)在SageMaker中训练PyTorch模型的教程、专门针对轮胎质量分类项目。' 
+keywords: FSx ONTAP, MLOps, NetApp ONTAP, SageMaker, AWS S3, Computer Vision, PyTorch 
+summary: '本文是有关使用Amazon FSx for NetApp ONTAP (FSx ONTAP)在SageMaker中训练PyTorch模型的教程、专门针对轮胎质量分类项目。' 
 ---
-= 第2部分—利用AWS FSx for NetApp ONTAP (FSxN)作为SageMaker模型训练的数据源
+= 第2部分—利用AWS Amazon FSx for NetApp ONTAP (FSx ONTAP)作为SageMaker模型训练的数据源
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,7 +14,7 @@ summary: '本文是一篇有关使用AWS FSx for NetApp ONTAP (FSxN)在SageMaker
 
 
 [role="lead"]
-本文是有关使用AWS FSx for NetApp ONTAP (FSxN)在SageMaker中训练PyTorch模型的教程、专门针对轮胎质量分类项目。
+本文是有关使用Amazon FSx for NetApp ONTAP (FSx ONTAP)在SageMaker中训练PyTorch模型的教程、专门针对轮胎质量分类项目。
 
 *作者：*
 Jian Jian (Ken)、NetApp高级数据和应用科学人员
@@ -23,13 +23,13 @@ Jian Jian (Ken)、NetApp高级数据和应用科学人员
 
 == 简介
 
-本教程提供了计算机视觉分类项目的一个实际示例、提供了在SageMaker环境中构建ML模型以利用FSxN作为数据源的实践经验。该项目侧重于使用深度学习框架PyTorch、根据轮胎图像对轮胎质量进行分类。它侧重于使用FSxN作为Amazon SageMaker中的数据源来开发机器学习模型。
+本教程提供了计算机视觉分类项目的一个实际示例、提供了构建ML模型的实践经验、该模型利用FSx ONTAP作为SageMaker环境中的数据源。该项目侧重于使用深度学习框架PyTorch、根据轮胎图像对轮胎质量进行分类。它侧重于使用FSx ONTAP作为Amazon SageMaker中的数据源来开发机器学习模型。
 
 
 
-== 什么是FSxN
+== 什么是FSx ONTAP
 
-Amazon FSx for NetApp ONTAP确实是AWS提供的一款完全托管的存储解决方案。它利用NetApp的ONTAP文件系统提供可靠的高性能存储。由于支持NFS、SMB和iSCSI等协议、因此可以从不同的计算实例和容器无缝访问。该服务旨在提供卓越的性能、确保快速高效的数据运营。它还提供高可用性和持久性、确保您的数据始终可访问并受到保护。此外、Amazon FSx for NetApp ONTAP的存储容量可扩展、使您可以根据需要轻松调整。
+Amazon FSx ONTAP确实是由AWS提供的完全托管存储解决方案。它利用NetApp的ONTAP文件系统提供可靠的高性能存储。由于支持NFS、SMB和iSCSI等协议、因此可以从不同的计算实例和容器无缝访问。该服务旨在提供卓越的性能、确保快速高效的数据运营。它还提供高可用性和持久性、确保您的数据始终可访问并受到保护。此外、Amazon FSx ONTAP的存储容量可扩展、使您可以根据需要轻松调整。
 
 
 
@@ -41,15 +41,15 @@ Amazon FSx for NetApp ONTAP确实是AWS提供的一款完全托管的存储解�
 
 image:mlops_fsxn_sagemaker_integration_training_0.png["网络环境"]
 
-FSxN (Amazon FSx for NetApp ONTAP)是一项AWS存储服务。它包括在NetApp ONTAP系统上运行的文件系统以及与其连接的AWS托管系统虚拟机(SVM)。在提供的图中、由AWS管理的NetApp ONTAP服务器位于VPC之外。SVM充当SageMaker和NetApp ONTAP系统之间的中介、接收来自SageMaker的操作请求并将其转发到底层存储。要访问FSxN、SageMaker必须与FSxN部署位于同一个VPC中。此配置可确保SageMaker和FSxN之间的通信和数据访问。
+FSx ONTAP (Amazon FSx ONTAP)是一项AWS存储服务。它包括在NetApp ONTAP系统上运行的文件系统以及与其连接的AWS托管系统虚拟机(SVM)。在提供的图中、由AWS管理的NetApp ONTAP服务器位于VPC之外。SVM充当SageMaker和NetApp ONTAP系统之间的中介、接收来自SageMaker的操作请求并将其转发到底层存储。要访问FSx ONTAP、SageMaker必须与FSx ONTAP部署位于同一个VPC中。此配置可确保SageMaker和FSx ONTAP之间的通信和数据访问。
 
 
 
 === 数据访问
 
-在实际场景中、数据科学家通常会利用存储在FSxN中的现有数据来构建机器学习模型。但是、出于演示目的、由于FSxN文件系统在创建后最初为空、因此需要手动上传训练数据。这可以通过将FSxN作为卷挂载到SageMaker来实现。成功挂载文件系统后、您可以将数据集上传到挂载位置、以便在SageMaker环境中训练模型。通过这种方法、您可以在与SageMaker合作进行模型开发和训练时利用FSxN的存储容量和功能。
+在实际场景中、数据科学家通常会利用FSx ONTAP中存储的现有数据来构建其机器学习模型。但是、出于演示目的、由于FSx ONTAP文件系统在创建后最初为空、因此需要手动上传训练数据。这可以通过将FSx ONTAP作为卷挂载到SageMaker来实现。成功挂载文件系统后、您可以将数据集上传到挂载位置、以便在SageMaker环境中训练模型。通过这种方法、您可以利用FSx ONTAP的存储容量和功能、同时与SageMaker合作进行模型开发和训练。
 
-数据读取过程会将FSxN配置为专用S3存储分段。要了解详细的配置说明、请参见 link:./mlops_fsxn_s3_integration.html["第1部分—将AWS FSx for NetApp ONTAP (FSxN)作为私有S3存储分段集成到AWS SageMaker中"]
+数据读取过程涉及将FSx ONTAP配置为专用S3存储分段。要了解详细的配置说明、请参见link:./mlops_fsxn_s3_integration.html["第1部分—将Amazon FSx for NetApp ONTAP (FSx ONTAP)作为私有S3存储分段集成到AWS SageMaker中"]
 
 
 
@@ -57,7 +57,7 @@ FSxN (Amazon FSx for NetApp ONTAP)是一项AWS存储服务。它包括在NetApp 
 
 image:mlops_fsxn_sagemaker_integration_training_1.png["培训工作流"]
 
-使用FSxN中的训练数据在SageMaker中构建深度学习模型的工作流可概括为三个主要步骤：数据加载程序定义、模型训练和部署。总体而言、这些步骤构成了MLOps管道的基础。但是、每个步骤都涉及多个详细的子步骤、以实现全面实施。这些子步骤包括各种任务、例如数据预处理、数据集拆分、模型配置、超参数调整、模型评估、 和型号部署。这些步骤可确保在SageMaker环境中使用来自FSxN的训练数据构建和部署深度学习模型的流程全面有效。
+使用FSx ONTAP中的训练数据在SageMaker中构建深度学习模型的工作流可概括为三个主要步骤：Data Loader定义、模型训练和部署。总体而言、这些步骤构成了MLOps管道的基础。但是、每个步骤都涉及多个详细的子步骤、以实现全面实施。这些子步骤包括各种任务、例如数据预处理、数据集拆分、模型配置、超参数调整、模型评估、 和型号部署。这些步骤可确保在SageMaker环境中使用FSx ONTAP中的训练数据构建和部署深度学习模型的流程全面有效。
 
 
 
@@ -127,11 +127,11 @@ class FSxNImageDataset(torch.utils.data.Dataset):
             image = self.preprocess(image)
         return image, label
 ----
-此类提供了获取数据集中记录总数的功能，并定义了读取每个记录的数据的方法。在*__gottim_*函数中，代码利用boto3 S3存储分段对象从FSxN中检索二进制数据。从FSxN访问数据的代码模式类似于从Amazon S3读取数据。后面的说明将深入介绍私有S3对象*bket*的创建过程。
+此类提供了获取数据集中记录总数的功能，并定义了读取每个记录的数据的方法。在*__gottim_*函数中，代码利用boto3 S3存储分段对象从FSx ONTAP中检索二进制数据。从FSx ONTAP访问数据的代码模式类似于从Amazon S3读取数据。后面的说明将深入介绍私有S3对象*bket*的创建过程。
 
 
 
-==== FSxN作为私有S3存储库
+==== FSx ONTAP作为私有S3存储库
 
 [source, python]
 ----
@@ -139,7 +139,7 @@ seed = 77                                                   # Random seed
 bucket_name = '<Your ONTAP bucket name>'                    # The bucket name in ONTAP
 aws_access_key_id = '<Your ONTAP bucket key id>'            # Please get this credential from ONTAP
 aws_secret_access_key = '<Your ONTAP bucket access key>'    # Please get this credential from ONTAP
-fsx_endpoint_ip = '<Your FSxN IP address>'                  # Please get this IP address from FSXN
+fsx_endpoint_ip = '<Your FSx ONTAP IP address>'                  # Please get this IP address from FSXN
 ----
 [source, python]
 ----
@@ -167,7 +167,7 @@ s3_client: boto3.client = boto3.resource(
 bucket = s3_client.Bucket(bucket_name)
 # --- End integrating SageMaker with FSXN ---
 ----
-要从SageMaker中的FSxN读取数据、需要创建一个处理程序、该处理程序使用S3协议指向FSxN存储。这样就可以将FSxN视为专用S3存储分段。处理程序配置包括指定FSxN SVM的IP地址、分段名称和所需凭据。有关获取这些配置项的完整说明、请参阅上的文档 link:mlops_fsxn_s3_integration.html["第1部分—将AWS FSx for NetApp ONTAP (FSxN)作为私有S3存储分段集成到AWS SageMaker中"]。
+要从SageMaker中的FSx ONTAP读取数据、需要创建一个使用S3协议指向FSx ONTAP存储的处理程序。这样、FSx ONTAP便可视为私有S3存储分段。处理程序配置包括指定FSx ONTAP SVM的IP地址、分段名称和所需凭据。有关获取这些配置项的完整说明，请参阅上的文档link:mlops_fsxn_s3_integration.html["第1部分—将Amazon FSx for NetApp ONTAP (FSx ONTAP)作为私有S3存储分段集成到AWS SageMaker中"]。
 
 在上述示例中、b分 段对象用于实例化PyTorch DataSet对象。数据集对象将在后续章节中进一步说明。
 

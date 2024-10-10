@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: ai/ddlnexus_expose_netapp_vols.html 
-keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, Hybrid, Hybrid Cloud, Hybrid Multicloud, Cloud, AWS, Amazon, Amazon Web Services, FSx for NetApp ONTAP, FSx, NetApp ONTAP, FlexCache, SnapMirror, BlueXP 
+keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, Hybrid, Hybrid Cloud, Hybrid Multicloud, Cloud, AWS, Amazon, Amazon Web Services, FSx ONTAP, FSx, NetApp ONTAP, FlexCache, SnapMirror, BlueXP 
 summary: 采用Domino数据实验室和NetApp的混合多云MLOps—将现有NetApp卷公开给Domino 
 ---
 = 将现有NetApp卷公开给Domino
@@ -39,7 +39,7 @@ summary: 采用Domino数据实验室和NetApp的混合多云MLOps—将现有Net
 === 在Kubbernetes中创建PV和PVC
 
 
-NOTE: 对于内部部署卷、请在内部Kubbernetes集群中创建PV和PVC。对于Amazon FSx for NetApp ONTAP卷、在Amazon EKS中创建PV和PVC。
+NOTE: 对于内部部署卷、请在内部Kubbernetes集群中创建PV和PVC。对于Amazon FSx ONTAP卷、在Amazon EKS中创建PV和PVC。
 
 首先、您必须在Kubbernetes集群中创建永久性卷(PV)和永久性卷请求(PVC)。要创建PV和PVC、请使用 link:https://docs.dominodatalab.com/en/latest/admin_guide/4cdae9/set-up-kubernetes-pv-and-pvc/#_nfs_pvpvc_example["NFS PV/PVC示例"] 并更新这些值以反映您的环境。请务必为指定正确的值 `namespace`， `nfs.path`，和 `nfs.server` 字段。此外、我们建议为您的PV和PVC提供唯一名称、以表示相应ONTAP NFS卷上存储的数据的性质。例如、如果卷包含制造缺陷的图像、您可以将PV命名为 `pv-mfg-defect-images`和PVC、 `pvc-mfg-defect-images`。
 

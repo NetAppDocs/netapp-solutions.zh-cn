@@ -20,34 +20,34 @@ AWS支持使用原生 FSX服务(FSX ONTAP)或Cloud Volumes ONTAP (CVO)的子系�
 
 == FSX ONTAP
 
-Amazon FSX for NetApp ONTAP 是一项完全托管的服务、可提供基于NetApp常用ONTAP 文件系统构建的高度可靠、可扩展、高性能和功能丰富的文件存储。FSX for ONTAP 将NetApp文件系统的常见特性、性能、功能和API操作与完全托管的AWS服务的灵活性、可扩展性和精简性相结合。
+Amazon FSx ONTAP是一项完全托管的服务、可提供基于NetApp常用ONTAP文件系统构建的高度可靠、可扩展、高性能和功能丰富的文件存储。FSx ONTAP将NetApp文件系统的熟悉特性、性能、功能和API操作与完全托管的AWS服务的敏捷性、可扩展性和精简性相结合。
 
-FSX for ONTAP 提供功能丰富、快速且灵活的共享文件存储、可从AWS或内部运行的Linux、Windows和macOS计算实例广泛访问。适用于ONTAP 的FSX可提供具有亚毫秒级延迟的高性能固态驱动器(SSD)存储。借助适用于ONTAP 的FSX、您可以为工作负载实现SSD级别的性能、而只需为一小部分数据购买SSD存储即可。
+FSx ONTAP提供功能丰富、快速且灵活的共享文件存储、可从AWS或内部运行的Linux、Windows和macOS计算实例广泛访问。FSx ONTAP可提供高性能固态驱动器(Solid State Drive、SSD)存储、并实现亚山级延时。借助FSx ONTAP、您可以为工作负载实现SSD级别的性能、同时只需为一小部分数据购买SSD存储即可。
 
-只需单击一个按钮、即可使用适用于ONTAP 的FSX轻松管理数据、因为您可以创建文件快照、克隆和复制文件。此外、适用于ONTAP 的FSX会自动将数据分层到成本较低的弹性存储中、从而减少配置或管理容量的需求。
+使用FSx ONTAP管理数据更加轻松、因为只需单击一个按钮、即可创建文件快照、克隆和复制。此外、FSx ONTAP会自动将数据分层到成本更低的弹性存储中、从而减少配置或管理容量的需求。
 
-此外、适用于ONTAP 的FSX还可通过完全托管的备份提供高可用性和持久性存储、并支持跨区域灾难恢复。为了更轻松地保护和保护数据、适用于ONTAP 的FSx支持常见的数据安全和防病毒应用程序。
+FSx ONTAP还提供高度可用且持久的存储、并具有完全托管的备份和跨区域灾难恢复支持。为了更轻松地保护和保障数据安全、FSx ONTAP支持常见的数据安全和防病毒应用程序。
 
 
 
 === FSX ONTAP 作为子系统连接的存储
 
-.在 AWS 上为适用于 NetApp ONTAP 的 Amazon FSX 配置 VMware Cloud
+.在AWS上使用VMware Cloud配置Amazon FSx ONTAP
 [%collapsible]
 ====
-Amazon FSX for NetApp ONTAP 文件共享和 LUN 可以从 AWS 上的 VMware Cloud 的 VMware SDDC 环境中创建的 VM 挂载。此外，还可以使用 NFS 或 SMB 协议在 Linux 客户端上挂载这些卷并将其映射到 Windows 客户端上，通过 iSCSI 挂载 LUN 时，可以在 Linux 或 Windows 客户端上以块设备的形式访问这些 LUN 。可通过以下步骤快速设置适用于 NetApp ONTAP 文件系统的 Amazon FSX 。
+Amazon FSx ONTAP文件共享和LUN可以从VMware Cloud at AWS上的VMware SDDC环境中创建的VM进行挂载。此外，还可以使用 NFS 或 SMB 协议在 Linux 客户端上挂载这些卷并将其映射到 Windows 客户端上，通过 iSCSI 挂载 LUN 时，可以在 Linux 或 Windows 客户端上以块设备的形式访问这些 LUN 。可通过以下步骤快速设置适用于 NetApp ONTAP 文件系统的 Amazon FSX 。
 
 
-NOTE: 适用于 NetApp ONTAP 的 Amazon FSx 和基于 AWS 的 VMware Cloud 必须位于同一可用性区域中，才能提高性能并避免在可用性区域之间传输数据。
+NOTE: Amazon FSx ONTAP和VMware Cloud on AWS必须位于同一可用性区域、才能提高性能并避免可用性区域之间的数据传输费用。
 
 ====
-.创建并挂载适用于 ONTAP 卷的 Amazon FSX
+.创建和挂载Amazon FSx ONTAP卷
 [%collapsible]
 ====
-要创建和挂载适用于 NetApp ONTAP 的 Amazon FSX 文件系统，请完成以下步骤：
+要创建和挂载Amazon FSx ONTAP文件系统、请完成以下步骤：
 
 . 打开 link:https://console.aws.amazon.com/fsx/["Amazon FSX 控制台"] 并选择创建文件系统以启动文件系统创建向导。
-. 在选择文件系统类型页面上，选择适用于 NetApp ONTAP 的 Amazon FSx ，然后选择下一步。此时将显示创建文件系统页面。
+. 在"选择文件系统类型"页面上、选择"Amazon FSx ONTAP "、然后选择"下一步"。此时将显示创建文件系统页面。
 
 
 image:aws-fsx-guest-1.png["图中显示了输入/输出对话框或表示已写入内容"]
@@ -91,7 +91,7 @@ image:aws-fsx-guest-7.png["图中显示了输入/输出对话框或表示已写�
 
 image:aws-fsx-guest-8.png["图中显示了输入/输出对话框或表示已写入内容"] image:aws-fsx-guest-9.png["图中显示了输入/输出对话框或表示已写入内容"] image:aws-fsx-guest-10.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-有关更多详细信息，请参见 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/getting-started.html["适用于 NetApp ONTAP 的 Amazon FSX 入门"]。
+有关更多详细信息，请参见link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/getting-started.html["Amazon FSx ONTAP入门"]。
 
 按上述方式创建文件系统后，使用所需的大小和协议创建卷。
 
@@ -117,7 +117,7 @@ image:aws-fsx-guest-11.png["图中显示了输入/输出对话框或表示已写
 . 使用以下命令为卷的挂载点创建一个目录：
 +
  $ sudo mkdir /fsx/nfsdemovol01
-. 将适用于 NetApp ONTAP NFS 的 Amazon FSX 卷挂载到上一步创建的目录中。
+. 将Amazon FSx ONTAP NFS卷挂载到上一步中创建的目录。
 +
  sudo mount -t nfs nfsvers=4.1,198.19.254.239:/nfsdemovol01 /fsx/nfsdemovol01
 
@@ -165,19 +165,19 @@ image:aws-fsx-guest-24.png["图中显示了输入/输出对话框或表示已写
 image:aws-fsx-guest-26.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 ====
-.使用 iSCSI 将适用于 NetApp ONTAP LUN 的 FSX 连接到主机
+.使用iSCSI将FSx ONTAP LUN连接到主机
 [%collapsible]
 ====
-.使用 iSCSI 将适用于 NetApp ONTAP LUN 的 FSX 连接到主机
+.使用iSCSI将FSx ONTAP LUN连接到主机
 video::0d03e040-634f-4086-8cb5-b01200fb8515[panopto]
-FSX 的 iSCSI 流量通过上一节提供的路由遍历 VMware Transit Connect/AWS Transit Gateway 。要在适用于 NetApp ONTAP 的 Amazon FSX 中配置 LUN ，请按照找到的文档进行操作 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/supported-fsx-clients.html["此处"]。
+FSX 的 iSCSI 流量通过上一节提供的路由遍历 VMware Transit Connect/AWS Transit Gateway 。要在Amazon FSx ONTAP中配置LUN，请按照中的文档进行操作link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/supported-fsx-clients.html["此处"]。
 
 在 Linux 客户端上，确保 iSCSI 守护进程正在运行。配置 LUN 后，请参见有关使用 Ubuntu 配置 iSCSI 的详细指南（示例） link:https://ubuntu.com/server/docs/service-iscsi["此处"]。
 
 本文介绍了如何将 iSCSI LUN 连接到 Windows 主机：
 
 ====
-.在适用于 NetApp ONTAP 的 FSX 中配置 LUN ：
+.在FSx ONTAP中配置LUN：
 [%collapsible]
 ====
 . 使用 ONTAP 文件系统的 FSX 管理端口访问 NetApp ONTAP 命令行界面。
@@ -453,7 +453,7 @@ image:aws-cvo-guest-34.png["图中显示了输入/输出对话框或表示已写
 . 使用以下命令为卷的挂载点创建一个目录。
 +
  $ sudo mkdir /fsxcvotesting01/nfsdemovol01
-. 将适用于 NetApp ONTAP NFS 的 Amazon FSX 卷挂载到上一步创建的目录中。
+. 将Amazon FSx ONTAP NFS卷挂载到上一步中创建的目录。
 +
  sudo mount -t nfs nfsvers=4.1,172.16.0.2:/nfsdemovol01 /fsxcvotesting01/nfsdemovol01
 

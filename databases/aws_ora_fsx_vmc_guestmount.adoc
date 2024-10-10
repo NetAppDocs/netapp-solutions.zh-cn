@@ -132,10 +132,10 @@ image:aws_ora_fsx_vmc_architecture.png["此图详细展示了AWS公共云中使�
 
 === 部署注意事项的关键因素
 
-* *FSx到VMC的连接。*当您在AWS上的VMware Cloud上部署SDDC时、它会在AWS帐户和专用于您的组织的VPC中创建、并由VMware进行管理。您还必须将SDDC连接到属于您的AWS帐户、称为客户AWS帐户。此连接允许SDDC访问属于您的客户帐户的AWS服务。FSx for ONTAP是在您的客户帐户中部署的一项AWS服务。将VMC SDDC连接到您的客户帐户后、VMC SDDC中的VM便可使用FSx存储来直接挂载子系统。
-* * FSX存储HA集群单区域或多区域部署。*在这些测试和验证中、我们在一个AWS可用性区域中部署了一个FSX HA集群。NetApp还建议在同一可用性区域中部署适用于NetApp ONTAP的FSx和基于AWS的VMware Cloud、以提高性能并避免可用性区域之间的数据传输费用。
-* * FSX存储集群规模估算。*适用于ONTAP 存储文件系统的Amazon FSX可提供高达160、000个原始SSD IOPS、高达4 Gbps吞吐量以及最大192 TiB容量。但是、您可以根据部署时的实际要求、根据已配置的IOPS、吞吐量和存储限制(最小1、024 GiB)来调整集群的大小。可以动态调整容量、而不会影响应用程序可用性。
-* * Oracle数据和日志布局。*在测试和验证中、我们分别为数据和日志部署了两个ASM磁盘组。在+data ASM磁盘组中、我们在一个数据卷中配置了四个LUN。在+logs ASM磁盘组中、我们在一个日志卷中配置了两个LUN。通常、在一个Amazon FSx for ONTAP卷中部署多个LUN可提高性能。
+* *FSx到VMC的连接。*在AWS上的VMware Cloud上部署SDDC时、它会在AWS帐户和专供您的组织使用的VPC中创建、并由VMware进行管理。您还必须将SDDC连接到属于您的AWS帐户、称为客户AWS帐户。此连接允许SDDC访问属于您的客户帐户的AWS服务。FSx ONTAP是一项部署在您的客户帐户中的AWS服务。将VMC SDDC连接到您的客户帐户后、VMC SDDC中的VM便可使用FSx存储来直接挂载子系统。
+* * FSx存储HA集群单区域或多区域部署。*在这些测试和验证中、我们在一个AWS可用性区域中部署了FSx HA集群。NetApp还建议在同一可用性区域中部署FSx ONTAP和VMware Cloud、以提高性能并避免可用性区域之间的数据传输费用。
+* *FSx存储集群规模估算。*Amazon FSx ONTAP存储文件系统可提供高达16万次原始SSD IOPS、高达4 Gbps吞吐量和最大192 TiB容量。但是、您可以根据部署时的实际要求、根据已配置的IOPS、吞吐量和存储限制(最小1、024 GiB)来调整集群的大小。可以动态调整容量、而不会影响应用程序可用性。
+* * Oracle数据和日志布局。*在测试和验证中、我们分别为数据和日志部署了两个ASM磁盘组。在+data ASM磁盘组中、我们在一个数据卷中配置了四个LUN。在+logs ASM磁盘组中、我们在一个日志卷中配置了两个LUN。通常、在一个Amazon FSx ONTAP卷中部署多个LUN可提高性能。
 * *iSCSI配置。* VMC SDDC中的数据库VM使用iSCSI协议连接到FSx存储。通过仔细分析Oracle AWR报告来确定应用程序和iSCSI流量吞吐量要求、衡量Oracle数据库峰值I/O吞吐量要求非常重要。NetApp还建议为正确配置多路径的两个FSX iSCSI端点分配四个iSCSI连接。
 * *要用于创建的每个Oracle ASM磁盘组的Oracle ASM冗余级别。*由于FSx ONTAP已在FSx集群级别镜像存储、因此应使用外部冗余、这意味着此选项不允许Oracle ASM镜像磁盘组的内容。
 * *数据库备份。* NetApp提供了一个SnapCenter软件套件、可通过用户友好的用户界面进行数据库备份、还原和克隆。NetApp建议实施此类管理工具、以实现快速(不到一分钟)的快照备份、快速(几分钟)的数据库还原和数据库克隆。
@@ -157,7 +157,7 @@ image:aws_ora_fsx_vmc_architecture.png["此图详细展示了AWS公共云中使�
 
 . 我们创建了一个使用VMware Cloud on AWS的软件定义的数据中心(Software-definated Data Center、SDDC)。有关如何在VMC中创建SDDC的详细说明、请参见VMware文档 link:https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws.getting-started/GUID-3D741363-F66A-4CF9-80EA-AA2866D1834E.html["在AWS上开始使用VMware Cloud"^]
 . 已设置AWS帐户、并已在您的AWS帐户中创建必要的VPC和网段。AWS帐户已链接到您的VMC SDDC。
-. 从AWS EC2控制台中、部署适用于ONTAP存储HA集群的Amazon FSx以托管Oracle数据库卷。如果您不熟悉FSX存储的部署、请参见相关文档 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/creating-file-systems.html["为ONTAP 文件系统创建FSX"^] 了解分步说明。
+. 从AWS EC2控制台中、部署Amazon FSx ONTAP存储HA集群以托管Oracle数据库卷。如果您不熟悉FSx存储的部署、请参见文档link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/creating-file-systems.html["正在创建FSx ONTAP文件系统"^]以获取分步说明。
 . 可以使用以下Terraform自动化工具包执行上述步骤、该工具包可创建一个EC2实例、作为通过SSH和FSx文件系统进行VMC访问时的SDDC的跳转主机。在执行前、请仔细阅读说明并根据您的环境更改变量。
 +
 ....
@@ -1464,7 +1464,7 @@ alter database open;
 ----
 
 
-至此、在适用于ONTAP存储的Amazon FSx和VMC DB VM上完成了Oracle 19c 19.18版重新启动部署。如果需要、NetApp建议将Oracle控制文件和联机日志文件重新定位到+logs磁盘组。
+至此、在Amazon FSx ONTAP存储和VMC DB VM上完成了Oracle 19c 19.18版重新启动部署。如果需要、NetApp建议将Oracle控制文件和联机日志文件重新定位到+logs磁盘组。
 
 ====
 
@@ -1907,7 +1907,7 @@ link:https://docs.oracle.com/en/database/oracle/oracle-database/19/ladbi/install
 +
 link:https://docs.oracle.com/en/database/oracle/oracle-database/19/ladbi/installing-and-configuring-oracle-database-using-response-files.html#GUID-D53355E9-E901-4224-9A2A-B882070EDDF7["https://docs.oracle.com/en/database/oracle/oracle-database/19/ladbi/installing-and-configuring-oracle-database-using-response-files.html#GUID-D53355E9-E901-4224-9A2A-B882070EDDF7"^]
 
-* 适用于 NetApp ONTAP 的 Amazon FSX
+* Amazon FSx ONTAP
 +
 link:https://aws.amazon.com/fsx/netapp-ontap/["https://aws.amazon.com/fsx/netapp-ontap/"^]
 

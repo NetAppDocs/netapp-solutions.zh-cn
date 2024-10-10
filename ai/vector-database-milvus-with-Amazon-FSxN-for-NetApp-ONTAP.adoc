@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: ai/vector-database-milvus-with-Amazon-FSxN-for-NetApp-ONTAP.html 
 keywords: vector database 
-summary: Milvus with Amazon FSxN for NetApp ONTAP—适用于NetApp的矢量数据库解决方案 
+summary: Milvus with Amazon FSx ONTAP for NetApp ONTAP -适用于NetApp的矢量数据库解决方案 
 ---
-= Milvus与Amazon FSxN for NetApp ONTAP—文件和对象双重性
+= Milvus与Amazon FSx ONTAP for NetApp ONTAP—文件和对象双重性
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,23 +14,22 @@ summary: Milvus with Amazon FSxN for NetApp ONTAP—适用于NetApp的矢量数�
 
 
 [role="lead"]
-本节讨论使用Amazon FSxN为适用于NetApp的向量数据库解决方案设置Milvus集群。
+本节讨论了使用Amazon FSx ONTAP为适用于NetApp的向量数据库解决方案设置的Milvus集群。
 
 
 
-== Milvus与Amazon FSxN for NetApp ONTAP—文件和对象双重性
+== Milvus与Amazon FSx ONTAP for NetApp ONTAP—文件和对象双重性
 
-在本节中、我们需要在云中部署向量数据库的原因以及在Docker容器中的Amazon FSxN for NetApp ONTAP中部署向量数据库(Milvus独立)的步骤。
+在本节中、我们需要在云中部署向量数据库的原因以及在Docker容器中的Amazon FSx ONTAP for NetApp ONTAP中部署向量数据库(Milvus独立)的步骤。
 
-在云中部署矢量数据库可提供多项显著优势、尤其是对于需要处理高维度数据和执行相似性搜索的应用程序。首先、基于云的部署提供可扩展性、支持轻松调整资源、以满足不断增长的数据量和查询负载的需求。这样可以确保数据库在保持高性能的同时高效地处理不断增长的需求。其次、云部署可提供高可用性和灾难恢复、因为可以在不同地理位置之间复制数据、从而最大限度地降低数据丢失的风险、并确保即使在意外事件发生时也能持续提供服务。第三、它不仅经济高效、因为您只需为所使用的资源付费、而且可以根据需要进行扩展或缩减、从而无需在前期投入大量硬件。最后、在云中部署矢量数据库可以增强协作、因为数据可以从任何位置访问和共享、从而促进基于团队的工作和数据驱动的决策。
-请检查在此验证中使用的Milvus独立架构以及Amazon FSxN for NetApp ONTAP。
+在云中部署矢量数据库可提供多项显著优势、尤其是对于需要处理高维度数据和执行相似性搜索的应用程序。首先、基于云的部署提供可扩展性、支持轻松调整资源、以满足不断增长的数据量和查询负载的需求。这样可以确保数据库在保持高性能的同时高效地处理不断增长的需求。其次、云部署可提供高可用性和灾难恢复、因为可以在不同地理位置之间复制数据、从而最大限度地降低数据丢失的风险、并确保即使在意外事件发生时也能持续提供服务。第三、它不仅经济高效、因为您只需为所使用的资源付费、而且可以根据需要进行扩展或缩减、从而无需在前期投入大量硬件。最后、在云中部署矢量数据库可以增强协作、因为数据可以从任何位置访问和共享、从而促进基于团队的工作和数据驱动的决策。请检查在此验证中使用的Milvus独立架构以及Amazon FSx ONTAP for NetApp ONTAP。
 
 image:Amazon_fsxn_milvus.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-. 创建适用于NetApp ONTAP的Amazon FSxN实例、并记下VPC、VPC安全组和子网的详细信息。创建EC2实例时需要此信息。有关详细信息、请单击此处- https://us-east-1.console.aws.amazon.com/fsx/home?region=us-east-1#file-system-create[]
-. 创建EC2实例、确保VPC、安全组和子网与Amazon FSxN for NetApp ONTAP实例的VPC、安全组和子网匹配。
+. 创建Amazon FSx ONTAP for NetApp ONTAP实例、并记下VPC、VPC安全组和子网的详细信息。创建EC2实例时需要此信息。有关详细信息、请单击此处- https://us-east-1.console.aws.amazon.com/fsx/home?region=us-east-1#file-system-create[]
+. 创建EC2实例、确保VPC、安全组和子网与Amazon FSx ONTAP for NetApp ONTAP实例的VPC、安全组和子网匹配。
 . 使用命令"apt-get install NFS-common"安装NFS-common、并使用"sudo apt-get update"更新软件包信息。
-. 创建一个挂载文件夹、并在此文件夹上挂载Amazon FSxN for NetApp ONTAP。
+. 创建一个挂载文件夹、并在此文件夹上挂载Amazon FSx ONTAP for NetApp ONTAP。
 +
 ....
 ubuntu@ip-172-31-29-98:~$ mkdir /home/ubuntu/milvusvectordb
@@ -83,8 +82,8 @@ drwxr-xr-x 4 root root 4.0K Apr  4 20:21 minio
 drwxr-xr-x 5 root root 4.0K Apr  4 20:21 milvus
 ubuntu@ip-172-31-29-98:~$
 ----
-. 为了验证向量数据库及其数据在Amazon FSxN for NetApp ONTAP中的读写功能、我们使用了Python Milvus SDK和PyMilvus的示例程序。使用"apt-get install python3-NumPy python3-pip"安装必要的软件包、并使用"pip3 install pymilvus"安装PyMilvus。
-. 验证向量数据库中Amazon FSxN for NetApp ONTAP的数据写入和读取操作。
+. 为了验证矢量数据库及其在Amazon FSx ONTAP for NetApp ONTAP中的数据的读写功能、我们使用了Python Milvus SDK和PyMilvus提供的示例程序。使用"apt-get install python3-NumPy python3-pip"安装必要的软件包、并使用"pip3 install pymilvus"安装PyMilvus。
+. 验证矢量数据库中Amazon FSx ONTAP for NetApp ONTAP的数据写入和读取操作。
 +
 [source, python]
 ----
@@ -195,6 +194,6 @@ volumes/minio/a-bucket/files/stats_log/448789845791611912/448789845791611913/448
 root@ip-172-31-29-98:~/pymilvus/examples#
 ----
 +
-本节有效地演示了客户如何在Docker容器中部署和运行独立的Milvus设置、并利用Amazon的NetApp FSxN来存储NetApp ONTAP数据。通过这种设置、客户可以在可扩展且高效的Docker容器环境中利用向量数据库的强大功能来处理高维数据和执行复杂查询。通过为NetApp ONTAP实例创建Amazon FSxN并匹配EC2实例、客户可以确保最佳资源利用率和数据管理。成功验证了向量数据库中FSxN的数据写入和读取操作、为客户提供了可靠且一致的数据操作保障。此外、通过S3协议列出(读取) AI工作负载中的数据、还增强了数据可访问性。因此、这一全面的流程为客户提供了一个强大而高效的解决方案、用于管理其大规模数据操作、并利用Amazon FSxN for NetApp ONTAP的功能。
+本节有效地演示了客户如何利用Amazon的NetApp FSx ONTAP进行NetApp ONTAP数据存储、在Docker容器中部署和运行独立的Milvus设置。通过这种设置、客户可以在可扩展且高效的Docker容器环境中利用向量数据库的强大功能来处理高维数据和执行复杂查询。通过创建Amazon FSx ONTAP for NetApp ONTAP实例并匹配EC2实例、客户可以确保最佳的资源利用率和数据管理。成功验证了矢量数据库中FSx ONTAP的数据写入和读取操作、为客户提供了可靠且一致的数据操作保障。此外、通过S3协议列出(读取) AI工作负载中的数据、还增强了数据可访问性。因此、这一全面的流程为客户提供了一个强大而高效的解决方案、用于管理其大规模数据运营、并充分利用Amazon FSx ONTAP for NetApp ONTAP的功能。
 
 

@@ -24,11 +24,11 @@ NetApp公司Allen Cao、Niyaz Mohamed
 
 SnapCenter 服务是一款SaaS版本的经典SnapCenter 数据库管理UI工具、可通过NetApp BlueXP云管理控制台访问。它是NetApp云备份和数据保护产品不可或缺的一部分、适用于在NetApp云存储上运行的Oracle和HANA等数据库。这种基于SaaS的服务简化了传统的SnapCenter 独立服务器部署、该部署通常需要在Windows域环境中运行的Windows服务器。
 
-在本文档中、我们将演示如何设置SnapCenter 服务来备份、还原和克隆部署到Amazon FSX for ONTAP 存储和EC2计算实例的Oracle数据库。虽然设置和使用起来要简单得多、但SnapCenter 服务可提供传统SnapCenter UI工具中提供的主要功能。
+在本文档中、我们将演示如何设置SnapCenter服务来备份、还原和克隆部署到Amazon FSx ONTAP存储和EC2计算实例的Oracle数据库。虽然设置和使用起来要简单得多、但SnapCenter 服务可提供传统SnapCenter UI工具中提供的主要功能。
 
 此解决方案 可解决以下使用情形：
 
-* 为Amazon FSX for ONTAP 中托管的Oracle数据库执行数据库备份和快照
+* 使用快照为Amazon FSx ONTAP中托管的Oracle数据库进行数据库备份
 * 发生故障时恢复Oracle数据库
 * 为开发/测试环境或其他使用情形快速、高效地克隆主数据库
 
@@ -39,10 +39,10 @@ SnapCenter 服务是一款SaaS版本的经典SnapCenter 数据库管理UI工具�
 
 本解决方案 面向以下受众：
 
-* 管理在适用于ONTAP 存储的Amazon FSX上运行的Oracle数据库的DBA
+* 负责管理在Amazon FSx ONTAP存储上运行的Oracle数据库的数据库管理员
 * 解决方案 架构师、负责在公共AWS云中测试Oracle数据库备份、还原和克隆
-* 支持和管理适用于ONTAP 存储的Amazon FSX的存储管理员
-* 拥有部署到Amazon FSX for ONTAP 存储的应用程序的应用程序所有者
+* 支持和管理Amazon FSx ONTAP存储的存储管理员
+* 拥有部署到Amazon FSx ONTAP存储的应用程序的应用程序所有者
 
 
 
@@ -101,7 +101,7 @@ image:snapctr_svcs_architecture.png["此图详细展示了BlueXP控制台中应�
 * *连接器应与数据库和FSX部署在同一VPC中。*如果可能、应将连接器部署在同一AWS VPC中、以便能够连接到FSX存储和EC2计算实例。
 * *为SnapCenter 连接器创建的AWS IAM策略。*详细的SnapCenter 服务文档中提供了JSON格式的策略。使用BlueXP控制台启动连接器部署时、系统还会提示您设置前提条件、并以JSON格式提供所需权限的详细信息。应将此策略分配给拥有此连接器的AWS用户帐户。
 * * AWS帐户访问密钥和在AWS帐户中创建的SSH密钥对。* SSH密钥对分配给EC2-user、用于登录到连接器主机、然后将数据库插件部署到EC2 DB服务器主机。访问密钥授予使用上述IAM策略配置所需连接器的权限。
-* *添加到BlueXP控制台设置的凭据。*要将Amazon FSx for ONTAP添加到BlueXP工作环境中、需要在BlueXP控制台设置中设置一个凭据、用于授予BlueXP访问Amazon FSx for ONTAP的权限。
+* *添加到BlueXP  控制台设置的凭据。*要将Amazon FSx ONTAP添加到BlueXP  工作环境、需要在BlueXP  控制台设置中设置一个凭据、用于授予BlueXP  访问Amazon FSx ONTAP的权限。
 * *EC2数据库实例主机上安装了java-11-OpenJDK。* SnapCenter服务安装需要Java版本11。在尝试部署插件之前、需要将其安装在应用程序主机上。
 
 
@@ -109,11 +109,11 @@ image:snapctr_svcs_architecture.png["此图详细展示了BlueXP控制台中应�
 
 == 解决方案 部署
 
-我们提供了大量的NetApp文档、范围更广、可帮助您保护云原生应用程序数据。本文档的目标是提供有关使用SnapCenter 控制台部署ONTAP 服务的分步过程、以保护部署到Amazon FSX for和EC2计算实例中的Oracle数据库。本文档将填写一些可能在一般说明中缺少的详细信息。
+我们提供了大量的NetApp文档、范围更广、可帮助您保护云原生应用程序数据。本文档的目标是提供有关使用BlueXP  控制台部署SnapCenter服务的分步过程、以保护部署到Amazon FSx ONTAP和EC2计算实例的Oracle数据库。本文档将填写一些可能在一般说明中缺少的详细信息。
 
 要开始使用、请完成以下步骤：
 
-* 阅读一般说明 link:https://docs.netapp.com/us-en/cloud-manager-backup-restore/concept-protect-cloud-app-data-to-cloud.html#architecture["保护您的Cloud原生 应用程序数据"^] 以及与Oracle和Amazon FSX for ONTAP 相关的章节。
+* 阅读与Oracle和Amazon FSx ONTAP相关的一般说明link:https://docs.netapp.com/us-en/cloud-manager-backup-restore/concept-protect-cloud-app-data-to-cloud.html#architecture["保护您的Cloud原生 应用程序数据"^]和章节。
 * 观看以下视频演练。
 
 
@@ -128,9 +128,9 @@ video::4b0fd212-7641-46b8-9e55-b01200f9383a[panopto]
 部署需要满足以下前提条件。
 
 . EC2实例上的主Oracle数据库服务器、其中Oracle数据库已完全部署且正在运行。
-. AWS中部署的Amazon FSx for ONTAP集群、用于托管上述数据库卷。
+. AWS中部署的一个Amazon FSx ONTAP集群、用于托管上述数据库卷。
 . EC2实例上的一个可选数据库服务器、可用于测试将Oracle数据库克隆到备用主机的操作、以支持开发/测试工作负载或任何需要生产Oracle数据库的完整数据集的使用情形。
-. 如果您需要帮助以满足在Amazon FSX for ONTAP 和EC2计算实例上部署Oracle数据库的上述前提条件、请参见 link:aws_ora_fsx_ec2_iscsi_asm.html["使用iSCSI/ASM在AWS FSX/EC2中部署和保护Oracle数据库"^] 或白皮书 link:aws_ora_fsx_ec2_deploy_intro.html["基于EC2和FSx的Oracle数据库部署最佳实践"^]
+. 如果您需要帮助以满足上述在Amazon FSx ONTAP和EC2计算实例上部署Oracle数据库的前提条件、请参见link:aws_ora_fsx_ec2_iscsi_asm.html["使用iSCSI/ASM在AWS FSX/EC2中部署和保护Oracle数据库"^]或白皮书link:aws_ora_fsx_ec2_deploy_intro.html["基于EC2和FSx的Oracle数据库部署最佳实践"^]
 
 
 ====
@@ -256,21 +256,21 @@ image:snapctr_svcs_setup_01.png["在图形用户界面中显示此步骤的屏�
 
 image:snapctr_svcs_setup_02.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
-. 单击*适用于ONTAP 的Amazon FSx *旁边的*发现现有*。
+. 单击*Amazon FSx FSx ONTAP *旁边的*Discover Exister*。
 
 
 image:snapctr_svcs_setup_03.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
-. 选择您在上一节中创建的*凭据名称*、为BlueXP授予管理FSx for ONTAP所需的权限。如果您尚未添加凭据、则可以从BlueXP控制台右上角的*设置*菜单中添加此凭据。
+. 选择您在上一节中创建的*凭据名称*，以授予BlueXP  管理FSx ONTAP所需的权限。如果您尚未添加凭据、则可以从BlueXP控制台右上角的*设置*菜单中添加此凭据。
 +
 image:snapctr_svcs_setup_04.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
-. 选择部署了Amazon FSX for ONTAP 的AWS区域、选择托管Oracle数据库的FSX集群、然后单击添加。
+. 选择部署了Amazon FSx ONTAP的AWS区域、选择托管Oracle数据库的FSx集群、然后单击添加。
 
 
 image:snapctr_svcs_setup_05.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
-. 此时、发现的Amazon FSX for ONTAP 实例将显示在工作环境中。
+. 此时、已发现的Amazon FSx ONTAP实例将显示在工作环境中。
 
 
 image:snapctr_svcs_setup_06.png["在图形用户界面中显示此步骤的屏幕截图。"]
@@ -280,7 +280,7 @@ image:snapctr_svcs_setup_06.png["在图形用户界面中显示此步骤的屏�
 
 image:snapctr_svcs_setup_07.png["在图形用户界面中显示此步骤的屏幕截图。"]
 
-. 登录到Amazon FSX for ONTAP 后、请查看数据库存储信息(例如数据库卷)。
+. 登录到Amazon FSx ONTAP后、请查看数据库存储信息(例如数据库卷)。
 
 
 image:snapctr_svcs_setup_08.png["在图形用户界面中显示此步骤的屏幕截图。"]
@@ -449,7 +449,7 @@ link:https://docs.netapp.com/us-en/cloud-manager-setup-admin/index.htmll["https:
 
 link:https://docs.netapp.com/us-en/cloud-manager-backup-restore/index.html["https://docs.netapp.com/us-en/cloud-manager-backup-restore/index.html"^]
 
-* 适用于 NetApp ONTAP 的 Amazon FSX
+* Amazon FSx ONTAP
 
 
 link:https://aws.amazon.com/fsx/netapp-ontap/["https://aws.amazon.com/fsx/netapp-ontap/"^]

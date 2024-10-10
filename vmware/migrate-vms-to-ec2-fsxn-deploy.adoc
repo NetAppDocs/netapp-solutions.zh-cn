@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: vmware/migrate-vms-to-ec2-fsxn-deploy.html 
 keywords: netapp, vmware, amazon, ec2, fsxn, migration, iscsi, deploy 
-summary: '本技术报告介绍如何使用卷云迁移(CMC)的MigrateOps "数据移动性即代码"功能将内部VMware vSphere VM迁移到数据磁盘位于FSx for ONTAP iSCSI LUN上的Amazon EC2实例。' 
+summary: '本技术报告介绍如何使用卷云迁移(CMC)的MigrateOps "数据移动性即代码"功能将内部VMware vSphere VM迁移到数据磁盘位于FSx ONTAP iSCSI LUN上的Amazon EC2实例。' 
 ---
-= 使用《FSxN：部署指南》将VM迁移到Amazon EC2
+= 使用Amazon FSx for ONTAP将VM迁移到Amazon EC2：部署指南
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -18,26 +18,26 @@ summary: '本技术报告介绍如何使用卷云迁移(CMC)的MigrateOps "数�
 
 
 
-== 为迁移操作配置FSx的ONTAP和卷卷卷卷数据
+== 为迁移操作配置FSx ONTAP和卷卷卷数据
 
-这 https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/getting-started-step1.html["分步部署指南"] 显示了如何将FSx for ONTAP卷添加到VPC。由于这些步骤在本质上是顺序的、因此请确保按顺序涵盖这些步骤。
+本 https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/getting-started-step1.html["分步部署指南"]节介绍如何将FSx ONTAP卷添加到VPC。由于这些步骤在本质上是顺序的、因此请确保按顺序涵盖这些步骤。
 
 在本演示中、"DRaaSDEM"是所创建文件系统的名称。
 
 image:migrate-ec2-fsxn-image02.png["演示文件系统用户界面的图像"]
 
-配置AWS VPC并根据性能要求配置FSx for ONTAP后、登录到 link:http://cloud.cirrusdata.com/["cloud.cirrusdata.com"] 和 link:https://customer.cirrusdata.com/cdc/kb/articles/get-started-with-cirrus-data-cloud-4eDqjIxQpg["创建新项目"] 或访问现有项目。
+配置AWS VPC并根据性能要求配置FSx ONTAP后、登录到和link:https://customer.cirrusdata.com/cdc/kb/articles/get-started-with-cirrus-data-cloud-4eDqjIxQpg["创建新项目"]或访问现有项目。link:http://cloud.cirrusdata.com/["cloud.cirrusdata.com"]
 
 image:migrate-ec2-fsxn-image03.png["\"开展 数据项目\"用户界面的图像"]
 
-在创建迁移操作方案之前、应将AWS Cloud作为集成添加。CMC可与FSx for ONTAP和AWS内置集成。FSx for ONTAP的集成提供了以下自动化功能：
+在创建迁移操作方案之前、应将AWS Cloud作为集成添加。CMC提供与FSx ONTAP和AWS的内置集成。FSx ONTAP的集成提供了以下自动化功能：
 
-*准备FSx for ONTAP文件系统:*
+*准备FSx ONTAP文件系统:*
 
 * 创建与源卷匹配的新卷和LUN
 
 
-*注意*：FSx for ONTAP FS模型中的目标磁盘是在"卷"上创建的一个"LUN "、该卷具有足够的容量来容纳LUN、并具有合理的开销、以便于创建快照和元数据。CMC自动化会处理所有这些详细信息、以便使用可选的用户定义参数创建相应的卷和LUN。
+*注意*：FSx ONTAP FS模型中的目标磁盘是在"卷"上创建的"LUN "、该卷具有足够的容量来容纳该LUN、并具有合理的开销量来促进快照和元数据。CMC自动化会处理所有这些详细信息、以便使用可选的用户定义参数创建相应的卷和LUN。
 
 * 使用主机启动程序IQN创建主机实体(在FSx中称为iGroup)
 * 使用映射将新创建的卷映射到相应的主机实体
@@ -52,12 +52,12 @@ image:migrate-ec2-fsxn-image03.png["\"开展 数据项目\"用户界面的图像
 * 在Windows上创建和管理iSCSI连接、例如永久性/收藏的iSCSI目标。
 
 
-要配置适用于FSx for ONTAP和AWS的CMC集成、请执行以下步骤：
+要为FSx ONTAP和AWS配置CMC集成、请执行以下步骤：
 
 . 登录到"Cloud"数据云门户。
 . 转到要启用集成的项目。
 . 导航到"Integrations"(集成)->"好 的方面"。
-. 滚动找到FSx for NetApp ONTAP、然后单击Add integration。
+. 滚动找到FSx ONTAP、然后单击Add integration。
 +
 image:migrate-ec2-fsxn-image04.png["“添加集成”用户界面的图像"]
 
@@ -65,7 +65,7 @@ image:migrate-ec2-fsxn-image04.png["“添加集成”用户界面的图像"]
 +
 image:migrate-ec2-fsxn-image05.png["“添加集成”用户界面的图像"]
 
-. 创建集成后、在创建新迁移会话期间、选择自动分配目标卷以在FSx for ONTAP上自动分配新卷。
+. 创建集成后、在创建新迁移会话期间、选择自动分配目标卷以自动在FSx ONTAP上分配新卷。
 +
 *注意*：除非为迁移启用了"迁移到较小的卷"、否则创建的新LUN的大小与源卷的大小相同。
 
@@ -80,7 +80,7 @@ image:migrate-ec2-fsxn-image05.png["“添加集成”用户界面的图像"]
 image:migrate-ec2-fsxn-image06.png["“添加集成”用户界面的图像"]
 
 +
-*注意*：将虚拟机从内部存储迁移到AWS时、将使用此集成、同时集成FSx for ONTAP。
+*注意*：将虚拟机从内部存储迁移到AWS以及FSx ONTAP集成时、会使用此集成。
 
 +
 *注意*：如果要迁移的生产实例没有直接出站连接、请使用管理中继与卷云数据云进行通信。
@@ -104,7 +104,7 @@ image:migrate-ec2-fsxn-image06.png["“添加集成”用户界面的图像"]
 
 image:migrate-ec2-fsxn-image07.png["要迁移的VMware虚拟机的图像"]
 
-此演示将应用程序VMDK从每个VM迁移到FSx for ONTAP中自动配置和映射的iSCSI卷。在这种情况下、操作系统VMDK将迁移到Amazon EBS卷、因为Amazon EC2实例仅支持此Amazon EBS作为启动磁盘。
+此演示将应用程序VMDK从每个VM迁移到FSx ONTAP中自动配置和映射的iSCSI卷。在这种情况下、操作系统VMDK将迁移到Amazon EBS卷、因为Amazon EC2实例仅支持此Amazon EBS作为启动磁盘。
 
 *注意*：采用这种迁移方法时、扩展因素是将内部环境连接到AWS VPC的网络带宽和管道。由于每个VM都配置了1：1主机会话、因此整体迁移性能取决于两个因素：
 
@@ -139,7 +139,7 @@ YAML提供操作名称、注释(问题描述)以及配方名称 `MIGRATEOPS_AWS_
 ----
 operations:
     -   name: Win2016 SQL server to AWS
-        notes: Migrate OS to AWS with EBS and Data to FSx for ONTAP
+        notes: Migrate OS to AWS with EBS and Data to FSx ONTAP
         recipe: MIGRATEOPS_AWS_COMPUTE
         config:
             system_name: Win2016-123
@@ -163,7 +163,7 @@ operations:
                             netapp:
                                 qos_policy_name: ""
                 migration:
-                    session_description: Migrate OS to AWS with EBS and Data to FSx for ONTAP
+                    session_description: Migrate OS to AWS with EBS and Data to FSx ONTAP
                     qos_level: MODERATE
                 cutover:
                     stop_applications:
@@ -243,7 +243,7 @@ image:migrate-ec2-fsxn-image13.png["完成了数据迁移的图像"]
 . 旧存储现已脱机。
 
 
-*注意*：只需单击一下以代码形式提交数据移动操作、然后单击一下以批准转换、VM便可使用FSx for ONTAP及其iSCSI功能成功地从内部VMware迁移到Amazon EC2实例。
+*注意*：只需单击一下以代码形式提交数据移动操作、单击一下以批准转换、VM便可使用FSx ONTAP及其iSCSI功能成功地从内部VMware迁移到Amazon EC2实例。
 
 *注意*：由于AWS API限制、转换后的VM将显示为Ubuntu。 严格来说、这是一个显示问题描述、不会影响已迁移实例的功能。即将发布的版本将解决此问题描述问题。
 

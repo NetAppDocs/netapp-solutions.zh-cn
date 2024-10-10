@@ -57,7 +57,7 @@ NetApp公司Allen Cao、Niyaz Mohamed
 
 === 架构
 
-image:aws_ora_fsx_ec2_vldb_architecture.png["此图详细展示了使用FSxN在AWS公有云中实施的Oracle VLDB增量合并。"]
+image:aws_ora_fsx_ec2_vldb_architecture.png["此图详细展示了使用FSx ONTAP在AWS公有云中实施的Oracle VLDB增量合并。"]
 
 
 
@@ -100,7 +100,7 @@ image:aws_ora_fsx_ec2_vldb_architecture.png["此图详细展示了使用FSxN在A
 * *适用于其他使用情形的FlexClone NFS卷的Oracle VLDB映像副本。* AWS FSx ONTAP FlexClone可为同一个NFS数据卷提供可写的共享副本。因此、它们可用于许多其他使用情形、同时仍可保持暂存Oracle VLDB映像副本的完整性、即使Oracle数据库已切换也是如此。这样可以大幅减少VLDB存储占用空间、从而显著节省存储成本。NetApp建议在数据库从主存储切换到数据库映像副本时尽量减少FlexClone活动、以便将Oracle性能保持在较高水平。
 * *EC2计算实例。*在这些测试和验证中，我们使用AWS EC2 T2.xlea占用 空间实例作为Oracle数据库计算实例。NetApp建议在生产部署中使用M5类型的EC2实例作为Oracle的计算实例、因为它已针对数据库工作负载进行了优化。您需要根据实际工作负载要求根据vCPU数量和RAM量适当调整EC2实例的大小。
 * * FSX存储HA集群单区域或多区域部署。*在这些测试和验证中、我们在一个AWS可用性区域中部署了一个FSX HA集群。对于生产部署、NetApp建议在两个不同的可用性区域中部署一个FSX HA对。FSX HA集群始终配置在一个HA对中、该HA对在一对主动-被动文件系统中进行同步镜像、以提供存储级别的冗余。多区域部署可在单个AWS区域发生故障时进一步提高高可用性。
-* * FSX存储集群规模估算。*适用于ONTAP 存储文件系统的Amazon FSX可提供高达160、000个原始SSD IOPS、高达4 Gbps吞吐量以及最大192 TiB容量。但是、您可以根据部署时的实际要求、根据已配置的IOPS、吞吐量和存储限制(最小1、024 GiB)来调整集群的大小。可以动态调整容量、而不会影响应用程序可用性。
+* *FSx存储集群规模估算。*Amazon FSx ONTAP存储文件系统可提供高达16万次原始SSD IOPS、高达4 Gbps吞吐量和最大192 TiB容量。但是、您可以根据部署时的实际要求、根据已配置的IOPS、吞吐量和存储限制(最小1、024 GiB)来调整集群的大小。可以动态调整容量、而不会影响应用程序可用性。
 * *DNFS配置。* DNFS内置在Oracle内核中、众所周知、在将Oracle部署到NFS存储时、它可以显著提高Oracle数据库性能。DNFS打包到Oracle二进制文件中、但默认情况下不启用。对于NFS上的任何Oracle数据库部署、都应启用此功能。对于VLDB的多FSx文件系统部署、应正确配置指向不同FSx NFS文件系统的DNFS多路径。
 
 
@@ -127,7 +127,7 @@ image:aws_ora_fsx_ec2_vldb_architecture.png["此图详细展示了使用FSxN在A
 
 . 已设置AWS帐户、并已在您的AWS帐户中创建必要的VPC和网段。
 . 在AWS EC2控制台中、您必须部署两个EC2 Linux实例、一个用作主Oracle数据库服务器、另一个用作可选的克隆目标数据库服务器。有关环境设置的详细信息、请参见上一节中的架构图。另请查看 link:https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html["Linux实例用户指南"^] 有关详细信息 ...
-. 从AWS EC2控制台中、部署Amazon FSx for ONTAP存储HA集群、以托管用于存储Oracle数据库备用映像副本的NFS卷。如果您不熟悉FSX存储的部署、请参见相关文档 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/creating-file-systems.html["为ONTAP 文件系统创建FSX"^] 了解分步说明。
+. 从AWS EC2控制台中、部署Amazon FSx ONTAP存储HA集群以托管用于存储Oracle数据库备用映像副本的NFS卷。如果您不熟悉FSx存储的部署、请参见文档link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/creating-file-systems.html["正在创建FSx ONTAP文件系统"^]以获取分步说明。
 . 可以使用以下Terraform自动化工具包执行步骤2和步骤3、该工具包会创建一个名为的EC2实例 `ora_01` 和名为的FSX文件系统 `fsx_01`。执行前、请仔细阅读该说明并根据您的环境更改变量。您可以根据自己的部署要求轻松修改此模板。
 +
 ....
@@ -218,7 +218,7 @@ mkdir /nfsfsxn/oracopy
 ----
 mkdir /nfsfsxn/archlog
 ----
-. 通过sqlplus登录到Oracle数据库、启用块更改跟踪以加快增量备份、如果Oracle闪存恢复区域当前位于主存储上、则将其更改为FSxN挂载。这样、RMAN默认控制文件/spfile自动备份和归档日志便可备份到FSxN NFS挂载以进行恢复。
+. 通过sqlplus登录到Oracle数据库、启用块更改跟踪以加快增量备份、如果Oracle闪存恢复区域当前位于主存储上、则将其更改为FSx ONTAP挂载。这样、RMAN默认控制文件/spfile自动备份和归档日志便可备份到FSx ONTAP NFS挂载中进行恢复。
 +
 [source, cli]
 ----
@@ -924,7 +924,7 @@ SQL>
 
 [%collapsible]
 ====
-如果主存储和EC2数据库实例主机均丢失、则无法从原始服务器执行恢复。幸运的是、冗余FSxN NFS文件系统上仍有Oracle数据库备份映像副本。您可以快速配置另一个相同的EC2数据库实例、并通过NFS轻松地将VLDB的映像副本挂载到新的EC2数据库主机中以运行恢复。在本节中、我们将演示执行此操作的分步过程。
+如果主存储和EC2数据库实例主机均丢失、则无法从原始服务器执行恢复。幸运的是、冗余FSx ONTAP NFS文件系统上仍有Oracle数据库备份映像副本。您可以快速配置另一个相同的EC2数据库实例、并通过NFS轻松地将VLDB的映像副本挂载到新的EC2数据库主机中以运行恢复。在本节中、我们将演示执行此操作的分步过程。
 
 . 插入一行以测试我们之前为Oracle数据库还原到备用主机验证创建的表。
 +
@@ -955,7 +955,7 @@ SQL> alter session set container=db1_pdb1;
 Session altered.
 
 
-SQL> insert into test values(2, sysdate, 'test recovery on a new EC2 instance host with image copy on FSxN');
+SQL> insert into test values(2, sysdate, 'test recovery on a new EC2 instance host with image copy on FSx ONTAP');
 
 1 row created.
 
@@ -977,12 +977,12 @@ test oracle incremental merge switch to copy
 
          2
 30-MAY-23 05.23.11.000000 PM
-test recovery on a new EC2 instance host with image copy on FSxN
+test recovery on a new EC2 instance host with image copy on FSx ONTAP
 
 
 SQL>
 ....
-. 以Oracle用户身份运行RMAN增量备份并合并、以将事务转储到FSxN NFS挂载上的备份集。
+. 以Oracle用户身份运行RMAN增量备份并合并、以将事务转储到FSx ONTAP NFS挂载上的备份集。
 +
 ....
 [oracle@ip-172-30-15-99 ~]$ rman target / nocatalog
@@ -1004,8 +1004,8 @@ RMAN> @rman_bkup_merge.cmd
 工具包： link:https://github.com/NetApp-Automation/na_oracle19c_deploy["na_oracle19c_dDeploy"^]
 文档： link:marketing_overview.html#awxtower-deployments["在 NFS 上自动部署适用于 ONTAP 的 Oracle19c"^]
 
-. 配置Oracle环境的方式与主EC2数据库实例主机ora_01类似、例如oratab、oraInst.loc和Oracle用户.bash_profile。最好将这些文件备份到FSxN NFS挂载点。
-. FSxN NFS挂载上的Oracle数据库备份映像副本存储在跨越AWS可用性区域的FSx集群上、以实现冗余、高可用性和高性能。只要网络连接可访问、NFS文件系统就可以轻松挂载到新服务器上。以下过程会将Oracle VLDB备份的映像副本挂载到新配置的EC2数据库实例主机以进行恢复。
+. 配置Oracle环境的方式与主EC2数据库实例主机ora_01类似、例如oratab、oraInst.loc和Oracle用户.bash_profile。最好将这些文件备份到FSx ONTAP NFS挂载点。
+. FSx ONTAP NFS挂载上的Oracle数据库备份映像副本存储在跨越AWS可用性区域的FSx集群上、以实现冗余、高可用性和高性能。只要网络连接可访问、NFS文件系统就可以轻松挂载到新服务器上。以下过程会将Oracle VLDB备份的映像副本挂载到新配置的EC2数据库实例主机以进行恢复。
 +
 以EC2用户身份创建挂载点。
 
@@ -1022,7 +1022,7 @@ sudo mkdir /nfsfsxn
 ----
 sudo mount 172.30.15.19:/ora_01_copy /nfsfsxn -o rw,bg,hard,vers=3,proto=tcp,timeo=600,rsize=262144,wsize=262144,nointr
 ----
-. 验证FSxN NFS挂载点上的Oracle数据库备份映像副本。
+. 验证FSx ONTAP NFS挂载点上的Oracle数据库备份映像副本。
 +
 ....
 [ec2-user@ip-172-30-15-124 ~]$ ls -ltr /nfsfsxn/oracopy
@@ -1097,7 +1097,7 @@ total 78940700
 -rw-r-----. 1 oracle 54331   11600384 May 30 17:54 bct_db1.ctf
 
 ....
-. 验证FSxN NFS挂载上可用于恢复的Oracle归档日志、并记下最后一个日志文件日志顺序编号。在本例中、此值为175。我们的恢复点最高为日志顺序编号176。
+. 验证FSx ONTAP NFS挂载上可用于恢复的Oracle归档日志、并记下最后一个日志文件日志顺序编号。在本例中、此值为175。我们的恢复点最高为日志顺序编号176。
 +
 ....
  [ec2-user@ip-172-30-15-124 ~]$ ls -ltr /nfsfsxn/archlog/DB1/archivelog/2023_05_30
@@ -1142,7 +1142,7 @@ total 5714400
 
 ....
 . 作为Oracle用户、将oracle_home变量设置为新EC2实例数据库主机ora_02上的当前Oracle安装、将oracle_sid设置为主Oracle实例SID。在此示例中、此值为db1。
-. 以Oracle用户身份、在$oracle_HOME/dbs目录中创建一个通用Oracle init文件、并配置适当的管理目录。最重要的是、拥有Oracle `flash recovery area` 指向主Oracle VLDB实例中定义的FSxN NFS挂载路径。  `flash recovery area` 第节介绍了配置 `Setup Oracle RMAN incremental merge to image copy on FSx`。将Oracle控制文件设置为FSx ONTAP NFS文件系统。
+. 以Oracle用户身份、在$oracle_HOME/dbs目录中创建一个通用Oracle init文件、并配置适当的管理目录。最重要的是、让Oracle `flash recovery area`指向主ONTAP VLDB实例中定义的FSx VLDB NFS挂载路径。 `flash recovery area`配置如第节所示 `Setup Oracle RMAN incremental merge to image copy on FSx`。将Oracle控制文件设置为FSx ONTAP NFS文件系统。
 +
 [source, cli]
 ----
@@ -1640,13 +1640,13 @@ SQL> select * from test;
         ID DT                                                                          EVENT
 ---------- --------------------------------------------------------------------------- ----------------------------------------------------------------------------------------------------
          1 18-MAY-23 02.35.37.000000 PM                                                test oracle incremental merge switch to copy
-         2 30-MAY-23 05.23.11.000000 PM                                                test recovery on a new EC2 instance host with image copy on FSxN
+         2 30-MAY-23 05.23.11.000000 PM                                                test recovery on a new EC2 instance host with image copy on FSx ONTAP
 ....
 . 其他恢复后任务
 +
 ....
 
-Add FSxN NFS mount to fstab so that the NFS file system will be mounted when EC2 instance host rebooted.
+Add FSx ONTAP NFS mount to fstab so that the NFS file system will be mounted when EC2 instance host rebooted.
 
 As EC2 user, vi /etc/fstab and add following entry:
 
@@ -1657,7 +1657,7 @@ Update the Oracle init file from primary databse init file backup that is restor
 ....
 
 
-这样、Oracle VLDB数据库便可从FSxN NFS文件系统上的备份映像副本恢复到新的EC2数据库实例主机。
+这样、Oracle VLDB数据库便可从FSx ONTAP NFS文件系统上的备份映像副本恢复到新的EC2数据库实例主机。
 
 ====
 
@@ -1671,7 +1671,7 @@ Update the Oracle init file from primary databse init file backup that is restor
 . 首先、我们会在之前创建的同一测试表中插入一行。
 +
 ....
- SQL> insert into test values (3, sysdate, 'test clone on a new EC2 instance host with image copy on FSxN');
+ SQL> insert into test values (3, sysdate, 'test clone on a new EC2 instance host with image copy on FSx ONTAP');
 
 1 row created.
 
@@ -1689,7 +1689,7 @@ test oracle incremental merge switch to copy
 
          2
 30-MAY-23 05.23.11.000000 PM
-test recovery on a new EC2 instance host with image copy on FSxN
+test recovery on a new EC2 instance host with image copy on FSx ONTAP
 
         ID
 ----------
@@ -1700,7 +1700,7 @@ EVENT
 
          3
 05-JUN-23 03.19.46.000000 PM
-test clone on a new EC2 instance host with image copy on FSxN
+test clone on a new EC2 instance host with image copy on FSx ONTAP
 
 
 SQL>
@@ -2307,8 +2307,8 @@ SQL> select * from test;
         ID DT                                                                          EVENT
 ---------- --------------------------------------------------------------------------- ----------------------------------------------------------------
          1 18-MAY-23 02.35.37.000000 PM                                                test oracle incremental merge switch to copy
-         2 30-MAY-23 05.23.11.000000 PM                                                test recovery on a new EC2 instance host with image copy on FSxN
-         3 05-JUN-23 03.19.46.000000 PM                                                test clone on a new EC2 instance host with image copy on FSxN
+         2 30-MAY-23 05.23.11.000000 PM                                                test recovery on a new EC2 instance host with image copy on FSx ONTAP
+         3 05-JUN-23 03.19.46.000000 PM                                                test clone on a new EC2 instance host with image copy on FSx ONTAP
 
 SQL>
 
@@ -2477,7 +2477,7 @@ link:https://support.oracle.com/knowledge/Oracle%20Database%20Products/745798_1.
 +
 link:https://docs.oracle.com/en/database/oracle/oracle-database/19/bradv/getting-started-rman.html["https://docs.oracle.com/en/database/oracle/oracle-database/19/bradv/getting-started-rman.html"^]
 
-* 适用于 NetApp ONTAP 的 Amazon FSX
+* Amazon FSx ONTAP
 +
 link:https://aws.amazon.com/fsx/netapp-ontap/["https://aws.amazon.com/fsx/netapp-ontap/"^]
 

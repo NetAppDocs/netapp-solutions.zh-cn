@@ -24,11 +24,11 @@ NetApp公司Allen Cao、Niyaz Mohamed
 
 ASM (Automatic Storage Management、自动存储管理)是许多Oracle安装中常用的Oracle存储卷管理器。这也是Oracle建议的存储管理解决方案。它提供了传统卷管理器和文件系统的替代方案。自Oracle 11g版以来、ASM一直采用网格基础架构而非数据库打包。因此、要在不使用RAC的情况下使用Oracle ASM进行存储管理、您必须在独立服务器中安装Oracle网格基础架构、也称为Oracle Restart。这样做无疑会增加Oracle数据库部署的复杂性。但是、顾名思义、在以重新启动模式部署Oracle时、出现故障的Oracle服务会由网格基础架构自动重新启动、或者在主机重新启动后无需用户干预、从而提供一定程度的高可用性或HA功能。
 
-在本文档中、我们将演示如何在使用EC2计算实例的Amazon FSX for ONTAP 存储环境中部署采用iSCSI协议的Oracle数据库和Oracle ASM。我们还演示了如何通过NetApp BlueXP控制台使用NetApp SnapCenter 服务来备份、还原和克隆Oracle数据库、以便在AWS公共云中进行开发/测试或其他存储效率数据库操作用例。
+在本文档中、我们将演示如何在使用EC2计算实例的Amazon FSx ONTAP存储环境中部署采用iSCSI协议和Oracle ASM的Oracle数据库。我们还演示了如何通过NetApp BlueXP控制台使用NetApp SnapCenter 服务来备份、还原和克隆Oracle数据库、以便在AWS公共云中进行开发/测试或其他存储效率数据库操作用例。
 
 此解决方案 可解决以下使用情形：
 
-* 在Amazon FSX中部署Oracle数据库、用于使用iSCSI/ASM的ONTAP 存储和EC2计算实例
+* 使用iSCSI/ASM在Amazon FSx ONTAP存储和EC2计算实例中部署Oracle数据库
 * 使用iSCSI/ASM在公共AWS云中测试和验证Oracle工作负载
 * 测试和验证AWS中部署的Oracle数据库重新启动功能
 
@@ -97,8 +97,8 @@ image:aws_ora_fsx_ec2_iscsi_asm_architecture.png["此图详细展示了AWS公共
 
 * * EC2计算实例。*在这些测试和验证中、我们对Oracle数据库计算实例使用了AWS EC2 T2.xlarge实例类型。NetApp建议在生产部署中使用M5类型的EC2实例作为Oracle的计算实例、因为它针对数据库工作负载进行了优化。您需要根据实际工作负载要求根据vCPU数量和RAM量适当调整EC2实例的大小。
 * * FSX存储HA集群单区域或多区域部署。*在这些测试和验证中、我们在一个AWS可用性区域中部署了一个FSX HA集群。对于生产部署、NetApp建议在两个不同的可用性区域中部署一个FSX HA对。FSX HA集群始终配置在一个HA对中、该HA对在一对主动-被动文件系统中进行同步镜像、以提供存储级别的冗余。多区域部署可在单个AWS区域发生故障时进一步提高高可用性。
-* * FSX存储集群规模估算。*适用于ONTAP 存储文件系统的Amazon FSX可提供高达160、000个原始SSD IOPS、高达4 Gbps吞吐量以及最大192 TiB容量。但是、您可以根据部署时的实际要求、根据已配置的IOPS、吞吐量和存储限制(最小1、024 GiB)来调整集群的大小。可以动态调整容量、而不会影响应用程序可用性。
-* * Oracle数据和日志布局。*在测试和验证中、我们分别为数据和日志部署了两个ASM磁盘组。在+data ASM磁盘组中、我们在一个数据卷中配置了四个LUN。在+logs ASM磁盘组中、我们在一个日志卷中配置了两个LUN。通常、在适用于ONTAP 的Amazon FSX卷中部署多个LUN可提高性能。
+* *FSx存储集群规模估算。*Amazon FSx ONTAP存储文件系统可提供高达16万次原始SSD IOPS、高达4 Gbps吞吐量和最大192 TiB容量。但是、您可以根据部署时的实际要求、根据已配置的IOPS、吞吐量和存储限制(最小1、024 GiB)来调整集群的大小。可以动态调整容量、而不会影响应用程序可用性。
+* * Oracle数据和日志布局。*在测试和验证中、我们分别为数据和日志部署了两个ASM磁盘组。在+data ASM磁盘组中、我们在一个数据卷中配置了四个LUN。在+logs ASM磁盘组中、我们在一个日志卷中配置了两个LUN。通常、在一个Amazon FSx ONTAP卷中部署多个LUN可提高性能。
 * * iSCSI配置。* EC2实例数据库服务器使用iSCSI协议连接到FSX存储。EC2实例通常使用一个网络接口或ENI进行部署。单个NIC接口可同时传输iSCSI和应用程序流量。请务必通过仔细分析Oracle AWR报告来衡量Oracle数据库峰值I/O吞吐量需求、以便选择既满足应用程序流量吞吐量要求又符合iSCSI流量吞吐量要求的正确EC2计算实例。NetApp还建议为正确配置多路径的两个FSX iSCSI端点分配四个iSCSI连接。
 * *要为创建的每个Oracle ASM磁盘组使用的Oracle ASM冗余级别。*由于FSX已在FSX集群级别镜像存储、因此应使用外部冗余、这意味着该选项不允许Oracle ASM镜像磁盘组的内容。
 * *数据库备份。* NetApp提供SaaS版本的SnapCenter 软件服务、用于在云中备份、还原和克隆数据库、该服务可通过NetApp BlueXP控制台UI访问。NetApp建议实施此类服务、以实现快速(不到一分钟)的快照备份、快速(几分钟)的数据库还原和数据库克隆。
@@ -120,7 +120,7 @@ image:aws_ora_fsx_ec2_iscsi_asm_architecture.png["此图详细展示了AWS公共
 
 . 已设置AWS帐户、并已在您的AWS帐户中创建必要的VPC和网段。
 . 在AWS EC2控制台中、您必须部署两个EC2 Linux实例、一个用作主Oracle数据库服务器、另一个用作可选的克隆目标数据库服务器。有关环境设置的详细信息、请参见上一节中的架构图。另请查看 link:https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html["Linux实例用户指南"^] 有关详细信息 ...
-. 在AWS EC2控制台中、部署适用于ONTAP 存储HA集群的Amazon FSX以托管Oracle数据库卷。如果您不熟悉FSX存储的部署、请参见相关文档 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/creating-file-systems.html["为ONTAP 文件系统创建FSX"^] 了解分步说明。
+. 从AWS EC2控制台中、部署Amazon FSx ONTAP存储HA集群以托管Oracle数据库卷。如果您不熟悉FSx存储的部署、请参见文档link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/creating-file-systems.html["正在创建FSx ONTAP文件系统"^]以获取分步说明。
 . 可以使用以下Terraform自动化工具包执行步骤2和步骤3、该工具包会创建一个名为的EC2实例 `ora_01` 和名为的FSX文件系统 `fsx_01`。执行前、请仔细阅读该说明并根据您的环境更改变量。
 +
 ....
@@ -1055,7 +1055,7 @@ alter database open;
 ....
 
 
-至此、在适用于ONTAP 和EC2计算实例的Amazon FSX上完成Oracle 19c版本19.18重新启动部署。如果需要、NetApp建议将Oracle控制文件和联机日志文件重新定位到+logs磁盘组。
+至此、在Amazon FSx ONTAP和EC2计算实例上完成了Oracle 19c 19.18重新启动部署。如果需要、NetApp建议将Oracle控制文件和联机日志文件重新定位到+logs磁盘组。
 
 ====
 
@@ -1084,7 +1084,7 @@ link:https://docs.oracle.com/en/database/oracle/oracle-database/19/ladbi/install
 +
 link:https://docs.oracle.com/en/database/oracle/oracle-database/19/ladbi/installing-and-configuring-oracle-database-using-response-files.html#GUID-D53355E9-E901-4224-9A2A-B882070EDDF7["https://docs.oracle.com/en/database/oracle/oracle-database/19/ladbi/installing-and-configuring-oracle-database-using-response-files.html#GUID-D53355E9-E901-4224-9A2A-B882070EDDF7"^]
 
-* 适用于 NetApp ONTAP 的 Amazon FSX
+* Amazon FSx ONTAP
 +
 link:https://aws.amazon.com/fsx/netapp-ontap/["https://aws.amazon.com/fsx/netapp-ontap/"^]
 

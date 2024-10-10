@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: ehc/veeam-fsxn-dr-to-vmc.html 
-keywords: disaster recovery, vmc, vmware cloud, aws, amazon web services, fsxn, fsx for ontap, fsx for netapp ontap, disaster recovery, dr, veeam, replication 
+keywords: disaster recovery, vmc, vmware cloud, aws, amazon web services, fsxn, FSx ONTAP, FSx ONTAP, disaster recovery, dr, veeam, replication 
 summary:  
 ---
-= 使用Veeam Replication和FSx for ONTAP将灾难恢复到AWS上的VMware Cloud
+= 使用Veeam Replication和FSx ONTAP在AWS上灾难恢复到VMware Cloud
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,7 +14,7 @@ summary:
 
 
 [role="lead"]
-Amazon FSx for NetApp ONTAP与AWS上的VMware Cloud集成是一个AWS管理的外部NFS数据存储库、该数据存储库基于NetApp的ONTAP文件系统构建、可以连接到SDDC中的集群。它为客户提供了灵活的高性能虚拟化存储基础架构、该基础架构可独立于计算资源进行扩展。
+Amazon FSx ONTAP与VMware Cloud on AWS的集成是一个AWS管理的外部NFS数据存储库、该数据存储库基于NetApp的ONTAP文件系统构建、可以连接到SDDC中的集群。它为客户提供了灵活的高性能虚拟化存储基础架构、该基础架构可独立于计算资源进行扩展。
 
 作者：Niyaz Mohamed - NetApp解决方案工程部
 
@@ -22,15 +22,15 @@ Amazon FSx for NetApp ONTAP与AWS上的VMware Cloud集成是一个AWS管理的�
 
 == 概述
 
-对于希望将基于AWS SDDC的VMware Cloud用作灾难恢复目标的客户、可以使用FSx for ONTAP数据存储库通过任何经过验证的第三方从内部复制数据、此类解决方案可提供VM复制功能。通过添加FSx for ONTAP数据存储库、与在AWS SDDC上使用大量ESXi主机来容纳存储相比、它将实现成本优化的部署。
+对于希望将基于AWS SDDC的VMware Cloud用作灾难恢复目标的客户、可以使用FSx ONTAP数据存储库通过任何经验证的第三方解决方案从内部复制数据、该解决方案可提供VM复制功能。与在AWS SDDC上使用大量ESXi主机来容纳存储相比、通过添加FSx ONTAP数据存储库、它将实现成本优化的部署。
 
-此方法还有助于客户在VMC中使用试点轻型集群以及FSx for ONTAP数据存储库来托管VM副本。通过妥善地对复制计划进行故障转移、也可以将同一过程作为一个迁移选项扩展到AWS上的VMware Cloud。
+此方法还有助于客户在VMC中使用试点轻型集群以及FSx ONTAP数据存储库来托管VM副本。通过妥善地对复制计划进行故障转移、也可以将同一过程作为一个迁移选项扩展到AWS上的VMware Cloud。
 
 
 
 == 问题陈述
 
-本文档介绍如何使用FSx for ONTAP数据存储库以及Veeam备份和复制功能为内部VMware VM设置灾难恢复、并将其恢复到AWS上的VMware Cloud。
+本文档介绍如何使用FSx ONTAP数据存储库和Veeam备份和复制功能为内部VMware VM设置灾难恢复、并将其恢复到AWS上的VMware Cloud。
 
 Veeam Backup & Replication支持通过现场和远程复制实现灾难恢复(Disaster Recovery、DR)。复制虚拟机时、Veeam Backup & Replication会在AWS SDDC集群上的目标VMware Cloud上以本机VMware vSphere格式创建VM的精确副本、并使该副本与原始VM保持同步。
 
@@ -51,7 +51,7 @@ image:dr-veeam-fsx-image1.png["使用Veeam Replication和FSx ONTAP for VMC的灾
 === 高级步骤
 
 . Veeam Backup and Replication软件正在具有适当网络连接的内部环境中运行。
-. 配置基于AWS的VMware Cloud、请参见VMware Cloud Tech Zone文章 link:https://vmc.techzone.vmware.com/fsx-guide["《VMware Cloud on AWS与Amazon FSx for NetApp ONTAP集成部署指南》"] 要进行部署、请将基于AWS SDDC的VMware Cloud和适用于ONTAP的FSx配置为NFS数据存储库。(采用最低配置设置的指示灯环境可用于灾难恢复。发生意外事件时、VM将故障转移到此集群、并且可以添加其他节点)。
+. 配置VMware Cloud on AWS、请参见VMware Cloud Tech Zone文章link:https://vmc.techzone.vmware.com/fsx-guide["《VMware Cloud on AWS与Amazon FSx ONTAP集成部署指南》"]、以部署和配置VMware Cloud on AWS SDDC和FSx ONTAP作为NFS数据存储库。(采用最低配置设置的指示灯环境可用于灾难恢复。发生意外事件时、VM将故障转移到此集群、并且可以添加其他节点)。
 . 设置复制作业以使用Veeam Backup and Replication创建VM副本。
 . 创建故障转移计划并执行故障转移。
 . 灾难事件完成且主站点启动后、切换回生产VM。
@@ -59,11 +59,11 @@ image:dr-veeam-fsx-image1.png["使用Veeam Replication和FSx ONTAP for VMC的灾
 
 
 
-=== 将Veeam VM复制到适用于ONTAP数据存储库的VMC和FSx的前提条件
+=== 将Veeam VM复制到VMC和FSx ONTAP数据存储库的前提条件
 
 . 确保Veeam Backup & Replication备份VM已连接到源vCenter以及AWS SDDC集群上的目标VMware云。
 . 备份服务器必须能够解析短名称并连接到源和目标vCenter。
-. 适用于ONTAP数据存储库的目标FSx必须具有足够的可用空间来存储已复制VM的VMDK
+. 目标FSx ONTAP数据存储库必须具有足够的可用空间来存储已复制VM的VMDK
 
 
 对于追加信息、请参阅介绍的"注意事项和限制" link:https://helpcenter.veeam.com/docs/backup/vsphere/replica_limitations.html?ver=120["此处"]。
@@ -91,11 +91,11 @@ image:dr-veeam-fsx-image2.png["图中显示了输入/输出对话框或表示已
 
 
 
-. 在*虚拟机*步骤中、选择需要复制到连接到AWS SDDC上的VMware Cloud的FSx for ONTAP数据存储库的VM。可以将虚拟机放置在vSAN上、以填满可用的vSAN数据存储库容量。在指示灯集群中、3节点集群的可用容量将受到限制。其余数据可以复制到FSx for ONTAP数据存储库。单击*Add*，然后在*Add Object*窗口中选择所需的VM或VM容器，然后单击*Add*。单击 * 下一步 * 。
+. 在*虚拟机*步骤中、选择需要复制到连接到AWS SDDC上的VMware Cloud的FSx ONTAP数据存储库的VM。可以将虚拟机放置在vSAN上、以填满可用的vSAN数据存储库容量。在指示灯集群中、3节点集群的可用容量将受到限制。其余数据可以复制到FSx ONTAP数据存储库。单击*Add*，然后在*Add Object*窗口中选择所需的VM或VM容器，然后单击*Add*。单击 * 下一步 * 。
 +
 image:dr-veeam-fsx-image3.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-. 之后、选择目标作为AWS SDDC上的VMware Cloud集群/主机、并为VM副本选择相应的资源池、VM文件夹和FSx for ONTAP数据存储库。然后单击*Next*。
+. 之后、选择目标作为AWS SDDC上的VMware Cloud集群/主机、并为VM副本选择相应的资源池、VM文件夹和FSx ONTAP数据存储库。然后单击*Next*。
 +
 image:dr-veeam-fsx-image4.png["图中显示了输入/输出对话框或表示已写入内容"]
 
@@ -221,7 +221,7 @@ image:dr-veeam-fsx-image19.png["图中显示了输入/输出对话框或表示�
 
 == 结论
 
-借助FSx for ONTAP数据存储库功能、Veeam或任何经过验证的第三方工具可以使用Pilot Light集群提供低成本的DR解决方案、而无需在集群中建立大量主机来容纳VM副本。这样可以提供一个功能强大的解决方案来处理定制的自定义灾难恢复计划、还可以重复使用内部现有备份产品来满足灾难恢复需求、从而通过在内部部署现有灾难恢复数据中心实现基于云的灾难恢复。发生灾难时、只需单击一个按钮、即可按计划进行故障转移或故障转移、并决定激活灾难恢复站点。
+借助FSx ONTAP数据存储库功能、Veeam或任何经过验证的第三方工具可以使用Pilot Light集群提供低成本的灾难恢复解决方案、而无需在集群中设置大量主机来容纳VM副本副本。这样可以提供一个功能强大的解决方案来处理定制的自定义灾难恢复计划、还可以重复使用内部现有备份产品来满足灾难恢复需求、从而通过在内部部署现有灾难恢复数据中心实现基于云的灾难恢复。发生灾难时、只需单击一个按钮、即可按计划进行故障转移或故障转移、并决定激活灾难恢复站点。
 
 要了解有关此过程的更多信息、请随时观看详细的演练视频。
 

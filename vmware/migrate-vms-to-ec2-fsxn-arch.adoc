@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: vmware/migrate-vms-to-ec2-fsxn-arch.html 
 keywords: netapp, vmware, amazon, ec2, fsxn, migration, iscsi, 
-summary: '本技术报告介绍如何使用卷云迁移(CMC)的MigrateOps "数据移动性即代码"功能将内部VMware vSphere VM迁移到数据磁盘位于FSx for ONTAP iSCSI LUN上的Amazon EC2实例。' 
+summary: '本技术报告介绍如何使用卷云迁移(CMC)的MigrateOps "数据移动性即代码"功能将内部VMware vSphere VM迁移到数据磁盘位于FSx ONTAP iSCSI LUN上的Amazon EC2实例。' 
 ---
-= 使用FSxN将VM迁移到Amazon EC2：架构和前提条件
+= 使用Amazon FSx for NetApp ONTAP将VM迁移到Amazon EC2：架构和前提条件
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -22,11 +22,11 @@ summary: '本技术报告介绍如何使用卷云迁移(CMC)的MigrateOps "数�
 
 下图展示了使用CMC MigrateOps将VMware上的虚拟机磁盘(VMDK)数据迁移到AWS的高级架构：
 
-image:migrate-ec2-fsxn-image01.png["使用FSxN将VM迁移到Amazon EC2架构图"]
+image:migrate-ec2-fsxn-image01.png["使用FSx ONTAP架构图将VM迁移到Amazon EC2"]
 
 
 
-== 如何使用Amazon EC2和FSx for ONTAP iSCSI将VMware VM迁移到AWS
+== 如何使用Amazon EC2和FSx ONTAP iSCSI将VMware VM迁移到AWS
 
 
 
@@ -37,12 +37,12 @@ image:migrate-ec2-fsxn-image01.png["使用FSxN将VM迁移到Amazon EC2架构图"
 *在AWS*上
 
 * AWS帐户。这包括子网、VPC设置、路由表、安全规则迁移、安全组、 以及其他网络要求、例如负载平衡。与任何迁移一样、网络连接应是最重要的工作和考虑因素。
-* 允许您同时为ONTAP和Amazon EC2实例配置FSx的适当IAM角色。
-* 允许路由表和安全组与FSx for ONTAP进行通信。
+* 允许您同时配置FSx ONTAP和Amazon EC2实例的适当IAM角色。
+* 允许路由表和安全组与FSx ONTAP进行通信。
 * 将入站规则添加到相应的安全组(有关详细信息、请参见下文)、以实现从内部数据中心到AWS的安全数据传输。
 * 可解析公共Internet域名的有效DNS。
 * 检查DNS解析是否正常工作、并允许您解析主机名。
-* 为了获得最佳性能并获得合理的规模估算、请使用源环境中的性能数据对FSx for ONTAP存储进行合理的规模估算。
+* 为了获得最佳性能和合理的规模估算、请使用源环境中的性能数据来合理调整FSx ONTAP存储的规模。
 * 每个MigrateOps会话都使用一个EIEF、因此应增加EIEF的配额以实现更多并行处理。请记住、默认的进口配置配额为5。
 * (如果正在迁移基于Active Directory的工作负载) Amazon EC2上的Windows Active Directory域。
 

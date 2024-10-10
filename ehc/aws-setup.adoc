@@ -28,7 +28,7 @@ NOTE: 目前、只有来宾存储是将Cloud Volumes ONTAP (CVO)连接到AWS VMC
 ====
 link:https://www.vmware.com/products/vmc-on-aws.html["基于 AWS 的 VMware Cloud"] 为 AWS 生态系统中基于 VMware 的工作负载提供 Cloud 原生体验。每个 VMware 软件定义的数据中心（ SDDC ）均在 Amazon Virtual Private Cloud （ VPC ）中运行，并提供完整的 VMware 堆栈（包括 vCenter Server ）， NSX-T 软件定义的网络连接， vSAN 软件定义的存储以及一个或多个 ESXi 主机，这些主机可为您的工作负载提供计算和存储资源。
 
-本节介绍如何在 AWS 上设置和管理 VMware Cloud ，并将其与适用于 NetApp ONTAP 的 Amazon FSX 和 / 或在 AWS 上使用子系统内存储的 Cloud Volumes ONTAP 结合使用。
+本节介绍如何在AWS上设置和管理VMware Cloud、并将其与Amazon FSx ONTAP和/或AWS上的Cloud Volumes ONTAP以及子系统内存储结合使用。
 
 
 NOTE: 目前、只有来宾存储是将Cloud Volumes ONTAP (CVO)连接到AWS VMC的唯一受支持方法。
@@ -105,11 +105,11 @@ image:aws-config-11.png["图中显示了输入/输出对话框或表示已写入
 ====
 要将 VMware Cloud 连接到 FSX ONTAP ，请完成以下步骤：
 
-. 完成 VMware Cloud 部署并连接到 AWS VPC 后，您必须将适用于 NetApp ONTAP 的 Amazon FSx 部署到新的 VPC 中，而不是原始连接的 VPC 中（请参见下面的屏幕截图）。如果在连接的 VPC 中部署了 FSX （ NFS 和 SMB 浮动 IP ），则无法访问它。请注意， Cloud Volumes ONTAP 等 iSCSI 端点在连接的 VPC 上运行正常。
+. 完成VMware Cloud部署并连接到AWS VPC后、您必须将Amazon FSx ONTAP部署到新的VPC中、而不是最初连接的VPC中(请参见下面的屏幕截图)。如果在连接的 VPC 中部署了 FSX （ NFS 和 SMB 浮动 IP ），则无法访问它。请注意， Cloud Volumes ONTAP 等 iSCSI 端点在连接的 VPC 上运行正常。
 +
 image:aws-connect-fsx-1.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-. 在同一地区部署一个额外的 VPC ，然后将适用于 NetApp ONTAP 的 Amazon FSx 部署到新的 VPC 中。
+. 在同一地区部署一个额外的VPC、然后将Amazon FSx ONTAP部署到新的VPC中。
 +
 通过在 VMware Cloud 控制台中配置 SDDC 组，可以使用所需的网络配置选项连接到部署了 FSX 的新 VPC 。在第 3 步中，验证是否已选中 " 为组配置 VMware Transit Connect 将在每个附件和数据传输中产生费用 " ，然后选择创建组。完成此过程可能需要几分钟时间。
 
@@ -134,7 +134,7 @@ image:aws-connect-fsx-10.png["图中显示了输入/输出对话框或表示已�
 
 . 在外部 VPC 选项卡中，单击路由列中的编辑图标，然后添加以下所需的路由：
 +
-** 适用于 NetApp ONTAP 的 Amazon FSX 的浮动 IP 范围的路由 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/supported-fsx-clients.html["浮动 IP"]。
+** Amazon FSx ONTAP的浮动IP范围的路由link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/supported-fsx-clients.html["浮动 IP"]。
 ** Cloud Volumes ONTAP 的浮动 IP 范围的路由（如果适用）。
 ** 新创建的外部 VPC 地址空间的路由。
 +

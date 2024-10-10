@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: automation/fsxn_monitoring_resizing_automation.html 
-keywords: AWS, FSX, FSxN, automation, FSxN monitoring, FSxN automation, FSxN resizing, FSx for NetApp ONTAP monitoring, FSx for ONTAP monitoring 
-summary: 此页面介绍了有关监控AWS FSxN以及根据阈值自动调整大小的自动化操作。 
+keywords: AWS, FSX, FSx ONTAP, automation, FSx ONTAP monitoring, FSx ONTAP automation, FSx ONTAP resizing, FSx ONTAP monitoring, FSx ONTAP monitoring 
+summary: 此页面介绍了有关监控AWS FSx ONTAP以及根据阈值自动调整大小的自动化操作。 
 ---
-= 使用AWS Lambda功能进行ONTAP 监控和自动调整大小的FSX
+= FSx ONTAP监控和使用AWS Lambda-Function自动调整大小
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,15 +14,15 @@ summary: 此页面介绍了有关监控AWS FSxN以及根据阈值自动调整大
 
 
 [role="lead"]
-此页面介绍了有关监控AWS FSxN以及根据阈值自动调整大小的自动化操作。
+此页面介绍了有关监控AWS FSx ONTAP以及根据阈值自动调整大小的自动化操作。
 
 
 
-== 概述：通过AWS Lambda功能监控和自动调整适用于ONTAP 的FSX的大小
+== 概述：通过AWS Lambda-Function监控FSx ONTAP并对其进行自动调整
 
-FSx for ONTAP是AWS上提供的第一方企业级云存储服务、可提供基于流行的NetApp ONTAP文件系统构建的高度可靠、可扩展、高性能和功能丰富的文件存储。
+FSx ONTAP是AWS上提供的第一方企业级云存储服务、可提供基于流行的NetApp ONTAP文件系统构建的高度可靠、可扩展、高性能和功能丰富的文件存储。
 
-适用于ONTAP 的FSX可提供无缝的部署和管理体验。无需具备存储专业知识即可开始使用。为了简化监控、可以使用AWS兰达功能(根据阈值自动调整总存储容量、卷大小或LUN大小的大小)。  本文档提供了创建自动设置的分步指南、该设置会定期监控FSx for ONTAP、在超过用户指定的阈值时发出通知并调整大小、以及向管理员通知调整大小活动。
+FSx ONTAP提供无缝部署和管理体验。无需具备存储专业知识即可开始使用。为了简化监控、可以使用AWS兰达功能(根据阈值自动调整总存储容量、卷大小或LUN大小的大小)。  本文档提供了创建自动设置的分步指南、该设置会定期监控FSx ONTAP、在超过用户指定的阈值时发出通知并调整大小、以及向管理员通知调整大小活动。
 
 .功能
 [%collapsible]
@@ -31,7 +31,7 @@ FSx for ONTAP是AWS上提供的第一方企业级云存储服务、可提供基�
 
 * 能够监控：
 +
-** 适用于ONTAP 的FSX的整体存储容量的使用情况
+** FSx ONTAP整体存储容量的使用情况
 ** 每个卷的使用情况(精简配置/厚配置)
 ** 每个LUN的使用情况(精简配置/厚配置)
 
@@ -43,7 +43,7 @@ FSx for ONTAP是AWS上提供的第一方企业级云存储服务、可提供基�
 * 能够定期监控检查
 * 可以使用解决方案 访问互联网、也可以不访问互联网
 * 可以手动部署或使用AWS CloudFormation模板进行部署
-* 能够在一个VPC中监控多个FSx for ONTAP文件系统
+* 可以在一个VPC中监控多个FSx ONTAP文件系统
 
 
 ====
@@ -52,16 +52,16 @@ FSx for ONTAP是AWS上提供的第一方企业级云存储服务、可提供基�
 ====
 开始之前、请确保满足以下前提条件：
 
-* 已部署适用于ONTAP 的FSx
-* 连接到FSx for ONTAP 的专用子网
-* 已为ONTAP 的FSX设置"fsxadmin"密码
+* FSx ONTAP已部署
+* 连接到FSx ONTAP的专用子网
+* 已为FSx ONTAP设置"fsxadmin"密码
 
 
 ====
 .高级架构
 [%collapsible]
 ====
-* AWS Lambda功能可通过API调用FSX for ONTAP 、以检索和更新存储容量、卷和LUN的大小。
+* AWS LambDAF函数通过API调用FSx ONTAP、以检索和更新存储容量、卷和LUN的大小。
 * "fsxadmin"密码以安全字符串形式存储在AWS SSM参数存储中、用于增加一层安全保护。
 * AWS SES (简单电子邮件服务)用于在发生调整大小事件时通知最终用户。
 * 如果在无法访问Internet的VPC中部署解决方案、则会对适用于AWS SSM、FSx和SES的VPC端点进行设置、使Lamb达 能够通过AWS内部网络访问这些服务。
@@ -79,7 +79,7 @@ image:fsxn-monitoring-resizing-architecture.png["此图显示了此解决方案 
 === 自动化部署
 
 
-NOTE: 涵盖适用于ONTAP文件系统的单个FSx。
+NOTE: 涵盖单个FSx ONTAP文件系统。
 
 按照一系列步骤完成此解决方案 的自动部署：
 
@@ -171,7 +171,7 @@ image:fsxn-monitoring-resizing-email-2.png["此图显示了通知可用时收到
 === 手动部署
 
 
-NOTE: 支持在一个VPC中监控多个FSx for ONTAP文件系统。
+NOTE: 支持在一个VPC中监控多个FSx ONTAP文件系统。
 
 按照一系列步骤完成此解决方案 的手动部署：
 
@@ -210,10 +210,9 @@ Tier: Standard
 Type: SecureString
 KMS key source: My current account
   KMS Key ID: <Use the default one selected>
-Value: <Enter the password for "fsxadmin" user configured on FSx for ONTAP>
+Value: <Enter the password for "fsxadmin" user configured on FSx ONTAP>
 ----
-单击*创建参数*。
-对要监控的所有FSx for ONTAP文件系统重复上述步骤。
+单击*创建参数*。对要监控的所有FSx ONTAP文件系统重复上述步骤。
 
 image:fsxn-monitoring-resizing-ssm-parameter.png["此图显示了AWS控制台上的SSM参数创建窗口。"]
 
@@ -271,7 +270,7 @@ image:fsxn-monitoring-resizing-vpc-endpoint-create-2.png["此图显示了VPC端�
 .第6步：创建和设置AWS Lamb编制 函数
 [%collapsible]
 ====
-. 导航到AWS控制台>* AWS Lambx*>*功能*、然后单击FSx for ONTAP所在区域的*创建功能*
+. 导航到AWS控制台>* AWS LambxD*>*函数*并单击FSx ONTAP所在区域的*创建函数*
 . 使用默认的*从头开始*作者并更新以下字段：
 +
 [listing]
@@ -282,7 +281,7 @@ Architecture: x86_64
 Permissions: Select "Create a new role with basic Lambda permissions"
 Advanced Settings:
   Enable VPC: Checked
-    VPC: <Choose either the same VPC as FSx for ONTAP or a VPC that can access both FSx for ONTAP and the internet via a private subnet>
+    VPC: <Choose either the same VPC as FSx ONTAP or a VPC that can access both FSx ONTAP and the internet via a private subnet>
     Subnets: <Choose 2 private subnets that have NAT gateway attached pointing to public subnets with internet gateway and subnets that have internet access>
     Security Group: <Choose a Security Group>
 ----
@@ -328,17 +327,16 @@ image:fsxn-monitoring-resizing-layers-added.png["此图显示了AWS Lambda功能
 | * 名称 * | * 类型 * | * 问题描述 * 
 
 
-| *fsxList* | 列表 | (必需)列出要监控的所有FSx for ONTAP文件系统。
-将所有文件系统包括在列表中以进行监控和自动调整大小。 
+| *fsxList* | 列表 | (必需)列出要监控的所有FSx ONTAP文件系统。将所有文件系统包括在列表中以进行监控和自动调整大小。 
 
 
-| * fsxMgmtIp* | string | (必需)从AWS上的ONTAP 的FSX控制台输入"管理端点- IP地址"。 
+| * fsxMgmtIp* | string | (必需)在AWS上的FSx ONTAP控制台中输入"Management Endpoint - IP address"。 
 
 
-| * fsxId* | string | (必需)从AWS上的FSX for ONTAP 控制台输入"文件系统ID"。 
+| * fsxId* | string | (必需)在AWS上的FSx ONTAP控制台中输入"文件系统ID"。 
 
 
-| *用户名* | string | (必需)从ONTAP 上的ONTAP 控制台输入FSX for ONTAP 的"FSX管理员用户名"。 
+| *用户名* | string | (必需)在ONTAP上的FSx ONTAP控制台中输入FSx ONTAP的"AWS管理员用户名"。 
 
 
 | *调整大小阈值* | 整型 | (必需)输入0-100之间的阈值百分比。此阈值将用于测量存储容量、卷和LUN的使用量、如果超过此阈值的任何使用量百分比增加、则会发生调整大小活动。 
@@ -400,4 +398,4 @@ image:fsxn-monitoring-resizing-eventbridge.png["此图显示了AWS Lambda功能�
 
 == 结论
 
-借助提供的解决方案、可以轻松设置监控、该监控解决方案会定期监控FSx for ONTAP存储、根据用户指定的阈值调整其值并提供警报机制。这样、使用和监控适用于ONTAP 的FSX的过程就可以无缝地让管理员腾出时间专注于业务关键型活动、同时存储在需要时自动增长。
+借助所提供的解决方案、可以轻松设置监控解决方案、该解决方案会定期监控FSx ONTAP存储、根据用户指定的阈值调整存储的容量、并提供警报机制。这样、使用和监控FSx ONTAP的过程便可无缝完成、使管理员可以专注于业务关键型活动、同时存储在需要时会自动增长。

@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: ai/mlops_fsxn_cictcd.html 
-keywords: FSxN, MLOps, NetApp ONTAP, AWS Lambda Functions, SageMaker, AWS S3 
+keywords: FSx ONTAP, FSx ONTAP, MLOps, NetApp ONTAP, AWS Lambda Functions, SageMaker, AWS S3 
 summary: 本文提供了使用AWS服务构建MLOps管道的指南、重点介绍自动化模型重新培训、部署和成本优化。 
 ---
 = 第3部分-构建简化的MLOps管道(CI/CT/CD)
@@ -34,10 +34,10 @@ Jian Jian (Ken)、NetApp高级数据和应用科学人员
 | 功能 | Name | comment 
 
 
-| 数据存储 | AWS FSxN | 请参见 link:./mlops_fsxn_s3_integration.html["第1部分—将AWS FSx for NetApp ONTAP (FSxN)作为私有S3存储分段集成到AWS SageMaker中"]。 
+| 数据存储 | AWS FSX ONTAP | 请参阅 link:./mlops_fsxn_s3_integration.html["第1部分—将Amazon FSx for NetApp ONTAP (FSx ONTAP)作为私有S3存储分段集成到AWS SageMaker中"]。 
 
 
-| 数据科学IDE | AWS SageMaker | 本教程基于中提供的Jupyter笔记本 link:./mlops_fsxn_sagemaker_integration_training.html["第2部分—利用AWS FSx for NetApp ONTAP (FSxN)作为SageMaker模型训练的数据源"]。 
+| 数据科学IDE | AWS SageMaker | 本教程基于中提供的Jupyter笔记本link:./mlops_fsxn_sagemaker_integration_training.html["第2部分-利用Amazon FSx for NetApp ONTAP (FSx ONTAP)作为SageMaker模型训练的数据源"]。 
 
 
 | 用于触发MLOps管道的功能 | AWS Lamb开发 函数 | - 
@@ -58,8 +58,8 @@ Jian Jian (Ken)、NetApp高级数据和应用科学人员
 
 == 前提条件
 
-* 一种预配置的FSxN文件系统。本教程将利用存储在FSxN中的数据进行培训。
-* 一个* SageMaker笔记本电脑实例*，该实例配置为与上述FSxN文件系统共享同一个VPC。
+* 一种预配置的FSx ONTAP文件系统。本教程将利用FSx ONTAP中存储的数据进行训练。
+* 一个* SageMaker笔记本电脑实例*，该实例配置为与上述FSx ONTAP文件系统共享同一个VPC。
 * 在触发*AWS Lambd*函数之前，请确保*SageMaker笔记本实例*处于*STOPPED*状态。
 * 要利用深度神经网络的必要GPU加速、需要使用*毫升g4dn.x大*实例类型。
 
@@ -114,7 +114,7 @@ echo "Starting the autostop script in cron"
 (crontab -l 2>/dev/null; echo "*/5 * * * * bash -c 'if ps -p $nbconvert_pid > /dev/null; then echo \"Notebook is still running.\" >> /var/log/jupyter.log; else echo \"Notebook execution completed.\" >> /var/log/jupyter.log; $PYTHON_DIR -c \"import boto3;boto3.client(\'sagemaker\').stop_notebook_instance(NotebookInstanceName=get_notebook_name())\" >> /var/log/jupyter.log; fi'") | crontab -
 EOF
 ----
-. 此脚本执行Jupyter笔记本、该笔记本负责重新训练和重新部署模型以进行引用。执行完成后、笔记本电脑将在5分钟内自动关闭。要了解有关问题陈述和代码实施的更多信息、请参见 link:./mlops_fsxn_sagemaker_integration_training.html["第2部分—利用AWS FSx for NetApp ONTAP (FSxN)作为SageMaker模型训练的数据源"]。
+. 此脚本执行Jupyter笔记本、该笔记本负责重新训练和重新部署模型以进行引用。执行完成后、笔记本电脑将在5分钟内自动关闭。要了解有关问题陈述和代码实施的更多信息，请参阅link:./mlops_fsxn_sagemaker_integration_training.html["第2部分-利用Amazon FSx for NetApp ONTAP (FSx ONTAP)作为SageMaker模型训练的数据源"]。
 +
 image:mlops_fsxn_cictcd_3.png["创建生命周期配置"]
 
@@ -176,6 +176,6 @@ image:mlops_fsxn_cictcd_11.png["完成触发"]
 
 
 
-每天完成两步配置后，*AWS Lambd*功能将启动*SageMaker笔记本*，使用*FSxN*存储库中的数据执行模型重新训练，将更新的模型重新部署到生产环境，并自动关闭*SageMaker笔记本实例*以优化成本。这可确保模型保持最新。
+每天完成两步配置后，*AWS Lambd*功能将启动*SageMaker笔记本*，使用*FSx ONTAP存储库中的数据执行模型重新训练，将更新的模型重新部署到生产环境，并自动关闭*SageMaker笔记本实例*以优化成本。这可确保模型保持最新。
 
 开发MLOps管道的教程到此结束。

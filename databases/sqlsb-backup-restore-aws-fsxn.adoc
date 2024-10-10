@@ -4,7 +4,7 @@ permalink: databases/sqlsb-backup-restore-aws-fsxn.html
 keywords: SQL server, SQL, backup, recover, AWS, aws, sql 
 summary:  
 ---
-= TR-4951：《AWS FSx for ONTAP 上Microsoft SQL Server的备份和恢复》
+= TR-4951：《AWS FSx ONTAP上Microsoft SQL Server的备份和恢复》
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -16,7 +16,7 @@ summary:
 作者：Niyaz Mohammed、Carine Ngwekwe - NetApp解决方案工程部
 
 [role="lead"]
-本文档介绍了在AWS FSx for ONTAP 上使用SnapCenter 对Microsoft SQL Server执行备份和恢复所需的步骤。其中包括以下信息：
+本文档介绍了在使用SnapCenter的AWS FSx ONTAP上对Microsoft SQL Server执行备份和恢复所需的步骤。其中包括以下信息：
 
 * NetApp SnapCenter 配置
 * SnapCenter 备份操作
@@ -32,7 +32,7 @@ summary:
 要配置SnapCenter 和保护Microsoft SQL Server资源、必须执行以下步骤。以下各节将详细介绍以下每个步骤。
 
 . 为SQL Server备份和还原用户配置sysadmin凭据。
-. 配置存储设置。提供Amazon Web Services (AWS)管理凭据、以便从SnapCenter 访问适用于NetApp ONTAP Storage Virtual Machine (SVM)的Amazon FSx。
+. 配置存储设置。提供Amazon Web Services (AWS)管理凭据、以便从SnapCenter访问Amazon FSx ONTAP Storage Virtual Machine (SVM)。
 . 将SQL Server主机添加到SnapCenter。部署并安装所需的SnapCenter 插件。
 . 配置策略。定义备份操作类型、保留和可选的Snapshot备份复制。
 . 配置和保护Microsoft SQL Server数据库。
@@ -72,7 +72,7 @@ image:sqlsb-aws-image3.png["图中显示了输入/输出对话框或表示已写
 +
 image:sqlsb-aws-image4.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-. 提供*FSx for ONTAP 管理*端点。
+. 提供*FSx ONTAP管理*端点。
 +
 image:sqlsb-aws-image5.png["图中显示了输入/输出对话框或表示已写入内容"]
 
@@ -107,7 +107,7 @@ image:sqlsb-aws-image8.png["图中显示了输入/输出对话框或表示已写
 
 image:sqlsb-aws-image9.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-. 安装完成后，转到*Resource*选项卡以验证所有FSx for ONTAP iSCSI卷是否都存在。
+. 安装完成后，转到*Resource*选项卡以验证所有FSx ONTAP iSCSI卷是否都存在。
 +
 image:sqlsb-aws-image10.png["图中显示了输入/输出对话框或表示已写入内容"]
 

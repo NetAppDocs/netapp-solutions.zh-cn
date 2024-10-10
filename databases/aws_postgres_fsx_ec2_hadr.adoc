@@ -129,7 +129,7 @@ video::e479b91f-eacd-46bf-bfa1-b01200f0015a[panopto]
 
 . 已设置AWS帐户、并已在您的AWS帐户中创建必要的VPC和网段。
 . 在AWS EC2控制台中、您必须部署两个EC2 Linux实例、一个在主站点上作为主PostgreSQL DB服务器、一个在备用灾难恢复站点上。要在主灾难恢复站点和备用灾难恢复站点实现计算冗余、请另外部署两个EC2 Linux实例作为备用PostgreSQL DB服务器。有关环境设置的详细信息、请参见上一节中的架构图。另请查看 link:https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html["Linux实例用户指南"] 有关详细信息 ...
-. 在AWS EC2控制台中、部署两个FSX ONTAP 存储HA集群来托管PostgreSQL数据库卷。如果您不熟悉FSX存储的部署、请参见相关文档 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/creating-file-systems.html["为ONTAP 文件系统创建FSX"] 了解分步说明。
+. 在AWS EC2控制台中、部署两个FSX ONTAP 存储HA集群来托管PostgreSQL数据库卷。如果您不熟悉FSx存储的部署、请参见文档link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/creating-file-systems.html["正在创建FSx ONTAP文件系统"]以获取分步说明。
 . 构建CentOS Linux VM以托管Ansible控制器。Ansible控制器可以位于内部或AWS云中。如果它位于内部、则必须通过SSH连接到VPC、EC2 Linux实例和FSX存储集群。
 . 按照资源中的"为RHEL/CentOS上的CLI部署设置Ansible控制器"一节所述设置Ansible控制器 link:../automation/getting-started.html["NetApp解决方案 自动化入门"]。
 . 从NetApp GitHub公共站点克隆自动化工具包的副本。
@@ -376,7 +376,7 @@ NetApp建议运行手动故障转移或使用成熟的操作系统集群软件�
 
 要了解有关本文档中所述信息的更多信息，请查看以下文档和 / 或网站：
 
-* 适用于 NetApp ONTAP 的 Amazon FSX
+* Amazon FSx ONTAP
 
 
 link:https://aws.amazon.com/fsx/netapp-ontap/["https://aws.amazon.com/fsx/netapp-ontap/"^]
