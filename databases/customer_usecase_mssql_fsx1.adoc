@@ -1,0 +1,63 @@
+---
+sidebar: sidebar 
+permalink: databases/customer_usecase_mssql_fsx1.html 
+keywords: SQL Server, WSFC, AWS, FSx ONTAP, EC2, SnapCenter 
+summary: 此真实客户用例示例说明了将SQL Server工作负载从内部迁移到Amazon FSx ONTAP以降低成本所面临的挑战、解决方案和结果。 
+---
+= 医疗产品公司将本地SQL工作负载迁移到Amazon FSx ONTAP以降低成本
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+NetApp解决方案工程团队
+
+[role="lead"]
+此真实客户用例示例说明了将SQL Server工作负载从内部迁移到Amazon FSx ONTAP以降低成本所面临的挑战、解决方案和结果。
+
+
+
+== 挑战
+
+* 该客户一直在由第三方托管的私有数据中心运行SQL Server工作负载。不断增加的托管成本已成为一个问题。
+* 由于外包和员工流失、IT部门对应用程序架构和现有基础架构缺乏了解。
+* 该公司在管理NetApp ONTAP方面几乎没有经验、甚至根本没有经验。
+* 在对现有基础架构做出续订决定之前、它的运行时间非常紧迫。
+* SQL Server环境非常庞大(100 TB)、并且非常复杂、两个数据中心之间会通过SQL Always On实现HA。使用AppSync在二级数据副本之外创建三个瞬时环境、并每天/每周刷新数据。每次从生产数据刷新后、需要通过SQL脚本更改专用数据标志。
+
+
+image:customer_usecase_mssql_fsx1_before.png["此图详细展示了迁移前的客户环境配置。"]
+
+
+
+== 解决方案
+
+* 使用NetApp SnapCenter从预置托管的Dell Unity SAN和AppSync环境迁移到AWS Amazon FSx ONTAP。
+* Amazon FSx ONTAP精简克隆功能有助于降低存储成本、同时完全自动化的SnapCenter克隆生命周期管理可满足所有其他瞬时环境要求。
+* 主SQL Server数据库部署在AWS EBS上、并在单可用性为AZ的Amazon FSx ONTAP上复制了二级副本。
+* POC证明、SnapCenter是AppSync的合适替代产品。
+* 值得信赖且经验丰富的合作伙伴、提供设置、迁移和持续支持。详细的解决方案实施指南为首次使用Amazon FSx ONTAP和SnapCenter的用户提供了帮助。
+
+
+image:customer_usecase_mssql_fsx1_after.png["此图详细展示了迁移后的客户环境配置。"]
+
+
+
+== 结果
+
+* 与继续在私有数据中心托管相比、成本降低40%。
+* 完全托管的Amazon FSx ONTAP服务、支持SnapCenter、可为300位客户提供支持。
+* 始终能够为预生产、UAT和QA环境实现近乎即时的精简配置克隆自动化。
+* 及时迁移、避免续订成本、从不满意的供应商关系转变为在公有云中获得回报的体验。
+* 基于Amazon FSx的SQL Server在保持性能的同时实现了额外的数据冗余层。
+* 能够在未来轻松实现跨区域灾难恢复。
+
+
+
+
+== 从何处查找追加信息
+
+要了解有关NetApp企业数据库解决方案的详细信息、请查看以下网站link:https://docs.netapp.com/us-en/netapp-solutions/databases/index.html["NetApp企业数据库解决方案"^]

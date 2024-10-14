@@ -1,0 +1,494 @@
+---
+sidebar: sidebar 
+permalink: databases/snapctr_psql_ontap.html 
+keywords: Database, PostgreSQL, ONTAP, backup, recovery, clone, SnapCenter 
+summary: 该解决方案提供了PostgreSQL数据库备份、恢复和克隆的概述和详细信息、这些内容可通过NetApp SnapCenter数据库管理UI工具在公有云或内部的ONTAP存储上进行。 
+---
+= TR-5000：《使用SnapCenter在ONTAP上执行PostgreSQL数据库备份、恢复和克隆》
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+NetApp公司Allen Cao、Niyaz Mohamed
+
+[role="lead"]
+该解决方案提供了PostgreSQL数据库备份、恢复和克隆的概述和详细信息、这些内容可通过NetApp SnapCenter数据库管理UI工具在公有云或内部的ONTAP存储上进行。
+
+
+
+== 目的
+
+NetApp SnapCenter 软件是一款易于使用的企业平台，可安全地协调和管理应用程序，数据库和文件系统之间的数据保护。它可以将备份、还原和克隆生命周期管理工作负载分流给应用程序所有者、而不会影响对存储系统上的活动进行监控和监管的能力、从而简化这些任务。通过利用基于存储的数据管理、它可以提高性能和可用性、并缩短测试和开发时间。
+
+在本文档中、我们使用一个非常用户友好的SnapCenter UI工具展示了在公有云或内部的NetApp ONTAP存储上的PostgreSQL数据库保护和管理。
+
+此解决方案 可解决以下使用情形：
+
+* 备份和恢复部署在公有云或内部NetApp ONTAP存储上的PostgreSQL数据库。
+* 管理PostgreSQL数据库快照和克隆副本、以加快应用程序开发速度并改进数据生命周期管理。
+
+
+
+
+== audience
+
+此解决方案 适用于以下人员：
+
+* 希望在NetApp ONTAP存储上部署PostgreSQL数据库的数据库管理人员。
+* 希望在NetApp ONTAP存储上测试PostgreSQL工作负载的数据库解决方案架构师。
+* 希望在NetApp ONTAP存储上部署和管理PostgreSQL数据库的存储管理员。
+* 希望在NetApp ONTAP存储上建立PostgreSQL数据库的应用程序所有者。
+
+
+
+
+== 解决方案 测试和验证环境
+
+此解决方案的测试和验证是在实验室环境中执行的、可能与最终部署环境不匹配。请参见一节 <<部署注意事项的关键因素>> 有关详细信息 ...
+
+
+
+=== 架构
+
+image:snapctr_psql_brc_architecture.png["此图详细展示了使用SnapCenter进行PostgreSQL备份、恢复和克隆的情况。"]
+
+
+
+=== 硬件和软件组件
+
+[cols="33%, 33%, 33%"]
+|===
+
+
+3+| * 硬件 * 
+
+
+| NetApp AFF A220 | 版本9.12.1P2 | 磁盘架DS224-12、IOM12E模块、24个磁盘/12 TiB容量 
+
+
+| VMware vSphere集群 | 6.7版 | 4个NetApp HCI H410C计算ESXi节点 
+
+
+3+| *软件* 
+
+
+| RedHat Linux | RHEL Linux 8.6 (LVM)- x64 Gen2 | 已部署RedHat订阅以进行测试 
+
+
+| Windows服务器 | 2022 DataCenter；AE HotPatch - x64 Gen2 | 托管SnapCenter服务器 
+
+
+| PostgreSQL 数据库 | 14.13版 | 已使用HAMmerDB tpcc架构填充PostgreSQL DB集群 
+
+
+| SnapCenter 服务器 | 6.0版 | 工作组部署 
+
+
+| 打开JDK | 版本java-11-OpenJDK | DB VM上的SnapCenter插件要求 
+
+
+| NFS | 版本 3.0 | 将数据和日志分隔到不同的挂载点 
+
+
+| Ansible | 核心2.16.2. | Python 3.6.8 
+|===
+
+
+=== 实验室环境中的PostgreSQL数据库配置
+
+[cols="33%, 33%, 33%"]
+|===
+
+
+3+|  
+
+
+| * 服务器 * | * 数据库 * | *DB存储* 
+
+
+| psql01 | 主数据库服务器 | /pgdata、/pglogs NFS卷挂载到ONTAP存储上 
+
+
+| psql02 | 克隆数据库服务器 | /pgdata_Clone、/pglogs_Clone NFS精简克隆卷挂载在ONTAP存储上 
+|===
+
+
+=== 部署注意事项的关键因素
+
+* * SnapCenter部署。* SnapCenter可以部署在Windows域或工作组环境中。对于基于域的部署、域用户帐户应为域管理员帐户、或者域用户属于SnapCenter托管服务器上的本地管理员组。
+* *名称解析。* SnapCenter服务器需要将名称解析为每个受管目标数据库服务器主机的IP地址。每个目标数据库服务器主机都必须将SnapCenter服务器名称解析为IP地址。如果DNS服务器不可用、请为本地主机文件添加命名以进行解析。
+* *资源组配置。* SnapCenter中的资源组是一个类似资源的逻辑分组、可以一起备份。因此、它可以简化大型数据库环境中的备份作业并减少备份作业的数量。
+* *单独的完整数据库和归档日志备份。*完整数据库备份包括数据卷和日志卷一致的组快照。频繁创建完整数据库快照会占用较多的存储空间、但会提高恢复能力。另一种方法是、减少创建完整数据库快照的频率、增加归档日志备份的频率、从而减少存储消耗、提高RPO、但可能会延长RTO。在设置备份方案时、请考虑您的RTO和RPO目标。此外、卷上的Snapshot备份数也有限制(1023)。
+* *特权委派。*利用SnapCenter UI内置的基于角色的访问控制、根据需要将权限委派给应用程序和数据库团队。
+
+
+
+
+== 解决方案 部署
+
+以下各节提供了在公有云或内部的NetApp ONTAP存储上部署、配置SnapCenter以及PostgreSQL数据库备份、恢复和克隆的分步过程。
+
+
+
+=== 部署的前提条件
+
+[%collapsible]
+====
+. 部署需要在ONTAP存储上运行两个现有PostgreSQL数据库、一个作为主数据库服务器、另一个作为克隆数据库服务器。有关ONTAP上PostgreSQL数据库部署的参考，请参阅TR-4956：link:aws_postgres_fsx_ec2_hadr.html["在AWS FSX/EC2中自动部署PostgreSQL高可用性和灾难恢复"^]，查找主实例上的PostgreSQL自动部署操作手册。
+. 配置Windows服务器以使用最新版本运行NetApp SnapCenter UI工具。有关详细信息，请参见以下链接：link:https://docs.netapp.com/us-en/snapcenter/install/task_install_the_snapcenter_server_using_the_install_wizard.html["安装 SnapCenter 服务器"^]。
+
+
+====
+
+
+=== SnapCenter安装和设置
+
+[%collapsible]
+====
+我们建议在继续SnapCenter安装和配置之前联机完成link:https://docs.netapp.com/us-en/snapcenter/index.html["SnapCenter 软件文档"^]：。下面概括了在ONTAP上为PostgreSQL安装和设置SnapCenter软件的步骤。
+
+. 从SnapCenter Windows服务器中，从下载并安装最新的Java JDKlink:https://www.java.com/en/["获取适用于桌面应用程序的Java"^]。关闭Windows防火墙。
+. 从SnapCenter Windows服务器下载并安装或更新SnapCenter 6.0 Windows前提条件：powerPowerShell - powershell-7.4.3-win-x64.msi和.Net hosting package - DOotnet-hosting-8.0.6-win。
+. 从SnapCenter Windows服务器上，从NetApp支持站点下载并安装最新版本(目前为6.0)的SnapCenter安装可执行文件：link:https://mysupport.netapp.com/site/["NetApp |支持"^]。
+. 从数据库数据库数据库VM中、为管理员用户及其sudo Privileges启用无密码ssh身份验证 `admin`。
+. 从数据库数据库数据库VM中、停止并禁用Linux防火墙守护进程。安装Java-11-OpenJDK。
+. 从SnapCenter Windows服务器启动浏览器、通过端口8146使用Windows本地管理员用户或域用户凭据登录到SnapCenter。
++
+image:snapctr_ora_azure_anf_setup_01.png["此图提供了SnapCenter服务器的登录屏幕"]
+
+. 请查看 `Get Started` 在线菜单。
++
+image:snapctr_ora_azure_anf_setup_02.png["此图提供SnapCenter服务器的联机菜单"]
+
+. 在中 `Settings-Global Settings`，检查 `Hypervisor Settings` 然后单击更新。
++
+image:snapctr_ora_azure_anf_setup_03.png["此图提供了SnapCenter服务器的虚拟机管理程序设置"]
+
+. 根据需要进行调整 `Session Timeout` 将SnapCenter UI设置为所需间隔。
++
+image:snapctr_ora_azure_anf_setup_04.png["此图提供SnapCenter服务器的会话超时"]
+
+. 根据需要向SnapCenter添加其他用户。
++
+image:snapctr_ora_azure_anf_setup_06.png["此图提供SnapCenter服务器的设置-用户和访问权限"]
+
+. 。 `Roles` 选项卡列出了可分配给不同SnapCenter用户的内置角色。具有所需权限的管理员用户也可以创建自定义角色。
++
+image:snapctr_ora_azure_anf_setup_07.png["此图提供了SnapCenter服务器的角色"]
+
+. 在中 `Settings-Credential`，为SnapCenter管理目标创建凭据。在本演示用例中、他们是Linux用户管理员(用于登录到数据库服务器VM)和postgres凭据(用于访问PostgreSQL)。
++
+image:snapctr_psql_setup_host_01.png["此图提供SnapCenter服务器的凭据"]
+
++
+
+NOTE: 在创建凭据之前、请重置PostgreSQL用户postgres密码。
+
+. 在选项卡中 `Storage Systems`、使用ONTAP集群管理员凭据添加 `ONTAP cluster`。对于Azure NetApp Files、您需要为容量池访问创建一个特定凭据。
++
+image:snapctr_psql_setup_ontap_01.png["此图提供了适用于SnapCenter服务器的Azure NetApp Files"] image:snapctr_psql_setup_ontap_02.png["此图提供了适用于SnapCenter服务器的Azure NetApp Files"]
+
+. 在选项卡中 `Hosts`、添加PostgreSQL数据库VM、此操作将在Linux上安装适用于PostgreSQL的SnapCenter插件。
++
+image:snapctr_psql_setup_host_02.png["此映像提供了SnapCenter服务器的主机"] image:snapctr_psql_setup_host_03.png["此映像提供了SnapCenter服务器的主机"] image:snapctr_psql_setup_host_05.png["此映像提供了SnapCenter服务器的主机"]
+
+. 在数据库服务器VM上安装主机插件后、主机上的数据库将自动发现并显示在选项卡中 `Resources`。
++
+image:snapctr_psql_bkup_01.png["此图提供了SnapCenter服务器的设置策略"]
+
+
+
+====
+
+
+=== 数据库备份
+
+[%collapsible]
+====
+自动发现的初始PostgreSQL集群在其集群名称旁边显示一个红色锁定。必须使用上一节中在SnapCenter设置期间创建的PostgreSQL数据库凭据解除锁定。然后、您需要创建并应用备份策略来保护数据库。最后、手动或由计划程序执行备份以创建快照备份。下一节将演示分步过程。
+
+* 解除PostgreSQL集群锁定。
++
+.. 导航到 `Resources`选项卡、其中列出了在数据库VM上安装SnapCenter插件后发现的PostgreSQL集群。最初，它被锁定，数据库群集的 `Overall Status`显示为 `Not protected`。
++
+image:snapctr_psql_bkup_01.png["此映像提供SnapCenter服务器的数据库备份"]
+
+.. 单击集群名称、然后单击 `Configure Credentials`以打开凭据配置页面。
++
+image:snapctr_psql_bkup_02.png["此映像提供SnapCenter服务器的数据库备份"]
+
+.. 选择 `postgres`上次SnapCenter设置期间创建的凭据。
++
+image:snapctr_psql_bkup_03.png["此映像提供SnapCenter服务器的数据库备份"]
+
+.. 应用凭据后、集群将被解除锁定。
++
+image:snapctr_psql_bkup_04.png["此映像提供SnapCenter服务器的数据库备份"]
+
+
+
+* 创建PostgreSQL备份策略。
++
+.. 导航到 `Setting`- `Polices`、然后单击 `New`以创建备份策略。
++
+image:snapctr_psql_bkup_06.png["此映像提供SnapCenter服务器的数据库备份"]
+
+.. 为备份策略命名。
++
+image:snapctr_psql_bkup_07.png["此映像提供SnapCenter服务器的数据库备份"]
+
+.. 选择存储类型。对于大多数情况、默认备份设置应该可以正常使用。
++
+image:snapctr_psql_bkup_08.png["此映像提供SnapCenter服务器的数据库备份"]
+
+.. 定义备份频率和快照保留。
++
+image:snapctr_psql_bkup_09.png["此映像提供SnapCenter服务器的数据库备份"]
+
+.. 用于在数据库卷复制到二级位置时选择二级复制的选项。
++
+image:snapctr_psql_bkup_10.png["此映像提供SnapCenter服务器的数据库备份"]
+
+.. 查看摘要并 `Finish`创建备份策略。
++
+image:snapctr_psql_bkup_11.png["此映像提供SnapCenter服务器的数据库备份"] image:snapctr_psql_bkup_12.png["此映像提供SnapCenter服务器的数据库备份"]
+
+
+
+* 应用备份策略以保护PostgreSQL数据库。
++
+.. 导航回 `Resource`选项卡、单击集群名称以启动PostgreSQL集群保护工作流。
++
+image:snapctr_psql_bkup_05.png["此映像提供SnapCenter服务器的数据库备份"]
+
+.. 接受默认值。 `Application Settings`此页面上的许多选项不适用于自动发现的目标。
++
+image:snapctr_psql_bkup_13.png["此映像提供SnapCenter服务器的数据库备份"]
+
+.. 应用刚刚创建的备份策略。根据需要添加备份计划。
++
+image:snapctr_psql_bkup_14.png["此映像提供SnapCenter服务器的数据库备份"]
+
+.. 如果需要备份通知、请提供电子邮件设置。
++
+image:snapctr_psql_bkup_15.png["此映像提供SnapCenter服务器的数据库备份"]
+
+.. 查看摘要并 `Finish`实施备份策略。现在、PostgreSQL集群已受到保护。
++
+image:snapctr_psql_bkup_16.png["此映像提供SnapCenter服务器的数据库备份"]
+
+.. 根据备份计划执行备份、或者从集群备份拓扑执行备份、单击 `Backup Now`可触发手动按需备份。
++
+image:snapctr_psql_bkup_17_1.png["此映像提供SnapCenter服务器的数据库备份"] image:snapctr_psql_bkup_17.png["此映像提供SnapCenter服务器的数据库备份"]
+
+.. 从选项卡监控备份作业 `Monitor`。备份大型数据库通常需要几分钟时间、在我们的测试案例中、备份接近1 TB的数据库卷大约需要4分钟。
++
+image:snapctr_psql_bkup_19.png["此映像提供SnapCenter服务器的数据库备份"]
+
+
+
+
+
+====
+
+
+=== 数据库恢复
+
+[%collapsible]
+====
+在此数据库恢复演示中、我们将展示PostgreSQL数据库集群的时间点恢复。首先、使用SnapCenter为ONTAP存储上的数据库卷创建快照备份。然后、登录到数据库、创建一个测试表、记下时间戳并删除测试表。现在、启动从备份到创建测试表时的时间戳的恢复、以恢复丢弃的表。下面捕获了使用SnapCenter UI验证PostgreSQL数据库时间点恢复的工作流和验证的详细信息。
+
+. 以用户身份登录到PostgreSQL `postgres`。创建一个测试表、然后将其丢弃。
++
+....
+postgres=# \dt
+Did not find any relations.
+
+
+postgres=# create table test (id integer, dt timestamp, event varchar(100));
+CREATE TABLE
+postgres=# \dt
+        List of relations
+ Schema | Name | Type  |  Owner
+--------+------+-------+----------
+ public | test | table | postgres
+(1 row)
+
+postgres=# insert into test values (1, now(), 'test PostgreSQL point in time recovery with SnapCenter');
+INSERT 0 1
+
+postgres=# select * from test;
+ id |             dt             |                         event
+----+----------------------------+--------------------------------------------------------
+  1 | 2024-10-08 17:55:41.657728 | test PostgreSQL point in time recovery with SnapCenter
+(1 row)
+
+postgres=# drop table test;
+DROP TABLE
+postgres=# \dt
+Did not find any relations.
+
+postgres=# select current_time;
+    current_time
+--------------------
+ 17:59:20.984144+00
+
+....
+. 在选项卡中 `Resources`、打开数据库备份页面。选择要还原的快照备份。然后、单击 `Restore`按钮以启动数据库恢复工作流。执行时间点恢复时、请记下备份的时间戳。
++
+image:snapctr_psql_restore_01.png["此映像提供SnapCenter服务器的数据库还原"]
+
+. 选择。 `Restore scope`目前、只有完整的资源可供选择。
++
+image:snapctr_psql_restore_02.png["此映像提供SnapCenter服务器的数据库还原"]
+
+. 对于 `Recovery Scope`，选择 `Recover to point in time`并输入将恢复前滚到的时间戳。
++
+image:snapctr_psql_restore_03.png["此映像提供SnapCenter服务器的数据库还原"]
+
+.  `PreOps`允许在执行还原/恢复操作之前对数据库执行脚本、或者将其留为黑色。
++
+image:snapctr_psql_restore_04.png["此映像提供SnapCenter服务器的数据库还原"]
+
+.  `PostOps`允许在还原/恢复操作后对数据库执行脚本、或者将其留为黑色。
++
+image:snapctr_psql_restore_05.png["此映像提供SnapCenter服务器的数据库还原"]
+
+. 如果需要、可通过电子邮件发送通知。
++
+image:snapctr_psql_restore_06.png["此映像提供SnapCenter服务器的数据库还原"]
+
+. 查看作业摘要并 `Finish`启动还原作业。
++
+image:snapctr_psql_restore_07.png["此映像提供SnapCenter服务器的数据库还原"]
+
+. 单击正在运行的作业以打开 `Job Details` 窗口。也可以从打开和查看作业状态 `Monitor` 选项卡。
++
+image:snapctr_psql_restore_08.png["此映像提供SnapCenter服务器的数据库还原"]
+
+. 以用户身份登录到PostgreSQL `postgres`、并验证测试表是否已恢复。
++
+....
+
+[postgres@psql01 ~]$ psql
+psql (14.13)
+Type "help" for help.
+
+postgres=# \dt
+        List of relations
+ Schema | Name | Type  |  Owner
+--------+------+-------+----------
+ public | test | table | postgres
+(1 row)
+
+postgres=# select * from test;
+ id |             dt             |                         event
+----+----------------------------+--------------------------------------------------------
+  1 | 2024-10-08 17:55:41.657728 | test PostgreSQL point in time recovery with SnapCenter
+(1 row)
+
+postgres=# select now();
+              now
+-------------------------------
+ 2024-10-08 18:22:33.767208+00
+(1 row)
+
+
+....
+
+
+====
+
+
+=== 数据库克隆
+
+[%collapsible]
+====
+通过SnapCenter进行的PostgreSQL数据库集群克隆会从源数据库数据卷的快照备份创建一个新的精简克隆卷。更重要的是、与其他方法相比、创建生产数据库的克隆副本以支持开发或测试的速度较快(只需几分钟)且效率较高。因此、它可以显著降低存储成本、并改进数据库应用程序生命周期管理。下一节介绍了使用SnapCenter UI的PostgreSQL数据库克隆的工作流。
+
+. 以验证克隆过程。再次在测试表中插入一行。然后运行备份以捕获测试数据。
++
+....
+postgres=# insert into test values (2, now(), 'test PostgreSQL clone to a different DB server host');
+INSERT 0 1
+postgres=# select * from test;
+ id |             dt             |                        event
+----+----------------------------+-----------------------------------------------------
+  2 | 2024-10-11 20:15:04.252868 | test PostgreSQL clone to a different DB server host
+(1 row)
+
+....
+. 在选项卡中 `Resources`、打开数据库集群备份页面。选择包含测试数据的数据库备份的快照。然后、单击 `clone`按钮以启动数据库克隆工作流。
++
+image:snapctr_psql_clone_01.png["此映像为SnapCenter服务器提供了数据库克隆"]
+
+. 选择源数据库服务器以外的其他数据库服务器主机。选择目标主机上未使用的TCP端口543x.
++
+image:snapctr_psql_clone_02.png["此映像为SnapCenter服务器提供了数据库克隆"]
+
+. 输入要在克隆操作前后执行的任何脚本。
++
+image:snapctr_psql_clone_03.png["此映像为SnapCenter服务器提供了数据库克隆"]
+
+. 如果需要、可通过电子邮件发送通知。
++
+image:snapctr_psql_clone_04.png["此映像为SnapCenter服务器提供了数据库克隆"]
+
+. 查看摘要并 `Finish`启动克隆过程。
++
+image:snapctr_psql_clone_05.png["此映像为SnapCenter服务器提供了数据库克隆"]
+
+. 单击正在运行的作业以打开 `Job Details` 窗口。也可以从打开和查看作业状态 `Monitor` 选项卡。
++
+image:snapctr_psql_clone_06.png["此映像提供SnapCenter服务器的数据库还原"]
+
+. 克隆的数据库会立即注册到SnapCenter中。
++
+image:snapctr_psql_clone_07.png["此映像提供SnapCenter服务器的数据库还原"]
+
+. 在目标数据库服务器主机上验证克隆的数据库集群。
++
+....
+
+[postgres@psql01 ~]$ psql -d postgres -h 10.61.186.7 -U postgres -p 5433
+Password for user postgres:
+psql (14.13)
+Type "help" for help.
+
+postgres=# select * from test;
+ id |             dt             |                        event
+----+----------------------------+-----------------------------------------------------
+  2 | 2024-10-11 20:15:04.252868 | test PostgreSQL clone to a different DB server host
+(1 row)
+
+postgres=# select pg_read_file('/etc/hostname') as hostname;
+ hostname
+----------
+ psql02  +
+
+(1 row)
+
+
+....
+
+
+====
+
+
+== 从何处查找追加信息
+
+要了解有关本文档中所述信息的更多信息，请查看以下文档和 / 或网站：
+
+* SnapCenter 软件文档
++
+link:https://docs.netapp.com/us-en/snapcenter/index.html["https://docs.netapp.com/us-en/snapcenter/index.html"^]
+
+* TR-4956：在AWS FSX/EC2中自动部署PostgreSQL高可用性和灾难恢复
++
+link:https://docs.netapp.com/us-en/netapp-solutions/databases/aws_postgres_fsx_ec2_hadr.html["TR-4956：在AWS FSX/EC2中自动部署PostgreSQL高可用性和灾难恢复"^]
+
+
