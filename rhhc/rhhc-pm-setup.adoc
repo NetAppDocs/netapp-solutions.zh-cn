@@ -58,7 +58,7 @@ image:rhhc-trident-helm.png["图中显示了输入/输出对话框或表示已�
 .使用Trident (适用于FSx ONTAP)创建后端和存储类
 [%collapsible]
 ====
-* 请参见 link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-postdeployment.html["此处"] 有关创建后端和存储类的详细信息、请参见。
+* 有关创建后端和存储类的详细信息、请参见link:https://docs.netapp.com/us-en/trident/trident-use/backends.html["此处"]。
 * 从OpenShift控制台使用默认的三端CSI为FsxN创建存储类。请参见以下屏幕截图：
 
 
@@ -72,7 +72,7 @@ image:rhhc-default-storage-class.png["图中显示了输入/输出对话框或�
 * 为集群设置新的Argo CD实例。请参阅说明 link:https://docs.openshift.com/container-platform/4.10/cicd/gitops/setting-up-argocd-instance.html["此处"]。
 
 
-打开Argo CD的控制台并部署应用程序。例如、您可以使用带有Helm Chart的Argo CD部署Jenkins应用程序。创建应用程序时、系统会提供以下详细信息：Project：default cluster： https://kubernetes.default.svc[]命名空间：Jenkins Helm图表的URL： https://charts.bitnami.com/bitnami[]
+打开Argo CD的控制台并部署应用程序。例如、您可以使用带有Helm Chart的Argo CD部署Jenkins应用程序。创建应用程序时、系统会提供以下详细信息：Project：default cluster：'https://kubernetes.default.svc'[](不带引号) Namespace：jenkins the URL for the Helm Chart：(without the'https://charts.bitnami.com/bitnami'[]引号)
 
 Helm参数：globL.storageClass：fsxn-nas
 
