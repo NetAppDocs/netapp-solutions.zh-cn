@@ -4,16 +4,16 @@ permalink: rhhc/rhhc-sm-gcp-setup.html
 keywords: NetApp Solutions, redhat OpenShift, red hat OpenShift, redhat openshift container platform, ocp, openshift container platform, Advanced Cluster Management, ACM, Hub Cluster, containers, container workloads, VMware, customer managed storage, ONTAP, Google Cloud Platform, Google Cloud, GCP 
 summary:  
 ---
-= 在GCP上部署和配置Red Hat OpenShift容器平台
+= 在Google Cloud上部署和配置Red Hat OpenShift容器平台
 :allow-uri-read: 
 
 
 
 
-== 在GCP上部署和配置Red Hat OpenShift容器平台
+== 在Google Cloud上部署和配置Red Hat OpenShift容器平台
 
 [role="lead"]
-本节简要介绍了如何在GCP中设置和管理OpenShift集群以及在这些集群上部署有状态应用程序的工作流。它显示了如何借助Trident使用NetApp Cloud Volumes ONTAP存储来提供永久性卷。本节详细介绍了如何使用Astra Control Center为有状态应用程序执行数据保护和迁移活动。
+本节简要介绍了如何在GCP中设置和管理OpenShift集群以及在这些集群上部署有状态应用程序的工作流。其中展示了如何借助Trident使用Google Cloud NetApp卷和NetApp Cloud Volumes ONTAP存储来提供永久性卷。
 
 下图显示了部署在GCP上并使用VPN连接到数据中心的集群。
 
@@ -24,9 +24,7 @@ NOTE: 可以通过多种方法在GCP中部署Red Hat OpenShift容器平台集群
 
 设置过程可细分为以下步骤：
 
-.使用命令行界面在GCP上安装OCP集群。
-[%collapsible]
-====
+.使用命令行界面在GCP上安装OCP集群
 * 确保您已满足上述所有前提条件 link:https://docs.openshift.com/container-platform/4.13/installing/installing_gcp/installing-gcp-default.html["此处"]。
 * 对于内部和GCP之间的VPN连接、我们会创建并配置一个pfSense VM。有关说明，请参见 https://docs.netgate.com/pfsense/en/latest/recipes/ipsec-s2s-psk.html["此处"]。
 +
@@ -49,34 +47,28 @@ NOTE: 可以通过多种方法在GCP中部署Red Hat OpenShift容器平台集群
 
 
 
-====
-.使用BlueXP在GCP中部署Cloud Volumes ONTAP。
-[%collapsible]
-====
+.部署Google Cloud NetApp卷
+* 可以将Google Cloud NetApp卷添加到您的项目中，如下所述link:https://cloud.google.com/netapp/volumes/docs/discover/overview["此处"]。
+
+
+.使用BlueXP  在GCP中部署Cloud Volumes ONTAP
 * 在Google Cloud中安装连接器。请参阅说明 https://docs.netapp.com/us-en/bluexp-setup-admin/task-install-connector-google-bluexp-gcloud.html["此处"]。
 * 使用连接器在Google Cloud中部署CVO实例。请参阅此处的说明。 https://docs.netapp.com/us-en/bluexp-cloud-volumes-ontap/task-getting-started-gcp.html[]
 
 
-====
 .在GCP的OCP集群中安装Trident
-[%collapsible]
-====
 * 部署Trident的方法有很多，如所示 https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html["此处"]。
 * 对于此项目，Trident是通过按照说明手动部署Trident操作员来安装的 https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy-operator.html["此处"]。
 * 创建后端和存储类。请参阅说明link:https://docs.netapp.com/us-en/trident/trident-use/backends.html["此处"]。
 
 
-====
-.将GCP上的OCP集群添加到Asta Control Center。
-[%collapsible]
-====
+.将GCP上的OCP集群添加到Asta Control Center
 * 创建一个具有集群角色的单独KubeConfig文件、该角色包含由Astra Control管理集群所需的最低权限。可以找到相关说明
 link:https://docs.netapp.com/us-en/astra-control-center/get-started/setup_overview.html#create-a-cluster-role-kubeconfig["此处"]。
 * 按照说明将集群添加到Astra Control Center
 link:https://docs.netapp.com/us-en/astra-control-center/get-started/setup_overview.html#add-cluster["此处"]
 
 
-====
 .对多区域架构使用三元数据的CSI拓扑功能
 如今、云提供商支持Kubbernetes/OpenShift集群管理员生成基于分区的集群节点。节点可以位于一个区域内的不同可用性区域中，也可以位于不同区域之间。为了便于在多区域架构中为工作负载配置卷、Trident使用CSI拓扑。使用 CSI 拓扑功能，可以根据区域和可用性区域将对卷的访问限制为一小部分节点。有关更多详细信息、请参见link:https://docs.netapp.com/us-en/trident/trident-use/csi-topology.html["此处"]。
 

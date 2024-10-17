@@ -26,24 +26,16 @@ NOTE: 此解决方案 已通过在AWS中的两个VPC中使用两个ROSA集群进
 设置过程可细分为以下步骤：
 
 .安装ROSA集群
-[%collapsible]
-====
 * 创建两个VPC并在VPC之间设置VPC对等连接。
 * 请参见 link:https://docs.openshift.com/rosa/welcome/index.html["此处"] 有关安装ROSA集群的说明。
 
 
-====
 .安装FSx ONTAP
-[%collapsible]
-====
 * 从BlueXP  在VPC上安装FSx ONTAP。请参见link:https://docs.netapp.com/us-en/cloud-manager-setup-admin/index.html["此处"]BlueXP  帐户创建并开始使用。有关安装FSx ONTAP的信息、请参见link:https://docs.netapp.com/us-en/cloud-manager-fsx-ontap/index.html["此处"]。有关在AWS中创建连接器以管理FSx ONTAP的信息、请参见link:https://docs.netapp.com/us-en/cloud-manager-setup-admin/index.html["此处"]。
 * 使用AWS部署FSx ONTAP。有关使用AWS控制台进行部署的信息、请参见link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/getting-started-step1.html["此处"]。
 
 
-====
 .在ROSA集群上安装TRIDent (使用Helm图表)
-[%collapsible]
-====
 * 使用Helm图表在ROSA集群上安装三端存储。请参阅文档链接：https://docs NetApp．com/us-en/Kuber/Kubernetes-Get Trident started/Kubernetes-Deploy Trident－helm.html [此处]。
 
 
@@ -54,20 +46,14 @@ NOTE: 当所有受管集群使用ApplicationSet注册到ArgoCD时、可以使用
 
 image:rhhc-trident-helm.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-====
 .使用Trident (适用于FSx ONTAP)创建后端和存储类
-[%collapsible]
-====
 * 有关创建后端和存储类的详细信息、请参见link:https://docs.netapp.com/us-en/trident/trident-use/backends.html["此处"]。
 * 从OpenShift控制台使用默认的三端CSI为FsxN创建存储类。请参见以下屏幕截图：
 
 
 image:rhhc-default-storage-class.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-====
 .使用OpenShift GitOps部署应用程序(Argo CD)
-[%collapsible]
-====
 * 在集群上安装OpenShift GitOps Operator。请参阅说明 link:https://docs.openshift.com/container-platform/4.10/cicd/gitops/installing-openshift-gitops.html["此处"]。
 * 为集群设置新的Argo CD实例。请参阅说明 link:https://docs.openshift.com/container-platform/4.10/cicd/gitops/setting-up-argocd-instance.html["此处"]。
 
@@ -75,5 +61,3 @@ image:rhhc-default-storage-class.png["图中显示了输入/输出对话框或�
 打开Argo CD的控制台并部署应用程序。例如、您可以使用带有Helm Chart的Argo CD部署Jenkins应用程序。创建应用程序时、系统会提供以下详细信息：Project：default cluster：'https://kubernetes.default.svc'[](不带引号) Namespace：jenkins the URL for the Helm Chart：(without the'https://charts.bitnami.com/bitnami'[]引号)
 
 Helm参数：globL.storageClass：fsxn-nas
-
-====

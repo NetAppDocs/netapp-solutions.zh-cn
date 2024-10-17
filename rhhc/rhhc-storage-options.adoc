@@ -26,7 +26,9 @@ ONTAP Storage Virtual Machine (SVM)可提供安全多租户。一个OpenShift集
 
 image:rhhc-storage-options-sc2ontap.png["存储类到ONTAP 关系"]
 
-应用程序所有者使用存储类请求永久性卷。存储类用于筛选后端存储。POD与后端存储之间的关系如下所示。
+应用程序所有者使用存储类请求永久性卷。存储类用于筛选后端存储。
+
+POD与后端存储之间的关系如下所示。
 
 image:rhhc_storage_opt_pod2vol.png["POD与ONTAP 卷之间的关系"]
 
@@ -34,7 +36,9 @@ image:rhhc_storage_opt_pod2vol.png["POD与ONTAP 卷之间的关系"]
 
 == 容器存储接口(CSI)选项
 
-在vSphere环境中、客户可以选择VMware CSI驱动程序和/或Trident CSI与ONTAP集成。使用VMware CSI时、永久性卷会用作本地SCSI磁盘、而使用三端技术时、则会使用网络。由于VMware CSI不支持使用ONTAP 的rwx访问模式、因此如果需要rwx模式、应用程序需要使用TRIDent CSI。对于基于FC的部署、首选使用VMware CSI、而SnapMirror业务连续性(SMBC)可提供区域级高可用性。
+在vSphere环境中、客户可以选择VMware CSI驱动程序和/或Trident CSI与ONTAP集成。使用VMware CSI时、永久性卷会用作本地SCSI磁盘、而使用三端技术时、则会使用网络。
+
+由于VMware CSI不支持使用ONTAP 的rwx访问模式、因此如果需要rwx模式、应用程序需要使用TRIDent CSI。对于基于FC的部署、首选使用VMware CSI、而SnapMirror业务连续性(SMBC)可提供区域级高可用性。
 
 
 
@@ -58,6 +62,8 @@ image:rhhc_storage_opt_pod2vol.png["POD与ONTAP 卷之间的关系"]
 
 对于VMware CSI和Trident CSI、ONTAP均支持对块协议使用nconnect、会话中继、Kerberos等、以及多路径、chap身份验证等。
 
-在AWS中、Amazon FSx for NetApp ONTAP (FSx ONTAP)可以部署在单可用性区域(AZ)或多可用性区域(AZ)中。对于需要高可用性的生产工作负载、与单个AZ相比、多可用性可提供分区级容错、并具有更好的NVMe读取缓存。有关详细信息，请查看 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/performance.html["AWS性能准则"]。为了节省灾难恢复站点的成本、可以使用一个AZ FSx ONTAP。image:rhhc_storage_options_fsxn_options.png["在多可用性分区和单可用性分区之间进行复制"]
+在AWS中、Amazon FSx for NetApp ONTAP (FSx ONTAP)可以部署在单可用性区域(AZ)或多可用性区域(AZ)中。对于需要高可用性的生产工作负载、与单个AZ相比、多可用性可提供分区级容错、并具有更好的NVMe读取缓存。有关详细信息，请查看 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/performance.html["AWS性能准则"]。
+
+为了节省灾难恢复站点的成本、可以使用一个AZ FSx ONTAP。image:rhhc_storage_options_fsxn_options.png["在多可用性分区和单可用性分区之间进行复制"]
 
 有关FSx ONTAP 支持的SVM数量、请参见 link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/managing-svms.html#max-svms["管理FSx ONTAP Storage Virtual Machine"]
