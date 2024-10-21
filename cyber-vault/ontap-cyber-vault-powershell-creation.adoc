@@ -48,7 +48,7 @@ NOTE: 网络存储集群可以与源数据位于同一数据中心、也可以�
 
 
 
-NOTE: 默认保留为"设置为最小值"。作为存储目标的 SnapLock 卷会为其分配默认保留期限。对于SnapLock Compliance卷、此时间段的值最初设置为最小0年、最大30年。首次提交每个 NetApp Snapshot 副本时都会使用此默认保留期限。保留期限可以稍后根据需要延长、但不能缩短。
+NOTE: 默认保留为"设置为最小值"。作为存储目标的 SnapLock 卷会为其分配默认保留期限。此期间的值最初设置为最小0年、最大100年(从ONTAP 9 10.1开始)。对于早期ONTAP版本、SnapLock Compliance卷的值为0 - 70。)首次提交每个 NetApp Snapshot 副本时都会使用此默认保留期限。保留期限可以稍后根据需要延长、但不能缩短。有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap/snaplock/set-retention-period-task.html["设置保留时间概述"^]。
 
 上述步骤包括手动步骤。安全专家建议自动执行此过程、以避免因手动管理而产生较大的错误空间。以下代码段可完全自动执行SnapLock Compliance的前提条件和配置以及时钟初始化。
 
