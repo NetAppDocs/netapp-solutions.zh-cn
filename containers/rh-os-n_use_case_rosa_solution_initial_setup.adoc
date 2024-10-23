@@ -1,0 +1,227 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_use_case_rosa_solution_initial_setup.html 
+keywords: OpenShift, OCP, Trident, NetApp ONTAP, Red Hat OpenShift Service on AWS, 
+summary: 借助NetApp ONTAP在AWS上运行Red Hat OpenShift服务 
+---
+= 借助NetApp ONTAP在AWS上运行Red Hat OpenShift服务
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+
+
+= 初始设置
+
+**1.为FSX**配置NetApp ONTAP
+
+在与ROSA集群相同的VPC中创建适用于NetApp ONTAP的多可用性FSx。可通过多种方法实现此操作。提供了使用CloudFormation堆栈创建FSxN的详细信息
+
+**a.Clone the GitHub re듦 퓚 处**
+
+[source]
+----
+$ git clone https://github.com/aws-samples/rosa-fsx-netapp-ontap.git
+----
+**b.Run the CloudFormation Stack **通过将参数值替换为您自己的值来运行以下命令：
+
+[source]
+----
+$ cd rosa-fsx-netapp-ontap/fsx
+----
+[source]
+----
+$ aws cloudformation create-stack \
+  --stack-name ROSA-FSXONTAP \
+  --template-body file://./FSxONTAP.yaml \
+  --region <region-name> \
+  --parameters \
+  ParameterKey=Subnet1ID,ParameterValue=[subnet1_ID] \
+  ParameterKey=Subnet2ID,ParameterValue=[subnet2_ID] \
+  ParameterKey=myVpc,ParameterValue=[VPC_ID] \
+ParameterKey=FSxONTAPRouteTable,ParameterValue=[routetable1_ID,routetable2_ID] \
+  ParameterKey=FileSystemName,ParameterValue=ROSA-myFSxONTAP \
+  ParameterKey=ThroughputCapacity,ParameterValue=1024 \
+  ParameterKey=FSxAllowedCIDR,ParameterValue=[your_allowed_CIDR] \
+  ParameterKey=FsxAdminPassword,ParameterValue=[Define Admin password] \
+  ParameterKey=SvmAdminPassword,ParameterValue=[Define SVM password] \
+  --capabilities CAPABILITY_NAMED_IAM
+----
+其中：region-name：sas the region where the ROSA cluster is才会部署subnet1_ID：FSxN subnet2_ID的首选子网的ID：FSxN的备用子网的ID VPC_ID：部署ROSA集群的ONTAP的VPC的ID routetable1_ID、routetable2_ID：与所选CIDR规则关联的路由表的ID：允许对所选Sx访问的子网进行控制。您可以使用0.0.0.0/0或任何适当的CIDR允许所有流量访问FSx for ONTAP的特定端口。定义管理员密码：用于登录到FSxN的密码定义SVM密码：用于登录到要创建的SVM的密码。
+
+验证是否已使用Amazon FSx控制台创建文件系统和Storage Virtual Machine (SVM)、如下所示：
+
+image:redhat_openshift_container_rosa_image2.png["已创建FSxN"]
+
+**2.为ROSA群集安装和配置Trident CSI驱动程序**
+
+**a.Add the Trident Helm re듦 在处**
+
+[source]
+----
+$ helm repo add netapp-trident https://netapp.github.io/trident-helm-chart
+----
+**b.Install Trident using Helm**
+
+[source]
+----
+$ helm install trident netapp-trident/trident-operator --version 100.2406.0 --create-namespace --namespace trident
+----
+
+NOTE: 根据您安装的版本、需要在显示的命令中更改version参数。有关正确的版本号、请参见link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy-helm.html["文档。"]。有关安装Trident的其他方法，请参阅《Trident》link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html["文档。"]。
+
+**c.Verify that all Trident Pod are in the running state**
+
+image:redhat_openshift_container_rosa_image3.png["Trident Pod正在运行"]
+
+**3.配置Trident CSI后端以使用FSx for ONTAP (ONTAP NAS)**
+
+Trident后端配置指示Trident如何与存储系统通信(在本示例中为FSx for ONTAP)。要创建后端、我们将提供要连接到的Storage Virtual Machine的凭据、以及集群管理和NFS数据接口。我们将使用link:https://docs.netapp.com/us-en/trident/trident-use/ontap-nas.html["ontap-NAS 驱动程序"]在FSx文件系统中配置存储卷。
+
+**…首先、使用以下YAML"为SVM凭据创建一个密钥
+
+[source]
+----
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backend-fsx-ontap-nas-secret
+  namespace: trident
+type: Opaque
+stringData:
+  username: vsadmin
+  password: <value provided for Define SVM password as a parameter to the Cloud Formation Stack>
+----
+
+NOTE: 您也可以从AWS机密管理器检索为FSxN创建的SVM密码、如下所示。
+
+image:redhat_openshift_container_rosa_image4.png["AWS机密管理器"]
+
+image:redhat_openshift_container_rosa_image5.png["检索密钥"]
+
+**b.Next，使用以下命令将SVM凭据的密钥添加到ROSA集群中**
+
+[source]
+----
+$ oc apply -f svm_secret.yaml
+----
+您可以使用以下命令验证是否已在Trident命名空间中添加此密钥
+
+[source]
+----
+$ oc get secrets -n trident |grep backend-fsx-ontap-nas-secret
+----
+image:redhat_openshift_container_rosa_image6.png["已应用密钥"]
+
+** C.接下来，创建后端对象**为此，移至克隆的Git储存库的**FSX**目录。打开文件backend-ams-naS.yaml ONTAP。将以下内容：** ManagementLIF**替换为管理DNS名称** dataLIF**，替换为Amazon FSx SVM的NFS DNS名称，并将** SVM**替换为SVM名称。使用以下命令创建后端对象。
+
+使用以下命令创建后端对象。
+
+[source]
+----
+$ oc apply -f backend-ontap-nas.yaml
+----
+
+NOTE: 您可以从Amazon FSx控制台获取管理DNS名称、NFS DNS名称和SVM名称、如以下屏幕截图所示
+
+image:redhat_openshift_container_rosa_image7.png["获取生命周期"]
+
+***现在，运行以下命令以验证是否已创建后端对象，并且Phase (阶段)显示bound and Status (绑定)为Success (成功)**
+
+image:redhat_openshift_container_rosa_image8.png["创建后端"]
+
+**4.创建存储类**配置Trident后端后，您可以创建一个Kubbernetes存储类以使用后端。存储类是可供集群使用的资源对象。它介绍并分类您可以为应用程序请求的存储类型。
+
+**…查看FSx文件夹中的storage-class-CSI－NAS．yaml文件。**
+
+[source]
+----
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: trident-csi
+provisioner: csi.trident.netapp.io
+parameters:
+  backendType: "ontap-nas"
+  fsType: "ext4"
+allowVolumeExpansion: True
+reclaimPolicy: Retain
+----
+** b.在ROSA集群中创建存储类、并验证是否Trident已创建ROSA-CSI存储类。**
+
+image:redhat_openshift_container_rosa_image9.png["创建后端"]
+
+至此、Trident CSI驱动程序的安装完成、并完成了它与FSx for ONTAP文件系统的连接。现在、您可以使用FSx for ONTAP上的文件卷在ROSA上部署示例PostgreSQL有状态应用程序。
+
+** C.确认没有使用PVC-sI存储类创建Trident和PV。**
+
+image:redhat_openshift_container_rosa_image10.png["使用Trident时无PVC"]
+
+***验证应用程序是否可以使用Trident Csi.**创建PV
+
+使用**FSX**文件夹中提供的PVC-AML.YAML文件创建Trident。
+
+[source]
+----
+pvc-trident.yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: basic
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: trident-csi
+----
+ You can issue the following commands to create a pvc and verify that it has been created.
+image:redhat_openshift_container_rosa_image11.png["使用Trident创建测试PVC"]
+
+**5.部署示例PostgreSQL有状态应用程序**
+
+**…使用Helm安装PostgreSQL **
+
+[source]
+----
+$ helm install postgresql bitnami/postgresql -n postgresql --create-namespace
+----
+image:redhat_openshift_container_rosa_image12.png["安装PostgreSQL"]
+
+** b.确认应用程序POD正在运行，并且为应用程序创建了PVC和PV。**
+
+image:redhat_openshift_container_rosa_image13.png["PostgreSQL Pod"]
+
+image:redhat_openshift_container_rosa_image14.png["PostgreSQL PVC"]
+
+image:redhat_openshift_container_rosa_image15.png["PostgreSQL PV"]
+
+** C.部署PostgreSQL客户机**
+
+**使用以下命令获取已安装的PostgreSQL服务器的口令。**
+
+[source]
+----
+$ export POSTGRES_PASSWORD=$(kubectl get secret --namespace postgresql postgresql -o jsoata.postgres-password}" | base64 -d)
+----
+**使用以下命令运行PostgreSQL客户机，并使用口令**连接到服务器
+
+[source]
+----
+$ kubectl run postgresql-client --rm --tty -i --restart='Never' --namespace postgresql --image docker.io/bitnami/postgresql:16.2.0-debian-11-r1 --env="PGPASSWORD=$POSTGRES_PASSWORD" \
+> --command -- psql --host postgresql -U postgres -d postgres -p 5432
+----
+image:redhat_openshift_container_rosa_image16.png["PostgreSQL客户端"]
+
+***创建数据库和表。创建表的纲要并将2行数据插入表中。**
+
+image:redhat_openshift_container_rosa_image17.png["PostgreSQL表、模式、行"]
+
+image:redhat_openshift_container_rosa_image18.png["PostgreSQL行1"]
+
+image:redhat_openshift_container_rosa_image19.png["PostgreSQL行2."]

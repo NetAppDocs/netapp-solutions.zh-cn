@@ -1,0 +1,33 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_use_case_openshift_virtualization_workflow_rosa_vm_live_migration.html 
+keywords: OpenShift, OCP, Trident, NetApp ONTAP, Red Hat OpenShift, OpenShift Virtualization, ROSA, CNV, Container Native Virtualization, Red Hat OpenShift Virtualization 
+summary: 基于ROSA的Red Hat OpenShift虚拟化 
+---
+= 虚拟机实时迁移
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+在本节中、我们将执行VM实时迁移、然后检查磁盘的内容。实时迁移是指将正在运行的虚拟机(Virtual Machine、VM)从一台物理主机移动到另一台主机、而不会中断正常操作、也不会导致停机或对最终用户造成其他不利影响的过程。实时迁移被视为虚拟化的一个重要步骤。它允许使用正在运行的操作系统(OS)、内存、存储和网络连接将整个VM从其当前节点移动到目标。下面我们将介绍如何将虚拟机从当前节点实时迁移到新节点。
+
+记下运行VM的节点image:redhat_openshift_ocpv_rosa_image24.png["OCP-v VM当前节点"]
+
+单击3个点、然后选择迁移image:redhat_openshift_ocpv_rosa_image25.png["OCP-v VM实时迁移"]
+
+在"概述"页面上、您可以看到迁移已成功、并且"状态"已更改为"成功"。image:redhat_openshift_ocpv_rosa_image26.png["OCP-v虚拟机迁移成功"]
+
+完成实时迁移后、虚拟机将位于其他节点上。image:redhat_openshift_ocpv_rosa_image27.png["OCP-v虚拟机位于不同节点上"]
+
+打开Web控制台并查看磁盘的内容。它仍具有与实时迁移之前创建的2个文件相同的文件。image:redhat_openshift_ocpv_rosa_image28.png["OCP-v虚拟机在实时迁移后具有相同的文件1"] image:redhat_openshift_ocpv_rosa_image29.png["OCP-v虚拟机在实时迁移后具有相同的文件2."]
+
+新节点上VM的存储仍会显示相同的磁盘image:redhat_openshift_ocpv_rosa_image30.png["在实时迁移后、OCP-v VM具有相同的磁盘"]
+
+此外、这些PVC也是相同的。image:redhat_openshift_ocpv_rosa_image31.png["实时迁移后、OCP-v虚拟机的PVC相同"]
+
+与VM Pod关联的卷也与以前相同(2个PVC)。image:redhat_openshift_ocpv_rosa_image32.png["实时迁移后、OCP-v虚拟机的PVC相同"]

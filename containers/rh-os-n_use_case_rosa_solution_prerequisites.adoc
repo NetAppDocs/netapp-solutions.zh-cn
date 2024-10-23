@@ -1,0 +1,33 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_use_case_rosa_solution_prerequisites.html 
+keywords: OpenShift, OCP, Trident, NetApp ONTAP, Red Hat OpenShift Service on AWS, 
+summary: 借助NetApp ONTAP在AWS上运行Red Hat OpenShift服务 
+---
+= 借助NetApp ONTAP在AWS上运行Red Hat OpenShift服务
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+
+
+= 前提条件
+
+* link:https://signin.aws.amazon.com/signin?redirect_uri=https://portal.aws.amazon.com/billing/signup/resume&client_id=signup["AWS 帐户"]
+* link:https://console.redhat.com/["Red Hat帐户"]
+* IAM用户link:https://www.rosaworkshop.io/rosa/1-account_setup/["具有适当的权限"]、用于创建和访问ROSA集群
+* link:https://aws.amazon.com/cli/["AWS命令行界面"]
+* link:https://console.redhat.com/openshift/downloads["罗莎命令行界面"]
+* link:https://console.redhat.com/openshift/downloads["OpenShift命令行界面"](OC)
+* Helm 3link:https://docs.aws.amazon.com/eks/latest/userguide/helm.html["文档。"]
+* link:https://docs.openshift.com/rosa/rosa_hcp/rosa-hcp-sts-creating-a-cluster-quickly.html["HCP ROSA集群"]
+* link:https://console.redhat.com/openshift/overview["访问Red Hat OpenShift Web控制台"]
+
+
+此图显示了部署在多个澳大利亚地区的ROSA集群。罗莎集群的主节点、基础架构节点位于Red Hat的VPC中，而工作节点位于客户帐户的VPC中。我们将在同一个VPC中创建一个FSx for ONTAP文件系统、并在ROSA集群中安装Trident驱动程序、从而允许此VPC的所有子网连接到文件系统。
+
+image:redhat_openshift_container_rosa_image1.png["罗莎体系结构"]
