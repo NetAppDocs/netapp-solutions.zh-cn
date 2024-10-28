@@ -1,0 +1,126 @@
+---
+sidebar: sidebar 
+permalink: containers/rh-os-n_use_case_rosa_solution_app_workflows.html 
+keywords: OpenShift, OCP, Trident, NetApp ONTAP, Red Hat OpenShift Service on AWS, 
+summary: 借助NetApp ONTAP在AWS上运行Red Hat OpenShift服务 
+---
+= 借助NetApp ONTAP在AWS上运行Red Hat OpenShift服务
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+
+
+== 创建卷快照
+
+**1.创建应用程序卷的快照**在本节中，我们将介绍如何创建与应用程序关联的卷的Trident快照。这将是应用程序数据的时间点副本。如果应用程序数据丢失、我们可以从此时间点副本恢复数据。注意：此快照与ONTAP中的原始卷存储在同一聚合中(内部或云中)。因此、如果ONTAP存储聚合丢失、我们将无法从其快照中恢复应用程序数据。
+
+**…创建卷快照类将以下清单保存在名为volume-snapshot-class.yaml的文件中
+
+[source]
+----
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshotClass
+metadata:
+ name: fsx-snapclass
+driver: csi.trident.netapp.io
+deletionPolicy: Delete
+----
+使用上述清单创建快照。
+
+image:redhat_openshift_container_rosa_image20.png["Snapshot类"]
+
+** b.接下来，创建快照**通过创建卷快照创建现有PVC的快照，以创建PostgreSQL数据的时间点副本。这将创建FSx快照、该快照在文件系统后端几乎不占用任何空间。将以下清单保存在名为volume-Snapshot．yaml的文件中：
+
+[source]
+----
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+ name: postgresql-volume-snap-01
+spec:
+ volumeSnapshotClassName: fsx-snapclass
+ source:
+   persistentVolumeClaimName: data-postgresql-0
+----
+** C.创建卷快照并确认已创建**
+
+删除数据库以模拟数据丢失(由于各种原因可能会发生数据丢失、此处我们只是通过删除数据库来模拟它)
+
+image:redhat_openshift_container_rosa_image21.png["卷快照"]
+
+***删除数据库以模拟数据丢失(由于各种原因可能会发生数据丢失，此处我们只是通过删除数据库来模拟它)**
+
+image:redhat_openshift_container_rosa_image22.png["数据库连接"]
+
+image:redhat_openshift_container_rosa_image23.png["删除数据库"]
+
+
+
+== 从卷快照还原
+
+**1.从Snap照 恢复**在本节中，我们将介绍如何从应用程序卷的Trident快照恢复应用程序。
+
+**…从快照**创建卷克隆
+
+要将卷还原到其先前状态、您必须根据创建的快照中的数据创建一个新的PVC。为此、请将以下清单保存在名为pvC-CLONE .yaml的文件中
+
+[source]
+----
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+ name: postgresql-volume-clone
+spec:
+ accessModes:
+   - ReadWriteOnce
+ storageClassName: trident-csi
+ resources:
+   requests:
+     storage: 8Gi
+ dataSource:
+   name: postgresql-volume-snap-01
+   kind: VolumeSnapshot
+   apiGroup: snapshot.storage.k8s.io
+----
+通过使用快照作为源并使用上述清单创建PVC来创建卷的克隆。应用清单并确保已创建克隆。
+
+image:redhat_openshift_container_rosa_image24.png["从Snapshot克隆PostgreSQL"]
+
+** b.删除初始PostgreSQL安装**
+
+image:redhat_openshift_container_rosa_image25.png["PostgreSQL应用程序删除"]
+
+** C.使用新的克隆PVC**创建新的PostgreSQL应用程序
+
+[source]
+----
+$ helm install postgresql bitnami/postgresql --set primary.persistence.enabled=true --set primary.persistence.existingClaim=postgresql-volume-clone -n postgresql
+----
+image:redhat_openshift_container_rosa_image26.png["PostgreSQL新安装"]
+
+***验证应用程序POD是否处于running状态**
+
+image:redhat_openshift_container_rosa_image27.png["PostgreSQL新安装"]
+
+**验证POD是否使用克隆作为其PVC**
+
+image:redhat_openshift_container_rosa_image28.png["PostgreSQL new install描述"]
+
+image:redhat_openshift_container_rosa_image29.png["新PVC是克隆"]
+
+f)要验证数据库是否已按预期还原、请返回容器控制台并显示现有数据库
+
+image:redhat_openshift_container_rosa_image30.png["数据库已还原"]
+
+
+
+== 演示视频
+
+.Amazon FSx for NetApp ONTAP使用托管控制平台在AWS上运行Red Hat OpenShift服务
+video::213061d2-53e6-4762-a68f-b21401519023[panopto,width=360]
+有关Red Hat OpenShift和OpenShift解决方案的更多视频，请参见link:https://docs.netapp.com/us-en/netapp-solutions/containers/rh-os-n_videos_and_demos.html["此处"]。
