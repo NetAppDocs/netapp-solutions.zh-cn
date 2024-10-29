@@ -1,0 +1,137 @@
+---
+sidebar: sidebar 
+keywords: Cyber vault, cybervault, cyber-vault, data protection, security, ransomware, ONTAP, FAQ 
+permalink: cyber-vault/ontap-cyber-vault-faq.html 
+summary: 本文档包含有关NetApp ONTAP网络存储解决方案的常见问题。 
+---
+= 网络存储常见问题解答
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+本常见问题解答面向NetApp客户和合作伙伴。它回答了有关NetApp基于ONTAP的网络存储参考架构的常见问题。
+
+
+
+== 什么是NetApp网络存储？
+
+网络存储是一种特定的数据保护技术、涉及将数据存储在独立于主IT基础架构的隔离环境中。
+
+网络存储库是一种"气隙"、不可变且不可变的数据存储库、可免受影响主数据的威胁、例如恶意软件、勒索软件或内部威胁。网络存储可通过不可变的NetApp ONTAP Snapshot副本实现、并通过NetApp SnapLock Compliance实现不可删除。在SnapLock Compliance保护下、即使ONTAP管理员或NetApp支持人员也无法修改或删除数据。
+
+使用传统方法进行的空占备份涉及到创建空间以及物理分离主介质和二级介质。网络存储的空中配置包括使用标准数据访问网络之外的单独数据复制网络将Snapshot副本复制到不可删除的目标。
+
+除气隙网络之外、还需要在不需要时禁用网络存储上的所有数据访问和复制协议。这样可以防止目标站点上的数据访问或数据泄漏。使用SnapLock Compliance时、不需要进行物理隔离。SnapLock Compliance可保护您存储的时间点只读Snapshot副本、从而实现快速数据恢复、避免被删除和不可更改。
+
+
+
+== NetApp的网络存储方法
+
+由SnapLock提供支持的NetApp网络存储为企业提供了一个全面而灵活的解决方案、用于保护其最关键的数据资产。通过利用ONTAP中的强化技术、NetApp使您能够创建一个安全、隔离且安全的网络存储库、从而免受不断演变的网络威胁的影响。借助NetApp、您可以确保数据的机密性、完整性和可用性、同时保持存储基础架构的灵活性和效率。
+
+网络存储NetApp参考架构的主要功能包括：
+
+* 安全、隔离的存储基础架构(例如、有气隙的存储系统)
+* 数据的备份副本既不可变、又不可删除
+* 严格且独立的访问控制、多管理员验证和多因素身份验证
+* 快速数据恢复功能
+
+
+
+
+== 网络存储常见问题解答
+
+.网络存储是否是NetApp的产品？
+[%collapsible%open]
+====
+不可以、"网络存储"是一个行业术语。NetApp创建了一个参考架构、便于客户轻松构建自己的网络存储、并利用数十种ONTAP安全功能帮助保护数据免受网络威胁。有关详细信息，请参见link:https://docs.netapp.com/us-en/netapp-solutions/cyber-vault/ontap-cyber-vault-overview.html["ONTAP文档站点"^]。
+
+====
+.使用NetApp的网络存储是否只是LockVault或SnapVault的另一个名称？
+[%collapsible%open]
+====
+LockVault是Data ONTAP 7-Mode的一项功能、在当前版本的ONTAP中不可用。
+
+SnapVault是一个传统术语、用于表示现在SnapMirror的存储策略所实现的目标。此策略允许目标卷保留与源卷不同数量的Snapshot副本。
+
+Cyber Vault将SnapMirror与存储策略和SnapLock Compliance结合使用、以创建不可变且不可删除的数据副本。
+
+====
+.以下哪种NetApp硬件可用于网络存储、FAS、容量闪存或性能闪存？
+[%collapsible%open]
+====
+此网络存储参考架构适用于整个ONTAP硬件产品组合。客户可以使用AFF A系列、AFF C系列或FAS平台作为存储。基于闪存的平台将提供最快的恢复时间、而基于磁盘的平台将提供最经济高效的解决方案。根据要恢复的数据量以及并行执行多个恢复的情况、使用基于磁盘的系统(FAS)可能需要数天到数周才能完成。请咨询NetApp或合作伙伴代表、以正确估算网络存储解决方案的规模、从而满足业务需求。
+
+====
+.是否可以使用Cloud Volumes ONTAP作为网络存储源？
+[%collapsible%open]
+====
+是、但是、使用CVO作为源时、需要将数据复制到一个内置网络存储目标、因为SnapLock Compliance是ONTAP网络存储的一项要求。从基于超群的CVO实例进行数据复制可能会产生传出费用。
+
+====
+.是否可以将Cloud Volumes ONTAP用作网络存储目标？
+[%collapsible%open]
+====
+网络存储架构依赖于ONTAP SnapLock Compliance的不可识别性、专为在本机实施而设计。基于云的Cyber Vault架构正在进行调查、以供日后发布。
+
+====
+.是否可以使用ONTAP Select作为网络存储源？
+[%collapsible%open]
+====
+可以。ONTAP Select可用作基于硬件的网络存储目标的源。
+
+====
+.是否可以将ONTAP Select用作网络存储目标？
+[%collapsible%open]
+====
+不能、不应将ONTAP Select用作网络存储目标、因为它无法使用SnapLock Compliance。
+
+====
+.使用NetApp的网络存储是否仅使用SnapMirror？
+[%collapsible%open]
+====
+不可以、NetApp网络存储架构可利用许多ONTAP功能创建安全、隔离、隔离且经过加固的数据副本。有关可使用的其他技术的详细信息、请参见下一个问题。
+
+====
+.网络存储是否使用了任何其他技术或配置？
+[%collapsible%open]
+====
+NetApp网络存储的基础是SnapMirror和SnapLock Compliance、但使用其他ONTAP功能(例如防篡改Snapshot副本、多因素身份验证(MFA)、多管理员验证、基于角色的访问控制以及远程和本地审核日志记录)可以提高数据的安全性。
+
+====
+.是什么让ONTAP Snapshot副本在网络存储方面优于其他产品？
+[%collapsible%open]
+====
+默认情况下、ONTAP Snapshot副本不可变、并且可以使用SnapLock Compliance使其不可变。甚至连NetApp支持都无法删除SnapLock Snapshot副本。更好的问题是、是什么让NetApp网络存储比业内其他网络存储更出色。首先、ONTAP是全球最安全的存储、并获得了CSFC验证、支持在硬件和软件层存储机密数据和顶级机密数据。有关的详细信息link:https://www.netapp.com/esg/trust-center/compliance/CSfC-Program/["可在此处找到CSFC"^]。此外、ONTAP还可以在存储层进行气隙映射、并由网络存储系统控制复制、以便在网络存储网络中创建气隙。
+
+====
+.网络存储的源卷是否为启用了ONTAP网络结构池的卷(将卷分层到ONTAP S3或StorageGRID)？
+[%collapsible%open]
+====
+不可以、无论使用何种策略、都无法将Fabric Pool源卷复制到SnapLock Compliance目标。
+
+====
+.NetApp网络存储是否使用不同的ONTAP特性或配置文件运行？
+[%collapsible%open]
+====
+不是、它是一个参考架构。客户可以使用link:ontap-create-cyber-vault-task.html["参考架构"]并构建网络存储、也可以使用link:ontap-cyber-vault-powershell-overview.html["用于创建、巩固和验证的PowerShell脚本"]网络存储。
+
+====
+.是否可以在网络存储中启用NFS、SMB和S3等数据协议？
+[%collapsible%open]
+====
+默认情况下、应在网络存储上禁用数据协议以确保其安全。但是、可以在网络存储上启用数据协议、以便访问数据进行恢复或在需要时访问数据。此操作应临时完成、并在恢复完成后禁用。
+
+====
+.您是否可以将现有SnapVault环境转换为网络存储？还是需要重新密封所有内容？
+[%collapsible%open]
+====
+是。可以将一个系统设置为SnapMirror目标(具有存储策略)、禁用数据协议、根据对系统进行加密link:https://docs.netapp.com/us-en/ontap/ontap-security-hardening/security-hardening-overview.html["ONTAP强化指南"^]、将其隔离到安全位置、然后按照参考架构中的其他步骤使其成为网络存储、而无需重新密封目标。
+
+====
+*还有其他问题吗？*请发送电子邮件至mailto：NetApp ng-cyber-vault__LW_AT__@cyber.com[ng-cyber-vault__LW_AT__^ cyvault.com@、NetApp vaultquestions、I ming to to more about：] with your questions！我们将回复您的问题并将其添加到常见问题解答中。
