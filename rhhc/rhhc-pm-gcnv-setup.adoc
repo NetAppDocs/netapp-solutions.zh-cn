@@ -1,0 +1,66 @@
+---
+sidebar: sidebar 
+permalink: rhhc/rhhc-pm-gcnv-setup.html 
+keywords: NetApp Solutions, Redhat OpenShift Dedicated, Red hat OpenShift, redhat openshift container platform, ocp, openshift container platform, Advanced Cluster Management, ACM, Hub Cluster, containers, container workloads, VMware, customer managed storage, ONTAP, Google Cloud, Google Cloud NetApp Volumes 
+summary:  
+---
+= 使用Google Cloud NetApp Volumes在Google Cloud上部署和配置专用OpenShift
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+本节介绍在Google Cloud平台上设置OpenShift专用(OSD)集群的高级工作流。图中显示了NetApp Trident使用Google Cloud NetApp卷作为存储后端、为运行Kubbernetes的有状态应用程序提供永久性卷。
+
+下图展示了部署在Google Cloud上并使用NetApp卷作为后端存储的OSD集群。
+
+image:rhhc-osd-with-gcnv.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+设置过程可细分为以下步骤：
+
+.在Google Cloud中安装OSD集群
+* 如果要将现有VPC用于集群、则必须为OSD集群创建VPC、两个子网、一个云路由器和两个GCP云NAS。有关说明、请参见。link:https://cloud.redhat.com/experts/gcp/osd_preexisting_vpc/["此处"]
+* 有关使用客户云订阅(Customer Cloud订阅、CC)计费模式在GCP上安装OSD集群的说明、请参见link:https://docs.openshift.com/dedicated/osd_install_access_delete_cluster/creating-a-gcp-cluster.html#osd-create-gcp-cluster-ccs_osd-creating-a-cluster-on-gcp["此处"]。OSD也包含在Google Cloud Marketplace中。有关如何使用Google Cloud Marketplace解决方案安装OSD的视频，请参见link:https://www.youtube.com/watch?v=p9KBFvMDQJM["此处"]。
+
+
+.启用Google Cloud NetApp卷
+* 有关设置对Google Cloud NetApp卷的访问权限的信息、请参见link:https://cloud.google.com/netapp/volumes/docs/get-started/configure-access/workflow["此处"]。按照到和(包括)的所有步骤进行操作
+* 创建存储池。有关如何在Google Cloud NetApp卷上设置存储池的信息、请参见link:https://cloud.google.com/netapp/volumes/docs/get-started/quickstarts/create-storage-pool#create_a_storage_pool["此处"]。系统将在存储池中为OSD上运行的有状态Kub并 有状态的Kubnetes应用程序创建卷。
+
+
+.在OSD集群上安装TRIDent (使用Helm图表)
+* 使用Helm图表在OSD集群上安装Trident。有关如何安装Helm Chart的说明、请参见link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy-helm.html#critical-information-about-astra-trident-24-06["此处"]。可以找到Helm图表link:https://github.com/NetApp/trident/tree/master/helm/trident-operator["此处"]。
+
+
+.将NetApp卷与适用于OSD集群的NetApp Trident集成
+使用Trident (适用于Google Cloud NetApp卷)创建后端和存储类
+
+* 有关创建后端的详细信息、请参见此处。
+* 如果Kubnetes中的任何当前存储类标记为默认值、请通过编辑此存储类来删除此标注。
+* 使用Asta Trident CSI配置程序为NetApp卷至少创建一个存储类。使用标注将其中一个存储类设置为默认存储类。这样、当PVC清单中未明确调用此存储类时、PVC便可使用此类。下面显示了一个标注示例。
+
+
+[source]
+----
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gcnv-standard-k8s
+  annotations:
+    storageclass.kubernetes.io/is-default-class: “true”
+provisioner: csi.trident.netapp.io
+parameters:
+  backendType: "google-cloud-netapp-volumes"
+  trident.netapp.io/nasType: "nfs"
+allowVolumeExpansion: true
+----
+.使用OpenShift GitOps部署应用程序(Argo CD)
+* 在集群上安装OpenShift GitOps Operator。请参阅说明link:https://docs.openshift.com/gitops/1.13/installing_gitops/installing-openshift-gitops.html["此处"]。
+* 为集群设置新的Argo CD实例。请参阅说明link:https://docs.openshift.com/gitops/1.13/argocd_instance/setting-up-argocd-instance.html["此处"]。
+
+
+打开Argo CD的控制台并部署应用程序。例如、您可以使用带有Helm Chart的Argo CD部署Jenkins应用程序。创建应用程序时、系统会提供以下详细信息：Project：default cluster：'https://kubernetes.default.svc'[](不带引号) Namespace：jenkins the URL for the Helm Chart：(without the'https://charts.bitnami.com/bitnami'[]引号)
