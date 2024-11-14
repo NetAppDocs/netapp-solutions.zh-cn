@@ -25,7 +25,7 @@ summary:
 ====
 要在 GCP 上配置 GCVE 环境，请登录到 GCP 控制台并访问 VMware 引擎门户。
 
-单击 " 新建私有云 " 按钮，然后输入所需的 GCVE 私有云配置。在 " 位置 " 上，确保在部署 CVS/CVO 的同一区域 / 区域部署私有云，以确保最佳性能和最低延迟。
+单击 " 新建私有云 " 按钮，然后输入所需的 GCVE 私有云配置。在"位置"上、确保将私有云部署在部署NetApp Volumes/CVO的同一区域/区域中、以确保性能最佳、延迟最低。
 
 前提条件：
 
@@ -44,7 +44,7 @@ image:gcve-deploy-1.png["图中显示了输入/输出对话框或表示已写入
 ====
 配置私有云后，配置对私有云的私有访问，以实现高吞吐量和低延迟的数据路径连接。
 
-这将确保运行 Cloud Volumes ONTAP 实例的 VPC 网络能够与 GCVE 私有云进行通信。要执行此操作，请按照 link:https://cloud.google.com/architecture/partners/netapp-cloud-volumes/quickstart["GCP 文档"]。对于云卷服务，通过在租户主机项目之间执行一次性对等操作，在 VMware 引擎和 Cloud Volumes Service 之间建立连接。有关详细步骤，请按照此步骤进行操作 link:https://cloud.google.com/vmware-engine/docs/vmware-ecosystem/howto-cloud-volumes-service["链接。"]。
+这将确保运行 Cloud Volumes ONTAP 实例的 VPC 网络能够与 GCVE 私有云进行通信。要执行此操作，请执行link:https://cloud.google.com/architecture/partners/netapp-cloud-volumes/quickstart["GCP 文档"]。对于云卷服务、通过在租户主机项目之间执行一次性对等操作、在VMware引擎和Google Cloud NetApp Volumes之间建立连接。有关详细步骤，请执行以下操作link:https://cloud.google.com/vmware-engine/docs/vmware-ecosystem/howto-cloud-volumes-service["链接。"]。
 
 image:gcve-access-1.png["图中显示了输入/输出对话框或表示已写入内容"]
 
@@ -61,9 +61,9 @@ image:gcve-access-3.png["图中显示了输入/输出对话框或表示已写入
 image:gcve-access-4.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 ====
-.将NetApp云卷服务补充数据存储库部署到GCVe
+.将Google Cloud NetApp卷补充数据存储库部署到GCVE
 [%collapsible]
 ====
-请参见 link:gcp-ncvs-datastore.html["操作步骤使用NetApp CVS将补充NFS数据存储库部署到GCVE"]
+请参阅link:gcp-ncvs-datastore.html["将包含NetApp卷的补充NFS数据存储库部署到GCVE)的过程"]
 
 ====

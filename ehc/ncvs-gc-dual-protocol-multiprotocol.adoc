@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: ehc/ncvs-gc-dual-protocol-multiprotocol.html 
 keywords: access control, user mapping, permission model 
-summary: 通过Cloud Volumes Service 、可以向SMB和NFS客户端共享相同的数据集、同时保持适当的访问权限双协议。这是通过协调协议之间的身份映射以及使用中央后端LDAP服务器向Cloud Volumes Service 提供UNIX身份来实现的。您可以使用Windows Active Directory为Windows和UNIX用户提供方便易用的功能。 
+summary: 通过Google Cloud NetApp卷、可以将相同的数据集同时共享给SMB和NFS客户端、同时保持适当的双协议访问权限。这是通过协调协议之间的身份映射以及使用集中式后端LDAP服务器为Google Cloud NetApp卷提供UNIX身份来实现的。您可以使用Windows Active Directory为Windows和UNIX用户提供方便易用的功能。 
 ---
 = 双协议/多协议
 :hardbreaks:
@@ -14,13 +14,13 @@ summary: 通过Cloud Volumes Service 、可以向SMB和NFS客户端共享相同�
 
 
 [role="lead"]
-通过Cloud Volumes Service 、可以向SMB和NFS客户端共享相同的数据集、同时保持适当的访问权限 (https://cloud.google.com/architecture/partners/netapp-cloud-volumes/managing-dual-protocol-access["双协议"^]）。这是通过协调协议之间的身份映射以及使用中央后端LDAP服务器向Cloud Volumes Service 提供UNIX身份来实现的。您可以使用Windows Active Directory为Windows和UNIX用户提供方便易用的功能。
+Google Cloud NetApp卷提供了向SMB和NFS客户端共享相同数据集的功能，同时保持适当的访问权限(https://cloud.google.com/architecture/partners/netapp-cloud-volumes/managing-dual-protocol-access["双协议"^])。这是通过协调协议之间的身份映射以及使用集中式后端LDAP服务器为Google Cloud NetApp卷提供UNIX身份来实现的。您可以使用Windows Active Directory为Windows和UNIX用户提供方便易用的功能。
 
 
 
 == 访问控制
 
-* *共享访问控制。*确定哪些客户端和/或用户和组可以访问NAS共享。对于NFS、导出策略和规则控制客户端对导出的访问。NFS导出可通过Cloud Volumes Service 实例进行管理。SMB使用CIFS/SMB共享和共享ACL、在用户和组级别提供更精细的控制。您只能使用对SMB Cloud Volumes Service实例具有管理员权限的帐户通过管理^从https://library.netapp.com/ecmdocs/ECMP1401220/html/GUID-C1772CDF-8AEE-422B-AB87-CFCB7E50FF94.html[MMC/Computer客户端配置共享级ACL (请参见链接：ncs-gc-sb.html#Accounts with local/BUILTIN administrator/backup rights ["Accounts with local/BUILTIN administrator/backup rights。"]部分)。
+* *共享访问控制。*确定哪些客户端和/或用户和组可以访问NAS共享。对于NFS、导出策略和规则控制客户端对导出的访问。NFS导出可通过Google Cloud NetApp卷实例进行管理。SMB使用CIFS/SMB共享和共享ACL、在用户和组级别提供更精细的控制。您只能从客户端配置共享级ACL、方法是使用https://library对Google NetApp NetApp实例具有管理员权限的帐户(请参见链接：ncpvs-ab87 CFCB7E50FF94.html[MMC/计算机管理^]和本地/本地/管理员帐户的备份权限部分)。
 * *文件访问控制。*在文件或文件夹级别控制权限、并且始终从NAS客户端进行管理。NFS客户端可以使用传统模式位(rwx)或NFSv4 ACL。SMB客户端利用NTFS权限。
 
 
@@ -30,11 +30,11 @@ summary: 通过Cloud Volumes Service 、可以向SMB和NFS客户端共享相同�
 
 == 用户映射
 
-当客户端访问卷时、Cloud Volumes Service 会尝试反向将传入用户映射到有效用户。这一点对于跨协议确定正确的访问权限以及确保请求访问的用户确实是他们所宣称的用户是必不可少的。
+当客户端访问某个卷时、Google Cloud NetApp Volumes会尝试将传入用户反向映射到有效用户。这一点对于跨协议确定正确的访问权限以及确保请求访问的用户确实是他们所宣称的用户是必不可少的。
 
-例如、如果名为`joe`的Windows用户尝试通过SMB访问具有UNIX权限的卷、则Cloud Volumes Service 将执行搜索以查找名为`joe`的相应UNIX用户。如果存在一个、则以Windows用户`joe`的身份写入SMB共享的文件在NFS客户端中显示为UNIX用户`joe`。
+例如，如果名为的Windows用户 `joe`尝试通过SMB访问具有UNIX权限的卷，则Google Cloud NetApp Volumes将执行搜索以查找名为的相应UNIX用户 `joe`。如果存在、则以Windows用户身份写入SMB共享的文件从NFS客户端显示为UNIX `joe`用户 `joe`。
 
-或者、如果名为`Joe`的UNIX用户尝试使用Windows权限访问Cloud Volumes Service 卷、则UNIX用户必须能够映射到有效的Windows用户。否则、将拒绝对卷的访问。
+或者、如果名为的UNIX用户 `joe`尝试使用Windows权限访问Google Cloud NetApp卷、则该UNIX用户必须能够映射到有效的Windows用户。否则、将拒绝对卷的访问。
 
 目前、只有Active Directory支持使用LDAP进行外部UNIX身份管理。有关配置对此服务的访问权限的详细信息、请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/creating-smb-volumes["创建AD连接"^]。
 
@@ -42,10 +42,10 @@ summary: 通过Cloud Volumes Service 、可以向SMB和NFS客户端共享相同�
 
 == 权限模型
 
-使用双协议设置时、Cloud Volumes Service 会使用卷的安全模式来确定ACL的类型。这些安全模式是根据指定的NAS协议设置的、对于双协议、则是在创建Cloud Volumes Service 卷时选择的。
+使用双协议设置时、Google Cloud NetApp卷会使用卷的安全模式来确定ACL的类型。这些安全模式是根据指定的NAS协议设置的、对于双协议、则是在创建Google Cloud NetApp卷时选择的。
 
-* 如果您仅使用NFS、则Cloud Volumes Service 卷将使用UNIX权限。
-* 如果您仅使用SMB、则Cloud Volumes Service 卷将使用NTFS权限。
+* 如果您仅使用NFS、则Google Cloud NetApp卷将使用UNIX权限。
+* 如果您仅使用SMB、则Google Cloud NetApp卷将使用NTFS权限。
 
 
 如果要创建双协议卷、则可以在创建卷时选择ACL模式。应根据所需的权限管理来做出此决策。如果您的用户从Windows/SMB客户端管理权限、请选择NTFS。如果您的用户希望使用NFS客户端和chmod/chown、请使用UNIX安全模式。

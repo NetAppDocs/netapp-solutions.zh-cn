@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: ehc/ncvs-gc-data-encryption-at-rest.html 
 keywords: aes-256 encryption, cmek 
-summary: Cloud Volumes Service 中的所有卷都使用AES-256加密进行空闲加密、这意味着写入介质的所有用户数据都将进行加密、并且只能使用每个卷的密钥进行解密。 
+summary: Google Cloud NetApp卷中的所有卷均使用AES-256加密进行空闲加密、这意味着写入到介质中的所有用户数据均已加密、只能使用每个卷的密钥进行解密。 
 ---
 = 空闲数据加密
 :hardbreaks:
@@ -14,12 +14,12 @@ summary: Cloud Volumes Service 中的所有卷都使用AES-256加密进行空闲
 
 
 [role="lead"]
-Cloud Volumes Service 中的所有卷都使用AES-256加密进行空闲加密、这意味着写入介质的所有用户数据都将进行加密、并且只能使用每个卷的密钥进行解密。
+Google Cloud NetApp卷中的所有卷均使用AES-256加密进行空闲加密、这意味着写入到介质中的所有用户数据均已加密、只能使用每个卷的密钥进行解密。
 
-* 对于CVS-SW、使用Google生成的密钥。
-* 对于CVS-Performance、每个卷的密钥存储在Cloud Volumes Service 中内置的密钥管理器中。
+* 对于NetApp Volume-SW、使用Google生成的密钥。
+* 对于NetApp卷性能、每个卷的密钥存储在Google Cloud NetApp卷内置的密钥管理器中。
 
 
 自2021年11月起、提供了预览客户管理的加密密钥(CMEK)功能。这样、您就可以使用中托管的每个项目的每个区域主密钥对每个卷的密钥进行加密 https://cloud.google.com/kms/docs["Google密钥管理服务(KMS)。"^] 您可以通过Kms连接外部密钥管理器。
 
-有关为KMS配置CVS-Performance的信息、请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/customer-managed-keys?hl=en_US["设置客户管理的加密密钥"^]。
+有关为NetApp卷性能配置KMS的信息，请参见 https://cloud.google.com/architecture/partners/netapp-cloud-volumes/customer-managed-keys?hl=en_US["设置客户管理的加密密钥"^]。

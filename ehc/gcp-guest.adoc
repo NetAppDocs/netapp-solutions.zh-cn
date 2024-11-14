@@ -14,7 +14,7 @@ summary:
 
 
 [role="lead"]
-GCP支持使用Cloud Volumes ONTAP (CVO)或Cloud Volumes Service (CVS)的子系统连接的NetApp存储。
+GCP支持使用Cloud Volumes ONTAP (CVO)或Google Cloud NetApp卷(NetApp卷)连接到子系统的NetApp存储。
 
 
 
@@ -216,27 +216,27 @@ image:gcve-cvo-guest-26.png["图中显示了输入/输出对话框或表示已�
 ====
 
 
-== Cloud Volumes Service (CVS)
+== Google Cloud NetApp卷(NetApp卷)
 
-Cloud Volumes Services (CVS)是一套完整的数据服务产品组合、可提供高级云解决方案。Cloud Volumes Services支持为主要云提供商提供多种文件访问协议(NFS和SMB支持)。
+Google Cloud NetApp Volumes (NetApp Volumes)是一套完整的数据服务产品组合、用于提供高级云解决方案。NetApp卷支持主要云提供商使用多种文件访问协议(NFS和SMB支持)。
 
 其他优势和功能包括：使用Snapshot进行数据保护和还原；在内部或云端复制、同步和迁移数据目标的特殊功能；以及在专用闪存存储系统级别实现一致的高性能。
 
 
 
-=== Cloud Volumes Service （ CVS ）作为子系统连接的存储
+=== Google Cloud NetApp卷(NetApp卷)作为子系统连接的存储
 
-.使用 VMware 引擎配置 Cloud Volumes Service
+.使用VMware引擎配置NetApp卷
 [%collapsible]
 ====
-可以从 VMware 引擎环境中创建的 VM 挂载 Cloud Volumes Service 共享。由于 Cloud Volumes Service 支持 SMB 和 NFS 协议，因此这些卷也可以挂载到 Linux 客户端并映射到 Windows 客户端。可以通过简单的步骤设置 Cloud Volumes Service 卷。
+可以从VMware引擎环境中创建的VM挂载Google Cloud NetApp卷共享。由于Google Cloud NetApp卷支持SMB和NFS协议、因此也可以在Linux客户端上挂载卷并将其映射到Windows客户端。只需简单的步骤即可设置Google Cloud NetApp卷。
 
-Cloud Volume Service 和 Google Cloud VMware Engine 私有云必须位于同一区域。
+Google Cloud NetApp Volumes和Google Cloud VMware引擎私有云必须位于同一区域。
 
-要从 Google 云市场购买，启用和配置适用于 Google Cloud 的 NetApp Cloud Volumes Service ，请按照以下详细信息进行操作 link:https://cloud.google.com/vmware-engine/docs/quickstart-prerequisites["指南"]。
+要从Google云市场购买、启用和配置适用于Google Cloud的Google Cloud NetApp卷，请按照以下详细说明进行操作link:https://cloud.google.com/vmware-engine/docs/quickstart-prerequisites["指南"]。
 
 ====
-.创建一个 CVS NFS 卷到 GCVE 私有云
+.创建NetApp卷NFS卷到GCVA私有云
 [%collapsible]
 ====
 要创建和挂载 NFS 卷，请完成以下步骤：
@@ -253,7 +253,7 @@ image:gcve-cvs-guest-2.png["图中显示了输入/输出对话框或表示已写
 +
 image:gcve-cvs-guest-3.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-. 选择相应的服务。对于 GCVE ，请选择 CVS-Performance 和所需的服务级别，以根据应用程序工作负载要求提高延迟和性能。
+. 选择相应的服务。对于GCVI、请根据应用程序工作负载要求选择NetApp Volume-Performance和所需服务级别、以缩短延迟并提高性能。
 +
 image:gcve-cvs-guest-4.png["图中显示了输入/输出对话框或表示已写入内容"]
 
@@ -271,7 +271,7 @@ image:gcve-cvs-guest-7.png["图中显示了输入/输出对话框或表示已写
 
 . 在此步骤中，选择可从中访问卷的 VPC 网络。确保已建立 VPC 对等关系。
 +
-提示：如果尚未建立 VPC 对等关系，则会显示一个弹出按钮，用于指导您完成对等命令。打开 Cloud Shell 会话并执行相应的命令，将您的 VPC 与 Cloud Volumes Service 生产者建立对等关系。如果您决定事先准备 VPC 对等关系，请参见以下说明。
+提示：如果尚未建立 VPC 对等关系，则会显示一个弹出按钮，用于指导您完成对等命令。打开一个云Shell会话并执行相应的命令、将VPC与Google Cloud NetApp Volumes生成器建立对等关系。如果您决定事先准备 VPC 对等关系，请参见以下说明。
 
 +
 image:gcve-cvs-guest-8.png["图中显示了输入/输出对话框或表示已写入内容"]
@@ -345,7 +345,7 @@ image:gcve-cvs-guest-30.png["图中显示了输入/输出对话框或表示已�
 +
 image:gcve-cvs-guest-31.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-. 选择相应的服务。对于 GCVE ，请选择 CVS-Performance 和所需的服务级别，以根据工作负载要求提高延迟和性能。
+. 选择相应的服务。对于GCVI、请根据工作负载要求选择NetApp Volume-Performance和所需服务级别、以缩短延迟并提高性能。
 +
 image:gcve-cvs-guest-32.png["图中显示了输入/输出对话框或表示已写入内容"]
 
@@ -363,7 +363,7 @@ image:gcve-cvs-guest-35.png["图中显示了输入/输出对话框或表示已�
 
 . 在此步骤中，选择可从中访问卷的 VPC 网络。确保已建立 VPC 对等关系。
 +
-提示：如果尚未建立 VPC 对等关系，则会显示一个弹出按钮，用于指导您完成对等命令。打开 Cloud Shell 会话并执行相应的命令，将您的 VPC 与 Cloud Volumes Service 生产者建立对等关系。如果您决定事先准备 VPC 对等关系，请参见以下内容 link:https://cloud.google.com/architecture/partners/netapp-cloud-volumes/setting-up-private-services-access?hl=en["说明"]。
+提示：如果尚未建立 VPC 对等关系，则会显示一个弹出按钮，用于指导您完成对等命令。打开一个云Shell会话并执行相应的命令、将VPC与Google Cloud NetApp Volumes生成器建立对等关系。如果您事先决定在中准备VPC对等，请参阅以下内容link:https://cloud.google.com/architecture/partners/netapp-cloud-volumes/setting-up-private-services-access?hl=en["说明"]。
 
 +
 image:gcve-cvs-guest-36.png["图中显示了输入/输出对话框或表示已写入内容"]

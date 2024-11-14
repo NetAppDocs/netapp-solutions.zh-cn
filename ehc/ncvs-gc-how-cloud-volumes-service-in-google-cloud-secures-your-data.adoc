@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: ehc/ncvs-gc-how-cloud-volumes-service-in-google-cloud-secures-your-data.html 
 keywords: secure, architecture, tenancy model, identity management, control plane, security hardening, encryption, zero trust, ransomware 
-summary: Google Cloud中的Cloud Volumes Service 提供了多种本机保护数据安全的方法。 
+summary: Google Cloud中的Google Cloud NetApp Volumes提供了多种方法来本机保护您的数据。 
 ---
-= Google Cloud中的Cloud Volumes Service 如何保护您的数据安全
+= Google Cloud中的Google Cloud NetApp Volumes如何保护您的数据
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,21 +14,21 @@ summary: Google Cloud中的Cloud Volumes Service 提供了多种本机保护数�
 
 
 [role="lead"]
-Google Cloud中的Cloud Volumes Service 提供了多种本机保护数据安全的方法。
+Google Cloud中的Google Cloud NetApp Volumes提供了多种方法来本机保护您的数据。
 
 
 
 == 安全架构和租户模式
 
-Cloud Volumes Service 通过在不同端点之间分段服务管理(控制平面)和数据访问(数据平面)、在Google Cloud中提供一个安全的架构、这样两者都不会影响另一端(请参见一节) link:ncvs-gc-cloud-volumes-service-architecture.html["Cloud Volumes Service 架构"]）。它使用Google https://cloud.google.com/vpc/docs/private-services-access?hl=en_US["私有服务访问"^] (PSA)提供服务的框架。此框架区分由NetApp提供和运营的服务生产者和客户项目中托管要访问Cloud Volumes Service 文件共享的客户端的虚拟私有云(Virtual Private Cloud、VPC)服务使用者。
+Google Cloud NetApp Volumes通过在不同端点之间分割服务管理(控制平台)和数据访问(数据平台)，从而在Google Cloud中提供安全架构，从而使两者都不会彼此影响(请参见一节link:ncvs-gc-cloud-volumes-service-architecture.html[""Google Cloud NetApp Volumes架构""])。它使用Google https://cloud.google.com/vpc/docs/private-services-access?hl=en_US["私有服务访问"^] (PSA)框架提供服务。此框架区分由NetApp提供和运营的服务生产者和客户项目中托管要访问Google Cloud NetApp卷文件共享的客户端的虚拟私有云(Virtual Private Cloud、VPC)服务使用者。
 
-在此架构中、租户(请参见第节 link:ncvs-gc-cloud-volumes-service-architecture.html#tenancy-model[""租户模式""])定义为除非用户明确连接、否则彼此完全隔离的Google Cloud项目。通过租户、可以使用Cloud Volumes Service 卷平台将数据卷、外部名称服务以及解决方案 的其他基本部分与其他租户完全隔离。由于Cloud Volumes Service 平台是通过VPC对等连接的、因此这种隔离也会对其进行适用场景。您可以使用共享VPC在多个项目之间共享Cloud Volumes Service 卷(请参见一节) link:ncvs-gc-cloud-volumes-service-architecture.html#shared-vpcs[""共享VPC""]）。您可以对SMB共享和NFS导出应用访问控制、以限制可以查看或修改数据集的用户或对象。
+在此架构中，租户(请参见一节link:ncvs-gc-cloud-volumes-service-architecture.html#tenancy-model[""租户模式""])被定义为除非用户明确连接，否则彼此完全隔离的Google Cloud项目。租户可以使用Google Cloud NetApp Volumes卷平台将数据卷、外部名称服务和解决方案的其他基本部分与其他租户完全隔离。由于Google Cloud NetApp Volumes平台是通过VPC对等连接的、因此这种隔离也适用于它。您可以使用共享VPC在多个项目之间共享Google Cloud NetApp卷(请参见一节link:ncvs-gc-cloud-volumes-service-architecture.html#shared-vpcs[""共享VPC""])。您可以对SMB共享和NFS导出应用访问控制、以限制可以查看或修改数据集的用户或对象。
 
 
 
 == 为控制平台提供强大的身份管理功能
 
-在进行Cloud Volumes Service 配置的控制平面中、身份管理通过进行管理 https://cloud.google.com/iam/docs/overview["身份访问管理(IAM)"^]。IAM是一项标准服务、可用于控制对Google Cloud项目实例的身份验证(登录)和授权(权限)。所有配置都使用Cloud Volumes Service API通过使用TLS 1.2加密的安全HTTPS传输执行、而身份验证则使用JWT令牌执行、以提高安全性。适用于Cloud Volumes Service 的Google控制台UI可将用户输入转换为Cloud Volumes Service API调用。
+在进行Google Cloud NetApp卷配置的控制平台中，使用管理身份管理 https://cloud.google.com/iam/docs/overview["身份访问管理(IAM)"^]。IAM是一项标准服务、可用于控制对Google Cloud项目实例的身份验证(登录)和授权(权限)。所有配置均通过使用TLS 1.2加密的安全HTTPS传输使用Google Cloud NetApp卷API执行、身份验证则使用JWT令牌 执行、以提高安全性。适用于Google Cloud NetApp卷的Google控制台UI可将用户输入转换为Google Cloud NetApp卷API调用。
 
 
 
@@ -36,7 +36,7 @@ Cloud Volumes Service 通过在不同端点之间分段服务管理(控制平面
 
 有效安全性的一部分是限制服务中可用的攻击面数。攻击面可能包括各种内容、包括空闲数据、正在传输的数据、登录信息以及数据集本身。
 
-托管服务可从其设计中消除某些固有的攻击面。基础架构管理、如一节所述 link:ncvs-gc-service-operation.html[""服务操作"、"] 由专门的团队处理、并可自动执行、以减少人员实际接触配置的次数、从而有助于减少有意和无意的错误数量。网络隔离、以便只有必要的服务才能彼此访问。加密会插入到数据存储中、只有数据平面需要Cloud Volumes Service 管理员的安全注意。通过隐藏API接口背后的大部分管理内容、可通过限制攻击面来实现安全性。
+托管服务可从其设计中消除某些固有的攻击面。如本节所述、基础架构管理link:ncvs-gc-service-operation.html[""服务操作"、"]由一个专门的团队处理、并可通过自动化来减少人员实际接触配置的次数、从而有助于减少有意和无意的错误数量。网络隔离、以便只有必要的服务才能彼此访问。加密功能会融入到数据存储中、只有数据平面需要Google Cloud NetApp卷管理员的安全关注。通过隐藏API接口背后的大部分管理内容、可通过限制攻击面来实现安全性。
 
 
 
@@ -53,7 +53,7 @@ Zero Trust已成为一种全新的安全方法、目前的口号是"不信任任
 * 拥有数字审核和纸质跟踪的一小部分专属管理员
 
 
-在Google Cloud中运行的Cloud Volumes Service 通过实施"不信任、不验证一切"的立场、遵循零信任模式。
+在Google Cloud中运行的Google Cloud NetApp Volumes通过实施"无信任、验证一切"立场、遵循零信任模式。
 
 
 
@@ -65,10 +65,10 @@ Zero Trust已成为一种全新的安全方法、目前的口号是"不信任任
 
 == 数据保护和备份
 
-安全性不仅仅是为了防止攻击。此外、还需要了解我们如何从发生的攻击中恢复。此策略包括数据保护和备份。Cloud Volumes Service 提供了在发生中断时复制到其他区域的方法(请参见一节 link:ncvs-gc-security-considerations-and-attack-surfaces.html#cross-region-replication[""跨区域复制""])或数据集受勒索软件攻击影响时。此外、它还可以使用将数据异步备份到Cloud Volumes Service 实例以外的位置 link:ncvs-gc-security-considerations-and-attack-surfaces.html#cloud-volumes-service-backup["Cloud Volumes Service 备份"]。通过定期备份、减少安全事件所需的时间、为管理员节省资金并提高效率。
+安全性不仅仅是为了防止攻击。此外、还需要了解我们如何从发生的攻击中恢复。此策略包括数据保护和备份。Google Cloud NetApp Volumes提供了在发生中断(请参见一节link:ncvs-gc-security-considerations-and-attack-surfaces.html#cross-region-replication[""跨区域复制""])或数据集受勒索软件攻击影响时复制到其他区域的方法。它还可以使用将数据异步备份到Google Cloud NetApp卷实例之外的位置link:ncvs-gc-security-considerations-and-attack-surfaces.html#cloud-volumes-service-backup["Google Cloud NetApp卷备份"]。通过定期备份、减少安全事件所需的时间、为管理员节省资金并提高效率。
 
 
 
 == 利用行业领先的Snapshot副本快速减少勒索软件
 
-除了数据保护和备份之外、Cloud Volumes Service 还支持不可变的Snapshot副本(请参见一节) link:ncvs-gc-security-considerations-and-attack-surfaces.html#immutable-snapshot-copies[""不可变的Snapshot副本""])允许从勒索软件攻击中恢复的卷(请参见一节 link:ncvs-gc-service-operation.html[""服务操作""])在发现问题描述 后数秒内完成、中断最少。恢复时间和影响取决于Snapshot计划、但您可以创建Snapshot副本、在勒索软件攻击中只能提供一小时的增量。Snapshot副本对性能和容量使用的影响微乎其微、是一种低风险、高回报的数据集保护方法。
+除了数据保护和备份之外、Google Cloud NetApp Volumes还支持link:ncvs-gc-security-considerations-and-attack-surfaces.html#immutable-snapshot-copies[""不可变的Snapshot副本""]卷的不可移动Snapshot副本(请参见第节)、这些卷允许link:ncvs-gc-service-operation.html[""服务操作""]在发现问题后数秒内从勒索软件攻击(请参见第节)中恢复、并且中断最少。恢复时间和影响取决于Snapshot计划、但您可以创建Snapshot副本、在勒索软件攻击中只能提供一小时的增量。Snapshot副本对性能和容量使用的影响微乎其微、是一种低风险、高回报的数据集保护方法。

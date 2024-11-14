@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: automation/cloud_volumes_terraform.html 
-keywords: AWS, Azure, GCP, FSX, CVO, ANF, CVS, Terraform, automation 
+keywords: AWS, Azure, GCP, FSX, CVO, ANF, NetApp Volumes, Terraform, automation 
 summary: 此页面介绍了使用 Terraform 在云提供商（ AWS ， Azure ， GCP ）上部署 NetApp 卷的自动化方法。 
 ---
 = 通过 Terraform 实现 Cloud Volumes Automation
@@ -1698,10 +1698,10 @@ GCP 上 HA 对中 NetApp CVO 实例的 Terraform 变量。
 | * GCP_CVO_GCP_volume_size_unit* | string | （可选） ["GB" 或 "TB"] 。默认值为 "TB" 。 
 |===
 --
-.CVS 卷
+.NetApp卷卷
 --
-.用于在GCP上部署NetApp CVS卷的Terraform配置文件
-本节包含用于在 GCP （ Google Cloud Platform ）上部署 / 配置 NetApp CVS （ Cloud Volumes Services ）卷的各种 Terraform 配置文件。
+.用于在GCP上部署NetApp卷的Terraform配置文件
+本节包含用于在GCP (Google云平台)上部署/配置NetApp卷(Google Cloud NetApp卷)卷的各种Terraform配置文件。
 
 Terraform 文档： https://registry.terraform.io/providers/NetApp/netapp-gcp/latest/docs[]
 
@@ -1755,25 +1755,25 @@ Terraform 文档： https://registry.terraform.io/providers/NetApp/netapp-gcp/la
     terraform destroy
 ----
 .收件人：
-`CVS 卷`
+`NetApp Volumes Volume`
 
-NetApp GCP CVS 卷的 Terraform 变量。
+NetApp GCP NetApp卷卷的Terraform变量。
 
 [cols="20%, 10%, 70%"]
 |===
 | * 名称 * | * 类型 * | * 问题描述 * 
 
 
-| * GCP_CVS_NAME* | string | （必需） NetApp CVS 卷的名称。 
+| * GCP_CVS_NAME* | string | (必需) NetApp卷卷的名称。 
 
 
-| * GCP_CVS_project_id* | string | （必需）要创建 CVS 卷的 GCP project_id 。 
+| * GCP_CVS_project_id* | string | (必需)要创建NetApp卷卷的GCP project_id。 
 
 
-| * GCP_CVS_GCP_service_account_path* | string | （必需） service_account JSON 文件的本地路径，用于 GCP 授权。此服务帐户用于在 GCP 中创建 CVS 卷。 
+| * GCP_CVS_GCP_service_account_path* | string | （必需） service_account JSON 文件的本地路径，用于 GCP 授权。此服务帐户用于在GCP中创建NetApp卷卷。 
 
 
-| * GCP_CVS_EORG* | string | （必需）要创建 CVS 卷的 GCP 区域。 
+| * GCP_CVS_EORG* | string | (必需)要创建NetApp卷卷的GCP区域。 
 
 
 | * GCP_CVS_NETWORK* | string | （必需）卷的网络 VPC 。 

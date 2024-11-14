@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: ehc/gcp-migrate-veeam.html 
-keywords: gcp, gcve, cvs, migrate , dr, disaster recovery, veeam, replication, proxy, re-ip 
-summary: 当前使用Veeam满足数据保护要求的客户将继续使用该解决方案将工作负载迁移到GCVe、并享受NetApp云卷服务NFS数据存储库的优势。 
+keywords: gcp, gcve, gcnv, migrate , dr, disaster recovery, veeam, replication, proxy, re-ip 
+summary: 当前使用Veeam满足数据保护要求的客户仍会使用该解决方案将工作负载迁移到GCVe、并享受Google Cloud NetApp卷NFS数据存储库的优势。 
 ---
-= 使用Veeam复制功能将VM迁移到Google Cloud VMware Engine上的NetApp云卷服务NFS数据存储库
+= 使用Veeam复制功能将VM迁移到Google Cloud NetApp卷上的NFS数据存储库VMware引擎
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,7 +14,7 @@ summary: 当前使用Veeam满足数据保护要求的客户将继续使用该解
 
 
 [role="lead"]
-当前使用Veeam满足数据保护要求的客户将继续使用该解决方案将工作负载迁移到GCVe、并享受NetApp云卷服务NFS数据存储库的优势。
+当前使用Veeam满足数据保护要求的客户仍会使用该解决方案将工作负载迁移到GCVe、并享受Google Cloud NetApp卷NFS数据存储库的优势。
 
 
 
@@ -24,7 +24,7 @@ summary: 当前使用Veeam满足数据保护要求的客户将继续使用该解
 
 可以利用Veeam复制功能将VMware vSphere上运行的VM工作负载迁移到Google Cloud VMware Engine (GCVE)。
 
-本文档提供了一种使用NetApp云卷服务、Veeam和Google Cloud VMware引擎(GCVe)设置和执行VM迁移的分步方法。
+本文档提供了使用Google Cloud NetApp卷、Veeam和Google Cloud VMware引擎(GCVA)设置和执行VM迁移的分步方法。
 
 image:gcp_migration_veeam_01.png["Veeam VM复制架构"]
 
@@ -46,7 +46,7 @@ NOTE: 将内部数据中心连接到Google Cloud有多种方式、这使我们�
 
 === 解决方案 部署概述
 
-. 确保NetApp云卷服务中的NFS数据存储库已挂载到GCVe vCenter上。
+. 确保已将Google Cloud NetApp卷中的NFS数据存储库挂载到GCVE) vCenter上。
 . 确保在现有VMware vSphere环境中部署Veeam Backup Recovery
 . 创建复制作业以开始将虚拟机复制到Google Cloud VMware Engine实例。
 . 对Veeam复制作业执行故障转移。
@@ -59,10 +59,9 @@ NOTE: 将内部数据中心连接到Google Cloud有多种方式、这使我们�
 
 
 
-==== 确保NetApp云卷服务中的NFS数据存储库已挂载到GCVe vCenter上
+==== 确保已将Google Cloud NetApp卷中的NFS数据存储库挂载到GCVE) vCenter上
 
-登录到GCVEvCenter并确保具有足够空间的NFS数据存储库可用。
-如果不是、请参见 link:gcp-ncvs-datastore.html["将NetApp CVS挂载为GCVE)上的NFS数据存储库"]
+登录到GCVEvCenter并确保具有足够空间的NFS数据存储库可用。如果不是、请参见link:gcp-ncvs-datastore.html["将NetApp卷作为NFS数据存储库挂载到GCVE"]
 
 
 
