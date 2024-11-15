@@ -34,7 +34,7 @@ SPARK NLP是一个统一的解决方案 、可满足所有NLP任务和要求、�
 
 Transformers (Bert)提供的双向编码器表示是一种基于转换器的机器学习技术、适用于NLP。它推广了预训练和微调的概念。Bert中的转换器架构源自机器翻译、与基于神经网络(RNN)的经常性语言模型相比、该模型更好地模拟长期依赖关系。它还引入了屏蔽语言建模(Masked Language Modeling、MLM)任务、其中随机屏蔽了所有令牌的15%、模型对其进行预测、从而实现了真正的双向性。
 
-由于该领域的专业语言和缺少标记数据、财务情绪分析具有挑战性。 https://nlp.johnsnowlabs.com/2021/11/03/bert_sequence_classifier_finbert_en.html["完成"^]一种基于经过预先培训的Bert的语言模式、该语言模式已经过域调整 https://trec.nist.gov/data/reuters/reuters.html["Reuters TRC2"^]一种财务资料、并使用标记的数据( https://www.researchgate.net/publication/251231364_FinancialPhraseBank-v10["金融租赁银行"^])进行财务状况分类。研究人员从新闻文章中提取了4、500句话、并使用了财务术语。然后、16名具有财务背景的专家和硕士学生将这些句子标记为肯定、中立和否定。我们构建了一个端到端Spark工作流、用于分析2016年至2020年排名前10位的纳斯达克公司收益电话记录的情绪、使用FinBeert和另外两个经过预先培训的管道( https://nlp.johnsnowlabs.com/2021/11/11/classifierdl_bertwiki_finance_sentiment_pipeline_en.html["金融新闻情感分析"^]， https://nlp.johnsnowlabs.com/2020/03/19/explain_document_dl.html["说明文档DL"^])。
+由于该领域的专业语言和缺少标记数据、财务情绪分析具有挑战性。FinBERT是一种基于经过预先训练的BERT的语言模型，它是 https://trec.nist.gov/data/reuters/reuters.html["Reuters TRC2"^]一种金融资料库，并使用标记数据()进行了微调， https://www.researchgate.net/publication/251231364_FinancialPhraseBank-v10["金融租赁银行"^]用于进行金融情绪分类。研究人员从新闻文章中提取了4、500句话、并使用了财务术语。然后、16名具有财务背景的专家和硕士学生将这些句子标记为肯定、中立和否定。我们构建了一个端到端Spark工作流、用于使用来自Spark NLG的FinBERT和其他两个经过预先训练的渠道、分析2016年至2020年前10位纳斯达克公司收益通话记录的情绪 https://nlp.johnsnowlabs.com/2020/03/19/explain_document_dl.html["说明文档DL"^]。
 
 适用于Spark NLP的底层深度学习引擎是TensorFlow、它是一个端到端的开源机器学习平台、可轻松构建模型、随时随地进行强大的ML生产以及进行强大的研究试验。因此、在Spark `Yarn集群`模式下执行管道时、我们基本上是在集群上挂载的网络连接存储中运行分布式TensorFlow、并在一个主节点和多个辅助节点之间并行处理数据和模型。
 
@@ -73,7 +73,7 @@ Horovod on Spark软件包为Horovod提供了一个方便的包装、使在Spark�
 
 深度神经网络(DNN)有望捕获功能之间非常复杂的交互。但是、与DCN相比、它需要的参数数量几乎要多一个数量级、无法明确形成交叉功能、并且可能无法高效地了解某些类型的功能交互。跨网络可节省内存并易于实施。将交叉组件和DNN组件联合训练在一起、有效地捕获预测性功能交互、并在Criteo CTR数据集上提供一流的性能。
 
-一个型号的DCN-首先是一个嵌入层和堆栈层、然后是一个跨网络和一个并行的深度网络。然后是最后一个组合层、该层将两个网络的输出相结合。您的输入数据可以是具有稀疏和密集功能的向量。在Spark中、这两者都是如此 https://spark.apache.org/docs/3.1.1/api/python/reference/api/pyspark.ml.linalg.SparseVector.html["毫升"^] 和 https://spark.apache.org/docs/3.1.1/api/python/reference/api/pyspark.mllib.linalg.SparseVector.html["mllib"^] 库的类型为`SparseVector`。因此、用户必须区分这两者、并在调用各自的功能和方法时要小心谨慎。在CTR预测等网络级建议系统中、输入主要是分类功能、例如`‘国家/地区=美国'`。此类功能通常编码为单热向量、例如、`‘`、1、0、…'。使用`SparseVector`的单热编码(OHEE)在处理实际数据集时非常有用、因为这些数据集的词义不断变化且不断增长。我们在中修改了示例 https://github.com/shenweichen/DeepCTR["DeepCTR"^] 要处理大型卷标、请在我们的DCN"嵌入和堆栈"层中创建嵌入载体。
+一个型号的DCN-首先是一个嵌入层和堆栈层、然后是一个跨网络和一个并行的深度网络。然后是最后一个组合层、该层将两个网络的输出相结合。您的输入数据可以是具有稀疏和密集功能的向量。在Spark中，库包含类型 `SparseVector`。因此、用户必须区分这两者、并在调用各自的功能和方法时要小心谨慎。在网络级建议系统(如电话预约维修预测)中，输入主要是类特征，例如 `‘country=usa’`。此类功能通常编码为一热矢量，例如 `‘[0,1,0, …]’`。在处理具有不断变化和不断增长的词汇表的实际数据集时、使用的一热编码(OHE) `SparseVector`非常有用。我们修改了中的示例 https://github.com/shenweichen/DeepCTR["DeepCTR"^]以处理大型词表，从而在DCN的嵌入和堆叠层中创建嵌入矢量。
 
 。 https://www.kaggle.com/competitions/criteo-display-ad-challenge/data["Criteo显示广告数据集"^] 预测广告点击率。它具有13个整数功能和26个分类功能、其中每个类别的基数都很高。对于此数据集、由于输入大小较大、光泽度提高了0.001实际上是一项显著的改进。如果对大型用户群的预测准确性稍作提高、可能会导致公司收入大幅增加。该数据集包含7天内的11 GB用户日志、相当于大约4、100万条记录。我们使用Spark `dataFrame.Random拆 分()函数`随机拆分数据进行训练(80%)、交叉验证(10%)、其余10%用于测试。
 
@@ -85,7 +85,7 @@ Horovod on Spark软件包为Horovod提供了一个方便的包装、使在Spark�
 * *超参数。*我们根据对隐藏层数、隐藏层大小、初始学习速率和跨层数的网格搜索来报告结果。隐藏层的数量从2到5不等、隐藏层大小从32到1024不等。对于DCN、跨层数量为1到6。初始学习速率从0.0001调整为0.001、增量为0.0001。所有实验都在训练步骤150、000时进行了早期停止、超过此步骤后、开始发生过度安装。
 
 
-除了使用了DCN之外、我们还测试了其他常见的深度学习模型来进行CTR预测、其中包括 https://www.ijcai.org/proceedings/2017/0239.pdf["DeepFM"^]， https://arxiv.org/pdf/1803.05170.pdf["xDeepFM"^]， https://arxiv.org/abs/1810.11921["自动内置"^]，和 https://arxiv.org/abs/2008.13535["DCNv2"^]。
+除了DCN之外，我们还测试了其他常见的用于电话预约维修预测的深度学习模型，包括 https://www.ijcai.org/proceedings/2017/0239.pdf["DeepFM"^]、 https://arxiv.org/abs/1810.11921["自动内置"^]和 https://arxiv.org/abs/2008.13535["DCNv2"^]。
 
 
 
