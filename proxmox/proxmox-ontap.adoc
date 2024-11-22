@@ -16,7 +16,7 @@ summary: 'Proxmox虚拟环境(VE)中的共享存储可缩短VM实时迁移的时
 [role="lead"]
 Proxmox虚拟环境(VE)中的共享存储可缩短VM实时迁移的时间、并为环境中的备份和一致模板提供更好的目标。ONTAP存储可以满足Proxmox VE主机环境的需求、并满足子系统文件、块和对象存储的需求。
 
-Proxmox VE主机需要将FC、以太网或其他受支持的接口连接到交换机、并与ONTAP逻辑接口进行通信。
+Proxmox VE主机需要将FC、以太网或其他受支持的接口连接到交换机、并与ONTAP逻辑接口进行通信。请始终检查 https://mysupport.netapp.com/matrix/#welcome["互操作性表工具"]是否支持配置。
 
 
 
@@ -142,6 +142,8 @@ NAS协议(NFS/SMB)支持Proxmox VE的所有内容类型、通常在数据中心�
 
 NOTE: 密码将保存在明文文件中、只有root用户才能访问。请参阅 link:https://pve.proxmox.com/pve-docs/chapter-pvesm.html#storage_cifs["Proxmox VE文档"]。
 
+.使用ONTAP的SMB共享存储池
+video::5b4ae54a-08d2-4f7d-95ec-b22d015f6035[panopto,width=360]
 .<strong>管理任务</strong>
 [%collapsible]
 ====
@@ -200,6 +202,8 @@ ONTAP支持Proxmox VE支持的所有NFS版本。要提供容错和性能增强�
 
 如果是首次使用ONTAP、请使用System Manager界面完成这些任务以获得更好的体验。
 
+.NFS nconnect选项与ONTAP
+video::f6c9aba3-b070-45d6-8048-b22e001acfd4[panopto,width=360]
 .<strong>管理任务</strong>
 [%collapsible]
 ====
@@ -248,12 +252,14 @@ image:proxmox-ontap-image12.png["NFS的存储配置文件"]
 
 == 使用iSCSI的LVM
 
+.使用ONTAP与iSCSI共享LVM池
+video::d66ef67f-bcc2-4ced-848e-b22e01588e8c[panopto,width=360]
 要为Proxmox主机之间的共享存储配置逻辑卷管理器、请完成以下任务：
 
 .<strong>管理任务</strong>
 [%collapsible]
 ====
-. 确保在各自的以太网NIC上配置了两个Linux网桥(最好是在不同的VLAN上)。
+. 确保有两个可用的Linux VLAN接口。
 . 确保在所有Proxmox VE主机上安装了多路径工具。确保启动时启动。
 +
 [source, shell]
@@ -319,14 +325,16 @@ image:proxmox-ontap-image19.png["LVM iSCSI配置"]
 ====
 
 
-=== 使用NVMe/TCP的LVM
+== 使用NVMe/TCP的LVM
 
+.使用ONTAP与NVMe/TCP建立LVM共享池
+video::80164fe4-06db-4c21-a25d-b22e0179c3d2[panopto,width=360]
 要为Proxmox主机之间的共享存储配置逻辑卷管理器、请完成以下任务：
 
 .<strong>管理任务</strong>
 [%collapsible]
 ====
-. 确保配置了两个Linux网桥、每个网桥都有自己的以太网设备(理想情况下位于不同的VLAN上)。
+. 确保有两个可用的Linux VLAN接口。
 . 在集群中的每个Proxmox主机上、执行以下命令收集主机启动程序信息。
 +
 [source, shell]
