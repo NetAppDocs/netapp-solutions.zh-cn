@@ -26,7 +26,7 @@ VMware HCX主要是一个移动平台、旨在简化工作负载迁移、工作�
 
 本文档提供了部署和配置VMware HCX的分步指导、其中包括其所有主要组件、内部部署和云数据中心端、从而支持各种VM迁移机制。
 
-有关详细信息，请参见 https://docs.vmware.com/en/VMware-HCX/4.4/hcx-getting-started/GUID-DE0AD0AE-A6A6-4769-96ED-4D200F739A68.html["HCX部署简介"^] 和 https://docs.vmware.com/en/VMware-HCX/4.4/hcx-getting-started/GUID-70F9C40C-804C-4FC8-9FBD-77F9B2FA77CA.html["安装检查清单B—在AWS SDDC目标环境中使用VMware Cloud的HCX"^]。
+有关详细信息，请参见 https://techdocs.broadcom.com/us/en/vmware-cis/hcx/vmware-hcx/4-10/vmware-hcx-user-guide-4-10.html["《VMware HCX用户指南》"^]和 https://techdocs.broadcom.com/us/en/vmware-cis/hcx/vmware-hcx/4-10/getting-started-with-vmware-hcx-4-10/install-checklist-b-hcx-with-a-vmc-sddc-instance.html["安装检查清单B—在AWS SDDC目标环境中使用VMware Cloud的HCX"^]。
 
 .高级步骤
 [%collapsible]
@@ -47,13 +47,13 @@ VMware HCX主要是一个移动平台、旨在简化工作负载迁移、工作�
 .前提条件
 [%collapsible]
 ====
-开始之前、请确保满足以下前提条件。有关详细信息，请参见 https://docs.vmware.com/en/VMware-HCX/4.4/hcx-user-guide/GUID-A631101E-8564-4173-8442-1D294B731CEB.html["准备安装HCX"^]。具备连接等前提条件后、可从VMC的VMware HCX控制台生成许可证密钥来配置和激活HCX。激活HCX后、将部署vCenter插件、并可使用vCenter控制台进行访问以进行管理。
+开始之前、请确保满足以下前提条件。有关详细信息，请参见 https://techdocs.broadcom.com/us/en/vmware-cis/hcx/vmware-hcx/4-10/vmware-hcx-user-guide-4-10/preparing-for-hcx-installations.html["准备安装"^]。具备连接等前提条件后、可从VMC的VMware HCX控制台生成许可证密钥来配置和激活HCX。激活HCX后、将部署vCenter插件、并可使用vCenter控制台进行访问以进行管理。
 
 在继续执行HCX激活和部署之前、必须完成以下安装步骤：
 
 . 使用现有VMC SDDC或根据此操作创建新的SDDC link:aws-setup.html["NetApp链接"^] 或这一点 https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws.getting-started/GUID-EF198D55-03E3-44D1-AC48-6E2ABA31FF02.html["VMware链接"^]。
 . 从内部vCenter环境到VMC SDDC的网络路径必须支持使用vMotion迁移VM。
-. 确保满足所需 https://docs.vmware.com/en/VMware-HCX/4.4/hcx-user-guide/GUID-A631101E-8564-4173-8442-1D294B731CEB.html["防火墙规则和端口"^] 允许用于内部vCenter Server与SDDC vCenter之间的vMotion流量。
+. 确保允许在内部vCenter Server和SDDC vCenter之间传输所需的 https://techdocs.broadcom.com/us/en/vmware-cis/hcx/vmware-hcx/4-10/vmware-hcx-user-guide-4-10/preparing-for-hcx-installations/network-port-and-protocol-requirements.html["防火墙规则和端口"^]vMotion流量。
 . FSx ONTAP NFS卷应作为补充数据存储库挂载到VMC SDDC中。要将NFS数据存储库连接到相应的集群，请按照本或本 https://docs.vmware.com/en/VMware-Cloud-on-AWS/services/com.vmware.vmc-aws-operations/GUID-D55294A3-7C40-4AD8-80AA-B33A25769CCA.html["VMware链接"^]中所述的步骤进行操作link:aws-native-overview.html["NetApp链接"^]。
 
 
@@ -198,7 +198,7 @@ VMware HCX互连(HCX-IX)设备可通过Internet提供安全通道功能、并可
 NOTE: 计算配置文件包含部署互连虚拟设备所需的计算、存储和网络部署参数。它们还会指定HCX服务可访问VMware数据中心的哪个部分。
 
 +
-有关详细说明、请参见 https://docs.vmware.com/en/VMware-HCX/4.4/hcx-user-guide/GUID-BBAC979E-8899-45AD-9E01-98A132CE146E.html["创建计算配置文件"^]。
+有关详细说明，请参见 https://techdocs.broadcom.com/us/en/vmware-cis/hcx/vmware-hcx/4-10/vmware-hcx-user-guide-4-10/configuring-and-managing-the-hcx-interconnect/configuring-the-hcx-service-mesh/create-a-compute-profile.html["创建计算配置文件"^]。
 
 +
 image:fsx-hcx-image13.png["图中显示了输入/输出对话框或表示已写入内容"]
@@ -213,7 +213,7 @@ NOTE: 这需要两个或更多IP地址。这些IP地址将从管理网络分配�
 image:fsx-hcx-image14.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 +
-有关详细说明、请参见 https://docs.vmware.com/en/VMware-HCX/4.4/hcx-user-guide/GUID-184FCA54-D0CB-4931-B0E8-A81CD6120C52.html["创建网络配置文件"^]。
+有关详细说明，请参见 https://techdocs.broadcom.com/us/en/vmware-cis/hcx/vmware-hcx/4-10/vmware-hcx-user-guide-4-10/configuring-and-managing-the-hcx-interconnect/configuring-the-hcx-service-mesh/create-a-network-profile.html["创建网络配置文件"^]。
 
 +
 
@@ -254,7 +254,7 @@ image:fsx-hcx-image18.png["图中显示了输入/输出对话框或表示已写�
 ====
 HCX可在内部环境和VMC SDDC等两个或更多不同环境之间提供双向迁移服务。可以使用各种迁移技术将应用程序工作负载迁移到HCX激活的站点或从这些站点迁移到这些站点、例如HCX批量迁移、HCX vMotion、HCX冷迁移、HCX复制辅助vMotion (适用于HCX Enterprise版本)以及HCX操作系统辅助迁移(适用于HCX Enterprise版本)。
 
-要了解有关可用HCX迁移技术的更多信息、请参见 https://docs.vmware.com/en/VMware-HCX/4.4/hcx-user-guide/GUID-8A31731C-AA28-4714-9C23-D9E924DBB666.html["VMware HCX迁移类型"^]
+要了解有关可用HCX迁移技术的更多信息、请参见 https://techdocs.broadcom.com/us/en/vmware-cis/hcx/vmware-hcx/4-10/vmware-hcx-user-guide-4-10/migrating-virtual-machines-with-vmware-hcx/vmware-hcx-migration-types.html["VMware HCX迁移类型"^]
 
 HCX-IX设备使用移动代理服务执行vMotion、冷迁移和复制辅助vMotion (RAV)迁移。
 
@@ -286,7 +286,7 @@ image:fsx-hcx-image22.png["图中显示了输入/输出对话框或表示已写�
 . 验证检查完成后、单击"Go"启动迁移。
 +
 
-NOTE: vMotion传输会捕获VM活动内存、其执行状态、IP地址及其MAC地址。有关HCX vMotion的要求和限制的详细信息、请参见 https://docs.vmware.com/en/VMware-HCX/4.1/hcx-user-guide/GUID-517866F6-AF06-4EFC-8FAE-DA067418D584.html["了解VMware HCX vMotion和冷迁移"^]。
+NOTE: vMotion传输会捕获VM活动内存、其执行状态、IP地址及其MAC地址。有关HCX vMotion的要求和限制的详细信息，请参见 https://techdocs.broadcom.com/us/en/vmware-cis/hcx/vmware-hcx/4-10/vmware-hcx-user-guide-4-10/migrating-virtual-machines-with-vmware-hcx/understanding-vmware-hcx-vmotion-and-cold-migration.html#GUID-517866F6-AF06-4EFC-8FAE-DA067418D584-en["了解VMware HCX vMotion和冷迁移"^]。
 
 . 您可以从"HCX">"迁移"信息板监控vMotion的进度和完成情况。
 +
@@ -309,7 +309,7 @@ image:fsx-hcx-image24.png["图中显示了输入/输出对话框或表示已写�
 image:fsx-hcx-image25.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 =====
-有关追加信息 的HCX迁移选项以及如何使用HCX将工作负载从内部迁移到AWS上的VMware Cloud的信息、请参见 https://docs.vmware.com/en/VMware-HCX/4.4/hcx-user-guide/GUID-14D48C15-3D75-485B-850F-C5FCB96B5637.html["《VMware HCX用户指南》"^]。
+有关HCX迁移选项以及如何使用HCX将工作负载从内部迁移到AWS上的VMware Cloud的其他信息，请参见 https://techdocs.broadcom.com/us/en/vmware-cis/hcx/vmware-hcx/4-10/vmware-hcx-user-guide-4-10/migrating-virtual-machines-with-vmware-hcx.html["《VMware HCX用户指南》"^]。
 
 
 NOTE: VMware HCX vMotion需要100 Mbps或更高的吞吐量功能。
@@ -352,5 +352,5 @@ https://docs.aws.amazon.com/fsx/latest/ONTAPGuide["https://docs.aws.amazon.com/f
 +
 《VMware HCX用户指南》
 
-* https://docs.vmware.com/en/VMware-HCX/4.4/hcx-user-guide/GUID-BFD7E194-CFE5-4259-B74B-991B26A51758.html["https://docs.vmware.com/en/VMware-HCX/4.4/hcx-user-guide/GUID-BFD7E194-CFE5-4259-B74B-991B26A51758.html"^]
+* https://techdocs.broadcom.com/us/en/vmware-cis/hcx/vmware-hcx/4-10/vmware-hcx-user-guide-4-10.html["https://techdocs.broadcom.com/us/en/vmware-cis/hcx/vmware-hcx/4-10/vmware-hcx-user-guide-4-10.html"^]
 
