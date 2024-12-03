@@ -1,0 +1,202 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmdc.html 
+keywords: vmware, vm, data, collector, vmdc 
+summary: '虚拟机数据收集器(Virtual Machine Data Collector、VMDc)是一个基于GUI的免费轻型工具包、适用于VMware环境、允许用户收集有关其虚拟机(VM)、主机、存储和网络的详细清单信息。' 
+---
+= 虚拟机数据收集器(Virtual Machine Data Collector、VMDc)
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+虚拟机数据收集器(Virtual Machine Data Collector、VMDc)是一个基于GUI的免费轻型工具包、适用于VMware环境、允许用户收集有关其虚拟机(VM)、主机、存储和网络的详细清单信息。
+
+
+
+== 概述
+
+VMDc的主要功能是报告vCenter、ESXi服务器和vSphere环境中的虚拟机(VM)的配置、包括集群配置、网络连接、存储、快照和性能数据。然后、可以使用收集到的有关环境的详细信息来生成有关基础架构的有价值的见解。报告输出显示是一个电子表格样式的图形用户界面、其中包含指向其各个部分的选项卡。它提供易于阅读的报告、并有助于确定问题、优化资源使用和规划容量。
+
+VMDc只是收集快速即时统计信息的基石、用于预测VMware核心许可以及vCPU和RAM的优化可能性。link:https://docs.netapp.com/us-en/data-infrastructure-insights/["NetApp数据基础架构洞察力"]这需要安装AOU和数据收集器、这应该是了解详细的虚拟机拓扑结构、使用标注对虚拟机进行分组以正确估算工作负载规模并确保基础架构适应未来需要的显而易见的下一步。
+
+VMDc可以下载link:https://mysupport.netapp.com/site/tools/tool-eula/vm-data-collector["此处"]、并且仅适用于Windows系统。
+
+
+
+== 安装和设置VMDc.
+
+只要安装了.NET 4.7、VMDc就可以在运行的Windows 2019、2022版上运行。验证后、从下载VMDc软件包link:https://mysupport.netapp.com/site/tools/tool-eula/vm-data-collector["NetApp工具箱"]、然后解压缩该软件包并运行批处理文件以安装和启动该服务。
+
+安装VMDc后、使用安装期间提及的IP地址访问此UI。此时将显示VMDc登录界面、可在其中输入vCenter Server的IP地址或DNS名称和凭据来添加vCenter。
+
+. 下载link:https://mysupport.netapp.com/site/tools/tool-eula/vm-data-collector["VMDc软件包"]。
++
+image:vmdc-image1.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 将软件包解压缩到指定文件夹。
++
+image:vmdc-image2.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 单击Start_VMDc批处理文件运行VMDc软件包。此时将打开命令提示符、并提示输入IP地址。
++
+image:vmdc-image3.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 安装程序将开始安装过程并启动VMDc服务。
++
+image:vmdc-image4.png["图中显示了输入/输出对话框或表示已写入内容"]
+
++
+image:vmdc-image5.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 完成后、"Press any key to continue (按任意键继续)"关闭命令提示符。
++
+image:vmdc-image6.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+
+NOTE: 要停止数据收集、请单击Stop_VMDc批处理文件。
+
+
+NOTE: 要删除收集的数据并重置VMDc、请运行reset_vmdc批处理文件。请记住、运行重置bat文件将删除所有现有数据、并从头开始。
+
+image:vmdc-image7.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+== 使用GUI
+
+
+
+=== 运行VMDc
+
+* 使用浏览器访问VMDc UI
++
+image:vmdc-image8.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* 使用"Add vCente"(添加vCenter)选项添加指定的vCenter
++
+** vCenter Name (vCenter名称)—提供vCenter的名称
+** Endpoint (端点)-输入vCenter Server的IP地址或FQDN
+** username—用于访问vCenter的用户名(UPN格式：username@domain.com)
+** 密码
+
+
+* 根据要求修改"其他详细信息"
++
+** 数据间隔时间—指定样本聚合时间范围。默认值为5分钟、但可以根据需要将其修改为30秒或1分钟。
+** 数据保留-指定存储历史指标的保留期限。
+** 收集性能指标—启用后、收集每个VM的性能指标。如果未选中此选项、VMDc将仅提供虚拟机、主机和数据存储库详细信息、从而提供类似于RVtools的功能。
+
+
+* 完成后、单击"Add Vcenter (添加vCenter)"
++
+image:vmdc-image9.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+
+NOTE: 添加vCenter后、数据收集将立即开始。无需计划收集时间、因为此过程会提取vCenter数据库中的可用数据、并根据指定的"数据间隔时间"开始聚合这些数据。
+
+要查看特定vCenter的数据、请转到信息板、单击相应vCenter名称旁边的"查看清单"。此页面将显示虚拟机清单以及虚拟机属性。默认情况下、"Performance Metrics (性能指标)"在用户界面中处于禁用状态、但可以使用切换选项启用。启用性能指标后、将显示每个VM的性能数据。有关现场表演的信息、请单击刷新按钮。
+
+
+
+=== 查看虚拟机拓扑
+
+VMDc为每个VM提供了"Show Topology"(显示拓扑)选项、可通过交互式界面查看VM磁盘、VM、ESXi主机、数据存储库和网络的资源及其关系。它有助于通过从收集的性能数据中获得的洞察力来管理和监控。拓扑有助于使用当前数据执行基本诊断和故障排除。要进行详细故障排除并快速完成MTTR、请使用link:https://docs.netapp.com/us-en/data-infrastructure-insights/["NetApp数据基础架构洞察力"]、其中提供了详细的拓扑视图以及端到端依赖关系映射。
+
+要访问拓扑视图、请执行以下步骤：
+
+* 访问VMDc信息板。
+* 选择vCenter名称、然后单击"View Inventory"(查看清单)。
++
+image:vmdc-image10.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* 选择虚拟机、然后单击"Show Topology"(显示拓扑)。
++
+image:vmdc-image11.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+
+
+=== 导出至 Excel
+
+要以可用格式捕获收集的、请使用"Download Report"(下载报告)选项下载XLSX文件。
+
+要下载报告、请执行以下步骤：
+
+* 访问VMDc信息板。
+* 选择vCenter名称、然后单击"View Inventory"(查看清单)。
++
+image:vmdc-image12.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* 选择"Download Report"(下载报告)选项
++
+image:vmdc-image13.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* 选择时间范围。此时间范围提供了多个选项、从4小时到7天不等。
++
+image:vmdc-image14.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+例如、如果所需数据是过去4小时的数据、请选择4或选择适当的值来捕获给定时间段的数据。生成的数据会持续汇总。因此、请选择时间范围、以确保生成的报告能够捕获必要的工作负载统计信息。
+
+
+
+=== VMDc数据计数器
+
+下载后、VMDc显示的第一个工作表是"VM Info"(VM信息)、该工作表包含有关驻留在vSphere环境中的VM的信息。此时将显示有关虚拟机的常规信息：虚拟机名称、电源状况、CPU、已配置内存(MB)、已利用内存(MB)、已配置容量(GB)、已利用容量(GB)、VMware工具版本、操作系统版本、环境类型、数据中心、集群、主机、文件夹、主数据存储库、磁盘、NIC、VM ID和VM UUID。
+
+"VM Performance"(VM性能)选项卡可捕获按选定间隔级别采样的每个VM的性能数据(默认值为5分钟)。每个虚拟机的示例包括：平均读取IOPS、平均写入IOPS、总平均IOPS、峰值读取IOPS、峰值写入IOPS、总峰值IOPS、平均读取吞吐量(KB/s)、平均写入吞吐量(KB/s)、总平均延迟(KB/s)、峰值读取吞吐量(KB/s)、总写入吞吐量(KB/s)、平均读取延迟(毫秒)、总写入延迟(毫秒)、平均延迟(毫秒)和总读取延迟(毫秒)。
+
+"ESXi主机信息"选项卡可捕获每个主机的信息：数据中心、vCenter、集群、操作系统、制造商、型号、CPU插槽、CPU核心、净时钟速度(GHz)、CPU时钟速度(GHz)、CPU线程、内存(GB)、已用内存(%)、CPU使用率(%)、子VM计数和NIC数量。
+
+
+
+=== 后续步骤
+
+使用下载的XLSX文件进行优化和重构。
+
+
+
+== VMDc属性说明
+
+本节介绍了Excel工作表中使用的每个计数器的定义。
+
+*VM信息表*
+
+image:vmdc-image15.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+*VM性能表*
+
+image:vmdc-image16.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+*ESXi主机信息*
+
+image:vmdc-image17.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+== 结论
+
+随着许可变更的临近、企业正在积极应对总拥有成本(Total Cost of拥有成本、TCO)可能增加的问题。他们正在通过积极的资源管理和规模估算从战略上优化VMware基础架构、以提高资源利用率并简化容量规划。通过有效使用专用工具、企业可以高效识别和回收浪费的资源、从而减少核心数量和整体许可费用。VMDc可以快速收集VM数据、并对这些数据进行切片、以报告和优化现有环境。
+
+使用VMDc执行快速评估以确定未充分利用的资源、然后使用NetApp数据基础架构洞察(Data Infrastructure Insight、DII)为VM回收提供详细分析和建议。这样、在部署和配置NetApp数据基础架构洞察(Data Infrastructure Insight、DII)的同时、客户可以了解潜在的成本节省和优化。NetApp数据基础架构洞察力(Data Infrastructure Insight、DII)可以帮助企业做出明智的决策、以优化其VM环境。它可以确定哪些资源可以回收或停用主机、而对生产的影响微乎其微、从而帮助企业以深思熟虑的战略性方式应对Broadcom收购VMware所带来的变化。也就是说、VMDc和DII作为一种详细的分析机制、可以帮助企业摆脱决策过程中的情绪。他们可以利用这两种工具提供的洞察力来做出合理的战略性决策、从而在成本优化与运营效率和生产率之间取得平衡、而不是以恐慌或沮丧的态度应对变化。
+
+借助NetApp、您可以合理调整虚拟化环境的规模、并引入经济高效的闪存存储性能以及简化的数据管理和勒索软件解决方案、以确保企业在优化现有IT资源的同时、为新的订阅模式做好准备。
+
+image:vmdc-image18.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+== 后续步骤
+
+下载VMDc软件包、收集数据并使用link:https://mhcsolengg.com/vmwntaptco/["vSAN TCO估算工具"]以便于预测、然后使用link:https://docs.netapp.com/us-en/data-infrastructure-insights/task_cloud_insights_onboarding_1.html["DII"]它持续提供智能信息、对现在和未来产生影响、以确保它可以随着新需求的出现进行调整。
