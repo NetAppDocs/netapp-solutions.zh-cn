@@ -40,7 +40,7 @@ image:aipod_nv_a90_netdetail.png["图中显示了输入/输出对话框或表示
 | 交换机1端口37-40 | AFF A90-01至-04 | 端口e11a 
 
 
-| 交换机1的端口41-44 | AFF A90-01至-04 | 端口E8a 
+| 交换机1的端口41-44 | AFF A90-01至-04 | 端口e2a 
 
 
 | 交换机1的端口为57到64 | ISL连接到交换机2 | 端口57至64 
@@ -61,7 +61,7 @@ image:aipod_nv_a90_netdetail.png["图中显示了输入/输出对话框或表示
 | 交换机2端口37-40 | AFF A90-01至-04 | 端口e11b 
 
 
-| 交换机2端口41-44 | AFF A90-01至-04 | 端口e8b 
+| 交换机2端口41-44 | AFF A90-01至-04 | 端口e2b 
 
 
 | 交换机2的端口为57到64 | ISL连接到交换机1 | 端口57至64 
@@ -100,7 +100,7 @@ image:aipod_nv_a90_netdetail.png["图中显示了输入/输出对话框或表示
 . 为两个交换机上的每对客户端端口和存储端口配置LACP MAG
 +
 ** 对于DGX-H100-01、每个交换机上的端口swp17 (enp170s0f1np1和enp41s0f1np1)、对于DGX-H100-02、端口swp18等((bond1-16)
-** 每个交换机上的端口swp41用于AFF A90-01 (E8a和e8b)、端口swp42用于AFF A90-02等(bond17-20)
+** 对于AFF-A90-01、每个交换机上的端口swp41 (e2a和e2b)、对于AFF-A90-02、端口swp42等((bond17-20)
 ** NV set interface bondX绑定成员swpX
 ** NV set interface bondx bond mlag id X
 
@@ -201,7 +201,7 @@ image:aipod_nv_a90_logical.png["图中显示了输入/输出对话框或表示�
 . 在每个控制器上配置ifgrp
 +
 ** net port ifgrp create -node <node>-ifgrp a1a -mode multimode_lacp -unc-fFunction port
-** net port ifgrp add-port -node <node>-ifgrp <ifgrp>-ports <node>：e8a、<node>：e8b
+** net port ifgrp add-port -node <node>-ifgrp <ifgrp>-ports <node>：e2a、<node>：e2b
 
 
 . 在每个控制器的ifgrp上配置管理VLAN端口
@@ -245,7 +245,7 @@ image:aipod_nv_a90_logical.png["图中显示了输入/输出对话框或表示�
 +
 ** 配置SVM以支持RDMA
 +
-*** vserver修改-vserver basePOD数据-rdma已启用
+*** vserver NFS修改-vserver basePOD数据-rdma已启用
 
 
 ** 创建生命周期
