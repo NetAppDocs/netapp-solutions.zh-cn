@@ -110,10 +110,27 @@ NetApp网络存储的基础是SnapMirror和SnapLock Compliance、但使用其他
 默认情况下、ONTAP Snapshot副本不可变、并且可以使用SnapLock Compliance使其不可变。甚至连NetApp支持都无法删除SnapLock Snapshot副本。更好的问题是、是什么让NetApp网络存储比业内其他网络存储更出色。首先、ONTAP是全球最安全的存储、并获得了CSFC验证、支持在硬件和软件层存储机密数据和顶级机密数据。有关的详细信息link:https://www.netapp.com/esg/trust-center/compliance/CSfC-Program/["可在此处找到CSFC"^]。此外、ONTAP还可以在存储层进行气隙映射、并由网络存储系统控制复制、以便在网络存储网络中创建气隙。
 
 ====
-.网络存储的源卷是否为启用了ONTAP网络结构池的卷(将卷分层到ONTAP S3或StorageGRID)？
+.网络存储上的卷是否可以使用ONTAP网络结构池？
 [%collapsible%open]
 ====
-不可以、无论使用何种策略、都无法将Fabric Pool源卷复制到SnapLock Compliance目标。
+不可以、无论策略如何、都不能使用Fabric Pool对网络存储卷(SnapLock Compliance SnapMirror目标)进行分层。
+
+image:ontap-cyber-vault-fabric-pool-configurations.png["网络存储Fabric Pool支持的配置"]
+
+
+NOTE: Fabric Pool *不能*用于网络存储的情形有多种。
+
+. Fabric Pool冷层*不能*使用网络存储集群。这是因为启用S3协议会使网络存储参考架构的安全特性处于一种状态。此外、用于Fabric Pool的S3存储分段也无法受到保护。
+. 由于数据锁定在卷中、网络存储上的SnapLock Compliance卷*无法*分层到S3存储分段。
+
+
+image:ontap-cyber-vault-fabric-pool-configurations-p-s-cv.png["级联关系支持的网络存储Fabric Pool配置"]
+
+====
+.ONTAP S3蠕虫是否可在网络存储上使用？
+[%collapsible%open]
+====
+不可以、S3是一种数据访问协议、它会使参考架构的安全特性处于非活动状态。
 
 ====
 .NetApp网络存储是否使用不同的ONTAP特性或配置文件运行？

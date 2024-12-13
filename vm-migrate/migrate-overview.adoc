@@ -1,0 +1,657 @@
+---
+sidebar: sidebar 
+permalink: vm-migrate/migrate-overview.html 
+keywords: netapp, vmware, esxi, vm, migration, openshift, virtualization, hyper-v, proxmox 
+summary:  
+---
+= 在虚拟化环境之间迁移虚拟机(VM)(Shift Toolkit)
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+借助NetApp Shift工具包、迁移虚拟机(VM)不再是问题。此独立产品支持快速高效地将VM从VMware ESXi迁移到Microsoft Hyper-V。此外、它还支持在各种虚拟磁盘格式之间进行磁盘级转换。
+
+
+
+== 用例
+
+现在、每个组织都看到了拥有多虚拟机管理程序环境的优势。随着市场的近期变化、每个组织都在权衡技术和商业风险、确定最佳行动方案、包括将工作负载虚拟机迁移到备用虚拟机管理程序、专注于实现业务定义的目标、以及控制供应商锁定。这样、他们就可以以优化的方式运行许可成本、并将IT预算扩展到合适的领域、而不是将这些未使用的核心用于特定虚拟机管理程序。但是、面临的挑战始终是迁移时间和相关停机时间。
+
+借助NetApp Shift工具包、迁移虚拟机(VM)不再是问题。此独立产品支持快速高效地将VM从VMware ESXi迁移到Microsoft Hyper-V。此外、它还支持在各种虚拟磁盘格式之间进行磁盘级转换。得益于ONTAP提供的即装即用功能、这些迁移可以非常快速、并且停机时间最短。例如、转换1 TB VMDK文件通常需要几个小时、但使用Shift工具包、只需几秒钟即可完成。
+
+
+
+== 工具包概述
+
+NetApp迁移工具包是一款易于使用的图形用户界面(GUI)解决方案、支持在不同虚拟机管理程序之间迁移虚拟机(VM)并转换虚拟磁盘格式。它利用NetApp FlexClone®技术快速转换VM硬盘。此外、该工具包还可以管理目标VM的创建和配置。
+
+Shift工具包通过支持以下虚拟机管理程序之间的双向转换、在多虚拟机管理程序环境中提供灵活性：
+
+* VMware ESXi到Microsoft Hyper-V
+* Microsoft Hyper-V到VMware ESXi (即将发布)
+
+
+Shift工具包支持在虚拟机管理程序之间对以下磁盘格式的虚拟磁盘进行磁盘级转换：
+
+* VMware ESX到Microsoft Hyper-V (虚拟机磁盘[VMDK]到虚拟硬盘格式[VHDS])
+* VMware ESX到KVM兼容虚拟机管理程序(VMDK到QCOW2)
+
+
+可以下载Shift工具包、该工具包link:https://mysupport.netapp.com/site/tools/tool-eula/netapp-shift-toolkit["此处"]仅适用于Windows系统。
+
+
+
+=== VM可移动性的优势
+
+ONTAP非常适合任何虚拟机管理程序和任何超频存储器。采用FlexClone技术。与等待较长的停机时间或使用直通选项解决问题相比、几分钟内便可实现虚拟机可移动性已成为现实。
+
+班次工具包：
+
+* 有助于最大限度地减少停机时间并提高业务效率。
+* 通过降低许可成本、锁定和对单一供应商的承诺、提供丰富的选择和灵活性。
+* 帮助希望优化VM许可成本并扩展IT预算的组织。
+* 可通过虚拟机可移动性降低虚拟化成本、此功能可从NetApp免费获得。
+
+
+
+
+=== Shift工具包的工作原理
+
+转换时、Shift工具包会连接到Microsoft Hyper-V和VMware ESXi主机以及共享NetApp存储。Shift工具包利用FlexClone、通过使用以下三种关键NetApp技术将虚拟机硬盘驱动器从一个虚拟机管理程序转换到另一个虚拟机管理程序：
+
+* 单个卷和多个协议
++
+借助NetApp ONTAP、可以轻松使用多个协议来访问单个卷。例如、VMware ESXi可以访问启用了网络文件系统(NFS)协议的卷、而Microsoft Hyper-V可以使用cIFS/SMB协议访问同一卷。
+
+* FlexClone技术
++
+FlexClone支持快速克隆整个文件或卷、而无需复制任何数据。存储系统上的公用块在多个文件或卷之间共享。因此、可以非常快速地克隆大型VM磁盘。
+
+* VM磁盘转换
++
+NetApp PowerShell工具包和Shift工具包包含大量可用于在NetApp存储控制器上执行各种操作的工作流。其中包括可将虚拟磁盘转换为不同格式的PowerShell cmdlet。例如、VMware VMDK可以转换为Microsoft VHDX、反之亦然。这些转换是通过FlexClone执行的、它可以一步快速地克隆和转换磁盘格式。
+
+
+
+image:shift-toolkit-image1.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+==== 协议和通信方法
+
+Shift工具包在转换或迁移操作期间使用以下协议。
+
+* HTTPS—Shift工具包用于与Data ONTAP集群进行通信。
+* VI Java (VI SDK)、VMware PowerCLI -用于与VMware ESXi进行通信。
+* Windows PowerShell模块-用于与Microsoft Hyper-V进行通信
+
+
+
+
+== 安装和设置Shift工具包
+
+要开始使用该工具包、请在指定的虚拟机上使用Windows操作系统、并确保满足前提条件、然后安装该软件包。
+
+Shift工具包可在Windows 2019和2022版本上运行。从下载Shift工具包link:https://mysupport.netapp.com/site/tools/tool-eula/netapp-shift-toolkit["NetApp工具箱"]、然后解压缩该软件包并运行批处理文件以安装和启动服务。
+
+Shift工具包可以安装在Microsoft Hyper-V服务器或独立服务器(物理或虚拟)上、最佳做法是在自己的虚拟机上安装Shift工具包。通过这种方法、您可以使用一个Shift工具包服务器来锁定不同的Microsoft Hyper-V服务器或VMware ESXi服务器。
+
+
+
+=== 前提条件：
+
+
+
+==== 硬件要求
+
+确保Shift服务器主机满足最低硬件要求。
+
+* CPU — 2vCPUs
+* 内存-最小4GB
+* 磁盘空间—至少10 GB
+
+
+
+
+==== 连接要求
+
+* 确保已配置虚拟机管理程序和存储环境、以便Shift工具包可以与环境中的所有组件正确交互。
+* Shift工具包可以安装在Microsoft Hyper-V服务器上、也可以安装在独立的Windows服务器(物理或虚拟)上。
+* Shift服务器、Data ONTAP CIFS服务器、Hyper-V服务器和子操作系统必须位于同一Windows域中。
+* 在执行VM转换时、支持在Storage Virtual Machine中使用多个CIFS和NFS的生命周期。Hyper-V服务器和ESXi主机使用这些SVM的IP地址访问Storage Virtual Machine (SVM)。
+* 对于CIFS操作、必须同步Windows域控制器和NetApp存储控制器的时间设置。
+
+
+
+
+=== 创建新SVM (建议)
+
+使用Storage vMotion将要迁移或转换的VM移动到新的指定Data ONTAP Storage Virtual Machine (SVM)。最佳做法是为VM配置一个新的SVM、以便确保不会转换生产SVM上的VM。使用ONTAP命令行界面或系统管理器创建新的SVM。
+
+按照本节中提供的步骤link:https://mysupport.netapp.com/site/tools/tool-eula/netapp-shift-toolkit["链接。"]配置一个同时支持NFS和SMB协议的新SVM。
+
+对于从ESX到Hyper-V的转换、指定CIFS共享的完全限定路径名称(尤其是控制器上的CIFS qtree)作为目标路径。
+
+注意：最好创建一个新的SVM、以确保此SVM满足Shift工具包的要求、而不必以可能会造成中断的方式修改生产SVM。注意：目标路径必须位于源VM的同一个卷上。注意：Shift工具包仅支持对驻留在NAS环境(NFS)中的VM进行转换。它不支持转换驻留在SAN环境(LUN)中的VM。
+
+
+
+==== 支持的操作系统
+
+请确保使用子操作系统支持的Windows和Linux版本进行转换、并且Shift工具包支持ONTAP版本。
+
+*支持的VM子操作系统*
+
+以下版本的Windows可用作VM转换的子操作系统：
+
+* Windows Server 2016
+* Windows Server 2019
+* Windows Server 2022
+
+
+以下版本的Linux可用作VM转换的子操作系统：
+
+* Red Hat Enterprise Linux 6.7或更高版本
+* Red Hat Enterprise Linux 7.2或更高版本
+* Red Hat Enterprise Linux 8.x
+* Red Hat Enterprise Linux 9.x
+* Ubuntu 2018
+* Ubuntu 2022
+* Ubuntu 2024
+* Debian 10
+* Debian 11
+* Debian 12
+
+
+
+NOTE: 不支持适用于Red Hat Enterprise Linux 5的CentOS Linux/RedHat。
+
+*支持的ONTAP版本*
+
+Shift工具包支持运行9.14.1 9.14.1或更高版本的平台。
+
+
+
+=== 安装
+
+. 下载link:https://mysupport.netapp.com/site/tools/tool-eula/netapp-shift-toolkit["移位工具包"]。
++
+image:shift-toolkit-image2.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 将软件包解压缩到指定文件夹。
++
+image:shift-toolkit-image3.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 单击*install*批处理文件运行Shift工具包。
++
+image:shift-toolkit-image4.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 安装程序将开始安装过程。这将打开命令提示符并开始安装必备软件、包括MongoDB、Windows PowerShell 7、NetApp ONTAP PowerShell工具包、适用于Windows PowerShell的Hyper-V模块、vmware.PowerCLI软件包和Java、所有这些软件包都打包在软件包中。
++
+image:shift-toolkit-image5.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 之后、CredSSP将在交互提示符下启用。按Y并继续。
++
+image:shift-toolkit-image6.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 启用CredSSP后、安装程序将安装Java软件包(qcow转换所需)。
++
+image:shift-toolkit-image7.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 完成后、安装程序将提示输入用于访问Shift工具包UI的IP地址。
++
+image:shift-toolkit-image8.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 完成后、"Press any key to continue (按任意键继续)"关闭命令提示符。
++
+image:shift-toolkit-image9.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+
+NOTE: 安装过程可能需要8到10分。
+
+
+
+=== 使用GUI
+
+
+
+==== 运行班次工具包
+
+* 使用浏览器输入以访问Shift工具包UI `http://<IP address specified during installation>:3001`。
+* 使用默认凭据访问UI、如下所示：用户名：管理员密码：管理员
+
+
+
+NOTE: 可以使用"Change Password"(更改密码)选项更改管理员凭据。
+
+image:shift-toolkit-image10.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+单击"Accept and continue (接受并继续)"以接受法律EULA
+
+image:shift-toolkit-image11.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+==== 班次工具包配置
+
+正确配置源虚拟机管理程序和目标虚拟机管理程序的存储和连接后、开始配置Shift工具包、以便利用FlexClone功能自动将虚拟机VMDK迁移或转换为适当的格式。
+
+
+
+===== 添加站点
+
+第一步是发现源vCenter、然后将目标Hyper-V详细信息(虚拟机管理程序和存储)添加到Shift工具包中。在支持的浏览器中打开Shift工具包、并使用默认用户名和密码(管理员/管理员)以及添加站点。
+
+image:shift-toolkit-image12.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+NOTE: 也可以使用"发现"选项添加站点。
+
+添加以下平台：
+
+* 源 *
+
+* 源站点详细信息
++
+** Site Name (站点名称)-提供站点的名称
+** 虚拟机管理程序—选择VMware作为源(预览期间仅提供此选项)
+** 站点位置–选择默认选项
+** Connector (连接器)–选择默认选项
+** 存储类型—选择默认选项
+
+
+
+
+填写后、单击Continue。
+
+image:shift-toolkit-image13.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* 源vCenter
++
+** Endpoint (端点)-输入vCenter Server的IP地址或FQDN
+** username—用于访问vCenter的用户名(UPN格式：username@domain.com)
+** vCenter Password—用于访问vCenter以执行资源清单的密码。
+** vCenter SSL缩略图(可选)
+
+
+
+
+选择"Accept Self signed certification"(接受自签名证书)、然后单击Continue (继续)。
+
+image:shift-toolkit-image14.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* ONTAP存储系统凭据
+
+
+image:shift-toolkit-image15.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+添加后、Shift工具包将执行自动发现、并显示虚拟机以及相关元数据信息。Shift工具包将自动检测VM使用的网络和端口组、并将其填充。
+
+image:shift-toolkit-image16.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+要查看特定vCenter的数据、请转到信息板、单击相应站点名称旁边的"View VM List"(查看VM列表)。此页面将显示虚拟机清单以及虚拟机属性。
+
+image:shift-toolkit-image17.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+NOTE: VM清单每24小时刷新一次。
+
+
+NOTE: Shift工具包支持ESXi 7.0及更高版本
+
+下一步是添加目标虚拟机管理程序。
+
+* 目标 *
+
+image:shift-toolkit-image18.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* 目标站点详细信息
++
+** Site Name (站点名称)-提供站点的名称
+** 虚拟机管理程序—选择Hyper-V或KVM作为目标
+** 站点位置–选择默认选项
+** Connector (连接器)–选择默认选项
+
+
+
+
+填写后、单击Continue。
+
+image:shift-toolkit-image19.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+根据选择的虚拟机管理程序、填写必要的详细信息。
+
+* 目标Hyper-V详细信息
++
+** Hyper-V独立或故障转移集群管理器IP地址或FQDN
+** username—用于访问Hyper-V的用户名(UPN格式：username@domain.com) Password—用于访问Hyper-V以执行资源清单的密码。
+
+
+
+
+image:shift-toolkit-image20.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+完成后、单击Continue
+
+
+NOTE: 在当前版本中、Shift工具包不会直接与System Center通信。
+
+
+NOTE: 在当前版本中、只有Hyper-V支持端到端虚拟机迁移。
+
+
+NOTE: 在当前版本中、对于KVM作为目标、唯一支持的工作流是将VMDK转换为qcow2。因此、如果从下拉列表中选择KVM、则不需要虚拟机管理程序详细信息。qcow2磁盘可用于在各种KVM上配置虚拟机。
+
+* ONTAP存储系统*
+
+image:shift-toolkit-image21.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+NOTE: 源存储系统和目标存储系统应与卷级别的磁盘格式转换相同。
+
+image:shift-toolkit-image22.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+下一步是将所需的VM作为资源组分组到其迁移组中。
+
+
+
+==== 资源分组
+
+添加平台后、将要迁移或转换的VM分组为资源组。使用Shift工具包资源组、您可以将一组依赖虚拟机分组到逻辑组中、这些逻辑组包含其启动顺序、启动延迟以及可在恢复时执行的可选应用程序验证。
+
+要开始创建资源组，请单击“创建新资源组”菜单项。
+
+. 访问资源组、单击"Create New Resource Group"(创建新资源组)。
++
+image:shift-toolkit-image23.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 在"New resource group"(新资源组)上、从下拉列表中选择源站点、然后单击"Creation"(创建)
+. 提供资源组详细信息并选择工作流。此工作流提供了两个选项
++
+.. 基于克隆的迁移—执行VM从源虚拟机管理程序到目标虚拟机管理程序的端到端迁移。
+.. 基于克隆的转换—将磁盘格式转换为选定虚拟机管理程序类型。
++
+image:shift-toolkit-image24.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+. 单击"Continue (继续)"
+. 使用搜索选项选择适当的VM。默认筛选选项为"数据 存储库"。
++
+
+NOTE: 在转换之前、将要转换的VM移动或迁移到新创建的ONTAP SVM上的指定数据存储库。这有助于隔离生产NFS数据存储库、并且指定的数据存储库可用于暂存虚拟机。
+
++
+image:shift-toolkit-image25.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 通过选择"Destin Site"(目标站点)、"Destin Hyper-V Entry"(目标Hyper-V条目)以及"数据 存储库到qtree"(qtree)映射来更新迁移详细信息。
++
+image:shift-toolkit-image26.png["图中显示了输入/输出对话框或表示已写入内容"]
+
++
+
+NOTE: 在将VM从ESX转换为Hyper-V时、请确保将目标路径(用于存储已转换的VM的路径)设置为qtree。将目标路径设置为相应的qtree。
+
+. 为所有选定虚拟机选择启动顺序和启动延迟(秒)。通过选择每个虚拟机并设置其优先级来设置启动顺序。3是所有虚拟机的默认值。
++
+选项如下：
+
++
+1—第一个启动的虚拟机3—默认值5—最后一个启动的虚拟机
+
++
+image:shift-toolkit-image27.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 单击"Create Resource Group"(创建资源组)。
++
+image:shift-toolkit-image28.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+
+
+===== 蓝图
+
+要迁移或转换虚拟机、需要制定一个计划。从下拉列表中选择源虚拟机管理程序平台和目标虚拟机管理程序平台、然后选择要包含在此蓝图中的资源组、以及应用程序应如何启动的分组(即域控制器、然后依次选择第1层和第2层等)。这些计划通常也称为迁移计划。要定义蓝图、请导航到"Blueprints"(蓝图)选项卡、然后单击"Create New Blueprint"(创建新蓝图)。
+
+要开始创建蓝图、请单击"Create New Blueprint"(创建新蓝图)。
+
+. 要访问蓝图、请单击"Create New Blueprint"(创建新蓝图)。
++
+image:shift-toolkit-image29.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 在"New Blueprint"(新蓝图)上、为计划提供一个名称、并通过选择源站点、关联的vCenter、目标站点和关联的Hyper-V虚拟机管理程序来添加所需的主机映射。
+. 完成映射后、选择集群和主机映射。
++
+image:shift-toolkit-image30.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 选择资源组详细信息、然后单击"Continue (继续)"
++
+image:shift-toolkit-image31.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 设置资源组的执行顺序。使用此选项可以选择存在多个资源组时的操作顺序。
+. 完成后、选择"Network Mapping"(网络映射)以映射到相应的虚拟交换机。虚拟交换机应已在Hyper-V中配置
++
+
+NOTE: 选择网络时、唯一支持的选项是虚拟交换机类型"External (外部)"。
+
++
+
+NOTE: 尽管GUI中提供了网络映射、但在当前版本中、Shift工具包不执行IP地址分配、但在即将发布的版本中、可以选择"保留IP"。在当前版本中、默认选择"Do no configure Network"(不配置网络)。在转换磁盘并在Hyper-V端购买虚拟机后、手动分配网络交换机、以匹配VM软件端的相关端口组和VLAN。
+
++
+image:shift-toolkit-image32.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 根据所选的虚拟机、系统将自动选择存储映射。注意：请确保事先配置qtree并分配必要的权限、以便可以从SMB共享创建和启动虚拟机。
+. 在VM详细信息下、提供每种操作系统类型的服务帐户详细信息。该脚本用于连接到虚拟机、以创建和运行删除VMware工具和备份IP配置详细信息所需的某些脚本。
++
+image:shift-toolkit-image33.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 同样、在VM详细信息下、选择IP配置选项。此版本不支持IP地址分配、因此默认情况下会选择"不配置"。
+. 下一步是VM配置。
++
+** (可选)调整VM CPU/RAM参数的大小、这对于调整大小非常有用。
+** 启动顺序覆盖：同时修改资源组中所有选定VM的启动顺序和启动延迟(秒)。如果需要对资源组引导顺序选择期间选择的内容进行任何更改、则可以使用此附加选项来修改引导顺序。默认情况下、系统会使用在选择资源组期间选择的启动顺序、但在此阶段可以进行任何修改。*启动：如果工作流不应启动虚拟机，请取消选中此选项。默认选项为on、表示虚拟机将启动。
+** 删除VMware工具：Shift工具包会在转换之前删除VMware工具。默认情况下，此选项处于选中状态。
+** 生成：Shift工具包使用以下经验法则、默认使用相应的One- Gen1 > BIOS和Gen2 > EFI。无法选择此选项。
+** 保留MAC：可以保留相应VM的MAC地址、以克服依赖MAC的应用程序面临的许可难题。此选项已禁用、因为在此版本中无法对网络进行任何改进。
+** 服务帐户覆盖：如果无法使用全局服务帐户、则此选项允许指定单独的服务帐户。
++
+image:shift-toolkit-image34.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+. 单击"Create Blueprint"(创建蓝图)。
+
+
+
+
+==== migration
+
+创建蓝图后、可以使用"Migration"(迁移)选项。在迁移选项期间、Shift工具包会执行一系列步骤来转换磁盘格式、并按照蓝图中的定义使用转换后的磁盘在Hyper-V主机上创建虚拟机。执行的高级步骤如下：
+
+* 在源上触发Blueprint的VM Snapshot
+* 触发卷快照
+* 通过克隆网络配置并删除适用于所有VM的VMware Tools来准备VM
++
+** 根据操作系统类型、会添加必要的Hyper-V驱动程序<optional>
+
+
+
+
+
+NOTE: 有关详细信息、请参见将RHEL VM迁移到hyper-v后dracut中的系统stubt
+
+* 关闭保护组中的VM—在源上
+* 删除蓝图中所有VM的现有快照
+* 克隆所有VM并将其VMDK转换为VHDx格式
+* 启动保护组中的VM—目标
+
+
+要按原样使用蓝图中指定的配置触发迁移工作流、请单击迁移。
+
+image:shift-toolkit-image35.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+一旦触发、准备阶段就会进入、转换过程将执行上述步骤。
+
+
+NOTE: 我们建议、从同一ESXi源到同一Hyper-V目标的并行转换不能超过10个
+
+image:shift-toolkit-image36.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+将VMDK转换为VHDx只需几秒钟、这使得这种方法成为所有选项中速度最快的一种、但需要额外付费。这也有助于减少迁移期间的VM停机时间。
+
+image:shift-toolkit-image37.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+作业完成后、蓝图的状态将更改为"migration" complete。
+
+image:shift-toolkit-image38.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+迁移完成后、现在是时候验证Hyper-V端的虚拟机了。以下屏幕截图显示了在创建蓝图期间指定的Hyper-V主机上运行的虚拟机。
+
+image:shift-toolkit-image39.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+NOTE: 转换后、除操作系统磁盘外的所有VM磁盘都将脱机。这是因为在VMware VM上、NewDiskPolicy参数默认设置为offlineALL。
+
+
+
+==== 转换
+
+通过基于克隆的转换选项、您只需在虚拟机管理程序之间转换以下磁盘格式的虚拟磁盘即可：
+
+* VMware ESX到Microsoft Hyper-V (VMDK到VHDX)
+* VMware ESX到Red Hat KVM (VMDK到QCOW2)
+
+
+
+
+===== 转换为QCOW2格式
+
+要使用NetApp Shift工具包将虚拟磁盘转换为QCOW2格式、请按照以下简要步骤进行操作：
+
+* 创建一个目标站点类型、将Hyper-V或KVM指定为虚拟机管理程序。注意：KVM不需要虚拟机管理程序详细信息。
++
+image:shift-toolkit-image40.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* 使用需要进行磁盘转换的VM创建一个资源组
++
+image:shift-toolkit-image41.png["图中显示了输入/输出对话框或表示已写入内容"]
+
++
+image:shift-toolkit-image42.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* 创建蓝图以将虚拟磁盘转换为QCOW2格式。
++
+image:shift-toolkit-image43.png["图中显示了输入/输出对话框或表示已写入内容"]
+
++
+image:shift-toolkit-image44.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* 在虚拟机出现必要的停机时间后、选择"Convert (转换)"。
++
+image:shift-toolkit-image45.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* 转换操作会对虚拟机和相应磁盘执行每个操作、以生成适当的格式。
++
+image:shift-toolkit-image46.png["图中显示了输入/输出对话框或表示已写入内容"]
+
++
+image:shift-toolkit-image47.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* 通过手动创建虚拟机并将磁盘连接到已转换的磁盘来使用该磁盘。
++
+image:shift-toolkit-image48.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+
+NOTE: Shift工具包仅支持磁盘转换。它们不支持VM转换。要在VM中使用转换后的磁盘、必须手动创建VM、并且必须将该磁盘连接到该VM。
+
+
+NOTE: Shift工具包不支持对KVM虚拟机管理程序进行VM级别转换。但是、它支持将磁盘转换为QCOW2磁盘格式、即KVM虚拟机管理程序使用的虚拟磁盘格式。
+
+
+
+===== 转换为VHDX格式
+
+要使用NetApp Shift工具包将虚拟磁盘转换为VHDX格式、请按照以下简要步骤进行操作：
+
+* 创建一个目标站点类型、将Hyper-V或KVM指定为虚拟机管理程序。
++
+
+NOTE: KVM不需要虚拟机管理程序详细信息。
+
++
+image:shift-toolkit-image49.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* 使用需要进行磁盘转换的VM创建一个资源组
++
+image:shift-toolkit-image50.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* 创建蓝图以将虚拟磁盘转换为VHDX格式。
++
+image:shift-toolkit-image51.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* 在虚拟机出现必要的停机时间后、选择"Convert (转换)"。
++
+image:shift-toolkit-image52.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* 转换操作会对虚拟机和相应磁盘执行每个操作、以生成适当的VHDX格式。
++
+image:shift-toolkit-image53.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* 通过手动创建虚拟机并将磁盘连接到已转换的磁盘来使用该磁盘。
++
+image:shift-toolkit-image54.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+
+NOTE: 要在虚拟机中使用转换后的VHDX磁盘、必须通过Hyper-V Manager或PowerShell命令手动创建虚拟机、并且必须将该磁盘连接到虚拟机。此外、还应手动映射网络。
+
+
+
+==== 监控和信息板
+
+使用作业监控功能监控作业的状态。
+
+image:shift-toolkit-image55.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+借助直观的用户界面、可以自信地评估迁移、转换和蓝图的状态。这样、管理员可以快速确定成功、失败或部分失败的计划以及迁移或转换的VM数量。
+
+image:shift-toolkit-image56.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+==== SAN环境
+
+作为Shift工具包的一项关键要求、要转换的VM必须驻留在NAS环境中(适用于ESX的NFS)。如果VM驻留在SAN环境(iSCSI、FC、FCoE、NVMeFC)中、则必须先将其迁移到NAS环境、然后再进行转换。
+
+image:shift-toolkit-image57.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+上述方法描述了一个典型的SAN环境、其中VM存储在SAN数据存储库中。首先、使用VMware vSphere Storage vMotion将要从ESX转换为Hyper-V的VM及其磁盘迁移到NFS数据存储库。Shift工具包使用FlexClone将VM从ESX转换为Hyper-V。转换后的VM及其磁盘驻留在CIFS共享上。转换后的虚拟机(及其磁盘)将通过Hyper-V存储实时迁移迁移迁移回启用了SAN的CSV。
+
+
+
+== 结论
+
+NetApp Shift工具包可帮助管理员快速无缝地将VM从VMware转换为Hyper-V。它还可以仅在不同虚拟机管理程序之间转换虚拟磁盘。因此、每当您要将工作负载从一个虚拟机管理程序迁移到另一个虚拟机管理程序时、Shift工具包就可以为您节省数小时的工作量。企业现在可以托管多虚拟机管理程序环境、而不必担心工作负载是否与单个虚拟机管理程序捆绑在一起。此功能可提高灵活性、并降低许可成本、锁定和对单个供应商的承诺。
+
+
+
+== 后续步骤
+
+下载Shift工具包、开始迁移或转换虚拟机或磁盘文件、以简化和简化迁移、从而充分发挥Data ONTAP的潜能。
+
+要了解有关此过程的更多信息、请随时按照详细的逐步说明进行操作。
+
+.从ESX到Hyper-V的迁移减少副本复制
+video::dc0d9627-0399-45d9-a843-b1d8010fff80[panopto,width=360]
