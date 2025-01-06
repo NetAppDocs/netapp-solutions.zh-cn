@@ -16,9 +16,9 @@ summary:
 [role="lead"]
 VMware Cloud Foundation (VCF)是一款集成的软件定义的数据中心(SDDC)平台、可提供一整套软件定义的基础架构、用于在混合云环境中运行企业级应用程序。它将计算、存储、网络和管理功能整合到一个统一平台中、跨私有云和公共云提供一致的运营体验。
 
-作者：Jsh Powell
+作者：Jsh Powell、Sresh Thoppay
 
-本文档提供了有关使用NetApp全闪存SAN阵列的VMware Cloud Foundation可用存储选项的信息。本指南介绍了受支持的存储选项、并具体说明了如何将iSCSI数据存储库部署为管理域的补充存储、以及将VVOL (iSCSI)和NVMe/TCP数据存储库部署为工作负载域的补充数据存储库。此外、还介绍了使用适用于VMware vSphere的SnapCenter对虚拟机和数据存储库进行数据保护的情况。
+本文档提供了有关使用NetApp全闪存SAN阵列的VMware Cloud Foundation可用存储选项的信息。有关将VMFS数据存储库(FC/iSCSI)部署为管理和工作负载域的主体存储和补充存储(FC/iSCSI/NVMe-oF)的具体说明、介绍了受支持的存储选项。此外、还介绍了使用适用于VMware vSphere的SnapCenter对虚拟机和数据存储库进行数据保护的情况。
 
 
 
@@ -71,16 +71,50 @@ image:vmware-vcf-aff-image02.png["VCF架构"]
 
 ==== VCF存储选项
 
-VMware将VCF的存储选项分为*主体*和*补充*存储。VCF管理域必须使用vSAN作为其主存储。但是、管理域有许多补充存储选项、VI工作负载域既可以使用主体存储选项、也可以使用补充存储选项。
+VMware将VCF的存储选项分为*主体*和*补充*存储。从VCF 5.2开始、ONTAP存储可用作管理和工作负载域的主存储和补充存储、VCF 5.2可以选择将现有vSphere环境转换为VCF管理域或作为工作负载域导入到现有VCF环境。
 
 image:vmware-vcf-aff-image01.png["VCF存储选项"]
 
-*工作负载域的主要存储*
-主体存储是指在SDDC Manager中的设置过程中可以直接连接到VI工作负载域的任何类型的存储。主存储在集群创建流程编排中使用SDDC管理器进行部署、是为工作负载域配置的第一个数据存储库。它包括光纤通道上的vSAN、vvol (VMFS)、NFS和VMFS。
+*用于管理和工作负载的主要存储域*主要存储是指可以在域设置过程中部署或导入的任何类型的存储。要在管理域中使用ONTAP存储作为主存储、必须从现有vSphere环境进行转换。支持FC或NFS v3数据存储库上的VMFS选项。
+
+[cols="20% 20% 20% 20% 20%"]
+|===
+| 存储类型 | 管理域-默认集群 | 管理域—附加集群 | VI工作负载域—默认集群 | VI工作负载域—附加集群 
+
+
+| FC上的VMFS | *导入工具* | *SDDC API* | 是的。 | 是的。 
+
+
+| iSCSI上的VMFS | 不适用 | 不适用 | 不适用 | 不适用 
+
+
+| 使用FC的VVOC | 不适用 | 不适用 | 否 | 是的。 
+
+
+| 使用iSCSI的vVol | 不适用 | 不适用 | 否 | 是的。 
+|===
+* 不适用—VCF不支持。
+
 
 *用于管理和工作负载域的补充存储*
 补充存储是一种存储类型、可以在创建集群后随时添加到管理域或工作负载域中。补充存储代表支持的存储选项范围最广、所有这些存储选项在NetApp ASA阵列上均受支持。对于大多数存储协议类型、可以使用适用于VMware vSphere的ONTAP工具部署补充存储。
 
+[cols="25% 25% 25% 25%"]
+|===
+| 存储类型 | 管理域-默认集群 | 管理域—附加集群 | VI工作负载域 
+
+
+| FC上的VMFS | 是的。 | 是的。 | 是的。 
+
+
+| iSCSI上的VMFS | 是的。 | 是的。 | 是的。 
+
+
+| 使用FC的VVOC | 是的。 | 是的。 | 是的。 
+
+
+| 使用iSCSI的vVol | 是的。 | 是的。 | 是的。 
+|===
 有关VMware Cloud Foundation的其他文档资源：
 * link:https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html["VMware Cloud Foundation文档"]
 * link:https://docs.vmware.com/en/VMware-Cloud-Foundation/5.1/vcf-design/GUID-2156EC66-BBBB-4197-91AD-660315385D2E.html["VMware Cloud Foundation支持的存储类型"]
@@ -194,12 +228,14 @@ BlueXP集成支持3-2-1备份策略、将数据副本扩展到云中的对象存
 
 == 解决方案概述
 
-本文档中介绍的方案将演示如何使用ONTAP存储系统作为管理和工作负载域的补充存储。此外、适用于VMware vSphere的SnapCenter插件用于保护虚拟机和数据存储库。
+本文档中介绍的方案将演示如何使用ONTAP存储系统作为管理和工作负载域的主存储和补充存储。此外、适用于VMware vSphere的SnapCenter插件用于保护虚拟机和数据存储库。
 
 本文档涵盖的场景：
 
 * *使用ONTAP工具在VCF管理域中部署iSCSI数据存储库*。单击 link:vmware_vcf_asa_supp_mgmt_iscsi.html["*此处*"] 了解部署步骤。
 * *使用ONTAP工具在VI工作负载域*中部署Vvol (iSCSI)数据存储库。单击 link:vmware_vcf_asa_supp_wkld_vvols.html["*此处*"] 了解部署步骤。
 * *配置基于TCP的NVMe数据存储库以在VI工作负载域中使用*。单击 link:vmware_vcf_asa_supp_wkld_nvme.html["*此处*"] 了解部署步骤。
-* *部署并使用适用于VMware vSphere的SnapCenter插件来保护和还原VI工作负载域中的虚拟机*。单击 link:vmware_vcf_asa_scv_wkld.html["*此处*"] 了解部署步骤。
+* *部署并使用适用于VMware vSphere的SnapCenter插件来保护和还原VI工作负载域中的虚拟机*单击可查看部署步骤。link:vmware_vcf_asa_scv_wkld.html["*此处*"]
+* *将延伸型集群与管理域中的VMFS数据存储库结合使用*单击link:vmware_vcf_asa_mgmt_stretchcluster.html["*此处*"]可查看部署步骤。
+* *将延伸型集群与VI工作负载域中的VMFS数据存储库结合使用*单击link:vmware_vcf_asa_wkld_stretchcluster.html["*此处*"]可查看部署步骤。
 
