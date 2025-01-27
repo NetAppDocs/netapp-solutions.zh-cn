@@ -40,7 +40,7 @@ image:ontap-cyber-vault-air-gap.png["使用NetApp ONTAP的有气隙的网络存�
 以下命令将 `dstvolB` `SVM2`在聚合上创建一个名为的2 GB SnapLock Compliance卷 `node01_aggr`：
 
 +
-`cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -snaplock-type compliance -type DP -size 2GG`
+`cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -snaplock-type compliance -type DP -size 2GB`
 
 . 在目标集群上，要创建气隙，请设置默认保留期限，如中所述link:https://docs.netapp.com/us-en/ontap/snaplock/set-default-retention-period-task.html["设置默认保留期限"^]。作为存储目标的 SnapLock 卷会为其分配默认保留期限。此期间的值最初设置为最小0年、最大100年(从ONTAP 9 10.1开始)。对于早期ONTAP版本、SnapLock Compliance卷的值为0 - 70。)首次提交每个 NetApp Snapshot 副本时都会使用此默认保留期限。必须更改default-保留 期限。保留期限可以稍后根据需要延长、但不能缩短。有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap/snaplock/set-retention-period-task.html["设置保留时间概述"^]。
 +
