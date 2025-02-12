@@ -14,18 +14,34 @@ summary: 借助 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化
 
 
 [role="lead"]
-本节介绍如何使用Red Hat OpenShift虚拟化迁移工具包将虚拟机从VMware迁移到OpenShift集群。
+本节介绍如何使用Red Hat OpenShift虚拟化迁移工具包将虚拟机从VMware迁移到OpenShift集群。其中包括以下类型的迁移：
 
+.冷迁移
+[%collapsible]
+====
+这是默认迁移类型。复制数据时、源虚拟机将关闭。
+
+====
+.热迁移
+[%collapsible]
+====
+在这种类型的迁移中、大部分数据都是在源虚拟机(VM)运行期间的预复制阶段复制的。然后、VM将关闭、剩余数据将在转换阶段进行复制。
+
+====
+
+
+== 视频演示
+
+以下视频演示了如何使用ONTAP存储类将RHEL VM从VMware冷迁移到OpenShift虚拟化以实现永久性存储。
+
+.使用Red Hat VtTM通过NetApp ONTAP存储将VM迁移到OpenShift虚拟化
+video::bac58645-dd75-4e92-b5fe-b12b015dc199[panopto,width=360]
 
 
 == 使用适用于虚拟化的迁移工具包将VM从VMware迁移到OpenShift虚拟化
 
 在本节中、我们将了解如何使用虚拟化迁移工具包(Migration Toolkit for Virtualization、MvTM)将虚拟机从VMware迁移到在OpenShift容器平台上运行并使用Trident与NetApp ONTAP存储集成的OpenShift虚拟化。
 
-以下视频演示了如何使用ONTAP SAN存储类将RHEL VM从VMware迁移到OpenShift虚拟化以实现永久性存储。
-
-.使用Red Hat VtTM通过NetApp ONTAP存储将VM迁移到OpenShift虚拟化
-video::bac58645-dd75-4e92-b5fe-b12b015dc199[panopto,width=360]
 下图简要展示了将VM从VMware迁移到Red Hat OpenShift虚拟化的过程。
 
 image:rh-os-n_use_case_vm_migration_using_mtv.png["图中显示了输入/输出对话框或表示已写入内容"]
@@ -179,7 +195,7 @@ allowVolumeExpansion: true
 ----
 
 
-=== *安装Mst*
+=== 安装 MTV
 
 现在、您可以安装适用于虚拟化的迁移工具包(Migration Toolkit for Virtualization、简称为迁移工具包)。请参阅提供的说明 link:https://access.redhat.com/documentation/en-us/migration_toolkit_for_virtualization/2.5/html/installing_and_using_the_migration_toolkit_for_virtualization/installing-the-operator["此处"] 有关安装的帮助。
 
@@ -225,11 +241,51 @@ NOTE: 虚拟化迁移工具包(Migration Toolkit for Virtualization、Mv）使�
 
 image:rh-os-n_use_case_vm_migration_using_mtv_plan_ready.png["图中显示了输入/输出对话框或表示已写入内容"]
 
+
+
+=== 执行冷迁移
+
 单击*Start*将运行一系列步骤来完成虚拟机的迁移。
 
 image:rh-os-n_use_case_vm_migration_using_mtv_plan_complete.png["图中显示了输入/输出对话框或表示已写入内容"]
 
-完成所有步骤后，您可以通过单击左侧导航菜单中“Virtualization”(虚拟化)下的*virtual Machines*来查看迁移的VM。
-其中提供了访问虚拟机的说明 link:https://docs.openshift.com/container-platform/4.13/virt/virtual_machines/virt-accessing-vm-consoles.html["此处"]。
+完成所有步骤后，您可以通过单击左侧导航菜单中“Virtualization”(虚拟化)下的*virtual Machines*来查看迁移的VM。提供了访问虚拟机的说明link:https://docs.openshift.com/container-platform/4.13/virt/virtual_machines/virt-accessing-vm-consoles.html["此处"]。
 
 您可以登录到虚拟机并验证pos正在 使用的数据库的内容。此表中的数据库、表和条目应与在源VM上创建的相同。
+
+
+
+=== 执行热迁移
+
+要执行热迁移、在创建如上所示的迁移计划后、您需要编辑计划设置以更改默认迁移类型。单击冷迁移旁边的编辑图标、然后切换按钮以将其设置为热迁移。单击**保存**。现在单击**开始**开始迁移。
+
+
+NOTE: 确保在VMware中从块存储迁移时、已为OpenShift虚拟化虚拟机选择块存储类。此外、应将卷模式设置为block,并将访问模式设置为rwx,以便日后可以对虚拟机执行实时迁移。
+
+image:rh-os-n_use_case_vm_migration_using_mtv_plan_warm1.png["1."]
+
+单击“**已完成0个VM (共1个VM)”，展开VM，您可以看到迁移进度。
+
+image:rh-os-n_use_case_vm_migration_using_mtv_plan_warm2.png["2."]
+
+一段时间后、磁盘传输完成、迁移将等待进入转换状态。DataVolume处于已暂停状态。返回计划并单击**转换**按钮。
+
+image:rh-os-n_use_case_vm_migration_using_mtv_plan_warm3.png["3."]
+
+image:rh-os-n_use_case_vm_migration_using_mtv_plan_warm4.png["4."]
+
+当前时间将显示在对话框中。如果要将转换计划为稍后的时间、请将时间更改为未来的时间。如果没有，要立即执行转换，请单击**设置转换**。
+
+image:rh-os-n_use_case_vm_migration_using_mtv_plan_warm5.png["5."]
+
+几秒钟后、在转换阶段开始时、DataVolume将从暂停状态变为导入计划到导入计划状态。
+
+image:rh-os-n_use_case_vm_migration_using_mtv_plan_warm6.png["6."]
+
+转换阶段完成后、DataVolume将变为sucsuced状态、PVC将绑定。
+
+image:rh-os-n_use_case_vm_migration_using_mtv_plan_warm7.png["7."]
+
+迁移计划将继续完成Image转换 阶段、最后完成VirtualMachineCreation阶段。VM在OpenShift虚拟化上处于running状态。
+
+image:rh-os-n_use_case_vm_migration_using_mtv_plan_warm8.png["8."]
