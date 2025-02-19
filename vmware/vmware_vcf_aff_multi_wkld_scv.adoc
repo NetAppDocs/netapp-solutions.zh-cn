@@ -1,0 +1,119 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmware_vcf_aff_multi_wkld_scv.html 
+keywords: netapp, vmware, cloud, foundation, vcf, aff, all-flash, nfs, vvol, vvols, array, ontap tools, otv, sddc, scv, workload, domain, backup 
+summary:  
+---
+= 使用适用于VMware vSphere的NetApp SnapCenter (SCV)保护VCF管理域和多个工作负载域
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+利用VMware Cloud Foundation (VCF)工作负载域、企业可以从逻辑上将资源分隔到不同的域中、以便对不同的工作负载进行分组、从而提高安全性和容错能力。域可以独立扩展、满足特定合规性要求并提供多租户功能。VMware Cloud Foundation (VCF)的数据保护对于确保管理域和工作负载域中数据的可用性、完整性和可恢复性至关重要。适用于VMware vSphere的NetApp SnapCenter插件(SCV)是一款功能强大的工具、可将NetApp的数据保护功能集成到VMware环境中。它可以简化NetApp存储上托管的VMware vSphere虚拟机(VM)的备份、还原和克隆。
+
+本文档提供了有关如何使用选择控制阀保护VCF多个域的部署步骤。
+
+
+
+== audience
+
+确保为VMware VCF工作负载域提供数据保护和灾难恢复的解决方案架构师或存储管理员。
+
+
+
+== 架构概述
+
+选择控制阀部署为Linux虚拟设备、使用OVA文件为VM、数据存储库以及文件和文件夹提供快速、节省空间、崩溃状态一致且VM一致的备份和还原操作。选择控制阀使用远程插件结构。在VCF管理域vCenter上部署和托管了多个SCV。选择控制阀和VCF域是一对一关系、因此VCF管理域和每个工作负载域需要一个选择控制阀。
+
+位于ONTAP FAS、AFF或全SAN阵列(ASA)主系统上并复制到ONTAP FAS、AFF或ASA二级系统的数据。选择控制阀还可以与SnapCenter服务器配合使用、以支持在VMware环境中对SnapCenter应用程序专用插件执行基于应用程序的备份和还原操作。有关详细信息、请查看：link:https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/index.html["适用于VMware vSphere的SnapCenter插件文档。"]
+
+image:vmware-vcf-aff-image50.png["具有选择控制阀的vCF多工作负载域"]
+
+3-2-1备份规则是 一种数据保护策略、涉及创建三个数据副本、将其存储在两种不同类型的介质上以及将一个副本保留在异地。BlueXP备份和恢复是一款基于云的数据管理工具、可为内部和云环境中的各种备份和恢复操作提供单一控制平台。NetApp BlueXP  备份和恢复套件的一部分功能可与选择控制阀(内部部署)集成、将数据副本扩展到云中的对象存储。这样可以为来自主存储备份或二级存储备份的异地数据创建第三个副本。通过BlueXP备份和恢复、您可以轻松设置存储策略、以便从这两个内置位置中的任何一个位置传输数据副本。有关详细信息、请查看link:https://docs.netapp.com/us-en/netapp-solutions/ehc/bxp-scv-hybrid-solution.html["3-2-1使用SnapCenter插件为VMware提供数据保护、并为VM提供BlueXP  备份和恢复。"]
+
+
+
+== 部署具有管理域和多个工作负载域的VCF
+
+VCF工作负载域是指具有一个或多个vSphere集群的ESXi组主机、这些主机通过SDDC Manager进行配置、并可随时应用程序。在下面的VCF示例中、部署了一个管理域和两个工作负载域。有关如何使用NetApp存储部署VCF的详细信息、请查看link:https://docs.netapp.com/us-en/netapp-solutions/vmware/vmware-vcf-overview.html["NetApp VCF部署文档。"] image:vmware-vcf-aff-image51.png["vcf一个管理域和两个工作负载域"]
+
+
+
+== 选择控制阀部署、配置和恢复步骤
+
+根据工作负载域的数量以及管理域、需要部署多个选择控制阀。对于两个工作负载域和一个管理域、以下示例显示了在VCF管理域vCenter上部署的三个SCV。image:vmware-vcf-aff-image63.png["VCF域和选择控制阀之间的一对一"]
+
+.为管理域和每个工作负载域部署选择控制阀  
+[%collapsible]
+====
+. link:https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_download_the_ova_open_virtual_appliance.html["下载开放式虚拟设备(OVA)。"]
+. 使用vSphere Client登录到vCenter Server。导航到" 管理">"证书">"证书管理"。添加可信根证书并将每个证书安装在certs文件夹中。安装证书后、可以验证并部署OVA。
+. 登录到 VCF工作负载域vCenter并部署OVF模板 以启动VMware Deploy向导。image:vmware-vcf-aff-image52.png["展开选择控制阀OVF模板"]
++
+｛｛｝
+
+. 打开 OVA以启动选择控制阀、然后单击 安装VMware工具。
+. 从OVA控制台的系统配置菜单生成MFA令牌。image:vmware-vcf-aff-image53.png["MFA for SnapCenter管理Web界面登录"]
++
+｛｛｝
+
+. 使用部署时设置的管理员用户名和密码以及使用维护控制台生成的MFA令牌登录到选择控制阀管理GUI。https://<appliance-IP-address>:8080 to[]访问管理GUI。
++
+image:vmware-vcf-aff-image54.png["适用于VMware vSphere的NetApp SnapCenter Web配置"]
+
+
+
+====
+.配置选择控制阀
+[%collapsible]
+====
+要备份或还原VM、请先添加存储集群或托管数据存储库的VM、然后创建保留和频率备份策略、并设置资源组以保护资源。image:vmware-vcf-aff-image55.png["开始使用选择控制阀"]
+
+. 登录到vCenter Web Client、单击  工具栏中的菜单、然后选择 适用于VMware vSphere的SnapCenter插件并添加存储。在选择控制阀插件的左侧导航窗格中、单击 存储系统 、然后选择 添加 选项。在添加存储系统对话框中、输入基本SVM或集群信息、然后选择 添加。输入NetApp存储IP地址并登录。
+. 要创建新的备份策略、请在选择控制阀插件的左侧导航窗格中、单击 策略、然后选择 新建策略。在 New Backup Policy 页面上、输入策略配置信息、然后单击 Add。image:vmware-vcf-aff-image56.png["创建备份策略"]
+. 在选择控制阀插件的左侧导航窗格中、单击 资源组、然后选择 创建。在创建资源组向导的每个页面上输入所需信息，选择要包含在资源组中的 VM 和数据存储库，然后选择要应用于资源组的备份策略并指定备份计划。
+
+
+image:vmware-vcf-aff-image57.png["创建资源组"]
+
+====
+.还原虚拟机和文件或文件夹备份
+[%collapsible]
+====
+可以还原备份中的VM、VMDK、文件和文件夹。可以将虚拟机还原到原始主机或同一vCenter Server中的备用主机、或者还原到由同一vCenter管理的备用ESXi主机。如果要访问备份中的文件，可以从备份挂载传统数据存储库。您可以将备份挂载到创建备份的同一 ESXi 主机，也可以挂载到具有相同类型的 VM 和主机配置的备用 ESXi 主机。您可以在主机上多次挂载数据存储库。也可以在子系统文件还原会话中还原单个文件和文件夹、该会话会附加虚拟磁盘的备份副本、然后还原选定的文件或文件夹。也可以还原文件和文件夹。
+
+虚拟机还原步骤
+
+. 在VMware vSphere客户端图形用户界面  中、单击工具栏中的菜单、  从下拉列表中选择虚拟机和模板、右键单击某个虚拟机、  然后在下拉列表中选择适用于VMware vSphere的SnapCenter插件、然后  在二级下拉列表中选择还原以启动向导。
+. 在 还原 向导中、选择要还原的备份Snapshot并  在 还原范围 字段中选择整个虚拟机、选择还原位置、然后输入应挂载备份的目标信息。在 Select Location 页面上、选择已还原数据存储库的位置。查看摘要页面、然后单击 完成。image:vmware-vcf-aff-image59.png["虚拟机还原"]
+. 单击  屏幕底部的Recent Tasks (近期任务)监控操作进度。
+
+
+数据存储库还原步骤
+
+. 右键单击某个数据存储库、然后选择适用于VMware vSphere的SnapCenter插件>挂载备份。
+. 在挂载数据存储库页面上、选择备份和备份位置(主或二级)、然后单击挂载。
+
+
+image:vmware-vcf-aff-image62.png["数据存储库还原"]
+
+文件和文件夹还原步骤
+
+. 如果您使用虚拟连接磁盘执行子系统文件或文件夹还原操作、则必须在还原之前为要连接的目标虚拟机配置凭据。在 适用于VMware vSphere的SnapCenter插件的 插件中、选择 子系统文件还原和作为凭据运行 部分、输入用户凭据。对于用户名、必须输入"Administrator (管理员)"。image:vmware-vcf-aff-image60.png["还原凭据"]
+. 右键单击vSphere客户端中的虚拟机、然后选择 适用于VMware vSphere的SnapCenter插件 > 子文件还原。在 Restore Scope 页面上、指定Backup Name、VMDK虚拟磁盘和Location–Primary或Secondary。单击摘要进行确认。image:vmware-vcf-aff-image61.png["文件和文件夹还原"]
+
+
+====
+适用于VCP的NetApp SnapCenter多域可集中管理数据保护、使用NetApp快照高效减少备份所需的时间和存储空间、支持具有强大备份和复制功能的大规模VMware环境、并可对整个VM、特定VMDK或单个文件进行粒度恢复。
+
+
+
+== 使用选择控制阀保护VCF多个域的视频演示
+
+.使用NetApp选择控制阀保护VMware VCF多个域
+video::25a5a06c-1def-4aa4-ab00-b28100142194[panopto,width=360]
