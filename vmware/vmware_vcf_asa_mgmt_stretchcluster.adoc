@@ -14,9 +14,11 @@ summary:
 
 
 [role="lead"]
-在此情景中、我们将演示如何使用适用于VMware vSphere的ONTAP工具(OTV)为VCF管理和工作负载域配置延伸型集群。
+在此情景中、我们将演示如何使用适用于VMware vSphere的ONTAP工具(OTV)为VCF管理域配置延伸型集群。这被视为单实例-多个可用性区域。
 
 作者：Sresh Thoppay
+
+image:vmware_vcf_asa_mgmt_stretchcluster_image01.jpg["单个实例-多个可用性区域"]
 
 
 
@@ -24,18 +26,20 @@ summary:
 
 延伸型集群解决方案可以在默认集群上实施、也可以在VCF管理或工作负载域中的其他集群上实施。主数据存储库和补充数据存储库均支持FC上的VMFS。iSCSI上的VMFS仅支持补充数据存储库。有关在NVMe-oF上使用SnapMirror活动同步时的VMFS支持、请参见IMT。
 
+image:vmware_vcf_asa_mgmt_stretchcluster_image02.jpg["适用于VCF管理域的ONTAP延伸型集群"]
+
 .管理域上的主存储
 [%collapsible]
 ====
-从VCF 5.2开始、可以使用VCF导入工具在不使用VSAN的情况下部署管理域。通过VCF导入工具的转换选项、可以将现有vCenter部署到管理域中。vCenter中的所有集群都将成为管理域的一部分。每个集群都需要有自己的分布式交换机才能进行转换。在VCF导入工具支持多个网络配置文件之前、请考虑对vMotion网络使用延伸型VLAN。
+从VCF 5.2开始、可以使用VCF导入工具在不使用VSAN的情况下部署管理域。VCF导入工具的转换选项允许link:vmware_vcf_convert_fc.html["将现有vCenter部署部署到管理域中"]。vCenter中的所有集群都将成为管理域的一部分。
 
 . 部署vSphere主机
 . 在本地数据存储库上部署vCenter Server (vCenter需要同时位于要转换为管理域的vSphere主机上)
 . 部署适用于VMware vSphere的ONTAP工具
 . 适用于VMware vSphere的Deploy SnapCenter插件(可选)
 . 创建数据存储库(应具备FC分区配置)
-. 将VM迁移到新创建的数据存储库
 . 保护vSphere集群
+. 将VM迁移到新创建的数据存储库
 
 
 
@@ -62,7 +66,7 @@ NOTE: 每当集群扩展或缩减时、都需要在ONTAP工具上更新集群的
 
 有关配置ONTAP存储系统的信息、请参见 link:https://docs.netapp.com/us-en/ontap["ONTAP 9文档"] 中心。
 
-有关配置VCF的信息、请参见 link:https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html["VMware Cloud Foundation文档"]。
+有关配置VCF的信息，请参见link:https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2.html["VMware Cloud Foundation 5.2文档"]。
 
 
 
