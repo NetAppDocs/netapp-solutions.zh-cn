@@ -122,6 +122,7 @@ image:azure_ora_anf_vldb_dg_architecture.png["此图详细展示了在ANF上的A
 * * Azure NetApp Files配置。*Azure NetApp Files在Azure NetApp存储帐户中分配为 `Capacity Pools`。在这些测试和验证中、我们部署了一个2 TiB容量池来托管东部地区的Oracle主存储、并部署了一个4 TiB容量池来托管西部2地区的备用数据库和数据库克隆。ANF容量池具有三个服务级别：标准、高级和超高。ANF容量池的IO容量取决于容量池的大小及其服务级别。创建容量池时、您可以将QoS设置为自动或手动、并将空闲数据加密设置为单个或双个。
 * *对数据库卷进行大小确定。*对于生产部署、NetApp建议从Oracle AWR报告中对Oracle数据库吞吐量要求进行全面评估。估算数据库的ANF卷规模时、应同时考虑数据库大小以及吞吐量要求。对于ANF的自动QoS配置、带宽保证为Ultra服务级别分配的每个TiB卷容量128 MiB/秒。较高的吞吐量可能需要较大的卷规模来满足要求。
 * *单个卷或多个卷。*一个大型卷可以提供与多个卷类似的性能级别、这些卷的聚合大小与QoS相同、而QoS是根据卷大小和容量池服务级别严格强制实施的。建议为Oracle VLDB实施多个卷(多个NFS挂载点)、以更好地利用共享后端ANF存储资源池。在多个NFS卷上实施Oracle ASM以实现IO负载平衡。
+* *应用程序卷组。*部署适用于Oracle的应用程序卷组(Application Volume Group、AVG)以优化性能。通过应用程序卷组部署的卷会放置在区域或分区基础架构中、以便为应用程序VM优化延迟和吞吐量。
 * *Azure虚拟机注意事项。*在这些测试和验证中、我们使用了一个Azure VM—Standard"、B4ms、带有4个vCPU和16 GiB内存。您需要为具有高吞吐量要求的Oracle VLDB选择适当的Azure DB VM。除了vCPU数量和RAM数量之外、在达到数据库存储容量之前、VM网络带宽(传入和传出或NIC吞吐量限制)可能会成为瓶颈。
 * *DNFS配置。*通过使用DNFS、在具有ANF存储的Azure虚拟机上运行的Oracle数据库可以比本机NFS客户端驱动更多的I/O。确保已应用Oracle DNFS修补程序p3293291以解决潜在错误。
 
@@ -168,6 +169,7 @@ vnet网关连接状态：image:azure_ora_anf_dg_vnet_03.png["显示Azure环境�
 +
 验证是否已建立流量(单击三个圆点以打开页面)：image:azure_ora_anf_dg_vnet_04.png["显示Azure环境配置的屏幕截图。"]
 
+. 要部署适用于Oracle的应用程序卷组、请参见本文档link:https://learn.microsoft.com/en-us/azure/azure-netapp-files/application-volume-group-oracle-deploy-volumes["部署适用于Oracle的应用程序卷组"^]。
 
 
 ====

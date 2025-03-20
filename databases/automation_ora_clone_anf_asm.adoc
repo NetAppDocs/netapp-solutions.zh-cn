@@ -1,0 +1,278 @@
+---
+sidebar: sidebar 
+permalink: databases/automation_ora_clone_anf_asm.html 
+keywords: Oracle, Azure, ANF, Database, clone 
+summary: 该解决方案提供了一个基于Ans得 的自动化工具包、用于从采用ASM配置的Azure NetApp Files存储上Azure云中托管的Oracle Data Guard的物理备用数据库中设置、克隆和刷新Oracle克隆数据库。 
+---
+= 使用ASM在ANF上实现Oracle克隆生命周期自动化
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+NetApp公司Allen Cao、Niyaz Mohamed
+
+[role="lead"]
+该解决方案提供了一个基于Ans得 的自动化工具包、用于从采用ASM配置的Azure NetApp Files存储上Azure云中托管的Oracle Data Guard的物理备用数据库中设置、克隆和刷新Oracle克隆数据库。
+
+
+
+== 目的
+
+在Oracle Data Guard配置中将物理备用Oracle数据库的克隆用于其他使用情形有多种用途。它提供生产数据库的可写副本、以供开发或UAT使用。因此、如果可以接受短延迟(10-15分钟)的报告、则可以避免高昂的Active Data Guard许可证成本。它可以节省存储成本、尤其是在可以选择使用精简克隆时。这款基于Ans得 的自动化工具包支持用户按用户计划设置、克隆和刷新克隆的Oracle数据库、以简化生命周期管理。该工具包适用于使用Azure NetApp Files存储部署到Azure公共云的Oracle数据库以及在Data Guard配置中配置的Oracle数据库。
+
+此解决方案 可解决以下使用情形：
+
+* 设置适用于Ans可 自动化的Oracle备用数据库克隆配置文件。
+* 按照用户定义的计划、使用Ansle Playbook从Data Guard备用模式创建或刷新克隆Oracle数据库。
+
+
+
+
+== audience
+
+此解决方案 适用于以下人员：
+
+* 在Azure云中管理Oracle数据库的数据库管理员。
+* 负责管理Azure NetApp Files存储的存储管理员。
+* 希望从Data Guard备用克隆Oracle数据库以用于其他使用情形的应用程序所有者。
+
+
+
+
+== 许可证
+
+访问、下载、安装或使用此GitHub存储库中的内容即表示您同意中列出的许可条款 link:https://github.com/NetApp/na_ora_hadr_failover_resync/blob/master/LICENSE.TXT["许可证文件"^]。
+
+
+NOTE: 在使用此GitHub存储库中的内容制作和/或共享任何衍生作品方面存在一些限制。在使用内容之前、请确保您已阅读许可条款。如果您不同意所有条款、请勿访问、下载或使用此存储库中的内容。
+
+
+
+== 解决方案 部署
+
+
+
+=== 部署的前提条件
+
+[%collapsible]
+====
+部署需要满足以下前提条件。
+
+....
+Ansible controller:
+  Ansible v.2.10 and higher
+  ONTAP collection 21.19.1
+  Python 3
+  Python libraries:
+    netapp-lib
+    xmltodict
+    jmespath
+....
+....
+Oracle servers:
+  Physical standby Oracle servers in Data Guard configuration
+  Clone target Oracle servers with ASM configuration
+....
+
+NOTE: 为了简化、应将克隆目标Oracle服务器配置为与备用Oracle服务器(例如Oracle软件堆栈)以及Oracle主目录布局等完全相同
+
+====
+
+
+=== 下载此工具包
+
+[%collapsible]
+====
+[source, cli]
+----
+git clone https://bitbucket.ngage.netapp.com/scm/ns-bb/na_oracle_clone_anf.git
+----
+
+NOTE: 此时、只有具有Bitb分 段访问权限的NetApp内部用户才能访问此工具包。对于感兴趣的外部用户、请向您的客户团队申请访问权限或联系NetApp解决方案工程团队。
+
+====
+
+
+=== Ans可 处理的源和目标主机文件配置
+
+[%collapsible]
+====
+该工具包包含一个hosts文件、用于定义运行Andsle Playbook的源和目标Oracle主机。通常、它包括Data Guard设置中的备用数据库主机和目标Oracle克隆主机。下面是一个示例文件。主机条目包括目标主机IP地址以及用于用户访问主机以执行克隆或刷新命令的ssh密钥。Azure NetApp Files存储可通过API进行配置。因此、ANF连接是通过HTTP协议通过本地主机进行的。
+
+....
+[ora_stdby]
+oras ansible_host=172.179.119.75 ansible_ssh_private_key_file=oras.pem
+....
+....
+[ora_clone]
+orac ansible_host=52.148.142.212 ansible_ssh_private_key_file=orac.pem
+....
+....
+[azure]
+localhost ansible_connection=local
+....
+====
+
+
+=== 全局变量配置
+
+[%collapsible]
+====
+以下是典型全局变量文件vars.yml的示例、其中包含适用于全局级别的变量。
+
+....
+######################################################################
+###### Oracle DB clone on ANF user configuration variables      ######
+###### Consolidate all variables from ANF, linux and oracle     ######
+######################################################################
+....
+....
+###########################################
+### ONTAP/ANF specific config variables ###
+###########################################
+....
+....
+# ANF credential
+subscription: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+client: "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+secret: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+tenant: "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx"
+....
+....
+# Cloned DB volumes from standby DB
+resource_group: ANFAVSRG
+storage_account: ANFOraWest
+anf_pool: database2
+data_vols:
+  - "{{ groups.ora_stdby[0] }}-u02"
+  - "{{ groups.ora_stdby[0] }}-u04"
+  - "{{ groups.ora_stdby[0] }}-u05"
+  - "{{ groups.ora_stdby[0] }}-u06"
+  - "{{ groups.ora_stdby[0] }}-u03"
+....
+....
+nfs_lifs:
+  - 10.0.3.36
+  - 10.0.3.36
+  - 10.0.3.36
+  - 10.0.3.36
+  - 10.0.3.36
+....
+....
+###########################################
+### Linux env specific config variables ###
+###########################################
+....
+....
+####################################################
+### DB env specific install and config variables ###
+####################################################
+....
+....
+# Standby DB configuration
+oracle_user: oracle
+oracle_base: /u01/app/oracle
+oracle_sid: NTAP
+db_unique_name: NTAP_LA
+oracle_home: '{{ oracle_base }}/product/19.0.0/{{ oracle_sid }}'
+spfile: '+DATA/{{ db_unique_name }}/PARAMETERFILE/spfile.289.1190302433'
+adump: '{{ oracle_base }}/admin/{{ db_unique_name }}/adump'
+grid_home: /u01/app/oracle/product/19.0.0/grid
+asm_disk_groups:
+  - DATA
+  - LOGS
+....
+....
+# Clond DB configuration
+clone_sid: NTAPDEV
+sys_pwd: "xxxxxxxx"
+....
+====
+
+
+=== 主机变量配置
+
+[%collapsible]
+====
+主机变量在名为｛｛host_name｝｝.yml的host_vars目录中定义、仅适用于特定主机。对于此解决方案、只会配置目标克隆数据库主机参数文件。Oracle备用数据库参数在全局变量文件中进行配置。以下是典型配置的目标Oracle克隆数据库主机变量文件orac.yml示例。
+
+ # User configurable Oracle clone host specific parameters
+....
+# Database SID - clone DB SID
+oracle_base: /u01/app/oracle
+oracle_user: oracle
+clone_sid: NTAPDEV
+oracle_home: '{{ oracle_base }}/product/19.0.0/{{ oracle_sid }}'
+clone_adump: '{{ oracle_base }}/admin/{{ clone_sid }}/adump'
+....
+....
+grid_user: oracle
+grid_home: '{{ oracle_base }}/product/19.0.0/grid'
+asm_sid: +ASM
+....
+====
+
+
+=== 其他克隆目标Oracle服务器配置
+
+[%collapsible]
+====
+克隆目标Oracle服务器应与安装并修补的源Oracle服务器具有相同的Oracle软件堆栈。Oracle用户.bash_profile已配置$oracle_base和$oracle_home。此外、$oracle_home变量应与源Oracle服务器设置匹配。如果目标oracle_home设置与备用Oracle服务器配置不同，请创建符号链接以解决这些差异。下面是一个示例。
+
+ # .bash_profile
+....
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+       . ~/.bashrc
+fi
+....
+ # User specific environment and startup programs
+....
+export ORACLE_BASE=/u01/app/oracle
+export GRID_HOME=/u01/app/oracle/product/19.0.0/grid
+export ORACLE_HOME=/u01/app/oracle/product/19.0.0/NTAP
+alias asm='export ORACLE_HOME=$GRID_HOME;export PATH=$PATH:$GRID_HOME/bin;export ORACLE_SID=+ASM'
+....
+====
+
+
+=== 执行操作手册
+
+[%collapsible]
+====
+总共有两本用于执行Oracle数据库克隆生命周期的操作手册。可以按需执行数据库克隆或刷新、也可以将其计划为crontab作业。
+
+. 安装Andsone控制器的前提条件-仅一次。
++
+[source, cli]
+----
+ansible-playbook -i hosts ansible_requirements.yml
+----
+. 按需创建和刷新克隆数据库、或者使用shell脚本定期从crontab创建和刷新克隆数据库、以调用克隆或刷新操作手册。
++
+[source, cli]
+----
+ansible-playbook -i oracle_clone_asm_anf.yml -u azureuser -e @vars/vars.yml
+----
++
+[source, cli]
+----
+0 */2 * * * /home/admin/na_oracle_clone_anf/oracle_clone_asm_anf.sh
+----
+
+
+要克隆任何其他数据库、请创建一个单独的oracle_CLONE n_ASM_anf.yml和oracle_CLONE n_ASM_anf.sh。相应地配置host_vars目录中的Ansv可 目标主机、全局vars.yml和hostname.yml文件。
+
+
+NOTE: 工具包在不同阶段的执行会暂停、以便完成特定任务。例如、它会暂停两分钟、以便完成数据库卷克隆。一般来说、默认值应足以满足要求、但时间安排可能需要根据具体情况或实施情况进行调整。
+
+====
+
+
+== 从何处查找追加信息
+
+要了解有关NetApp 解决方案 自动化的详细信息、请查看以下网站 link:../automation/automation_introduction.html["NetApp 解决方案自动化"^]
