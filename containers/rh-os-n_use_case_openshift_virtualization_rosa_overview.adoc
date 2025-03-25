@@ -17,7 +17,11 @@ summary: 基于ROSA的Red Hat OpenShift虚拟化
 
 == 概述
 
-本节详细介绍了如何将FSx for NetApp ONTAP设置为ROSA集群的默认存储类、然后创建一个虚拟机来将FSx ONTAP存储用于其卷。我们还将了解如何使用子系统凭据连接到虚拟机并重新启动虚拟机。最后、我们将执行虚拟机从当前节点到新节点的实时迁移。我们将在VM重新启动和实时迁移之后检查磁盘存储的内容。
+本节详细介绍了如何将FSx for NetApp ONTAP设置为ROSA集群的默认存储类、然后创建一个虚拟机来将FSx ONTAP存储用于其卷。
+
+我们还将了解如何使用子系统凭据连接到虚拟机并重新启动虚拟机。最后、我们将执行虚拟机从当前节点到新节点的实时迁移。我们将在VM重新启动和实时迁移之后检查磁盘存储的内容。
+
+阅读博客作为其他资源：link:https://community.netapp.com/t5/Tech-ONTAP-Blogs/Unlock-Seamless-iSCSI-Storage-Integration-A-Guide-to-FSxN-on-ROSA-Clusters-for/ba-p/459124["解锁无缝iSCSI存储集成：适用于iSCSI的ROSA集群上的FSxN指南"]
 
 
 
@@ -33,7 +37,19 @@ summary: 基于ROSA的Red Hat OpenShift虚拟化
 * link:https://docs.openshift.com/rosa/rosa_hcp/rosa-hcp-sts-creating-a-cluster-quickly.html["HCP ROSA集群"](至少具有3个裸机工作节点)
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/virtualization/installing#virt-aws-bm_preparing-cluster-for-virt["ROSA集群上安装了OpenShift虚拟化"]
 * link:https://console.redhat.com/openshift/overview["访问Red Hat OpenShift Web控制台"]
+* Trident 25.02或更高版本您可以利用Trident 25.02或更高版本轻松设置ROSA集群的工作节点、以便对FSxN存储执行iSCSI操作。使用节点准备标志在ROSA集群上安装Trident 25.02或更高版本
 
+
+....
+#./tridentctl install trident -n trident --node-prep=iscsi
+....
+此操作将通过启动iscs-d和multipathd服务并在/etc/multipath.conf文件中设置以下内容来为iSCSI准备ROSA集群工作节点
+
+image:rh-os-n_use_case_iscsi_node_prep1.png["iscsud active"]
+
+image:rh-os-n_use_case_iscsi_node_prep2.png["multipathd处于活动状态"]
+
+image:rh-os-n_use_case_iscsi_node_prep3.png["多路径.conf文件"]
 
 
 
@@ -112,3 +128,5 @@ $ dd if=/dev/urandom of=random.dat bs=1M count=10240 (to create a file called ra
 磁盘中已填充11 GB的数据。image:redhat_openshift_ocpv_rosa_image18.png["OCP-v VM填充磁盘"]
 
 使用vi创建示例文本文件、我们将使用该文件进行测试。image:redhat_openshift_ocpv_rosa_image19.png["ocp-v创建文件"]
+
+阅读博客作为其他资源：link:https://community.netapp.com/t5/Tech-ONTAP-Blogs/Unlock-Seamless-iSCSI-Storage-Integration-A-Guide-to-FSxN-on-ROSA-Clusters-for/ba-p/459124["解锁无缝iSCSI存储集成：适用于iSCSI的ROSA集群上的FSxN指南"]

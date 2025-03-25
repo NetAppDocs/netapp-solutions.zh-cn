@@ -86,69 +86,27 @@ NOTE: 确保启动PostgreSQL服务器并启用服务以在启动时启动。
 
 * OpenShift集群4.13.34
 * link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html["Trident 23.10"]
-* 为iSCSI启用的集群节点上的多路径(对于ONONTAP SAN存储类)。请参见提供的YAML以创建一个守护进程集、以便在集群中的每个节点上启用iSCSI。
+* 为iSCSI启用的集群节点上的多路径(对于ONONTAP SAN存储类)。如果使用节点准备标志安装Trident 25.02、则可以轻松启用多路径。要安装Trident 25.02并为iSCSI准备工作节点、可以使用以下命令
+
+
+[source, yaml]
+----
+#/tridentctl install trident n trident —node-prep=iscsi
+
+----
+
+NOTE: 要验证是否已在OpenShift集群的工作节点上启用iSCSI工具、请登录到工作节点并验证您是否看到iscsud、multipathd active以及multipath.conf文件中的条目、如图所示。
+
+image:rh-os-n_use_case_iscsi_node_prep1.png["iscsud active"]
+
+image:rh-os-n_use_case_iscsi_node_prep2.png["multipathd处于活动状态"]
+
+image:rh-os-n_use_case_iscsi_node_prep3.png["多路径.conf文件"]
+
 * 使用iSCSI的ONTAP SAN的三端和存储类。请参见为三元后端和存储类提供的YAML文件。
 * link:https://docs.openshift.com/container-platform/4.13/virt/install/installing-virt-web.html["OpenShift 虚拟化"]
 
 
-要在OpenShift集群节点上安装iSCSI和多路径、请使用下面提供的YAML文件
-**为iSCSI准备群集节点**
-
-[source, yaml]
-----
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  namespace: trident
-  name: trident-iscsi-init
-  labels:
-    name: trident-iscsi-init
-spec:
-  selector:
-    matchLabels:
-      name: trident-iscsi-init
-  template:
-    metadata:
-      labels:
-        name: trident-iscsi-init
-    spec:
-      hostNetwork: true
-      serviceAccount: trident-node-linux
-      initContainers:
-      - name: init-node
-        command:
-          - nsenter
-          - --mount=/proc/1/ns/mnt
-          - --
-          - sh
-          - -c
-        args: ["$(STARTUP_SCRIPT)"]
-        image: alpine:3.7
-        env:
-        - name: STARTUP_SCRIPT
-          value: |
-            #! /bin/bash
-            sudo yum install -y lsscsi iscsi-initiator-utils sg3_utils device-mapper-multipath
-            rpm -q iscsi-initiator-utils
-            sudo sed -i 's/^\(node.session.scan\).*/\1 = manual/' /etc/iscsi/iscsid.conf
-            cat /etc/iscsi/initiatorname.iscsi
-            sudo mpathconf --enable --with_multipathd y --find_multipaths n
-            sudo systemctl enable --now iscsid multipathd
-            sudo systemctl enable --now iscsi
-        securityContext:
-          privileged: true
-      hostPID: true
-      containers:
-      - name: wait
-        image: k8s.gcr.io/pause:3.1
-      hostPID: true
-      hostNetwork: true
-      tolerations:
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/master
-  updateStrategy:
-    type: RollingUpdate
-----
 使用以下YAML文件创建使用ONTAP SAN存储的三元后端配置
 ** iSCSI的三端**
 
