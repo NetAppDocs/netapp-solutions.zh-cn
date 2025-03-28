@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: databases/automation_ora_clone_lifecycle.html 
-keywords: Oracle, AWS, FSx ONTAP, Database, Oracle 19c, HA, DR 
-summary: '解决方案提供了一个基于Ans得 的自动化工具包、用于在AWS中配置Oracle数据库高可用性和灾难恢复(High Availability and Disaster Recovery、HA/DR)、其中AWS FSx ONTAP用作Oracle数据库存储、EC2实例用作计算实例。' 
+keywords: Database, Oracle, DataGuard, AWS, FSx ONTAP, Azure, ANF, 
+summary: 该解决方案提供了一个基于Ans得 的自动化工具包、用于从主数据库设置、克隆和刷新Oracle克隆数据库。主数据库可以是Oracle Data Guard配置中的物理备用数据库。该解决方案可以应用于私有数据中心、也可以应用于采用NFS或ASM配置的FSx ONTAP存储的AWS云、或者采用NFS配置的Azure NetApp Files存储的Azure云。 
 ---
 = SnapCenter Oracle克隆生命周期自动化
 :hardbreaks:
@@ -16,13 +16,13 @@ summary: '解决方案提供了一个基于Ans得 的自动化工具包、用于
 NetApp公司Allen Cao、Niyaz Mohamed
 
 [role="lead"]
-此解决方案提供了一个基于Ans得 的自动化工具包、用于在AWS中配置Oracle数据库高可用性和灾难恢复(High Availability and Disaster Recovery、HA/DR)、其中AWS FSx ONTAP用作Oracle数据库存储、EC2实例用作计算实例。
+该解决方案提供了一个基于Ans得 的自动化工具包、用于从主数据库设置、克隆和刷新Oracle克隆数据库。主数据库可以是Oracle Data Guard配置中的物理备用数据库。该解决方案可以应用于私有数据中心、也可以应用于采用NFS或ASM配置的FSx ONTAP存储的AWS云、或者采用NFS配置的Azure NetApp Files存储的Azure云。
 
 
 
 == 目的
 
-客户喜欢NetApp ONTAP存储的FlexClone功能、该功能可为数据库节省大量存储成本。此基于Ans可 通过NetApp SnapCenter命令行实用程序按计划自动设置、克隆和刷新已克隆的Oracle数据库、以简化生命周期管理。该工具包适用于部署到ONTAP存储(内部未命中或公共云)并由NetApp SnapCenter UI工具管理的Oracle数据库。
+客户喜欢NetApp ONTAP存储的FlexClone功能、因为它可以快速(分钟)地进行大型数据库克隆、如果在私有数据中心或公共云中的特定存储产品上启用精简克隆功能、则可以节省更多存储空间。这款基于Ans处于 基础之上的工具包可使用NetApp SnapCenter命令行实用程序按计划自动设置、克隆和刷新已克隆的Oracle数据库、从而简化生命周期管理。该工具包适用于部署到内部或公共云(AWS或Azure) ONTAP存储并由NetApp SnapCenter UI工具管理的Oracle数据库。
 
 此解决方案 可解决以下使用情形：
 
@@ -74,16 +74,18 @@ Ansible controller:
 ....
 ....
 SnapCenter server:
-  version 5.0
+  version 5.0 and up, 6.1 for Azure NetApp Files
   backup policy configured
   Source database protected with a backup policy
 ....
 ....
 Oracle servers:
-  Source server managed by SnapCenter
-  Target server managed by SnapCenter
-  Target server with identical Oracle software stack as source server installed and configured
+  Source server managed by SnapCenter (In Data Guard, this would be the physical standby serer)
+  Target server managed by SnapCenter (clone DB host)
 ....
+
+NOTE: 为了简化、应将克隆目标Oracle服务器配置为与备用Oracle服务器(例如Oracle软件堆栈)以及Oracle主目录布局等完全相同
+
 ====
 
 
@@ -95,6 +97,9 @@ Oracle servers:
 ----
 git clone https://bitbucket.ngage.netapp.com/scm/ns-bb/na_oracle_clone_lifecycle.git
 ----
+
+NOTE: 此时、只有具有Bitb分 段访问权限的NetApp内部用户才能访问此工具包。对于感兴趣的外部用户、请向您的客户团队申请访问权限或联系NetApp解决方案工程团队。
+
 ====
 
 
@@ -102,7 +107,7 @@ git clone https://bitbucket.ngage.netapp.com/scm/ns-bb/na_oracle_clone_lifecycle
 
 [%collapsible]
 ====
-该工具包包含一个主机文件、用于定义运行Ands得以 执行的Playbook的目标。通常、它是目标Oracle克隆主机。下面是一个示例文件。主机条目包括目标主机IP地址以及用于管理员用户访问主机以执行克隆或刷新命令的ssh密钥。
+该工具包包含一个主机文件、用于定义运行Ands得以 处理的游戏手册的目标。通常、它是目标Oracle克隆主机。下面是一个示例文件。主机条目包括目标主机IP地址以及用于管理员用户访问主机以执行克隆或刷新命令的ssh密钥。
 
 # Oracle克隆主机
 
@@ -157,7 +162,7 @@ clone_db_sid: NTAP1DEV
 
 [%collapsible]
 ====
-克隆目标Oracle服务器应与安装并修补的源Oracle服务器具有相同的Oracle软件堆栈。Oracle用户.bash_profile已配置$oracle_base和$oracle_home。此外、$oracle_home变量应与源Oracle服务器设置匹配。下面是一个示例。
+克隆目标Oracle服务器应与安装和修补的源Oracle服务器具有相同的Oracle软件堆栈。Oracle用户.bash_profile已配置$oracle_base和$oracle_home。此外、$oracle_home变量应与源Oracle服务器设置匹配。下面是一个示例。
 
  # .bash_profile
 ....
@@ -199,6 +204,9 @@ ansible-playbook -i hosts clone_1_setup.yml -u admin -e @vars/vars.yml
 0 */4 * * * /home/admin/na_oracle_clone_lifecycle/clone_1_refresh.sh
 ----
 
+
+
+NOTE: 在SnapCenter配置中、将用户名更改为您的sudo用户。
 
 对于其他克隆数据库、请创建一个单独的CLONE n_setup.yml和CLONE n_refresh .yml以及CLONE n_refresh。在host_vars目录中相应地配置"Andsvey"目标主机和hostname.yml文件。
 
