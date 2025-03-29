@@ -16,8 +16,6 @@ summary:
 [role="lead"]
 Veeam Backup & Replication是一款高效可靠的解决方案 、用于保护VMware Cloud中的数据。此解决方案演示了使用Veeam备份和复制备份和还原VMware Cloud中FSx ONTAP NFS数据存储库上的应用程序VM的正确设置和配置。
 
-作者：Jsh Powell—NetApp解决方案工程部
-
 
 
 == 概述
@@ -47,7 +45,7 @@ VMware Cloud (在AWS中)支持使用NFS数据存储库作为补充存储、而FS
 
 
 .解决方案 部署概述
-[%collapsible]
+[%collapsible%open]
 ====
 此列表简要介绍了配置Veeam备份和复制、使用FSx ONTAP作为备份存储库执行备份和还原作业以及还原SQL Server和Oracle VM和数据库所需的步骤：
 
@@ -60,7 +58,7 @@ VMware Cloud (在AWS中)支持使用NFS数据存储库作为补充存储、而FS
 
 ====
 .前提条件
-[%collapsible]
+[%collapsible%open]
 ====
 此解决方案的目的是、演示对在VMware Cloud中运行且位于FSx ONTAP托管的NFS数据存储库中的虚拟机的数据保护。此解决方案 假定已配置以下组件并可供使用：
 
@@ -91,7 +89,7 @@ VMware Cloud (在AWS中)支持使用NFS数据存储库作为补充存储、而FS
 image:aws-vmc-veeam-00.png["解决方案 架构图"]
 
 .硬件/软件组件
-[%collapsible]
+[%collapsible%open]
 ====
 此解决方案的目的是、演示对在VMware Cloud中运行且位于FSx ONTAP托管的NFS数据存储库中的虚拟机的数据保护。此解决方案 假定已配置以下组件并可供使用：
 
@@ -137,7 +135,7 @@ Veeam Data Mover是Veeam代理服务器的一个组件、它利用传输模式�
 在下面的步骤中、我们将介绍如何在VMware Cloud SDDC中的Windows VM上部署Veeam代理服务器。
 
 .部署Veeam代理以分布备份工作负载
-[%collapsible]
+[%collapsible%open]
 ====
 在此步骤中、Veeam代理将部署到现有Windows VM。这样便可在主Veeam备份服务器和Veeam代理之间分布备份作业。
 
@@ -185,7 +183,7 @@ image:aws-vmc-veeam-10.png["配置网络流量规则"]
 主Veeam备份服务器和Veeam代理服务器可访问直连存储形式的备份存储库。本节将介绍如何创建FSx ONTAP文件系统、如何将iSCSI LUN挂载到Veeam服务器以及如何创建备份存储库。
 
 .创建FSx ONTAP文件系统
-[%collapsible]
+[%collapsible%open]
 ====
 创建一个FSx ONTAP文件系统、用于托管Veeam备份存储库的iSCSI卷。
 
@@ -206,7 +204,7 @@ image:aws-vmc-veeam-03.png["填写文件系统信息"]
 
 ====
 .配置和挂载iSCSI LUN
-[%collapsible]
+[%collapsible%open]
 ====
 在FSx ONTAP上创建和配置iSCSI LUN、然后挂载到Veeam备份和代理服务器。这些LUN稍后将用于创建Veeam备份存储库。
 
@@ -257,7 +255,7 @@ image:aws-vmc-veeam-13.png["Windows磁盘管理"]
 
 ====
 .创建Veeam备份系统信息源
-[%collapsible]
+[%collapsible%open]
 ====
 在Veeam Backup and Replication控制台中、为Veeam Backup和Veeam Proxy服务器创建备份存储库。这些存储库将用作虚拟机备份的备份目标。
 
@@ -293,7 +291,7 @@ image:aws-vmc-veeam-16.png["选择挂载服务器"]
 
 
 .配置Veeam备份作业时的一般注意事项
-[%collapsible]
+[%collapsible%open]
 ====
 . 启用应用程序感知型处理、以创建一致的备份并执行事务日志处理。
 . 启用应用程序感知型处理后、请向应用程序添加具有管理员权限的正确凭据、因为此凭据可能与子操作系统凭据不同。
@@ -329,7 +327,7 @@ Veeam Backup & Replication提供了多种还原SQL Server数据库的选项。�
 
 
 .使用Veeam Explorer即时恢复还原SQL Server数据库
-[%collapsible]
+[%collapsible%open]
 ====
 . 在Veeam备份和复制控制台中、导航到SQL Server备份列表、右键单击某个服务器并选择*还原应用程序项*、然后选择* Microsoft SQL Server数据库...*。
 +
@@ -369,7 +367,7 @@ Veeam Explorer for Oracle数据库支持使用即时恢复执行标准Oracle数�
 有关使用Veeam Explorer执行Oracle数据库还原操作的详细信息、请参阅中的Oracle一节 https://helpcenter.veeam.com/docs/backup/explorers/veor_user_guide.html?ver=120["《Veeam Explorers用户指南》"]。
 
 .使用Veeam Explorer还原Oracle数据库
-[%collapsible]
+[%collapsible%open]
 ====
 本节将介绍如何使用Veeam Explorer将Oracle数据库还原到其他服务器。
 
@@ -406,7 +404,7 @@ image:aws-vmc-veeam-31.png["指定目标位置"]
 
 ====
 .将Oracle数据库发布到备用服务器
-[%collapsible]
+[%collapsible%open]
 ====
 在本节中、数据库会发布到备用服务器、以便在不启动完全还原的情况下快速访问。
 

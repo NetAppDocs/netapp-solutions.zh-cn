@@ -143,7 +143,7 @@ image:vcf_ora_si_vvols_architecture.png["此图详细展示了AWS公共云中使
 
 === 部署的前提条件
 
-[%collapsible]
+[%collapsible%open]
 ====
 部署需要满足以下前提条件。
 
@@ -161,7 +161,7 @@ NOTE: 确保已在Oracle VM根卷中至少分配50G、以便有足够的空间�
 
 === 创建存储功能配置文件
 
-[%collapsible]
+[%collapsible%open]
 ====
 首先、为托管此虚拟卷数据存储库的带下划线的ONTAP存储创建一个自定义存储功能配置文件。
 
@@ -200,7 +200,7 @@ image:vcf_ora_vvol_scp_07.png["显示自定义存储功能配置文件配置的�
 
 === 创建和配置卷数据存储库
 
-[%collapsible]
+[%collapsible%open]
 ====
 完成前提条件后、以管理员用户身份通过vSphere客户端登录到VCF、导航到工作负载域。请勿使用内置的VMware存储选项创建vvol。请改用NetApp ONTAP工具创建虚拟卷。以下说明了创建和配置卷的过程。
 
@@ -245,7 +245,7 @@ NOTE: 请注意、在克隆Oracle数据库时、数据的另一个虚拟卷会�
 
 === 根据存储功能配置文件创建VM存储策略
 
-[%collapsible]
+[%collapsible%open]
 ====
 在将存储从Vvol数据存储库配置到数据库VM之前、请根据上一步创建的存储功能配置文件添加VM存储策略。以下是过程。
 
@@ -288,7 +288,7 @@ image:vcf_ora_vvol_vm_policy_07.png["显示虚拟机存储策略配置的屏幕�
 
 === 从Vvol数据存储库为DB VM分配磁盘并配置DB存储
 
-[%collapsible]
+[%collapsible%open]
 ====
 在vSphere Client中、通过编辑Vvol设置将三个磁盘从VVM数据存储库添加到数据库VM中。然后、登录到VM以格式化磁盘并将其挂载到挂载点/u01、/u02和/u03。以下内容展示了确切的步骤和任务。
 
@@ -432,7 +432,7 @@ UUID=aff942c4-b224-4b62-807d-6a5c22f7b623 /boot                   xfs     defaul
 
 === 在VCF中部署Oracle数据库
 
-[%collapsible]
+[%collapsible%open]
 ====
 建议利用NetApp自动化工具包在VCF中使用VVO尔 部署Oracle。有关在xfs文件系统上执行Oracle自动部署的详细参考信息，请参阅TR-4不同 的文档： link:automation_ora_c-series_nfs.html["在采用NFS的NetApp C系列上简化的自动化Oracle部署"^]。虽然TR-4处于 使用NFS的NetApp C系列上的Oracle自动部署范围、但如果绕过挂载到数据库VM的NFS文件系统、则它与使用VVOR的VCF中的Oracle部署方式相同。我们只需使用特定标记即可跳过该步骤。下面是分步过程。
 
@@ -501,7 +501,7 @@ ansible-playbook -i hosts 5-destroy.yml -u admin -e @vars/vars.yml
 
 ==== SnapCenter设置
 
-[%collapsible]
+[%collapsible%open]
 ====
 与版本5相比、SnapCenter版本6具有许多增强功能、包括对VMware Vvol数据存储库的支持。SnapCenter依靠数据库VM上的主机端插件来执行应用程序感知型数据保护管理活动。有关适用于Oracle的NetApp SnapCenter插件的详细信息，请参阅本文档 link:https://docs.netapp.com/us-en/snapcenter/protect-sco/concept_what_you_can_do_with_the_snapcenter_plug_in_for_oracle_database.html["您可以使用适用于 Oracle 数据库的插件执行什么操作"^]。下面简要介绍了在VCF中为Oracle数据库备份、恢复和克隆设置SnapCenter版本6的步骤。
 
@@ -557,7 +557,7 @@ NOTE: 确保可以将SnapCenter服务器名称解析为DB VM和vSphere插件VM�
 
 ==== 数据库备份
 
-[%collapsible]
+[%collapsible%open]
 ====
 与基于RMAN的传统方法相比、SnapCenter利用ONTAP卷快照加快数据库备份、还原或克隆速度。由于数据库在创建快照之前处于Oracle备份模式、因此这些快照是应用程序一致的。
 
@@ -600,7 +600,7 @@ image:vcf_ora_vvol_snapctr_bkup_10.png["显示SnapCenter配置的屏幕截图。
 
 ==== 数据库还原/恢复
 
-[%collapsible]
+[%collapsible%open]
 ====
 SnapCenter为Oracle数据库提供了许多从快照备份还原和恢复选项。在此示例中、我们演示了如何从较早的快照备份进行还原、然后将数据库前滚到最后一个可用日志。
 
@@ -741,7 +741,7 @@ SQL>
 
 ==== 数据库克隆
 
-[%collapsible]
+[%collapsible%open]
 ====
 在此示例中、最新的备份集用于克隆数据库、该数据库位于不同软件安装的DB VM ora_02上、而在VCF中则用于克隆oracle_home。
 

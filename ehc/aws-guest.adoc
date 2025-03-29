@@ -33,7 +33,7 @@ FSx ONTAP还提供高度可用且持久的存储、并具有完全托管的备�
 === FSX ONTAP 作为子系统连接的存储
 
 .在AWS上使用VMware Cloud配置Amazon FSx ONTAP
-[%collapsible]
+[%collapsible%open]
 ====
 Amazon FSx ONTAP文件共享和LUN可以从VMware Cloud at AWS上的VMware SDDC环境中创建的VM进行挂载。此外，还可以使用 NFS 或 SMB 协议在 Linux 客户端上挂载这些卷并将其映射到 Windows 客户端上，通过 iSCSI 挂载 LUN 时，可以在 Linux 或 Windows 客户端上以块设备的形式访问这些 LUN 。可通过以下步骤快速设置适用于 NetApp ONTAP 文件系统的 Amazon FSX 。
 
@@ -42,7 +42,7 @@ NOTE: Amazon FSx ONTAP和VMware Cloud on AWS必须位于同一可用性区域、
 
 ====
 .创建和挂载Amazon FSx ONTAP卷
-[%collapsible]
+[%collapsible%open]
 ====
 要创建和挂载Amazon FSx ONTAP文件系统、请完成以下步骤：
 
@@ -108,7 +108,7 @@ image:aws-fsx-guest-11.png["图中显示了输入/输出对话框或表示已写
 
 ====
 .在 Linux 客户端上挂载 FSX ONTAP 卷
-[%collapsible]
+[%collapsible%open]
 ====
 挂载上一步中创建的 FSX ONTAP 卷。在 AWS SDDC 上 VMC 中的 Linux VM 中，完成以下步骤：
 
@@ -133,7 +133,7 @@ image:aws-fsx-guest-21.png["图中显示了输入/输出对话框或表示已写
 video::c3befe1b-4f32-4839-a031-b01200fb6d60[panopto]
 ====
 .将 FSX ONTAP 卷连接到 Microsoft Windows 客户端
-[%collapsible]
+[%collapsible%open]
 ====
 要管理和映射 Amazon FSX 文件系统上的文件共享，必须使用共享文件夹图形用户界面。
 
@@ -166,7 +166,7 @@ image:aws-fsx-guest-26.png["图中显示了输入/输出对话框或表示已写
 
 ====
 .使用iSCSI将FSx ONTAP LUN连接到主机
-[%collapsible]
+[%collapsible%open]
 ====
 .使用iSCSI将FSx ONTAP LUN连接到主机
 video::0d03e040-634f-4086-8cb5-b01200fb8515[panopto]
@@ -178,7 +178,7 @@ FSX 的 iSCSI 流量通过上一节提供的路由遍历 VMware Transit Connect/
 
 ====
 .在FSx ONTAP中配置LUN：
-[%collapsible]
+[%collapsible%open]
 ====
 . 使用 ONTAP 文件系统的 FSX 管理端口访问 NetApp ONTAP 命令行界面。
 . 按照规模估算输出所示，使用所需大小创建 LUN 。
@@ -288,7 +288,7 @@ Cloud Volumes ONTAP 是行业领先的云数据管理解决方案 、基于NetAp
 === Cloud Volumes ONTAP （ CVO ）作为子系统连接的存储
 
 .在 AWS 中部署新的 Cloud Volumes ONTAP 实例（自行操作）
-[%collapsible]
+[%collapsible%open]
 ====
 可以从 AWS SDDC 环境中的 VMware 云中创建的 VM 挂载 Cloud Volumes ONTAP 共享和 LUN 。这些卷还可以挂载在原生 AWS VM Linux Windows 客户端上，并且在通过 iSCSI 挂载时，可以在 Linux 或 Windows 客户端上以块设备的形式访问 LUN ，因为 Cloud Volumes ONTAP 支持 iSCSI ， SMB 和 NFS 协议。只需几个简单的步骤即可设置 Cloud Volumes ONTAP 卷。
 
@@ -369,7 +369,7 @@ image:aws-cvo-guest-14.png["图中显示了输入/输出对话框或表示已写
 
 ====
 .SMB 卷的其他配置
-[%collapsible]
+[%collapsible%open]
 ====
 . 准备好工作环境后，请确保为 CIFS 服务器配置了适当的 DNS 和 Active Directory 配置参数。要创建 SMB 卷，必须执行此步骤。
 
@@ -394,7 +394,7 @@ image:aws-cvo-guest-23.png["图中显示了输入/输出对话框或表示已写
 
 ====
 .将 LUN 连接到主机
-[%collapsible]
+[%collapsible%open]
 ====
 要将 Cloud Volumes ONTAP LUN 连接到主机，请完成以下步骤：
 
@@ -444,7 +444,7 @@ image:aws-cvo-guest-34.png["图中显示了输入/输出对话框或表示已写
 
 ====
 .在 Linux 客户端上挂载 Cloud Volumes ONTAP NFS 卷
-[%collapsible]
+[%collapsible%open]
 ====
 要从 AWS SDDC 上 VMC 内的 VM 挂载 Cloud Volumes ONTAP （ DIY ）文件系统，请完成以下步骤：
 

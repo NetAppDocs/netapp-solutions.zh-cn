@@ -13,8 +13,6 @@ summary: 使用Trident Protect和NetApp ONTAP保护Red Hat OpenShift容器应用
 :imagesdir: ../media/
 
 
-作者：Banu Sunzhar、NetApp
-
 [role="lead"]
 本参考文档的这一部分详细介绍了如何使用Trident Protect创建容器应用程序的快照和备份。NetApp Trident Protect提供高级应用程序数据管理功能、可增强由NetApp ONTAP存储系统和NetApp Trident CSI存储配置程序提供支持的有状态Kubbernetes应用程序的功能和可用性。Trident Protect可创建应用程序快照和备份、这意味着不仅会创建永久性卷中应用程序数据的快照和备份、还会创建应用程序元数据的快照和备份。Trident Protect创建的快照和备份可以存储在以下任意对象存储中、并可在以后从这些对象存储中还原。
 
@@ -36,7 +34,7 @@ NOTE: 集群管理员可以访问默认Trident保护命名空间中的资源、�
 可以按照文档中提供的说明安装Trident Protectlink:https://docs.netapp.com/us-en/trident/trident-protect/trident-protect-installation.html["此处"]。本节将介绍使用Trident Protect保护容器应用程序数据和还原应用程序的工作流。1.创建快照(按计划按需) 2.从Snapshot还原(还原到相同和不同的命名空间) 3.备份创建4.从备份中还原
 
 .前提条件
-[%collapsible]
+[%collapsible%open]
 ====
 在为应用程序创建快照和备份之前、必须在Trident Protect中配置对象存储以存储快照和备份。此操作可使用存储分段CR来完成。只有管理员才能创建存储分段CR并对其进行配置。存储分段CR在Trident Protect中称为AppVault。AppVault对象是存储分段的声明性Kubarnetes工作流表示形式。AppVault CR包含在备份、快照、还原操作和SnapMirror复制等保护操作中使用存储分段所需的配置。
 
@@ -178,7 +176,7 @@ image:rhhc_dp_tp_solution_container_image2.png["已创建应用程序"]
 
 ====
 .创建快照
-[%collapsible]
+[%collapsible%open]
 ====
 **创建按需快照**
 
@@ -243,7 +241,7 @@ image:rhhc_dp_tp_solution_container_image8.png["已按计划创建PVC Snap"]
 
 ====
 .删除应用程序以模拟应用程序丢失
-[%collapsible]
+[%collapsible%open]
 ====
 [source, yaml]
 ----
@@ -253,7 +251,7 @@ No resources found in postgres namespace.
 ----
 ====
 .从Snapshot还原到同一命名空间
-[%collapsible]
+[%collapsible%open]
 ====
 [source, yaml]
 ----
@@ -268,7 +266,7 @@ image:rhhc_dp_tp_solution_container_image10.png["应用程序已恢复、先生"
 
 ====
 .从Snapshot还原到其他命名空间
-[%collapsible]
+[%collapsible%open]
 ====
 [source, yaml]
 ----
@@ -283,7 +281,7 @@ image:rhhc_dp_tp_solution_container_image12.png["应用程序已还原、SnapRes
 
 ====
 .创建备份
-[%collapsible]
+[%collapsible%open]
 ====
 **创建按需备份**
 
@@ -307,7 +305,7 @@ image:rhhc_dp_tp_solution_container_image13a.png["先前已创建计划"]
 
 ====
 .从备份还原
-[%collapsible]
+[%collapsible%open]
 ====
 **删除应用程序和PVC以模拟数据丢失。**
 
@@ -327,7 +325,7 @@ image:rhhc_dp_tp_solution_container_image17.png["还原到其他命名空间"]
 
 ====
 .迁移应用程序
-[%collapsible]
+[%collapsible%open]
 ====
 要克隆应用程序或将其迁移到其他集群(执行跨集群克隆)、请在源集群上创建备份、然后将备份还原到其他集群。确保目标集群上已安装Trident Protect。
 

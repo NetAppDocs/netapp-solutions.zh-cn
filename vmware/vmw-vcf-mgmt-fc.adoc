@@ -1,0 +1,357 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmw-vcf-mgmt-fc.html 
+keywords: netapp, vmware, cloud, foundation, vcf, asa, aff, all-flash, fc, array, ontap tools, otv, sddc, sddc manager, ontap tools, ontap tools 10 
+summary:  
+---
+= 将vSphere环境(FC数据存储库)转换为VCF管理域
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+随着VMware Virtual Cloud Foundation (VCF) 5.2版的发布、可以将现有vSphere 8环境转换为VCF管理域或作为VCF VI工作负载域导入。
+
+
+
+== 简介
+
+要转换vSphere环境并使现有光纤通道(Fibre Channel、FC)数据存储库运行在ONTAP上、需要将现有基础架构集成到现代私有云架构中。此流程得益于FC存储的强大功能、可确保无缝数据访问和管理。通过转换过程建立VCF管理域后、管理员可以高效地将其他vSphere环境(包括使用FC数据存储库的环境)导入到VCF生态系统中。这种集成不仅可以提高资源利用率、还可以简化私有云基础架构的管理、从而确保在尽量不中断现有工作负载的情况下实现平稳过渡。
+
+在本解决方案中、我们将演示将集群转换为VCF管理域后、vSphere 8中的FC数据存储库如何成为主存储。
+
+
+
+== 方案概述
+
+此情景包括以下高级步骤：
+
+* 部署适用于VMware vSphere 10的ONTAP工具。
+* 使用ONTAP工具配置FC数据存储库。
+* 使用VCF导入工具验证vSphere集群。
+* 在vSphere集群中部署SDDC Manager。
+* 配置一个JSON文件、以便在VCF转换期间创建NSX。
+* 使用VCF导入工具将vSphere 8集群转换为5.2.1
+
+
+
+
+== 前提条件
+
+此方案需要以下组件和配置：
+
+* NetApp ASA AFF存储系统、其Storage Virtual Machine (ASA)配置为允许光纤通道(FC)流量。
+* 已创建逻辑接口(Logical Interface、LIF)来传输FC流量、此接口与SVM关联。
+* 已在指定用于传输FC流量的交换机上配置FC分区。
+* 一个vSphere 8集群、其中包含4个ESXi主机、并将一个vCenter设备主机代管在该集群上。
+* 在为此目的而建立的VLAN或网段上为vMotion配置的分布式端口组。
+* 下载VCF转换所需的软件。
+
+
+适用于VMware vSphere 10的ONTAP工具可以安装在HA或非HA配置中。有关ONTAP工具前提条件的完整信息，请参见 https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/deploy/prerequisites.html#system-requirements["部署适用于VMware vSphere的ONTAP工具的前提条件"]。
+
+有关将vSphere转换或导入VCF 5.2时支持的存储以及其他注意事项，请参见 https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/importing-existing-vsphere-environments-admin/considerations-before-converting-or-importing-existing-vsphere-environments-into-vcf-admin.html["将现有vSphere环境转换或导入VMware Cloud Foundation之前的注意事项"]。
+
+有关所需的软件，请参阅 https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/importing-existing-vsphere-environments-admin/download-software-for-converting-or-importing-existing-vsphere-environments-admin.html["下载用于转换或导入现有vSphere环境的软件"]。
+
+有关配置ONTAP存储系统的信息、请参见 link:https://docs.netapp.com/us-en/ontap["ONTAP 9文档"] 中心。
+
+有关配置VCF的信息，请参见link:https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2.html["VMware Cloud Foundation 5.2文档"]。
+
+
+
+== 部署步骤
+
+该解决方案涵盖使用适用于VMware vSphere的ONTAP工具配置FC数据存储库以及将现有vSphere 8集群转换为VCF管理域的过程。
+
+完成以下步骤：
+
+* 部署适用于VMware vSphere 10的ONTAP工具。
+* 使用ONTAP工具配置FC数据存储库。
+* 将VCF导入工具复制到vCenter设备。
+* 使用VCF导入工具对vCenter设备运行预检。
+* 在vCenter集群上部署SDDC管理器虚拟机。
+* 为要在转换过程中部署的NSX集群创建一个JSON文件。
+* 将所需软件上传到SDDC管理器。
+* 将vSphere集群转换为SDDC管理器清单。
+
+
+有关转换过程的概述，请参见 https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/importing-existing-vsphere-environments-admin/convert-or-import-a-vsphere-environment-into-vmware-cloud-foundation-admin.html["在VMware Cloud Foundation中将vSphere环境转换为管理域或将vSphere环境导入为VI工作负载域"]。
+
+
+
+=== 部署ONTAP工具并配置FC数据存储库
+
+ONTAP Tools 10的架构旨在与VMware环境无缝集成、利用包括ONTAP工具服务、vSphere插件和REST API在内的模块化可扩展框架来实现高效的存储管理、自动化和数据保护。
+
+适用于VMware vSphere 10的ONTAP工具可以安装在HA或非HA配置中。
+
+image:vmware-vcf-import-nfs-10.png["ONTAP工具架构"]
+
+.部署适用于VMware vSphere 10的ONTAP工具
+[%collapsible%open]
+====
+在此步骤中、ONTAP工具10使用非HA配置进行部署。
+
+有关HA和非HA配置的其他部署详细信息，请参见 https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/deploy/ontap-tools-deployment.html["部署适用于VMware vSphere的ONTAP工具"]。
+
+. 从下载ONTAP工具10 OVA模板 https://mysupport.netapp.com/site/["NetApp 支持站点"]。
+. 在vSphere客户端中、右键单击集群、然后单击*部署OVF模板*
++
+image:vmware-vcf-import-nfs-01.png["部署OVF模板"]
+
++
+｛｛｝
+
+. 在*部署OVF模板*中，完成以下步骤：
++
+** 选择一个OVF模板。
+** 选择名称和文件夹。
+** 选择计算资源。
+** 查看详细信息。
+** 同意许可协议。
+
+
+. 在模板的*Configuration*页面上，选择部署类型，包括是否在HA配置中部署ONTAP工具。单击“*下一步*”继续。
++
+image:vmware-vcf-import-nfs-02.png["配置—部署类型"]
+
++
+｛｛｝
+
+. 在*选择存储*页面上，选择要安装虚拟机的数据存储库，然后单击*下一步*。
+. 选择ONTAP工具VM要与之通信的网络。单击“*下一步*”继续。
+. 在"Customize temple"(自定义模板)窗口中、填写所有必需信息。
++
+** 应用程序用户名和密码
+** 选择是否启用ASUP (自动支持)、包括代理URL。
+** 管理员用户名和密码。
+** NTP服务器。
+** 维护用户名和密码(在控制台上使用的maint帐户)。
+** 提供部署配置所需的IP地址。
+** 提供节点配置的所有网络连接信息。
++
+image:vmware-vcf-import-nfs-03.png["自定义模板"]
+
++
+｛｛｝
+
+
+
+. 最后，单击*下一步*继续，然后单击*完成*开始部署。
+
+
+====
+.配置 ONTAP 工具
+[%collapsible%open]
+====
+安装ONTAP工具虚拟机并启动后、需要进行一些基本配置、例如添加要管理的vCenter服务器和ONTAP存储系统。有关详细信息、请参见上的文档 https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/index.html["适用于VMware vSphere的ONTAP工具文档"]。
+
+. 要配置要使用ONTAP工具管理的vCenter实例、请参见 https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/configure/add-vcenter.html["添加vCenter实例"]。
+. 要添加ONTAP存储系统、请登录到vSphere Client并导航到左侧的主菜单。单击NetApp ONTAP tools*以启动用户界面。
++
+image:vmware-vcf-import-nfs-04.png["打开ONTAP工具"]
+
++
+｛｛｝
+
+. 导航到左侧菜单中的*存储后端*，然后单击*添加*以访问*添加存储后端*窗口。
+. 填写要管理的ONTAP存储系统的IP地址和凭据。单击*Add*完成。
++
+image:vmware-vcf-import-nfs-05.png["添加存储后端"]
+
+
+
+
+NOTE: 此时、存储后端将使用集群IP地址添加到vSphere客户端UI中。这样便可全面管理存储系统中的所有SVM。或者，也可以使用位于的ONTAP Tools Manager添加存储后端并将其与vCenter实例关联 `https://loadBalanceIP:8443/virtualization/ui/`。使用此方法、只能在vSphere客户端UI中添加SVM凭据、从而更精细地控制存储访问。
+
+====
+.使用ONTAP工具配置FC数据存储库
+[%collapsible%open]
+====
+ONTAP工具可将功能集成到整个vSphere客户端UI中。在此步骤中、将从主机清单页面配置FC数据存储库。
+
+. 在vSphere Client中、导航到主机(或存储)清单。
+. 导航到*操作> NetApp ONTAP工具>创建数据存储库*。
++
+image:vmware-vcf-convert-fc-01.png["创建数据存储库"]
+
++
+｛｛｝
+
+. 在*创建数据存储库*向导中，选择VMFS作为要创建的数据存储库类型。
++
+image:vmware-vcf-convert-fc-02.png["数据存储库类型"]
+
++
+｛｛｝
+
+. 在*名称和协议*页面上，填写数据存储库的名称、大小和要使用的FC协议。
++
+image:vmware-vcf-convert-fc-03.png["名称和协议"]
+
++
+｛｛｝
+
+. 在*存储*页面上、选择ONTAP存储平台和Storage Virtual Machine (SVM)。您也可以在此处选择任何可用的自定义导出策略。单击“*下一步*”继续。
++
+image:vmware-vcf-convert-fc-04.png["存储页面"]
+
++
+｛｛｝
+
+. 在*Storage Attributes*页面上，选择要使用的存储聚合。单击“*下一步*”继续。
+. 在*Summary (摘要)*页面上，查看相关信息，然后单击*Finish (完成)*开始配置过程。ONTAP工具将在ONTAP存储系统上创建一个卷、并将其作为FC数据存储库挂载到集群中的所有ESXi主机。
++
+image:vmware-vcf-convert-fc-05.png["摘要页面"]
+
+
+
+====
+
+
+=== 将vSphere环境转换为VCF 5.2
+
+下一节将介绍部署SDDC管理器以及将vSphere 8集群转换为VCF 5.2管理域的步骤。如有其他详细信息、请参见VMware文档。
+
+Broadcom从VMware提供的VCF导入工具是一款实用程序、可在vCenter设备和SDDC管理器上使用、用于验证配置并为vSphere和VCF环境提供转换和导入服务。
+
+有关详细信息，请参阅 https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/importing-existing-vsphere-environments-admin/vcf-import-tool-options-and-parameters-admin.html["VCF导入工具选项和参数"]。
+
+.复制并提取VCF导入工具
+[%collapsible%open]
+====
+在vCenter设备上使用VCF导入工具验证vSphere集群在VCF转换或导入过程中是否处于运行状况良好的状态。
+
+完成以下步骤：
+
+. 按照VMware文档中的步骤 https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/copy-the-vcf-import-tool-to-the-target-vcenter-appliance.html["将VCF导入工具复制到目标vCenter设备"]将VCF导入工具复制到正确的位置。
+. 使用以下命令提取捆绑包：
++
+....
+tar -xvf vcf-brownfield-import-<buildnumber>.tar.gz
+....
+
+
+====
+.验证vCenter设备
+[%collapsible%open]
+====
+使用VCF导入工具在转换之前验证vCenter设备。
+
+. 按照中的步骤 https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/run-a-precheck-on-the-target-vcenter-before-conversion.html["转换前在目标vCenter上运行预检"]运行验证。
+. 以下输出显示vCenter设备已通过预检。
++
+image:vmware-vcf-import-nfs-11.png["vcf导入工具预检"]
+
+
+
+====
+.部署SDDC Manager
+[%collapsible%open]
+====
+SDDC管理器必须位于要转换为VCF管理域的vSphere集群上。
+
+按照VMware Docs中的部署说明完成部署。
+
+请参阅 https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/deploy-the-sddc-manager-appliance-on-the-target-vcenter.html["在目标vCenter上部署SDDC Manager设备"]。
+
+有关详细信息、请参见link:https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/4-5/administering/host-management-admin/commission-hosts-admin.html["佣金主机"]《VCF管理指南》中的。
+
+====
+.为NSX部署创建JSON文件
+[%collapsible%open]
+====
+要在将vSphere环境导入或转换为VMware Cloud Foundation时部署NSX Manager、请创建NSX部署规范。NSX部署至少需要3台主机。
+
+有关完整信息，请参见 https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/generate-an-nsx-deployment-specification-for-converting-or-importing-existing-vsphere-environments.html["为转换或导入现有vSphere环境生成NSX部署规范"]。
+
+
+NOTE: 在转换或导入操作中部署NSX Manager集群时、会利用NSX-VLAN网络。有关NSX-VLAN网络连接限制的详细信息、请参阅"将现有vSphere环境转换或导入VMware Cloud Foundation之前的注意事项"一节。有关NSX-VLAN网络连接限制的信息，请参阅 https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/considerations-before-converting-or-importing-existing-vsphere-environments-into-vcf.html["将现有vSphere环境转换或导入VMware Cloud Foundation之前的注意事项"]。
+
+以下是用于NSX部署的JSON文件示例：
+
+....
+{
+  "license_key": "xxxxx-xxxxx-xxxxx-xxxxx-xxxxx",
+  "form_factor": "medium",
+  "admin_password": "************************",
+  "install_bundle_path": "/tmp/vcfimport/bundle-133764.zip",
+  "cluster_ip": "172.21.166.72",
+  "cluster_fqdn": "vcf-m02-nsx01.sddc.netapp.com",
+  "manager_specs": [{
+    "fqdn": "vcf-m02-nsx01a.sddc.netapp.com",
+    "name": "vcf-m02-nsx01a",
+    "ip_address": "172.21.166.73",
+    "gateway": "172.21.166.1",
+    "subnet_mask": "255.255.255.0"
+  },
+  {
+    "fqdn": "vcf-m02-nsx01b.sddc.netapp.com",
+    "name": "vcf-m02-nsx01b",
+    "ip_address": "172.21.166.74",
+    "gateway": "172.21.166.1",
+    "subnet_mask": "255.255.255.0"
+  },
+  {
+    "fqdn": "vcf-m02-nsx01c.sddc.netapp.com",
+    "name": "vcf-m02-nsx01c",
+    "ip_address": "172.21.166.75",
+    "gateway": "172.21.166.1",
+    "subnet_mask": "255.255.255.0"
+  }]
+}
+....
+将JSON文件复制到SDDC Manager上的目录中。
+
+====
+.将软件上传到SDDC Manager
+[%collapsible%open]
+====
+将VCF导入工具和NSX部署包复制到SDDC Manager上的/HOME/vcf/vcfimport目录中。
+
+有关详细说明、请参见 https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/seed-software-on-sddc-manager.html["将所需软件上传到SDDC Manager设备"]。
+
+====
+.将vSphere集群转换为VCF管理域
+[%collapsible%open]
+====
+VCF导入工具用于执行转换过程。从/HOME/vcf/vcf-import-pack包/vcf-brownfield-import-vcf-brownfield-toolset目录运行以下命令、以查看<version>导入工具函数的打印输出：
+
+....
+python3 vcf_brownfield.py --help
+....
+运行以下命令将vSphere集群转换为VCF管理域并部署NSX集群：
+
+....
+python3 vcf_brownfield.py convert --vcenter '<vcenter-fqdn>' --sso-user '<sso-user>' --domain-name '<wld-domain-name>' --nsx-deployment-spec-path '<nsx-deployment-json-spec-path>'
+....
+有关完整说明，请参阅 https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/import-workload-domain-into-sddc-manager-inventory.html["将vSphere环境转换或导入到SDDC Manager清单中"]。
+
+====
+.向VCF添加许可
+[%collapsible%open]
+====
+完成转换后、必须向环境中添加许可。
+
+. 登录到SDDC Manager用户界面。
+. 导航到导航窗格中的*管理>许可*。
+. 单击*+许可证密钥*。
+. 从下拉菜单中选择产品。
+. 输入许可证密钥。
+. 提供许可证说明。
+. 单击 * 添加 * 。
+. 对每个许可证重复上述步骤。
+
+
+====
+
+
+== 适用于VMware vSphere 10的ONTAP工具视频演示
+
+.使用适用于VMware vSphere 10的ONTAP工具的NFS数据存储库
+video::1e4c3701-0bc2-41fa-ac93-b2680147f351[panopto,width=360]

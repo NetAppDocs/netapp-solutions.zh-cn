@@ -121,7 +121,7 @@ image:aws_ora_fsx_ec2_vldb_architecture.png["此图详细展示了使用FSx ONTA
 
 === 部署的前提条件
 
-[%collapsible]
+[%collapsible%open]
 ====
 部署需要满足以下前提条件。
 
@@ -143,7 +143,7 @@ NOTE: 确保您已在EC2实例根卷中至少分配50G、以便有足够的空�
 
 === 配置和导出要挂载到EC2数据库实例主机的NFS卷
 
-[%collapsible]
+[%collapsible%open]
 ====
 在此演示中、我们将展示如何通过命令行配置NFS卷、方法是以fsxadmin用户身份通过FSx集群管理IP以ssh登录到FSx集群。或者、也可以使用AWS FSx控制台分配卷。如果设置了多个FSx文件系统以适应数据库大小、请在其他FSx文件系统上重复上述过程。
 
@@ -202,7 +202,7 @@ sudo chown oracle:oinstall /nfsfsxn
 
 === 将Oracle RMAN增量合并设置为FSx上的映像副本
 
-[%collapsible]
+[%collapsible%open]
 ====
 RMAN增量合并会在每个增量备份/合并间隔持续更新暂存数据库数据文件映像副本。数据库备份的映像副本将与您执行增量备份/合并的频率相同。因此、在确定RMAN增量备份和合并的频率时、应考虑数据库性能、RTO和RPO目标。
 
@@ -639,7 +639,7 @@ total 70585148
 
 === 将Oracle数据库切换到映像副本、以便快速恢复
 
-[%collapsible]
+[%collapsible%open]
 ====
 如果因主存储问题描述发生故障(例如数据丢失或损坏)、则可以快速将数据库切换到FSx ONTAP NFS挂载上的映像副本、并将其恢复到当前状态、而无需还原数据库。消除介质还原可显著加快VLDB的数据库恢复速度。此使用情形假定数据库主机实例完好无损、并且数据库控制文件、归档日志和当前日志均可用于恢复。
 
@@ -922,7 +922,7 @@ SQL>
 
 === 从映像副本到不同EC2数据库实例主机的Oracle数据库恢复
 
-[%collapsible]
+[%collapsible%open]
 ====
 如果主存储和EC2数据库实例主机均丢失、则无法从原始服务器执行恢复。幸运的是、冗余FSx ONTAP NFS文件系统上仍有Oracle数据库备份映像副本。您可以快速配置另一个相同的EC2数据库实例、并通过NFS轻松地将VLDB的映像副本挂载到新的EC2数据库主机中以运行恢复。在本节中、我们将演示执行此操作的分步过程。
 
@@ -1664,7 +1664,7 @@ Update the Oracle init file from primary databse init file backup that is restor
 
 === 克隆Oracle备用映像副本、以供其他使用情形使用
 
-[%collapsible]
+[%collapsible%open]
 ====
 使用AWS FSx ONTAP暂存Oracle VLDB映像副本的另一个优势是、可以通过FlexCloned将其用于其他许多用途、而额外的存储投资极少。在以下用例中、我们将演示如何在FSx ONTAP上为其他Oracle用例(如开发、UAT等)创建暂存NFS卷的快照和克隆
 

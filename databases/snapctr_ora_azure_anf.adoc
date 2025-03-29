@@ -142,7 +142,7 @@ image:automation_ora_anf_nfs_archit.png["此图详细展示了AWS公共云中使
 
 === 部署的前提条件
 
-[%collapsible]
+[%collapsible%open]
 ====
 部署要求现有Oracle数据库在Azure中的ANF上运行。如果没有、请按照以下步骤创建两个Oracle数据库以进行解决方案验证。有关在Azure云中的ANF上通过自动化部署Oracle数据库的详细信息、请参见TR-4987： link:automation_ora_anf_nfs.html["使用NFS在Azure NetApp Files上简化、自动化的Oracle部署"^]
 
@@ -196,7 +196,7 @@ video::960fb370-c6e0-4406-b6d5-b110014130e8[panopto,width=360]
 
 === SnapCenter安装和设置
 
-[%collapsible]
+[%collapsible%open]
 ====
 我们建议您在线完成 link:https://docs.netapp.com/us-en/snapcenter/index.html["SnapCenter 软件文档"^] 在继续SnapCenter安装和配置之前：。下面简要概括了在Azure ANF上安装和设置适用于Oracle的SnapCenter软件的步骤。
 
@@ -249,7 +249,7 @@ image:snapctr_ora_azure_anf_setup_05.png["此图提供了SnapCenter服务器的�
 
 === 数据库备份
 
-[%collapsible]
+[%collapsible%open]
 ====
 NetApp快照备份会为数据库卷创建一个时间点映像、您可以在发生系统故障或数据丢失时使用该映像进行还原。Snapshot备份所需时间极少、通常不到一分钟。备份映像占用的存储空间极少、并且性能开销可以忽略不计、因为它仅会记录自上次创建Snapshot副本以来对文件所做的更改。下一节介绍了如何在SnapCenter中为Oracle数据库备份实施快照。
 
@@ -308,7 +308,7 @@ image:snapctr_ora_azure_anf_bkup_13.png["此映像提供SnapCenter服务器的�
 
 === 数据库恢复
 
-[%collapsible]
+[%collapsible%open]
 ====
 通过SnapCenter进行数据库恢复可还原数据库卷映像时间点的Snapshot副本。然后、数据库将按scn/时间戳前滚到所需的点、或备份集中可用归档日志所允许的点。下一节介绍了使用SnapCenter UI进行数据库恢复的工作流。
 
@@ -351,7 +351,7 @@ image:snapctr_ora_azure_anf_restore_08.png["此映像提供SnapCenter服务器�
 
 === 数据库克隆
 
-[%collapsible]
+[%collapsible%open]
 ====
 通过SnapCenter执行数据库克隆的方法是、从卷的快照创建新卷。创建快照时、系统会使用卷上的数据、使用快照信息克隆新卷。更重要的是、与其他方法相比、创建生产数据库的克隆副本以支持开发或测试的速度较快(只需几分钟)且效率较高。因此、可以显著改善数据库应用程序生命周期管理。下一节介绍了使用SnapCenter UI进行数据库克隆的工作流。
 

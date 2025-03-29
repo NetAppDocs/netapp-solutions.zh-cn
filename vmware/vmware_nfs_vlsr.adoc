@@ -62,7 +62,7 @@ image:vmware-nfs-srm-image05.png["配置设备"] ｛｛｝
 
 NetApp建议为NFS采用冗余网络设计、以便为存储系统、交换机、网络适配器和主机系统提供容错功能。根据架构要求、通常会使用一个子网或多个子网部署NFS。
 
-请参见 https://core.vmware.com/resource/best-practices-running-nfs-vmware-vsphere["在VMware vSphere中运行NFS的最佳实践"] 有关特定于VMware vSphere的详细信息、请参见。
+有关特定于VMware vSphere的详细信息、请参见 https://www.vmware.com/docs/vmw-best-practices-running-nfs-vmware-vsphere["在VMware vSphere中运行NFS的最佳实践"]。
 
 有关将ONTAP与VMware vSphere结合使用的网络指导、请参见 https://docs.netapp.com/us-en/ontap-apps-dbs/vmware/vmware-vsphere-network.html#nfs["网络配置—NFS"] NetApp企业应用程序文档中的一节。
 
@@ -91,7 +91,7 @@ NetApp建议为NFS采用冗余网络设计、以便为存储系统、交换机�
 完成以下步骤以配置SRM设备和SRA适配器。
 
 .连接主站点和二级站点的SRM设备
-[%collapsible]
+[%collapsible%open]
 ====
 主站点和二级站点都必须完成以下步骤。
 
@@ -122,7 +122,7 @@ image:vmware-nfs-srm-image03.png["配置设备"]
 
 ====
 .在SRM设备上配置SRA
-[%collapsible]
+[%collapsible%open]
 ====
 要在SRM设备上配置SRA、请完成以下步骤：
 
@@ -145,7 +145,7 @@ image:vmware-nfs-srm-image04.png["添加新的SRM适配器"]
 完成以下步骤以配置站点配对、创建保护组、
 
 .为SRM配置站点配对
-[%collapsible]
+[%collapsible%open]
 ====
 以下步骤将在主站点的vCenter Client中完成。
 
@@ -193,7 +193,7 @@ image:vmware-nfs-srm-image11.png["站点对摘要"]
 
 ====
 .为SRM添加阵列对
-[%collapsible]
+[%collapsible%open]
 ====
 以下步骤将在主站点的Site Recovery界面中完成。
 
@@ -237,7 +237,7 @@ image:vmware-nfs-srm-image16.png["阵列对"]
 
 ====
 .为SRM配置保护组
-[%collapsible]
+[%collapsible%open]
 ====
 以下步骤将在主站点的Site Recovery界面中完成。
 
@@ -284,7 +284,7 @@ image:vmware-nfs-srm-image22.png["恢复计划"]
 
 ====
 .配置SRM的恢复计划
-[%collapsible]
+[%collapsible%open]
 ====
 以下步骤将在主站点的Site Recovery界面中完成。
 
@@ -329,7 +329,7 @@ image:vmware-nfs-srm-image26.png["测试网络"]
  https://docs.netapp.com/us-en/ontap-apps-dbs/vmware/vmware-srm-operational_best_practices.html["操作最佳实践"]有关将ONTAP存储与SRM灾难恢复操作结合使用的详细信息、请参见。
 
 .正在测试使用SRM进行故障转移
-[%collapsible]
+[%collapsible%open]
 ====
 以下步骤将在Site Recovery界面中完成。
 
@@ -362,7 +362,7 @@ image:vmware-nfs-srm-image30.png["新挂载的数据存储库"]
 
 ====
 .使用SRM运行恢复计划
-[%collapsible]
+[%collapsible%open]
 ====
 执行完全恢复并故障转移到二级站点。
 
@@ -394,4 +394,4 @@ image:vmware-nfs-srm-image32.png["Filover已完成"]
 
 有关配置ONTAP存储系统的信息、请参见 link:https://docs.netapp.com/us-en/ontap["ONTAP 9文档"] 中心。
 
-有关配置VCF的信息、请参见 link:https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html["VMware Cloud Foundation文档"]。
+有关配置VCF的信息，请参见link:https://techdocs.broadcom.com/us/en/vmware-cis/vcf.html["VMware Cloud Foundation文档"]。

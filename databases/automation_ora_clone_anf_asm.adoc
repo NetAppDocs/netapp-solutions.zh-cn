@@ -58,7 +58,7 @@ NOTE: 在使用此GitHub存储库中的内容制作和/或共享任何衍生作�
 
 === 部署的前提条件
 
-[%collapsible]
+[%collapsible%open]
 ====
 部署需要满足以下前提条件。
 
@@ -85,7 +85,7 @@ NOTE: 为了简化、应将克隆目标Oracle服务器配置为与备用Oracle�
 
 === 下载此工具包
 
-[%collapsible]
+[%collapsible%open]
 ====
 [source, cli]
 ----
@@ -99,7 +99,7 @@ NOTE: 此时、只有具有Bitb分 段访问权限的NetApp内部用户才能访
 
 === Ans可 处理的源和目标主机文件配置
 
-[%collapsible]
+[%collapsible%open]
 ====
 该工具包包含一个hosts文件、用于定义运行Andsle Playbook的源和目标Oracle主机。通常、它包括Data Guard设置中的备用数据库主机和目标Oracle克隆主机。下面是一个示例文件。主机条目包括目标主机IP地址以及用于用户访问主机以执行克隆或刷新命令的ssh密钥。Azure NetApp Files存储可通过API进行配置。因此、ANF连接是通过HTTP协议通过本地主机进行的。
 
@@ -120,7 +120,7 @@ localhost ansible_connection=local
 
 === 全局变量配置
 
-[%collapsible]
+[%collapsible%open]
 ====
 以下是典型全局变量文件vars.yml的示例、其中包含适用于全局级别的变量。
 
@@ -196,7 +196,7 @@ sys_pwd: "xxxxxxxx"
 
 === 主机变量配置
 
-[%collapsible]
+[%collapsible%open]
 ====
 主机变量在名为｛｛host_name｝｝.yml的host_vars目录中定义、仅适用于特定主机。对于此解决方案、只会配置目标克隆数据库主机参数文件。Oracle备用数据库参数在全局变量文件中进行配置。以下是典型配置的目标Oracle克隆数据库主机变量文件orac.yml示例。
 
@@ -219,7 +219,7 @@ asm_sid: +ASM
 
 === 其他克隆目标Oracle服务器配置
 
-[%collapsible]
+[%collapsible%open]
 ====
 克隆目标Oracle服务器应与安装并修补的源Oracle服务器具有相同的Oracle软件堆栈。Oracle用户.bash_profile已配置$oracle_base和$oracle_home。此外、$oracle_home变量应与源Oracle服务器设置匹配。如果目标oracle_home设置与备用Oracle服务器配置不同，请创建符号链接以解决这些差异。下面是一个示例。
 
@@ -242,7 +242,7 @@ alias asm='export ORACLE_HOME=$GRID_HOME;export PATH=$PATH:$GRID_HOME/bin;export
 
 === 执行操作手册
 
-[%collapsible]
+[%collapsible%open]
 ====
 总共有两本用于执行Oracle数据库克隆生命周期的操作手册。可以按需执行数据库克隆或刷新、也可以将其计划为crontab作业。
 

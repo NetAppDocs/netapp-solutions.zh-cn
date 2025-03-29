@@ -17,7 +17,7 @@ summary:
 从VMware vSphere 8.0 U1 (作为技术预览版)开始、nconnect功能可为NFS v3数据存储库卷实现多个TCP连接、从而提高吞吐量。现在、使用NFS数据存储库的客户可以增加与NFS服务器的连接数、从而最大程度地提高高速网络接口卡的利用率。
 
 
-NOTE: 此功能通常适用于具有8.0 U2的NFS v3，请参阅上的存储部分link:https://docs.vmware.com/en/VMware-vSphere/8.0/rn/vsphere-esxi-802-release-notes/index.html["VMware vSphere 8.0 Update 2发行说明"]。vSphere 8.0 U3增加了对NFS v4.1的支持。有关详细信息、请查看link:https://docs.vmware.com/en/VMware-vSphere/8.0/rn/vsphere-vcenter-server-803-release-notes/index.html["《vSphere 8.0 Update 3发行说明》"]
+NOTE: 此功能通常适用于具有8.0 U2的NFS v3，请参阅上的存储部分link:https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/release-notes/esxi-update-and-patch-release-notes/vsphere-esxi-802-release-notes.html["VMware vSphere 8.0 Update 2发行说明"]。vSphere 8.0 U3增加了对NFS v4.1的支持。有关详细信息、请查看link:https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/release-notes/esxi-update-and-patch-release-notes/vsphere-esxi-803-release-notes.html["《vSphere 8.0 Update 3发行说明》"]
 
 
 
@@ -137,7 +137,7 @@ govc host.esxcli storage nfs list
 
 ONTAP支持的最大连接数取决于存储平台型号。查找上的exec_ctx link:https://www.netapp.com/media/10720-tr-4067.pdf["NFS最佳实践和实施指南"] 有关详细信息 ...
 
-随着每个NFSv3数据存储库的连接数的增加、可挂载到该vSphere主机上的NFS数据存储库数量也会减少。每个vSphere主机支持的连接总数为256。检查 link:https://kb.vmware.com/s/article/91481["VMware知识库文章91481."] 每个vSphere主机的数据存储库限制。
+随着每个NFSv3数据存储库的连接数的增加、可挂载到该vSphere主机上的NFS数据存储库数量也会减少。每个vSphere主机支持的连接总数为256。检查link:https://knowledge.broadcom.com/external/article?legacyId=91481["VMware知识库文章91481."]每个vSphere主机是否存在数据存储库限制。
 
 
 NOTE: VVOV数据存储库不支持nConnect功能。但是、协议端点会计入连接限制。创建VVOV数据存储库时、系统会为SVM的每个数据lf创建一个协议端点。

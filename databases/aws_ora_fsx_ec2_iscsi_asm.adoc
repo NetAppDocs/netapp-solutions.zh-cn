@@ -114,7 +114,7 @@ image:aws_ora_fsx_ec2_iscsi_asm_architecture.png["此图详细展示了AWS公共
 
 === 部署的前提条件
 
-[%collapsible]
+[%collapsible%open]
 ====
 部署需要满足以下前提条件。
 
@@ -136,7 +136,7 @@ NOTE: 确保您已在EC2实例根卷中至少分配50G、以便有足够的空�
 
 === EC2实例内核配置
 
-[%collapsible]
+[%collapsible%open]
 ====
 在配置了前提条件的情况下、以EC2-user身份登录到EC2实例、并使用sudo to root user配置Linux内核以进行Oracle安装。
 
@@ -277,7 +277,7 @@ systemctl disable firewalld
 
 === 配置数据库卷和LUN并将其映射到EC2实例主机
 
-[%collapsible]
+[%collapsible%open]
 ====
 使用FSx集群管理IP通过ssh以fsxadmin用户身份登录FSx集群、从命令行配置三个卷、以托管Oracle数据库二进制文件、数据和日志文件。
 
@@ -369,7 +369,7 @@ svm_ora    /vol/ora_01_logs/ora_01_logs_02           ora_01        6  iscsi
 
 === 数据库存储配置
 
-[%collapsible]
+[%collapsible%open]
 ====
 现在、为EC2实例主机上的Oracle网格基础架构和数据库安装导入并设置FSX存储。
 
@@ -640,7 +640,7 @@ systemctl restart multipathd
 
 === Oracle网格基础架构安装
 
-[%collapsible]
+[%collapsible%open]
 ====
 . 通过SSH以EC2-user身份登录到EC2实例、并通过取消注释启用密码身份验证 `PasswordAuthentication yes` 然后进行注释 `PasswordAuthentication no`。
 +
@@ -818,7 +818,7 @@ ASMCMD-9526: The AFD state is 'LOADED' and filtering is 'ENABLED' on host 'ip-17
 
 === Oracle数据库安装
 
-[%collapsible]
+[%collapsible%open]
 ====
 . 以Oracle用户身份登录并取消设置 `$ORACLE_HOME` 和 `$ORACLE_SID` 如果已设置。
 +

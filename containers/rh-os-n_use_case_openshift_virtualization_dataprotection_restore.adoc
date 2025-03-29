@@ -23,7 +23,7 @@ summary: 借助 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化
 要从备份中还原、我们假设虚拟机所在的命名空间被意外删除。
 
 .还原到同一命名空间
-[%collapsible]
+[%collapsible%open]
 ====
 要从刚刚创建的备份进行还原、需要创建一个还原自定义资源(CR)。我们需要为其提供一个名称、提供要从中还原的备份的名称、并将restorEPVs设置为true。可以按中所示设置其他参数 link:https://docs.openshift.com/container-platform/4.14/backup_and_restore/application_backup_and_restore/backing_up_and_restoring/restoring-applications.html["文档。"]。单击创建按钮。
 
@@ -45,7 +45,7 @@ image:redhat_openshift_OADP_restore_image2.jpg["还原已完成"]
 
 ====
 .还原到其他命名空间
-[%collapsible]
+[%collapsible%open]
 ====
 要将VM还原到其他命名空间、您可以在Restore CR的YAML定义中提供一个命名空间映射。
 
@@ -71,7 +71,7 @@ image:redhat_openshift_OADP_restore_image3.jpg["还原到新命名空间已完�
 
 ====
 .还原到其他存储类
-[%collapsible]
+[%collapsible%open]
 ====
 Velero提供了一种在恢复期间通过指定json修补程序来修改资源的通用功能。json修补程序会在还原之前应用于资源。json修补程序在configmap中指定、而configmap则在restore命令中引用。通过此功能、您可以使用不同的存储类进行还原。
 

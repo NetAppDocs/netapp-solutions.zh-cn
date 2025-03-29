@@ -20,8 +20,6 @@ summary: 将灾难恢复到云是一种具有弹性且经济高效的方式、�
 
 == 概述
 
-作者：NetApp公司Ravi BCB和Niyaz Mohamed
-
  This covers application data; however, what about the actual VMs themselves. Disaster recovery should cover all dependent components, including virtual machines, VMDKs, application data, and more. To accomplish this, SnapMirror along with Jetstream can be used to seamlessly recover workloads replicated from on-premises to Cloud Volumes ONTAP while using vSAN storage for VM VMDKs.
 本文档提供了使用NetApp SnapMirror、Jetstream和Azure VMware解决方案 (AVS)设置和执行灾难恢复的分步方法。
 
@@ -71,7 +69,7 @@ NOTE: 将内部数据中心连接到Azure有多种选项、这使我们无法在
 === 部署详细信息
 
 .在Azure上配置CVO并将卷复制到CVO
-[%collapsible]
+[%collapsible%open]
 ====
 第一步是Cloud Volumes ONTAP在Azure (link:azure-guest.html["链接。"^])并使用所需的频率和快照保留将所需的卷复制到Cloud Volumes ONTAP。
 
@@ -79,7 +77,7 @@ image:dr-cvo-avs-image2.png["图中显示了输入/输出对话框或表示已�
 
 ====
 .配置AVS主机和CVO数据访问
-[%collapsible]
+[%collapsible%open]
 ====
 部署SDDC时需要考虑的两个重要因素是Azure VMware解决方案 中SDDC集群的大小以及SDDC的持续运行时间。对于灾难恢复解决方案 、这两个主要注意事项有助于降低整体运营成本。SDDC可以小至三台主机、在整个规模的部署中一直到多主机集群。
 
@@ -93,7 +91,7 @@ image:dr-cvo-avs-image2.png["图中显示了输入/输出对话框或表示已�
 
 ====
 .在内部数据中心中安装Jetstream DR
-[%collapsible]
+[%collapsible%open]
 ====
 Jetstream灾难恢复软件由三个主要组件组成：Jetstream灾难恢复管理服务器虚拟设备(Virtual Appliance、MSA)、灾难恢复虚拟设备(DR Virtual Appliance、DRVA)和主机组件(I/O筛选器软件包)。MSA用于在计算集群上安装和配置主机组件、然后管理Jetstream DR软件。安装过程如下：
 
@@ -201,7 +199,7 @@ image:dr-cvo-avs-image20.png["图中显示了输入/输出对话框或表示已�
 
 ====
 .在私有云中安装Jetstream DR for AVS
-[%collapsible]
+[%collapsible%open]
 ====
 恢复站点(AVS)的一个最佳实践是、提前创建一个三节点的试用集群。这样可以对恢复站点基础架构进行预配置、其中包括以下内容：
 
@@ -274,7 +272,7 @@ image:dr-cvo-avs-image26.png["图中显示了输入/输出对话框或表示已�
 
 ====
 .故障转移和故障恢复
-[%collapsible]
+[%collapsible%open]
 ====
 . 在内部环境的受保护集群发生灾难(部分或完整故障)后、您可以在中断相应应用程序卷的SnapMirror关系后使用Jetstream为VM触发故障转移。
 +

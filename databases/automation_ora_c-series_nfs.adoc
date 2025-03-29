@@ -142,7 +142,7 @@ image:automation_ora_c-series_nfs_archit.png["此图详细展示了AWS公共云�
 
 === 部署的前提条件
 
-[%collapsible]
+[%collapsible%open]
 ====
 部署需要满足以下前提条件。
 
@@ -176,7 +176,7 @@ installer_archives:
 
 === 在适用于Oracle的C系列上配置网络和SVM
 
-[%collapsible]
+[%collapsible%open]
 ====
 本部分部署指南演示了使用ONTAP System Manager UI为采用NFS协议的Oracle工作负载在C系列控制器上设置网络和Storage Virtual Machine (SVM)的最佳实践。
 
@@ -276,7 +276,7 @@ NOTE: 数据库卷命名约定应严格遵循上述格式、以确保自动化�
 
 === 自动化参数文件
 
-[%collapsible]
+[%collapsible%open]
 ====
 Ans可 通过预定义的参数执行数据库安装和配置任务。对于此Oracle自动化解决方案、有三个用户定义的参数文件需要用户输入才能执行操作手册。
 
@@ -292,7 +292,7 @@ Ans可 通过预定义的参数执行数据库安装和配置任务。对于此O
 
 === 参数文件配置
 
-[%collapsible]
+[%collapsible%open]
 ====
 . 可逆目标 `hosts` 文件配置：
 +
@@ -366,7 +366,7 @@ nfs_lif: 172.30.136.68
 
 === 执行操作手册
 
-[%collapsible]
+[%collapsible%open]
 ====
 自动化工具包中共有五本操作手册。每个任务执行不同的任务块、并用于不同的用途。
 
@@ -430,7 +430,7 @@ ansible-playbook -i hosts 5-destroy.yml -u admin -e @vars/vars.yml
 
 === 执行后验证
 
-[%collapsible]
+[%collapsible%open]
 ====
 运行此操作手册后、登录到Oracle数据库服务器VM、以验证是否已安装和配置Oracle以及是否已成功创建容器数据库。以下是对DB VM ora_01或ora_02进行Oracle数据库验证的示例。
 
@@ -662,7 +662,7 @@ image:automation_ora_c-series_nfs_em_01.png["此图提供Oracle Enterprise Manag
 
 === 使用SnapCenter进行Oracle备份、还原和克隆
 
-[%collapsible]
+[%collapsible%open]
 ====
 NetApp建议使用SnapCenter UI工具来管理C系列中部署的Oracle数据库。请参阅TR-4979 link:aws_ora_fsx_vmc_guestmount.html#oracle-backup-restore-and-clone-with-snapcenter["借助子系统装载的FSx ONTAP、在基于AWS的VMware Cloud中简化自我管理Oracle"^] 部分。 `Oracle backup, restore, and clone with SnapCenter` 有关设置SnapCenter以及执行数据库备份、还原和克隆工作流的详细信息。
 

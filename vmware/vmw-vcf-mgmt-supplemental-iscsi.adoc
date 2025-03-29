@@ -1,0 +1,358 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmw-vcf-mgmt-supplemental-iscsi.html 
+keywords: netapp, vmware, cloud, foundation, vcf, aff, all-flash, array, ontap tools, otv, sddc, iscsi 
+summary:  
+---
+= 使用适用于VMware的ONTAP工具将iSCSI作为管理域的补充存储
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+在此情景中、我们将演示如何部署和使用适用于VMware vSphere的ONTAP工具(OTV)为VCF管理域配置iSCSI数据存储库。
+
+
+
+== iSCSI的优势
+
+*高性能：*提供高性能、可提供快速、高效的数据传输速率和低延迟。非常适合要求苛刻的企业级应用程序和虚拟化环境。
+
+*易于管理：*使用熟悉的基于IP的工具和协议简化存储管理。
+
+*经济高效：*利用现有以太网基础架构、减少对专用硬件的需求、并使企业能够实现可靠且可扩展的存储解决方案。
+
+有关在NetApp存储系统中使用iSCSI的详细信息，请参阅 https://docs.netapp.com/us-en/ontap/san-admin/san-host-provisioning-concept.html["使用iSCSI配置SAN"]。
+
+
+
+== 方案概述
+
+此情景包括以下高级步骤：
+
+* 为iSCSI流量创建一个具有逻辑接口(Logical Interface、Logical Interface、Logical Interface、
+* 在VCF管理域上为iSCSI网络创建分布式端口组。
+* 在VCF管理域的ESXi主机上为iSCSI创建vmkernel适配器。
+* 在VCF管理域上部署ONTAP工具。
+* 在VCF管理域上创建新的VMFS数据存储库。
+
+
+
+
+== 前提条件
+
+此方案需要以下组件和配置：
+
+* 一种ONTAP AFF或ASA存储系统、其以太网交换机上的物理数据端口专用于存储流量。
+* VCF管理域部署已完成、可访问vSphere客户端。
+
+
+NetApp建议为iSCSI设计完全冗余的网络。下图展示了一个冗余配置示例、用于为存储系统、交换机、网络适配器和主机系统提供容错功能。请参阅NetApp link:https://docs.netapp.com/us-en/ontap/san-config/index.html["SAN 配置参考"] 适用于追加信息 。
+
+image:vmware-vcf-asa-image74.png["iSCSI网络设计"]｛｛｝
+
+对于多路径和多路径故障转移、NetApp建议在单独的以太网网络中为iSCSI配置中的所有SVM的每个存储节点至少配置两个LUN。
+
+本文档演示了创建新SVM以及指定IP地址信息以为iSCSI流量创建多个LUN的过程。要向现有SVM添加新的SVM、请参见 link:https://docs.netapp.com/us-en/ontap/networking/create_a_lif.html["创建LIF (网络接口)"]。
+
+有关在VMware中使用VMFS iSCSI数据存储库的追加信息信息、请参见 link:vsphere_ontap_auto_block_iscsi.html["vSphere VMFS 数据存储库—具有 ONTAP 的 iSCSI 存储后端"]。
+
+
+TIP: 如果在同一IP网络上配置了多个VMkernel适配器、建议在ESXi主机上使用软件iSCSI端口绑定、以确保在适配器之间实现负载平衡。请参阅知识库文章link:https://knowledge.broadcom.com/external/article?legacyId=2038869["在ESS/ESXi中使用软件iSCSI端口绑定的注意事项(20388689)"]。
+
+
+
+== 部署步骤
+
+要部署ONTAP工具并使用它在VCF管理域上创建VMFS数据存储库、请完成以下步骤：
+
+
+
+=== 在ONTAP存储系统上创建SVM和SVM
+
+以下步骤在ONTAP系统管理器中执行。
+
+.创建Storage VM和SVM
+[%collapsible%open]
+====
+完成以下步骤、为iSCSI流量创建一个SVM以及多个LUN。
+
+. 从ONTAP系统管理器导航到左侧菜单中的*存储VM*、然后单击*+ Add*开始。
++
+image:vmware-vcf-asa-image01.png["单击+Add开始创建SVM"]
+
++
+｛｛｝
+
+. 在*添加Storage VM*向导中为SVM提供*名称*，选择* IP空间*，然后在*访问协议下，单击*iSCSI*选项卡并选中*启用iSCSI*复选框。
++
+image:vmware-vcf-asa-image02.png["添加Storage VM向导—启用iSCSI"]
+
+. 在*Network Interface*部分中，填写第一个LIF的*IP地址*、*Subnet Mask *和*Broadcast Domain和Port*。对于后续的Lifs、可以启用此复选框、以便在所有剩余Lifs中使用通用设置或使用单独的设置。
++
+
+NOTE: 对于多路径和多路径故障转移、NetApp建议在单独的以太网网络中为iSCSI配置中的所有SVM的每个存储节点至少配置两个LUN。
+
++
+image:vmware-vcf-asa-image03.png["填写lifs的网络信息"]
+
+. 选择是否启用Storage VM管理帐户(对于多租户环境)、然后单击*保存*以创建SVM。
++
+image:vmware-vcf-asa-image04.png["启用SVM帐户并完成"]
+
+
+
+====
+
+
+=== 在ESXi主机上为iSCSI设置网络连接
+
+可使用vSphere客户端在VCF管理域集群上执行以下步骤。
+
+.为iSCSI流量创建分布式端口组
+[%collapsible%open]
+====
+完成以下操作、为每个iSCSI网络创建一个新的分布式端口组：
+
+. 从管理域集群的vSphere Client中、导航到*清单>网络连接*。导航到现有分布式交换机并选择要创建*新分布式端口组...*的操作。
++
+image:vmware-vcf-asa-image05.png["选择创建新端口组"]
+
++
+｛｛｝
+
+. 在“*新分布式端口组*”向导中，填写新端口组的名称，然后单击“*下一步*”继续。
+. 在*Configure settings (配置设置)*页面上填写所有设置。如果使用的是VLAN、请确保提供正确的VLAN ID。单击“*下一步*”继续。
++
+image:vmware-vcf-asa-image06.png["填写VLAN ID"]
+
++
+｛｛｝
+
+. 在*Ready to Complete*(准备完成)页面上，查看所做的更改，然后单击*Finish (完成)*以创建新的分布式端口组。
+. 重复此过程为所使用的第二个iSCSI网络创建分布式端口组，并确保输入正确的*VLAN ID*。
+. 创建两个端口组后，请导航到第一个端口组并选择操作*编辑设置...*。
++
+image:vmware-vcf-asa-image27.png["DPG—编辑设置"]
+
++
+｛｛｝
+
+. 在“*分布式端口组-编辑设置*”页面上，导航到左侧菜单中的*分组和故障转移*，然后单击*uplink2*将其下移到“*未使用的上行链路*”。
++
+image:vmware-vcf-asa-image28.png["将Uplink2移至未使用"]
+
+. 对第二个iSCSI端口组重复此步骤。但是，这次将*Uplink1*下移到*unused uplines*。
++
+image:vmware-vcf-asa-image29.png["将Uplink1移至未使用"]
+
+
+
+====
+.在每台ESXi主机上创建VMkernel适配器
+[%collapsible%open]
+====
+对管理域中的每个ESXi主机重复此过程。
+
+. 从vSphere客户端导航到管理域清单中的一个ESXi主机。从*配置*选项卡中选择*VMkernel适配器*，然后单击*添加网络...*开始。
++
+image:vmware-vcf-asa-image07.png["启动添加网络向导"]
+
++
+｛｛｝
+
+. 在“*选择连接类型*”窗口中，选择*VMkernel网络适配器*，然后单击“*下一步*”继续。
++
+image:vmware-vcf-asa-image08.png["选择VMkernel Network Adapter"]
+
++
+｛｛｝
+
+. 在*选择目标设备*页上，为先前创建的iSCSI选择一个分布式端口组。
++
+image:vmware-vcf-asa-image09.png["选择目标端口组"]
+
++
+｛｛｝
+
+. 在*Port properties*页上保留默认值，然后单击*Next*继续。
++
+image:vmware-vcf-asa-image10.png["VMkernel端口属性"]
+
++
+｛｛｝
+
+. 在*IPv4设置*页面上，填写*IP地址*、*Subnet mask *，并提供新的网关IP地址(仅在需要时才提供)。单击“*下一步*”继续。
++
+image:vmware-vcf-asa-image11.png["VMkernel IPv4设置"]
+
++
+｛｛｝
+
+. 在*Ready to Complete*(准备完成)页面上查看您选择的内容，然后单击*Complete*(完成)以创建VMkernel适配器。
++
+image:vmware-vcf-asa-image12.png["查看VMkernel选择"]
+
++
+｛｛｝
+
+. 重复此过程、为第二个iSCSI网络创建VMkernel适配器。
+
+
+====
+
+
+=== 部署并使用ONTAP工具配置存储
+
+以下步骤将使用vSphere客户端在VCF管理域集群上执行、涉及部署OTV、创建VMFS iSCSI数据存储库以及将管理VM迁移到新数据存储库。
+
+.部署适用于VMware vSphere的ONTAP工具
+[%collapsible%open]
+====
+适用于VMware vSphere的ONTAP工具(OTV)部署为一个VM设备、可通过一个集成的vCenter UI来管理ONTAP存储。
+
+完成以下操作以部署适用于VMware vSphere的ONTAP工具：
+
+. 从获取ONTAP工具OVA映像 link:https://mysupport.netapp.com/site/products/all/details/otv/downloads-tab["NetApp 支持站点"] 并下载到本地文件夹。
+. 登录到VCF管理域的vCenter设备。
+. 在vCenter设备界面中，右键单击管理集群，然后选择*Deploy OVF Template…*
++
+image:vmware-vcf-aff-image21.png["部署OVF模板..."]
+
++
+｛｛｝
+
+. 在“*部署OVF模板*”向导中，单击“*本地文件*”单选按钮，然后选择在上一步中下载的ONTAP工具OVA文件。
++
+image:vmware-vcf-aff-image22.png["选择OVA文件"]
+
++
+｛｛｝
+
+. 对于向导的第2步到第5步、为虚拟机选择一个名称和文件夹、选择计算资源、查看详细信息并接受许可协议。
+. 对于配置和磁盘文件的存储位置、请选择VCF管理域集群的vSAN数据存储库。
++
+image:vmware-vcf-aff-image23.png["选择OVA文件"]
+
++
+｛｛｝
+
+. 在Select network页面上、选择用于管理流量的网络。
++
+image:vmware-vcf-aff-image24.png["选择网络"]
+
++
+｛｛｝
+
+. 在"自定义模板"页面上、填写所有必需信息：
++
+** 用于对OTV进行管理访问的密码。
+** NTP服务器IP地址。
+** OTV维护帐户密码。
+** OTV Derby数据库密码。
+** 不要选中*启用VMware Cloud Foundation (VCF)*复选框。部署补充存储不需要vcf模式。
+** vCenter设备的FQDN或IP地址、并提供vCenter的凭据。
+** 提供所需的网络属性字段。
++
+单击“*下一步*”继续。
+
++
+image:vmware-vcf-aff-image25.png["自定义OTV模板1."]
+
++
+image:vmware-vcf-asa-image13.png["自定义OTV模板2."]
+
++
+｛｛｝
+
+
+
+. 查看即将完成页面上的所有信息、然后单击完成开始部署OTV设备。
+
+
+====
+.使用OTV在管理域上配置VMFS iSCSI数据存储库
+[%collapsible%open]
+====
+要使用OTV将VMFS iSCSI数据存储库配置为管理域上的补充存储、请完成以下操作：
+
+. 在vSphere Client中导航到主菜单并选择*vSphere Tools* NetApp ONTAP。
++
+image:vmware-vcf-asa-image14.png["导航到ONTAP工具"]
+
+. 进入*Storage ONTAP Tools*后，从Getting Started页面(或从*Storage Systems*)中单击*Add*以添加新的存储系统。
++
+image:vmware-vcf-asa-image15.png["添加存储系统"]
+
++
+｛｛｝
+
+. 提供ONTAP存储系统的IP地址和凭据、然后单击*添加*。
++
+image:vmware-vcf-asa-image16.png["提供ONTAP系统的IP和凭据"]
+
++
+｛｛｝
+
+. 单击*是*以授权集群证书并添加存储系统。
++
+image:vmware-vcf-asa-image17.png["授权集群证书"]
+
+
+
+====
+.将管理VM迁移到iSCSI数据存储库
+[%collapsible%open]
+====
+如果首选使用ONTAP存储来保护VCF管理虚拟机、则可以使用虚拟机的vMotion将虚拟机迁移到新创建的iSCSI数据存储库。
+
+完成以下步骤、将VCF管理VM迁移到iSCSI数据存储库。
+
+. 从vSphere Client导航到管理域集群、然后单击*虚拟机*选项卡。
+. 选择要迁移到iSCSI数据存储库的VM、右键单击并选择*迁移..*。
++
+image:vmware-vcf-asa-image18.png["选择要迁移的VM"]
+
++
+｛｛｝
+
+. 在*虚拟机-迁移*向导中，选择*仅更改存储*作为迁移类型，然后单击*下一步*继续。
++
+image:vmware-vcf-asa-image19.png["选择迁移类型"]
+
++
+｛｛｝
+
+. 在*选择存储*页面上，选择iSCSI数据存储库并选择*下一步*继续。
++
+image:vmware-vcf-asa-image20.png["选择目标数据存储库"]
+
++
+｛｛｝
+
+. 查看所做的选择，然后单击*完成*开始迁移。
+. 可从*Recent Tasks*窗格查看重新定位状态。
++
+image:vmware-vcf-asa-image21.png["vSphere Client Recent Tasks窗格"]
+
+
+
+====
+
+
+== 追加信息
+
+有关配置ONTAP存储系统的信息、请参见 link:https://docs.netapp.com/us-en/ontap["ONTAP 9文档"] 中心。
+
+有关配置VCF的信息，请参见link:https://techdocs.broadcom.com/us/en/vmware-cis/vcf.html["VMware Cloud Foundation文档"]。
+
+
+
+== 此解决方案的视频演示
+
+.iSCSI存储库作为VCF管理域的补充存储
+video::1d0e1af1-40ae-483a-be6f-b156015507cc[panopto,width=360]

@@ -1,0 +1,102 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmw-vcf-viwld-mgmt-supplemental-fc.html 
+keywords: netapp, vmware, cloud, foundation, vcf, asa, all-flash, array, ontap tools, otv, sddc, fc 
+summary:  
+---
+= 使用适用于VMware的ONTAP工具将FC上的VMFS作为VI工作负载和管理域的补充存储
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+在此情景中、我们将演示如何使用ONTAP工具为管理和工作负载域部署具有光纤通道(Fibre Channel、FC)后端的VMFS数据存储库。
+
+
+
+== 光纤通道的优势
+
+*高性能：* FC提供高速数据传输速率、非常适合需要快速可靠地访问大量数据的应用程序。
+
+*低延迟：*极低延迟，这对于数据库和虚拟化环境等性能敏感型应用程序至关重要。
+
+*可靠性：* FC网络因其稳健性和可靠性而闻名、具有内置冗余和纠错等功能。
+
+*专用带宽：* FC为存储流量提供专用带宽、降低网络拥塞的风险。
+
+有关在NetApp存储系统中使用光纤通道的详细信息，请参阅 https://docs.netapp.com/us-en/ontap/san-admin/san-provisioning-fc-concept.html["使用FC配置SAN"]。
+
+
+
+== 方案概述
+
+vcf补充数据存储库会在使用vCenter执行第2天操作时配置。此情景包括以下高级步骤：
+
+* 在管理域上部署ONTAP工具
+* 将VI工作负载vCenter服务器注册到ONTAP工具
+* 在适用于VMware vSphere的ONTAP工具插件上定义存储后端
+* 在FC传输上配置VMFS
+
+
+
+
+== 前提条件
+
+此方案需要以下组件和配置：
+
+* FC端口连接到FC交换机的ONTAP存储系统。
+* 已使用FC SVM创建SVM。
+* 使用FC HBA连接到FC交换机的vSphere。
+* 在FC交换机上配置了单个启动程序-目标分区。
++
+
+NOTE: 在区域配置中使用SVM FC逻辑接口、而不是在ONTAP系统上使用物理FC端口。
+
+
+
+NetApp建议为FC LUN使用多路径。
+
+有关在ONTAP存储系统上配置光纤通道的完整信息、请参阅 https://docs.netapp.com/us-en/ontap/san-management/index.html["SAN存储管理"]ONTAP 9文档中的。
+
+有关将VMFS与ONTAP存储系统结合使用的详细信息，请参见 https://docs.netapp.com/us-en/netapp-solutions/vmware/vmfs-deployment.html["VMFS部署指南"]。
+
+
+
+== 管理域的部署步骤
+
+要部署ONTAP工具并使用它在VCF管理域上创建VMFS数据存储库、请完成以下步骤：
+
+* link:https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/deploy/ontap-tools-deployment.html["在管理域上部署ONTAP工具"]
+* link:https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/configure/add-storage-backend.html["使用vSphere客户端界面定义存储后端"]
+* link:https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/configure/create-vvols-datastore.html["在FC上配置VMFS"]
+
+
+
+
+== VI工作负载域的部署步骤
+
+要部署ONTAP工具并使用它在VCF VI工作负载域上创建VMFS数据存储库、请完成以下步骤：
+
+* link:https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/configure/add-vcenter.html["注册VI工作负载vCenter以启用vCenter插件"]
+* link:https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/configure/add-storage-backend.html["使用vSphere客户端界面定义存储后端"]
+* link:https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/configure/create-vvols-datastore.html["在FC上配置VMFS"]
+
+
+
+
+== 追加信息
+
+有关配置ONTAP存储系统的信息、请参见 link:https://docs.netapp.com/us-en/ontap["ONTAP 9文档"] 中心。
+
+有关配置VCF的信息，请参见link:https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2.html["VMware Cloud Foundation文档"]。
+
+
+
+== 此解决方案的视频演示
+
+.VMFS (FC)数据存储库作为VCF管理域的补充存储
+video::3135c36f-3a13-4c95-aac9-b2a0001816dc[panopto,width=360]

@@ -26,16 +26,16 @@ image:rhhc-on-premises.png["图中显示了输入/输出对话框或表示已写
 设置过程可细分为以下步骤：
 
 .部署和配置CentOS VM
-[%collapsible]
+[%collapsible%open]
 ====
 * 它部署在VMware vSphere环境中。
-* 此VM用于为该解决方案部署NetApp Trident和NetApp Astra控制中心等组件。
+* 此VM用于为解决方案部署NetApp Trident和NetApp Trident Protect等组件。
 * 在安装期间、会在此虚拟机上配置一个root用户。
 
 
 ====
 .在VMware vSphere上部署和配置OpenShift容器平台集群(集线器集群)
-[%collapsible]
+[%collapsible%open]
 ====
 请参见有关部署OCP集群的方法的说明link:https://docs.openshift.com/container-platform/4.17/installing/installing_vsphere/installing-vsphere-assisted-installer.html["辅助部署"]。
 
@@ -44,13 +44,13 @@ TIP: 请记住以下内容：-创建ssh公共密钥和专用密钥以提供给�
 
 ====
 .在集线器集群上安装高级集群管理
-[%collapsible]
+[%collapsible%open]
 ====
 可使用集线器集群上的高级集群管理操作员进行安装。请参阅说明 link:https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.7/html/install/installing#doc-wrapper["此处"]。
 
 ====
 .安装两个额外的OCP集群(源和目标)
-[%collapsible]
+[%collapsible%open]
 ====
 * 可以使用集线器集群上的ACM部署其他集群。
 * 请参阅说明 link:https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.7/html/clusters/cluster_mce_overview#vsphere_prerequisites["此处"]。
@@ -58,7 +58,7 @@ TIP: 请记住以下内容：-创建ssh公共密钥和专用密钥以提供给�
 
 ====
 .配置NetApp ONTAP 存储
-[%collapsible]
+[%collapsible%open]
 ====
 * 在VMware环境中安装可连接到OCP VM的ONTAP 集群。
 * 创建SVM。
@@ -67,7 +67,7 @@ TIP: 请记住以下内容：-创建ssh公共密钥和专用密钥以提供给�
 
 ====
 .在OCP集群上安装NetApp Trident
-[%collapsible]
+[%collapsible%open]
 ====
 * 在集线器、源和目标集群这三个集群上安装NetApp三项功能
 * 请参阅说明 link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy-operator.html["此处"]。
@@ -78,9 +78,9 @@ TIP: 请记住以下内容：-创建ssh公共密钥和专用密钥以提供给�
 
 ====
 .在源集群上部署应用程序
-[%collapsible]
+[%collapsible%open]
 ====
 使用OpenShift GitOps部署应用程序。(例如Postgres, Ghost)
 
 ====
-下一步是使用Trident Protect进行数据保护以及从源集群到目标集群的数据迁移。有关说明、请参见。link:rhhc/rhhc-dp-tp-solution.html["此处"]
+下一步是使用Trident Protect进行数据保护以及从源集群到目标集群的数据迁移。有关说明、请参见。link:rhhc-dp-tp-solution.html["此处"]

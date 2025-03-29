@@ -1,0 +1,43 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmw-getting-started-metro-storage-cluster.html 
+keywords: vmware, getting, started, overview, netapp, storage, metro, cluster 
+summary:  
+---
+= vSphere Metro Storage Cluster
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+高级业务连续性对于企业来说至关重要、因为企业希望保护其VMware环境、使其免受一个或多个故障域中发生中断的影响。
+
+
+
+== 简介
+
+除了这些产品中内置的可用性之外、VMware和NetApp还提供了高级配置、可进一步保护分布在故障域(例如机架、建筑物、园区甚至城市)中的工作负载。
+
+
+
+== NetApp MetroCluster
+
+NetApp MetroCluster使用NetApp的高可用性(HA)功能来防止控制器出现故障。MetroCluster还包括SyncMirror技术、集群按需故障转移(Cluster Failover On Demand、CFOD)、硬件冗余以及实现高可用性的地理分隔。SyncMirror会在两个丛之间同步镜像数据：主动提供数据的本地丛和作为备用丛的远程丛。所有MetroCluster组件(例如控制器、存储、缆线、交换机和适配器)都具有硬件冗余。
+
+
+
+== NetApp SnapMirror活动同步
+
+NetApp SnapMirror主动同步通过FCP和iSCSI SAN协议提供数据存储库粒度保护、从而有选择地保护高优先级工作负载拓扑。与主动-备用MetroCluster不同、它可以同时对本地和远程站点进行主动-主动访问。从ONTAP 9.151开始、SnapMirror主动同步支持对称主动/主动功能、允许通过双向同步复制从受保护LUN的两个副本执行读写I/O操作。
+
+
+
+== VMware vSphere Metro Storage Cluster
+
+VMware vSphere Metro Storage Cluster (VMSC)通过主动-主动延伸型存储增强了VMware HA。这种经过认证的配置可保护VM和容器免受故障的影响。这可以通过结合使用延伸型存储概念和vSphere主机集群来实现。这些主机分布在不同的故障域中。NetApp MetroCluster和SnapMirror主动同步存储技术用于提供保护和受支持的存储产品。通过利用VMSC、借助NetApp认证解决方案、可以跨故障域提供强大且具有故障恢复能力的IT运营。
+
+有关详细信息，请参见 https://docs.netapp.com/us-en/ontap-apps-dbs/vmware/vmware_vmsc_overview.html#continuous-availability-solutions-for-vsphere-environments["采用ONTAP的vSphere Metro存储集群"]。｛｛｝

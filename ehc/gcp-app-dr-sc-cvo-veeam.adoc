@@ -16,8 +16,6 @@ summary: 将灾难恢复到云是一种具有弹性且经济高效的方式、�
 [role="lead"]
 将灾难恢复到云是一种具有弹性且经济高效的方式、可保护工作负载免受站点中断和勒索软件等数据损坏事件的影响。借助NetApp SnapMirror、可以将使用来宾连接存储的内部VMware工作负载复制到在Google Cloud中运行的NetApp Cloud Volumes ONTAP。
 
-作者：NetApp公司Suresh ThopPay
-
 
 
 == 概述
@@ -72,7 +70,7 @@ NOTE: 将内部数据中心连接到Google Cloud有多种方式、这使我们�
 === 部署详细信息
 
 .在Google Cloud上配置CVO并将卷复制到CVO
-[%collapsible]
+[%collapsible%open]
 ====
 第一步是Cloud Volumes ONTAP在Google Cloud (link:gcp-guest.html#gcp-cvo["CVO"^])并使用所需的频率和快照保留将所需的卷复制到Cloud Volumes ONTAP。
 
@@ -84,7 +82,7 @@ image:dr-cvo-gcve-image2.png["图中显示了输入/输出对话框或表示已�
 video::395e33db-0d63-4e48-8898-b01200f006ca[panopto]
 ====
 .配置GCVE主机和CVO数据访问
-[%collapsible]
+[%collapsible%open]
 ====
 部署SDDC时需要考虑的两个重要因素是GCVE解决方案 中SDDC集群的大小以及SDDC的持续运行时间。对于灾难恢复解决方案 、这两个主要注意事项有助于降低整体运营成本。SDDC可以小至三台主机、在整个规模的部署中一直到多主机集群。
 
@@ -96,13 +94,13 @@ video::395e33db-0d63-4e48-8898-b01200f006ca[panopto]
 
 ====
 .安装Veeam组件
-[%collapsible]
+[%collapsible%open]
 ====
 根据部署场景、需要部署的Veeam备份服务器、备份存储库和备份代理。在此使用情形下、无需为Veeam部署对象存储、也不需要横向扩展存储库。https://helpcenter.veeam.com/docs/backup/qsg_vsphere/deployment_scenarios.html["有关安装操作步骤 的信息、请参见Veeam文档"]
 
 ====
 .使用Veeam设置VM复制
-[%collapsible]
+[%collapsible%open]
 ====
 内部vCenter和GCVE vCenter都需要向Veeam注册。 https://helpcenter.veeam.com/docs/backup/qsg_vsphere/replication_job.html["设置vSphere VM复制作业"] 在向导的子系统处理步骤中、选择禁用应用程序处理、因为我们将利用SnapCenter 进行应用程序感知型备份和恢复。
 
@@ -110,7 +108,7 @@ video::395e33db-0d63-4e48-8898-b01200f006ca[panopto]
 video::8b7e4a9b-7de1-4d48-a8e2-b01200f00692[panopto]
 ====
 .Microsoft SQL Server VM故障转移
-[%collapsible]
+[%collapsible%open]
 ====
 .Microsoft SQL Server VM故障转移
 video::9762dc99-081b-41a2-ac68-b01200f00ac0[panopto]

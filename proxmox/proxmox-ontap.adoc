@@ -145,7 +145,7 @@ NOTE: 密码将保存在明文文件中、只有root用户才能访问。请参�
 .使用ONTAP的SMB共享存储池
 video::5b4ae54a-08d2-4f7d-95ec-b22d015f6035[panopto,width=360]
 .<strong>管理任务</strong>
-[%collapsible]
+[%collapsible%open]
 ====
 如果是首次使用ONTAP、请使用System Manager界面完成这些任务以获得更好的体验。
 
@@ -171,7 +171,7 @@ image:proxmox-ontap-image03.png["SMB共享信息"]
 
 ====
 .<strong>管理任务</strong>
-[%collapsible]
+[%collapsible%open]
 ====
 . 收集用于共享身份验证的SMB服务器、共享名称和凭据。
 . 确保在不同的VLAN中至少配置两个接口(以实现容错)、并且NIC支持RSS。
@@ -205,7 +205,7 @@ ONTAP支持Proxmox VE支持的所有NFS版本。要提供容错和性能增强�
 .NFS nconnect选项与ONTAP
 video::f6c9aba3-b070-45d6-8048-b22e001acfd4[panopto,width=360]
 .<strong>管理任务</strong>
-[%collapsible]
+[%collapsible%open]
 ====
 . 确保已为NFS启用SVM。请参见 link:https://docs.netapp.com/us-en/ontap/nfs-config/verify-protocol-enabled-svm-task.html["ONTAP 9 文档"]
 . 每个控制器至少有两个生命周期。按照上述链接中的步骤进行操作。下面是我们在实验室中使用的生命周期管理工具的屏幕截图、供您参考。
@@ -226,7 +226,7 @@ image:proxmox-ontap-image08.png["NFS卷信息"]
 
 ====
 .<strong>管理任务</strong>
-[%collapsible]
+[%collapsible%open]
 ====
 . 确保在不同VLAN中至少配置两个接口(以实现容错)。使用NIC绑定。
 . 如果使用管理UI `https:<proxmox-node>:8006`，请单击数据中心，选择存储，单击添加，然后选择NFS。
@@ -257,7 +257,7 @@ video::d66ef67f-bcc2-4ced-848e-b22e01588e8c[panopto,width=360]
 要为Proxmox主机之间的共享存储配置逻辑卷管理器、请完成以下任务：
 
 .<strong>管理任务</strong>
-[%collapsible]
+[%collapsible%open]
 ====
 . 确保有两个可用的Linux VLAN接口。
 . 确保在所有Proxmox VE主机上安装了多路径工具。确保启动时启动。
@@ -279,7 +279,7 @@ cat /etc/iscsi/initiator.name
 
 ====
 .<strong>管理任务</strong>
-[%collapsible]
+[%collapsible%open]
 ====
 如果是首次使用ONTAP、请使用System Manager以获得更好的体验。
 
@@ -298,7 +298,7 @@ image:proxmox-ontap-image14.png["iSCSI LUN详细信息"]
 
 ====
 .<strong>管理任务</strong>
-[%collapsible]
+[%collapsible%open]
 ====
 . 转至Management UI (管理UI `https:<proxmox node>:8006`)，单击Datacenter (数据中心)，选择storage (存储)，单击Add (添加)，然后选择iSCSI。
 +
@@ -332,7 +332,7 @@ video::80164fe4-06db-4c21-a25d-b22e0179c3d2[panopto,width=360]
 要为Proxmox主机之间的共享存储配置逻辑卷管理器、请完成以下任务：
 
 .<strong>管理任务</strong>
-[%collapsible]
+[%collapsible%open]
 ====
 . 确保有两个可用的Linux VLAN接口。
 . 在集群中的每个Proxmox主机上、执行以下命令收集主机启动程序信息。
@@ -346,7 +346,7 @@ nvme show-hostnqn
 
 ====
 .<strong>管理任务</strong>
-[%collapsible]
+[%collapsible%open]
 ====
 如果是首次使用ONTAP、请使用System Manager以获得更好的体验。
 
@@ -361,7 +361,7 @@ image:proxmox-ontap-image20.png["NVMe命名空间创建"]
 
 ====
 .<strong>管理任务</strong>
-[%collapsible]
+[%collapsible%open]
 ====
 . 导航到集群中每个Proxmox VE主机上的Shell、创建/etc/NVMe/discovery.conf文件并更新特定于您的环境的内容。
 +

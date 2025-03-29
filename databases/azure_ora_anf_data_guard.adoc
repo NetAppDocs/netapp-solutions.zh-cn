@@ -13,8 +13,6 @@ summary: '该解决方案提供了使用Microsoft Azure NetApp Files (ANF)作为
 :imagesdir: ../media/
 
 
-NetApp公司Allen Cao、Niyaz Mohamed
-
 [role="lead"]
 该解决方案提供了使用Microsoft Azure NetApp Files (ANF)作为主数据库存储和备用数据库存储来配置Oracle Data Guard的概述和详细信息、以降低Azure云中Oracle Data Guard HA/DR解决方案的许可和运营成本。
 
@@ -115,7 +113,7 @@ image:azure_ora_anf_data_guard_architecture.png["此图详细展示了在ANF上�
 === 部署注意事项的关键因素
 
 * *备用数据库克隆。*在从主数据库接收和应用事务日志时、可以克隆物理备用数据库并将其挂载到数据库VM上、以支持开发、测试或报告等其他工作负载。克隆可以是精简克隆、也可以是厚克隆。此时、ANF仅支持厚克隆、即备用数据库的完整副本。不久将发布ANF精简克隆选项。对于精简克隆的数据库卷副本、它与备用数据库共享相同的数据库卷、并利用写时复制技术为写入IO提供服务。因此、克隆的存储效率非常高、可用于许多其他使用情形、只需为新写入IO分配最少的增量新存储即可。这样可以大幅减少Active Data Guard存储占用空间、从而显著节省存储成本。NetApp建议在数据库从主存储切换到备用ANF存储时尽量减少FlexClone活动、以便将Oracle性能保持在较高水平。
-* * Oracle软件要求。*一般来说、物理备用数据库必须与主数据库具有相同的Database Home版本、包括修补程序集例外(Patch Set例外、PSE)、关键修补程序更新(Critical Patch Update、CPU)、 和补丁集更新(PSU)、除非正在执行Oracle Data Guard Standby-First Patch Apply进程(如上的My Oracle Support note 1265700.1中所述) link:http://support.oracle.com.["support.oracle.com"^]
+* * Oracle软件要求。*通常，物理备用数据库必须与主数据库具有相同的Database Home版本，包括修补程序集例外(PDE)、关键修补程序更新(CPU)和修补程序集更新(PSU)，除非正在执行Oracle Data Guard Standby-First Patch Apply进程(如上的My Oracle支持注释1265700.1中所述link:https://support.oracle.com["support.oracle.com"^])。
 * *备用数据库目录结构注意事项。*如果可能、主系统和备用系统上的数据文件、日志文件和控制文件应具有相同的名称和路径名称、并使用最佳灵活架构(OFA)命名约定。备用数据库上的归档目录也应在站点之间完全相同、包括大小和结构。此策略允许备份、切换和故障转移等其他操作执行相同的步骤集、从而降低维护复杂性。
 * *强制日志记录模式。*要防止主数据库中未记录的无法传播到备用数据库的直接写入、请在执行数据文件备份以创建备用数据库之前、在主数据库中启用强制日志记录。
 * *Azure虚拟机大小。*在这些测试和验证中、我们使用了一个Azure VM—Standard"、B4ms、带有4个vCPU和16 GiB内存。您需要根据实际工作负载要求、根据vCPU数量和RAM量适当地调整Azure DB VM的大小。
@@ -135,7 +133,7 @@ image:azure_ora_anf_data_guard_architecture.png["此图详细展示了在ANF上�
 
 === 部署的前提条件
 
-[%collapsible]
+[%collapsible%open]
 ====
 部署需要满足以下前提条件。
 
@@ -174,7 +172,7 @@ vnet网关连接状态：image:azure_ora_anf_dg_vnet_03.png["显示Azure环境�
 
 === 为Data Guard准备主数据库
 
-[%collapsible]
+[%collapsible%open]
 ====
 在此演示中、我们已在主Azure数据库服务器上设置了一个名为NTAP的主Oracle数据库、其中包含三个NFS挂载点：/u01表示Oracle二进制文件、/u02表示Oracle数据文件、/u03表示Oracle活动日志、归档日志文件和冗余Oracle控制文件。下面说明了设置主数据库以实现Oracle Data Guard保护的详细过程。所有步骤均应以Oracle数据库所有者或默认用户身份执行 `oracle`。
 
@@ -484,7 +482,7 @@ log_archive_dest_21                  string
 
 === 准备备用数据库并激活Data Guard
 
-[%collapsible]
+[%collapsible%open]
 ====
 Oracle Data Guard需要在备用数据库服务器上配置操作系统内核和Oracle软件堆栈(包括修补程序集)、以便与主数据库服务器匹配。为了便于管理和简化、备用数据库服务器的数据库存储配置也应与主数据库服务器相匹配、例如数据库目录布局和NFS挂载点大小。下面详细介绍了设置备用Oracle数据库服务器和激活Oracle DataGuard for HA/DR保护的过程。所有命令都应以默认Oracle所有者用户ID执行 `oracle`。
 
@@ -846,7 +844,7 @@ SQL>
 
 === 设置Data Guard代理
 
-[%collapsible]
+[%collapsible%open]
 ====
 Oracle Data Guard代理是一个分布式管理框架、可自动集中创建、维护和监控Oracle Data Guard配置。以下部分演示如何设置Data Guard Broker以管理Data Guard环境。
 
@@ -943,7 +941,7 @@ DGMGRL>
 
 === 克隆备用数据库以用于其他使用情形
 
-[%collapsible]
+[%collapsible%open]
 ====
 在Oracle Data Guard设置中、将Oracle备用数据库托管在ANF上的主要优势在于、如果启用了精简克隆、则可以快速克隆该数据库以满足许多其他使用情形的需要、而额外的存储投资却极少。NetApp建议使用SnapCenter UI工具管理Oracle DataGuard数据库。在下一节中、我们将演示如何使用NetApp SnapCenter工具为ANF上已挂载和正在恢复的备用数据库卷创建快照和克隆、以用于其他目的、例如开发、测试、报告等。
 

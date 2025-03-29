@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: containers/vtwn_solution_overview.html 
-keywords: VMware Tanzu, Tanzu, DevOps, Netapp, Trident, Astra Control, Astra 
+keywords: VMware Tanzu, Tanzu, DevOps, Netapp, Trident, Trident Protect 
 summary: '本参考文档对不同类型的VMware Tanzu Kubernetes解决方案进行了部署验证、这些解决方案已通过NetApp验证部署为Tanzu Kubernetes Grid (TKG)、Tanzu Kubernetes Grid Service (TKGS)或Tanzu Kubernetes Grid Integrated (TKGI)。' 
 ---
 = NVA-1166：采用NetApp技术的VMware Tanzu
@@ -16,7 +16,7 @@ summary: '本参考文档对不同类型的VMware Tanzu Kubernetes解决方案�
 NetApp 公司 Alan Cowles 和 Nikhil M Kulkarni
 
 [role="lead"]
-本参考文档对不同类型的VMware Tanzu Kubernetes解决方案进行了部署验证、这些解决方案已通过NetApp验证部署为Tanzu Kubernetes Grid (TKG)、Tanzu Kubernetes Grid Service (TKGS)或Tanzu Kubernetes Grid Integrated (TKGI)。同时、还介绍了与NetApp存储系统和Trident存储流程编排程序的存储集成、用于管理永久性存储、以及通过Astra控制中心备份和克隆使用该永久性存储的有状态应用程序。最后、本文档还提供了有关解决方案 集成和验证的视频演示。
+本参考文档对不同类型的VMware Tanzu Kubernetes解决方案进行了部署验证、这些解决方案已通过NetApp验证部署为Tanzu Kubernetes Grid (TKG)、Tanzu Kubernetes Grid Service (TKGS)或Tanzu Kubernetes Grid Integrated (TKGI)。同时、还介绍了与NetApp存储系统和Trident存储流程编排程序的存储集成、用于管理永久性存储、以及与Trident Protect相集成、用于使用该永久性存储备份和克隆有状态应用程序。最后、本文档还提供了有关解决方案 集成和验证的视频演示。
 
 
 
@@ -26,8 +26,8 @@ NetApp 公司 Alan Cowles 和 Nikhil M Kulkarni
 
 * 易于部署和管理部署在VMware vSphere上并与NetApp存储系统集成的VMware Tanzu Kubernetes Grid产品。
 * 企业级容器和虚拟化工作负载与VMware Tanzu Kubernetes Grid产品相结合的强大功能。
-* 与NetApp存储和NetApp Astra产品套件结合使用时、真实的配置和使用情形重点介绍了VMware Tanzu的功能。
-* 使用Astra控制中心对部署在VMware Tanzu Kubernetes Grid集群上的容器化工作负载进行应用程序一致的保护或迁移、这些集群的数据驻留在NetApp存储系统上。
+* 实际配置和用例、重点介绍了与NetApp存储和NetApp Trident产品套件结合使用时VMware Tanzu的功能。
+* 使用Trident Protect对部署在VMware Tanzu Kubornetes Grid集群上的容器化工作负载进行应用程序一致的保护或迁移、该集群的数据驻留在NetApp存储系统上。
 
 
 
@@ -116,10 +116,6 @@ NetApp 拥有多个存储系统，非常适合企业数据中心和混合云部�
 
 === NetApp 存储集成
 
-NetApp Astra控制中心为有状态的Kubernetes工作负载提供一套丰富的存储和应用程序感知型数据管理服务、这些服务部署在内部环境中、并采用值得信赖的NetApp数据保护技术。
-
-有关详细信息，请访问 NetApp Astra 网站 https://cloud.netapp.com/astra["此处"]。
-
 Trident是一款完全受支持的开源存储流程编排程序、适用于容器和Kubnetes分发版(包括VMware Tanzu)。
 
 有关详细信息，请访问Trident网站 https://docs.netapp.com/us-en/trident/index.html["此处"]。
@@ -135,9 +131,6 @@ Trident是一款完全受支持的开源存储流程编排程序、适用于容�
 
 
 | NetApp ONTAP | 存储 | 9.9.1 
-
-
-| NetApp Astra 控制中心 | 应用程序感知型数据管理 | 22.04 
 
 
 | NetApp Trident | 存储编排 | 22.04.0 

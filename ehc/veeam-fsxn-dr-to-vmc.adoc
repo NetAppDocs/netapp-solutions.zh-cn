@@ -16,8 +16,6 @@ summary:
 [role="lead"]
 Amazon FSx ONTAP与VMware Cloud on AWS的集成是一个AWS管理的外部NFS数据存储库、该数据存储库基于NetApp的ONTAP文件系统构建、可以连接到SDDC中的集群。它为客户提供了灵活的高性能虚拟化存储基础架构、该基础架构可独立于计算资源进行扩展。
 
-作者：Niyaz Mohamed - NetApp解决方案工程部
-
 
 
 == 概述
@@ -73,7 +71,7 @@ image:dr-veeam-fsx-image1.png["使用Veeam Replication和FSx ONTAP for VMC的灾
 === 部署详细信息
 
 .第1步：复制VM
-[%collapsible]
+[%collapsible%open]
 ====
 Veeam Backup & Replication利用VMware vSphere快照功能、在复制期间、Veeam Backup & Replication会请求VMware vSphere创建VM快照。VM快照是VM的时间点副本、其中包括虚拟磁盘、系统状态、配置等。Veeam Backup & Replication使用快照作为复制数据源。
 
@@ -124,7 +122,7 @@ image:dr-veeam-fsx-image8.png["图中显示了输入/输出对话框或表示已
 
 ====
 .第2步：创建故障转移计划
-[%collapsible]
+[%collapsible%open]
 ====
 初始复制或传播完成后、创建故障转移计划。故障转移计划有助于逐个或以组的形式自动对相关VM执行故障转移。故障转移计划是VM处理顺序(包括启动延迟)的蓝图。故障转移计划还有助于确保关键的相关VM已在运行。
 
@@ -156,7 +154,7 @@ image:dr-veeam-fsx-image10.png["图中显示了输入/输出对话框或表示�
 
 ====
 .第3步：运行故障转移计划
-[%collapsible]
+[%collapsible%open]
 ====
 在故障转移期间、生产站点中的源VM将切换到灾难恢复站点上的副本。在故障转移过程中、Veeam Backup & Replication会将VM副本还原到所需的还原点、并将所有I/O活动从源VM移至其副本。不仅可以在发生灾难时使用副本、还可以用于模拟灾难恢复演练。在模拟故障转移期间、源VM将保持运行状态。执行完所有必要的测试后、您可以撤消故障转移并恢复正常操作。
 
@@ -184,7 +182,7 @@ NOTE: Veeam Backup & Replication会停止源VM的所有复制活动、直到其�
 
 ====
 .第4步：故障恢复到生产站点
-[%collapsible]
+[%collapsible%open]
 ====
 当故障转移计划正在运行时、它会被视为一个中间步骤、需要根据需要最终确定。选项包括：
 

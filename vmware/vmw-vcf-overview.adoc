@@ -1,0 +1,167 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmw-vcf-overview.html 
+keywords: netapp, vmware, cloud, foundation, vcf, flexpod 
+summary:  
+---
+= VMware Cloud Foundation和NetApp ONTAP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+VMware Cloud Foundation (VCF)是一套旨在简化客户异构生态系统中混合云体验之旅的技术。
+
+
+
+= 简介
+
+将NetApp与VCF结合使用可通过NetApp的重复数据删除、数据压缩和快照等高级功能增强数据管理和存储效率。这种组合可为虚拟化环境提供无缝集成、高性能和可扩展性。此外、它还可以跨内部和云基础架构实现一致的数据服务和管理、从而简化混合云部署。
+
+
+
+== NetApp ONTAP简介
+
+NetApp ONTAP是一款全面的数据管理软件、可在广泛的产品系列中提供高级存储功能。ONTAP可作为软件定义的存储、主要云提供商提供的第一方服务以及NetApp ASA (全SAN阵列)、AFF (全闪存FAS)和FAS (光纤连接存储)平台的存储操作系统提供。ONTAP可为包括VMware虚拟化在内的各种使用情形提供高性能和低延迟、而不会形成孤岛。
+
+
+
+== VMware Cloud Foundation简介
+
+vCF将计算、网络和存储产品与VMware产品以及第三方集成相集成、从而同时支持本机Kubernetes和基于虚拟机的工作负载。此软件平台包含一些关键组件、例如VMware vSphere、NSX、Aia Suite Enterprise、Tanzu Kubernetes Grid、HCX Enterprise、SDDC Manager以及通过vSAN链接到主机CPU核心的存储容量。NetApp ONTAP可与内部和公有云中的各种VCF部署模式无缝集成。
+
+image:vmware-vcf-overview-components.png["VMware Cloud Foundation组件"]
+
+
+
+== VCF域
+
+域是VCF中的一个基本结构、可用于将资源组织成不同的独立分组。域有助于更有效地组织基础架构、确保资源得到高效利用。每个域都部署有自己的计算、网络和存储元素。
+
+image:vmware-vcf-overview-domains.png["VMware Cloud域"]
+
+VCF主要有两种类型的域：
+
+* *管理域*—管理域包括负责VCF环境核心功能的组件。这些组件负责处理资源配置、监控和维护等基本任务、并包括适用于VMware的NetApp ONTAP工具等第三方插件集成。可以使用Cloud Builder设备部署管理域、以确保遵循最佳实践、也可以将现有vCenter环境转换为VCF管理域。
+* *虚拟基础架构工作负载域*—虚拟基础架构工作负载域是专用于特定运营需求、工作负载或组织的资源池。工作负载域可通过SDDC Manager轻松部署、有助于自动执行一系列复杂任务。在一个VCF环境中、最多可以配置24个工作负载域、每个域代表一个应用程序就绪基础架构单元。
+
+
+
+
+== 使用VCF的存储
+
+域功能的核心是它们所使用的存储。虽然VCF包括基于CPU核心的vSAN容量、可用于超融合用例、但它还支持各种外部存储解决方案。对于在现有存储阵列上投入大量资金或需要支持vSAN以外的协议的企业来说、这种灵活性至关重要。VMware在VCF中支持多种存储类型。
+
+VCF主要有两种类型的存储：
+
+* *Principal storage*—此存储类型在首次创建域时分配。对于管理域、此存储用于托管VCF管理和操作组件。对于工作负载域、此存储旨在支持为其部署域的工作负载、VM或容器。
+* *补充存储*—部署后、可以将补充存储添加到任何工作负载域。这种存储类型可帮助企业利用现有的存储基础架构投资、并集成各种存储技术来优化性能、可扩展性和成本效益。
+
+
+*支持VCF存储类型*
+
+[cols="25%, 25%, 50%"]
+|===
+
+
+| *域类型* | *主要存储* | *补充存储* 
+
+
+| 管理域 | vSAN FC* NFS* | 卷(FC、iSCSI或NFS) FC NFS iSCSI NVMe/TCP NVMe/FC NVMe/RDMA 
+
+
+| 虚拟基础架构工作负载域 | vSAN vvol (FC、iSCSI或NFS) FC NFS | 卷(FC、iSCSI或NFS) FC NFS iSCSI NVMe/TCP NVMe/FC NVMe/RDMA 
+|===
+注意：*在现有vSphere环境中使用VCF导入工具时、提供了特定协议支持。
+
+
+
+== 为什么选择ONTAP for VCF
+
+除了涉及投资保护和多协议支持的用例之外、还有许多其他原因需要利用VCF工作负载域中的外部共享存储。可以假定为工作负载域配置的存储只是用于托管VM和容器的存储库。但是、企业的需求往往会超出许可容量的能力范围、需要企业级存储。ONTAP提供的存储分配给VCF中的域、易于部署、并可提供适应未来需求的共享存储解决方案。
+
+image:why_ontap_for_vmware_2.png["为什么选择ONTAP for VCF"]
+
+有关下面列出的VMware VCF的主要ONTAP优势的详细信息，请参见link:vmw-getting-started-overview.html#why-ontap-for-vmware["为什么选择ONTAP for VMware"]。
+
+* 灵活性
+* 将存储任务卸载到ONTAP
+* 同类最佳的存储效率
+* 企业级数据可用性
+* 高效的备份和恢复操作
+* 全面的业务连续性功能
+
+
+
+
+== 其他信息：
+
+* link:vmw-getting-started-netapp-storage-options.html["NetApp 存储选项"]
+* link:vmw-getting-started-metro-storage-cluster.html["vSphere Metro Storage Cluster (VMSC)支持"]
+* link:vmw-getting-started-ontap-tools-for-vmware.html["适用于 VMware vSphere 的 ONTAP 工具"]
+* link:vmw-getting-started-ontap-apis-automation.html["利用ONTAP实现VMware自动化"]
+* link:vmw-getting-started-snapcenter.html["NetApp SnapCenter"]
+* link:vmw-getting-started-hybrid-multicloud.html["采用VMware和NetApp的混合多云"]
+* link:vmw-getting-started-security-ransomware.html["安全性和勒索软件保护"]
+* link:vmw-getting-started-migration.html["轻松将VMware工作负载迁移到NetApp"]
+* link:vmw-getting-started-bluexp-disaster-recovery.html["BlueXP  灾难恢复"]
+* link:vmw-getting-started-data-infrastructure-insights.html["数据基础架构洞察"]
+* link:vmw-getting-started-vm-data-collector.html["VM 数据收集器"]
+
+
+
+
+== 摘要
+
+ONTAP提供了一个可满足所有工作负载要求的平台、可提供自定义的块存储解决方案和统一的产品/服务、从而以可靠、安全的方式更快地为VM和应用程序提供结果。ONTAP整合了先进的数据精简和移动技术、可最大限度地减少数据中心占用空间、同时确保企业级可用性、使关键工作负载保持联机。此外、AWS、Azure和Google还支持NetApp支持的外部存储、作为其云中VMware产品的一部分、可增强基于VMware云的集群中的vSAN存储。总的来说、NetApp的卓越功能使其成为VMware Cloud Foundation部署的更有效选择。
+
+
+
+== 文档资源
+
+有关适用于VMware Cloud Foundation的NetApp产品的详细信息、请参见以下内容：
+
+*VMware Cloud Foundation文档*
+
+* link:https://techdocs.broadcom.com/us/en/vmware-cis/vcf.html["VMware Cloud Foundation文档"]
+
+
+*VCF with NetApp的四(4)篇博客系列
+
+* link:https://www.netapp.com/blog/netapp-vmware-cloud-foundation-getting-started/["NetApp和VMware Cloud Foundation让一切变得轻松第1部分：入门"]
+* link:https://www.netapp.com/blog/netapp-vmware-cloud-foundation-ontap-principal-storage/["NetApp和VMware Cloud Foundation让一切变得轻松第2部分：vcf和ONTAP主体存储"]
+* link:https://www.netapp.com/blog/netapp-vmware-cloud-foundation-element-principal-storage/["NetApp和VMware Cloud Foundation让一切变得轻松第3部分：vcf和Element主体存储"]
+* link:https://www.netapp.com/blog/netapp-vmware-cloud-foundation-supplemental-storage/["NetApp和VMware云基础变得简单—第4部分：适用于VMware的ONTAP工具和补充存储"]
+
+
+*采用NetApp全闪存SAN阵列的VMware Cloud Foundation*
+
+* link:vmw-getting-started-netapp-storage-options.html#netapp-asa-all-san-array-benefits["vcf与NetApp ASA阵列、简介和技术概述"]
+* link:vmw-vcf-mgmt-principal-fc.html["使用带有FC的ONTAP作为管理域的主存储"]
+* link:vmw-vcf-viwld-principal-fc.html["使用带有FC的ONTAP作为VI工作负载域域的主存储"]
+* link:vmw-vcf-mgmt-supplemental-iscsi.html["使用ONTAP工具在VCF管理域中部署iSCSI数据存储库"]
+* link:vmw-vcf-mgmt-supplemental-fc.html["使用ONTAP工具在VCF管理域中部署FC数据存储库"]
+* link:vmw-vcf-viwld-supplemental-vvols.html["使用ONTAP工具在VI工作负载域中部署Vvol (iSCSI)数据存储库"]
+* link:vmw-vcf-viwld-supplemental-nvme.html["配置要在VI工作负载域中使用的基于TCP的NVMe数据存储库"]
+* link:vmw-vcf-scv-wkld.html["部署并使用适用于VMware vSphere的SnapCenter插件来保护和还原VI工作负载域中的VM"]
+* link:vmw-vcf-scv-nvme.html["部署和使用适用于VMware vSphere的SnapCenter插件来保护和还原VI工作负载域(NVMe/TCP数据存储库)中的VM"]
+
+
+*采用NetApp全闪存AFF阵列的VMware Cloud Foundation*
+
+* link:vmw-getting-started-netapp-storage-options.html#netapp-aff-all-flash-fas-benefits["vcf与NetApp AFF阵列、简介和技术概述"]
+* link:vmw-vcf-mgmt-principal-nfs.html["使用ONTAP和NFS作为管理域的主存储"]
+* link:vmw-vcf-viwld-principal-nfs.html["使用ONTAP和NFS作为VI工作负载域的主存储"]
+* link:vmw-vcf-viwld-supplemental-nfs-vvols.html["使用ONTAP工具在VI工作负载域中部署Vvol (NFS)数据存储库"]
+
+
+*VMware Cloud Foundation*的NetApp FlexPod解决方案
+
+* link:https://www.netapp.com/blog/expanding-flexpod-hybrid-cloud-with-vmware-cloud-foundation/["借助VMware Cloud Foundation扩展FlexPod混合云"]
+* link:https://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/UCS_CVDs/flexpod_vcf.html["FlexPod作为VMware Cloud Foundation的工作负载域"]
+* link:https://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/UCS_CVDs/flexpod_vcf_design.html["《FlexPod作为VMware云基础的工作负载域设计指南》"]
+

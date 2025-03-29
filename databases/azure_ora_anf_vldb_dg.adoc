@@ -137,7 +137,7 @@ image:azure_ora_anf_vldb_dg_architecture.png["此图详细展示了在ANF上的A
 
 === 部署的前提条件
 
-[%collapsible]
+[%collapsible%open]
 ====
 部署需要满足以下前提条件。
 
@@ -177,7 +177,7 @@ vnet网关连接状态：image:azure_ora_anf_dg_vnet_03.png["显示Azure环境�
 
 === Data Guard的主要Oracle VLDB配置
 
-[%collapsible]
+[%collapsible%open]
 ====
 在此演示中、我们在主Azure数据库服务器上设置了一个名为NTAP的主Oracle数据库、该数据库具有六个NFS挂载点：/u01表示Oracle二进制文件、/u02、/u04、/u05、/u06表示Oracle数据文件、/u03表示Oracle活动日志、归档日志文件和冗余Oracle控制文件。此设置可用作参考配置。您的实际部署应考虑您在容量池规模估算、服务级别、数据库卷数量以及每个卷的规模估算方面的特定需求和要求。
 
@@ -505,7 +505,7 @@ DIRNAME
 
 === Data Guard的备用Oracle VLDB配置
 
-[%collapsible]
+[%collapsible%open]
 ====
 Oracle Data Guard需要在备用数据库服务器上配置操作系统内核和Oracle软件堆栈(包括修补程序集)、以便与主数据库服务器匹配。为了便于管理和简化、备用数据库服务器的数据库存储配置也应与主数据库服务器相匹配、例如数据库目录布局和NFS挂载点大小。
 
@@ -825,7 +825,7 @@ DIRNAME
 
 === 设置Data Guard代理
 
-[%collapsible]
+[%collapsible%open]
 ====
 Oracle Data Guard代理是一个分布式管理框架、可自动集中创建、维护和监控Oracle Data Guard配置。以下部分演示如何设置Data Guard Broker以管理Data Guard环境。
 
@@ -922,7 +922,7 @@ DGMGRL>
 
 === 通过自动化功能克隆备用数据库以用于其他使用情形
 
-[%collapsible]
+[%collapsible%open]
 ====
 请联系NetApp解决方案工程团队、获取用于创建和刷新克隆的自动化工具包、以实现完整的克隆生命周期管理。
 

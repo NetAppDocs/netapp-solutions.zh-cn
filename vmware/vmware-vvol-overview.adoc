@@ -14,7 +14,13 @@ summary:
 
 
 [role="lead"]
-VMware虚拟卷(vvol)可满足应用程序特定的要求、以推动存储配置决策、同时利用存储阵列提供的一组丰富功能。通过vSphere存储感知API (vSphere API for Storage A感知、VASA)、VM管理员可以轻松地使用配置VM所需的任何存储功能、而无需与其存储团队进行交互。在使用VASA之前、VM管理员可以定义VM存储策略、但必须与其存储管理员一起确定适当的数据存储库、通常使用文档或命名约定。通过使用VASA、具有适当权限的vCenter管理员可以定义一系列存储功能、然后vCenter用户可以使用这些功能来配置VM。通过在VM存储策略和数据存储库存储功能配置文件之间进行映射、vCenter可以显示兼容数据存储库列表以供选择、并支持Aria (以前称为vReise) Automation或Tanzu Kubernetes Grid等其他技术自动从分配的策略中选择存储。这种方法称为基于存储策略的管理。虽然存储功能配置文件和策略也可用于传统数据存储库、但我们在此重点关注的是虚拟卷数据存储库。适用于ONTAP的ONTAP提供程序作为适用于VMware vSphere的VMware工具的一部分提供。
+VMware虚拟卷(vvol)可满足应用程序特定的要求、以推动存储配置决策、同时利用存储阵列提供的一组丰富功能。
+
+
+
+== 概述
+
+通过vSphere存储感知API (vSphere API for Storage A感知、VASA)、VM管理员可以轻松地使用配置VM所需的任何存储功能、而无需与其存储团队进行交互。在使用VASA之前、VM管理员可以定义VM存储策略、但必须与其存储管理员一起确定适当的数据存储库、通常使用文档或命名约定。通过使用VASA、具有适当权限的vCenter管理员可以定义一系列存储功能、然后vCenter用户可以使用这些功能来配置VM。通过在VM存储策略和数据存储库存储功能配置文件之间进行映射、vCenter可以显示兼容数据存储库列表以供选择、并支持Aria (以前称为vReise) Automation或Tanzu Kubernetes Grid等其他技术自动从分配的策略中选择存储。这种方法称为基于存储策略的管理。虽然存储功能配置文件和策略也可用于传统数据存储库、但我们在此重点关注的是虚拟卷数据存储库。适用于ONTAP的ONTAP提供程序作为适用于VMware vSphere的VMware工具的一部分提供。
 
 将VASA Provider置于存储阵列之外的优势包括：
 
@@ -84,7 +90,9 @@ VMware虚拟卷(vvol)具有以下优势：
 
 通常建议对存储网络使用双网络结构环境、以实现高可用性、性能和容错。iSCSI、FC、NFS3和NVMe/FC均支持vvol。注：link:https://imt.netapp.com/matrix["互操作性表工具（ IMT ）"]有关支持的ONTAP工具版本、请参见
 
-连接选项与VMFS数据存储库或NFS数据存储库选项保持一致。下面显示了iSCSI和NFS的参考vSphere网络示例。image:vmware-vvol-overview-image03.png["iSCSI网络"]
+连接选项与VMFS数据存储库或NFS数据存储库选项保持一致。下面显示了iSCSI和NFS的参考vSphere网络示例。
+
+image:vmware-vvol-overview-image03.png["iSCSI网络"]
 
 image:vmware-vvol-overview-image04.png["NFS网络"]
 

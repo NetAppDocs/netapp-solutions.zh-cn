@@ -52,7 +52,7 @@ image:vmware-nfs-otv10-image29.png["otv10架构"]
 
 NetApp建议为NFS采用冗余网络设计、以便为存储系统、交换机、网络适配器和主机系统提供容错功能。根据架构要求、通常会使用一个子网或多个子网部署NFS。
 
-请参见 https://core.vmware.com/resource/best-practices-running-nfs-vmware-vsphere["在VMware vSphere中运行NFS的最佳实践"] 有关特定于VMware vSphere的详细信息、请参见。
+有关特定于VMware vSphere的详细信息、请参见 https://www.vmware.com/docs/vmw-best-practices-running-nfs-vmware-vsphere["在VMware vSphere中运行NFS的最佳实践"]。
 
 有关将ONTAP与VMware vSphere结合使用的网络指导、请参见 https://docs.netapp.com/us-en/ontap-apps-dbs/vmware/vmware-vsphere-network.html#nfs["网络配置—NFS"] NetApp企业应用程序文档中的一节。
 
@@ -71,7 +71,7 @@ NetApp建议为NFS采用冗余网络设计、以便为存储系统、交换机�
 以下步骤将在ONTAP系统管理器中执行。
 
 .创建Storage VM和SVM
-[%collapsible]
+[%collapsible%open]
 ====
 完成以下步骤可为NFS流量创建一个SVM以及多个SVM。
 
@@ -111,7 +111,7 @@ image:vmware-vcf-asa-image04.png["启用SVM帐户并完成"]
 使用vSphere客户端在VI Workload Domain集群上执行以下步骤。在这种情况下、使用的是vCenter单点登录、因此vSphere客户端在管理域和工作负载域中通用。
 
 .为NFS流量创建分布式端口组
-[%collapsible]
+[%collapsible%open]
 ====
 完成以下操作、为网络创建一个新的分布式端口组以传输NFS流量：
 
@@ -150,7 +150,7 @@ image:vmware-nfs-otv10-image02.png["DPG—组上行链路"]
 
 ====
 .在每台ESXi主机上创建一个VMkernel适配器
-[%collapsible]
+[%collapsible%open]
 ====
 对工作负载域中的每个ESXi主机重复此过程。
 
@@ -199,7 +199,7 @@ image:vmware-nfs-otv10-image06.png["查看VMkernel选择"]
 有关部署和使用适用于VMware vSphere 10的ONTAP工具的完整文档，请参见 https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/deploy/ontap-tools-deployment.html["部署适用于VMware vSphere的ONTAP工具"]。
 
 .部署适用于VMware vSphere 10的ONTAP工具
-[%collapsible]
+[%collapsible%open]
 ====
 适用于VMware vSphere 10的ONTAP工具部署为VM设备、可通过集成的vCenter UI来管理ONTAP存储。ONTAP工具10提供了一个全新的全局管理门户、用于管理与多个vCenter Server和ONTAP存储后端的连接。
 
@@ -282,7 +282,7 @@ image:vmware-nfs-otv10-image12.png["自定义OTV模板2."]
 
 ====
 .将存储后端和vCenter Server连接到ONTAP工具10.
-[%collapsible]
+[%collapsible%open]
 ====
 ONTAP工具管理器用于配置ONTAP工具10的全局设置。
 
@@ -360,7 +360,7 @@ image:vmware-nfs-otv10-image22.png["ONTAP工具信息板"]
 
 ====
 .使用ONTAP工具创建NFS数据存储库10.
-[%collapsible]
+[%collapsible%open]
 ====
 要使用ONTAP工具10部署在NFS上运行的ONTAP数据存储库、请完成以下步骤。
 
@@ -407,7 +407,7 @@ image:vmware-nfs-otv10-image28.png["查看摘要并完成"]
 
 ====
 .使用ONTAP工具调整NFS数据存储库的大小10.
-[%collapsible]
+[%collapsible%open]
 ====
 要使用ONTAP工具10调整现有NFS数据存储库的大小、请完成以下步骤。
 

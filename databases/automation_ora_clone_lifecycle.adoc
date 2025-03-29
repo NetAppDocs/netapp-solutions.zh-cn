@@ -58,7 +58,7 @@ NOTE: 在使用此GitHub存储库中的内容制作和/或共享任何衍生作�
 
 === 部署的前提条件
 
-[%collapsible]
+[%collapsible%open]
 ====
 部署需要满足以下前提条件。
 
@@ -91,7 +91,7 @@ NOTE: 为了简化、应将克隆目标Oracle服务器配置为与备用Oracle�
 
 === 下载此工具包
 
-[%collapsible]
+[%collapsible%open]
 ====
 [source, cli]
 ----
@@ -105,7 +105,7 @@ NOTE: 此时、只有具有Bitb分 段访问权限的NetApp内部用户才能访
 
 === Ans可 处理目标主机文件配置
 
-[%collapsible]
+[%collapsible%open]
 ====
 该工具包包含一个主机文件、用于定义运行Ands得以 处理的游戏手册的目标。通常、它是目标Oracle克隆主机。下面是一个示例文件。主机条目包括目标主机IP地址以及用于管理员用户访问主机以执行克隆或刷新命令的ssh密钥。
 
@@ -122,7 +122,7 @@ ora_04.cie.netapp.com ansible_host=10.61.180.29 ansible_ssh_private_key_file=ora
 
 === 全局变量配置
 
-[%collapsible]
+[%collapsible%open]
 ====
 AnsablePlaybooks从多个变量文件中获取变量输入。下面是一个全局变量文件vars.yml示例。
 
@@ -140,7 +140,7 @@ snapctr_pwd: 'xxxxxxxx'
 
 === 主机变量配置
 
-[%collapsible]
+[%collapsible%open]
 ====
 主机变量在名为｛｛host_name｝｝.yml的host_vars目录中定义。以下是显示典型配置的目标Oracle主机变量文件ora_04.cie.netapp.com.yml的示例。
 
@@ -160,7 +160,7 @@ clone_db_sid: NTAP1DEV
 
 === 其他克隆目标Oracle服务器配置
 
-[%collapsible]
+[%collapsible%open]
 ====
 克隆目标Oracle服务器应与安装和修补的源Oracle服务器具有相同的Oracle软件堆栈。Oracle用户.bash_profile已配置$oracle_base和$oracle_home。此外、$oracle_home变量应与源Oracle服务器设置匹配。下面是一个示例。
 
@@ -181,7 +181,7 @@ export ORACLE_HOME=/u01/app/oracle/product/19.0.0/NTAP1
 
 === 执行操作手册
 
-[%collapsible]
+[%collapsible%open]
 ====
 共有三本使用SnapCenter命令行界面实用程序执行Oracle数据库克隆生命周期的操作手册。
 

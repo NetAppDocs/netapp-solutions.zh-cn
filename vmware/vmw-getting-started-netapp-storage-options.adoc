@@ -1,0 +1,136 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmw-getting-started-netapp-storage-options.html 
+keywords: vmware, getting, started, overview, netapp, storage 
+summary:  
+---
+= NetApp 存储选项
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+NetApp的FAS (光纤连接存储)、AFF (全闪存FAS)、ASA (全SAN阵列)和云解决方案提供了一系列对VMware环境(包括VMware Cloud Foundation和VMware vSphere基础部署)非常有利的功能。
+
+
+
+== 简介
+
+这些产品可为VMware管理员增强性能、可扩展性和数据管理能力。此外、这些平台还利用ONTAP、提供统一、可扩展且高效的数据管理解决方案、该解决方案支持各种存储协议、增强数据保护并针对不同工作负载优化性能。
+
+
+
+== NetApp平台的共同优势
+
+* *VMware集成：*所有NetApp平台均可与VMware实现深度集成，从而提高存储环境的效率。内部部署解决方案可以利用插件、API、VAAI和VASA来改进整体数据管理、同时提高基础架构的多功能性。
+* *成本优化和存储效率：*利用NetApp存储可利用重复数据删除、数据压缩和精简配置等本机效率技术、显著降低存储消耗和成本、同时最大程度地提高容量利用率和性能。此外、这些存储节省还可以减轻计算资源的负担。
+* *统一数据管理：* ONTAP为内部和基于云的存储提供单一管理界面、简化管理并降低复杂性。这样、可以在内部环境和云环境之间无缝移动和管理数据、从而为VMware工作负载提供灵活性和可扩展性。
+* *多协议支持：* ONTAP支持多种存储协议、包括NFS、CIP/SMB、iSCSI、FC和NVMe、使企业可以在一个平台上整合工作负载或利用专用SAN产品、而不会形成数据孤岛。
+* *自动化和流程协调：*支持VMware Cloud Foundation Automation (原VMware AIA Automation)等自动化工具、并与Ansv可 及其他自动化框架集成、可简化运营并降低管理开销。
+* *安全性：*强大的安全功能(包括空闲和传输中加密、安全多租户和基于角色的访问控制)可确保VMware环境始终安全。
+* *适用于VMware的ONTAP工具：*适用于VMware的NetApp ONTAP工具可提供无缝集成和管理功能，通过统一直观的界面为VMware环境实现高效的存储配置、数据保护和增强的性能。
+* *适用于VMware vSphere的SnapCenter：*适用于VMware vSphere的NetApp SnapCenter可简化并集中管理VMware环境的数据保护、备份和恢复操作、确保可靠高效地管理虚拟机数据。
+* *高可用性和弹性：* RAID-TEC和RAID-DP等功能可提供强大的数据保护和高可用性，这对于VMware环境至关重要。
+* *服务质量(QoS)：*允许管理员为不同的VM设置性能保证、确保关键工作负载获得必要的资源。
+
+
+注意：NetApp云解决方案的功能可能受云提供商的限制、但对于子系统连接和本机NFS数据存储库支持、它们仍然非常强大。
+
+
+
+== NetApp ASA (全SAN阵列)的优势
+
+* *针对SAN进行了优化：*专为SAN工作负载而设计、可为依赖块存储的VMware环境提供高性能和低延迟。
+* *增强型高可用性：*主动-主动控制器和同步复制等功能可确保持续可用性和数据保护。
+
+
+ASA系列由A系列和C系列型号组成。
+
+NetApp A系列全NVMe闪存阵列专为高性能工作负载而设计、可提供超低延迟和高故障恢复能力、使其适合任务关键型应用程序。
+
+image:vmware-asa-image1.png["宽度=800"]
+
+C系列QLC闪存阵列适用于容量更大的用例、可提供闪存速度和混合闪存的经济效益。
+
+image:vmware-asa-image2.png["宽度=800"]
+
+
+
+=== 存储协议支持
+
+ASA支持所有标准SAN协议、包括iSCSI、光纤通道(FC)、以太网光纤通道(FCoE)和基于网络结构的NVMe。
+
+*iSCSI*- NetApp ASA为iSCSI提供强大的支持，允许通过IP网络对存储设备进行块级访问。它可以与iSCSI启动程序无缝集成、从而高效地配置和管理iSCSI LUN。ONTAP的高级功能、例如多路径、CHAP身份验证和AUA支持。
+
+有关iSCSI配置的设计指导、请参见 https://docs.netapp.com/us-en/ontap/san-config/configure-iscsi-san-hosts-ha-pairs-reference.html["SAN配置参考文档"]。
+
+*光纤通道*- NetApp ASA为光纤通道(FC)提供全面支持，光纤通道(FC)是一种常用于存储区域网络(Storage Area Network, SANS )的高速网络技术。ONTAP可与FC基础架构无缝集成、提供对存储设备的可靠高效的块级访问。它提供分区、多路径和网络结构登录(FLOGI)等功能、可优化性能、增强安全性并确保在FC环境中实现无缝连接。
+
+有关光纤通道配置的设计指导、请参见 https://docs.netapp.com/us-en/ontap/san-config/fc-config-concept.html["SAN配置参考文档"]。
+
+*基于网络结构的NVMe*—NetApp ONTAP和ASA支持基于网络结构的NVMe。NVMe/FC支持通过光纤通道基础架构使用NVMe存储设备、并通过存储IP网络使用NVMe/TCP。
+
+有关NVMe的设计指导、请参见 https://docs.netapp.com/us-en/ontap/nvme/support-limitations.html["NVMe配置、支持和限制"]
+｛｛｝
+
+
+
+=== 双主动技术
+
+NetApp纯闪存SAN阵列支持通过两个控制器的主动-主动路径、主机操作系统无需等待某个主动路径出现故障、即可激活备用路径。这意味着、主机可以利用所有控制器上的所有可用路径、从而确保无论系统处于稳定状态还是正在执行控制器故障转移操作、活动路径始终存在。
+
+此外、NetApp ASA还提供了一项显著提高SAN故障转移速度的独特功能。每个控制器都会将基本LUN元数据持续复制到其配对系统。因此、每个控制器都可以在其配对系统突然发生故障时接管数据服务职责。之所以能够做到这一点、是因为控制器已经拥有必要的信息、可以开始利用以前由故障控制器管理的驱动器。
+
+使用主动-主动路径时、计划内和计划外接管的IO恢复时间均为2-3秒。
+
+有关详细信息，请参见 https://www.netapp.com/pdf.html?item=/media/85671-tr-4968.pdf["TR-4968：《NetApp纯SAS阵列—NetApp ASA的数据可用性和完整性》"]。
+｛｛｝
+
+有关详细信息、请参见 https://www.netapp.com/data-storage/all-flash-san-storage-array["NetApp ASA登录页面"]。
+｛｛｝
+
+
+
+== NetApp AFF (全闪存FAS)的优势
+
+* *至高性能：*利用全闪存存储提供亚微秒级延迟和高IOPS、是性能敏感型VMware工作负载的理想选择。
+* *稳定一致的低延迟：*确保关键应用程序和VM的可预测性能、这对于保持SLA至关重要。
+
+
+有关NetApp AFF A系列存储阵列的详细信息、请参见 link:https://www.netapp.com/data-storage/aff-a-series/["NetApp AFF A 系列"] 登录页面。
+
+有关NetApp C系列存储阵列的详细信息、请参见 link:https://www.netapp.com/data-storage/aff-c-series/["NetApp AFF C系列"] 登录页面。
+
+｛｛｝
+
+
+
+== NetApp FAS (光纤连接存储)的优势
+
+* *统一存储架构：*支持SAN (块级)和NAS (文件级)协议、使其适用于各种VMware工作负载。
+* *经济高效：*非常适合需要在性能和成本之间取得平衡的环境、提供HDD和SSD的组合。
+
+
+
+
+== 云解决方案的优势
+
+* *云原生数据管理：*利用云原生产品增强VMware工作负载的数据移动性、备份和灾难恢复能力。为VMware云工作负载提供本机NFS数据存储库支持如下：
++
+** 采用Amazon FSx for NetApp ONTAP的VMware Cloud on AWS
+** 采用Azure NetApp Files的Azure VMware服务
+** 带有Google Cloud NetApp卷的Google Cloud VMware引擎-
+
+
+* *混合云灵活性：*内部环境与云环境无缝集成、为跨多个位置的VMware工作负载提供灵活性。
+
+
+
+
+== 摘要
+
+总之、ONTAP和NetApp平台为VMware工作负载提供了一套全面的优势、可增强性能、可扩展性和数据管理。虽然通用功能提供了坚实的基础、但每个平台都可根据特定需求提供不同的优势、无论是采用FAS的经济高效的存储、采用AFF的高性能、采用ASA的优化SAN性能、还是采用NetApp云产品的混合云灵活性。

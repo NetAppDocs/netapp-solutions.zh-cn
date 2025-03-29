@@ -13,7 +13,7 @@ summary:
 == 在Azure上部署和配置Red Hat OpenShift容器平台
 
 [role="lead"]
-本节简要介绍了如何在Azure中设置和管理OpenShift集群并在其上部署有状态应用程序的工作流。它显示了如何借助Trident使用NetApp Cloud Volumes ONTAP存储来提供永久性卷。本节详细介绍了如何使用Astra Control Center为有状态应用程序执行数据保护和迁移活动。
+本节简要介绍了如何在Azure中设置和管理OpenShift集群并在其上部署有状态应用程序的工作流。它显示了如何借助Trident使用NetApp Cloud Volumes ONTAP存储来提供永久性卷。本节详细介绍了如何使用Trident Protect为有状态应用程序执行数据保护和迁移活动。
 
 下图显示了部署在Azure上并使用VPN连接到数据中心的集群。
 
@@ -25,7 +25,7 @@ NOTE: 可以通过多种方法在Azure中部署Red Hat OpenShift容器平台集�
 设置过程可细分为以下步骤：
 
 .使用命令行界面在Azure上安装OCP集群。
-[%collapsible]
+[%collapsible%open]
 ====
 * 确保您已满足上述所有前提条件 link:https://docs.openshift.com/container-platform/4.13/installing/installing_azure/installing-azure-vnet.html["此处"]。
 * 创建VPN、子网和网络安全组以及专用DNS区域。创建VPN网关和站点间VPN连接。
@@ -102,7 +102,7 @@ pullSecret:
 ....
 ====
 .使用BlueXP在Azure中部署Cloud Volumes ONTAP。
-[%collapsible]
+[%collapsible%open]
 ====
 * 在Azure中的中安装连接器。请参阅说明 https://docs.netapp.com/us-en/bluexp-setup-admin/task-install-connector-azure-bluexp.html["此处"]。
 * 使用连接器在Azure中部署CVO实例。请参阅说明链接：https://docs.netapp.com/us-en/bluexp-cloud-volumes-ontap/task-getting-started-azure.html [此处]。

@@ -1,0 +1,479 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmw-vcf-scv-wkld.html 
+keywords: netapp, vmware, cloud, foundation, vcf, aff, all-flash, vvol, vvols, array, ontap tools, otv, sddc, scv, snapcenter, plug-in 
+summary:  
+---
+= 保护VCF工作负载域
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+在此情景中、我们将演示如何部署和使用适用于VMware vSphere的SnapCenter插件(SCV)来备份和还原VCF工作负载域上的虚拟机和数据存储库。选择控制阀使用ONTAP快照技术为托管vSphere数据存储库的ONTAP存储卷创建快速高效的备份副本。SnapMirror和SnapVault技术用于在单独的存储系统上创建二级备份、并使用与原始卷类似的保留策略或独立于原始卷的保留策略进行长期保留。
+
+*iSCSI*用作此解决方案中VMFS数据存储库的存储协议。
+
+
+
+== 方案概述
+
+此情景包括以下高级步骤：
+
+* 在VI工作负载域上部署适用于VMware vSphere的SnapCenter插件(SCV)。
+* 将存储系统添加到选择控制阀。
+* 在选择控制阀中创建备份策略。
+* 在选择控制阀中创建资源组。
+* 使用选择控制阀备份数据存储库或特定虚拟机。
+* 使用选择控制阀将VM恢复到集群中的备用位置。
+* 使用选择控制阀将文件恢复到Windows文件系统。
+
+
+
+
+== 前提条件
+
+此方案需要以下组件和配置：
+
+* 已将iSCSI VMFS数据存储库分配给工作负载域集群的ONTAP ASA存储系统。
+* 配置为使用SnapMirror接收二级备份的二级ONTAP存储系统。
+* VCF管理域部署已完成、可访问vSphere客户端。
+* 先前已部署VI工作负载域。
+* 集群选择控制阀上的虚拟机被指定为保护。
+
+
+有关将iSCSI VMFS数据存储库配置为补充存储的信息、请参见link:vmw-vcf-mgmt-supplemental-iscsi.html["*iSCSI作为使用ONTAP Tools for VMware*的管理域的补充存储"]本文档中的。对于管理域和工作负载域、使用OTV部署数据存储库的过程是相同的。
+
+
+TIP: 除了将使用选择控制阀创建的备份复制到二级存储之外、还可以使用NetApp BlueXP虚拟机备份和恢复功能将数据的异地副本复制到三(3)家领先云提供商之一上的对象存储。有关详细信息，请参阅解决方案link:vmw-vcf-scv-321.html["3-2-1使用SnapCenter插件和适用于VM的BlueXP备份和恢复为VMware提供数据保护"]。
+
+image:vmware-vcf-asa-image108.png["3-2-1备份策略"]
+
+
+
+== 部署步骤
+
+要部署SnapCenter插件并使用它创建备份以及还原VM和数据存储库、请完成以下步骤：
+
+
+
+=== 部署并使用选择控制阀保护VI工作负载域中的数据
+
+完成以下步骤以部署、配置和使用选择控制阀保护VI工作负载域中的数据：
+
+.部署适用于VMware vSphere的SnapCenter插件
+[%collapsible%open]
+====
+SnapCenter插件托管在VCF管理域上、但已注册到VI工作负载域的vCenter中。每个vCenter实例都需要一个选择控制阀实例、请注意、一个工作负载域可以包含由一个vCenter实例管理的多个集群。
+
+从vCenter客户端完成以下步骤、将选择控制阀部署到VI工作负载域：
+
+. 从NetApp 支持站点 的下载区下载用于选择控制阀部署的OVA文件 link:https://mysupport.netapp.com/site/products/all/details/scv/downloads-tab["*此处*"]。
+. 从管理域vCenter Client中、选择*部署OVF模板...*。
++
+image:vmware-vcf-asa-image46.png["部署OVF模板..."]
+
++
+｛｛｝
+
+. 在*Deploy OVF Template *(部署OVF模板*)向导中，单击*local file*(本地文件*)单选按钮，然后选择上传先前下载的OVF模板。单击“*下一步*”继续。
++
+image:vmware-vcf-asa-image47.png["选择OVF模板"]
+
++
+｛｛｝
+
+. 在*选择名称和文件夹*页面上，提供选择控制阀数据代理VM的名称和管理域上的文件夹。单击“*下一步*”继续。
+. 在*选择计算资源*页面上，选择要将虚拟机安装到的管理域集群或集群中的特定ESXi主机。
+. 在*查看详细信息*页面上查看与VF模板相关的信息，并在*许可协议*页面上同意许可条款。
+. 在*选择存储*页面上，选择要将VM安装到的数据存储库，然后选择*虚拟磁盘格式*和*VM存储策略*。在此解决方案中、虚拟机将安装在ONTAP存储系统上的iSCSI VMFS数据存储库上、如本文档先前单独一节所述。单击“*下一步*”继续。
++
+image:vmware-vcf-asa-image48.png["选择OVF模板"]
+
++
+｛｛｝
+
+. 在*选择网络*页面上，选择能够与工作负载域vCenter设备以及主和二级ONTAP存储系统进行通信的管理网络。
++
+image:vmware-vcf-asa-image49.png["选择管理网络"]
+
++
+｛｛｝
+
+. 在“*自定义模板*”页面上，填写部署所需的所有信息：
++
+** 工作负载域vCenter设备的FQDN或IP以及凭据。
+** 选择控制阀管理帐户的凭据。
+** 选择控制阀维护帐户凭据。
+** IPv4网络属性详细信息(也可以使用IPv6)。
+** 日期和时间设置。
++
+单击“*下一步*”继续。
+
++
+image:vmware-vcf-asa-image50.png["选择管理网络"]
+
++
+image:vmware-vcf-asa-image51.png["选择管理网络"]
+
++
+image:vmware-vcf-asa-image52.png["选择管理网络"]
+
++
+｛｛｝
+
+
+
+. 最后，在“准备完成”页面*上，查看所有设置，然后单击“完成”开始部署。
+
+
+====
+.将存储系统添加到选择控制阀
+[%collapsible%open]
+====
+安装SnapCenter插件后，完成以下步骤将存储系统添加到选择控制阀：
+
+. 可以从vSphere Client中的主菜单访问选择控制阀。
++
+image:vmware-vcf-asa-image53.png["打开SnapCenter插件"]
+
++
+｛｛｝
+
+. 在选择控制阀UI界面顶部、选择与要保护的vSphere集群匹配的正确选择控制阀实例。
++
+image:vmware-vcf-asa-image54.png["选择正确的实例"]
+
++
+｛｛｝
+
+. 导航到左侧菜单中的*Storage Systems*，然后单击*Add*开始使用。
++
+image:vmware-vcf-asa-image55.png["添加新存储系统"]
+
++
+｛｛｝
+
+. 在*添加存储系统*表单上，填写要添加的ONTAP存储系统的IP地址和凭据，然后单击*Add*完成操作。
++
+image:vmware-vcf-asa-image56.png["提供存储系统凭据"]
+
++
+｛｛｝
+
+. 对要管理的任何其他存储系统重复此操作步骤、包括要用作二级备份目标的任何系统。
+
+
+====
+.在选择控制阀中配置备份策略
+[%collapsible%open]
+====
+有关创建选择控制阀备用策略的详细信息，请参阅 link:https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_create_backup_policies_for_vms_and_datastores.html["为 VM 和数据存储库创建备份策略"]。
+
+要创建新的备份策略、请完成以下步骤：
+
+. 从左侧菜单中选择*Policies*，然后单击*Create*开始。
++
+image:vmware-vcf-asa-image57.png["创建新策略"]
+
++
+｛｛｝
+
+. 在“*新备份策略*”表单上，问题描述为该策略提供*名称*和*备份*、进行备份的*频率*以及指定备份保留时间的*保留*期限。
++
+*Locking Period (锁定期限)*允许ONTAP SnapLock功能创建防篡改快照并允许配置锁定期限。
+
++
+对于*Replication (复制)*，选择更新ONTAP存储卷的底层SnapMirror或SnapVault关系。
+
++
+
+TIP: SnapMirror和SnapVault复制的相似之处在于、它们都利用ONTAP SnapMirror技术将存储卷异步复制到二级存储系统、以增强保护和安全性。对于SnapMirror关系、在选择控制阀备份策略中指定的保留计划将控制主卷和二级卷的保留。通过SnapVault关系、可以在二级存储系统上为长期或不同的保留计划建立单独的保留计划。在这种情况下、可在选择控制阀备份策略以及与二级卷关联的策略中指定快照标签、以确定要应用独立保留计划的卷。
+
++
+选择任何其他高级选项，然后单击*Add*以创建策略。
+
++
+image:vmware-vcf-asa-image58.png["填写策略详细信息"]
+
+
+
+====
+.在选择控制阀中创建资源组
+[%collapsible%open]
+====
+有关创建选择控制阀资源组的更多信息，请参阅 link:https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_create_resource_groups_for_vms_and_datastores.html["创建资源组"]。
+
+要创建新资源组，请完成以下步骤：
+
+. 从左侧菜单中选择*Resource Groups*，然后单击*Create*开始。
++
+image:vmware-vcf-asa-image59.png["创建新资源组"]
+
++
+｛｛｝
+
+. 在“*常规信息和通知*”页面上，为资源组提供名称、通知设置以及用于快照命名的任何其他选项。
+. 在*Resource*页面上，选择要在资源组中保护的数据存储库和VM。单击“*下一步*”继续。
++
+
+TIP: 即使仅选择特定虚拟机、也会始终备份整个数据存储库。这是因为ONTAP会为托管数据存储库的卷创建快照。但是、请注意、仅选择要备份的特定VM会限制仅还原到这些VM的能力。
+
++
+image:vmware-vcf-asa-image60.png["选择要备份的资源"]
+
++
+｛｛｝
+
+. 在*Spanning disks*页面上，选择选项以了解如何处理具有跨多个数据存储库的VMDK的VM。单击“*下一步*”继续。
++
+image:vmware-vcf-asa-image61.png["选择Spanning数据存储库选项"]
+
++
+｛｛｝
+
+. 在*Policies*页面上，选择一个或多个要用于此资源组的策略。  单击“*下一步*”继续。
++
+image:vmware-vcf-asa-image62.png["选择策略"]
+
++
+｛｛｝
+
+. 在*计划*页面上，通过配置重复性和时间来确定备份何时运行。单击“*下一步*”继续。
++
+image:vmware-vcf-asa-image63.png["选择计划"]
+
++
+｛｛｝
+
+. 最后查看*摘要*并单击*完成*以创建资源组。
++
+image:vmware-vcf-asa-image64.png["查看摘要并创建资源组"]
+
++
+｛｛｝
+
+. 创建资源组后，单击“*立即运行*”按钮以运行第一次备份。
++
+image:vmware-vcf-asa-image65.png["查看摘要并创建资源组"]
+
++
+｛｛｝
+
+. 导航到*Dashboard (信息板)*，然后在*Recent Job Actives*(最近工作活动)下单击*Job ID*(工作ID)旁边的数字，打开作业监视器并查看正在运行的作业的进度。
++
+image:vmware-vcf-asa-image66.png["查看备份作业进度"]
+
+
+
+====
+
+
+==== 使用选择控制阀还原VM、VMDK和文件
+
+SnapCenter插件允许从主备份或二级备份还原VM、VMDK、文件和文件夹。
+
+可以将VM还原到原始主机、同一vCenter Server中的备用主机、或者还原到由同一vCenter管理的备用ESXi主机或链接模式下的任何vCenter。
+
+可以将VVOl VM还原到原始主机。
+
+传统VM中的VMDK可以还原到原始数据存储库或备用数据存储库。
+
+VVOl VM中的VMDK可以还原到原始数据存储库。
+
+可以还原子系统文件还原会话中的各个文件和文件夹、该会话会附加虚拟磁盘的备份副本、然后还原选定的文件或文件夹。
+
+要还原VM、VMDK或单个文件夹、请完成以下步骤。
+
+.使用SnapCenter插件还原VM
+[%collapsible%open]
+====
+完成以下步骤以还原具有选择控制阀的虚拟机：
+
+. 在vSphere客户端中导航到要还原的虚拟机、右键单击并导航到*适用于VMware vSphere的SnapCenter插件*。  从子菜单中选择*Restore*。
++
+image:vmware-vcf-asa-image67.png["选择此项可还原虚拟机"]
+
++
+
+TIP: 另一种方法是导航到清单中的数据存储库、然后在*配置*选项卡下转到*适用于VMware vSphere的SnapCenter插件>备份*。从选定备份中、选择要还原的虚拟机。
+
++
+image:vmware-vcf-asa-image68.png["从数据存储库导航备份"]
+
++
+｛｛｝
+
+. 在*Restore*向导中选择要使用的备份。单击“*下一步*”继续。
++
+image:vmware-vcf-asa-image69.png["选择要使用的备份"]
+
++
+｛｛｝
+
+. 在“*选择范围*”页上填写所有必填字段：
++
+** *恢复范围*-选择此选项可恢复整个虚拟机。
+** *重新启动VM*-选择是否在恢复后启动VM。
+** *恢复位置*-选择恢复到原始位置或备用位置。选择备用位置时、请从每个字段中选择选项：
++
+*** *目标vCenter Server*—链接模式下的本地vCenter或备用vCenter
+*** *目标ESXi主机*
+*** * 网络 *
+*** *还原后的虚拟机名称*
+*** *选择数据存储库：*
++
+image:vmware-vcf-asa-image70.png["选择还原范围选项"]
+
++
+｛｛｝
+
++
+单击“*下一步*”继续。
+
+
+
+
+
+. 在*选择位置*页面上、选择从主或二级ONTAP存储系统还原虚拟机。单击“*下一步*”继续。
++
+image:vmware-vcf-asa-image71.png["选择存储位置"]
+
++
+｛｛｝
+
+. 最后，查看*摘要*并单击*完成*以启动恢复作业。
++
+image:vmware-vcf-asa-image72.png["单击完成以启动还原作业"]
+
++
+｛｛｝
+
+. 可以从vSphere Client中的*近期任务*窗格和选择控制阀中的作业监控器监控还原作业进度。
++
+image:vmware-vcf-asa-image73.png["监控还原作业"]
+
+
+
+====
+.使用SnapCenter插件还原VMDK
+[%collapsible%open]
+====
+通过ONTAP工具、可以将VMDK完全还原到其原始位置、或者可以将VMDK作为新磁盘连接到主机系统。在这种情况下、VMDK将连接到Windows主机以访问文件系统。
+
+要从备份连接VMDK、请完成以下步骤：
+
+. 在vSphere Client中导航到某个VM、然后从*操作*菜单中选择*适用于VMware vSphere的SnapCenter插件>连接虚拟磁盘*。
++
+image:vmware-vcf-asa-image80.png["选择连接虚拟磁盘"]
+
++
+｛｛｝
+
+. 在*连接虚拟磁盘*向导中，选择要使用的备份实例和要连接的特定VMDK。
++
+image:vmware-vcf-asa-image81.png["选择连接虚拟磁盘设置"]
+
++
+
+TIP: 筛选器选项可用于查找备份并显示主存储系统和二级存储系统中的备份。
+
++
+image:vmware-vcf-asa-image82.png["连接虚拟磁盘筛选器"]
+
++
+｛｛｝
+
+. 选择所有选项后、单击*连接*按钮开始还原过程、并将VMDK连接到主机。
+. 连接操作步骤完成后、即可从主机系统的操作系统访问磁盘。在这种情况下、选择控制阀将磁盘及其NTFS文件系统连接到Windows SQL Server的E：驱动器、并且文件系统上的SQL数据库文件可通过文件资源管理器进行访问。
++
+image:vmware-vcf-asa-image83.png["访问Windows文件系统"]
+
+
+
+====
+.使用SnapCenter插件执行子系统文件系统还原
+[%collapsible%open]
+====
+ONTAP工具可从Windows Server操作系统上的VMDK还原子系统文件系统。这是从SnapCenter插件界面集中预先形成的。
+
+有关详细信息、请参见 link:https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/scpivs44_restore_guest_files_and_folders_overview.html["还原子系统文件和文件夹"] 在选择控制阀文档站点上。
+
+要对Windows系统执行子系统文件系统还原、请完成以下步骤：
+
+. 第一步是创建"运行方式"凭据、以提供对Windows主机系统的访问权限。在vSphere Client中、导航到CSV插件界面、然后单击主菜单中的*子文件还原*。
++
+image:vmware-vcf-asa-image84.png["打开子系统文件还原"]
+
++
+｛｛｝
+
+. 在*作为凭据运行*下，单击*+*图标打开*作为凭据运行*窗口。
+. 填写凭据记录的名称、Windows系统的管理员用户名和密码，然后单击*选择VM*按钮以选择要用于恢复的可选代理VM。image:vmware-vcf-asa-image85.png["运行身份凭据窗口"]
++
+｛｛｝
+
+. 在"Proxy VM"页面上、提供VM的名称、并通过按ESXi主机或名称搜索来查找它。选择后，单击“*保存*”。
++
+image:vmware-vcf-asa-image86.png["在代理虚拟机页面上找到虚拟机"]
+
++
+｛｛｝
+
+. 在*运行身份凭证*窗口中再次单击*保存*以完成记录的保存。
+. 接下来、导航到清单中的虚拟机。从*操作*菜单中或右键单击虚拟机、选择*适用于VMware vSphere的SnapCenter插件>子文件还原*。
++
+image:vmware-vcf-asa-image87.png["打开子系统文件还原向导"]
+
++
+｛｛｝
+
+. 在*Guest File Restore*向导的*Restore scope页面上，选择要从中还原的备份、特定VMDK以及要从中还原VMDK的位置(主或二级)。单击“*下一步*”继续。
++
+image:vmware-vcf-asa-image88.png["子系统文件还原范围"]
+
++
+｛｛｝
+
+. 在*Guest Details*页面上，选择使用*Guest VM*或*使用Ges*文件还原代理VM*进行还原。此外、如果需要、请在此处填写电子邮件通知设置。单击“*下一步*”继续。
++
+image:vmware-vcf-asa-image89.png["子系统文件详细信息"]
+
++
+｛｛｝
+
+. 最后，查看“*摘要*”页并单击“完成”以开始子系统文件系统还原会话。
+. 返回SnapCenter插件界面，再次导航到*客户机文件还原*，并在*客户机会话监视器*下查看正在运行的会话。单击*浏览文件*下的图标继续。
++
+image:vmware-vcf-asa-image90.png["子会话监控器"]
+
++
+｛｛｝
+
+. 在*Guest File Browse*向导中，选择要恢复的文件夹或文件，以及要将其恢复到的文件系统位置。最后，单击*Restore*以启动*Restore*进程。
++
+image:vmware-vcf-asa-image91.png["子系统文件浏览1"]
+
++
+image:vmware-vcf-asa-image92.png["子系统文件浏览2."]
+
++
+｛｛｝
+
+. 可以从vSphere Client任务窗格监控还原作业。
+
+
+====
+
+
+== 追加信息
+
+有关配置VCF的信息，请参见 https://techdocs.broadcom.com/us/en/vmware-cis/vcf.html["VMware Cloud Foundation文档"]。
+
+有关配置ONTAP存储系统的信息、请参见 https://docs.netapp.com/us-en/ontap["ONTAP 9文档"] 中心。
+
+有关使用适用于VMware vSphere的SnapCenter插件的信息、请参见 https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/["适用于 VMware vSphere 的 SnapCenter 插件文档"]。

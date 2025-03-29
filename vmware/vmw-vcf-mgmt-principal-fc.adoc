@@ -1,0 +1,77 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmw-vcf-mgmt-principal-fc.html 
+keywords: netapp, vmware, cloud, foundation, vcf, asa, all-flash, array, ontap tools, otv, sddc, fc 
+summary:  
+---
+= FC上的VMFS作为管理域的主存储
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+在此情景中、我们将查看使用ONTAP上基于FC的现有VMFS数据存储库作为VMware Cloud Foundation (VCF)管理域的主存储的使用情形。
+
+
+
+== 简介
+
+我们将在适当的情况下参考外部文档、了解在VCF的SDDC Manager中必须执行的步骤、并参考特定于存储配置部分的步骤。
+
+有关使用ONTAP转换现有基于FC的vSphere环境的信息，请参阅link:vmw-vcf-mgmt-fc.html["将vSphere环境(FC数据存储库)转换为VCF管理域"]。
+
+
+NOTE: vcf 5.2版提供了将现有vSphere 8环境转换为VCF管理域或导入为VCF VI工作负载域的功能。在此版本之前、VMware vSAN是VCF管理域中主存储的唯一选项。
+
+
+NOTE: 此解决方案适用于支持FC存储的ONTAP平台、包括NetApp ASA、AFF和FAS。
+
+
+
+== 前提条件
+
+在此情景中、将使用以下组件和配置：
+
+* NetApp存储系统、其中Storage Virtual Machine (SVM)配置为允许FC流量。
+* 已在FC网络结构上创建逻辑接口(LIF)、用于传输FC流量并与SVM关联。
+* 分区已配置为在FC交换机上对主机HBA和存储目标使用单个启动程序-目标分区。
+
+
+有关配置ONTAP存储系统的信息、请参见 link:https://docs.netapp.com/us-en/ontap["ONTAP 9文档"] 中心。
+
+有关配置VCF的信息、请参见 link:https://docs.vmware.com/en/VMware-Cloud-Foundation/index.html["VMware Cloud Foundation文档"]。
+
+
+
+== 部署步骤
+
+
+
+=== 管理域-默认集群
+
+只有VCF brownfield导入工具才支持初始集群上的FC主体存储。如果VCF是使用Cloud Builder工具部署的(先发布到版本5.2.x)、则仅支持vSAN。
+
+有关使用现有vSphere环境的详细信息、请参阅 https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2/map-for-administering-vcf-5-2/importing-existing-vsphere-environments-admin/convert-or-import-a-vsphere-environment-into-vmware-cloud-foundation-admin.html["将现有vSphere环境转换为管理域"]以了解详细信息。
+
+
+
+=== 管理域—附加集群
+
+可以使用以下选项部署管理域上的其他vSphere集群：
+
+* 在vSphere环境中配置其他集群、并使用VCF brownfield导入工具将vSphere环境转换为管理域。 https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/configure/create-vvols-datastore.html["适用于 VMware vSphere 的 ONTAP 工具"] https://docs.netapp.com/us-en/ontap/san-admin/provision-storage.html["System Manager或ONTAP API"]可用于将VMFS数据存储库部署到vSphere集群。
+* 使用SDDC API部署其他集群。vSphere主机应已配置VMFS数据存储库。 https://docs.netapp.com/us-en/ontap/san-admin/provision-storage.html["System Manager或ONTAP API"]用于将LUN部署到vSphere主机。
+* 使用SDDC Manager UI部署其他集群。但是、此选项仅会创建版本5.2.x之前的VSAN数据存储库
+
+
+
+
+== 追加信息
+
+有关配置ONTAP存储系统的信息、请参见 link:https://docs.netapp.com/us-en/ontap["ONTAP 9文档"] 中心。
+
+有关配置VCF的信息，请参见link:https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-5-2-and-earlier/5-2.html["VMware Cloud Foundation文档"]。

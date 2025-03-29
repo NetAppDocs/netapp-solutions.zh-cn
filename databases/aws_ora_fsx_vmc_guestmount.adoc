@@ -151,7 +151,7 @@ image:aws_ora_fsx_vmc_architecture.png["此图详细展示了AWS公共云中使�
 
 === 部署的前提条件
 
-[%collapsible]
+[%collapsible%open]
 ====
 部署需要满足以下前提条件。
 
@@ -178,7 +178,7 @@ NOTE: 确保已在Oracle VM根卷中至少分配50G、以便有足够的空间�
 
 === DB VM内核配置
 
-[%collapsible]
+[%collapsible%open]
 ====
 在配置了前提条件的情况下、以管理员用户身份通过SSH登录到Oracle VM、并使用sudo向root用户配置Linux内核以进行Oracle安装。Oracle安装文件可以暂存到AWS S3存储分段中、然后传输到VM。
 
@@ -398,7 +398,7 @@ chmod 440 /etc/sudoers
 
 === 配置FSx ONTAP LUN并将其映射到数据库虚拟机
 
-[%collapsible]
+[%collapsible%open]
 ====
 通过ssh和FSx集群管理IP以fsxadmin用户身份从命令行登录到FSx集群、以配置三个卷。在卷中创建LUN以托管Oracle数据库二进制文件、数据文件和日志文件。
 
@@ -530,7 +530,7 @@ nim        /vol/ora_02_logs/ora_02_u03_02            ora_02        6  iscsi
 
 === DB VM存储配置
 
-[%collapsible]
+[%collapsible%open]
 ====
 现在、导入并设置FSx ONTAP存储、用于在VMC数据库VM上安装Oracle网格基础架构和数据库。
 
@@ -823,7 +823,7 @@ systemctl restart multipathd
 
 === Oracle网格基础架构安装
 
-[%collapsible]
+[%collapsible%open]
 ====
 . 以管理员用户身份通过SSH登录到DB VM、并通过取消注释启用密码身份验证 `PasswordAuthentication yes` 然后进行注释 `PasswordAuthentication no`。
 +
@@ -1084,7 +1084,7 @@ CRS-4638: Oracle High Availability Services is online
 
 === Oracle数据库安装
 
-[%collapsible]
+[%collapsible%open]
 ====
 . 以Oracle用户身份登录并取消设置 `$ORACLE_HOME` 和 `$ORACLE_SID` 如果已设置。
 +
@@ -1475,7 +1475,7 @@ alter database open;
 
 ==== SnapCenter设置
 
-[%collapsible]
+[%collapsible%open]
 ====
 SnapCenter依靠数据库VM上的主机端插件来执行应用程序感知型数据保护管理活动。有关适用于Oracle的NetApp SnapCenter插件的详细信息、请参见此文档 link:https://docs.netapp.com/us-en/snapcenter/protect-sco/concept_what_you_can_do_with_the_snapcenter_plug_in_for_oracle_database.html["您可以使用适用于 Oracle 数据库的插件执行什么操作"^]。下面简要介绍了为Oracle数据库备份、恢复和克隆设置SnapCenter的步骤。
 
@@ -1516,7 +1516,7 @@ NOTE: 确保SnapCenter服务器名称可解析为数据库VM中的IP地址、而
 
 ==== 数据库备份
 
-[%collapsible]
+[%collapsible%open]
 ====
 与基于RMAN的传统方法相比、SnapCenter利用FSx ONTAP卷快照加快数据库备份、还原或克隆速度。由于数据库在创建快照之前处于Oracle备份模式、因此这些快照是应用程序一致的。
 
@@ -1551,7 +1551,7 @@ image:aws_ora_fsx_vmc_snapctr_11.png["显示SnapCenter配置的屏幕截图。"]
 
 ==== 数据库恢复
 
-[%collapsible]
+[%collapsible%open]
 ====
 SnapCenter为Oracle数据库提供了许多从快照备份还原和恢复选项。在本示例中、我们展示了一个时间点还原、用于恢复因错误而丢弃的表。在VM ora_02上、两个数据库cdb3和cdb4共享相同的+data和+logs.磁盘组。一个数据库的数据库还原不会影响另一个数据库的可用性。
 
@@ -1748,7 +1748,7 @@ SQL>
 
 ==== 数据库克隆
 
-[%collapsible]
+[%collapsible%open]
 ====
 在此示例中、使用相同的备份集克隆不同oracle_home中同一VM上的数据库。如果需要、这些过程同样适用于将数据库从备份克隆到VMC中的单独虚拟机。
 

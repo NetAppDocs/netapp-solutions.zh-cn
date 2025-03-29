@@ -20,8 +20,6 @@ summary: 客户可以使用NFS补充数据存储库和Google Cloud NetApp卷扩�
 
 == 概述
 
-作者：NetApp公司Suresh ThopPay
-
 如果客户需要在其Google Cloud VMware Engine (GCVe)环境中增加存储容量、则可以使用NetApp云卷服务挂载为补充NFS数据存储库。通过将数据存储在Google Cloud NetApp Volumes上、客户可以在不同区域之间进行复制、以防止灾难。
 
 image:gcp_ncvs_ds01.png["GCVE)上的Google Cloud NetApp卷NFS数据存储库"]
@@ -31,25 +29,25 @@ image:gcp_ncvs_ds01.png["GCVE)上的Google Cloud NetApp卷NFS数据存储库"]
 == 从GCVE)上的Google Cloud NetApp卷(NetApp卷)挂载NFS数据存储库的部署步骤
 
 .配置NetApp卷性能卷
-[%collapsible]
+[%collapsible%open]
 ====
 可以通过配置Google Cloud NetApp卷link:https://cloud.google.com/architecture/partners/netapp-cloud-volumes/workflow["使用Google Cloud Console"] link:https://docs.netapp.com/us-en/cloud-manager-cloud-volumes-service-gcp/task-create-volumes.html["使用NetApp BlueXP门户或API"]
 
 ====
 .将NetApp卷卷标记为不可删除
-[%collapsible]
+[%collapsible%open]
 ====
 为了避免在VM运行期间意外删除卷、请确保将此卷标记为不可删除、如下面的屏幕截图所示。image:gcp_ncvs_ds02.png["NetApp卷不可删除选项"]有关详细信息、请参见link:https://cloud.google.com/architecture/partners/netapp-cloud-volumes/creating-nfs-volumes#creating_an_nfs_volume["正在创建NFS卷"]文档。
 
 ====
 .确保NetApp卷租户VPC在GCVA上存在专用连接。
-[%collapsible]
+[%collapsible%open]
 ====
 要挂载NFS数据存储库、GCVA和NetApp卷项目之间应存在专用连接。有关详细信息、请参见link:https://cloud.google.com/vmware-engine/docs/networking/howto-setup-private-service-access["如何设置专用服务访问"]
 
 ====
 .挂载NFS数据存储库
-[%collapsible]
+[%collapsible%open]
 ====
 有关如何在GCVE)上挂载NFS数据存储库的说明，请参阅link:https://cloud.google.com/vmware-engine/docs/vmware-ecosystem/howto-cloud-volumes-service-datastores["如何使用NetApp卷创建NFS数据存储库"]
 

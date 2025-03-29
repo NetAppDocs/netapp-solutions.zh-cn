@@ -1,0 +1,64 @@
+---
+sidebar: sidebar 
+permalink: vmware/vmw-vcf-vmsc-viwld-smas.html 
+keywords: netapp, vmware, cloud, foundation, vcf, asa, all-flash, array, ontap tools, otv, sddc, iscsi 
+summary:  
+---
+= 使用SnapMirror主动同步的VI工作负载域延伸型集群
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+在此情景中、我们将演示如何使用适用于VMware vSphere的ONTAP工具(OTV)为VCF VI工作负载域配置延伸型集群。
+
+image:vmware_vcf_asa_mgmt_stretchcluster_image01.jpg["单个实例-多个可用性区域"]
+
+
+
+== 方案概述
+
+可以使用SnapMirror活动同步保护VCF工作负载域上的数据存储库、以提供延伸型集群解决方案。此保护将在vSphere集群级别启用、并且集群中的所有ONTAP块数据存储库都将受到保护。
+
+.工作负载域上的主存储
+[%collapsible%open]
+====
+可以使用VCF导入工具创建导入工作负载域、也可以使用SDDC管理器进行部署。与导入现有环境相比、使用SDDC管理器进行部署可提供更多的网络选项。
+
+. 在FC上使用VMFS创建工作负载域
+. link:https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/configure/add-vcenter.html["将工作负载域vCenter注册到ONTAP工具管理器以部署vCenter插件"]
+. link:https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/configure/add-storage-backend.html["在ONTAP工具上注册存储系统"]
+. link:https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere-10/configure/protect-cluster.html["保护vSphere集群"]
+
+
+
+NOTE: 每当集群扩展或缩减时、都需要在ONTAP工具上更新集群的主机集群关系、以指示对源或目标所做的更改。
+
+====
+.工作负载域上的补充存储
+[%collapsible%open]
+====
+工作负载域启动并运行后、可以使用ONTAP工具创建其他数据存储库、从而触发一致性组扩展。
+
+
+TIP: 如果vSphere集群受到保护、则集群中的所有数据存储库都将受到保护。
+
+====
+
+
+== 追加信息
+
+有关配置ONTAP存储系统的信息、请参见 link:https://docs.netapp.com/us-en/ontap["ONTAP 9文档"] 中心。
+
+有关配置VCF的信息，请参见link:https://techdocs.broadcom.com/us/en/vmware-cis/vcf.html["VMware Cloud Foundation文档"]。
+
+
+
+== 此解决方案的视频演示
+
+.使用ONTAP工具为VCF部署延伸型集群
+video::569a91a9-2679-4414-b6dc-b25d00ff0c5a[panopto,width=360]

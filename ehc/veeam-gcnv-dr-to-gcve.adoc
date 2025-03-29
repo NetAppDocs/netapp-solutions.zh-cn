@@ -101,7 +101,7 @@ NOTE: 在将GCVE vCenter服务器添加到Veeam备份和复制清单时、Veeam�
 完成以下步骤、使用NetApp卷为GCVE)创建和使用NFS数据存储库：
 
 .创建NetApp卷NFS卷
-[%collapsible]
+[%collapsible%open]
 ====
 可从Google云平台(GCP)控制台访问Google Cloud NetApp卷。
 
@@ -152,7 +152,7 @@ image::dr-veeam-gcnv-image05.png[卷属性]
 
 ====
 .在GCVE)中挂载NFS数据存储库
-[%collapsible]
+[%collapsible%open]
 ====
 在编写本文时、在GCVA中挂载数据存储库的过程需要打开GCP支持服务单、以便将卷挂载为NFS数据存储库。
 
@@ -164,7 +164,7 @@ image::dr-veeam-gcnv-image05.png[卷属性]
 === 将VM复制到GCVE并执行故障转移计划和故障恢复
 
 .将VM复制到GCVE)中的NFS数据存储库
-[%collapsible]
+[%collapsible%open]
 ====
 Veeam Backup & Replication利用VMware vSphere快照功能在复制期间、Veeam Backup & Replication会请求VMware vSphere创建VM快照。VM快照是VM的时间点副本、其中包括虚拟磁盘、系统状态、配置和元数据。Veeam Backup & Replication使用快照作为复制数据源。
 
@@ -257,7 +257,7 @@ image::dr-veeam-gcnv-image15.png[作业状态窗口]
 
 ====
 .创建故障转移计划
-[%collapsible]
+[%collapsible%open]
 ====
 初始复制或传播完成后、创建故障转移计划。故障转移计划有助于逐个或以组的形式自动对相关VM执行故障转移。故障转移计划是VM处理顺序(包括启动延迟)的蓝图。故障转移计划还有助于确保依赖关系关键的VM已在运行。
 
@@ -313,7 +313,7 @@ image::dr-veeam-gcnv-image19.png[启动顺序和延迟]
 
 ====
 .运行故障转移计划
-[%collapsible]
+[%collapsible%open]
 ====
 在故障转移期间、生产站点中的源VM会切换到其在灾难恢复站点上的副本。在此过程中、Veeam Backup & Replication会将VM副本还原到所需的还原点、并将所有I/O活动从源VM传输到其副本。副本不仅适用于实际灾难、还适用于模拟灾难恢复演练。在故障转移模拟中、源VM会继续运行。完成必要的测试后、故障转移可以撤消、从而使操作恢复正常。
 
@@ -345,7 +345,7 @@ NOTE: Veeam Backup & Replication会停止源VM的所有复制活动、直到其�
 
 ====
 .故障恢复到生产站点
-[%collapsible]
+[%collapsible%open]
 ====
 执行故障转移被视为一个中间步骤、需要根据要求完成。选项包括：
 

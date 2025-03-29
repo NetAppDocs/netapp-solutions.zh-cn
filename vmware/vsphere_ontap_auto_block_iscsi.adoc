@@ -85,19 +85,19 @@ TIP: 建议每个节点使用两个 iSCSI 网络接口。
 == VMware vSphere 任务
 
 . 验证 iSCSI VLAN 是否至少有一个可用 NIC 。为了提高性能和容错能力，最好使用两个 NIC 。
-. link:++https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.networking.doc/GUID-B2AA3EEE-2334-45FE-9A0F-1172FDDCC6A8.html++["确定 vSphere 主机上可用的物理 NIC 的数量。"]
-. link:++https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.storage.doc/GUID-C476065E-C02F-47FA-A5F7-3B3F2FD40EA8.html++["配置 iSCSI 启动程序。"] 典型的使用情形是软件 iSCSI 启动程序。
-. link:++https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.networking.doc/GUID-660423B1-3D35-4F85-ADE5-FE1D6BF015CF.html++["验证 iSCSI 的 TCPIP 堆栈是否可用"]。
-. link:++https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.storage.doc/GUID-0D31125F-DC9D-475B-BC3D-A3E131251642.html++["验证 iSCSI 端口组是否可用"]。
+. link:++https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/7-0/vsphere-single-host-management-vmware-host-client-7-0/networking-in-the-vsphere-host-client-vSphereSingleHostManagementVMwareHostClient/managing-physical-network-adapters-in-the-vsphere-host-client-vSphereSingleHostManagementVMwareHostClient/view-physical-network-adapter-information-in-the-vsphere-host-client-vSphereSingleHostManagementVMwareHostClient.html++["确定 vSphere 主机上可用的物理 NIC 的数量。"]
+. link:++https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/vsphere-storage-8-0/configuring-iscsi-and-iser-adapters-and-storage-with-esxi/configure-the-software-iscsi-adapter-with-esxi.html++["配置 iSCSI 启动程序。"]典型的使用情形是软件iSCSI启动程序。
+. link:++https://techdocs.broadcom.com/us/en/vmware-cis/vsan/vsan/8-0/vsan-network-design/ip-network-transport-configuration/vsphere-tcp-ip-stacks.html++["验证 iSCSI 的 TCPIP 堆栈是否可用"](英文)
+. link:++https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/assign-a-port-group-or-network-to-a-network-protocol-profile.html++["验证 iSCSI 端口组是否可用"](英文)
 +
 ** 我们通常使用具有多个上行链路端口的单个虚拟交换机。
 ** 使用 1 ： 1 适配器映射。
 
 
 . 验证是否已启用 iSCSI VMKernel 适配器以匹配 NIC 数量，以及是否已分配 IP 。
-. link:++https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.storage.doc/GUID-D9B862DF-476A-4BCB-8CA5-DE6DB2A1A981.html++["将 iSCSI 软件适配器绑定到 iSCSI VMKernel 适配器。"]
+. link:++https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/vsphere-storage-8-0/configuring-iscsi-and-iser-adapters-and-storage-with-esxi/configure-the-software-iscsi-adapter-with-esxi.html++["将 iSCSI 软件适配器绑定到 iSCSI VMKernel 适配器。"]
 . link:++https://docs.netapp.com/vapp-98/topic/com.netapp.doc.vsc-iag/GUID-D7CAD8AF-E722-40C2-A4CB-5B4089A14B00.html++["使用 ONTAP 工具配置 VMFS 数据存储库"]。对所有数据存储库重复此步骤。
-. link:++https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.storage.doc/GUID-0520FD37-D7AD-4FBA-9A2E-E5F8211FCBBB.html++["验证硬件加速支持。"]
+. link:++https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/7-0/vsphere-storage-7-0/storage-hardware-acceleration-in-vsphere/vsphere-hardware-acceleration-on-block-storage/managing-hardware-acceleration-filter-and-plug-ins/verify-hardware-acceleration-support-status.html++["验证硬件加速支持。"]
 
 
 

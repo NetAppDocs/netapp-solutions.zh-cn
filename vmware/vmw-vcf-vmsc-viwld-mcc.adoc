@@ -16,7 +16,11 @@ summary:
 [role="lead"]
 VCF上的工作负载受vSphere Metro Storage Cluster (VMSC)保护。采用FC或IP部署的ONTAP MetroCluster通常用于为VMFS和NFS数据存储库提供容错功能。
 
-image:vmw-vcf-vmsc-viwld-mcc-image01.png["使用VMSC的vcf VI工作负载域"]
+image:vmw-vcf-vmsc-viwld-mcc-image01.png["使用VMSC的vcf VI工作负载域、宽度=500"]
+
+
+
+== 简介
 
 在本解决方案中、我们将演示如何使用ONTAP MetroCluster实施StingvCF VI工作负载域、并将NFS作为主数据存储库。VI工作负载域可以使用SDDC Manager进行部署、也可以将现有vSphere环境导入为VI工作负载域。
 
@@ -97,7 +101,7 @@ image:vmw-vcf-vmsc-mgmt-mcc-image17.png["容错域2上的SVM"]
 使用从Broadcom支持门户下载的ISO在主机上部署vSphere、或者对vSphere主机使用现有部署选项。
 
 .将NFS数据存储库挂载到主机VM
-[%collapsible]
+[%collapsible%open]
 ====
 在此步骤中、我们将创建NFS卷并将其作为数据存储库挂载到托管VM。
 
@@ -137,7 +141,7 @@ Broadcom从VMware提供的VCF导入工具是一款实用程序、可在vCenter�
 有关详细信息，请参阅 https://docs.vmware.com/en/VMware-Cloud-Foundation/5.2/vcf-admin/GUID-44CBCB85-C001-41B2-BBB4-E71928B8D955.html["VCF导入工具选项和参数"]。
 
 .复制并提取VCF导入工具
-[%collapsible]
+[%collapsible%open]
 ====
 在vCenter设备上使用VCF导入工具来验证vSphere集群在VCF转换或导入过程中是否处于运行状况良好的状态。
 
@@ -153,7 +157,7 @@ tar -xvf vcf-brownfield-import-<buildnumber>.tar.gz
 
 ====
 .验证vCenter设备
-[%collapsible]
+[%collapsible%open]
 ====
 使用VCF导入工具在导入为VI工作负载域之前验证vCenter设备。
 
@@ -162,7 +166,7 @@ tar -xvf vcf-brownfield-import-<buildnumber>.tar.gz
 
 ====
 .为NSX部署创建JSON文件
-[%collapsible]
+[%collapsible%open]
 ====
 要在将vSphere环境导入或转换为VMware Cloud Foundation时部署NSX Manager、请创建NSX部署规范。NSX部署至少需要3台主机。
 
@@ -206,7 +210,7 @@ NOTE: 在转换或导入操作中部署NSX Manager集群时、将使用NSX VLAN�
 
 ====
 .将软件上传到SDDC Manager
-[%collapsible]
+[%collapsible%open]
 ====
 将VCF导入工具复制到vcf用户的主文件夹、并将NSX部署包复制到SDDC Manager上的/nfs/vmware/vcf/nfs-mount/packe/文件夹。
 
@@ -214,7 +218,7 @@ NOTE: 在转换或导入操作中部署NSX Manager集群时、将使用NSX VLAN�
 
 ====
 .转换前详细检查vCenter
-[%collapsible]
+[%collapsible%open]
 ====
 在执行管理域转换操作或VI工作负载域导入操作之前、必须执行详细检查、以确保现有vSphere环境的配置支持转换或导入。。以vcf用户身份通过SSH连接到SDDC Manager设备。。导航到VCF导入工具复制到的目录。。运行以下命令、检查vSphere环境是否可以转换
 
@@ -225,7 +229,7 @@ image:vmw-vcf-vmsc-viwld-mcc-image08.png["vcf检查VC"]
 
 ====
 .将vSphere集群转换为VCF VI工作负载域
-[%collapsible]
+[%collapsible%open]
 ====
 VCF导入工具用于执行转换过程。
 
@@ -246,7 +250,7 @@ SDDC Manager会显示使用提供的名称创建的VI工作负载域、并将NFS
 
 ====
 .向VCF添加许可
-[%collapsible]
+[%collapsible%open]
 ====
 完成转换后、必须向环境中添加许可。
 

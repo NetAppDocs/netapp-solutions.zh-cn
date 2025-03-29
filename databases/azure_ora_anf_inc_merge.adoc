@@ -116,7 +116,7 @@ Oracle VLDB可以运行在ANF存储上、也可以运行在Azure云生态系统�
 
 === 部署的前提条件
 
-[%collapsible]
+[%collapsible%open]
 ====
 部署需要满足以下前提条件。
 
@@ -133,7 +133,7 @@ NOTE: 确保您已在Azure VM根卷中至少分配128 G、以便有足够的空�
 
 === 配置和导出要挂载到Oracle主VLDB服务器上的NFS卷
 
-[%collapsible]
+[%collapsible%open]
 ====
 在本节中、我们将介绍通过Azure门户控制台从ANF容量池配置NFS卷。如果设置了多个ANF容量池来容纳数据库的大小、请对其他ANF容量池重复上述过程。
 
@@ -185,7 +185,7 @@ sudo chown oracle:oinstall /nfsanf
 
 === 将Oracle RMAN增量合并设置为ANF上的映像副本
 
-[%collapsible]
+[%collapsible%open]
 ====
 RMAN增量合并会在每个增量备份/合并间隔持续更新暂存数据库数据文件映像副本。数据库备份的映像副本将与您执行增量备份/合并的频率相同。因此、在确定RMAN增量备份和合并的频率时、应考虑数据库性能、RTO和RPO目标。
 
@@ -812,7 +812,7 @@ total 399482176
 
 === 将Oracle VLDB切换到映像副本、以便快速恢复
 
-[%collapsible]
+[%collapsible%open]
 ====
 如果因主存储问题描述发生故障(例如数据丢失或损坏)、则可以快速将数据库切换到ANF NFS挂载上的映像副本、并将其恢复到当前状态、而无需还原数据库。消除介质还原可显著加快VLDB的数据库恢复速度。此使用情形假定Oracle VLDB数据库服务器完好无损、并且数据库控制文件、归档日志和当前日志均可用于恢复。
 
@@ -1094,7 +1094,7 @@ SQL>
 
 === 从映像副本到备用数据库服务器的Oracle VLDB恢复
 
-[%collapsible]
+[%collapsible%open]
 ====
 如果发生故障、并且主存储和主数据库服务器主机均丢失、则无法从原始服务器执行恢复。但是、ANF NFS文件系统上提供的Oracle数据库备份映像副本非常方便。您可以使用备份映像副本将主数据库快速恢复到备用数据库服务器(如果有)。在本节中、我们将展示此类恢复的分步过程。
 

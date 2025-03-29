@@ -16,9 +16,13 @@ summary:
 [role="lead"]
 VCF的管理组件驻留在VCF管理域中、并使用vSphere Metro Storage Cluster (VMSC)来启用容错功能。采用FC或IP部署的ONTAP MetroCluster通常用于为VMFS和NFS数据存储库提供容错功能。
 
-image:vmw-vcf-vmsc-mgmt-mcc-image01.png["使用VMSC的VCF管理域"]
+image:vmw-vcf-vmsc-mgmt-mcc-image01.png["使用VMSC的vcf管理域、宽度=500"]
 
-在本解决方案中、我们将演示如何使用ONTAP MetroCluster实施将NFS作为主数据存储库的StingvCF管理域。
+
+
+== 简介
+
+在本解决方案中、我们将演示如何使用ONTAP MetroCluster实施延伸型VCF管理域、并将NFS作为主数据存储库。
 
 
 
@@ -51,7 +55,7 @@ image:vmw-vcf-vmsc-mgmt-mcc-image01.png["使用VMSC的VCF管理域"]
 
 这是两个容错域的SVM网络接口。image:vmw-vcf-vmsc-mgmt-mcc-image13.png["容错域1中的SVM网络接口"]
 
-image:vmw-vcf-vmsc-mgmt-mcc-image14.png["来自容错域2的SVM网络接口"]
+image:vmw-vcf-vmsc-mgmt-mcc-image14.png["容错域2中的SVM网络接口"]
 
 [注意] SVM将在MetroCluster中的一个容错域上处于活动状态。
 
@@ -99,7 +103,7 @@ image:vmw-vcf-vmsc-mgmt-mcc-image17.png["容错域2上的SVM"]
 使用从Broadcom支持门户下载的ISO在主机上部署vSphere、或者对vSphere主机使用现有部署选项。
 
 .将NFS数据存储库挂载到主机VM
-[%collapsible]
+[%collapsible%open]
 ====
 在此步骤中、我们将创建NFS卷并将其作为数据存储库挂载到托管VM。
 
@@ -118,7 +122,7 @@ image:vmw-vcf-vmsc-mgmt-mcc-image17.png["容错域2上的SVM"]
 
 === 创建vSphere集群
 
-. 登录到vSphere WebClient、通过添加部署了NFS VAAI的主机之一来创建数据中心和vSphere集群。我们选择了使用单个映像选项管理集群中的所有主机。[提示]请勿选择"在集群级别管理配置"。有关更多详细信息，请参见 https://knowledge.broadcom.com/external/article/373968/vlcm-config-manager-is-enabled-on-this-c.html["vSphere集群上的NSX注意事项"]。有关ONTAP MetroCluster的VMSC最佳实践、请查看 https://docs.netapp.com/us-en/ontap-apps-dbs/vmware/vmware_vmsc_design.html#netapp-storage-configuration["《VMSC设计和实施准则》"]
+. 登录到vSphere Web Client、通过添加部署了NFS VAAI的主机之一来创建数据中心和vSphere集群。我们选择了使用单个映像选项管理集群中的所有主机。[提示]请勿选择"在集群级别管理配置"。有关更多详细信息，请参见 https://knowledge.broadcom.com/external/article/373968/vlcm-config-manager-is-enabled-on-this-c.html["vSphere集群上的NSX注意事项"]。有关ONTAP MetroCluster的VMSC最佳实践、请查看 https://docs.netapp.com/us-en/ontap-apps-dbs/vmware/vmware_vmsc_design.html#netapp-storage-configuration["《VMSC设计和实施准则》"]
 . 将其他vSphere主机添加到集群。
 . 创建分布式交换机并添加端口组。
 . https://techdocs.broadcom.com/us/en/vmware-cis/vsan/vsan/8-0/vsan-network-design/migrating-from-standard-to-distributed-vswitch.html["将网络从标准vSwitch迁移到分布式交换机。"]
@@ -135,7 +139,7 @@ Broadcom从VMware提供的VCF导入工具是一款实用程序、可在vCenter�
 有关详细信息，请参阅 https://docs.vmware.com/en/VMware-Cloud-Foundation/5.2/vcf-admin/GUID-44CBCB85-C001-41B2-BBB4-E71928B8D955.html["VCF导入工具选项和参数"]。
 
 .复制并提取VCF导入工具
-[%collapsible]
+[%collapsible%open]
 ====
 在vCenter设备上使用VCF导入工具来验证vSphere集群在VCF转换或导入过程中是否处于运行状况良好的状态。
 
@@ -151,11 +155,11 @@ tar -xvf vcf-brownfield-import-<buildnumber>.tar.gz
 
 ====
 .验证vCenter设备
-[%collapsible]
+[%collapsible%open]
 ====
 使用VCF导入工具在转换之前验证vCenter设备。
 
-. 按照中的步骤 https://docs.vmware.com/en/VMware-Cloud-Foundation/5.2/vcf-admin/GUID-AC6BF714-E0DB-4ADE-A884-DBDD7D6473BB.html["转换前在目标vCenter上运行预检"]运行验证。
+. 按照中的步骤 https://docs.vmware.com/en/VMware-Cloud-Foundation/5.2/vcf-admin/GUID-AC6BF714-E0DB-4ADE-A884-DBDD7D6473BB.html["转换前对目标vCenter运行预检"]运行验证。
 . 以下输出显示vCenter设备已通过预检。
 +
 image:vmw-vcf-vmsc-mgmt-mcc-image07.png["vcf导入工具预检"]
@@ -164,7 +168,7 @@ image:vmw-vcf-vmsc-mgmt-mcc-image07.png["vcf导入工具预检"]
 
 ====
 .部署SDDC Manager
-[%collapsible]
+[%collapsible%open]
 ====
 SDDC管理器必须位于要转换为VCF管理域的vSphere集群上。
 
@@ -176,7 +180,7 @@ image:vmw-vcf-vmsc-mgmt-mcc-image08.png["转换VCF之前"]
 
 ====
 .为NSX部署创建JSON文件
-[%collapsible]
+[%collapsible%open]
 ====
 要在将vSphere环境导入或转换为VMware Cloud Foundation时部署NSX Manager、请创建NSX部署规范。NSX部署至少需要3台主机。
 
@@ -220,7 +224,7 @@ NOTE: 在转换或导入操作中部署NSX Manager集群时、将使用NSX VLAN�
 
 ====
 .将软件上传到SDDC Manager
-[%collapsible]
+[%collapsible%open]
 ====
 将VCF导入工具复制到vcf用户的主文件夹、并将NSX部署包复制到SDDC Manager上的/nfs/vmware/vcf/nfs-mount/packe/文件夹。
 
@@ -228,7 +232,7 @@ NOTE: 在转换或导入操作中部署NSX Manager集群时、将使用NSX VLAN�
 
 ====
 .转换前详细检查vCenter
-[%collapsible]
+[%collapsible%open]
 ====
 在执行管理域转换操作或VI工作负载域导入操作之前、必须执行详细检查、以确保现有vSphere环境的配置支持转换或导入。。以vcf用户身份通过SSH连接到SDDC Manager设备。。导航到VCF导入工具复制到的目录。。运行以下命令、检查vSphere环境是否可以转换
 
@@ -237,7 +241,7 @@ python3 vcf_brownfield.py check --vcenter '<vcenter-fqdn>' --sso-user '<sso-user
 ....
 ====
 .将vSphere集群转换为VCF管理域
-[%collapsible]
+[%collapsible%open]
 ====
 VCF导入工具用于执行转换过程。
 
@@ -258,7 +262,7 @@ SDDC Manager会显示使用提供的名称创建的管理域、并将NFS显示�
 
 ====
 .向VCF添加许可
-[%collapsible]
+[%collapsible%open]
 ====
 完成转换后、必须向环境中添加许可。
 

@@ -136,7 +136,7 @@ image:snapctr_psql_brc_architecture.png["此图详细展示了使用SnapCenter�
 
 === 部署的前提条件
 
-[%collapsible]
+[%collapsible%open]
 ====
 . 部署需要在ONTAP存储上运行两个现有PostgreSQL数据库、一个作为主数据库服务器、另一个作为克隆数据库服务器。有关ONTAP上PostgreSQL数据库部署的参考，请参阅TR-4956：link:aws_postgres_fsx_ec2_hadr.html["在AWS FSX/EC2中自动部署PostgreSQL高可用性和灾难恢复"^]，查找主实例上的PostgreSQL自动部署操作手册。
 . 配置Windows服务器以使用最新版本运行NetApp SnapCenter UI工具。有关详细信息，请参见以下链接：link:https://docs.netapp.com/us-en/snapcenter/install/task_install_the_snapcenter_server_using_the_install_wizard.html["安装 SnapCenter 服务器"^]。
@@ -147,7 +147,7 @@ image:snapctr_psql_brc_architecture.png["此图详细展示了使用SnapCenter�
 
 === SnapCenter安装和设置
 
-[%collapsible]
+[%collapsible%open]
 ====
 我们建议在继续SnapCenter安装和配置之前联机完成link:https://docs.netapp.com/us-en/snapcenter/index.html["SnapCenter 软件文档"^]：。下面概括了在ONTAP上为PostgreSQL安装和设置SnapCenter软件的步骤。
 
@@ -207,7 +207,7 @@ image:snapctr_psql_bkup_01.png["此图提供了SnapCenter服务器的设置策�
 
 === 数据库备份
 
-[%collapsible]
+[%collapsible%open]
 ====
 自动发现的初始PostgreSQL集群在其集群名称旁边显示一个红色锁定。必须使用上一节中在SnapCenter设置期间创建的PostgreSQL数据库凭据解除锁定。然后、您需要创建并应用备份策略来保护数据库。最后、手动或由计划程序执行备份以创建快照备份。下一节将演示分步过程。
 
@@ -298,7 +298,7 @@ image:snapctr_psql_bkup_19.png["此映像提供SnapCenter服务器的数据库�
 
 === 数据库恢复
 
-[%collapsible]
+[%collapsible%open]
 ====
 在此数据库恢复演示中、我们将展示PostgreSQL数据库集群的时间点恢复。首先、使用SnapCenter为ONTAP存储上的数据库卷创建快照备份。然后、登录到数据库、创建一个测试表、记下时间戳并删除测试表。现在、启动从备份到创建测试表时的时间戳的恢复、以恢复丢弃的表。下面捕获了使用SnapCenter UI验证PostgreSQL数据库时间点恢复的工作流和验证的详细信息。
 
@@ -406,7 +406,7 @@ postgres=# select now();
 
 === 数据库克隆
 
-[%collapsible]
+[%collapsible%open]
 ====
 通过SnapCenter进行的PostgreSQL数据库集群克隆会从源数据库数据卷的快照备份创建一个新的精简克隆卷。更重要的是、与其他方法相比、创建生产数据库的克隆副本以支持开发或测试的速度较快(只需几分钟)且效率较高。因此、它可以显著降低存储成本、并改进数据库应用程序生命周期管理。下一节介绍了使用SnapCenter UI的PostgreSQL数据库克隆的工作流。
 

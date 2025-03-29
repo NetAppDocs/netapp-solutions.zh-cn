@@ -14,7 +14,7 @@ summary:
 
 
 [role="lead"]
-本节简要介绍了如何在AWS中设置和管理OpenShift集群以及在这些集群上部署有状态应用程序的工作流。它显示了如何借助Trident使用NetApp Cloud Volumes ONTAP存储来提供永久性卷。本节详细介绍了如何使用Astra Control Center为有状态应用程序执行数据保护和迁移活动。
+本节简要介绍了如何在AWS中设置和管理OpenShift集群以及在这些集群上部署有状态应用程序的工作流。它显示了如何借助Trident使用NetApp Cloud Volumes ONTAP存储来提供永久性卷。本节详细介绍了如何使用Trident Protect为有状态应用程序执行数据保护和迁移活动。
 
 
 NOTE: 可以通过多种方法在AWS上部署Red Hat OpenShift容器平台集群。此高级设置问题描述 提供了所用特定方法的文档链接。您可以参考中提供的相关链接中的其他方法 link:rhhc-resources.html["资源部分"]。
@@ -26,7 +26,7 @@ image:rhhc-self-managed-aws.png["图中显示了输入/输出对话框或表示�
 设置过程可细分为以下步骤：
 
 .通过高级集群管理在AWS上安装OCP集群。
-[%collapsible]
+[%collapsible%open]
 ====
 * 创建具有站点到站点VPN连接的VPC (使用pfSense)以连接到内部网络。
 * 内部网络具有Internet连接。
@@ -44,7 +44,7 @@ TIP: 使用ACM创建集群时、您可以在表单视图中填写详细信息后
 
 ====
 .使用BlueXP在AWS中部署Cloud Volumes ONTAP。
-[%collapsible]
+[%collapsible%open]
 ====
 * 在内部VMware环境中安装连接器。请参阅说明 link:https://docs.netapp.com/us-en/cloud-manager-setup-admin/task-install-connector-on-prem.html#install-the-connector["此处"]。
 * 使用连接器在AWS中部署CVO实例。请参阅说明 link:https://docs.netapp.com/us-en/cloud-manager-cloud-volumes-ontap/task-getting-started-aws.html["此处"]。
@@ -55,7 +55,7 @@ NOTE: 该连接器也可以安装在云环境中。请参见 link:https://docs.n
 
 ====
 .在OCP集群中安装Trident
-[%collapsible]
+[%collapsible%open]
 ====
 * 使用Helm部署三级联操作员。请参阅说明 link:https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy-helm.html["此处"]
 * 创建后端和存储类。请参阅说明link:https://docs.netapp.com/us-en/trident/trident-use/backends.html["此处"]。

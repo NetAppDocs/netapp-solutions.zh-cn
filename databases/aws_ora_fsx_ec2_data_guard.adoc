@@ -137,7 +137,7 @@ image:aws_ora_fsx_data_guard_architecture.png["此图详细展示了使用FSx ON
 
 === 部署的前提条件
 
-[%collapsible]
+[%collapsible%open]
 ====
 部署需要满足以下前提条件。
 
@@ -160,7 +160,7 @@ NOTE: 确保您已在EC2实例根卷中至少分配50G、以便有足够的空�
 
 === 为Data Guard准备主数据库
 
-[%collapsible]
+[%collapsible%open]
 ====
 在此演示中、我们已在主EC2数据库实例上设置了一个名为db1的主Oracle数据库、其中两个ASM磁盘组采用独立的Restart配置、数据文件位于ASM磁盘组+data中、闪存恢复区域位于ASM磁盘组+logs中。下面说明了为Data Guard设置主数据库的详细过程。所有步骤均应以数据库所有者Oracle用户身份执行。
 
@@ -404,7 +404,7 @@ srvctl start database -d db1
 
 === 准备备用数据库并激活Data Guard
 
-[%collapsible]
+[%collapsible%open]
 ====
 Oracle Data Guard要求操作系统内核配置和Oracle软件堆栈(包括备用EC2数据库实例上的修补程序集)与主EC2数据库实例匹配。为了便于管理和简化、备用EC2数据库实例数据库存储配置也应与主EC2数据库实例(例如ASM磁盘组的名称、数量和大小)完美匹配。下面是为Data Guard设置备用EC2数据库实例的详细过程。所有命令都应以Oracle所有者用户id的身份执行。
 
@@ -704,7 +704,7 @@ SQL>
 
 === 设置Data Guard代理
 
-[%collapsible]
+[%collapsible%open]
 ====
 Oracle Data Guard代理是一个分布式管理框架、可自动集中创建、维护和监控Oracle Data Guard配置。以下部分演示如何设置Data Guard Broker以管理Data Guard环境。
 
@@ -799,7 +799,7 @@ DGMGRL>
 
 === 克隆备用数据库以用于其他使用情形
 
-[%collapsible]
+[%collapsible%open]
 ====
 在Data Guard中的AWS FSx ONTAP上暂存备用数据库的主要优势在于、可以通过FlexCloned以最少的额外存储投资来处理许多其他用例。在下一节中、我们将演示如何在FSx ONTAP上为已挂载和正在恢复的备用数据库卷创建快照和克隆以用于其他目的、例如开发、测试、报告等。 使用NetApp SnapCenter工具。
 

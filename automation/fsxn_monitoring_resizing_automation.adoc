@@ -25,7 +25,7 @@ FSx ONTAP是AWS上提供的第一方企业级云存储服务、可提供基于�
 FSx ONTAP提供无缝部署和管理体验。无需具备存储专业知识即可开始使用。为了简化监控、可以使用AWS兰达功能(根据阈值自动调整总存储容量、卷大小或LUN大小的大小)。  本文档提供了创建自动设置的分步指南、该设置会定期监控FSx ONTAP、在超过用户指定的阈值时发出通知并调整大小、以及向管理员通知调整大小活动。
 
 .功能
-[%collapsible]
+[%collapsible%open]
 ====
 解决方案 提供了以下功能：
 
@@ -48,7 +48,7 @@ FSx ONTAP提供无缝部署和管理体验。无需具备存储专业知识即�
 
 ====
 .前提条件
-[%collapsible]
+[%collapsible%open]
 ====
 开始之前、请确保满足以下前提条件：
 
@@ -59,7 +59,7 @@ FSx ONTAP提供无缝部署和管理体验。无需具备存储专业知识即�
 
 ====
 .高级架构
-[%collapsible]
+[%collapsible%open]
 ====
 * AWS LambDAF函数通过API调用FSx ONTAP、以检索和更新存储容量、卷和LUN的大小。
 * "fsxadmin"密码以安全字符串形式存储在AWS SSM参数存储中、用于增加一层安全保护。
@@ -84,7 +84,7 @@ NOTE: 涵盖单个FSx ONTAP文件系统。
 按照一系列步骤完成此解决方案 的自动部署：
 
 .第1步：克隆GitHub存储库
-[%collapsible]
+[%collapsible%open]
 ====
 在本地系统上克隆GitHub存储库：
 
@@ -94,7 +94,7 @@ git clone https://github.com/NetApp/fsxn-monitoring-auto-resizing.git
 ----
 ====
 .第2步：设置AWS S3存储分段
-[%collapsible]
+[%collapsible%open]
 ====
 . 导航到AWS控制台>*。s3*并单击*创建存储分段*。使用默认设置创建存储分段。
 . 进入存储分段后、单击*上传*>*添加文件*、然后从系统上克隆的GitHub存储库中选择*实用程序.zip。
@@ -105,7 +105,7 @@ image:fsxn-monitoring-resizing-s3-upload-zip-files.png["此图显示了正在上
 
 ====
 .第3步：AWS SES SMTP设置(如果无法访问Internet、则需要此设置)
-[%collapsible]
+[%collapsible%open]
 ====
 如果要在不访问Internet的情况下部署解决方案、请执行此步骤(注意：要设置的VPC端点会增加相关成本。)
 
@@ -122,7 +122,7 @@ image:fsxn-monitoring-resizing-ses-smtp-creds-addition.png["此图显示了AWS S
 
 ====
 .第4步：AWS CloudFormation部署
-[%collapsible]
+[%collapsible%open]
 ====
 . 导航到AWS控制台>* CloudFormation*>创建堆栈>使用新资源(标准)。
 +
@@ -176,7 +176,7 @@ NOTE: 支持在一个VPC中监控多个FSx ONTAP文件系统。
 按照一系列步骤完成此解决方案 的手动部署：
 
 .第1步：克隆GitHub存储库
-[%collapsible]
+[%collapsible%open]
 ====
 在本地系统上克隆GitHub存储库：
 
@@ -186,7 +186,7 @@ git clone https://github.com/NetApp/fsxn-monitoring-auto-resizing.git
 ----
 ====
 .第2步：AWS SES SMTP设置(如果无法访问Internet、则需要此设置)
-[%collapsible]
+[%collapsible%open]
 ====
 如果要在不访问Internet的情况下部署解决方案、请执行此步骤(注意：要设置的VPC端点会增加相关成本。)
 
@@ -199,7 +199,7 @@ image:fsxn-monitoring-resizing-ses-smtp-creds-addition.png["此图显示了AWS S
 
 ====
 .第3步：为fsxadmin密码创建SSM参数
-[%collapsible]
+[%collapsible%open]
 ====
 导航到AWS控制台>*参数存储*、然后单击*创建参数*。
 
@@ -220,7 +220,7 @@ image:fsxn-monitoring-resizing-ssm-parameter.png["此图显示了AWS控制台上
 
 ====
 .第4步：设置电子邮件服务
-[%collapsible]
+[%collapsible%open]
 ====
 导航到AWS控制台>*简单电子邮件服务(SES)*、然后单击*创建身份*。
 
@@ -237,7 +237,7 @@ image:fsxn-monitoring-resizing-ses.png["此图显示了AWS控制台上的SES身�
 
 ====
 .第5步：设置VPC端点(如果无法访问Internet、则需要此端点)
-[%collapsible]
+[%collapsible%open]
 ====
 
 NOTE: 只有在部署时不能访问Internet时才需要。与VPC端点相关的额外成本。
@@ -268,7 +268,7 @@ image:fsxn-monitoring-resizing-vpc-endpoint-create-2.png["此图显示了VPC端�
 
 ====
 .第6步：创建和设置AWS Lamb编制 函数
-[%collapsible]
+[%collapsible%open]
 ====
 . 导航到AWS控制台>* AWS LambxD*>*函数*并单击FSx ONTAP所在区域的*创建函数*
 . 使用默认的*从头开始*作者并更新以下字段：

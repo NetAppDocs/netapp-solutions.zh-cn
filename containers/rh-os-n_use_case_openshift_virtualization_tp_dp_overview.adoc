@@ -13,8 +13,6 @@ summary: 借助NetApp ONTAP实现Red Hat OpenShift虚拟化数据保护
 :imagesdir: ../media/
 
 
-作者：Banu Sunzhar、NetApp
-
 [role="lead"]
 本参考文档的这一部分详细介绍了如何使用Trident Protect创建虚拟机的快照和备份。
 
@@ -36,7 +34,7 @@ Trident Protect支持对OpenShift集群上的应用程序和VM执行快照、备
 
 
 .创建AppVault
-[%collapsible]
+[%collapsible%open]
 ====
 在为应用程序或VM创建快照和备份之前、必须在Trident Protect中配置对象存储、以存储快照和备份。此操作可使用存储分段CR来完成。只有管理员才能创建存储分段CR并对其进行配置。存储分段CR在Trident Protect中称为AppVault。AppVault对象是存储分段的声明性Kubarnetes工作流表示形式。AppVault CR包含在备份、快照、还原操作和SnapMirror复制等保护操作中使用存储分段所需的配置。
 
@@ -102,7 +100,7 @@ image:rh-os-n_use_case_ocpv_tp_dp_8.png["已创建ONTAP S3 Appvault"]
 
 ====
 .在OpenShift虚拟化中创建VM
-[%collapsible]
+[%collapsible%open]
 ====
 以下屏幕截图显示了使用模板从控制台创建虚拟机(命名空间演示中的demo-fedora)的过程。根磁盘会自动选择默认存储类、因此、请验证是否已正确设置默认存储类。在此设置中，默认存储类为** SC-ZoneA-SAN**。请确保在创建附加磁盘时选择存储类SC-ZoneA-san并选中"**应用优化的存储设置**"复选框。此操作会将访问模式设置为rwx、并将卷模式设置为块。
 
@@ -125,7 +123,7 @@ image:rh-os-n_use_case_ocpv_tp_dp_7.png["已创建虚拟机、Pod和PVC"]
 
 ====
 .创建应用程序
-[%collapsible]
+[%collapsible%open]
 ====
 **为虚拟机创建Trident Protect应用程序**
 
@@ -152,7 +150,7 @@ image:rh-os-n_use_case_ocpv_tp_dp_9.png["已创建应用程序"]
 
 ====
 .创建备份
-[%collapsible]
+[%collapsible%open]
 ====
 **创建按需备份**
 
@@ -202,7 +200,7 @@ image:rh-os-n_use_case_ocpv_tp_dp_17.png["按需和按计划创建备份"]
 
 ====
 .从备份中还原
-[%collapsible]
+[%collapsible%open]
 ====
 **将虚拟机恢复到同一命名空间**
 
@@ -282,7 +280,7 @@ image:rh-os-n_use_case_ocpv_tp_dp_23.png["VM"]
 
 ====
 .创建快照
-[%collapsible]
+[%collapsible%open]
 ====
 **创建按需快照**为应用程序创建快照并指定需要将其存储在的应用程序存储库。
 
@@ -350,7 +348,7 @@ image:rh-os-n_use_case_ocpv_tp_dp_26.png["计划快照"]
 
 ====
 .从Snapshot还原
-[%collapsible]
+[%collapsible%open]
 ====
 **将虚拟机从快照恢复到同一命名空间**从demo 2命名空间中删除虚拟机demo-fedora。
 
@@ -428,7 +426,7 @@ image:rh-os-n_use_case_ocpv_tp_dp_32.png["VM已在新命名空间中还原"]
 
 ====
 .在命名空间中选择特定VM以创建快照/备份和还原
-[%collapsible]
+[%collapsible%open]
 ====
 在上一个示例中、我们在一个命名空间中有一个VM。通过在备份中包含整个命名空间、可以捕获与该虚拟机关联的所有资源。在以下示例中、我们会将另一个VM添加到同一命名空间、然后使用标签选择器为此新VM创建一个应用程序。
 
@@ -489,9 +487,9 @@ image:rh-os-n_use_case_ocpv_tp_dp_18.png["备份已创建的特定虚拟机"]
 
 **将特定VM还原到同一命名空间**使用相应的应用程序创建了特定VM (CentOS)的备份。如果从此创建了就地备份还原或备份还原、则只会还原此特定虚拟机。删除CentOS VM。
 
-image:rh-os-n_use_case_ocpv_tp_dp_33["CentOS VM存在"]
+image:rh-os-n_use_case_ocpv_tp_dp_33.png["CentOS VM存在"]
 
-image:rh-os-n_use_case_ocpv_tp_dp_34["已删除CentOS VM"]
+image:rh-os-n_use_case_ocpv_tp_dp_34.png["已删除CentOS VM"]
 
 从demo-Centos-backup-On Demand创建备份原位还原、并验证是否已重新创建CentOS VM。
 
@@ -500,9 +498,9 @@ image:rh-os-n_use_case_ocpv_tp_dp_34["已删除CentOS VM"]
 #tp create bir demo-centos-restore --backup demo/demo-centos-backup-on-demand -n demo
 BackupInplaceRestore "demo-centos-restore" created.
 ----
-image:rh-os-n_use_case_ocpv_tp_dp_35["创建CentOS VM bir"]
+image:rh-os-n_use_case_ocpv_tp_dp_35.png["创建CentOS VM bir"]
 
-image:rh-os-n_use_case_ocpv_tp_dp_36["已创建CentOS VM"]
+image:rh-os-n_use_case_ocpv_tp_dp_36.png["已创建CentOS VM"]
 
 **将特定VM还原到不同的命名空间**创建一个备份还原到与demo-Centos-backup-On Demand不同的命名空间(deme3)，并验证是否已重新创建CentOS VM。
 
@@ -511,8 +509,8 @@ image:rh-os-n_use_case_ocpv_tp_dp_36["已创建CentOS VM"]
 # tp create br demo2-centos-restore --backup demo/demo-centos-backup-on-demand --namespace-mapping demo:demo3 -n demo3
 BackupRestore "demo2-centos-restore" created.
 ----
-image:rh-os-n_use_case_ocpv_tp_dp_37["创建CentOS VM bir"]
+image:rh-os-n_use_case_ocpv_tp_dp_37.png["创建CentOS VM bir"]
 
-image:rh-os-n_use_case_ocpv_tp_dp_38["已创建CentOS VM"]
+image:rh-os-n_use_case_ocpv_tp_dp_38.png["已创建CentOS VM"]
 
 ====

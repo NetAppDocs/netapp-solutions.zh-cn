@@ -142,7 +142,7 @@ image:automation_ora_anf_nfs_archit.png["此图详细展示了AWS公共云中使
 
 === 部署的前提条件
 
-[%collapsible]
+[%collapsible%open]
 ====
 部署需要满足以下前提条件。
 
@@ -200,7 +200,7 @@ video::d1c859b6-e45a-44c7-8361-b10f012fc89b[panopto,width=360]
 
 === 自动化参数文件
 
-[%collapsible]
+[%collapsible%open]
 ====
 Ans可 通过预定义的参数执行数据库安装和配置任务。对于此Oracle自动化解决方案、有三个用户定义的参数文件需要用户输入才能执行操作手册。
 
@@ -216,7 +216,7 @@ Ans可 通过预定义的参数执行数据库安装和配置任务。对于此O
 
 === 参数文件配置
 
-[%collapsible]
+[%collapsible%open]
 ====
 . 可逆目标 `hosts` 文件配置：
 +
@@ -290,7 +290,7 @@ nfs_lif: 172.30.136.68
 
 === 执行操作手册
 
-[%collapsible]
+[%collapsible%open]
 ====
 自动化工具包中共有五本操作手册。每个任务执行不同的任务块、并用于不同的用途。
 
@@ -354,7 +354,7 @@ ansible-playbook -i hosts 5-destroy.yml -u azureuser -e @vars/vars.yml
 
 === 执行后验证
 
-[%collapsible]
+[%collapsible%open]
 ====
 运行此操作手册后、登录到Oracle数据库服务器VM、以验证是否已安装和配置Oracle以及是否已成功创建容器数据库。以下是在主机ora-01上验证Oracle数据库的示例。
 
@@ -591,7 +591,7 @@ image:automation_ora_anf_nfs_em_01.png["此图提供Oracle Enterprise Manager Ex
 
 === 将Oracle数据库迁移到Azure
 
-[%collapsible]
+[%collapsible%open]
 ====
 Oracle数据库从内部迁移到云是一项繁重的工作。使用正确的策略和自动化可以使流程顺畅进行、并最大限度地减少服务中断和停机时间。请遵循此详细说明 link:azure_ora_nfile_migration.html#converting-a-single-instance-non-cdb-to-a-pdb-in-a-multitenant-cdb["将数据库从内部迁移到Azure云"^] 指导您的数据库迁移之旅。
 
@@ -600,7 +600,7 @@ Oracle数据库从内部迁移到云是一项繁重的工作。使用正确的�
 
 === 使用SnapCenter进行Oracle备份、还原和克隆
 
-[%collapsible]
+[%collapsible%open]
 ====
 NetApp建议使用SnapCenter UI工具来管理部署在Azure云中的Oracle数据库。请参阅TR-4988： link:snapctr_ora_azure_anf.html["使用SnapCenter在ANF上执行Oracle数据库备份、恢复和克隆"^] 了解详细信息。
 
