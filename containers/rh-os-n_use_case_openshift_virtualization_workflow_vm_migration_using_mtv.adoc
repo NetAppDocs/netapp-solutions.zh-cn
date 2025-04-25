@@ -91,7 +91,7 @@ NOTE: 确保启动PostgreSQL服务器并启用服务以在启动时启动。
 
 [source, yaml]
 ----
-#/tridentctl install trident n trident —node-prep=iscsi
+#./tridentctl install trident n trident —node-prep=iscsi
 
 ----
 
@@ -107,8 +107,7 @@ image:rh-os-n_use_case_iscsi_node_prep3.png["多路径.conf文件"]
 * link:https://docs.openshift.com/container-platform/4.13/virt/install/installing-virt-web.html["OpenShift 虚拟化"]
 
 
-使用以下YAML文件创建使用ONTAP SAN存储的三元后端配置
-** iSCSI的三端**
+** iSCSI的Trident后端** YAML文件示例，用于使用iSCSI协议为ONTAP SAN存储创建Trident后端配置
 
 [source, yaml]
 ----
@@ -134,8 +133,7 @@ spec:
   credentials:
     name: backend-tbc-ontap-san-secret
 ----
-使用以下YAML文件创建要使用ONTAP SAN存储的三元存储类配置
-**用于iSCSI**的三级存储类
+**适用于iSCSI的Trident存储类** YAML文件示例，用于为采用iSCSI协议的ONTAP SAN存储创建Trident存储类配置
 
 [source, yaml]
 ----
@@ -148,6 +146,53 @@ parameters:
   backendType: "ontap-san"
   media: "ssd"
   provisioningType: "thin"
+  snapshots: "true"
+allowVolumeExpansion: true
+----
+**安装FC后端和存储类** YAML文件示例，用于使用FC协议为ONTAP SAN存储创建Trident后端配置
+
+[source, yaml]
+----
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tbc-fc-secret
+type: Opaque
+stringData:
+  username: admin
+  password: <cluster password>
+---
+apiVersion: trident.netapp.io/v1
+kind: TridentBackendConfig
+metadata:
+  name: tbc-fc
+spec:
+  version: 1
+  storageDriverName: ontap-san
+  managementLIF: <cluster management lif>
+  backendName: tbc-fc
+  svm: openshift-fc
+  sanType: fcp
+  storagePrefix: demofc
+  defaults:
+    nameTemplate: "{{ .config.StoragePrefix }}_{{ .volume.Namespace }}_{{ .volume.RequestName }}"
+  credentials:
+    name: tbc-fc-secret
+----
+用于为使用FC协议的ONTAP SAN存储创建Trident存储类配置的示例YAML文件**用于FC**的Trident存储类
+
+[source, yaml]
+----
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: sc-fc
+provisioner: csi.trident.netapp.io
+parameters:
+  backendType: "ontap-san"
+  media: "ssd"
+  provisioningType: "thin"
+  fsType: ext4
   snapshots: "true"
 allowVolumeExpansion: true
 ----
