@@ -14,7 +14,7 @@ summary: 借助 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化
 
 
 [role="lead"]
-本节介绍如何使用Red Hat OpenShift虚拟化创建虚拟机。
+本节介绍如何使用Red Hat OpenShift虚拟化创建虚拟机。作为前提条件、您应已创建Trident后端、存储类和卷快照类对象。有关详细信息、请参见link:rh-os-n_use_case_openshift_virtualization_trident_install.html["Trident安装部分"]。
 
 
 
@@ -38,7 +38,7 @@ image:redhat_openshift_image52.png["创建 VM 架构"]
 要在集群上配置ONTAP－SAN存储类，请参见link:rh-os-n_use_case_openshift_virtualization_workflow_vm_migration_using_mtv.html["有关将VM从VMware迁移到OpenShift虚拟化的章节"]。
 
 
-NOTE: 您可以将ONTAP NAS或iSCSI设置为集群的默认存储类。单击Quick create VirtualMachine将使用默认存储类为虚拟机的可启动根磁盘创建PVC和PV。如果默认存储类不是ONTAP NAS或ONTAP SAN、则可以选择磁盘的存储类、方法是选择自定义虚拟机>自定义虚拟机参数>磁盘、然后编辑该磁盘以使用所需的存储类。
+NOTE: 单击Quick create VirtualMachine将使用默认存储类为虚拟机的可启动根磁盘创建PVC和PV。您可以通过选择自定义虚拟机>自定义虚拟机参数>磁盘、然后编辑磁盘以使用所需的存储类来为此磁盘选择其他存储类。
 
 通常、在配置VM磁盘时、块访问模式优于文件系统。
 
