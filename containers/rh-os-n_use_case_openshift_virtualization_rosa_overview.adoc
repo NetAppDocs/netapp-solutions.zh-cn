@@ -34,7 +34,7 @@ summary: 基于ROSA的Red Hat OpenShift虚拟化
 * link:https://docs.aws.amazon.com/eks/latest/userguide/helm.html["Helm 3文档"]
 * link:https://docs.openshift.com/rosa/rosa_hcp/rosa-hcp-sts-creating-a-cluster-quickly.html["HCP ROSA集群"](至少具有3个裸机工作节点)
 * link:https://console.redhat.com/openshift/overview["访问Red Hat OpenShift Web控制台"]
-* Trident 25.02或更高版本
+* Trident 25.02或更高版本有关上述Trident前提条件、请参见link:rh-os-n_use_case_openshift_virtualization_trident_install.html["Trident安装部分"]以了解详细信息。
 * link:https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/virtualization/installing#virt-aws-bm_preparing-cluster-for-virt["ROSA集群上安装了OpenShift虚拟化"]
 
 
@@ -99,10 +99,6 @@ deletionPolicy: Retain
 #oc create -f snapshot-class.yaml
 ----
 在安装OpenShift虚拟化之前、请确保将存储类和卷快照类配置为默认值。有关如何设置默认值的详细信息，请参阅link:rh-os-n_use_case_openshift_virtualization_trident_install.html["使用Trident存储和快照类部分设置默认值"]以了解详细信息。
-
-确保默认存储类设置为Tridentimage:redhat_openshift_ocpv_rosa_image1.png["OCP-v默认存储类"]
-
-确保已按所示设置默认的卷Snap肖 特克莱斯image:redhat_openshift_ocpv_rosa_image2.png["OCP-v默认卷快照类"]
 
 
 

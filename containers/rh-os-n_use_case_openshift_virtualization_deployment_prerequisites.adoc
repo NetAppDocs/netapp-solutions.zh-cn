@@ -22,10 +22,14 @@ summary: 借助 NetApp ONTAP 实现 Red Hat OpenShift 虚拟化
 
 * Red Hat OpenShift 集群（ 4.6 版之后的版本），安装在具有 RHCOS 工作节点的裸机基础架构上
 * 部署计算机运行状况检查以保持虚拟机的 HA
-* NetApp ONTAP 集群
+* 为SVM配置了正确协议的NetApp ONTAP集群。
 * Trident安装在OpenShift集群上
-* 在 ONTAP 集群上配置了 SVM 的 Trident 后端
+* 已创建Trident后端配置
 * 在OpenShift集群上配置的一个StorageClass、其中Trident是配置程序
+
+
+有关上述Trident前提条件的详细信息、请参见link:rh-os-n_use_case_openshift_virtualization_trident_install.html["Trident安装部分"]。
+
 * 对 Red Hat OpenShift 集群的集群管理员访问
 * 对 NetApp ONTAP 集群的管理员访问权限
 * 安装了 tridentctl 和 oc 工具并将其添加到 $path 中的管理工作站
