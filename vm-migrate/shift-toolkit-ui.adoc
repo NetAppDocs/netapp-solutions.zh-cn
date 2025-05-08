@@ -1,0 +1,628 @@
+---
+sidebar: sidebar 
+permalink: vm-migrate/shift-toolkit-ui.html 
+keywords: netapp, vmware, esxi, vm, migration, openshift, virtualization, hyper-v, proxmox 
+summary:  
+---
+= 设置和使用Shift Toolkit GUI
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+本节详细介绍如何通过用户界面设置和运行Shift Toolkit。
+
+
+
+== 运行班次工具包
+
+* 使用浏览器、输入安装期间指定的地址>：3001"以访问Shift工具包UI"http://<IP[]
++
+
+NOTE: 使用Google Chrome或Internet Explorer获得最佳体验。
+
+* 使用默认凭据访问UI、如下所示：
++
+用户名：admin
+
++
+密码：admin
+
+
+
+
+NOTE: 可以使用"Change Password"(更改密码)选项更改管理员凭据。
+
+image:shift-toolkit-image18.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+单击"Accept and continue (接受并继续)"以接受法律EULA。
+
+image:shift-toolkit-image19.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+== 班次工具包配置
+
+正确配置源虚拟机管理程序和目标虚拟机管理程序的存储和连接后、开始配置Shift工具包、以便利用FlexClone功能自动将虚拟机VMDK迁移或转换为适当的格式。
+
+
+
+=== 添加站点
+
+第一步是发现源vCenter、然后将目标Hyper-V详细信息(虚拟机管理程序和存储)添加到Shift工具包中。在支持的浏览器中打开Shift工具包、使用默认用户名和密码(管理员/管理员)、然后单击"Add Sites"(添加站点)。
+
+image:shift-toolkit-image20.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+NOTE: 也可以使用"发现"选项添加站点。
+
+添加以下平台：
+
+* 源 *
+
+* 源站点详细信息
++
+** Site Name (站点名称)-提供站点的名称
+** Hypervisor-选择VMware作为源(GA期间仅提供此选项)
+** 站点位置–选择默认选项
+** Connector (连接器)–选择默认选项
+
+
+
+
+填写后、单击Continue。
+
+image:shift-toolkit-image21.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* 源vCenter
++
+** Endpoint (端点)-输入vCenter Server的IP地址或FQDN
+** username—用于访问vCenter的用户名(UPN格式： `username@domain.com`)
+** vCenter Password—用于访问vCenter以执行资源清单的密码。
+** vCenter SSL缩略图(可选)
+
+
+
+
+选择"Accept Self signed certification"(接受自签名证书)、然后单击Continue (继续)。
+
+image:shift-toolkit-image22.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* ONTAP存储系统凭据
+
+
+image:shift-toolkit-image23.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+添加后、Shift工具包将执行自动发现、并显示虚拟机以及相关元数据信息。Shift工具包将自动检测VM使用的网络和端口组并将其填充。
+
+
+NOTE: 如果对源站点进行了任何修改、请确保运行发现以提取最新信息。单击站点名称旁边的3个点、然后单击"Discover Site"(发现站点)、即可完成此操作。
+
+
+NOTE: VM清单每24小时自动刷新一次。
+
+image:shift-toolkit-image24.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+要查看特定vCenter的数据、请转到信息板、单击相应站点名称旁边的"View VM List"(查看VM列表)。此页面将显示虚拟机清单以及虚拟机属性。
+
+下一步是添加目标虚拟机管理程序。要添加、请单击"Add New Site"(添加新站点)、然后选择"Destation"(目标)。
+
+* 目标 *
+
+image:shift-toolkit-image25.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+* 目标站点详细信息
++
+** Site Name (站点名称)-提供站点的名称
+** 虚拟机管理程序—选择Hyper-V或KVM作为目标
+** 站点位置–选择默认选项
+** Connector (连接器)–选择默认选项
+
+
+
+
+填写后、单击Continue。
+
+image:shift-toolkit-image26.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+根据选择的虚拟机管理程序、填写必要的详细信息。
+
+* 目标Hyper-V详细信息
++
+** Hyper-V独立或故障转移集群管理器IP地址或FQDN
+** username—要访问的用户名(UPN格式： `username@domain.com`或domain\administrator)
++
+Password—用于访问Hyper-V主机或FCI实例以执行资源清单的密码。
+
++
+选择"Accept Self signed certification"(接受自签名证书)、然后单击Continue (继续)。
+
+
+
+
+
+image:shift-toolkit-image27.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+完成后、单击Continue
+
+
+NOTE: 在当前版本中、Shift工具包不会直接与System Center通信。
+
+
+NOTE: Hyper-V FCI和主机发现依赖于DNS解析。确保主机名应可从Shift工具包虚拟机解析。如果解决失败、请更新主机文件(C：\Windows\System32\drivers \ETC\hosts)、然后重试发现操作。
+
+* ONTAP存储系统*
+
+image:shift-toolkit-image28.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+NOTE: 源存储系统和目标存储系统应与在卷级别和同一卷中进行的磁盘格式转换相同。
+
+image:shift-toolkit-image29.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+下一步是将所需的VM作为资源组分组到其迁移组中。
+
+
+
+== 资源分组
+
+添加平台后、将要迁移或转换的VM分组为资源组。使用Shift工具包资源组、您可以将一组相关VM分组到包含其启动顺序和启动延迟的逻辑组中。
+
+
+NOTE: 在创建资源组之前、请确保已配置qtrees (如前提条件一节中所述)。
+
+要开始创建资源组，请单击“创建新资源组”菜单项。
+
+. 访问资源组、单击"Create New Resource Group"(创建新资源组)。
++
+image:shift-toolkit-image30.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 在"New resource group"(新资源组)上、从下拉列表中选择源站点、然后单击"Creation"(创建)
+. 提供资源组详细信息并选择工作流。此工作流提供了两个选项
++
+.. 基于克隆的迁移—执行VM从源虚拟机管理程序到目标虚拟机管理程序的端到端迁移。
+.. 基于克隆的转换—将磁盘格式转换为选定虚拟机管理程序类型。
++
+image:shift-toolkit-image31.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+. 单击"Continue (继续)"
+. 使用搜索选项选择适当的VM。默认筛选选项为"数据 存储库"。
++
+
+NOTE: 在转换之前、将要转换的VM移动或迁移到新创建的ONTAP SVM上的指定数据存储库。这有助于隔离生产NFS数据存储库、并且指定的数据存储库可用于暂存虚拟机。
+
++
+image:shift-toolkit-image32.png["图中显示了输入/输出对话框或表示已写入内容"]
+
++
+
+NOTE: 此上下文中的数据存储库下拉列表将仅显示NFSv3数据存储库。不会显示NFSv4数据存储库。
+
++
+image:shift-toolkit-image33.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 通过选择"Destin Site"(目标站点)、"Destin Hyper-V Entry"(目标Hyper-V条目)以及"数据 存储库到qtree"(qtree)映射来更新迁移详细信息。
++
+image:shift-toolkit-image34.png["图中显示了输入/输出对话框或表示已写入内容"]
+
++
+
+NOTE: 在将VM从ESX转换为Hyper-V时、请确保将目标路径(用于存储已转换的VM的路径)设置为qtree。将目标路径设置为相应的qtree。
+
++
+
+NOTE: 可以创建多个qtrees并相应地用于存储转换后的VM磁盘。
+
+. 为所有选定虚拟机选择启动顺序和启动延迟(秒)。通过选择每个虚拟机并设置其优先级来设置启动顺序。3是所有虚拟机的默认值。
++
+选项如下：
+
++
+1—第一个启动的虚拟机3—默认值5—最后一个启动的虚拟机
+
++
+image:shift-toolkit-image35.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 单击"Create Resource Group"(创建资源组)。
++
+image:shift-toolkit-image36.png["图中显示了输入/输出对话框或表示已写入内容"]
+
++
+
+NOTE: 如果需要修改资源组以添加或删除虚拟机，请使用资源组名称旁边的3个点，然后选择“编辑资源组”。
+
+
+
+
+
+=== 蓝图
+
+要迁移或转换虚拟机、需要制定一个计划。从下拉列表中选择源虚拟机管理程序平台和目标虚拟机管理程序平台、然后选择要包含在此蓝图中的资源组、以及应用程序应如何启动的分组(即域控制器、然后依次选择第1层和第2层等)。这些计划通常也称为迁移计划。要定义蓝图、请导航到"Blueprints"(蓝图)选项卡、然后单击"Create New Blueprint"(创建新蓝图)。
+
+要开始创建蓝图、请单击"Create New Blueprint"(创建新蓝图)。
+
+. 要访问蓝图、请单击"Create New Blueprint"(创建新蓝图)。
++
+image:shift-toolkit-image37.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 在"New Blueprint"(新蓝图)上、为计划提供一个名称、并通过选择"Source Site"(源站点)>"Associated VCenter、Destination Site"(关联的vCenter、目标站点)和"Associated Hyper-V hypervisor"(关联的Hyper-V虚拟机管理程序)添加所
+. 完成映射后、选择集群和主机映射。
++
+image:shift-toolkit-image38.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 选择资源组详细信息、然后单击"Continue (继续)"
++
+image:shift-toolkit-image39.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 设置资源组的执行顺序。使用此选项可以选择存在多个资源组时的操作顺序。
+. 完成后、选择"Network Mapping"(网络映射)以映射到相应的虚拟交换机。虚拟交换机应已在Hyper-V中配置
++
+image:shift-toolkit-image40.png["图中显示了输入/输出对话框或表示已写入内容"]
+
++
+
+NOTE: 在Hyper-V端、虚拟交换机类型"External (外部)"是唯一支持的网络选择选项。
+
++
+
+NOTE: 对于测试迁移、默认选择"Do no configure Network"、Shift工具包不执行IP地址分配。在转换磁盘并在Hyper-V端购买虚拟机后、手动分配气泡网络交换机、以避免与生产网络发生任何摩擦。
+
++
+image:shift-toolkit-image41.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+. 根据所选的虚拟机、系统将自动选择存储映射。
++
+
+NOTE: 确保事先配置qtree并分配必要的权限、以便可以从SMB共享创建虚拟机并启动虚拟机。
+
+. 在VM详细信息下、提供每种操作系统类型的服务帐户和有效用户凭据。该脚本用于连接到虚拟机、以创建和运行删除VMware工具和备份IP配置详细信息所需的某些脚本。
++
+.. 对于基于Windows的操作系统、建议使用具有本地管理员Privileges的用户。也可以使用域凭据、但是、在转换之前、请确保虚拟机上存在用户配置文件、否则、域凭据将无法正常工作、因为它会在未连接网络时查找域身份验证。
+.. 对于基于Linux分发版的子VM、请提供一个无需密码即可执行sudo命令的用户、这意味着该用户应属于sudoers列表或作为新配置文件添加到/sudoers.d/文件夹。
++
+image:shift-toolkit-image42.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+. 再次在VM详细信息下、选择相关的IP配置选项。默认情况下、会选择"Do not configure"(不配置)。
++
+.. 要从源系统迁移具有相同IP的VM、请选择"Retain IP"。
+.. 要在源系统中使用静态IP迁移VM并在目标VM上分配DHCP、请选择"DHCP"。
++
+要使此功能正常工作、请确保满足以下要求：
+
++
+*** 确保在VM准备阶段以及计划的迁移时间之前已打开VM的电源。
+*** 对于VMware VM、请确保已安装VMware Tools。
+*** 确保使用以下帐户在源VM上运行准备脚本：在Windows操作系统上使用管理员Privileges的帐户、在基于Linux的发行版操作系统上使用sudo Privileges、不带密码选项、以创建cron作业。
+
+
+
+
+. 下一步是VM配置。
++
+.. (可选)调整VM CPU/RAM参数的大小、这对于调整大小非常有用。
+.. 启动顺序覆盖：同时修改资源组中所有选定VM的启动顺序和启动延迟(秒)。如果需要对资源组引导顺序选择期间选择的内容进行任何更改、则可以使用此附加选项来修改引导顺序。默认情况下、系统会使用在选择资源组期间选择的启动顺序、但在此阶段可以进行任何修改。
+.. 启动：如果工作流不应启动虚拟机、请取消选中此选项。默认选项为on、表示虚拟机将启动。
+.. 删除VMware工具：转换后、Shift工具包将删除VMware工具。默认情况下，此选项处于选中状态。如果计划执行客户自己的自定义脚本、则可以取消选择此选项。
+.. 生成：Shift工具包使用以下经验法则、默认使用相应的One- Gen1 > BIOS和Gen2 > EFI。无法选择此选项。
+.. 保留MAC：可以保留相应VM的MAC地址、以克服依赖MAC的应用程序面临的许可难题。
+.. 服务帐户覆盖：如果无法使用全局服务帐户、则此选项允许指定单独的服务帐户。
++
+image:shift-toolkit-image43.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+. 单击"Continue (继续)"。
+. 在下一步中、通过选中复选框设置日期和时间来计划迁移。确保在计划日期之前准备好所有虚拟机(VM)并关闭其电源。完成后、单击"Create Blueprint"(创建蓝图)。
++
+image:shift-toolkit-image44.png["图中显示了输入/输出对话框或表示已写入内容"]
+
++
+
+NOTE: 在计划时、请选择至少比当前Shift虚拟机时间提前30分钟的日期。这是为了确保工作流有足够的时间在资源组中准备VM。
+
+. 创建蓝图后、将启动一个预准备VM作业、此作业将自动在源VM上运行脚本、以便为迁移做好准备
++
+image:shift-toolkit-image45.png["图中显示了输入/输出对话框或表示已写入内容"]
+
++
+此作业会使用Invoke－VMScript方法运行一个脚本，以复制删除VMware工具和备份网络配置详细信息(包括IP地址、路由和DNS信息)所需的脚本，这些信息将用于在目标VM上保持相同的设置。
+
++
+** 对于基于Windows的操作系统、准备脚本的默认存储位置是"C:\Windows" NetApp文件夹。
++
+image:shift-toolkit-image46.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+** 对于基于Linux的VM、预处理脚本的默认存储位置是/Linux NetApp和/opt目录。
++
+image:shift-toolkit-image47.png["图中显示了输入/输出对话框或表示已写入内容"]
+
++
+
+NOTE: 对于运行CentOS或Red Hat的Linux源VM、Shift工具包非常智能、可以自动安装必要的Hyper-V驱动程序。在进行磁盘转换之前、源VM中必须存在这些驱动程序、以确保VM在转换后可以成功启动。
+
++
+
+NOTE: 有关详细信息，请参见link:https://access.redhat.com/solutions/3465011["将RHEL VM迁移到hyper-v后、系统卡在dracut中"]。
+
++
+成功完成准备VM作业(如下面的屏幕截图所示)后、VM便可进行迁移、并且蓝图状态将更新为"Active"。
+
++
+image:shift-toolkit-image48.png["图中显示了输入/输出对话框或表示已写入内容"]
+
++
+image:shift-toolkit-image49.png["图中显示了输入/输出对话框或表示已写入内容"]
+
++
+现在、迁移将在设定的时间进行、也可以通过单击迁移选项手动启动。
+
+
+
+
+
+
+
+== 监控和信息板
+
+使用作业监控功能监控作业的状态。
+
+image:shift-toolkit-image76.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+借助直观的用户界面、可以自信地评估迁移、转换和蓝图的状态。这样、管理员可以快速确定成功、失败或部分失败的计划以及迁移或转换的VM数量。
+
+image:shift-toolkit-image77.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+== 高级设置
+
+Shift工具包提供了高级设置、可通过单击顶部工具栏中的"设置"图标来访问这些设置。
+
+image:shift-toolkit-image78.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+
+=== CredSSP
+
+Shift利用凭据安全服务提供商(CredSSP)管理凭据传输。在转换过程中、Shift服务器会在要转换的VM的子操作系统上运行许多脚本。用于运行这些脚本的凭据通过"双跃点"从Shift服务器通过Hyper-V服务器传递到子操作系统。
+
+image:shift-toolkit-image79.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+*将Shift服务器配置为CredSSP客户端:*
+
+"高级设置"向导会自动将Shift服务器配置为CredSSP客户端。这样、Shift服务器就可以将凭据委派给Hyper-V服务器。
+
+*幕后的情况:*
+
+Shift工具包可执行一系列命令将自身配置为客户端、从而使其能够管理Hyper-V主机。此过程涉及到设置必要的配置。
+
+* 运行以下命令：
++
+** Set-Item WSman：\localhost\Client\HostedHosts -value "FQDN-in-hyper-v-host"
+** enant-WSManCredSSP -Role client -DelegateComputer "FQDN-OP-hyper-v-host"
+
+
+* 配置以下组策略：
++
+** 计算机配置>管理模板>系统>凭据委派>允许使用仅NTLM服务器身份验证委派新凭据
+
+
+
+
+选择启用并添加WSMAN/FQDN-in-hyper-v-host。
+
+*将Hyper-V服务器配置为CredSSP服务器*
+
+在Hyper-V服务器上使用Enable-WSManCredSSP cmdlet将Hyper-V服务器配置为CredSSP服务器、这样、Hyper-V服务器便可从Shift服务器接收凭据。
+
+在将由Shift工具包服务器配置虚拟机的Hyper-V主机上、以管理员身份打开Windows PowerShell会话并运行以下命令：
+
+. Enable-PSRemoting
+. enance-WSManCredSSP -Role服务器
+
+
+
+
+=== Swagger
+
+通过"高级设置"中的交换器页面、可以与可用API进行交互。通过Shift工具包REST API提供的资源按类别进行组织、如Swagger API文档页面上所示。下面简要介绍了每个资源的问题描述以及基本资源路径，并在适当情况下提供了其他使用注意事项。
+
+image:shift-toolkit-image80.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+*会议*
+
+您可以使用此API登录到Shift工具包服务器。此 API 将返回一个用户授权令牌，用于对后续请求进行身份验证。
+
+* 启动会话
+* 验证会话
+* 获取所有Session ID
+* 结束会话
+
+
+*连接器*
+
+* 添加连接器
+* 获取所有连接器的详细信息
+* 按ID更新连接器详细信息
+* 按ID获取连接器详细信息
+
+
+*租户*
+
+使用API执行Add和Get操作
+
+* 添加租户
+* 获取所有租户
+
+
+* 用户 *
+
+使用API执行添加、获取、更改和接受操作
+
+* 添加用户
+* 获取所有用户
+* 更改用户的密码
+* 接受EULA
+
+
+*CredSsp*
+
+使用API执行enable和get操作
+
+* 启用凭据
+* 获取凭据的状态
+
+
+*站点*
+
+使用API执行获取、添加、删除和更新操作
+
+* 获取站点计数
+* 获取所有站点详细信息
+* 添加站点
+* 按ID获取站点详细信息
+* 按ID删除站点
+* 向站点添加虚拟环境
+* 向站点添加存储环境
+* 获取站点的虚拟环境详细信息
+* 更新站点的虚拟环境详细信息
+* 删除站点的虚拟环境详细信息
+* 获取站点的存储环境详细信息
+* 更新站点的存储环境详细信息
+* 删除站点的存储环境详细信息
+
+
+*发现*
+
+使用API执行发现和获取操作
+
+* 发现源站点
+* 获取源站点的所有发现请求
+* 发现目标站点
+* 获取目标站点的所有发现请求
+* 按ID获取源站点的发现步骤
+* 按ID获取目标站点的发现步骤
+
+
+*VM*
+
+使用API执行GET操作
+
+* 从源中获取站点和虚拟环境的VM
+* 为站点和虚拟环境获取未受保护的VM
+* 获取虚拟机计数
+* 获取受保护的VM计数
+
+
+* 资源 *
+
+使用API执行GET操作
+
+* 获取站点和虚拟环境的资源详细信息
+* 获取源站点资源计数
+
+
+*资源组*
+
+使用API执行添加、更新和获取操作
+
+* 获取保护组计数
+* 获取所有保护组详细信息
+* 添加保护组
+* 按ID获取保护组详细信息
+* 按ID删除保护组
+* 按ID更新保护组详细信息
+* 按ID获取保护组的VM
+* 获取包含保护组的蓝图
+
+
+*蓝图*
+
+使用API执行添加、更新和获取操作
+
+* 获取蓝图计数
+* 获取所有蓝图详细信息
+* 添加蓝图
+* 按ID获取蓝图详细信息
+* 按ID删除蓝图
+* 更新ID的蓝图详细信息
+* 获取VM的蓝图
+* 获取蓝图中虚拟机的电源状态
+* 获取BluePrint计数
+* 获取所有蓝图详细信息
+
+
+*合规性*
+
+使用API执行添加和获取操作
+
+* 获取蓝图的合规性检查结果
+* 获取蓝图的合规性检查最终状态
+* 为蓝图添加新的按需合规性检查
+
+
+*执行*
+
+使用API执行GET操作
+
+* 获取所有执行详细信息
+* 获取正在执行的详细信息
+* 获取执行计数
+* 获取正在执行的执行计数
+* 获取执行ID的步骤
+
+
+*恢复*
+
+使用API执行添加和获取操作
+
+* 为蓝图添加新的执行请求
+* 为蓝图添加重试执行请求
+* 获取所有蓝图的执行状态
+* 获取蓝图ID的执行状态
+
+
+*脚本块*
+
+使用API执行获取和更新操作
+
+* 获取所有脚本元数据
+* 按ID获取脚本元数据
+* 获取所有刷新元数据
+* 执行脚本
+
+
+
+
+=== 脚本块
+
+In Shift工具包中的脚本块提供了示例代码、可帮助通过内部和外部API自动执行、集成和开发功能。在脚本块的代码示例部分、浏览并下载由Shift工具包自动化团队和社区成员编写的示例。使用示例开始执行自动化、管理或集成任务。
+
+image:shift-toolkit-image81.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+下面是一个示例PowerShell脚本示例、可用于在Shift UI中删除特定作业。此功能不会通过工作流公开、但也可以通过脚本块来实现。同样的脚本也可以作为bat脚本使用、可以通过下载和调用来轻松执行。
+
+image:shift-toolkit-image82.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+此处的目标是提供示例脚本、以便使用Shift工具包API和相应的虚拟机管理程序发布API对特定虚拟机管理程序执行Day 0和Day N操作。
+
+
+
+== SAN环境
+
+作为Shift工具包的一项关键要求、要转换的VM必须驻留在NAS环境中(适用于ESX的NFS)。如果VM驻留在SAN环境(iSCSI、FC、FCoE、NVMeFC)中、则必须先将其迁移到NAS环境、然后再进行转换。
+
+image:shift-toolkit-image83.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+上述方法描述了一个典型的SAN环境、其中VM存储在SAN数据存储库中。首先、使用VMware vSphere Storage vMotion将要从ESX转换为Hyper-V的VM及其磁盘迁移到NFS数据存储库。Shift工具包使用FlexClone将VM从ESX转换为Hyper-V。转换后的VM及其磁盘驻留在CIFS共享上。转换后的虚拟机(及其磁盘)将通过Hyper-V存储实时迁移迁移迁移回启用了SAN的CSV。
+
+
+NOTE: 如果节点具有不同的进程功能集、则实时VM迁移可能会失败。可以通过设置"迁移到具有不同处理器的物理计算机"来处理此问题。此脚本位于脚本块下。

@@ -1,0 +1,127 @@
+---
+sidebar: sidebar 
+permalink: vm-migrate/shift-toolkit-migration.html 
+keywords: netapp, vmware, esxi, vm, migration, openshift, virtualization, hyper-v, proxmox 
+summary:  
+---
+= 使用Shift工具包执行VM迁移
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+本节详细介绍如何使用Shift工具包执行VM迁移。
+
+
+
+== migration
+
+创建蓝图后、可以使用"Migration"(迁移)选项。在迁移选项期间、Shift工具包会执行一系列步骤来转换磁盘格式、并按照蓝图中的定义使用转换后的磁盘在Hyper-V主机上创建虚拟机。
+
+执行的高级别步骤如下：
+
+前提条件：在启动迁移之前、请确保虚拟机(VM)已正常关闭、无论迁移是临时迁移还是根据计划内维护时间计划的迁移。确认虚拟机已完全关闭；如果操作系统正在等待更新、则仅在虚拟机完全关闭后触发迁移。
+
+* 删除蓝图中所有VM的现有快照
+* 在源上触发Blueprint的VM Snapshot
+* 在转换磁盘之前触发卷快照
+* 克隆所有VM的VMDK并将其转换为VHDx格式
+* 启动保护组中的VM—目标
+* 在每个VM上注册网络
+* 根据操作系统类型、删除VMware工具并使用触发器脚本或cron作业分配IP地址
+
+
+
+
+=== 需要考虑的因素
+
+在开始迁移之前、请确保满足所有前提条件(本文档的"前提条件"一节将详细介绍这些前提条件)。下面是一个快速检查清单、用于回顾：
+
+* 确保Shift虚拟机属于该域
+* 确保为CIFS共享配置了适当的权限
+* 用于迁移或转换的qtree具有正确的安全模式
+* 作为快速测试、请尝试从集群中的任何Hyper-V主机使用Hyper-V Manager创建虚拟机、并将VHDX放置在CIFS共享上(参见项目符号A)。通过添加Hyper-V管理工具(通过"程序和功能"或使用"powershell"- add-WindowsFeature RASAP-hyper-v-tools)、从Shift工具包虚拟机中尝试相同的操作
+
+
+
+NOTE: 如果出现故障，link:https://learn.microsoft.com/en-us/windows-server/virtualization/hyper-v/manage/remotely-manage-hyper-v-hosts["使用任何身份验证协议启用委派"]。
+
+
+
+=== 网络提示和注意事项
+
+必须考虑以下网络注意事项：
+
+* 确保静态IP地址可用、并且未分配给其他虚拟机
+
+
+对于Windows VM：
+
+* 准备脚本会复制网络配置详细信息(IP地址空间、网关地址、DNS服务器)、而触发脚本(在迁移期间)会根据蓝图映射重新应用网络设置、无论是单个NIC还是多个NIC。
+* 迁移后、Windows设备管理器可能仍会显示迁移前的旧网络适配器信息。虽然这不会影响迁移后创建的新网络适配器、也不会导致IP冲突、但脚本当前不会删除此旧注册、因此它仍然可见。
+
+
+对于Linux VM：
+
+* 准备脚本会复制网络配置详细信息(IP地址空间、路由、DNS服务器、网络设备名称)、并根据Linux版本确定所使用的网络类型并应用IP设置。网络重新分配脚本使用cron选项卡设置为cron作业、并在启动时触发。例如、cronJob将在迁移后对实例执行脚本以重新应用网络设置、无论是基于蓝图映射的单个NIC还是多个NIC。
+* 在某些情况下、转换后的Hyper-V虚拟机的接口名称将像eth0或eth1、而不是源端上的ens192或33。在这种情况下、该脚本将更新网络配置详细信息以匹配新接口名称。如果正在使用可预测的名称(与现代系统一样)、并且接口名称保留在Hyper-V端、则该脚本将跳过其网络端、而仅删除VMware工具、然后重新启动虚拟机。
+* Shift工具包目前支持NetworkManager、Netplan和ifconfig机制、并保留蓝图中指定的IP。
+
+
+
+
+=== 阶段和选项
+
+下面是迁移过程的关键阶段和选项。
+
+. 准备VM—准备要迁移的VM、确保已完全满足所有前提条件。
+. 迁移—准备完成后、选择VMware VM并将其迁移到Hyper-V。迁移完成后、验证VM是否已成功启动、以及数据是否已正确迁移。
+. 测试迁移—测试迁移通过将VMDK转换为VHDX并使用SMB共享上已转换的VHDX文件创建Hyper-V虚拟机来模拟迁移。测试迁移不允许配置网络映射；此任务通常应手动执行到气泡网络。
+. 重试迁移—如果迁移失败、Shift工具包提供了重试选项。此功能允许迁移作业从故障点恢复。重试此操作之前、请务必查看并更正任何错误消息。
+
+
+
+NOTE: Shift工具包不会更改源VM、除非复制VM准备所需的脚本。这样可以在转换失败时快速回滚。
+
+要使用蓝图中指定的配置触发迁移工作流、请单击迁移。
+
+image:shift-toolkit-image50.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+启动后、工作流将激活、转换过程将按照概述的步骤注册VM。如果蓝图中的VM未关闭电源、则Shift工具包将提示正常关闭、然后再继续。
+
+image:shift-toolkit-image51.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+NOTE: 建议从同一ESXi源并行触发到同一Hyper-V目标的转换不超过十次
+
+image:shift-toolkit-image52.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+将VMDK转换为VHDx只需几秒钟、这使得这种方法成为所有选项中速度最快的一种、但需要额外付费。这也有助于减少迁移期间的VM停机时间。
+
+image:shift-toolkit-image53.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+作业完成后、蓝图的状态将更改为"migration" complete。
+
+image:shift-toolkit-image54.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+迁移完成后、现在是时候验证Hyper-V端的虚拟机了。以下屏幕截图显示了在创建蓝图期间指定的Hyper-V主机上运行的虚拟机。
+
+image:shift-toolkit-image55.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+NOTE: Shift工具包使用启动时执行的cron作业。在Hyper-V主机上购买基于Linux的VM后、不会为这些VM创建任何ssh连接或等效的连接。
+
+image:shift-toolkit-image56.png["图中显示了输入/输出对话框或表示已写入内容"]
+
+
+NOTE: 对于Windows VM、Shift工具包使用PowerShell Direct连接到这些基于Windows的子VM。PowerShell Direct允许连接到基于Windows的子VM、而不管其网络配置或远程管理设置如何。
+
+
+NOTE: 转换后、Windows操作系统上除操作系统磁盘外的所有VM磁盘都将脱机。这是因为在VMware VM上、NewDiskPolicy参数默认设置为offlineALL。此问题是由默认Microsoft Windows SAN策略引起的。此策略旨在防止在启动Windows Server时激活多个服务器正在访问的LUN。这样做是为了避免任何潜在的数据损坏问题。可以通过运行PowerShell命令来处理此问题：set-StorageSeting -NewDiskPolicy OnlineAll
+
+
+NOTE: 利用多个卷暂存VM、这意味着应根据需要将VM移动到不同的卷。如果资源组包含具有大型VMDK的VM、请将其分布在不同的卷中进行转换。此方法可通过在后台执行克隆拆分的同时在不同的卷上并行运行克隆操作来防止出现快照繁忙错误。
