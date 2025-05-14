@@ -29,7 +29,7 @@ image:redhat_openshift_OADP_app_deleted_image1.png["已删除应用程序"]
 ====
 要从刚刚创建的备份进行还原、需要创建一个还原自定义资源(CR)。我们需要为其提供一个名称、提供要从中还原的备份的名称、并将restorEPVs设置为true。可以按中所示设置其他参数 link:https://docs.openshift.com/container-platform/4.14/backup_and_restore/application_backup_and_restore/backing_up_and_restoring/restoring-applications.html["文档。"]。单击创建按钮。
 
-image:redhat_openshift_OADP_restore_image1.jpg["创建还原CR"]
+image:redhat_openshift_OADP_restore_image1.png["创建还原CR"]
 
 ....
 apiVersion: velero.io/v1
@@ -44,7 +44,7 @@ spec:
 ....
 当阶段显示完成时、您可以看到应用程序已还原到创建快照时的状态。应用程序将还原到同一命名空间。
 
-image:redhat_openshift_OADP_restore_image2.jpg["还原已完成"] image:redhat_openshift_OADP_restore_image2a.png["已还原到同一命名空间"]
+image:redhat_openshift_OADP_restore_image2.png["还原已完成"] image:redhat_openshift_OADP_restore_image2a.png["已还原到同一命名空间"]
 
 ====
 .还原到其他命名空间

@@ -26,11 +26,11 @@ summary: 使用NetApp ONTAP实现Red Hat OpenShift容器应用程序数据保护
 
 通过OADP、可以对OpenShift集群上的应用程序进行备份、还原和灾难恢复。可以使用OADP保护的数据包括Kubbernetes资源对象、永久性卷和内部映像。
 
-image:redhat_openshift_OADP_image1.jpg["用于数据保护的OpenShift API"]
+image:redhat_openshift_OADP_image1.png["用于数据保护的OpenShift API"]
 
 Red Hat OpenShift利用了OpenSource社区开发的解决方案来实现数据保护。 link:https://velero.io/["Velero"] 是一款开源工具、用于安全备份和还原、执行灾难恢复以及迁移Kubbernetes集群资源和永久性卷。为了轻松使用Velero、OpenShift开发了OADP运算符和Velero插件、以便与CSI存储驱动程序集成。公开的OADP API的核心基于Velero API。安装并配置OADP操作程序后、可以执行的备份/还原操作将基于Velero API公开的操作。
 
-image:redhat_openshift_OADP_image2.jpg["用于数据保护的OpenShift API"]
+image:redhat_openshift_OADP_image2.png["用于数据保护的OpenShift API"]
 
 OADP 1.3可从OpenShift集群的操作中心进行下载、版本为：它具有内置的Data Mover、可将CSI卷快照移动到远程对象存储。这样可以在备份期间将快照移动到对象存储位置、从而提高可移植性和持久性。灾难发生后、快照可供还原。
 

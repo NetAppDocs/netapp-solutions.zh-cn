@@ -24,7 +24,7 @@ summary: 本节介绍了与 Jenkins 部署持续集成和持续交付或部署�
 
 . 创建一个名为 Jenkins 的新项目。
 +
-image:redhat_openshift_image15.jpeg["图中显示了输入/输出对话框或表示已写入内容"]
+image:redhat_openshift_image15.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在此示例中，我们使用永久性存储部署了 Jenkins 。要支持 Jenkins 构建，请创建 PVC 。导航到 "Storage">"Persistent Volume Claim " ，然后单击 "Create Persistent Volume Claim " 。选择已创建的存储类，确保永久性卷声明名称是 Jenkins ，选择适当的大小和访问模式，然后单击创建。
 
@@ -47,7 +47,7 @@ image:redhat_openshift_image18.png["图中显示了输入/输出对话框或表�
 
 . 默认情况下，系统会填充 Jenkins 应用程序的详细信息。根据您的要求，修改参数并单击创建。此过程将创建支持 OpenShift 上的 Jenkins 所需的所有资源。
 +
-image:redhat_openshift_image19.jpeg["图中显示了输入/输出对话框或表示已写入内容"]
+image:redhat_openshift_image19.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . Jenkins Pod 大约需要 10 到 12 分钟才能进入就绪状态。
 +
@@ -59,11 +59,11 @@ image:redhat_openshift_image21.png["图中显示了输入/输出对话框或表�
 
 . 由于在创建 Jenkins 应用程序时使用了 OpenShift OAuth ，因此请单击使用 OpenShift 登录。
 +
-image:redhat_openshift_image22.jpeg["图中显示了输入/输出对话框或表示已写入内容"]
+image:redhat_openshift_image22.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 授权 Jenkins 服务帐户访问 OpenShift 用户。
 +
-image:redhat_openshift_image23.jpeg["图中显示了输入/输出对话框或表示已写入内容"]
+image:redhat_openshift_image23.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 此时将显示 Jenkins 欢迎页面。由于我们使用的是 Maven 内部版本，因此请先完成 Maven 安装。导航到 Manage Jenkins > Global Tool Configuration ，然后在 Maven 子标题中单击 Add Maven 。输入您选择的名称，并确保已选中自动安装选项。单击保存。
 +
@@ -71,7 +71,7 @@ image:redhat_openshift_image24.png["图中显示了输入/输出对话框或表�
 
 . 现在，您可以创建一个管道来演示 CI/CD 工作流。在主页上，单击左侧菜单中的创建新作业或新建项目。
 +
-image:redhat_openshift_image25.jpeg["图中显示了输入/输出对话框或表示已写入内容"]
+image:redhat_openshift_image25.png["图中显示了输入/输出对话框或表示已写入内容"]
 
 . 在创建项目页面上，输入所选名称，选择管道，然后单击确定。
 +

@@ -62,19 +62,19 @@ NOTE: F5 BIG-IP 系统可以部署在专用硬件上，云中或内部部署的�
 . 登录到 F5 BIG-IP 系统，导航到 "iApps" > "Package Management LX" ，然后单击 "Import" 。
 . 单击选择文件并选择已下载的 AS3 RPM 文件，单击确定，然后单击上传。
 +
-image:redhat_openshift_image109.jpg["上传 iApps"]
+image:redhat_openshift_image109.png["上传 iApps"]
 
 . 确认 AS3 扩展已成功安装。
 +
-image:redhat_openshift_image110.jpg["AS3 安装验证"]
+image:redhat_openshift_image110.png["AS3 安装验证"]
 
 . 接下来，配置 OpenShift 和 BIG-IP 系统之间通信所需的资源。首先，通过在 OpenShift SDN 的 BIG-IP 系统上创建 VXLAN 通道接口，在 OpenShift 和 BIG-IP 服务器之间创建通道。导航到 " 网络 ">" 通道 ">" 配置文件 " ，单击 " 创建 " ，然后将父配置文件设置为 VXLAN ，并将 " 洪水类型 " 设置为 " 多播 " 。输入配置文件的名称，然后单击完成。
 +
-image:redhat_openshift_image111.jpg["创建 VXLAN 配置文件"]
+image:redhat_openshift_image111.png["创建 VXLAN 配置文件"]
 
 . 导航到 " 网络 ">" 通道 ">" 通道列表 " ，单击 " 创建 " ，然后输入通道的名称和本地 IP 地址。选择在上一步中创建的通道配置文件，然后单击完成。
 +
-image:redhat_openshift_image112.jpg["创建 VXLAN 通道"]
+image:redhat_openshift_image112.png["创建 VXLAN 通道"]
 
 . 使用 cluster-admin 权限登录到 Red Hat OpenShift 集群。
 . 在 OpenShift 上为 F5 BIG-IP 服务器创建一个子网，从而将子网从 OpenShift 集群扩展到 F5 BIG-IP 服务器。下载主机子网 YAML 定义。
@@ -132,11 +132,11 @@ ocp-vmw-nszws-worker-wtgfw   ocp-vmw-nszws-worker-wtgfw   10.63.172.17    10.128
 ----
 . 在 OpenShift VXLAN 上使用与 F5 BIG-IP 服务器对应的 OpenShift 主机子网范围中的 IP 创建自 IP 。登录到 F5 BIG-IP 系统，导航到 " 网络 ">" 自 IP " ，然后单击 " 创建 " 。输入为 F5 BIG-IP 主机子网创建的集群 IP 子网中的 IP ，选择 VXLAN 通道，然后输入其他详细信息。然后单击完成。
 +
-image:redhat_openshift_image113.jpg["为 VXLAN 创建自 IP"]
+image:redhat_openshift_image113.png["为 VXLAN 创建自 IP"]
 
 . 在 F5 BIG-IP 系统中创建一个分区，以便在 CIS 中配置和使用。导航到系统 > 用户 > 分区列表，单击创建，然后输入详细信息。然后单击完成。
 +
-image:redhat_openshift_image114.jpg["创建 BIG-IP 分区"]
+image:redhat_openshift_image114.png["创建 BIG-IP 分区"]
 
 +
 
@@ -164,24 +164,24 @@ customresourcedefinition.apiextensions.k8s.io/ingresslinks.cis.f5.com created
 ----
 . 导航到 Operators > OperatorHub ，搜索关键字 F5 ，然后单击 F5 Container In出口 服务磁贴。
 +
-image:redhat_openshift_image115.jpg["OperatorHub 中的 F5 CIS"]
+image:redhat_openshift_image115.png["OperatorHub 中的 F5 CIS"]
 
 . 阅读操作员信息，然后单击安装。
 +
-image:redhat_openshift_image116.jpg["OperatorHub 中的 F5 CIS Info 图块"]
+image:redhat_openshift_image116.png["OperatorHub 中的 F5 CIS Info 图块"]
 
 . 在 Install Operator 屏幕上，保留所有默认参数，然后单击 Install 。
 +
-image:redhat_openshift_image117.jpg["安装 F5 CIS 运算符"]
+image:redhat_openshift_image117.png["安装 F5 CIS 运算符"]
 
 . 安装操作员需要一段时间。
 +
-image:redhat_openshift_image118.jpg["F5 CIS 操作员安装进度"]
+image:redhat_openshift_image118.png["F5 CIS 操作员安装进度"]
 
 . 安装操作员后，将显示安装成功消息。
 . 导航到 Operators > Installed Operators ，单击 F5 Container In出口 服务，然后单击 F5BigIpCtrl+Alt+Del 图块下的 Create Instance 。
 +
-image:redhat_openshift_image119.jpg["创建 F5BigIpCtlr"]
+image:redhat_openshift_image119.png["创建 F5BigIpCtlr"]
 
 . 单击 YAML View ，并在更新必要参数后粘贴以下内容。
 +
@@ -225,7 +225,7 @@ spec:
 ----
 . 粘贴此内容后，单击创建。此操作将在 Kube-system 命名空间中安装 CIS Pod 。
 +
-image:redhat_openshift_image120.jpg["验证 F5 CIS Pod"]
+image:redhat_openshift_image120.png["验证 F5 CIS Pod"]
 
 +
 
@@ -461,6 +461,6 @@ f5-demo-test-57c46f6f98-cl2m8   1/1     Running   0          27s
 ----
 . 检查是否在 OpenShift 中为 loadbalancing 类型的服务在 BIG-IP 系统中创建了相应的虚拟服务器。导航到 " 本地流量 ">" 虚拟服务器 ">" 虚拟服务器列表 " 。
 +
-image:redhat_openshift_image121.jpg["验证是否为相应的服务类型负载平衡器创建了 BIG-IP 虚拟服务器"]
+image:redhat_openshift_image121.png["验证是否为相应的服务类型负载平衡器创建了 BIG-IP 虚拟服务器"]
 
 

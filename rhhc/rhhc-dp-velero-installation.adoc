@@ -38,11 +38,11 @@ summary: 使用NetApp ONTAP实现Red Hat OpenShift容器应用程序数据保护
 . 转到集群的Operator Hub、然后选择Red Hat OADP operator。在安装页面中、使用所有默认选项、然后单击安装。在下一页上、再次使用所有默认值、然后单击安装。OADP操作符将安装在命名空间OpenShift-ADP中。
 
 
-image:redhat_openshift_OADP_install_image1.jpg["在Operator Hub中使用OpenShift API进行数据保护"]
+image:redhat_openshift_OADP_install_image1.png["在Operator Hub中使用OpenShift API进行数据保护"]
 
-image:redhat_openshift_OADP_install_image2.jpg["OpenShift API for Data Protection Operator安装"]
+image:redhat_openshift_OADP_install_image2.png["OpenShift API for Data Protection Operator安装"]
 
-image:redhat_openshift_OADP_install_image3.jpg["已安装OpenShift API for Data Protection Operator"]
+image:redhat_openshift_OADP_install_image3.png["已安装OpenShift API for Data Protection Operator"]
 
 
 
@@ -88,11 +88,11 @@ image:redhat_openshift_OADP_install_image6.png["使用命令行界面为Storage 
 * 接下来，要配置Velero，请从Operators下的菜单项中选择Installed Operators，单击OADP Operator，然后选择**DataSetionApplication**选项卡。
 
 
-image:redhat_openshift_OADP_install_image7.jpg["DataSetionApplication"]
+image:redhat_openshift_OADP_install_image7.png["DataSetionApplication"]
 
 单击"Create Data分别 保护应用程序"。在表单视图中、为DataProtection应用程序提供一个名称或使用默认名称。
 
-image:redhat_openshift_OADP_install_image8.jpg["创建DataSetionApplication"]
+image:redhat_openshift_OADP_install_image8.png["创建DataSetionApplication"]
 
 现在转到YAML视图并替换规格信息、如下面的YAML文件示例所示。
 
@@ -176,7 +176,7 @@ ONTAP S3或StorageGRID S3 (及其凭据和YAML中显示的其他信息)被配置
 ** Velero.io/CSI-VOUESNAPECUE-CLASS=TRUE**，如下所示。
 
 
-image:redhat_openshift_OADP_install_image9.jpg["三项功能Snapshot类标签"]
+image:redhat_openshift_OADP_install_image9.png["三项功能Snapshot类标签"]
 
 确保即使删除了卷Snapshot对象、这些快照也可以持久保留。这可以通过将*DELERionPolicy*设置为保留来实现。否则、删除命名空间将完全丢失以前备份过的所有PVC。
 
@@ -188,7 +188,7 @@ metadata:
 driver: csi.trident.netapp.io
 deletionPolicy: Retain
 ....
-image:redhat_openshift_OADP_install_image10.jpg["应将卷SnapshotClass删除策略设置为保留"]
+image:redhat_openshift_OADP_install_image10.png["应将卷SnapshotClass删除策略设置为保留"]
 
 确保已创建Data놣 rotionApplication且其状态为"病 况：已调节"。
 

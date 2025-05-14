@@ -36,12 +36,12 @@ image:redhat_openshift_image60.png["Snapshot 架构中的 VM"]
 . 创建 VolumeSnapshotClass ，然后使用该类创建 VolumeSnapshot 。导航到 "Storage">"VolumeSnapshotClasss" ，然后单击 "Create VolumeSnapshotClass" 。
 . 输入 Snapshot 类的名称，输入驱动程序的 csi.trident.netapp.io ，然后单击创建。
 +
-image:redhat_openshift_image61.jpg["创建 Snapshot 类"]
+image:redhat_openshift_image61.png["创建 Snapshot 类"]
 
 . 确定连接到源 VM 的 PVC ，然后创建该 PVC 的 Snapshot 。导航到 `Storage > VolumeSnapshots` ，然后单击 Create VolumeSnapshots 。
 . 选择要为其创建 Snapshot 的 PVC ，输入 Snapshot 的名称或接受默认值，然后选择相应的 VolumeSnapshotClass 。然后单击创建。
 +
-image:redhat_openshift_image62.jpg["创建快照"]
+image:redhat_openshift_image62.png["创建快照"]
 
 . 此时将创建 PVC 的快照。
 
@@ -53,7 +53,7 @@ image:redhat_openshift_image62.jpg["创建快照"]
 . 首先，将 Snapshot 还原到新的 PVC 中。导航到存储 > 卷快照，单击要还原的快照旁边的省略号，然后单击还原为新 PVC 。
 . 输入新 PVC 的详细信息，然后单击还原。这样就会创建一个新的 PVC 。
 +
-image:redhat_openshift_image63.jpg["将 Snapshot 还原到新的 PVC"]
+image:redhat_openshift_image63.png["将 Snapshot 还原到新的 PVC"]
 
 . 接下来，使用此 PVC 创建一个新虚拟机。导航到"Virtualation"(虚拟化)>"Virtual Machines"(虚拟机)、然后单击"Creation"(创建)>"With
 . 在规范 > 模板 > 规范 > 卷部分中，指定从 Snapshot 创建的新 PVC ，而不是从容器磁盘创建的新 PVC 。根据您的要求提供新虚拟机的所有其他详细信息。
