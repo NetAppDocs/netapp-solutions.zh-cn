@@ -16,7 +16,7 @@ summary: 采用NetApp的开源MLOps—适用于NetApp AIPod部署的Kubernetes S
 [role="lead"]
 在使用 Trident 在 Kubernetes 集群中动态配置存储资源之前，必须创建一个或多个 Kubernetes StorageClasses 。下面的示例代表了在上部署此解决方案的组件时可能要创建的不同类型的StorageCluster link:aipod_nv_intro.html["NetApp AIPod"^]。有关StorageClasses以及其他平台/环境的StorageClasses等详细信息，请参见 link:https://docs.netapp.com/us-en/trident/index.html["Trident 文档"^]。
 
-. NetApp建议为在link:aicp_example_trident_backends_for_ontap_ai_deployments.html["适用于NetApp AIPod部署的Trident后端示例"]第1步的部分中创建的启用了FlexGroup的Trident后端创建存储类。下面的示例命令显示了创建多个StorageClasses的过程，这些StorageClasses对应于在link:aicp_example_trident_backends_for_ontap_ai_deployments.html["适用于NetApp AIPod部署的Trident后端示例"]第1节步骤1中创建的两个示例后端-一个使用，一个不使用link:https://docs.netapp.com/us-en/ontap/nfs-rdma/["基于 RDMA 的 NFS"]。
+. NetApp建议为在link:aicp_example_trident_backends_for_ontap_ai_deployments.html["适用于NetApp AIPod部署的Trident后端示例"]第1步的部分中创建的启用了FlexGroup的Trident后端创建存储类。下面的示例命令显示了创建多个StorageClasses的过程，这些StorageClasses对应于在link:aicp_example_trident_backends_for_ontap_ai_deployments.html["适用于NetApp AIPod部署的Trident后端示例"]第1步中创建的示例后端-一个使用，一个不使用link:https://docs.netapp.com/us-en/ontap/nfs-rdma/["基于 RDMA 的 NFS"]。
 +
 为了在删除相应的 PersistentVolumeClaim （ PVC ）时不删除永久性卷，以下示例使用了 `reClaimPolicy` 值 `Retain` 。有关 `re"claimPolicy` " 字段的详细信息，请参见相关官员 https://kubernetes.io/docs/concepts/storage/storage-classes/["Kubernetes 文档"^]。
 
@@ -27,7 +27,7 @@ summary: 采用NetApp的开源MLOps—适用于NetApp AIPod部署的Kubernetes S
 注意：要使用基于RDMA的NFS、必须在ONTAP系统上配置基于RDMA的NFS。有关详细信息、请参见 link:https://docs.netapp.com/us-en/ontap/nfs-rdma/["ONTAP 文档"^] 。
 
 +
-注意：在以下示例中、未在StorageClass定义文件的StoragePoool字段中指定特定后端。
+注意：在以下示例中、在StorageClass定义文件的StoragePoool字段中指定了一个特定的后端。
 
 +
 ....
