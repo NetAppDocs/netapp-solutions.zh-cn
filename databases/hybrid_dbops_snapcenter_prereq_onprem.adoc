@@ -20,7 +20,7 @@ keywords: prerequisites, on prem, on premises, installation, security, automatio
 
 == SnapCenter 安装和配置
 
-NetApp SnapCenter 工具是一款基于 Windows 的应用程序，通常在 Windows 域环境中运行，但也可以部署工作组。它基于多层架构，其中包括用于数据库工作负载的集中式管理服务器（ SnapCenter 服务器）和数据库服务器主机上的 SnapCenter 插件。以下是混合云部署的几个主要注意事项。
+NetApp SnapCenter 工具是一款基于 Windows 的应用程序，通常在 Windows 域环境中运行，但也可以部署工作组。它基于多层架构，包括集中管理服务器（SnapCenter 服务器）和数据库服务器主机上用于数据库工作负载的 SnapCenter 插件。以下是混合云部署的几个主要注意事项。
 
 * * 单实例或 HA 部署。 * HA 部署可在单个 SnapCenter 实例服务器发生故障时提供冗余。
 * * 名称解析。 * 必须在 SnapCenter 服务器上配置 DNS 以解析所有数据库主机，并在存储 SVM 上配置 DNS 以进行正向和反向查找。此外，还必须在数据库服务器上配置 DNS ，以解析 SnapCenter 服务器和存储 SVM ，以便进行正向和反向查找。
@@ -30,7 +30,7 @@ NetApp SnapCenter 工具是一款基于 Windows 的应用程序，通常在 Wind
 * * 端口必须处于打开状态，才能在内部和公有云之间传输 SnapMirror 流量。 * SnapCenter 服务器依靠 ONTAP SnapMirror 将现场 Snapshot 备份复制到云 CVO 存储 SVM 。
 
 
-仔细规划安装前的规划和考虑后，单击此项 link:https://docs.netapp.com/us-en/snapcenter/install/install_workflow.html["SnapCenter 安装工作流"^] 有关 SnapCenter 安装和配置的详细信息。
+经过仔细的安装前规划和考虑后，单击此处link:https://docs.netapp.com/us-en/snapcenter/install/requirements-to-install-snapcenter-server.html["SnapCenter 安装前提条件"^]有关 SnapCenter 安装和配置的详细信息。
 
 
 
@@ -69,7 +69,7 @@ image:storage_layout_oracle_shared.png["图中显示了输入/输出对话框或
 
 SnapCenter 是 NetApp 提供的许可软件。它通常包含在内部 ONTAP 许可证中。但是，对于混合云部署，要将 CVO 作为目标数据复制目标添加到 SnapCenter ，还需要 SnapCenter 的云许可证。有关详细信息，请查看以下 SnapCenter 基于容量的标准许可证链接：
 
-link:https://docs.netapp.com/us-en/snapcenter/install/concept_snapcenter_licenses.html["基于容量的 SnapCenter 标准版许可证"^]
+link:https://docs.netapp.com/us-en/snapcenter/install/concept_snapcenter_standard_controller_based_licenses.html["基于容量的 SnapCenter 标准版许可证"^]
 
 
 

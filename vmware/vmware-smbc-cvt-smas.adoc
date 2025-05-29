@@ -5,12 +5,30 @@ keywords: NetApp Solutions, vMSC, Metro Storage Cluster, SnapMirror active sync,
 summary:  
 ---
 = 使用VMware vSphere Metro Storage Cluster将SM活动同步从非对称转换为对称主动/主动
+:hardbreaks:
 :allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
 
 
-link:https://docs.netapp.com/us-en/ontap/snapmirror-active-sync/["NetApp SnapMirror主动同步(SM主动同步)"]是一款强大的解决方案、可在虚拟化环境中实现零恢复时间目标(RTO)和零恢复点目标(RPO)。link:https://docs.netapp.com/us-en/ontap-apps-dbs/vmware/vmware_vmsc_overview.html["VMware vSphere 城域存储集群（ VMSC ）"]是一种跨不同容错域的延伸型集群解决方案、可将虚拟机(VM)分布在两个地理位置不同的站点上、即使一个站点发生故障、也可提供持续可用性。将VMSC与SM活动同步相结合、可确保两个站点之间的数据一致性和即时故障转移功能。对于不允许出现任何数据丢失或停机的任务关键型应用程序来说、这种设置尤其重要。
+[role="lead"]
+本文详细介绍了如何使用 VMware vSphere Metro Storage Cluster (VMSC) 将 SnapMirror 主动同步从非对称转换为对称主动/主动。
 
-SM主动同步(以前称为SnapMirror业务连续性(SMBC))、即使在站点完全瘫痪时、业务服务也能继续运行、支持应用程序使用二级副本透明地进行故障转移。从ONTAP 9.15.1开始、SM主动同步支持对称主动/主动功能。对称主动/主动允许通过双向同步复制从受保护LUN的两个副本执行读写I/O操作、以便两个LUN副本都可以在本地处理I/O操作。本文档介绍如何在VMware延伸型集群环境中将SM活动同步非对称主动/主动转换为SM活动同步对称主动/主动、也就是说、将SM活动同步从自动故障转移策略转换为自动故障转移-双工策略。有关如何使用System Manager和ONTAP工具设置具有SnapMirror活动同步(SM-A)的VMSC的详细信息，请查看link:https://docs.netapp.com/us-en/netapp-solutions/vmware/vmware-vmsc-with-smas.html["具有SnapMirror活动同步的VMware vSphere Metro存储集群"]。
+
+
+== 概述
+
+link:https://docs.netapp.com/us-en/ontap/snapmirror-active-sync/["NetApp SnapMirror主动同步(SM主动同步)"]是一款强大的解决方案、可在虚拟化环境中实现零恢复时间目标(RTO)和零恢复点目标(RPO)。
+
+link:https://docs.netapp.com/us-en/ontap-apps-dbs/vmware/vmware_vmsc_overview.html["VMware vSphere 城域存储集群（ VMSC ）"]是一种跨不同容错域的延伸型集群解决方案、可将虚拟机(VM)分布在两个地理位置不同的站点上、即使一个站点发生故障、也可提供持续可用性。
+
+将VMSC与SM活动同步相结合、可确保两个站点之间的数据一致性和即时故障转移功能。对于不允许出现任何数据丢失或停机的任务关键型应用程序来说、这种设置尤其重要。
+
+SM主动同步(以前称为SnapMirror业务连续性(SMBC))、即使在站点完全瘫痪时、业务服务也能继续运行、支持应用程序使用二级副本透明地进行故障转移。从ONTAP 9.15.1开始、SM主动同步支持对称主动/主动功能。对称主动/主动允许通过双向同步复制从受保护LUN的两个副本执行读写I/O操作、以便两个LUN副本都可以在本地处理I/O操作。
+
+本文档介绍如何在VMware延伸型集群环境中将SM活动同步非对称主动/主动转换为SM活动同步对称主动/主动、也就是说、将SM活动同步从自动故障转移策略转换为自动故障转移-双工策略。有关如何使用System Manager和ONTAP工具设置具有SnapMirror活动同步(SM-A)的VMSC的详细信息，请查看link:https://docs.netapp.com/us-en/netapp-solutions/vmware/vmware-vmsc-with-smas.html["具有SnapMirror活动同步的VMware vSphere Metro存储集群"]。
 
 
 

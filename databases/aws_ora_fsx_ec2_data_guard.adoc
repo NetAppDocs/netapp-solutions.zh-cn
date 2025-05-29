@@ -111,7 +111,7 @@ image:aws_ora_fsx_data_guard_architecture.png["此图详细展示了使用FSx ON
 === 部署注意事项的关键因素
 
 * *Oracle备用数据库FlexClone的工作原理。* AWS FSx ONTAP FlexClone为可写的同一备用数据库卷提供共享副本。卷的副本实际上是指向原始数据块的指针、直到克隆开始新的写入为止。然后、ONTAP会为新写入分配新的存储块。所有读取IO都由活动复制下的原始数据块提供服务。因此、克隆的存储效率非常高、可用于许多其他使用情形、只需为新写入IO分配最少的增量新存储即可。这样可以大幅减少Active Data Guard存储占用空间、从而显著节省存储成本。NetApp建议在数据库从主存储切换到备用FSx存储时尽量减少FlexClone活动、以便将Oracle性能保持在较高水平。
-* * Oracle软件要求。*一般来说、物理备用数据库必须与主数据库具有相同的Database Home版本、包括修补程序集例外(Patch Set例外、PSE)、关键修补程序更新(Critical Patch Update、CPU)、 和补丁集更新(PSU)、除非正在执行Oracle Data Guard Standby-First Patch Apply进程(如上的My Oracle Support note 1265700.1中所述) link:http://support.oracle.com.["support.oracle.com"^]
+* * Oracle软件要求。*一般而言，物理备用数据库必须具有与主数据库相同的数据库主版本，包括补丁集异常 (PSE)、关键补丁更新 (CPU) 和补丁集更新 (PSU)，除非正在进行 Oracle Data Guard 备用优先补丁应用过程（如 My Oracle Support 说明 1265700.1 中所述，网址为link:https://support.oracle.com.["support.oracle.com"^]
 * *备用数据库目录结构注意事项。*如果可能、主系统和备用系统上的数据文件、日志文件和控制文件应具有相同的名称和路径名称、并使用最佳灵活架构(OFA)命名约定。备用数据库上的归档目录也应在站点之间完全相同、包括大小和结构。此策略允许备份、切换和故障转移等其他操作执行相同的步骤集、从而降低维护复杂性。
 * *强制日志记录模式。*要防止主数据库中未记录的无法传播到备用数据库的直接写入、请在执行数据文件备份以创建备用数据库之前、在主数据库中启用强制日志记录。
 * *数据库存储管理。*为简化操作、Oracle建议在Oracle Data Guard配置中设置Oracle自动存储管理(Oracle ASM)和Oracle托管文件(Oracle Managed Files、OMF)时、在主数据库和备用数据库上对称设置。

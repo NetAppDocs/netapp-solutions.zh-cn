@@ -32,7 +32,7 @@ image:dr-vmc-aws-image1.png["图中显示了输入/输出对话框或表示已�
 
 在部署此解决方案 之前、请查看组件概述、部署解决方案 所需的前提条件以及在记录此解决方案 时所做的假设。
 
-link:aws-guest-dr-solution-prereqs.html["DR解决方案 要求、要求和规划"]
+link:aws-guest-dr-solution-prereqs.html["DR 解决方案要求、先决条件和规划"]
 
 
 
@@ -222,7 +222,7 @@ FSx-Dest::> snapmirror initialize -destination-path DestSVM:DestVol
 ====
 此解决方案 使用NetApp SnapCenter 为SQL Server和Oracle数据库创建应用程序一致的备份。与用于备份虚拟机VMDK的Veeam备份和复制相结合、可为内部和基于云的数据中心提供全面的灾难恢复解决方案。
 
-SnapCenter 软件可从NetApp支持站点获得、并可安装在位于域或工作组中的Microsoft Windows系统上。有关详细的规划指南和安装说明、请参见 https://docs.netapp.com/us-en/snapcenter/install/install_workflow.html["NetApp文档中心"^]。
+SnapCenter 软件可从 NetApp 支持站点获得，并可安装在域或工作组中的 Microsoft Windows 系统上。详细的规划指南和安装说明可以在 https://docs.netapp.com/us-en/snapcenter/install/requirements-to-install-snapcenter-server.html["NetApp文档中心"^] 。
 
 SnapCenter 软件可从获取 https://mysupport.netapp.com["此链接。"^]。
 
@@ -430,7 +430,7 @@ image:dr-vmc-aws-image39.png["图中显示了输入/输出对话框或表示已�
 ====
 SnapCenter 服务器部署在VMware云SDDC中或安装在VPC中的EC2实例上、并通过网络连接到VMware云环境。
 
-SnapCenter 软件可从NetApp支持站点获得、并可安装在位于域或工作组中的Microsoft Windows系统上。有关详细的规划指南和安装说明、请参见 https://docs.netapp.com/us-en/snapcenter/install/install_workflow.html["NetApp文档中心"^]。
+SnapCenter 软件可从 NetApp 支持站点获得，并可安装在域或工作组中的 Microsoft Windows 系统上。详细的规划指南和安装说明可以在 https://docs.netapp.com/us-en/snapcenter/install/requirements-to-install-snapcenter-server.html["NetApp文档中心"^] 。
 
 您可以在以下位置找到SnapCenter 软件： https://mysupport.netapp.com["此链接。"^]。
 
@@ -476,7 +476,7 @@ SnapCenter 软件可从NetApp支持站点获得、并可安装在位于域或工
 
 === 用于灾难恢复的SnapCenter 数据库备份
 
-SnapCenter 允许备份和恢复其底层MySQL数据库和配置数据、以便在发生灾难时恢复SnapCenter 服务器。对于解决方案 、我们在VPC中的AWS EC2实例上恢复了SnapCenter 数据库和配置。有关SnapCenter灾难恢复的详细信息，请参见 https://docs.netapp.com/us-en/snapcenter/concept/concept_disaster_recovery.html["此链接。"^]。
+SnapCenter 允许备份和恢复其底层MySQL数据库和配置数据、以便在发生灾难时恢复SnapCenter 服务器。对于解决方案 、我们在VPC中的AWS EC2实例上恢复了SnapCenter 数据库和配置。有关SnapCenter灾难恢复的详细信息，请参见 https://docs.netapp.com/us-en/snapcenter/index.html["此链接。"^]。
 
 .SnapCenter 备份前提条件
 [%collapsible%open]
@@ -509,7 +509,7 @@ SnapCenter 备份需要满足以下前提条件：
 .备份SnapCenter 数据库和配置
 [%collapsible%open]
 ====
-SnapCenter 提供了一个Web客户端界面、用于执行REST API命令。有关通过Swagger访问REST API的信息，请参见上的SnapCenter文档 https://docs.netapp.com/us-en/snapcenter/concept/concept_snapcenter_rest_apis.html["此链接。"^]。
+SnapCenter 提供了一个Web客户端界面、用于执行REST API命令。有关通过Swagger访问REST API的信息，请参见上的SnapCenter文档 https://docs.netapp.com/us-en/snapcenter/sc-automation/overview_rest_apis.html["此链接。"^]。
 
 .登录到Swagger并获取授权令牌
 [%collapsible%open]
