@@ -105,7 +105,7 @@ image:sql-srv-anf_image2.png["图中显示了输入/输出对话框或表示已�
 
 == 性能验证
 
-与任何部署一样，测试虚拟机和存储也至关重要。对于存储验证，可使用 HammerDB ， Apploader ，等工具 https://github.com/NetApp/SQL_Storage_Benchmark["SQL Server 存储基准测试（ Storage Benchmark ， SB ）工具"^]或任何具有适当读 / 写混合的自定义脚本或 FIO 。但请注意，大多数 SQL Server 工作负载，甚至繁忙的 OLTP 工作负载，读取率接近 80% – 90% ，写入率接近 10% – 20% 。
+与任何部署一样，测试虚拟机和存储也至关重要。对于存储验证，应该使用诸如 HammerDB、Apploader 或任何具有适当读/写组合的自定义脚本或 FIO 等工具。但请注意，大多数 SQL Server 工作负载，甚至繁忙的 OLTP 工作负载，读取率接近 80% – 90% ，写入率接近 10% – 20% 。
 
 为了展示性能，我们对使用高级服务级别的卷执行了快速测试。在此测试中，卷大小从 100 GB 实时增加到 2 TB ，而不会中断应用程序访问和零数据迁移。
 
