@@ -1,0 +1,232 @@
+---
+sidebar: sidebar 
+permalink: ehc/evs-mount-fsxn-iscsi.html 
+keywords: Amazon, AWS, EVS, Elastic VMware Service, ONTAP, FSx, iscsi 
+summary: 本节介绍使用 FSx for ONTAP 配置 iSCSI 数据存储库的步骤。 
+---
+= 使用 FSx for ONTAP 作为 iSCSI 数据存储库的部署过程
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+本节介绍使用 FSx for ONTAP 配置 iSCSI 数据存储库的步骤。
+
+
+
+== 前提条件
+
+在将 FSx for ONTAP 预配并连接为 iSCSI 数据存储之前，您必须先部署 Amazon EVS 虚拟化环境。有关更多信息，请参阅 Amazon EVS 入门指南文档。本节还假设您已部署 FSx for ONTAP 文件系统，请参阅上面的“详细方法”部分了解相应的步骤。
+
+
+
+== 高级部署步骤
+
+部署 FSx for ONTAP 文件系统以用作 Amazon EVS 的 iSCSI 数据存储并在两项服务之间建立连接将包括以下步骤：
+
+* 为每个 ESXi 主机设置一个 iSCSI 网络适配器。
+* 创建和配置 FSx for ONTAP 文件系统、卷、LUN 等。
+* 将 ESXi 主机连接到 FSx for ONTAP 文件系统服务器。
+* 创建 iSCSI 数据存储虚拟机文件系统 (VMFS)。
+
+
+
+
+== 添加 iSCSI 网络适配器
+
+需要在您环境中的每个 ESXi 主机上执行以下步骤。
+
+. 进入 vSphere 客户端并选择 ESXi 主机。在“配置”选项卡下，选择“添加软件适配器”，然后从下拉菜单中选择“添加 iSCSI 适配器”，如下所示：
++
+image:evs-mount-fsxn-25.png["该图表示上述步骤的对话框"]
+
+. 安装完成后，您将进入“存储适配器”屏幕。从菜单栏中选择“重新扫描适配器”。记录 iSCSI 适配器的 IQN：iqn.xxxx。此值将在稍后的 LUN 映射步骤中用到。
++
+image:evs-mount-fsxn-26.png["该图表示上述步骤的对话框"]
+
+
+
+
+
+== 创建FSx for ONTAP卷
+
+. 转到 AWS 控制台并进入 FSx for ONTAP 文件系统的页面，然后单击“创建卷”。
++
+image:evs-mount-fsxn-27.png["该图表示上述步骤的对话框"]
+
+. 选择要创建卷的 SVM。
++
+image:evs-mount-fsxn-28.png["该图表示上述步骤的对话框"]
+
+. 在“卷详细信息”页面上，输入如下图所示的详细信息。完成后，点击“创建”以设置卷。选择“已启用”以启用 ONTAP 存储效率功能（压缩、重复数据删除和压缩）。
++
+image:evs-mount-fsxn-29.png["该图表示上述步骤的对话框"]
+
+. 对于存储分层选项，从下拉菜单中选择“仅快照”，并设置分层策略冷却期。默认值为 31 天，但在本例中，我们设置了 2 天的冷却期。
++
+image:evs-mount-fsxn-30.png["该图表示上述步骤的对话框"]
+
+. 创建卷后，使用 ONTAP CLI 设置以下值：
++
+[cols="50%, 50%"]
+|===
+| *设置* | * 配置 * 
+
+
+| 卷保证 | 无（精简配置） 
+
+
+| fractional_reserve | 0% 
+
+
+| snap_reserve | 0% 
+
+
+| 自动调整大小 | grow_shrink 
+
+
+| 存储效率 | enabled 
+
+
+| 卷分层策略 | 仅Snapshot 
+
+
+| 访问时间更新（ -atime-update ） | false 
+
+
+| 最小预读（ -min-readahead ） | false 
+
+
+| 快照策略 | 无 
+
+
+| LUN 空间预留 | 已禁用 
+
+
+| LUN 空间分配 | enabled 
+|===
+
+
+
+
+== 创建 LUN、igroup 和映射 LUN
+
+在本节中，我们将介绍如何创建将在 vSphere 中显示为磁盘的 LUN。我们还将介绍如何创建启动器组 (igroup)，即有权访问该 LUN 的启动器列表。igroup允许从 vSphere ESXi 主机访问该 LUN。最后，我们将介绍如何将 igroup 映射到 LUN。
+
+. 要访问 ONTAP CLI，请通过运行以下命令在 FSx for ONTAP 文件系统或 SVM 的管理端口上建立 SSH 会话：
++
+....
+[~]$ ssh fsxadmin@management_endpoint_ip
+....
+. 创建 LUN。务必将空间分配和空间预留设置为已启用。LUN大小应不超过卷大小的 90%。
++
+....
+Fsxid::> lun create -vserver fsx -path /vol/DemoDS02/lun_name -size 1.8T -ostype vmware -space-allocation enabled -space-reservation disabled
+....
+. 创建 igroup，并添加集群内所有 ESXi 主机的 IQN。
++
+....
+Fsxid::> lun igroup create -vserver fsx -igroup evs1 -protocol iscsi -ostype vmware -initiator iqn.1998-01.com.vmware:esxi01.evs.local:1060882244:64,iqn.1998-01.com.vmware:esxi02.evs.local:1911302492:64,iqn.1998-01.com.vmware:esxi03.evs.local:2069609753:64,iqn.1998-01.com.vmware:esxi04.evs.local:1165297648:64
+....
+. 使用以下代码映射 LUN：
++
+....
+Fsxid::> lun mapping create -vserver fsx -path /vol/DemoDS02/lun1 -igroup evs1 -lun-id 2
+....
+. 检查 LUN 映射，并确认状态已更改为“已映射”。这是必要的双重检查，以确保 LUN 处于映射状态：
++
+....
+Fsxid::> lun show
+Vserver   Path                            State   Mapped   Type        Size
+--------- ------------------------------- ------- -------- -------- --------
+fsx       /vol/DemoDS02/lun1              online  mapped   vmware     1.80TB
+....
+
+
+
+
+== 从 SVM 获取 iSCSI 配置信息
+
+. 运行 iSCSI show 并记录目标名称。此名称将用于 FSx for ONTAP 磁盘的 vSphere 发现（注意：此目标名称对于您的 SVM 是唯一的）：
++
+....
+Fsxid::> iscsi show -vserver fsx
+                 Vserver: fsx
+             Target Name: iqn.1992-08.com.netapp:sn.c083e374f1b711ef9d9f8123a3ebcf46:vs.3
+            Target Alias: fsx
+   Administrative Status: up
+....
+. 记录 iSCSI IP 地址：
++
+....
+Fsxid::> network interface show -vserver fsx -data-protocol iscsi -fields address
+vserver lif       address
+------- -------   -----------
+fsx     iscsi_1   10.0.10.134
+fsx     iscsi_2   10.0.10.227
+....
+
+
+
+
+== 发现 FSx for ONTAP iSCSI 服务器
+
+现在我们已经映射了 LUN，可以发现 SVM 的 FSx for ONTAP iSCSI 服务器了。请注意，对于 SDDC 中存在的每个 ESXi 主机，您都需要重复此处列出的步骤。
+
+. 首先，确保链接到 FSx for ONTAP 文件系统（即连接到 ENI 的安全组）的安全组允许 iSCSI 端口。
++
+有关 iSCSI 协议端口的完整列表以及如何应用它们，请参阅link:https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/limit-access-security-groups.html["使用Amazon VPC控制文件系统访问"] 。
+
+. 在 vSphere Client 中，转到 ESXi 主机 > 存储适配器 > 静态发现，然后单击“添加”。
+. 输入上面的 iSCSI 服务器 IP 地址（端口为 3260）。iSCSI目标名称是 iSCSI show 命令中显示的 IQN。点击“确定”继续。
++
+image:evs-mount-fsxn-31.png["该图表示上述步骤的对话框"]
+
+. 向导将关闭，您将进入“数据存储静态发现”屏幕。在本页的表格中，您可以验证目标是否已被发现。
++
+image:evs-mount-fsxn-32.png["该图表示上述步骤的对话框"]
+
+
+
+
+
+== 创建 iSCSI 数据存储
+
+现在我们已经发现了 iSCSI 服务器，我们可以创建一个 iSCSI 数据存储。
+
+. 在 vSphere Client 中，转到“数据存储”选项卡，选择要部署数据存储的 SDDC。右键单击并选择存储图标（如下图屏幕截图中的绿色箭头所示），然后从下拉菜单中选择“新建数据存储”：
++
+image:evs-mount-fsxn-33.png["该图表示上述步骤的对话框"]
+
+. 现在您将进入“新建数据存储”向导。在“类型”步骤中，选择 VMFS 选项。
+. 在“名称和设备选择”步骤中：
++
+.. 为您的数据存储提供一个名称。
+.. 选择要连接到数据存储的 ESXi 主机。
+.. 选择发现的磁盘（LUN），然后单击“下一步”。
++
+image:evs-mount-fsxn-34.png["该图表示上述步骤的对话框"]
+
+
+
+. 在“VMFS 版本”步骤中，选择“VMFS 6”。
++
+image:evs-mount-fsxn-35.png["该图表示上述步骤的对话框"]
+
+. 在“分区配置”步骤中，保留默认设置，包括“使用所有可用分区”选项。点击“下一步”继续。
++
+image:evs-mount-fsxn-36.png["该图表示上述步骤的对话框"]
+
+. 在“准备完成”步骤中，请确保设置正确。完成后，点击“完成”即可完成设置。
++
+image:evs-mount-fsxn-37.png["该图表示上述步骤的对话框"]
+
+. 返回“设备”页面并验证数据存储是否已连接。
++
+image:evs-mount-fsxn-38.png["该图表示上述步骤的对话框"]
+
+
