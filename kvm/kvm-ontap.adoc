@@ -1,0 +1,353 @@
+---
+sidebar: sidebar 
+permalink: kvm/kvm-ontap.html 
+keywords: netapp, kvm, libvirt, all-flash, nfs, iscsi, ontap, storage, aff 
+summary: KVM 主机中的共享存储可缩短虚拟机实时迁移的时间，并有助于在整个环境中更好地备份和保持一致的模板。ONTAP存储不仅可以满足 KVM 主机环境的需求，还可以满足客户机文件、块和对象存储的需求。 
+---
+= 使用 ONTAP 进行 KVM 虚拟化
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+KVM 主机中的共享存储可缩短虚拟机实时迁移的时间，并有助于在整个环境中更好地备份和保持一致的模板。ONTAP存储不仅可以满足 KVM 主机环境的需求，还可以满足客户机文件、块和对象存储的需求。
+
+KVM 主机需要将 FC、以太网或其他受支持的接口连接到交换机，并与 ONTAP 逻辑接口进行通信。
+
+请始终检查 https://mysupport.netapp.com/matrix/#welcome["互操作性表工具"]是否支持配置。
+
+
+
+== ONTAP高级功能
+
+*通用功能*
+
+* 横向扩展集群
+* 安全身份验证和RBAC支持
+* 零信任多管理员支持
+* 安全多租户
+* 使用SnapMirror复制数据。
+* 具有Snapshot的时间点副本。
+* 节省空间的克隆。
+* 重复数据删除、数据压缩等存储效率功能
+* Trident对Kubnetes的CSI支持
+* Snaplock
+* 防篡改Snapshot副本锁定
+* 加密支持
+* FabricPool、用于将冷数据分层到对象存储。
+* BlueXP 和数据基础设施洞察集成。
+* Microsoft卸载数据传输(Offloaded Data Transfer、ODX)
+
+
+* NAS *
+
+* FlexGroup卷是一种横向扩展NAS容器、可提供高性能以及负载分布和可扩展性。
+* FlexCache允许在全球范围内分布数据、同时仍提供对数据的本地读写访问。
+* 通过多协议支持、可以通过SMB和NFS访问相同的数据。
+* NFS nConnect允许每个TCP连接有多个TCP会话、从而提高网络吞吐量。这样可以提高现代服务器上可用的高速NIC的利用率。
+* NFS会话中继可提高数据传输速度、高可用性和容错能力。
+* pNFS 用于优化数据路径连接。
+* SMB多通道可提高数据传输速度、高可用性和容错能力。
+* 与Active Directory/LDAP集成以获得文件权限。
+* 通过TLS与NFS进行安全连接。
+* NFS Kerberos支持。
+* 基于RDMA的NFS。
+* Windows和Unix身份之间的名称映射。
+* 自主勒索软件保护。
+* 文件系统分析。
+
+
+* SAN *
+
+* 使用SnapMirror活动同步跨容错域延伸集群。
+* ASA型号提供主动/主动多路径和快速路径故障转移。
+* 支持FC、iSCSI、NVMe-oF协议。
+* 支持iSCSI CHAP相互身份验证。
+* 选择性LUN映射和端口集。
+
+
+
+
+== 带有 ONTAP 存储的 Libvirt
+
+Libvirt 可用于管理利用 NetApp ONTAP 存储来存储磁盘映像和数据的虚拟机。通过此集成，您可以在基于 Libvirt 的虚拟化环境中受益于 ONTAP 的高级存储功能，例如数据保护、存储效率和性能优化。以下是 Libvirt 与 ONTAP 的交互方式以及您可以执行的操作：
+
+. 存储池管理：
++
+** 将 ONTAP 存储定义为 Libvirt 存储池：您可以配置 Libvirt 存储池以通过 NFS、iSCSI 或光纤通道等协议指向 ONTAP 卷或 LUN。
+** Libvirt 管理池内的卷：一旦定义了存储池，Libvirt 就可以管理该池内与 ONTAP LUN 或文件相对应的卷的创建、删除、克隆和快照。
++
+*** 示例：NFS 存储池：如果您的 Libvirt 主机从 ONTAP 挂载 NFS 共享，则可以在 Libvirt 中定义基于 NFS 的存储池，它会将共享中的文件列为可用于 VM 磁盘的卷。
+
+
+
+
+. 虚拟机磁盘存储：
++
+** 在 ONTAP 上存储虚拟机磁盘映像：您可以在由 ONTAP 存储支持的 Libvirt 存储池中创建虚拟机磁盘映像（例如，qcow2、raw）。
+** 受益于 ONTAP 的存储功能：当 VM 磁盘存储在 ONTAP 卷上时，它们会自动受益于 ONTAP 的数据保护（快照、SnapMirror、SnapVault）、存储效率（重复数据删除、压缩）和性能功能。
+
+
+. 数据保护：
++
+** 自动数据保护：ONTAP 提供自动数据保护功能，包括快照和 SnapMirror 等功能，可以通过将您宝贵的数据复制到其他 ONTAP 存储（无论是在本地、远程站点还是在云端）来保护您的宝贵数据。
+** RPO 和 RTO：您可以使用 ONTAP 的数据保护功能实现低恢复点目标 (RPO) 和快速恢复时间目标 (RTO)。
+** MetroCluster/SnapMirror 主动同步：为了实现自动零 RPO（恢复点目标）和站点到站点可用性，您可以使用 ONTAP MetroCluster 或 SMas，这使得能够在站点之间建立延伸集群。
+
+
+. 性能和效率：
++
+** Virtio 驱动程序：在客户虚拟机中使用 Virtio 网络和磁盘设备驱动程序，以提升性能。这些驱动程序旨在与虚拟机管理程序协作，并提供半虚拟化优势。
+** Virtio-SCSI：为了实现可扩展性和高级存储功能，请使用 Virtio-SCSI，它能够直接连接到 SCSI LUN 并处理大量设备。
+** 存储效率：ONTAP 的存储效率功能（例如重复数据删除、压缩和压缩）可以帮助减少虚拟机磁盘的存储空间，从而节省成本。
+
+
+. ONTAP Select 集成：
++
+** KVM 上的 ONTAP Select：ONTAP Select 是 NetApp 的软件定义存储解决方案，可以部署在 KVM 主机上，为基于 Libvirt 的虚拟机提供灵活且可扩展的存储平台。
+** ONTAP Select Deploy：ONTAP Select Deploy 是用于创建和管理 ONTAP Select 集群的工具。它可以作为虚拟机在 KVM 或 VMware ESXi 上运行。
+
+
+
+
+本质上，将 Libvirt 与 ONTAP 结合使用，您可以将基于 Libvirt 的虚拟化的灵活性和可扩展性与 ONTAP 的企业级数据管理功能相结合，为您的虚拟化环境提供强大而高效的解决方案。
+
+
+
+== 基于文件的存储池（使用 SMB 或 NFS）
+
+dir 和 netfs 类型的存储池适用于基于文件的存储。
+
+[cols="20% 10% 10% 10% 10% 10% 10% 10%"]
+|===
+| 存储协议 | 目录 | 文件系统 | 净文件系统 | 逻辑 | 磁盘 | 互联网连接 | iscsi直接 | mpath 
+
+
+| SMB/CIFS | 是的。 | 否 | 是的。 | 否 | 否 | 否 | 否 | 否 
+
+
+| NFS | 是的。 | 否 | 是的。 | 否 | 否 | 否 | 否 | 否 
+|===
+使用 netfs 时，libvirt 将挂载文件系统，并且支持的挂载选项有限。使用 dir 存储池时，文件系统的挂载需要在主机外部处理。可以使用 fstab 或 automounter 来实现此目的。要使用 automounter，需要安装 autofs 软件包。Autofs特别适合按需挂载网络共享，与 fstab 中的静态挂载相比，这可以提高系统性能和资源利用率。它会在一段时间不活动后自动卸载共享。
+
+根据所使用的存储协议，验证主机上是否安装了所需的包。
+
+[cols="40% 20% 20% 20%"]
+|===
+| 存储协议 | Fedora | Debian | 吃豆人 
+
+
+| SMB/CIFS | samba 客户端/cifs-utils | smbclient/cifs实用程序 | smbclient/cifs实用程序 
+
+
+| NFS | nfs实用程序 | nfs-通用 | nfs实用程序 
+|===
+NFS 因其在 Linux 中的原生支持和性能而广受欢迎，而 SMB 则是与 Microsoft 环境集成的可行选项。在生产环境中使用前，请务必检查其支持列表。
+
+根据选择的协议，按照适当的步骤创建 SMB 共享或 NFS 导出。 https://docs.netapp.com/us-en/ontap-system-manager-classic/smb-config/index.html["SMB 共享创建"]https://docs.netapp.com/us-en/ontap-system-manager-classic/nfs-config/index.html["NFS 导出创建"]
+
+在 fstab 或自动挂载程序配置文件中包含挂载选项。例如，使用 autofs 时，我们在 /etc/auto.master 中添加了以下行，以便使用文件 auto.kvmfs01 和 auto.kvmsmb01 进行直接映射
+
+/- /etc/auto.kvmnfs01 --timeout=60 /- /etc/auto.kvmsmb01 --timeout=60 --ghost
+
+在 /etc/auto.kvmnfs01 文件中，我们有 /mnt/kvmnfs01 -trunkdiscovery,nconnect=4 172.21.35.11,172.21.36.11(100):/kvmnfs01
+
+对于 smb，在 /etc/auto.kvmsmb01 中，我们有 /mnt/kvmsmb01 -fstype=cifs,credentials=/root/smbpass,multichannel,max_channels=8 ://kvmfs01.sddc.netapp.com/kvmsmb01
+
+使用池类型为 dir 的 virsh 定义存储池。
+
+[source, shell]
+----
+virsh pool-define-as --name kvmnfs01 --type dir --target /mnt/kvmnfs01
+virsh pool-autostart kvmnfs01
+virsh pool-start kvmnfs01
+----
+可以使用
+
+[source, shell]
+----
+virsh vol-list kvmnfs01
+----
+为了优化基于 NFS 挂载的 Libvirt 存储池的性能，会话中继、pNFS 和 nconnect 挂载选项这三个选项都可以发挥作用，但它们的有效性取决于您的具体需求和环境。以下是一些细分，可帮助您选择最佳方法：
+
+. n连接：
++
+** 最适合：通过使用多个 TCP 连接对 NFS 挂载本身进行简单、直接的优化。
+** 工作原理：nconnect 挂载选项允许您指定 NFS 客户端与 NFS 端点（服务器）建立的 TCP 连接数。这可以显著提高受益于多个并发连接的工作负载的吞吐量。
+** 好处：
++
+*** 易于配置：只需将 nconnect=<number_of_connections> 添加到您的 NFS 挂载选项即可。
+*** 提高吞吐量：增加 NFS 流量的“管道宽度”。
+*** 对各种工作负载有效：适用于通用虚拟机工作负载。
+
+
+** 限制：
++
+*** 客户端/服务器支持：需要客户端（Linux 内核）和 NFS 服务器（例如 ONTAP）上都支持 nconnect。
+*** 饱和度：设置非常高的 nconnect 值可能会使您的网络线路饱和。
+*** 每次挂载设置：nconnect 值是为初始挂载设置的，并且所有后续挂载到同一服务器和版本都会继承此值。
+
+
+
+
+. 会话中继：
++
+** 最适合：通过利用多个网络接口 (LIF) 到 NFS 服务器来增强吞吐量并提供一定程度的弹性。
+** 工作原理：会话中继允许 NFS 客户端打开与 NFS 服务器上不同 LIF 的多个连接，从而有效地聚合多个网络路径的带宽。
+** 好处：
++
+*** 提高数据传输速度：通过利用多条网络路径。
+*** 弹性：如果一条网络路径发生故障，其他路径仍然可以使用，尽管故障路径上正在进行的操作可能会挂起，直到重新建立连接。
+
+
+** 限制：仍然是单个 NFS 会话：虽然它使用多个网络路径，但它不会改变传统 NFS 的基本单会话性质。
+** 配置复杂性：需要在 ONTAP 服务器上配置中继组和 LIF。网络设置：需要合适的网络基础架构来支持多路径。
+** 使用 nConnect 选项：仅第一个接口会应用 nConnect 选项。其余接口将采用单连接。
+
+
+. pNFS：
++
+** 最适合：高性能、横向扩展工作负载，可从并行数据访问和存储设备的直接 I/O 中受益。
+** 工作原理：pNFS 分离元数据和数据路径，允许客户端直接从存储访问数据，从而可能绕过 NFS 服务器进行数据访问。
+** 好处：
++
+*** 提高可扩展性和性能：对于受益于并行 I/O 的特定工作负载（如 HPC 和 AI/ML）。
+*** 直接数据访问：允许客户端直接从存储读取/写入数据，从而减少延迟并提高性能。
+*** 使用 nConnect 选项：所有连接都将应用 nConnect 以最大化网络带宽。
+
+
+** 限制：
++
+*** 复杂性：pNFS 的设置和管理比传统 NFS 或 nconnect 更复杂。
+*** 特定于工作负载：并非所有工作负载都能从 pNFS 中受益匪浅。
+*** 客户端支持：需要客户端支持pNFS。
+
+
+
+
+
+
+建议：* 对于 NFS 上的通用 Libvirt 存储池：从 nconnect 挂载选项开始。它相对容易实现，并且可以通过增加连接数来显著提升性能。* 如果您需要更高的吞吐量和弹性：除了 nconnect 之外，还可以考虑使用会话中继 (Session Trunking) 来代替它。这在 Libvirt 主机和 ONTAP 系统之间有多个网络接口的环境中非常有用。* 对于需要从并行 I/O 中获益的苛刻工作负载：如果您正在运行 HPC 或 AI/ML 等可以利用并行数据访问的工作负载，那么 pNFS 可能是您的最佳选择。但是，请做好设置和配置复杂性增加的准备。请始终使用不同的挂载选项和设置来测试和监控 NFS 性能，以确定适合您特定 Libvirt 存储池和工作负载的最佳配置。
+
+
+
+== 基于块的存储池（带有 iSCSI、FC 或 NVMe-oF）
+
+目录池类型通常在共享 LUN 或命名空间上的集群文件系统（如 OCFS2 或 GFS2）上使用。
+
+根据所使用的存储协议验证主机是否安装了必要的软件包。
+
+[cols="40% 20% 20% 20%"]
+|===
+| 存储协议 | Fedora | Debian | 吃豆人 
+
+
+| iSCSI | iscsi 启动器实用程序、设备映射器多路径、ocfs2 工具/gfs2 实用程序 | open-iscsi、多路径工具、ocfs2 工具/gfs2 实用程序 | open-iscsi、多路径工具、ocfs2 工具/gfs2 实用程序 
+
+
+| FC | 设备映射器多路径，ocfs2 工具/gfs2 实用程序 | 多路径工具、ocfs2 工具/gfs2 实用程序 | 多路径工具、ocfs2 工具/gfs2 实用程序 
+
+
+| NVMe-oF | nvme-cli、ocfs2-工具/gfs2-utils | nvme-cli、ocfs2-工具/gfs2-utils | nvme-cli、ocfs2-工具/gfs2-utils 
+|===
+收集主机iqn/wwpn/nqn。
+
+[source, shell]
+----
+# To view host iqn
+cat /etc/iscsi/initiatorname.iscsi
+# To view wwpn
+systool -c fc_host -v
+# or if you have ONTAP Linux Host Utility installed
+sanlun fcp show adapter -v
+# To view nqn
+sudo nvme show-hostnqn
+----
+请参阅相应部分来创建 LUN 或命名空间。
+
+https://docs.netapp.com/us-en/ontap-system-manager-classic/iscsi-config-rhel/index.html["为 iSCSI 主机创建 LUN"] https://docs.netapp.com/us-en/ontap-system-manager-classic/fc-config-rhel/index.html["为 FC 主机创建 LUN"] https://docs.netapp.com/us-en/ontap/san-admin/create-nvme-namespace-subsystem-task.html["为 NVMe-oF 主机创建命名空间"]
+
+确保 FC 分区或以太网设备配置为与 ONTAP 逻辑接口通信。
+
+对于 iSCSI，
+
+[source, shell]
+----
+# Register the target portal
+iscsiadm -m discovery -t st -p 172.21.37.14
+# Login to all interfaces
+iscsiadm -m node -L all
+# Ensure iSCSI service is enabled
+sudo systemctl enable iscsi.service
+# Verify the multipath device info
+multipath -ll
+# OCFS2 configuration we used.
+o2cb add-cluster kvmcl01
+o2cb add-node kvm02.sddc.netapp.com
+o2cb cluster-status
+mkfs.ocfs2 -L vmdata -N 4  --cluster-name=kvmcl01 --cluster-stack=o2cb -F /dev/mapper/3600a098038314c57312b58387638574f
+mount -t ocfs2 /dev/mapper/3600a098038314c57312b58387638574f1 /mnt/kvmiscsi01/
+mounted.ocfs2 -d
+# For libvirt storage pool
+virsh pool-define-as --name kvmiscsi01 --type dir --target /mnt/kvmiscsi01
+virsh pool-autostart kvmiscsi01
+virsh pool-start kvmiscsi01
+----
+对于 NVMe/TCP，我们使用
+
+[source, shell]
+----
+# Listing the NVMe discovery
+cat /etc/nvme/discovery.conf
+# Used for extracting default parameters for discovery
+#
+# Example:
+# --transport=<trtype> --traddr=<traddr> --trsvcid=<trsvcid> --host-traddr=<host-traddr> --host-iface=<host-iface>
+-t tcp -l 1800 -a 172.21.37.16
+-t tcp -l 1800 -a 172.21.37.17
+-t tcp -l 1800 -a 172.21.38.19
+-t tcp -l 1800 -a 172.21.38.20
+# Login to all interfaces
+nvme connect-all
+nvme list
+# Verify the multipath device info
+nvme show-topology
+# OCFS2 configuration we used.
+o2cb add-cluster kvmcl01
+o2cb add-node kvm02.sddc.netapp.com
+o2cb cluster-status
+mkfs.ocfs2 -L vmdata1 -N 4  --cluster-name=kvmcl01 --cluster-stack=o2cb -F /dev/nvme2n1
+mount -t ocfs2 /dev/nvme2n1 /mnt/kvmns01/
+mounted.ocfs2 -d
+# To change label
+tunefs.ocfs2 -L tme /dev/nvme2n1
+# For libvirt storage pool
+virsh pool-define-as --name kvmns01 --type dir --target /mnt/kvmns01
+virsh pool-autostart kvmns01
+virsh pool-start kvmns01
+----
+对于 FC ，
+
+[source, shell]
+----
+# Verify the multipath device info
+multipath -ll
+# OCFS2 configuration we used.
+o2cb add-cluster kvmcl01
+o2cb add-node kvm02.sddc.netapp.com
+o2cb cluster-status
+mkfs.ocfs2 -L vmdata2 -N 4  --cluster-name=kvmcl01 --cluster-stack=o2cb -F /dev/mapper/3600a098038314c57312b583876385751
+mount -t ocfs2 /dev/mapper/3600a098038314c57312b583876385751 /mnt/kvmfc01/
+mounted.ocfs2 -d
+# For libvirt storage pool
+virsh pool-define-as --name kvmfc01 --type dir --target /mnt/kvmfc01
+virsh pool-autostart kvmfc01
+virsh pool-start kvmfc01
+----
+注意：设备挂载应包含在 /etc/fstab 中或使用自动挂载映射文件。
+
+Libvirt 在集群文件系统之上管理虚拟磁盘（文件）。它依赖集群文件系统（OCFS2 或 GFS2）来处理底层共享块访问和数据完整性。OCFS2或 GFS2 充当 Libvirt 主机和共享块存储之间的抽象层，提供必要的锁定和协调，以允许安全地并发访问存储在该共享存储上的虚拟磁盘映像。
