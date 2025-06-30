@@ -1,0 +1,645 @@
+---
+sidebar: sidebar 
+permalink: databases/automation_ora_bkup_clone.html 
+keywords: Oracle, GCP, GCNV, Database, clone 
+summary: '该解决方案提供了一个基于 Ansible 的自动化工具包，用于从位于 NetApp 云卷（可从公有云平台获取）中的 Oracle 数据库映像备份副本设置、克隆和刷新 Oracle 克隆的超大型数据库 (VLDB)。该工具包最初支持 Google Cloud NetApp 卷 (GCNV)，但可以扩展以支持其他云卷，例如 Azure NetApp Files (ANF) 或 Amazon FSx for ONTAP (FSxN)。' 
+---
+= 通过服务器内映像备份实现 Oracle VLDB 克隆生命周期自动化
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+NetApp公司Allen Cao、Niyaz Mohamed
+
+[role="lead"]
+该解决方案提供了一个基于 Ansible 的自动化工具包，用于从位于 NetApp 云卷（可从公有云平台获取）中的 Oracle 数据库映像备份副本设置、克隆和刷新 Oracle 克隆的超大型数据库 (VLDB)。该工具包最初支持 Google Cloud NetApp 卷 (GCNV)，但可以扩展以支持其他云卷，例如 Azure NetApp Files (ANF) 或 Amazon FSx for ONTAP (FSxN)。
+
+
+
+== 目的
+
+利用 NetApp ONTAP 卷的快速克隆（几分钟内）功能，从公有云中的服务器内数据库映像备份副本克隆 Oracle VLDB 可实现多种用途。它为报告、开发或 UAT 用例提供近乎实时的全尺寸生产数据库。它还能节省存储成本，尤其是在可以选择对主数据库备份卷进行精简克隆的情况下。这款基于 Ansible 的自动化工具包使用户能够按照用户期望的计划设置、克隆和刷新克隆的 Oracle 数据库，从而简化生命周期管理。该工具包适用于部署到 Google 公有云的 Oracle VLDB 用例，并使用 GCNV 作为服务器内数据库备份存储。
+
+此解决方案 可解决以下使用情形：
+
+* 设置数据库克隆配置文件以实现 Oracle 数据库的自动克隆。
+* 使用调度程序上的 Ansible 剧本从主数据库映像备份副本创建或刷新克隆 Oracle 数据库。
+
+
+
+
+== audience
+
+此解决方案 适用于以下人员：
+
+* 在Google Cloud中管理Oracle数据库的数据库管理员。
+* 管理Google NetApp卷存储的存储管理员。
+* 应用程序所有者喜欢从数据库映像备份副本克隆 Oracle 数据库以用于其他用例。
+
+
+
+
+== 许可证
+
+访问、下载、安装或使用此GitHub存储库中的内容即表示您同意中列出的许可条款 link:https://github.com/NetApp/na_ora_hadr_failover_resync/blob/master/LICENSE.TXT["许可证文件"^]。
+
+
+NOTE: 在使用此GitHub存储库中的内容制作和/或共享任何衍生作品方面存在一些限制。在使用内容之前、请确保您已阅读许可条款。如果您不同意所有条款、请勿访问、下载或使用此存储库中的内容。
+
+
+
+== 解决方案 部署
+
+
+
+=== 部署的前提条件
+
+[%collapsible%open]
+====
+部署需要满足以下前提条件。
+
+....
+Ansible controller:
+  Ansible v.2.10 and higher
+  ONTAP collection 21.19.1
+  Python 3
+  Python libraries:
+    netapp-lib
+    xmltodict
+    jmespath
+....
+....
+Oracle servers:
+  Primary Oracle VLDB server with an in-server image backup
+  Clone target Oracle server
+....
+
+NOTE: 为了简化，克隆目标 Oracle 服务器的配置应与主 Oracle 服务器相同，例如 Oracle 软件堆栈以及 Oracle Home 的目录布局等。
+
+====
+
+
+=== 下载此工具包
+
+[%collapsible%open]
+====
+[source, cli]
+----
+https://bitbucket.ngage.netapp.com/projects/NS-BB/repos/na_oracle_bkup_clone/browse
+----
+
+NOTE: 此时、只有具有Bitb分 段访问权限的NetApp内部用户才能访问此工具包。对于感兴趣的外部用户、请向您的客户团队申请访问权限或联系NetApp解决方案工程团队。
+
+====
+
+
+=== Ans可 处理的源和目标主机文件配置
+
+[%collapsible%open]
+====
+该工具包包含一个hosts文件、用于定义运行Andsle Playbook的源和目标Oracle主机。通常包括主数据库服务器主机和目标克隆数据库服务器主机。下面是一个示例文件。主机条目包括目标主机IP地址以及用于用户访问主机以执行克隆或刷新命令的ssh密钥。可通过gcloud命令行界面访问和管理Google Cloud NetApp卷存储。
+
+....
+#Oracle hosts
+[ora_prod]
+orap ansible_host=35.212.10.122 ansible_ssh_private_key_file=oras.pem
+....
+....
+[ora_clone]
+orac ansible_host=35.212.1.75 ansible_ssh_private_key_file=orac.pem
+....
+....
+[gcp]
+localhost ansible_connection=local
+....
+====
+
+
+=== 全局变量配置
+
+[%collapsible%open]
+====
+以下是典型全局变量文件vars.yml的示例、其中包含适用于全局级别的变量。
+
+....
+######################################################################
+###### Oracle DB clone on GCNV user configuration variables     ######
+###### Consolidate all variables from GCNV, linux and oracle    ######
+######################################################################
+....
+....
+############################################
+### ONTAP/GCNV specific config variables ###
+############################################
+....
+....
+# GCNV credential
+key_file: /home/admin/google-cloud-sdk/service_key.json
+....
+....
+# Cloned DB volumes from the primary DB
+project_id: cvs-pm-host-1p
+location: us-east4
+protocol: nfsv3
+bkup_mnt: /nfsgcnv
+ora_data: '{{ bkup_mnt }}/oracopy'
+ora_logs: '{{ bkup_mnt }}/archlog'
+data_vols:
+  - "{{ groups.ora_prod[0] }}-bkup"
+....
+....
+nfs_lifs:
+  - 10.165.128.5
+....
+ nfs_client: 0.0.0.0/0
+....
+###########################################
+### Linux env specific config variables ###
+###########################################
+....
+....
+####################################################
+### DB env specific install and config variables ###
+####################################################
+....
+....
+# Primary DB configuration
+oracle_user: oracle
+oracle_base: /u01/app/oracle
+oracle_sid: NTAP
+oracle_home: '{{ oracle_base }}/product/19.0.0/{{ oracle_sid }}'
+adump: '{{ oracle_base }}/admin/{{ oracle_sid }}/adump'
+db_id: 1379265854
+....
+....
+# Clond DB configuration
+clone_sid: NTAPDEV
+sys_pwd: "XXXXXXXX"
+....
+
+NOTE: 为了实现更安全的自动化部署、可以使用Ansvor vaults对密码、访问令牌或密钥等敏感信息进行加密。该解决方案不涉及到Ansvor vaults实施、但它在Ansvor文档中有详细说明。有关详细信息、请参见link:https://docs.ansible.com/ansible/latest/vault_guide/index.html["使用Ansv可 存储保护敏感数据"^]。
+
+====
+
+
+=== 主机变量配置
+
+[%collapsible%open]
+====
+主机变量在名为｛｛host_name｝｝.yml的host_vars目录中定义、仅适用于特定主机。对于此解决方案、只会配置目标克隆数据库主机参数文件。Oracle 主数据库参数在全局 vars 文件中配置。以下是典型配置的目标Oracle克隆数据库主机变量文件orac.yml示例。
+
+ # User configurable Oracle clone host specific parameters
+....
+# Database SID - clone DB SID
+oracle_base: /u01/app/oracle
+oracle_user: oracle
+clone_sid: NTAPDEV
+oracle_home: '{{ oracle_base }}/product/19.0.0/{{ oracle_sid }}'
+clone_adump: '{{ oracle_base }}/admin/{{ clone_sid }}/adump'
+sga_size: 4096M
+....
+====
+
+
+=== 其他克隆目标Oracle服务器配置
+
+[%collapsible%open]
+====
+克隆目标Oracle服务器应与安装并修补的源Oracle服务器具有相同的Oracle软件堆栈。理想情况下，$ORACLE_HOME 变量应与源 Oracle 服务器设置匹配。如果目标 ORACLE_HOME 设置与主 Oracle 服务器配置不同，请创建符号链接来解决这些差异。
+
+如果主数据库配置了 ASM，则数据文件主组可能属于 asm 组，应将具有相同组 ID 的相同 asm 组添加到克隆主机，以避免权限问题。
+
+====
+
+
+=== 执行操作手册
+
+[%collapsible%open]
+====
+总共有两本用于执行Oracle数据库克隆生命周期的操作手册。可以按需执行数据库克隆或刷新、也可以将其计划为crontab作业。
+
+. 安装Andsone控制器的前提条件-仅一次。
++
+[source, cli]
+----
+ansible-playbook -i hosts ansible_requirements.yml
+----
+. 按需创建和刷新克隆数据库、或者使用shell脚本定期从crontab创建和刷新克隆数据库、以调用克隆或刷新操作手册。
++
+[source, cli]
+----
+ansible-playbook -i hosts oracle_bkup_clone_gcnv.yml -u admin -e @vars/vars.yml
+----
++
+[source, cli]
+----
+30 */4 * * * /home/admin/na_oracle_bkup_clone/oracle_bkup_clone_gcnv.sh
+----
+
+
+要克隆任何其他数据库，请创建单独的 oracle_bkup_clone_n_gcnv.yml 和 oracle_bkup_clone_n_gcnv.sh。相应地配置host_vars目录中的Ansv可 目标主机、全局vars.yml和hostname.yml文件。
+
+
+NOTE: 工具包在不同阶段的执行会暂停、以便完成特定任务。例如、它会暂停两分钟、以便完成数据库卷克隆。一般来说、默认值应足以满足要求、但时间安排可能需要根据具体情况或实施情况进行调整。
+
+====
+
+
+=== Playbook 执行细节
+
+[%collapsible%open]
+====
+以下日志文件捕获了剧本完整执行的输出详细信息以供参考。
+
+....
+
+Begin Oracle DB clone or refresh at 2025-0627-083001
+
+PLAY [Check to drop existing clone sid for refresh] ****************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [orac]
+
+TASK [Call clone check/drop tasks block] ***************************************
+
+TASK [oracle : Check if DB with clone_sid registered in /etc/oratab] ***********
+changed: [orac]
+
+TASK [oracle : Show the check result] ******************************************
+ok: [orac] => {
+    "msg": {
+        "changed": true,
+        "cmd": "if grep -q NTAPDEV /etc/oratab; then\n  echo 'YES'\nelse\n  echo 'NO'\nfi\n",
+        "delta": "0:00:00.005924",
+        "end": "2025-06-27 12:30:05.207068",
+        "failed": false,
+        "msg": "",
+        "rc": 0,
+        "start": "2025-06-27 12:30:05.201144",
+        "stderr": "",
+        "stderr_lines": [],
+        "stdout": "YES",
+        "stdout_lines": [
+            "YES"
+        ]
+    }
+}
+
+TASK [oracle : Copy db drop script to clone host] ******************************
+ok: [orac]
+
+TASK [oracle : Drop existing clone if exist] ***********************************
+changed: [orac]
+
+TASK [oracle : Remove oratab entry for clone DB] *******************************
+changed: [orac]
+
+TASK [oracle : Files to delete in dbs directory] *******************************
+ok: [orac]
+
+TASK [oracle : Clean up Oracle files in dbs dir] *******************************
+changed: [orac] => (item={'path': '/u01/app/oracle/product/19.0.0/NTAP/dbs/initNTAPDEV.ora', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 54321, 'gid': 54321, 'size': 719, 'inode': 4098517569, 'dev': 46, 'nlink': 1, 'atime': 1751013685.3448362, 'mtime': 1751013685.3398356, 'ctime': 1751013685.34829, 'gr_name': 'oinstall', 'pw_name': 'oracle', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [orac] => (item={'path': '/u01/app/oracle/product/19.0.0/NTAP/dbs/hc_NTAP.dat', 'mode': '0660', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 54321, 'gid': 54321, 'size': 1544, 'inode': 4098517516, 'dev': 46, 'nlink': 1, 'atime': 1751013264.035136, 'mtime': 1751013672.821017, 'ctime': 1751013672.821017, 'gr_name': 'oinstall', 'pw_name': 'oracle', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [orac] => (item={'path': '/u01/app/oracle/product/19.0.0/NTAP/dbs/lkNTAP', 'mode': '0640', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 54321, 'gid': 54321, 'size': 24, 'inode': 4098517570, 'dev': 46, 'nlink': 1, 'atime': 1751013280.898314, 'mtime': 1751013280.901301, 'ctime': 1751013280.901301, 'gr_name': 'oinstall', 'pw_name': 'oracle', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [orac] => (item={'path': '/u01/app/oracle/product/19.0.0/NTAP/dbs/snapcf_NTAP.f', 'mode': '0640', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 54321, 'gid': 54321, 'size': 18726912, 'inode': 4098517640, 'dev': 46, 'nlink': 1, 'atime': 1751013606.020257, 'mtime': 1751013607.487233, 'ctime': 1751013607.487233, 'gr_name': 'oinstall', 'pw_name': 'oracle', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [orac] => (item={'path': '/u01/app/oracle/product/19.0.0/NTAP/dbs/lkNTAPDEV', 'mode': '0640', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 54321, 'gid': 54321, 'size': 24, 'inode': 4098517783, 'dev': 46, 'nlink': 1, 'atime': 1751013695.137098, 'mtime': 1751013695.1391, 'ctime': 1751013695.1391, 'gr_name': 'oinstall', 'pw_name': 'oracle', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+changed: [orac] => (item={'path': '/u01/app/oracle/product/19.0.0/NTAP/dbs/hc_NTAPDEV.dat', 'mode': '0660', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 54321, 'gid': 54321, 'size': 1544, 'inode': 4098517742, 'dev': 46, 'nlink': 1, 'atime': 1751013689.452215, 'mtime': 1751027428.293948, 'ctime': 1751027428.293948, 'gr_name': 'oinstall', 'pw_name': 'oracle', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False})
+
+TASK [oracle : Umount NFS file systems on Oracle hosts] ************************
+changed: [orac] => (item=/nfsgcnv)
+
+TASK [oracle : Clean up fstab entry for nfs mounts] ****************************
+ok: [orac] => (item=['orap-bkup', '10.165.128.5', '/nfsgcnv'])
+
+TASK [oracle : set_fact] *******************************************************
+ok: [orac -> localhost] => (item=localhost)
+
+TASK [oracle : debug] **********************************************************
+ok: [orac] => {
+    "msg": "YES"
+}
+
+PLAY [Purge exising clone DB volumes for clone refresh] ************************
+
+TASK [Call gcp volumes purge tasks block] **************************************
+
+TASK [ontap : Login to GCP with service key from cli] **************************
+changed: [localhost]
+
+TASK [ontap : Purge existing cloned GCP DB volumes] ****************************
+changed: [localhost] => (item=orap-bkup)
+
+TASK [ontap : Pause to allow volume purge to complete] *************************
+Pausing for 25 seconds
+ok: [localhost]
+
+PLAY [Delete existing snapshot if exist and take a new volume snapshot] ********
+
+TASK [Call gcp volumes snapshot tasks block] ***********************************
+
+TASK [ontap : Login to GCP with service key from cli] **************************
+changed: [localhost]
+
+TASK [ontap : List an existing snapshot of all DB volumes in sequence if exist] ***
+changed: [localhost] => (item=orap-bkup)
+
+TASK [ontap : set_fact] ********************************************************
+ok: [localhost] => (item={'changed': True, 'stdout': "---\ncreateTime: '2025-06-27T08:31:42.595Z'\nname: projects/cvs-pm-host-1p/locations/us-east4/volumes/orap-bkup/snapshots/snapclone-orap-bkup-ntapdev\nstate: READY\nstateDetails: Available for use\nusedBytes: 454656.0", 'stderr': '', 'rc': 0, 'cmd': ['gcloud', 'netapp', 'volumes', 'snapshots', 'list', '--project=cvs-pm-host-1p', '--location=us-east4', '--volume=orap-bkup', '--project=cvs-pm-host-1p', '--location=us-east4', '--volume=orap-bkup'], 'start': '2025-06-27 08:31:14.094576', 'end': '2025-06-27 08:31:16.505816', 'delta': '0:00:02.411240', 'msg': '', 'invocation': {'module_args': {'_raw_params': 'gcloud netapp volumes snapshots list --project=cvs-pm-host-1p --location=us-east4 --volume=orap-bkup --project=cvs-pm-host-1p --location=us-east4 --volume=orap-bkup\n', '_uses_shell': False, 'expand_argument_vars': True, 'stdin_add_newline': True, 'strip_empty_ends': True, 'argv': None, 'chdir': None, 'executable': None, 'creates': None, 'removes': None, 'stdin': None}}, 'stdout_lines': ['---', "createTime: '2025-06-27T08:31:42.595Z'", 'name: projects/cvs-pm-host-1p/locations/us-east4/volumes/orap-bkup/snapshots/snapclone-orap-bkup-ntapdev', 'state: READY', 'stateDetails: Available for use', 'usedBytes: 454656.0'], 'stderr_lines': [], 'failed': False, 'item': 'orap-bkup', 'ansible_loop_var': 'item'})
+
+TASK [ontap : Delete an existing snapshot of all DB volumes in sequence if exist] ***
+changed: [localhost] => (item=['orap-bkup', ''])
+
+TASK [ontap : Pause to allow snapshots delete to complete] *********************
+Pausing for 25 seconds
+ok: [localhost]
+
+TASK [ontap : Take a snapshot of all DB volumes in sequence] *******************
+changed: [localhost] => (item=orap-bkup)
+
+TASK [ontap : Pause to allow snapshots to complete] ****************************
+Pausing for 25 seconds
+ok: [localhost]
+
+PLAY [Create clone DB volumes from snapshot] ***********************************
+
+TASK [ontap : Open a GCP connection via cli] ***********************************
+included: /home/admin/na_oracle_bkup_clone/roles/ontap/tasks/gcp_open_conn.yml for localhost
+
+TASK [ontap : Login to GCP with service key from cli] **************************
+changed: [localhost]
+
+TASK [ontap : Set facts for DB volumes] ****************************************
+included: /home/admin/na_oracle_bkup_clone/roles/ontap/tasks/gcp_vol_setfact.yml for localhost
+
+TASK [ontap : Get DB volumes details to set facts] *****************************
+changed: [localhost] => (item=orap-bkup)
+
+TASK [ontap : set_fact] ********************************************************
+ok: [localhost] => (item={'changed': True, 'stdout': 'capacityGib: \'1024\'\ncreateTime: \'2025-05-23T15:45:26.897Z\'\nencryptionType: SERVICE_MANAGED\nexportPolicy:\n  rules:\n  - accessType: READ_WRITE\n    allowedClients: 0.0.0.0/0\n    hasRootAccess: \'true\'\n    kerberos5ReadOnly: false\n    kerberos5ReadWrite: false\n    kerberos5iReadOnly: false\n    kerberos5iReadWrite: false\n    kerberos5pReadOnly: false\n    kerberos5pReadWrite: false\n    nfsv3: true\n    nfsv4: false\nlabels:\n  creator: acao\n  database: oracle\n  resource_id: \'12664458934480123852\'\nmountOptions:\n- export: /orap-bkup\n  exportFull: 10.165.128.5:/orap-bkup\n  instructions: |-\n    Setting up your instance\n    Open an SSH client and connect to your instance.\n    Install the nfs client on your instance.\n    On Red Hat Enterprise Linux or SuSE Linux instance:\n    sudo yum install -y nfs-utils\n    On an Ubuntu or Debian instance:\n    sudo apt-get install nfs-common\n\n    Mounting your volume\n    Create a new directory on your instance, such as "/orap-bkup":\n    sudo mkdir /orap-bkup\n    Mount your volume using the example command below:\n    sudo mount -t nfs -o rw,hard,rsize=65536,wsize=65536,vers=3,tcp 10.165.128.5:/orap-bkup /orap-bkup\n    Note. Please use mount options appropriate for your specific workloads when known.\n  ipAddress: 10.165.128.5\n  protocol: NFSV3\nname: projects/cvs-pm-host-1p/locations/us-east4/volumes/orap-bkup\nnetwork: projects/565676753309/global/networks/shared-vpc-prod\nprotocols:\n- NFSV3\nsecurityStyle: UNIX\nserviceLevel: STANDARD\nshareName: orap-bkup\nstate: READY\nstateDetails: Available for use\nstoragePool: ora-bkup\nunixPermissions: \'0770\'\nusedGib: \'916\'', 'stderr': '', 'rc': 0, 'cmd': ['gcloud', 'netapp', 'volumes', 'describe', 'orap-bkup', '--project=cvs-pm-host-1p', '--location=us-east4'], 'start': '2025-06-27 08:32:12.741499', 'end': '2025-06-27 08:32:14.637893', 'delta': '0:00:01.896394', 'msg': '', 'invocation': {'module_args': {'_raw_params': 'gcloud netapp volumes describe orap-bkup   --project=cvs-pm-host-1p  --location=us-east4\n', '_uses_shell': False, 'expand_argument_vars': True, 'stdin_add_newline': True, 'strip_empty_ends': True, 'argv': None, 'chdir': None, 'executable': None, 'creates': None, 'removes': None, 'stdin': None}}, 'stdout_lines': ["capacityGib: '1024'", "createTime: '2025-05-23T15:45:26.897Z'", 'encryptionType: SERVICE_MANAGED', 'exportPolicy:', '  rules:', '  - accessType: READ_WRITE', '    allowedClients: 0.0.0.0/0', "    hasRootAccess: 'true'", '    kerberos5ReadOnly: false', '    kerberos5ReadWrite: false', '    kerberos5iReadOnly: false', '    kerberos5iReadWrite: false', '    kerberos5pReadOnly: false', '    kerberos5pReadWrite: false', '    nfsv3: true', '    nfsv4: false', 'labels:', '  creator: acao', '  database: oracle', "  resource_id: '12664458934480123852'", 'mountOptions:', '- export: /orap-bkup', '  exportFull: 10.165.128.5:/orap-bkup', '  instructions: |-', '    Setting up your instance', '    Open an SSH client and connect to your instance.', '    Install the nfs client on your instance.', '    On Red Hat Enterprise Linux or SuSE Linux instance:', '    sudo yum install -y nfs-utils', '    On an Ubuntu or Debian instance:', '    sudo apt-get install nfs-common', '', '    Mounting your volume', '    Create a new directory on your instance, such as "/orap-bkup":', '    sudo mkdir /orap-bkup', '    Mount your volume using the example command below:', '    sudo mount -t nfs -o rw,hard,rsize=65536,wsize=65536,vers=3,tcp 10.165.128.5:/orap-bkup /orap-bkup', '    Note. Please use mount options appropriate for your specific workloads when known.', '  ipAddress: 10.165.128.5', '  protocol: NFSV3', 'name: projects/cvs-pm-host-1p/locations/us-east4/volumes/orap-bkup', 'network: projects/565676753309/global/networks/shared-vpc-prod', 'protocols:', '- NFSV3', 'securityStyle: UNIX', 'serviceLevel: STANDARD', 'shareName: orap-bkup', 'state: READY', 'stateDetails: Available for use', 'storagePool: ora-bkup', "unixPermissions: '0770'", "usedGib: '916'"], 'stderr_lines': [], 'failed': False, 'item': 'orap-bkup', 'ansible_loop_var': 'item'})
+
+TASK [ontap : debug] ***********************************************************
+ok: [localhost] => {
+    "msg": [
+        "capacityGib: '1024'"
+    ]
+}
+
+TASK [ontap : set_fact] ********************************************************
+ok: [localhost] => (item=capacityGib: '1024')
+
+TASK [ontap : set_fact] ********************************************************
+ok: [localhost] => (item={'changed': True, 'stdout': 'capacityGib: \'1024\'\ncreateTime: \'2025-05-23T15:45:26.897Z\'\nencryptionType: SERVICE_MANAGED\nexportPolicy:\n  rules:\n  - accessType: READ_WRITE\n    allowedClients: 0.0.0.0/0\n    hasRootAccess: \'true\'\n    kerberos5ReadOnly: false\n    kerberos5ReadWrite: false\n    kerberos5iReadOnly: false\n    kerberos5iReadWrite: false\n    kerberos5pReadOnly: false\n    kerberos5pReadWrite: false\n    nfsv3: true\n    nfsv4: false\nlabels:\n  creator: acao\n  database: oracle\n  resource_id: \'12664458934480123852\'\nmountOptions:\n- export: /orap-bkup\n  exportFull: 10.165.128.5:/orap-bkup\n  instructions: |-\n    Setting up your instance\n    Open an SSH client and connect to your instance.\n    Install the nfs client on your instance.\n    On Red Hat Enterprise Linux or SuSE Linux instance:\n    sudo yum install -y nfs-utils\n    On an Ubuntu or Debian instance:\n    sudo apt-get install nfs-common\n\n    Mounting your volume\n    Create a new directory on your instance, such as "/orap-bkup":\n    sudo mkdir /orap-bkup\n    Mount your volume using the example command below:\n    sudo mount -t nfs -o rw,hard,rsize=65536,wsize=65536,vers=3,tcp 10.165.128.5:/orap-bkup /orap-bkup\n    Note. Please use mount options appropriate for your specific workloads when known.\n  ipAddress: 10.165.128.5\n  protocol: NFSV3\nname: projects/cvs-pm-host-1p/locations/us-east4/volumes/orap-bkup\nnetwork: projects/565676753309/global/networks/shared-vpc-prod\nprotocols:\n- NFSV3\nsecurityStyle: UNIX\nserviceLevel: STANDARD\nshareName: orap-bkup\nstate: READY\nstateDetails: Available for use\nstoragePool: ora-bkup\nunixPermissions: \'0770\'\nusedGib: \'916\'', 'stderr': '', 'rc': 0, 'cmd': ['gcloud', 'netapp', 'volumes', 'describe', 'orap-bkup', '--project=cvs-pm-host-1p', '--location=us-east4'], 'start': '2025-06-27 08:32:12.741499', 'end': '2025-06-27 08:32:14.637893', 'delta': '0:00:01.896394', 'msg': '', 'invocation': {'module_args': {'_raw_params': 'gcloud netapp volumes describe orap-bkup   --project=cvs-pm-host-1p  --location=us-east4\n', '_uses_shell': False, 'expand_argument_vars': True, 'stdin_add_newline': True, 'strip_empty_ends': True, 'argv': None, 'chdir': None, 'executable': None, 'creates': None, 'removes': None, 'stdin': None}}, 'stdout_lines': ["capacityGib: '1024'", "createTime: '2025-05-23T15:45:26.897Z'", 'encryptionType: SERVICE_MANAGED', 'exportPolicy:', '  rules:', '  - accessType: READ_WRITE', '    allowedClients: 0.0.0.0/0', "    hasRootAccess: 'true'", '    kerberos5ReadOnly: false', '    kerberos5ReadWrite: false', '    kerberos5iReadOnly: false', '    kerberos5iReadWrite: false', '    kerberos5pReadOnly: false', '    kerberos5pReadWrite: false', '    nfsv3: true', '    nfsv4: false', 'labels:', '  creator: acao', '  database: oracle', "  resource_id: '12664458934480123852'", 'mountOptions:', '- export: /orap-bkup', '  exportFull: 10.165.128.5:/orap-bkup', '  instructions: |-', '    Setting up your instance', '    Open an SSH client and connect to your instance.', '    Install the nfs client on your instance.', '    On Red Hat Enterprise Linux or SuSE Linux instance:', '    sudo yum install -y nfs-utils', '    On an Ubuntu or Debian instance:', '    sudo apt-get install nfs-common', '', '    Mounting your volume', '    Create a new directory on your instance, such as "/orap-bkup":', '    sudo mkdir /orap-bkup', '    Mount your volume using the example command below:', '    sudo mount -t nfs -o rw,hard,rsize=65536,wsize=65536,vers=3,tcp 10.165.128.5:/orap-bkup /orap-bkup', '    Note. Please use mount options appropriate for your specific workloads when known.', '  ipAddress: 10.165.128.5', '  protocol: NFSV3', 'name: projects/cvs-pm-host-1p/locations/us-east4/volumes/orap-bkup', 'network: projects/565676753309/global/networks/shared-vpc-prod', 'protocols:', '- NFSV3', 'securityStyle: UNIX', 'serviceLevel: STANDARD', 'shareName: orap-bkup', 'state: READY', 'stateDetails: Available for use', 'storagePool: ora-bkup', "unixPermissions: '0770'", "usedGib: '916'"], 'stderr_lines': [], 'failed': False, 'item': 'orap-bkup', 'ansible_loop_var': 'item'})
+
+TASK [ontap : set_fact] ********************************************************
+ok: [localhost] => (item=storagePool: ora-bkup)
+
+TASK [ontap : set_fact] ********************************************************
+ok: [localhost] => (item={'changed': True, 'stdout': 'capacityGib: \'1024\'\ncreateTime: \'2025-05-23T15:45:26.897Z\'\nencryptionType: SERVICE_MANAGED\nexportPolicy:\n  rules:\n  - accessType: READ_WRITE\n    allowedClients: 0.0.0.0/0\n    hasRootAccess: \'true\'\n    kerberos5ReadOnly: false\n    kerberos5ReadWrite: false\n    kerberos5iReadOnly: false\n    kerberos5iReadWrite: false\n    kerberos5pReadOnly: false\n    kerberos5pReadWrite: false\n    nfsv3: true\n    nfsv4: false\nlabels:\n  creator: acao\n  database: oracle\n  resource_id: \'12664458934480123852\'\nmountOptions:\n- export: /orap-bkup\n  exportFull: 10.165.128.5:/orap-bkup\n  instructions: |-\n    Setting up your instance\n    Open an SSH client and connect to your instance.\n    Install the nfs client on your instance.\n    On Red Hat Enterprise Linux or SuSE Linux instance:\n    sudo yum install -y nfs-utils\n    On an Ubuntu or Debian instance:\n    sudo apt-get install nfs-common\n\n    Mounting your volume\n    Create a new directory on your instance, such as "/orap-bkup":\n    sudo mkdir /orap-bkup\n    Mount your volume using the example command below:\n    sudo mount -t nfs -o rw,hard,rsize=65536,wsize=65536,vers=3,tcp 10.165.128.5:/orap-bkup /orap-bkup\n    Note. Please use mount options appropriate for your specific workloads when known.\n  ipAddress: 10.165.128.5\n  protocol: NFSV3\nname: projects/cvs-pm-host-1p/locations/us-east4/volumes/orap-bkup\nnetwork: projects/565676753309/global/networks/shared-vpc-prod\nprotocols:\n- NFSV3\nsecurityStyle: UNIX\nserviceLevel: STANDARD\nshareName: orap-bkup\nstate: READY\nstateDetails: Available for use\nstoragePool: ora-bkup\nunixPermissions: \'0770\'\nusedGib: \'916\'', 'stderr': '', 'rc': 0, 'cmd': ['gcloud', 'netapp', 'volumes', 'describe', 'orap-bkup', '--project=cvs-pm-host-1p', '--location=us-east4'], 'start': '2025-06-27 08:32:12.741499', 'end': '2025-06-27 08:32:14.637893', 'delta': '0:00:01.896394', 'msg': '', 'invocation': {'module_args': {'_raw_params': 'gcloud netapp volumes describe orap-bkup   --project=cvs-pm-host-1p  --location=us-east4\n', '_uses_shell': False, 'expand_argument_vars': True, 'stdin_add_newline': True, 'strip_empty_ends': True, 'argv': None, 'chdir': None, 'executable': None, 'creates': None, 'removes': None, 'stdin': None}}, 'stdout_lines': ["capacityGib: '1024'", "createTime: '2025-05-23T15:45:26.897Z'", 'encryptionType: SERVICE_MANAGED', 'exportPolicy:', '  rules:', '  - accessType: READ_WRITE', '    allowedClients: 0.0.0.0/0', "    hasRootAccess: 'true'", '    kerberos5ReadOnly: false', '    kerberos5ReadWrite: false', '    kerberos5iReadOnly: false', '    kerberos5iReadWrite: false', '    kerberos5pReadOnly: false', '    kerberos5pReadWrite: false', '    nfsv3: true', '    nfsv4: false', 'labels:', '  creator: acao', '  database: oracle', "  resource_id: '12664458934480123852'", 'mountOptions:', '- export: /orap-bkup', '  exportFull: 10.165.128.5:/orap-bkup', '  instructions: |-', '    Setting up your instance', '    Open an SSH client and connect to your instance.', '    Install the nfs client on your instance.', '    On Red Hat Enterprise Linux or SuSE Linux instance:', '    sudo yum install -y nfs-utils', '    On an Ubuntu or Debian instance:', '    sudo apt-get install nfs-common', '', '    Mounting your volume', '    Create a new directory on your instance, such as "/orap-bkup":', '    sudo mkdir /orap-bkup', '    Mount your volume using the example command below:', '    sudo mount -t nfs -o rw,hard,rsize=65536,wsize=65536,vers=3,tcp 10.165.128.5:/orap-bkup /orap-bkup', '    Note. Please use mount options appropriate for your specific workloads when known.', '  ipAddress: 10.165.128.5', '  protocol: NFSV3', 'name: projects/cvs-pm-host-1p/locations/us-east4/volumes/orap-bkup', 'network: projects/565676753309/global/networks/shared-vpc-prod', 'protocols:', '- NFSV3', 'securityStyle: UNIX', 'serviceLevel: STANDARD', 'shareName: orap-bkup', 'state: READY', 'stateDetails: Available for use', 'storagePool: ora-bkup', "unixPermissions: '0770'", "usedGib: '916'"], 'stderr_lines': [], 'failed': False, 'item': 'orap-bkup', 'ansible_loop_var': 'item'})
+
+TASK [ontap : set_fact] ********************************************************
+ok: [localhost] => (item=shareName: orap-bkup)
+
+TASK [ontap : Clone DB volumes from snapshots] *********************************
+included: /home/admin/na_oracle_bkup_clone/roles/ontap/tasks/gcp_vol_snapclone.yml for localhost
+
+TASK [ontap : Clone DB volumes in sequence] ************************************
+changed: [localhost] => (item=['orap-bkup', 'ora-bkup', "'1024'", 'orap-bkup'])
+
+TASK [ontap : Pause to allow snapshots volumes clone to complete] **************
+Pausing for 120 seconds
+ok: [localhost]
+
+PLAY [Clone Oracle DB at clone host from backup copy on gcnv] ******************
+
+TASK [Gathering Facts] *********************************************************
+ok: [orac]
+
+TASK [oracle : Mount cloned DB volumes on clone host] **************************
+included: /home/admin/na_oracle_bkup_clone/roles/oracle/tasks/ora_vol_mount.yml for orac
+
+TASK [oracle : Create mount points for NFS file systems] ***********************
+changed: [orac]
+
+TASK [oracle : Mount NFS file systems on Oracle hosts] *************************
+changed: [orac] => (item=['orap-bkup', '10.165.128.5'])
+
+TASK [oracle : Convert clone DB vol and recover DB] ****************************
+included: /home/admin/na_oracle_bkup_clone/roles/oracle/tasks/ora_clone_convert.yml for orac
+
+TASK [oracle : Create primary DB adump dir on clone host] **********************
+ok: [orac]
+
+TASK [oracle : Create a starter DB init file on clone host] ********************
+ok: [orac]
+
+TASK [oracle : Copy conversion script to clone host] ***************************
+ok: [orac]
+
+TASK [oracle : Switch DB to backup copy] ***************************************
+changed: [orac]
+
+TASK [oracle : Print convert output] *******************************************
+ok: [orac] => {
+    "msg": {
+        "changed": true,
+        "cmd": "export ORACLE_SID=NTAP;export ORACLE_HOME=/u01/app/oracle/product/19.0.0/NTAP;export PATH=$ORACLE_HOME/bin:$PATH\nrman target / nocatalog @/tmp/ora_clone_convert.cmd\n",
+        "delta": "0:00:33.967761",
+        "end": "2025-06-27 12:34:58.298231",
+        "failed": false,
+        "msg": "",
+        "rc": 0,
+        "start": "2025-06-27 12:34:24.330470",
+        "stderr": "",
+        "stderr_lines": [],
+        "stdout": "\nRecovery Manager: Release 19.0.0.0.0 - Production on Fri Jun 27 12:34:24 2025\nVersion 19.18.0.0.0\n\nCopyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.\n\nconnected to target database (not started)\n\nRMAN> startup nomount pfile='/home/oracle/initNTAP.ora';\n2> set dbid = 1379265854;\n3> restore controlfile from autobackup;\n4> restore spfile to pfile '$ORACLE_HOME/dbs/initNTAPDEV.ora' from autobackup;\n5> alter database mount;\n6> switch database to copy;\n7> exit;\nOracle instance started\n\nTotal System Global Area    4294963936 bytes\n\nFixed Size                     9171680 bytes\nVariable Size                805306368 bytes\nDatabase Buffers            3472883712 bytes\nRedo Buffers                   7602176 bytes\n\nexecuting command: SET DBID\n\nStarting restore at 27-JUN-25\nallocated channel: ORA_DISK_1\nchannel ORA_DISK_1: SID=9 device type=DISK\n\nrecovery area destination: /nfsgcnv/archlog/\ndatabase name (or database unique name) used for search: NTAP\nchannel ORA_DISK_1: AUTOBACKUP /nfsgcnv/archlog/NTAP/autobackup/2025_06_25/o1_mf_s_1204733866_n5r89f5f_.bkp found in the recovery area\nchannel ORA_DISK_1: looking for AUTOBACKUP on day: 20250627\nchannel ORA_DISK_1: looking for AUTOBACKUP on day: 20250626\nchannel ORA_DISK_1: looking for AUTOBACKUP on day: 20250625\nchannel ORA_DISK_1: restoring control file from AUTOBACKUP /nfsgcnv/archlog/NTAP/autobackup/2025_06_25/o1_mf_s_1204733866_n5r89f5f_.bkp\nchannel ORA_DISK_1: control file restore from AUTOBACKUP complete\noutput file name=/nfsgcnv/oracopy/NTAPDEV.ctl\nFinished restore at 27-JUN-25\n\nStarting restore at 27-JUN-25\nusing channel ORA_DISK_1\n\nrecovery area destination: /nfsgcnv/archlog/\ndatabase name (or database unique name) used for search: NTAP\nchannel ORA_DISK_1: AUTOBACKUP /nfsgcnv/archlog/NTAP/autobackup/2025_06_25/o1_mf_s_1204733866_n5r89f5f_.bkp found in the recovery area\nchannel ORA_DISK_1: looking for AUTOBACKUP on day: 20250627\nchannel ORA_DISK_1: looking for AUTOBACKUP on day: 20250626\nchannel ORA_DISK_1: looking for AUTOBACKUP on day: 20250625\nchannel ORA_DISK_1: restoring spfile from AUTOBACKUP /nfsgcnv/archlog/NTAP/autobackup/2025_06_25/o1_mf_s_1204733866_n5r89f5f_.bkp\nchannel ORA_DISK_1: SPFILE restore from AUTOBACKUP complete\nFinished restore at 27-JUN-25\n\nreleased channel: ORA_DISK_1\nStatement processed\n\nStarting implicit crosscheck backup at 27-JUN-25\nallocated channel: ORA_DISK_1\nchannel ORA_DISK_1: SID=9 device type=DISK\nCrosschecked 33 objects\nFinished implicit crosscheck backup at 27-JUN-25\n\nStarting implicit crosscheck copy at 27-JUN-25\nusing channel ORA_DISK_1\nCrosschecked 49 objects\nFinished implicit crosscheck copy at 27-JUN-25\n\nsearching for all files in the recovery area\ncataloging files...\ncataloging done\n\nList of Cataloged Files\n=======================\nFile Name: /nfsgcnv/archlog/NTAP/archivelog/2025_06_26/o1_mf_1_25_n5snz5ps_.arc\nFile Name: /nfsgcnv/archlog/NTAP/archivelog/2025_06_26/o1_mf_1_26_n5vkb3qh_.arc\nFile Name: /nfsgcnv/archlog/NTAP/autobackup/2025_06_25/o1_mf_s_1204733866_n5r89f5f_.bkp\n\ndatafile 1 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSTEM_FNO-1_dt3rn522\"\ndatafile 3 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSAUX_FNO-3_ds3rn4rh\"\ndatafile 4 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-UNDOTBS1_FNO-4_du3rn52l\"\ndatafile 5 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSTEM_FNO-5_e63rn5fh\"\ndatafile 6 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSAUX_FNO-6_e23rn5am\"\ndatafile 7 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-USERS_FNO-7_eb3rn5ju\"\ndatafile 8 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-UNDOTBS1_FNO-8_e83rn5id\"\ndatafile 9 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSTEM_FNO-9_e33rn5c4\"\ndatafile 10 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSAUX_FNO-10_dv3rn569\"\ndatafile 11 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-UNDOTBS1_FNO-11_e73rn5gu\"\ndatafile 12 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-USERS_FNO-12_ec3rn5k1\"\ndatafile 13 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSTEM_FNO-13_e43rn5d1\"\ndatafile 14 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSAUX_FNO-14_e03rn57p\"\ndatafile 15 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-UNDOTBS1_FNO-15_e93rn5if\"\ndatafile 16 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-USERS_FNO-16_ed3rn5k2\"\ndatafile 17 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSTEM_FNO-17_e53rn5e4\"\ndatafile 18 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSAUX_FNO-18_e13rn598\"\ndatafile 19 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-UNDOTBS1_FNO-19_ea3rn5js\"\ndatafile 20 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-USERS_FNO-20_ee3rn5k4\"\ndatafile 21 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-21_ct3rm3ae\"\ndatafile 22 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-22_cu3rm3ae\"\ndatafile 23 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-23_d83rmcpr\"\ndatafile 24 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-24_di3rmr29\"\ndatafile 25 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-25_cv3rm3ae\"\ndatafile 26 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-26_d93rmcrt\"\ndatafile 27 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-27_dj3rmr5k\"\ndatafile 28 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-28_d03rm3ae\"\ndatafile 29 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-29_da3rmhi5\"\ndatafile 30 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-30_db3rmhid\"\ndatafile 31 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-31_dk3rmr5l\"\ndatafile 32 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-32_d23rm81j\"\ndatafile 33 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-33_d33rm82n\"\ndatafile 34 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-34_dc3rmhlo\"\ndatafile 35 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-35_dl3rmrd2\"\ndatafile 36 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-36_d43rm838\"\ndatafile 37 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-37_dd3rmhtd\"\ndatafile 38 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-38_dm3rmvu9\"\ndatafile 39 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-39_de3rmmah\"\ndatafile 40 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-40_dn3rmvua\"\ndatafile 41 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-41_d53rm850\"\ndatafile 42 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-42_df3rmmdh\"\ndatafile 43 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-43_do3rn01j\"\ndatafile 44 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-44_d63rmco2\"\ndatafile 45 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-45_dp3rn09s\"\ndatafile 46 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-46_d73rmcpr\"\ndatafile 47 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-47_dg3rmmdo\"\ndatafile 48 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-48_dh3rmml5\"\ndatafile 49 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-49_dq3rn4mn\"\ndatafile 50 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-50_dr3rn4pe\"\n\nRecovery Manager complete.",
+        "stdout_lines": [
+            "",
+            "Recovery Manager: Release 19.0.0.0.0 - Production on Fri Jun 27 12:34:24 2025",
+            "Version 19.18.0.0.0",
+            "",
+            "Copyright (c) 1982, 2019, Oracle and/or its affiliates.  All rights reserved.",
+            "",
+            "connected to target database (not started)",
+            "",
+            "RMAN> startup nomount pfile='/home/oracle/initNTAP.ora';",
+            "2> set dbid = 1379265854;",
+            "3> restore controlfile from autobackup;",
+            "4> restore spfile to pfile '$ORACLE_HOME/dbs/initNTAPDEV.ora' from autobackup;",
+            "5> alter database mount;",
+            "6> switch database to copy;",
+            "7> exit;",
+            "Oracle instance started",
+            "",
+            "Total System Global Area    4294963936 bytes",
+            "",
+            "Fixed Size                     9171680 bytes",
+            "Variable Size                805306368 bytes",
+            "Database Buffers            3472883712 bytes",
+            "Redo Buffers                   7602176 bytes",
+            "",
+            "executing command: SET DBID",
+            "",
+            "Starting restore at 27-JUN-25",
+            "allocated channel: ORA_DISK_1",
+            "channel ORA_DISK_1: SID=9 device type=DISK",
+            "",
+            "recovery area destination: /nfsgcnv/archlog/",
+            "database name (or database unique name) used for search: NTAP",
+            "channel ORA_DISK_1: AUTOBACKUP /nfsgcnv/archlog/NTAP/autobackup/2025_06_25/o1_mf_s_1204733866_n5r89f5f_.bkp found in the recovery area",
+            "channel ORA_DISK_1: looking for AUTOBACKUP on day: 20250627",
+            "channel ORA_DISK_1: looking for AUTOBACKUP on day: 20250626",
+            "channel ORA_DISK_1: looking for AUTOBACKUP on day: 20250625",
+            "channel ORA_DISK_1: restoring control file from AUTOBACKUP /nfsgcnv/archlog/NTAP/autobackup/2025_06_25/o1_mf_s_1204733866_n5r89f5f_.bkp",
+            "channel ORA_DISK_1: control file restore from AUTOBACKUP complete",
+            "output file name=/nfsgcnv/oracopy/NTAPDEV.ctl",
+            "Finished restore at 27-JUN-25",
+            "",
+            "Starting restore at 27-JUN-25",
+            "using channel ORA_DISK_1",
+            "",
+            "recovery area destination: /nfsgcnv/archlog/",
+            "database name (or database unique name) used for search: NTAP",
+            "channel ORA_DISK_1: AUTOBACKUP /nfsgcnv/archlog/NTAP/autobackup/2025_06_25/o1_mf_s_1204733866_n5r89f5f_.bkp found in the recovery area",
+            "channel ORA_DISK_1: looking for AUTOBACKUP on day: 20250627",
+            "channel ORA_DISK_1: looking for AUTOBACKUP on day: 20250626",
+            "channel ORA_DISK_1: looking for AUTOBACKUP on day: 20250625",
+            "channel ORA_DISK_1: restoring spfile from AUTOBACKUP /nfsgcnv/archlog/NTAP/autobackup/2025_06_25/o1_mf_s_1204733866_n5r89f5f_.bkp",
+            "channel ORA_DISK_1: SPFILE restore from AUTOBACKUP complete",
+            "Finished restore at 27-JUN-25",
+            "",
+            "released channel: ORA_DISK_1",
+            "Statement processed",
+            "",
+            "Starting implicit crosscheck backup at 27-JUN-25",
+            "allocated channel: ORA_DISK_1",
+            "channel ORA_DISK_1: SID=9 device type=DISK",
+            "Crosschecked 33 objects",
+            "Finished implicit crosscheck backup at 27-JUN-25",
+            "",
+            "Starting implicit crosscheck copy at 27-JUN-25",
+            "using channel ORA_DISK_1",
+            "Crosschecked 49 objects",
+            "Finished implicit crosscheck copy at 27-JUN-25",
+            "",
+            "searching for all files in the recovery area",
+            "cataloging files...",
+            "cataloging done",
+            "",
+            "List of Cataloged Files",
+            "=======================",
+            "File Name: /nfsgcnv/archlog/NTAP/archivelog/2025_06_26/o1_mf_1_25_n5snz5ps_.arc",
+            "File Name: /nfsgcnv/archlog/NTAP/archivelog/2025_06_26/o1_mf_1_26_n5vkb3qh_.arc",
+            "File Name: /nfsgcnv/archlog/NTAP/autobackup/2025_06_25/o1_mf_s_1204733866_n5r89f5f_.bkp",
+            "",
+            "datafile 1 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSTEM_FNO-1_dt3rn522\"",
+            "datafile 3 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSAUX_FNO-3_ds3rn4rh\"",
+            "datafile 4 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-UNDOTBS1_FNO-4_du3rn52l\"",
+            "datafile 5 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSTEM_FNO-5_e63rn5fh\"",
+            "datafile 6 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSAUX_FNO-6_e23rn5am\"",
+            "datafile 7 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-USERS_FNO-7_eb3rn5ju\"",
+            "datafile 8 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-UNDOTBS1_FNO-8_e83rn5id\"",
+            "datafile 9 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSTEM_FNO-9_e33rn5c4\"",
+            "datafile 10 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSAUX_FNO-10_dv3rn569\"",
+            "datafile 11 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-UNDOTBS1_FNO-11_e73rn5gu\"",
+            "datafile 12 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-USERS_FNO-12_ec3rn5k1\"",
+            "datafile 13 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSTEM_FNO-13_e43rn5d1\"",
+            "datafile 14 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSAUX_FNO-14_e03rn57p\"",
+            "datafile 15 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-UNDOTBS1_FNO-15_e93rn5if\"",
+            "datafile 16 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-USERS_FNO-16_ed3rn5k2\"",
+            "datafile 17 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSTEM_FNO-17_e53rn5e4\"",
+            "datafile 18 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SYSAUX_FNO-18_e13rn598\"",
+            "datafile 19 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-UNDOTBS1_FNO-19_ea3rn5js\"",
+            "datafile 20 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-USERS_FNO-20_ee3rn5k4\"",
+            "datafile 21 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-21_ct3rm3ae\"",
+            "datafile 22 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-22_cu3rm3ae\"",
+            "datafile 23 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-23_d83rmcpr\"",
+            "datafile 24 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-24_di3rmr29\"",
+            "datafile 25 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-25_cv3rm3ae\"",
+            "datafile 26 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-26_d93rmcrt\"",
+            "datafile 27 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-27_dj3rmr5k\"",
+            "datafile 28 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-28_d03rm3ae\"",
+            "datafile 29 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-29_da3rmhi5\"",
+            "datafile 30 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-30_db3rmhid\"",
+            "datafile 31 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-31_dk3rmr5l\"",
+            "datafile 32 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-32_d23rm81j\"",
+            "datafile 33 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-33_d33rm82n\"",
+            "datafile 34 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-34_dc3rmhlo\"",
+            "datafile 35 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-35_dl3rmrd2\"",
+            "datafile 36 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-36_d43rm838\"",
+            "datafile 37 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-37_dd3rmhtd\"",
+            "datafile 38 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-38_dm3rmvu9\"",
+            "datafile 39 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-39_de3rmmah\"",
+            "datafile 40 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-40_dn3rmvua\"",
+            "datafile 41 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-41_d53rm850\"",
+            "datafile 42 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-42_df3rmmdh\"",
+            "datafile 43 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-43_do3rn01j\"",
+            "datafile 44 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-44_d63rmco2\"",
+            "datafile 45 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-45_dp3rn09s\"",
+            "datafile 46 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE1_FNO-46_d73rmcpr\"",
+            "datafile 47 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-47_dg3rmmdo\"",
+            "datafile 48 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE2_FNO-48_dh3rmml5\"",
+            "datafile 49 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-49_dq3rn4mn\"",
+            "datafile 50 switched to datafile copy \"/nfsgcnv/oracopy/data_D-NTAP_I-1379265854_TS-SOE3_FNO-50_dr3rn4pe\"",
+            "",
+            "Recovery Manager complete."
+        ]
+    }
+}
+
+TASK [oracle : Copy recovery script to clone host] *****************************
+ok: [orac]
+
+TASK [oracle : Recover database to last scn in archived log from bkup] *********
+changed: [orac]
+
+TASK [oracle : Rename recovered DB to clone SID] *******************************
+changed: [orac]
+
+TASK [oracle : Post clone tasks] ***********************************************
+included: /home/admin/na_oracle_bkup_clone/roles/oracle/tasks/ora_post_clone.yml for orac
+
+TASK [oracle : Create clone DB adump dir on clone host] ************************
+ok: [orac]
+
+TASK [oracle : Remove source DB init file] *************************************
+ok: [orac]
+
+TASK [oracle : Remove dynamic parameters in clone DB init file] ****************
+changed: [orac]
+
+TASK [oracle : Update clone DB name] *******************************************
+changed: [orac]
+
+TASK [oracle : Update clone DB controlfile] ************************************
+changed: [orac]
+
+TASK [oracle : Update clone DB adump] ******************************************
+changed: [orac]
+
+TASK [oracle : Copy post clone script to clone host] ***************************
+ok: [orac]
+
+TASK [oracle : Reset log, turn off archive mode, open clone DB] ****************
+changed: [orac]
+
+TASK [oracle : Add oratab entry for clone DB] **********************************
+changed: [orac]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=24   changed=9    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+orac                       : ok=35   changed=16   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+End Oracle DB clone or refresh at 2025-0627-084452
+
+
+....
+====
+
+
+== 从何处查找追加信息
+
+要了解有关NetApp 解决方案 自动化的详细信息、请查看以下网站 link:../automation/automation_introduction.html["NetApp 解决方案自动化"^]

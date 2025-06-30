@@ -1,0 +1,538 @@
+---
+sidebar: sidebar 
+permalink: ai/ai-minipod.html 
+keywords: netapp, aipod, RAG, ai solution, design 
+summary: 本文介绍了 NetApp® AIPod for Enterprise RAG 的经过验证的参考设计，该设计融合了 Intel® Xeon® 6 处理器和 NetApp 数据管理解决方案的技术和功能。该解决方案演示了一个下游 ChatQnA 应用程序，该应用程序利用大型语言模型，为并发用户提供准确且上下文相关的响应。这些响应通过隔离的 RAG 推理管道从组织的内部知识存储库中检索。 
+---
+= NetApp AIPod Mini - 利用 NetApp 和 Intel 进行企业 RAG 推理
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+本文介绍了 NetApp® AIPod for Enterprise RAG 的经过验证的参考设计，该设计融合了 Intel® Xeon® 6 处理器和 NetApp 数据管理解决方案的技术和功能。该解决方案演示了一个下游 ChatQnA 应用程序，该应用程序利用大型语言模型，为并发用户提供准确且上下文相关的响应。这些响应通过隔离的 RAG 推理管道从组织的内部知识存储库中检索。
+
+image:aipod-mini-image01.png["100,100"]
+
+Sathish Thyagarajan、Michael Oglesby、NetApp
+
+
+
+== 内容提要
+
+越来越多的组织正在利用检索增强生成 (RAG) 应用程序和大型语言模型 (LLM) 来解读用户提示并生成响应，以提高生产力和商业价值。这些提示和响应可以包括文本、代码、图像，甚至是从组织内部知识库、数据湖、代码存储库和文档存储库中检索到的治疗性蛋白质结构。本文介绍了 NetApp® AIPod™ Mini 解决方案的参考设计，该解决方案包含 NetApp AFF 存储和搭载英特尔® 至强® 6 处理器的服务器。它包含 NetApp ONTAP® 数据管理软件、英特尔® 高级矩阵扩展 (英特尔® AMX) 以及基于企业人工智能开放平台 (OPEA) 构建的英特尔® AI for Enterprise 检索增强生成 (RAG) 软件。NetAppAIPod Mini for Enterprise RAG 使组织能够将公共 LLM 增强为私有生成式人工智能 (GenAI) 推理解决方案。该解决方案展示了企业规模的高效且经济的 RAG 推理，旨在提高可靠性并让您更好地控制您的专有信息。
+
+
+
+== 英特尔存储合作伙伴验证
+
+搭载英特尔至强 6 处理器的服务器专为处理高要求的 AI 推理工作负载而设计，并使用英特尔 AMX 架构以实现最佳性能。为了实现最佳存储性能和可扩展性，该解决方案已成功通过 NetApp ONTAP 验证，使企业能够满足 RAG 应用的需求。此项验证是在搭载英特尔至强 6 处理器的服务器上进行的。英特尔和 NetApp 建立了牢固的合作伙伴关系，致力于提供经过优化、可扩展且符合客户业务需求的 AI 解决方案。
+
+
+
+== 使用 NetApp 运行 RAG 系统的优势
+
+RAG 应用程序涉及从公司各种类型的文档存储库（例如 PDF、文本、CSV、Excel 或知识图谱）中检索知识。这些数据通常存储在 S3 对象存储或 NFS 等本地解决方案中作为数据源。NetApp一直是边缘、数据中心和云生态系统中数据管理、数据移动性、数据治理和数据安全技术的领导者。NetAppONTAP 数据管理提供企业级存储，以支持各种类型的 AI 工作负载，包括批量和实时推理，并提供以下一些优势：
+
+* 速度和可扩展性。您可以高速处理大型数据集进行版本控制，并能够独立扩展性能和容量。
+* 数据访问。多协议支持允许客户端应用程序使用 S3、NFS 和 SMB 文件共享协议读取数据。ONTAPS3 NAS 存储桶可以在多模 LLM 推理场景中促进数据访问。
+* 可靠性和保密性。ONTAP提供数据保护、内置 NetApp 自主勒索软件防护 (ARP) 和动态存储配置，并提供基于软件和硬件的加密，以增强保密性和安全性。ONTAP的所有 SSL 连接均符合 FIPS 140-2 标准。
+
+
+
+
+== 目标受众
+
+本文档面向希望利用构建用于交付企业 RAG 和 GenAI 解决方案的基础架构的 AI 决策者、数据工程师、业务领导者和部门高管。在实施阶段，具备 AI 推理、LLM、Kubernetes 以及网络及其组件方面的相关知识将大有裨益。
+
+
+
+== 技术要求
+
+
+
+=== 硬件
+
+
+
+==== 英特尔人工智能技术
+
+使用 Xeon 6 作为主机 CPU，加速系统可受益于高单线程性能；更高的内存带宽；更高的可靠性、可用性和可维护性 (RAS)；以及更多的 I/O 通道。英特尔 AMX 加速 INT8 和 BF16 的推理，并支持 FP16 训练模型，INT8 每核每周期最多可进行 2,048 次浮点运算，BF16/FP16 每核每周期最多可进行 1,024 次浮点运算。要使用 Xeon 6 处理器部署 RAG 解决方案，通常建议至少配备 250GB 的 RAM 和 500GB 的磁盘空间。但是，这在很大程度上取决于 LLM 模型的大小。如需了解更多信息，请参阅英特尔 https://www.intel.com/content/dam/www/central-libraries/us/en/documents/2024-05/intel-xeon-6-product-brief.pdf["Xeon 6处理器"^]产品简介。
+
+图 1 - 搭载 Intel Xeon 6 处理器的计算服务器image:aipod-mini-image02.png["300,300"]
+
+
+
+==== NetApp AFF 存储系统
+
+入门级和中级 NetApp AFF A 系列系统提供更强大的性能、密度和更高的效率。NetAppAFF A20、AFF A30 和 AFF A50 系统提供真正的统一存储，支持块、文件和对象存储，基于单一操作系统，能够以最低的成本在混合云中无缝管理、保护和调动 RAG 应用程序的数据。
+
+图 2 - NetApp AFF A 系列系统。 image:aipod-mini-image03.png["300,300"]
+
+|===
+| * 硬件 * | *数量* | * 注释 * 
+
+
+| 基于 Intel Xeon 6 的服务器 | 2. | RAG 推理节点 - 配备双插槽 Intel Xeon 6900 系列或 Intel Xeon 6700 系列处理器以及 250GB 至 3TB RAM（配备 DDR5 (6400MHz) 或 MRDIMM (8800MHz)。2U服务器。 
+
+
+| 带有英特尔处理器的控制平面服务器 | 1. | Kubernetes 控制平面/1U 服务器。 
+
+
+| 100Gb 以太网交换机的选择 | 1. | 数据中心交换机。 
+
+
+| NetApp AFF A20（或 AFF A30；AFF A50） | 1. | 最大存储容量：9.3PB。注意：网络：10/25/100 GbE 端口。 
+|===
+为了验证此参考设计，我们使用了 Supermicro 的 Intel Xeon 6 处理器服务器（222HA-TN-OTO-37）和 Arista 的 100GbE 交换机（7280R3A）。
+
+
+
+=== 软件
+
+
+
+==== 企业AI开放平台
+
+企业 AI 开放平台 (OPEA) 是由英特尔牵头，与生态系统合作伙伴共同发起的一项开源计划。它提供了一个由可组合构建块组成的模块化平台，旨在加速尖端生成式 AI 系统的开发，并重点关注 RAG。OPEA包含一个全面的框架，该框架包含 LLM、数据存储、提示引擎、RAG 架构蓝图，以及一个基于性能、特性、可信度和企业就绪度对生成式 AI 系统进行评估的四步评估方法。
+
+OPEA 的核心包括两个关键部分：
+
+* GenAIComps：由微服务组件组成的基于服务的工具包
+* GenAIExamples：可立即部署的解决方案，例如 ChatQnA，可展示实际用例
+
+
+有关详细信息，请参阅 https://opea-project.github.io/latest/index.html["OPEA项目文档"^]
+
+
+
+==== 由 OPEA 提供支持的英特尔企业人工智能推理
+
+面向英特尔企业人工智能 RAG 的 OPEA 简化了将企业数据转化为可操作洞察的过程。它搭载英特尔至强处理器，集成了来自行业合作伙伴的组件，提供精简的企业解决方案部署方法。它可与成熟的编排框架无缝扩展，为您的企业提供所需的灵活性和选择。
+
+在 OPEA 的基础上，英特尔企业级 RAG 人工智能扩展了这一基础，并添加了关键特性，以增强可扩展性、安全性和用户体验。这些特性包括：可与现代服务架构无缝集成的服务网格功能、可用于生产环境的管道可靠性验证，以及功能丰富的 RAG 即服务用户界面 (UI)，可轻松管理和监控工作流。此外，英特尔及其合作伙伴的支持服务提供了广泛的解决方案生态系统，并结合集成的身份和访问管理 (IAM) 以及用户界面和应用程序，确保操作安全合规。可编程护栏可对管道行为进行细粒度控制，从而实现自定义的安全性和合规性设置。
+
+
+
+==== NetApp ONTAP
+
+NetApp ONTAP 是 NetApp 关键数据存储解决方案的基础技术。ONTAP包含各种数据管理和数据保护功能，例如针对网络攻击的自动勒索软件防护、内置数据传输功能以及存储效率功能。这些优势适用于各种架构，从本地部署到混合多云，涵盖 NAS、SAN、对象存储以及用于 LLM 部署的软件定义存储。您可以在 ONTAP 集群中使用 ONTAP S3 对象存储服务器来部署 RAG 应用程序，从而充分利用 ONTAP 通过授权用户和客户端应用程序提供的存储效率和安全性。有关详细信息、请参见 https://docs.netapp.com/us-en/ontap/s3-config/index.html["了解ONTAP S3配置"^]
+
+
+
+==== NetApp Trident
+
+NetApp Trident™ 软件是一款开源且全面支持的存储编排器，适用于容器和 Kubernetes 发行版（包括 Red Hat OpenShift）。Trident可与 NetApp 的整个存储产品组合兼容，包括 NetApp ONTAP，并且还支持 NFS 和 iSCSI 连接。有关详细信息、请参见 https://github.com/NetApp/trident["Git 上的 NetApp Trident"^]
+
+|===
+| *软件* | * 版本 * | * 注释 * 
+
+
+| 面向企业 RAG 的英特尔 AI 的 OPEA | 1.1.2 | 基于OPEA微服务的企业RAG平台 
+
+
+| 容器存储接口（CSI驱动程序） | NetApp Trident 25.02 | 支持动态配置、NetApp Snapshot™ 副本和卷。 
+
+
+| Ubuntu | 22.04.5 | 双节点集群上的操作系统 
+
+
+| 容器编排 | Kubernetes 1.31.4 | 运行 RAG 框架的环境 
+
+
+| ONTAP | ONTAP 9.16.1P4 | AFF A20 上的存储操作系统。它具有 Vscan 和 ARP 功能。 
+|===
+
+
+== 解决方案 部署
+
+
+
+=== 软件堆栈
+
+该解决方案部署在由基于 Intel Xeon 处理器的应用节点组成的 Kubernetes 集群上。为了实现 Kubernetes 控制平面的基本高可用性，至少需要三个节点。我们使用以下集群布局验证了该解决方案。
+
+表 3 - Kubernetes 集群布局
+
+|===
+| 节点 | Role | 数量 
+
+
+| 配备 Intel Xeon 6 处理器和 1TB RAM 的服务器 | 应用节点、控制平面节点 | 2. 
+
+
+| 通用服务器 | 控制平面节点 | 1. 
+|===
+下图描述了该解决方案的“软件堆栈视图”。 image:aipod-mini-image04.png["600,600"]
+
+
+
+=== 部署步骤
+
+
+
+==== 部署 ONTAP 存储设备
+
+部署和配置您的 NetApp ONTAP 存储设备。有关详细信息、请参见 https://docs.netapp.com/us-en/ontap-systems-family/["ONTAP硬件系统文档"^] 。
+
+
+
+==== 配置 ONTAP SVM 以进行 NFS 和 S3 访问
+
+在 Kubernetes 节点可访问的网络上配置 ONTAP 存储虚拟机 (SVM) 以进行 NFS 和 S3 访问。
+
+要使用 ONTAP 系统管理器创建 SVM，请导航至“存储”>“存储虚拟机”，然后单击“+ 添加”按钮。为 SVM 启用 S3 访问时，请选择使用外部 CA（证书颁发机构）签名的证书，而不是系统生成的证书。您可以使用自签名证书，也可以使用由公共信任的 CA 签名的证书。有关更多详细信息，请参阅 https://docs.netapp.com/us-en/ontap/index.html["ONTAP文档。"^]
+
+以下屏幕截图展示了如何使用 ONTAP System Manager 创建 SVM。请根据您的环境修改详细信息。
+
+图 4 — 使用 ONTAP 系统管理器创建 SVM。 image:aipod-mini-image05.png["600,600"]image:aipod-mini-image06.png["600,600"]
+
+
+
+==== 配置 S3 权限
+
+为您在上一步中创建的 SVM 配置 S3 用户/组设置。确保您拥有该 SVM 的所有 S3 API 操作的完全访问权限。有关详细信息，请参阅 ONTAP S3 文档。
+
+注意：Intel AI for Enterprise RAG 应用程序的数据采集服务需要此用户。如果您使用 ONTAP System Manager 创建了 SVM，则 System Manager 将自动创建一个名为 `sm_s3_user`以及一个名为 `FullAccess`当您创建 SVM 时，但尚未分配任何权限 `sm_s3_user` 。
+
+要编辑此用户的权限，请导航至存储 > 存储虚拟机，单击您在上一步中创建的 SVM 的名称，单击设置，然后单击“S3”旁边的铅笔图标。要授予 `sm_s3_user`拥有所有 S3 API 操作的完全访问权限，创建一个关联 `sm_s3_user`与 `FullAccess`策略如下面的屏幕截图所示。
+
+图 5 - S3 权限。
+
+image:aipod-mini-image07.png["600,600"]
+
+
+
+==== 创建 S3 存储区。
+
+在您之前创建的 SVM 中创建一个 S3 存储桶。要使用 ONTAP 系统管理器创建 SVM，请导航至“存储”>“存储桶”，然后单击“+ 添加”按钮。有关更多详细信息，请参阅 ONTAP S3 文档。
+
+以下屏幕截图展示了使用 ONTAP 系统管理器创建 S3 存储桶的过程。
+
+图 6 - 创建 S3 存储桶。 image:aipod-mini-image08.png["600,600"]
+
+
+
+==== 配置 S3 存储桶权限
+
+配置您在上一步中创建的 S3 存储桶的权限。确保您在上一步中配置的用户具有以下权限：  `GetObject, PutObject, DeleteObject, ListBucket, GetBucketAcl, GetObjectAcl, ListBucketMultipartUploads, ListMultipartUploadParts, GetObjectTagging, PutObjectTagging, DeleteObjectTagging, GetBucketLocation, GetBucketVersioning, PutBucketVersioning, ListBucketVersions, GetBucketPolicy, PutBucketPolicy, DeleteBucketPolicy, PutLifecycleConfiguration, GetLifecycleConfiguration, GetBucketCORS, PutBucketCORS.`
+
+要使用 ONTAP 系统管理器编辑 S3 存储桶权限，请导航至“存储”>“存储桶”，单击存储桶名称，单击“权限”，然后单击“编辑”。请参阅 https://docs.netapp.com/us-en/ontap/object-storage-management/index.html["ONTAP S3文档"^]了解更多详细信息。
+
+以下屏幕截图展示了 ONTAP 系统管理器中必要的存储桶权限。
+
+图 7 - S3 存储桶权限。 image:aipod-mini-image09.png["600,600"]
+
+
+
+==== 创建 bucket 跨域资源共享规则
+
+使用 ONTAP CLI，为您在上一步中创建的存储桶创建存储桶跨域资源共享 (CORS) 规则：
+
+[source, cli]
+----
+ontap::> bucket cors-rule create -vserver erag -bucket erag-data -allowed-origins *erag.com -allowed-methods GET,HEAD,PUT,DELETE,POST -allowed-headers *
+----
+此规则允许英特尔 AI for Enterprise RAG Web 应用程序的 OPEA 从 Web 浏览器内与存储桶进行交互。
+
+
+
+==== 部署服务器
+
+部署服务器并在每台服务器上安装 Ubuntu 22.04 LTS。安装 Ubuntu 后，请在每台服务器上安装 NFS 实用程序。要安装 NFS 实用程序，请运行以下命令：
+
+[source, cli]
+----
+ apt-get update && apt-get install nfs-common
+----
+
+
+==== 安装 Kubernetes
+
+使用 Kubespray 在您的服务器上安装 Kubernetes。有关详细信息、请参见 https://kubespray.io/["Kubespray 文档"^] 。
+
+
+
+==== 安装 Trident CSI 驱动程序
+
+在您的 Kubernetes 集群中安装 NetApp Trident CSI 驱动程序。有关详细信息、请参见 https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html["Trident 安装文档"^] 。
+
+
+
+==== 创建 Trident 后端
+
+为您之前创建的 SVM 创建 Trident 后端。创建后端时，请使用 `ontap-nas`司机。有关详细信息、请参见 https://docs.netapp.com/us-en/trident/trident-use/ontap-nas.html["Trident 后端文档"^] 。
+
+
+
+==== 创建存储类。
+
+创建与您在上一步中创建的 Trident 后端对应的 Kubernetes 存储类。有关详情，请参阅 Trident 存储类文档。
+
+
+
+==== 面向企业 RAG 的英特尔 AI 的 OPEA
+
+在您的 Kubernetes 集群中安装适用于英特尔企业人工智能 RAG 的 OPEA。请参阅 https://github.com/opea-project/Enterprise-RAG/blob/release-1.2.0/deployment/README.md["英特尔 AI 企业版 RAG 部署"^]有关详细信息，请参阅文档。请务必记下本文后面介绍的所需配置文件修改。您必须在执行安装手册之前进行这些修改，才能使英特尔 AI for Enterprise RAG 应用程序与您的 ONTAP 存储系统正确配合使用。
+
+
+
+=== 启用 ONTAP S3
+
+为 Intel AI for Enterprise RAG 安装 OPEA 时，编辑主配置文件以允许使用 ONTAP S3 作为源数据存储库。
+
+要启用 ONTAP S3，请在 `edp`部分。
+
+注意：默认情况下，Intel AI for Enterprise RAG 应用程序会从 SVM 中所有现有存储桶中提取数据。如果您的 SVM 中有多个存储桶，您可以修改 `bucketNameRegexFilter`字段，以便仅从某些存储桶中提取数据。
+
+[source, cli]
+----
+edp:
+  enabled: true
+  namespace: edp
+  dpGuard:
+    enabled: false
+  storageType: s3compatible
+  s3compatible:
+    region: "us-east-1"
+    accessKeyId: "<your_access_key>"
+    secretAccessKey: "<your_secret_key>"
+    internalUrl: "https://<your_ONTAP_S3_interface>"
+    externalUrl: "https://<your_ONTAP_S3_interface>"
+    bucketNameRegexFilter: ".*"
+----
+
+
+=== 配置计划同步设置
+
+安装英特尔企业人工智能 RAG 应用程序的 OPEA 时，启用 `scheduledSync`以便应用程序自动从您的 S3 存储桶中提取新的或更新的文件。
+
+什么时候 `scheduledSync`启用后，应用程序会自动检查源 S3 存储桶中是否有新的或更新的文件。在此同步过程中发现的任何新的或更新的文件都会自动提取并添加到 RAG 知识库中。应用程序会根据预设的时间间隔检查源存储桶。默认时间间隔为 60 秒，这意味着应用程序每 60 秒检查一次更改。您可以根据自己的特定需求更改此间隔。
+
+启用 `scheduledSync`并设置同步间隔，在 `deployment/components/edp/values.yaml:`
+
+[source, cli]
+----
+celery:
+  config:
+    scheduledSync:
+      enabled: true
+      syncPeriodSeconds: "60"
+----
+
+
+=== 更改卷访问模式
+
+在 `deployment/components/gmc/microservices-connector/helm/values.yaml` ，对于每个卷 `pvc`列表，更改 `accessMode`到 `ReadWriteMany` 。
+
+[source, cli]
+----
+pvc:
+  modelLlm:
+    name: model-volume-llm
+    accessMode: ReadWriteMany
+    storage: 100Gi
+  modelEmbedding:
+    name: model-volume-embedding
+    accessMode: ReadWriteMany
+    storage: 20Gi
+  modelReranker:
+    name: model-volume-reranker
+    accessMode: ReadWriteMany
+    storage: 10Gi
+  vectorStore:
+    name: vector-store-data
+    accessMode: ReadWriteMany
+    storage: 20Gi
+----
+
+
+=== （可选）禁用 SSL 证书验证
+
+如果您在为 SVM 启用 S3 访问时使用了自签名证书，则必须禁用 SSL 证书验证。如果您使用了由公众信任的 CA 签名的证书，则可以跳过此步骤。
+
+要禁用 SSL 证书验证，请在 `deployment/components/edp/values.yaml:`
+
+[source, cli]
+----
+edpExternalUrl: "https://s3.erag.com"
+edpExternalSecure: "true"
+edpExternalCertVerify: "false"
+edpInternalUrl: "edp-minio:9000"
+edpInternalSecure: "true"
+edpInternalCertVerify: "false"
+----
+
+
+==== 访问适用于企业 RAG UI 的英特尔 AI 的 OPEA
+
+访问英特尔企业人工智能 RAG UI 的 OPEA。有关详细信息、请参见 https://github.com/opea-project/Enterprise-RAG/blob/release-1.1.2/deployment/README.md#interact-with-chatqna["英特尔企业人工智能 RAG 部署文档"^] 。
+
+图 8 - 适用于企业 RAG UI 的英特尔 AI 的 OPEA。 image:aipod-mini-image10.png["600,600"]
+
+
+
+==== 为 RAG 提取数据
+
+您现在可以提取文件，以将其纳入基于 RAG 的查询扩充中。提取文件有多种选项。请根据您的需求选择合适的选项。
+
+注意：提取文件后，英特尔 AI for Enterprise RAG 应用程序的 OPEA 会自动检查文件的更新并相应地提取更新。
+
+*选项 1：直接上传到您的 S3 存储桶。要一次性提取多个文件，我们建议您使用您选择的 S3 客户端将文件上传到您的 S3 存储桶（即您之前创建的存储桶）。常用的 S3 客户端包括 AWS CLI、Amazon SDK for Python (Boto3)、s3cmd、S3 浏览器、Cyberduck 和 Commander One。如果文件属于受支持的类型，您上传到 S3 存储桶的任何文件都将自动被 OPEA for Intel AI for Enterprise RAG 应用程序提取。
+
+注意：在撰写本文时，支持以下文件类型：PDF、HTML、TXT、DOC、DOCX、PPT、PPTX、MD、XML、JSON、JSONL、YAML、XLS、XLSX、CSV、TIFF、JPG、JPEG、PNG 和 SVG。
+
+您可以使用 OPEA for Intel AI for Enterprise RAG 用户界面来确认文件是否已正确提取。有关详情，请参阅 Intel AI for Enterprise RAG 用户界面文档。请注意，应用程序提取大量文件可能需要一些时间。
+
+*选项 2：使用 UI 上传 如果您只需要导入少量文件，可以使用 OPEA for Intel AI for Enterprise RAG UI 导入。有关详细信息，请参阅 Intel AI for Enterprise RAG UI 文档。
+
+图 9-数据提取 UI。 image:aipod-mini-image11.png["600,600"]
+
+
+
+==== 执行聊天查询
+
+您现在可以使用内置的聊天用户界面 (UI) 与英特尔企业人工智能 (AI for Enterprise) RAG 应用程序 OPEA 进行“聊天”。在响应您的查询时，该应用程序会使用您提取的文件执行 RAG。这意味着该应用程序会自动在您提取的文件中搜索相关信息，并在响应您的查询时整合这些信息。
+
+
+
+== 规模估算指南
+
+作为验证工作的一部分，我们与英特尔合作进行了性能测试。测试结果如下表所示。
+
+|===
+| 特征 | 价值 | comment 
+
+
+| 模型尺寸 | 200亿个参数 | Llama-8B、Llama-13B、Mistral 7B、Qwen 14B、DeepSeek Distill 8B 
+
+
+| 输入尺寸 | 约2000个代币 | 约4页 
+
+
+| 输出尺寸 | 约2000个代币 | 约4页 
+
+
+| 并发用户 | 32. | “并发用户”是指同时提交查询的提示请求。 
+|===
+注：以上尺寸指南基于使用 96 核 Intel Xeon 6 处理器进行的性能验证和测试结果。对于具有类似 I/O 令牌和模型大小要求的客户，我们建议使用搭载 96 核或 128 核 Xeon 6 处理器的服务器。
+
+
+
+== 结论
+
+企业 RAG 系统和 LLM 是协同工作的技术，可帮助组织提供准确且情境感知的响应。这些响应涉及基于大量私有和内部企业数据的信息检索。通过使用 RAG、API、向量嵌入和高性能存储系统来查询包含公司数据的文档存储库，可以更快、更安全地处理数据。NetAppAIPod Mini 将 NetApp 的智能数据基础架构与 ONTAP 数据管理功能、英特尔至强 6 处理器、英特尔 AI for Enterprise RAG 和 OPEA 软件堆栈相结合，帮助部署高性能 RAG 应用程序，并帮助组织走上 AI 领导之路。
+
+
+
+== 确认
+
+本文档由 NetApp 解决方案工程团队成员 Sathish Thyagarajan 和 Michael Ogelsby 撰写。作者还要感谢英特尔企业 AI 产品团队（Ajay Mungara、Mikolaj Zyczynski、Igor Konopko、Ramakrishna Karamsetty、Michal Prostko、Shreejan Mistry 和 Ned Fiori）以及 NetApp 其他团队成员（Lawrence Bunka、Bobby Oommen 和 Jeff Liborio）在本解决方案验证期间提供的持续支持和帮助。
+
+
+
+== 物料清单
+
+以下是用于此解决方案功能验证的物料清单 (BOM)，可供参考。任何符合以下配置的服务器或网络组件（甚至是现有网络，最好是 100GbE 带宽）均可使用。
+
+对于应用服务器：
+
+|===
+| *零件编号* | *产品描述* | *数量* 
+
+
+| 222HA-TN-OTO-37 | 超级服务器 SYS-222HA-TN /2U | 2. 
+
+
+| P4X-GNR6972P-SRPL2-UCC | 英特尔至强 6972P 2P 128C 2G 504M 500W SGX512 | 2. 
+
+
+| RAM | MEM-DR564MC-ER64(x16)64GB DDR5-6400 2RX4 (16Gb) ECC RDIMM | 32. 
+
+
+|  | HDS-M2N4-960G0-E1-TXD-NON-080(x2) SSD M.2 NVMe PCIe4 960GB 1DWPD TLC D，80 毫米 | 2. 
+
+
+|  | WS-1K63A-1R(x2)1U 692W/1600W 冗余单输出电源。散热量为 2361 BTU/小时，最高温度为 59°C（约）。 | 4. 
+|===
+对于控制服务器：
+
+|===
+
+
+| *零件编号* | *产品描述* | *数量* 
+
+
+| 511R-M-OTO-17 | 优化了 1U X13SCH-SYS、CSE-813MF2TS-R0RCNBP、PWS-602A-1R | 1. 
+
+
+| P4X-GNR6972P-SRPL2-UCC | P4D-G7400-SRL66(x1) ADL 奔腾 G7400 | 1. 
+
+
+| RAM | MEM-DR516MB-EU48(x2)16GB DDR5-4800 1Rx8 (16Gb) ECC UDIMM | 1. 
+
+
+|  | HDS-M2N4-960G0-E1-TXD-NON-080(x2) SSD M.2 NVMe PCIe4 960GB 1DWPD TLC D，80 毫米 | 2. 
+|===
+对于网络交换机：
+
+|===
+
+
+| *零件编号* | *产品描述* | *数量* 
+
+
+| DCS-7280CR3A | Arista 7280R3A 28x100 GbE | 1. 
+|===
+NetApp AFF 存储：
+
+|===
+
+
+| *零件编号* | *产品描述* | *数量* 
+
+
+| AFF-A20A-100-C | AFF A20 HA 系统，-C | 1. 
+
+
+| X800-42U-R6-C | 跳线 Crd，驾驶室内，C13-C14，-C | 2. 
+
+
+| X97602A-C | 电源，1600W，钛金，-C | 2. 
+
+
+| X66211B-2-N-C | 电缆，100GbE，QSFP28-QSFP28，铜，2米，-C | 4. 
+
+
+| X66240A-05-N-C | 电缆，25GbE，SFP28-SFP28，铜，0.5米，-C | 2. 
+
+
+| X5532A-N-C | 导轨，4 柱，薄，圆形/方孔，小，可调节，24-32，-C | 1. 
+
+
+| X4024A-2-A-C | 驱动器包 2X1.92TB，NVMe4，SED，-C | 6. 
+
+
+| X60130A-C | IO 模块，2PT，100GbE，-C | 2. 
+
+
+| X60132A-C | IO 模块，4PT，10/25GbE，-C | 2. 
+
+
+| SW-ONTAPB-FLASH-A20-C | SW、ONTAP 基础包、每 TB、闪存、A20、-C | 23 
+|===
+
+
+== 从何处查找追加信息
+
+要了解有关本文档中所述信息的更多信息，请查看以下文档和 / 或网站：
+
+https://www.netapp.com/support-and-training/documentation/ONTAP%20S3%20configuration%20workflow/["NetApp 产品文档"^]
+
+link:https://github.com/opea-project/Enterprise-RAG/tree/main["OPEA 项目"]
+
+https://github.com/opea-project/Enterprise-RAG/tree/main/deployment/playbooks["OPEA Enterprise RAG 部署手册"^]
